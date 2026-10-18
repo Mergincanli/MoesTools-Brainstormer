@@ -360,4 +360,4 @@ Each one stands on its own. A reply like "1B 2A 3C 4B 5B 6A 7B 8B 9A" is enough.
 1. Read the TL;DR and the [decisions](#decisions-needed), and reply with your choices. A list like "1B 2A 3C..." is enough.
 2. Skim [samples.md](samples.md), especially the three "translation to a player-controlled unit" sections. Do they feel like Shamble Frontlines?
 3. Skim the core lists in [vocabularies.md](vocabularies.md) (classes, roles, flavours, mobility, bodies, weapon families) for anything wrong for your game.
-4. Reply with your choices and "approved" (as a comment on the pull request, or in our chat), or tell me what to change. GitHub won't let you press Approve here, because the pull request was opened from your own account. Nothing else is needed from you: no accounts, keys or installs.
+4. Reply with your choices and "approved" (as a comment on the pull request, or in our chat), or tell me what to change. A reply is enough: the pull request was opened from the repository owner's account, and GitHub doesn't let a pull request's author press Approve. Nothing else is needed from you: no accounts, keys or installs.
