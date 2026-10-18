@@ -40,12 +40,7 @@
     },
     "status": {
       "description": "proposed = written, not yet reviewed and calibrated; accepted = reviewed and calibrated in the merge pass; merged = folded into another pattern; rejected.",
-      "enum": [
-        "proposed",
-        "accepted",
-        "merged",
-        "rejected"
-      ]
+      "enum": ["proposed", "accepted", "merged", "rejected"]
     },
     "merged_into": {
       "description": "Required when status is merged.",
@@ -125,15 +120,7 @@
       "description": "The heart of the tool: how the pattern plays when one player controls the unit.",
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "summary",
-        "as_user",
-        "as_target",
-        "teammates",
-        "controls",
-        "feedback",
-        "changes_from_rts"
-      ],
+      "required": ["summary", "as_user", "as_target", "teammates", "controls", "feedback", "changes_from_rts"],
       "properties": {
         "summary": {
           "type": "string"
@@ -191,11 +178,7 @@
     "team_play": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "potential",
-        "hooks",
-        "notes"
-      ],
+      "required": ["potential", "hooks", "notes"],
       "properties": {
         "potential": {
           "$ref": "common.schema.json#/$defs/rating"
@@ -216,10 +199,7 @@
     "build_difficulty": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "level",
-        "notes"
-      ],
+      "required": ["level", "notes"],
       "properties": {
         "level": {
           "$ref": "common.schema.json#/$defs/rating"
@@ -236,10 +216,7 @@
     "risks": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "balance",
-        "readability"
-      ],
+      "required": ["balance", "readability"],
       "properties": {
         "balance": {
           "$ref": "#/$defs/risk"
@@ -256,12 +233,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "id",
-          "name",
-          "summary",
-          "min_spice"
-        ],
+        "required": ["id", "name", "summary", "min_spice"],
         "properties": {
           "id": {
             "$ref": "common.schema.json#/$defs/slug"
@@ -318,6 +290,20 @@
                 "items": {
                   "$ref": "common.schema.json#/$defs/ref"
                 }
+              },
+              "adds_strengths": {
+                "description": "Replaces the base generator's adds_strengths for this variant (for example a mine variant that no longer has to reach its target).",
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/relation"
+                }
+              },
+              "adds_weaknesses": {
+                "description": "Replaces the base generator's adds_weaknesses for this variant.",
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/relation"
+                }
               }
             }
           }
@@ -328,14 +314,7 @@
       "description": "Rules for the generator. Links in requires, excludes, implies, adds_strengths and adds_weaknesses describe the card itself; counters and countered_by describe the enemy.",
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "classes",
-        "min_tier",
-        "kinds",
-        "slot",
-        "rarity",
-        "countered_by"
-      ],
+      "required": ["classes", "min_tier", "kinds", "slot", "rarity", "countered_by"],
       "properties": {
         "classes": {
           "description": "Classes that can roll this pattern.",
@@ -361,11 +340,7 @@
         },
         "slot": {
           "description": "signature = only as the card's signature ability; extra = only as an extra ability; any = either.",
-          "enum": [
-            "signature",
-            "extra",
-            "any"
-          ]
+          "enum": ["signature", "extra", "any"]
         },
         "rarity": {
           "type": "string",
@@ -441,22 +416,13 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "id",
-          "kind"
-        ],
+        "required": ["id", "kind"],
         "properties": {
           "id": {
             "$ref": "common.schema.json#/$defs/slug"
           },
           "kind": {
-            "enum": [
-              "variant-of",
-              "generalises",
-              "often-confused-with",
-              "counters",
-              "combos-with"
-            ]
+            "enum": ["variant-of", "generalises", "often-confused-with", "counters", "combos-with"]
           }
         }
       }
@@ -479,10 +445,7 @@
       "description": "How well the pattern suits a player-controlled, top-down team shooter. Feeds the top-30 list.",
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "score",
-        "reason"
-      ],
+      "required": ["score", "reason"],
       "properties": {
         "score": {
           "type": "integer",
@@ -506,9 +469,7 @@
         }
       },
       "then": {
-        "required": [
-          "generator"
-        ]
+        "required": ["generator"]
       }
     },
     {
@@ -520,9 +481,7 @@
         }
       },
       "then": {
-        "required": [
-          "merged_into"
-        ]
+        "required": ["merged_into"]
       }
     }
   ],
@@ -530,13 +489,7 @@
     "example": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "game",
-        "unit",
-        "note",
-        "sources",
-        "confidence"
-      ],
+      "required": ["game", "unit", "note", "sources", "confidence"],
       "properties": {
         "game": {
           "type": "string",
@@ -575,10 +528,7 @@
     "risk": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "level",
-        "notes"
-      ],
+      "required": ["level", "notes"],
       "properties": {
         "level": {
           "$ref": "common.schema.json#/$defs/rating"

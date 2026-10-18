@@ -37,7 +37,7 @@ One researched unit from a real game. File: `data/units/<game>.json`. Schema: `s
 | `tier.basis` | text | yes |  | Why this band, in plain words. |
 | `cost_band` | group | yes |  |  |
 | `cost_band.band` | term or empty | yes | `cost-bands` | Null only when units are not bought in the game. |
-| `cost_band.raw` | number |  |  | The price in the game's currency, so the band can be recomputed. |
+| `cost_band.raw` | number |  |  | The price in the game's currency. Stored only so the band can be recomputed; the generator and app never show or use it. |
 | `cost_band.basis` | text | yes |  |  |
 | `mobility` | group | yes |  |  |
 | `mobility.base` | term | yes | `mobility` | A term from *Mobility types*. |
@@ -45,7 +45,7 @@ One researched unit from a real game. File: `data/units/<game>.json`. Schema: `s
 | `mobility.traits` | list of terms (max 3) |  | `mobility-traits` | Terms from *Mobility traits*. |
 | `mobility.speed` | term | yes | `speed-bands` | Relative to the game's basic infantry. |
 | `mobility.notes` | text |  |  |  |
-| `mobility.speed_raw` | number |  |  | Speed as a ratio to the game's speed reference, when a stat table gives it. |
+| `mobility.speed_raw` | number |  |  | Speed as a ratio to the game's speed reference, when a stat table gives it. Stored only so the band can be recomputed. |
 | `body` | group | yes |  |  |
 | `body.plan` | term | yes | `bodies` | A term from *Body plans*. |
 | `body.size` | term | yes | `sizes` | A term from *Sizes*. |
@@ -57,20 +57,20 @@ One researched unit from a real game. File: `data/units/<game>.json`. Schema: `s
 | `armour.notes` | text |  |  |  |
 | `armament[]` | list of groups | yes |  | Weapons, in slot order. Empty for unarmed units. |
 | `armament[].name` | text | yes |  | In-game weapon name, for reference only. |
-| `armament[].slot` | one of `primary`, `secondary`, `alternate`, `passenger`, `acquired`, `option` | yes |  | primary / secondary; alternate = switched to by an ability or mode; passenger = depends on who rides inside (one entry per passenger type); acquired = gained during play, e.g. salvaged from a kill; option = one of several loadout choices (see option_group). |
+| `armament[].slot` | one of `primary`, `secondary`, `alternate`, `passenger`, `acquired`, `option` | yes |  | primary / secondary; alternate = switched to by an ability or mode; passenger = depends on who rides inside (one entry per distinct result); acquired = gained during play, e.g. salvaged from a kill; option = one of several loadout choices (see option_group). |
 | `armament[].seat` | term |  | `seat-roles` | *Proposal, not a sourced fact.* Which seat fires it in a player version. Default: driver. |
 | `armament[].family` | term | yes | `weapon-families` | A term from *Weapon families*. |
-| `armament[].damage` | term |  | `damage-types` | A term from *Damage types*. |
-| `armament[].mount` | term |  | `aim-models` | *Proposal, not a sourced fact.* Our proposed mount for a player version. |
-| `armament[].delivery` | term |  | `weapon-delivery` | A term from *Weapon delivery*. |
-| `armament[].range` | term |  | `range-bands` | Relative to the source's other weapons. |
-| `armament[].can_target` | list of terms |  | `target-types` | Terms from *Target types*. |
+| `armament[].damage` | term | unless family is adaptive | `damage-types` | A term from *Damage types*. |
+| `armament[].mount` | term | unless family is adaptive | `aim-models` | *Proposal, not a sourced fact.* Our proposed mount for a player version. |
+| `armament[].delivery` | term | unless family is adaptive | `weapon-delivery` | A term from *Weapon delivery*. |
+| `armament[].range` | term | unless family is adaptive | `range-bands` | Relative to the source's other weapons. |
+| `armament[].can_target` | list of terms | unless family is adaptive | `target-types` | Terms from *Target types*. |
 | `armament[].affects` | one of `enemies`, `allies`, `both` |  |  | Default: enemies. Repair and buff tools affect allies. |
 | `armament[].traits` | list of terms (max 4) |  | `weapon-traits` | Terms from *Weapon traits*. |
 | `armament[].summary` | text | yes |  | What it does, in plain words. |
-| `armament[].when` | typed link |  |  | For passenger, alternate or acquired weapons: a typed link saying when it applies (e.g. role:engineer for an engineer passenger). |
+| `armament[].when` | typed link |  |  | For passenger, alternate or acquired weapons: a typed link saying when it applies, e.g. the passenger's unit id (unit:...) or role (role:engineer). |
 | `armament[].condition` | text |  |  | The same condition in plain words. |
-| `armament[].patterns` | list of ids |  |  |  |
+| `armament[].patterns` | list of ids |  |  | Pattern ids (from data/pattern-registry.json) this weapon is an example of. |
 | `armament[].mode` | id |  |  | Mode id from the unit's modes, if the weapon only works in that mode. |
 | `armament[].option_group` | id |  |  | For option weapons: options in the same group exclude each other. |
 | `armament[].default` | boolean |  |  | For option weapons: the one fitted by default. |
@@ -118,7 +118,7 @@ One researched unit from a real game. File: `data/units/<game>.json`. Schema: `s
 | `weaknesses` | list of link + reasons (min 1) | yes |  | Where it falls short; links describe the unit itself. |
 | `countered_by` | list of link + reasons (min 1) | yes |  | What beats it; links describe the enemy. |
 | `counters` | list of link + reasons (min 1) | yes |  | What it beats; links describe the enemy. |
-| `combos` | list of link + reasons |  |  | Notable combinations; links describe the teammate or the setup. |
+| `combos` | list of link + reasons | yes |  | Notable combinations; links describe the teammate or the setup. Required, so 'none known' is an explicit empty list. |
 | `memorable` | text | yes |  | One line: why this unit is memorable. |
 | `as_player` | text | yes |  | *Proposal, not a sourced fact.* Two or three lines: how it would play if one player controlled it. |
 | `sources[]` | list of groups (min 1, max 3) | yes |  | A citation. Paraphrase only; never copy text or images. |
@@ -149,6 +149,10 @@ One researched unit from a real game. File: `data/units/<game>.json`. Schema: `s
 | `fit_notes[].used` | text | yes |  |  |
 | `fit_notes[].wanted` | text |  |  |  |
 | `fit_notes[].note` | text | yes |  |  |
+| `atypical[]` | list of groups |  |  | Combination rules this real unit breaks. Found by the validator and recorded here; never blocks a source unit, and useful evidence for relaxing a rule. |
+| `atypical[].path` | text | yes |  |  |
+| `atypical[].rule` | text | yes |  |  |
+| `atypical[].note` | text | yes |  |  |
 
 ## Mechanic pattern
 
@@ -159,7 +163,7 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `schema_version` | text | yes |  |  |
 | `vocab_version` | text | yes |  |  |
 | `id` | id | yes |  | Generic English, verb first: <verb>-<object>[-<qualifier>], e.g. 'infest-vehicle'. No fiction words. |
-| `status` | one of `proposed`, `accepted`, `merged`, `rejected` | yes |  | proposed = written by a research agent; accepted = reviewed and calibrated; merged = folded into another pattern; rejected. |
+| `status` | one of `proposed`, `accepted`, `merged`, `rejected` | yes |  | proposed = written, not yet reviewed and calibrated; accepted = reviewed and calibrated in the merge pass; merged = folded into another pattern; rejected. |
 | `merged_into` | id |  |  | Required when status is merged. |
 | `name` | text | yes |  | Our own generic name, never a trademark. |
 | `aliases` | list of texts |  |  | Generic synonyms and old ids merged into this one (the resolver accepts them). |
@@ -169,7 +173,7 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `generic` | boolean |  |  | True for plain mechanics (sprint, self-heal, stat buff) kept so every ability can link a pattern; excluded from the top-30 list. |
 | `summary` | text | yes |  | What it does, in plain words. |
 | `counterplay` | list of texts (min 1) | yes |  | How the enemy deals with it. |
-| `source_units` | list of unit ids |  |  | Unit ids that use this pattern. Computed from the units' links by the build step; if written by hand it must match. |
+| `source_units` | list of unit ids (min 1) | yes |  | Unit ids that use this pattern. Must match the units that link it (the validator checks; a build step will compute it). |
 | `other_examples[]` | list of groups |  |  | Further uses found during research that are not (yet) entered as source units. |
 | `other_examples[].game` | text | yes |  | Game id from the registry, or 'extra:<title>' for a game outside it. |
 | `other_examples[].unit` | text | yes |  | Unit, ability or mechanic name (reference only). |
@@ -184,6 +188,7 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `other_examples[].sources[].version` | text |  |  | Patch, edition or remaster the page describes, for games that change. |
 | `other_examples[].confidence` | term | yes | `confidence` | A term from *Confidence levels*. |
 | `other_examples[].unit_id` | unit id |  |  | Unit id, once the unit is in the database. |
+| `other_examples[].franchise` | text |  |  | Franchise name, for counting how many franchises use a pattern. |
 | `shooter_analogues[]` | list of groups |  |  | Where players already do this in shooters or action games. |
 | `shooter_analogues[].game` | text | yes |  | Game id from the registry, or 'extra:<title>' for a game outside it. |
 | `shooter_analogues[].unit` | text | yes |  | Unit, ability or mechanic name (reference only). |
@@ -198,6 +203,7 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `shooter_analogues[].sources[].version` | text |  |  | Patch, edition or remaster the page describes, for games that change. |
 | `shooter_analogues[].confidence` | term | yes | `confidence` | A term from *Confidence levels*. |
 | `shooter_analogues[].unit_id` | unit id |  |  | Unit id, once the unit is in the database. |
+| `shooter_analogues[].franchise` | text |  |  | Franchise name, for counting how many franchises use a pattern. |
 | `player_translation` | group | yes |  | The heart of the tool: how the pattern plays when one player controls the unit. |
 | `player_translation.summary` | text | yes |  |  |
 | `player_translation.as_user` | list of texts (min 1) | yes |  | What the player using it does and feels. |
@@ -233,7 +239,9 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `variants[].overrides.requires` | list of lists |  |  | Conditions as groups of typed links: every group must hold, and one link in a group is enough. |
 | `variants[].overrides.excludes` | list of typed links |  |  |  |
 | `variants[].overrides.implies` | list of typed links |  |  |  |
-| `generator` | group |  |  | Rules for the generator. Links in requires, excludes, implies, adds_strengths and adds_weaknesses describe the card itself; counters and countered_by describe the enemy. |
+| `variants[].overrides.adds_strengths` | list of link + reasons |  |  | Replaces the base generator's adds_strengths for this variant (for example a mine variant that no longer has to reach its target). |
+| `variants[].overrides.adds_weaknesses` | list of link + reasons |  |  | Replaces the base generator's adds_weaknesses for this variant. |
+| `generator` | group | when status is accepted |  | Rules for the generator. Links in requires, excludes, implies, adds_strengths and adds_weaknesses describe the card itself; counters and countered_by describe the enemy. |
 | `generator.classes` | list of terms (min 1) | yes | `classes` | Classes that can roll this pattern. |
 | `generator.min_tier` | term | yes | `tiers` | A term from *Tier bands*. |
 | `generator.kinds` | list of terms (min 1) | yes | `ability-kinds` | Ability kinds this pattern can take on a card. |
@@ -256,7 +264,7 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `related[].id` | id | yes |  | Lower-case id with dashes, e.g. 'infest-vehicle'. |
 | `related[].kind` | one of `variant-of`, `generalises`, `often-confused-with`, `counters`, `combos-with` | yes |  |  |
 | `open_questions` | list of texts |  |  | Design questions for Mustafa that the research raised. |
-| `confidence` | term | yes | `confidence` | Confidence that the linked units implement the mechanic as summarised (the lowest of the linked units and examples). |
+| `confidence` | term | yes | `confidence` | Confidence that the linked source units implement the mechanic as summarised; each example carries its own confidence. |
 | `review` | group | yes |  | Checker status. The research run samples entries and re-checks them against their sources. |
 | `review.status` | one of `unchecked`, `checked`, `disputed` | yes |  |  |
 | `review.checked_by` | text |  |  |  |

@@ -4,7 +4,7 @@ A creativity tool for designing units for **Shamble Frontlines**, a browser team
 
 ## Status
 
-**Step 1 of the brief: proposal, waiting for approval.** Nothing is built yet beyond draft data and schemas.
+**The brief's first step (step 7): proposal, waiting for approval.** Nothing is built yet beyond draft data and schemas.
 
 - [Proposal](docs/proposal.md): the plan, repository structure, decisions needed. Start here.
 - [Samples](docs/samples.md): three researched units (RA3 Terror Drone, Hammer Tank, Multigunner IFV), three mechanic patterns and an example concept card.
@@ -15,7 +15,7 @@ A creativity tool for designing units for **Shamble Frontlines**, a browser team
 
 | Folder | Contents |
 |---|---|
-| `data/` | Games registry, word lists, researched units, mechanic patterns (JSON). |
+| `data/` | Games registry, pattern registry, word lists, researched units, mechanic patterns (JSON). |
 | `schemas/` | JSON Schemas for every record type. |
 | `docs/` | Proposal and generated reference pages. |
 

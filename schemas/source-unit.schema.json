@@ -5,12 +5,7 @@
   "description": "data/units/<game>.json: researched units from one game. Real names are reference only; generated concepts never reuse them. Fields marked x-provenance 'proposal' are our design suggestions for a player version: the checker skips them and confidence does not cover them.",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "vocab_version",
-    "game",
-    "units"
-  ],
+  "required": ["schema_version", "vocab_version", "game", "units"],
   "properties": {
     "$schema": {
       "type": "string"
@@ -113,9 +108,7 @@
         "roles": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "primary"
-          ],
+          "required": ["primary"],
           "properties": {
             "primary": {
               "type": "string",
@@ -134,17 +127,11 @@
         "tier": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "band",
-            "basis"
-          ],
+          "required": ["band", "basis"],
           "properties": {
             "band": {
               "description": "Null only when the game has no tech tiers.",
-              "type": [
-                "string",
-                "null"
-              ],
+              "type": ["string", "null"],
               "x-vocab": "tiers"
             },
             "gate": {
@@ -160,17 +147,11 @@
         "cost_band": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "band",
-            "basis"
-          ],
+          "required": ["band", "basis"],
           "properties": {
             "band": {
               "description": "Null only when units are not bought in the game.",
-              "type": [
-                "string",
-                "null"
-              ],
+              "type": ["string", "null"],
               "x-vocab": "cost-bands"
             },
             "raw": {
@@ -185,11 +166,7 @@
         "mobility": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "base",
-            "handling",
-            "speed"
-          ],
+          "required": ["base", "handling", "speed"],
           "properties": {
             "base": {
               "type": "string",
@@ -226,10 +203,7 @@
         "body": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "plan",
-            "size"
-          ],
+          "required": ["plan", "size"],
           "properties": {
             "plan": {
               "type": "string",
@@ -252,10 +226,7 @@
         "armour": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "class",
-            "models"
-          ],
+          "required": ["class", "models"],
           "properties": {
             "class": {
               "type": "string",
@@ -285,10 +256,7 @@
         "crew": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "model",
-            "basis"
-          ],
+          "required": ["model", "basis"],
           "properties": {
             "model": {
               "description": "Who operates the unit.",
@@ -297,11 +265,7 @@
             },
             "basis": {
               "description": "in-game = the source has these seats; lore = the source describes a crew; proposal = our suggestion for a player version.",
-              "enum": [
-                "in-game",
-                "lore",
-                "proposal"
-              ]
+              "enum": ["in-game", "lore", "proposal"]
             },
             "solo_fallback": {
               "description": "For multi-seat models: what a lone player can do.",
@@ -312,10 +276,7 @@
               "description": "Passenger seats, if any. Any crew model can carry passengers; the card then shows 'transport with passengers'.",
               "type": "object",
               "additionalProperties": false,
-              "required": [
-                "seats",
-                "kind"
-              ],
+              "required": ["seats", "kind"],
               "properties": {
                 "seats": {
                   "type": "integer",
@@ -336,10 +297,7 @@
               "items": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": [
-                  "role",
-                  "count"
-                ],
+                "required": ["role", "count"],
                 "properties": {
                   "role": {
                     "type": "string",
@@ -379,10 +337,7 @@
         "on_death": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "outcomes",
-            "basis"
-          ],
+          "required": ["outcomes", "basis"],
           "properties": {
             "outcomes": {
               "type": "array",
@@ -394,10 +349,7 @@
               }
             },
             "basis": {
-              "enum": [
-                "in-game",
-                "proposal"
-              ]
+              "enum": ["in-game", "proposal"]
             }
           }
         },
@@ -495,11 +447,7 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "path",
-              "rule",
-              "note"
-            ],
+            "required": ["path", "rule", "note"],
             "properties": {
               "path": {
                 "type": "string"
@@ -518,12 +466,7 @@
     "weapon": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "name",
-        "slot",
-        "family",
-        "summary"
-      ],
+      "required": ["name", "slot", "family", "summary"],
       "properties": {
         "name": {
           "description": "In-game weapon name, for reference only.",
@@ -531,14 +474,7 @@
         },
         "slot": {
           "description": "primary / secondary; alternate = switched to by an ability or mode; passenger = depends on who rides inside (one entry per distinct result); acquired = gained during play, e.g. salvaged from a kill; option = one of several loadout choices (see option_group).",
-          "enum": [
-            "primary",
-            "secondary",
-            "alternate",
-            "passenger",
-            "acquired",
-            "option"
-          ]
+          "enum": ["primary", "secondary", "alternate", "passenger", "acquired", "option"]
         },
         "seat": {
           "description": "Which seat fires it in a player version. Default: driver.",
@@ -583,11 +519,7 @@
         },
         "affects": {
           "description": "Default: enemies. Repair and buff tools affect allies.",
-          "enum": [
-            "enemies",
-            "allies",
-            "both"
-          ]
+          "enum": ["enemies", "allies", "both"]
         },
         "traits": {
           "type": "array",
@@ -610,6 +542,7 @@
           "type": "string"
         },
         "patterns": {
+          "description": "Pattern ids (from data/pattern-registry.json) this weapon is an example of.",
           "type": "array",
           "items": {
             "$ref": "common.schema.json#/$defs/slug"
@@ -638,24 +571,13 @@
         }
       },
       "then": {
-        "required": [
-          "damage",
-          "mount",
-          "delivery",
-          "range",
-          "can_target"
-        ]
+        "required": ["damage", "mount", "delivery", "range", "can_target"]
       }
     },
     "ability": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "name",
-        "kind",
-        "summary",
-        "patterns"
-      ],
+      "required": ["name", "kind", "summary", "patterns"],
       "properties": {
         "name": {
           "description": "In-game ability name, for reference only.",
@@ -701,12 +623,7 @@
     "mode": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "name",
-        "via",
-        "summary"
-      ],
+      "required": ["id", "name", "via", "summary"],
       "properties": {
         "id": {
           "$ref": "common.schema.json#/$defs/slug"
@@ -725,9 +642,7 @@
         "mobility": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "base"
-          ],
+          "required": ["base"],
           "properties": {
             "base": {
               "type": "string",
@@ -750,9 +665,7 @@
         "body": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "plan"
-          ],
+          "required": ["plan"],
           "properties": {
             "plan": {
               "type": "string",
@@ -767,9 +680,7 @@
         "armour": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "class"
-          ],
+          "required": ["class"],
           "properties": {
             "class": {
               "type": "string",
