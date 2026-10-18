@@ -72,7 +72,7 @@
           "enum": ["commanded", "piloted", "both"]
         },
         "research_bucket": {
-          "description": "The research agent batch this game belongs to.",
+          "description": "The research batch this game belongs to: r1 Red Alert; r2 Tiberium series and Renegade; r3 Generals, Tempest Rising, Iron Harvest; r4 Company of Heroes, World in Conflict, Wargame, Broken Arrow; r5 Supreme Commander, Planetary Annihilation, StarCraft II, Halo Wars 2, Dawn of War; r6 shooters and hybrids (Battlefield, PlanetSide 2, Foxhole, WARDOGS, Arc Raiders, MechWarrior/BattleTech).",
           "$ref": "common.schema.json#/$defs/slug"
         },
         "version_researched": {
@@ -165,10 +165,10 @@
           }
         },
         "cost_thresholds": {
-          "description": "Lowest price for each cost band above 'very low', in the game's currency.",
+          "description": "Lowest price for each cost band above 'very low', in the game's currency. Method: pick an anchor, the price of the game's standard main battle tank (or its main line combat unit if it has no tanks); the thresholds are about 0.5, 0.9, 1.4 and 2 times the anchor, rounded. 'basis' names the anchor.",
           "type": "object",
           "additionalProperties": false,
-          "required": ["currency", "low", "medium", "high", "very-high"],
+          "required": ["currency", "basis", "low", "medium", "high", "very-high"],
           "properties": {
             "currency": {
               "type": "string"
@@ -184,6 +184,10 @@
             },
             "very-high": {
               "type": "number"
+            },
+            "basis": {
+              "description": "The anchor unit and its price, and how a multi-resource cost is turned into one number.",
+              "type": "string"
             }
           }
         },
