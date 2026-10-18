@@ -36,6 +36,23 @@
       "description": "Hold on a target to lock, then fire homing shots; the target gets a warning."
     },
     {
+      "id": "guided",
+      "label": "Guided",
+      "description": "You steer the shot in flight by keeping your aim on it; it is lost if you stop aiming, so the shooter stays exposed until it lands. It reaches whatever its family reaches.",
+      "notes": "The player does the steering, so it needs a mount the player aims (not auto-target or radial) and no homing trait, and it is a medium-range or longer shot. A shot that homes by itself is lock-on or the homing trait.",
+      "allowed": {
+        "range-bands": ["medium", "long", "off-screen"]
+      },
+      "excluded": {
+        "aim-models": ["auto-target", "radial"],
+        "weapon-traits": ["homing"]
+      },
+      "examples": [
+        "Battlefield: TOW missiles follow the gunner's crosshair until they hit",
+        "Battlefield: the attack helicopter gunner flies the TV-guided missile through its camera"
+      ]
+    },
+    {
       "id": "melee",
       "label": "Melee",
       "description": "Strikes or lunges at touching distance."
@@ -48,15 +65,19 @@
     {
       "id": "place",
       "label": "Place",
-      "description": "Sets down charges, mines or devices on the ground or a target."
+      "description": "Sets down charges, mines or devices on the ground or a target. What is placed stays on the ground, so it never hits fliers; a charge that clings to a flier is attach.",
+      "allowed": {
+        "target-types": ["infantry", "ground-vehicle", "structure", "naval"]
+      }
     },
     {
       "id": "drop",
       "label": "Drop",
-      "description": "Released below or just ahead of the unit; you aim by flying over the target. It falls to the ground, so it never hits fliers.",
+      "description": "Released below or just ahead of the unit; you aim by flying over the target, so only a flier can drop. It falls to the ground, so it never hits fliers.",
       "allowed": {
         "target-types": ["infantry", "ground-vehicle", "structure", "naval"]
-      }
+      },
+      "requires": [["target:low-air", "target:high-air"]]
     },
     {
       "id": "ram",

@@ -10,6 +10,9 @@
 // ensure_ascii=False per value). To match it exactly this file parses JSON itself rather than with JSON.parse:
 // object keys keep their written order (JSON.parse moves keys like "10" to the front), integers stay exact,
 // numbers written with a fraction or exponent stay floats ("1.0" stays "1.0"), and widths count code points.
+// Two deliberate differences keep every output standard JSON with the same data: NaN, Infinity and numbers
+// too large for a float (1e400) are refused, where Python would write NaN or Infinity; and a lone surrogate
+// in a string is written as a \uXXXX escape, where Python's file write would fail.
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -40,15 +43,17 @@ export function parseJson(text) {
     if (text.startsWith('true', i)) { i += 4; return true }
     if (text.startsWith('false', i)) { i += 5; return false }
     if (text.startsWith('null', i)) { i += 4; return null }
-    // Python's json module also reads these non-standard constants.
-    if (text.startsWith('NaN', i)) { i += 3; return { type: 'float', value: NaN } }
-    if (text.startsWith('Infinity', i)) { i += 8; return { type: 'float', value: Infinity } }
-    if (text.startsWith('-Infinity', i)) { i += 9; return { type: 'float', value: -Infinity } }
+    // NaN and Infinity, which Python's json module also reads, are not JSON and are refused here.
     NUMBER.lastIndex = i
     const m = NUMBER.exec(text)
     if (!m) fail('expected a value')
+    if (m[1] || m[2]) {
+      const value = Number(m[0])
+      if (!Number.isFinite(value)) fail(`number ${m[0]} is too large for a float`)
+      i += m[0].length
+      return { type: 'float', value }
+    }
     i += m[0].length
-    if (m[1] || m[2]) return { type: 'float', value: Number(m[0]) }
     return { type: 'int', value: BigInt(m[0]) }
   }
 
@@ -128,6 +133,7 @@ function dumpString(s) {
     else if (ch === '\b') out += '\\b'
     else if (ch === '\f') out += '\\f'
     else if (c < 0x20) out += '\\u' + c.toString(16).padStart(4, '0')
+    else if (c >= 0xd800 && c <= 0xdfff) out += '\\u' + c.toString(16) // a lone surrogate; pairs arrive joined
     else out += ch
   }
   return out + '"'
@@ -136,9 +142,7 @@ function dumpString(s) {
 // Python's repr(float): shortest round-trip digits, fixed notation from 1e-4 up to (not including) 1e16,
 // otherwise exponent notation such as 1e-05 or 1.5e+16; fixed notation always has a fraction ('2.0').
 function dumpFloat(x) {
-  if (Number.isNaN(x)) return 'NaN'
-  if (x === Infinity) return 'Infinity'
-  if (x === -Infinity) return '-Infinity'
+  if (!Number.isFinite(x)) throw new RangeError(`${x} cannot be written as JSON`)
   const sign = x < 0 || Object.is(x, -0) ? '-' : ''
   const [mant, exp] = Math.abs(x).toExponential().split('e')
   const digits = mant.replace('.', '')
@@ -197,15 +201,17 @@ function sameData(a, b) {
     return a.entries.length === b.entries.length
       && a.entries.every(([k, x], i) => k === b.entries[i][0] && sameData(x, b.entries[i][1]))
   }
-  return a.value === b.value || (Number.isNaN(a.value) && Number.isNaN(b.value))
+  return a.value === b.value
 }
 
 /** Returns the formatted text of a JSON document (with the final newline). */
 export function formatText(text) {
   const data = parseJson(text)
   const out = fmt(data) + '\n'
-  // Safety net, like the Python version's assert: the output must read back as the same data.
+  // Safety net, like the Python version's assert: the output must read back as the same data, and must be
+  // standard JSON that every other tool reads.
   if (!sameData(parseJson(out), data)) throw new Error('formatting changed the data')
+  JSON.parse(out)
   return out
 }
 

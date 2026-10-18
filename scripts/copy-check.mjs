@@ -10,18 +10,29 @@
 // Pages come from MediaWiki sites (Fandom, wiki.gg, StrategyWiki, Halopedia, Wikipedia and others) as
 // wikitext through the site's api.php (action=parse), and from other sites as HTML turned into text.
 // Every page is cached under .cache/sources/ (git-ignored), so later runs work offline. Requests go one
-// at a time with a pause between them, and a 429 or 503 answer is retried with a growing wait.
+// at a time with a pause between them, and a 429 or 503 answer is retried with a growing wait (Retry-After
+// when the site gives one). A dropped connection, a timeout or a temporary DNS failure is tried again at
+// most twice; other network errors are not retried. After three network failures in a row the network
+// counts as unavailable: nothing more is fetched and the remaining uncached pages are listed as not checked.
 //
-// This needs the network, so CI does not run it: research agents and checkers run it by hand.
+// This needs the network, so CI does not run it: research agents and checkers run it by hand. Behind a
+// proxy it needs Node.js 22.21 or newer (see rerunWithProxy below).
 //
 // Usage: node scripts/copy-check.mjs [root] [options]
+//   root               the repository to check (default: this one)
 //   --offline          use cached pages only; uncached pages are listed as not checked
 //   --min-words N      shortest shared run to report (default 6)
 //   --only TEXT        only check pages whose URL contains TEXT (repeatable)
 //   --max-fetch N      fetch at most N pages from the network in this run; the rest count as not checked
 //   --refresh          fetch again even when a page is cached
 //   --delay MS         pause between network requests (default 1500)
-// Exit code: 1 when shared runs are found, 2 on bad arguments, otherwise 0.
+//
+// Exit codes:
+//   0  every cited page in scope was checked and none shares a run with the records that cite it
+//   1  shared runs were found (FOUND lines; pages that were not checked are listed as well)
+//   2  bad arguments
+//   3  no shared runs were found, but some pages were not checked (offline and not cached, over
+//      --max-fetch, an HTTP or network error, or the network unavailable), so the check is incomplete
 import crypto from 'node:crypto'
 import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
@@ -150,6 +161,7 @@ function apiCandidates(u) {
   if (h.endsWith('.fandom.com') || h.endsWith('.wiki.gg') || h === 'www.halopedia.org' || h === 'halopedia.org') {
     return [`${u.origin}/api.php`]
   }
+  if (h === 'www.sarna.net') return [`${u.origin}/wiki/api.php`]
   if (h === 'strategywiki.org' || h.endsWith('.wikipedia.org') || h.endsWith('.wikimedia.org') || h.endsWith('.wiktionary.org')) {
     return [`${u.origin}/w/api.php`]
   }
@@ -159,6 +171,9 @@ function apiCandidates(u) {
 /** For a wiki page URL, the page title and the API endpoints to try; null for other URLs. */
 export function mediaWikiTarget(url) {
   const u = new URL(url)
+  // Liquipedia keeps one wiki per game, each with its own API (https://liquipedia.net/starcraft2/Page).
+  const lq = u.hostname === 'liquipedia.net' && u.pathname.match(/^\/([a-z0-9]+)\/(.+)$/)
+  if (lq) return { title: safeDecode(lq[2]).replace(/_/g, ' '), apis: [`${u.origin}/${lq[1]}/api.php`] }
   let title = null
   const m = u.pathname.match(/^\/wiki\/(.+)$/)
   if (m) title = m[1]
@@ -174,9 +189,26 @@ function safeDecode(s) {
 
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 
-// One request at a time; retries 429/503 and network errors with a growing wait (Retry-After if given).
-async function politeGet(url, state, { tries = 6 } = {}) {
-  for (let attempt = 1; ; attempt++) {
+// Network errors worth one more try: a dropped connection, a timeout or a temporary DNS failure. Anything
+// else (connection refused, host not found, a bad certificate) fails the same way the next time.
+const TRANSIENT = new Set(['ECONNRESET', 'ETIMEDOUT', 'EAI_AGAIN', 'UND_ERR_SOCKET', 'UND_ERR_CONNECT_TIMEOUT'])
+const NETWORK_RETRIES = 2 // tries again at most twice after a transient network error
+const BUSY_TRIES = 6 // tries in all when a site answers 429 or 503
+export const MAX_NETWORK_FAILURES = 3 // network failures in a row before the network counts as unavailable
+const NETWORK_UNAVAILABLE = `network unavailable: stopped after ${MAX_NETWORK_FAILURES} network failures in a row`
+
+/** The site could not be reached at all (no HTTP answer), as opposed to an HTTP or wiki API error. */
+class NetworkError extends Error {}
+
+function networkCode(e) {
+  if (e?.name === 'TimeoutError') return 'ETIMEDOUT' // our own 30-second limit
+  return e?.cause?.code || e?.code || e?.message || String(e)
+}
+
+// One request at a time. A 429 or 503 is retried with a growing wait (Retry-After if given); a transient
+// network error is retried at most NETWORK_RETRIES times; any other network error throws a NetworkError.
+async function politeGet(url, state) {
+  for (let busy = 1, net = 0; ;) {
     const wait = state.lastRequest + state.delay - Date.now()
     if (wait > 0) await sleep(wait)
     state.lastRequest = Date.now()
@@ -185,19 +217,33 @@ async function politeGet(url, state, { tries = 6 } = {}) {
     try {
       res = await fetch(url, { headers: { 'User-Agent': USER_AGENT }, redirect: 'follow', signal: AbortSignal.timeout(30000) })
     } catch (e) {
-      if (attempt >= tries) throw new Error(`network error: ${e.cause?.code || e.message}`)
-      await sleep(2000 * 2 ** (attempt - 1))
+      const code = networkCode(e)
+      if (!TRANSIENT.has(code) || net >= NETWORK_RETRIES) throw new NetworkError(`network error: ${code}`)
+      net++
+      const backoff = state.retryWait * 2 ** (net - 1)
+      state.log(`  ${code} from ${new URL(url).host}, trying again in ${Math.round(backoff / 1000)}s (retry ${net} of ${NETWORK_RETRIES})`)
+      await sleep(backoff)
       continue
     }
-    if ((res.status === 429 || res.status === 503) && attempt < tries) {
+    if ((res.status === 429 || res.status === 503) && busy < BUSY_TRIES) {
       const retryAfter = Number(res.headers.get('retry-after'))
-      const backoff = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 2000 * 2 ** (attempt - 1)
-      console.error(`  ${res.status} from ${new URL(url).host}, waiting ${Math.round(backoff / 1000)}s (try ${attempt} of ${tries})`)
+      const backoff = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : state.retryWait * 2 ** (busy - 1)
+      state.log(`  ${res.status} from ${new URL(url).host}, waiting ${Math.round(backoff / 1000)}s (try ${busy} of ${BUSY_TRIES})`)
       await res.body?.cancel()
       await sleep(Math.min(backoff, 120000))
+      busy++
       continue
     }
     return res
+  }
+}
+
+// The body of an answer; a connection lost while reading it is a network failure too.
+async function bodyText(res) {
+  try {
+    return await res.text()
+  } catch (e) {
+    throw new NetworkError(`network error while reading: ${networkCode(e)}`)
   }
 }
 
@@ -209,7 +255,7 @@ async function fetchPage(url, state) {
       const res = await politeGet(q, state)
       if (res.status === 404) { await res.body?.cancel(); continue } // no API at this path
       if (!res.ok) throw new Error(`HTTP ${res.status} from ${api}`)
-      const body = await res.text()
+      const body = await bodyText(res)
       let data
       try { data = JSON.parse(body) } catch { continue } // not an API here; try the next one
       if (data.error) throw new Error(`wiki API: ${data.error.code}${data.error.info ? ` (${data.error.info})` : ''}`)
@@ -220,7 +266,7 @@ async function fetchPage(url, state) {
   }
   const res = await politeGet(url, state)
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return { format: 'html', via: url, raw: await res.text() }
+  return { format: 'html', via: url, raw: await bodyText(res) }
 }
 
 export function cachePath(cacheDir, url) {
@@ -281,8 +327,15 @@ function nameStrings(x, key = null, out = []) {
 
 // ---------------------------------------------------------------- the check
 
+// retryWait (the first wait before a retry, doubling each time) and log (where progress lines go) have no
+// command-line option; tests set them.
+export const DEFAULT_OPTIONS = Object.freeze({
+  root: REPO_ROOT, offline: false, minWords: 6, only: Object.freeze([]), maxFetch: Infinity, refresh: false, delay: 1500,
+  retryWait: 2000, log: msg => console.error(msg),
+})
+
 function parseArgs(argv) {
-  const opts = { root: REPO_ROOT, offline: false, minWords: 6, only: [], maxFetch: Infinity, refresh: false, delay: 1500 }
+  const opts = { ...DEFAULT_OPTIONS, only: [] }
   const num = (a, v) => { const n = Number(v); if (!Number.isInteger(n) || n < 0) throw new Error(`${a} needs a whole number`); return n }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
@@ -298,7 +351,8 @@ function parseArgs(argv) {
   return opts
 }
 
-export async function copyCheck(opts) {
+export async function copyCheck(options = {}) {
+  const opts = { ...DEFAULT_OPTIONS, ...options }
   const n = opts.minWords
   const cacheDir = path.join(opts.root, '.cache', 'sources')
   const records = collectRecords(opts.root)
@@ -307,10 +361,10 @@ export async function copyCheck(opts) {
 
   const allUrls = [...new Set(records.flatMap(r => citedUrls(r.value)))].sort()
   const urls = opts.only.length ? allUrls.filter(u => opts.only.some(t => u.includes(t))) : allUrls
-  const state = { delay: opts.delay, lastRequest: 0, requests: 0 }
+  const state = { delay: opts.delay, retryWait: opts.retryWait, log: opts.log, lastRequest: 0, requests: 0 }
   const pages = new Map() // url -> gram set
   const notChecked = [] // [url, reason]
-  let fromCache = 0, fetched = 0
+  let fromCache = 0, fetched = 0, failuresInARow = 0
   for (const url of urls) {
     const file = cachePath(cacheDir, url)
     let page = null
@@ -319,14 +373,20 @@ export async function copyCheck(opts) {
     }
     if (!page) {
       if (opts.offline) { notChecked.push([url, 'offline and not cached']); continue }
+      if (failuresInARow >= MAX_NETWORK_FAILURES) { notChecked.push([url, NETWORK_UNAVAILABLE]); continue }
       if (fetched >= opts.maxFetch) { notChecked.push([url, `over --max-fetch ${opts.maxFetch}`]); continue }
       try {
-        console.error(`fetching ${url}`)
+        opts.log(`fetching ${url}`)
         page = { url, fetched: new Date().toISOString(), ...(await fetchPage(url, state)) }
         fs.mkdirSync(path.dirname(file), { recursive: true })
         fs.writeFileSync(file, JSON.stringify(page, null, 1) + '\n')
         fetched++
+        failuresInARow = 0
       } catch (e) {
+        // Only a failure to reach a site at all counts towards the network being down; an HTTP or wiki
+        // API error shows the network works.
+        failuresInARow = e instanceof NetworkError ? failuresInARow + 1 : 0
+        if (failuresInARow === MAX_NETWORK_FAILURES) opts.log(`${MAX_NETWORK_FAILURES} network failures in a row; fetching nothing more`)
         notChecked.push([url, e.message])
         continue
       }
@@ -350,10 +410,19 @@ export async function copyCheck(opts) {
       for (const [run, us] of byRun) findings.push({ file: r.file, id: r.id, path: p, run, urls: us })
     }
   }
-  return { urls, allUrls, pagesChecked: pages.size, fromCache, fetched, notChecked, findings, records: records.length }
+  return {
+    urls, allUrls, pagesChecked: pages.size, fromCache, fetched, requests: state.requests, notChecked, findings,
+    records: records.length,
+  }
 }
 
-export function formatCopyReport(res, opts) {
+/** 1 when shared runs were found, else 3 when some pages were not checked, else 0. */
+export function exitCode(res) {
+  return res.findings.length ? 1 : res.notChecked.length ? 3 : 0
+}
+
+export function formatCopyReport(res, options = {}) {
+  const opts = { ...DEFAULT_OPTIONS, ...options }
   const lines = []
   const scope = opts.only.length ? `${res.urls.length} of ${res.allUrls.length} cited page(s) (--only)` : `${res.urls.length} cited page(s)`
   lines.push(`copy-check: ${scope} in ${res.records} record(s); reporting shared runs of ${opts.minWords}+ words`)
@@ -375,8 +444,11 @@ export function formatCopyReport(res, opts) {
   }
   lines.push('')
   if (res.findings.length) lines.push(`FAILED: ${res.findings.length} shared run(s); rewrite them in your own words`)
-  else if (res.notChecked.length) lines.push(`OK for the ${res.pagesChecked} page(s) checked; ${res.notChecked.length} page(s) not checked`)
-  else lines.push('OK: no shared runs')
+  if (res.notChecked.length) {
+    lines.push(`INCOMPLETE: ${res.notChecked.length} page(s) not checked (listed above)` +
+      (res.findings.length ? '' : `; no shared runs in the ${res.pagesChecked} page(s) checked`))
+  }
+  if (!res.findings.length && !res.notChecked.length) lines.push('OK: no shared runs')
   return lines.join('\n')
 }
 
@@ -405,5 +477,5 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   if (status !== null) process.exit(status)
   const res = await copyCheck(opts)
   console.log(formatCopyReport(res, opts))
-  process.exitCode = res.findings.length ? 1 : 0
+  process.exitCode = exitCode(res)
 }

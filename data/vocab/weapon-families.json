@@ -2,7 +2,7 @@
   "$schema": "../../schemas/vocabulary.schema.json",
   "id": "weapon-families",
   "label": "Weapon families",
-  "description": "What the weapon is, judged by how it behaves in the source, not by its name. Each family has defaults (damage, mount, delivery, range) and lists what it may be combined with. Tie-breaks: a missile that steers is guided, an unguided one is a rocket; a soldier's personal gun is small arms, a belt-fed or mounted gun is a machine gun; prism only if the beam splits, travelling bolts are plasma; placed or thrown charges are explosives, dropped ones are bombs; artillery only for arcing or out-of-sight fire. Air: every family lists the target types it can reach. Only anti-air families (flak, guided missiles, autocannons) reach high air, besides adaptive, which takes whatever weapon it gains; most direct-fire families reach low air; lobbed, dropped, melee and short-range area families stay on the ground.",
+  "description": "What the weapon is, judged by how it behaves in the source, not by its name. Each family has defaults (damage, mount, delivery, range) and lists what it may be combined with. Tie-breaks: a missile that steers, by itself or by the player's hand, is a guided missile, an unguided one is a rocket; a soldier's personal gun is small arms, a belt-fed or mounted gun is a machine gun; prism only if the beam splits, travelling bolts are plasma; placed or thrown charges are explosives, dropped ones are bombs; artillery only for arcing or out-of-sight fire. Air: every family lists the target types it can reach. High air is reached only by the anti-air families (flak, guided missiles, autocannons), by adaptive, which takes whatever weapon it gains, and by any weapon with the anti-air trait whose family reaches low air. Most direct-fire families reach low air; lobbed, dropped, melee and short-range area families stay on the ground, except that explosives can reach a low flier by ramming it or clinging to it. Whatever the family, a lobbed, dropped or placed shot never hits a flier. Ships (research only) are on every family's list except flak's.",
   "group": "core",
   "status": "draft",
   "version": "0.4.0",
@@ -60,7 +60,7 @@
       "allowed": {
         "damage-types": ["kinetic", "fire"],
         "weapon-delivery": ["hitscan", "projectile"],
-        "target-types": ["infantry", "ground-vehicle", "low-air", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -80,7 +80,7 @@
       "allowed": {
         "damage-types": ["kinetic", "armour-piercing", "energy"],
         "weapon-delivery": ["hitscan", "projectile"],
-        "target-types": ["infantry", "ground-vehicle", "low-air"]
+        "target-types": ["infantry", "ground-vehicle", "low-air", "naval"]
       }
     },
     {
@@ -121,7 +121,7 @@
       "allowed": {
         "damage-types": ["armour-piercing", "explosive"],
         "weapon-delivery": ["projectile"],
-        "target-types": ["infantry", "ground-vehicle", "low-air", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -140,7 +140,7 @@
       "allowed": {
         "damage-types": ["explosive", "fire", "toxic", "cryo"],
         "weapon-delivery": ["lobbed"],
-        "target-types": ["infantry", "ground-vehicle", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "structure", "naval"]
       }
     },
     {
@@ -162,7 +162,7 @@
     {
       "id": "guided-missiles",
       "label": "Guided missiles",
-      "description": "Missiles that lock on and steer toward the target.",
+      "description": "Missiles that steer toward the target: they lock on and home by themselves, or the player steers them by hand.",
       "rarity": "common",
       "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
       "default_damage": "armour-piercing",
@@ -171,7 +171,7 @@
       "default_range": "long",
       "allowed": {
         "damage-types": ["armour-piercing", "explosive", "emp"],
-        "weapon-delivery": ["lock-on"],
+        "weapon-delivery": ["lock-on", "guided"],
         "target-types": ["infantry", "ground-vehicle", "low-air", "high-air", "structure", "naval"]
       }
     },
@@ -212,7 +212,7 @@
       "allowed": {
         "damage-types": ["fire", "toxic"],
         "weapon-delivery": ["projectile"],
-        "target-types": ["infantry", "ground-vehicle", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "structure", "naval"]
       }
     },
     {
@@ -228,7 +228,7 @@
       "allowed": {
         "damage-types": ["electric"],
         "weapon-delivery": ["hitscan", "beam"],
-        "target-types": ["infantry", "ground-vehicle", "low-air", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -315,7 +315,7 @@
       "allowed": {
         "damage-types": ["sonic"],
         "weapon-delivery": ["beam", "projectile"],
-        "target-types": ["infantry", "ground-vehicle", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "structure", "naval"]
       }
     },
     {
@@ -335,7 +335,7 @@
       "allowed": {
         "damage-types": ["melee", "electric", "energy"],
         "weapon-delivery": ["melee", "attach"],
-        "target-types": ["infantry", "ground-vehicle", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "structure", "naval"]
       }
     },
     {
@@ -355,7 +355,7 @@
       "allowed": {
         "damage-types": ["toxic"],
         "weapon-delivery": ["projectile", "lobbed", "drop"],
-        "target-types": ["infantry", "ground-vehicle", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "structure", "naval"]
       }
     },
     {
@@ -376,7 +376,7 @@
       "allowed": {
         "damage-types": ["explosive", "emp", "fire"],
         "weapon-delivery": ["place", "lobbed", "attach", "ram"],
-        "target-types": ["infantry", "ground-vehicle", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -384,7 +384,10 @@
       "label": "Bombs",
       "description": "Ordnance dropped from above.",
       "rarity": "common",
-      "classes": ["aircraft", "drone"],
+      "classes": ["infantry", "aircraft", "drone"],
+      "class_rarity": {
+        "infantry": "rare"
+      },
       "default_damage": "explosive",
       "default_aim": "body-aim",
       "default_delivery": "drop",
@@ -392,8 +395,9 @@
       "allowed": {
         "damage-types": ["explosive", "fire", "toxic", "emp"],
         "weapon-delivery": ["drop"],
-        "target-types": ["infantry", "ground-vehicle", "structure"]
-      }
+        "target-types": ["infantry", "ground-vehicle", "structure", "naval"]
+      },
+      "notes": "Only a flier can drop anything (the drop delivery needs one), so on infantry it means a jetpack trooper bombing from above, and a drone must fly."
     },
     {
       "id": "emp",
@@ -427,9 +431,9 @@
       "allowed": {
         "damage-types": ["energy"],
         "weapon-delivery": ["beam"],
-        "target-types": ["infantry", "ground-vehicle", "low-air", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       },
-      "notes": "Always carries the self-heal weapon trait."
+      "notes": "Always carries the heal-on-hit weapon trait."
     },
     {
       "id": "railgun",
@@ -464,7 +468,7 @@
       "allowed": {
         "damage-types": ["kinetic"],
         "weapon-delivery": ["beam"],
-        "target-types": ["ground-vehicle", "low-air"]
+        "target-types": ["ground-vehicle", "low-air", "naval"]
       },
       "notes": "Can pull down a low flier such as a helicopter; jets and airships fly out of its reach."
     },
@@ -501,7 +505,7 @@
       "allowed": {
         "damage-types": ["psionic"],
         "weapon-delivery": ["beam", "hitscan"],
-        "target-types": ["infantry", "ground-vehicle", "low-air"]
+        "target-types": ["infantry", "ground-vehicle", "low-air", "naval"]
       }
     },
     {

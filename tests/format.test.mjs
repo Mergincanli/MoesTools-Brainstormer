@@ -59,6 +59,20 @@ describe('formatter', () => {
     assert.throws(() => formatText('{"a": 1} x'))
   })
 
+  it('refuses NaN, Infinity and numbers too large for a float rather than write them', () => {
+    for (const text of ['[NaN]', '[Infinity]', '[-Infinity]', '[1e400]', '{"a": -1e400}']) {
+      assert.throws(() => formatText(text), SyntaxError, text)
+    }
+    assert.equal(formatText('[1e308, 123456789012345678901234567890]'), '[1e+308, 123456789012345678901234567890]\n')
+  })
+
+  it('writes a lone surrogate as an escape, so the output stays valid JSON with the same text', () => {
+    const out = formatText('["\\ud800 lone", "\\udfff", "\\ud83d\\ude00"]')
+    assert.equal(out, '["\\ud800 lone", "\\udfff", "\u{1F600}"]\n') // a proper pair is written as the character
+    assert.deepEqual(JSON.parse(out), ['\ud800 lone', '\udfff', '\u{1F600}'])
+    assert.ok(out.isWellFormed())
+  })
+
   it('--check lists an unformatted file and exits 1 without writing it', () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'unit-forge-format-'))
     tmpDirs.push(dir)

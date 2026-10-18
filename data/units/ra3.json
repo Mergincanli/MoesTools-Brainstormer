@@ -50,7 +50,7 @@
         "sight": "short",
         "traits": [],
         "basis": "in-game",
-        "notes": "The wiki gives a single sight figure of 100 (game units), half the Hammer tank's vision of 200 on that tank's page, so short. Patch 1.11 lengthened its view in stasis ray mode."
+        "notes": "The wiki gives one sight figure, half the Hammer tank's vision, so short. Patch 1.11 lengthened its view in stasis ray mode."
       },
       "armament": [
         {
@@ -287,14 +287,7 @@
       "researched_by": "step-7 samples",
       "review": {
         "status": "unchecked"
-      },
-      "atypical": [
-        {
-          "path": "armament/0/can_target",
-          "rule": "weapon-families:blades target-types naval",
-          "note": "The claws also infest ships, even submerged ones, which the blades family's target list leaves out."
-        }
-      ]
+      }
     },
     {
       "id": "ra3.soviet.hammer-tank",
@@ -341,7 +334,7 @@
         "sight": "medium",
         "traits": [],
         "basis": "in-game",
-        "notes": "The wiki gives 200 for vision and 500 for clearing the fog (game units), between its cannon range of 150 and its beam range of 300: it sees about as far as it shoots, so medium. Patch 1.11 lengthened its view in leech mode."
+        "notes": "The wiki's vision figure lies between the reach of its cannon and that of its beam, and its fog-clearing figure is over twice the vision: it sees about as far as it shoots, so medium. Patch 1.11 lengthened its view in leech mode."
       },
       "armament": [
         {
@@ -365,10 +358,10 @@
           "delivery": "beam",
           "range": "long",
           "can_target": ["ground-vehicle", "naval", "structure"],
-          "traits": ["self-heal"],
+          "traits": ["heal-on-hit"],
           "condition": "In leech mode. Since patch 1.11 the tank must stand still to use it.",
           "summary": "Reaches about twice as far as the cannon. Deals modest damage that ignores armour type, and repairs the tank while it stays on target. A vehicle that dies in the beam can hand over its weapon if the tank has none yet.",
-          "patterns": ["leech-weapon-on-kill", "drain-health"]
+          "patterns": ["leech-weapon-on-kill"]
         },
         {
           "name": "Auxiliary weapon port",
@@ -410,7 +403,7 @@
           "why": "Its armour is rated the heaviest among main battle tanks, which makes it the toughest of the three; beats the Allied and Imperial tanks one-on-one."
         },
         {
-          "ref": "weapon-trait:self-heal",
+          "ref": "weapon-trait:heal-on-hit",
           "why": "Heals itself mid-fight with the beam, so a damaged tank can step behind the line and leech at range to recover instead of leaving the battle."
         },
         {
@@ -550,13 +543,6 @@
           "note": "The band follows the vision figure, as the Terror Drone entry does; the fog-clearing figure is over twice as large and would point to long sight."
         }
       ],
-      "atypical": [
-        {
-          "path": "armament/1/can_target",
-          "rule": "weapon-families:drain target-types naval",
-          "note": "The leech beam also drains ships and surfaced submarines, which the drain family's target list leaves out."
-        }
-      ],
       "researched_by": "step-7 samples",
       "review": {
         "status": "unchecked"
@@ -628,7 +614,7 @@
           "delivery": "projectile",
           "range": "long",
           "can_target": ["low-air", "high-air", "ground-vehicle", "infantry"],
-          "traits": [],
+          "traits": ["anti-air"],
           "condition": "Only when nobody is riding inside.",
           "summary": "Rapid, light missiles. Against aircraft they hit about three times as hard, and reach about twice as far, as against ground targets. Good against aircraft and light vehicles, weak against armour.",
           "patterns": ["passenger-sets-weapon"]
@@ -756,8 +742,8 @@
           "mount": "free-aim",
           "delivery": "beam",
           "range": "long",
-          "can_target": ["infantry", "ground-vehicle", "low-air"],
-          "traits": [],
+          "can_target": ["infantry", "ground-vehicle", "low-air", "high-air"],
+          "traits": ["anti-air"],
           "condition": "An Allied Cryo Legionnaire rides inside (Uprising only).",
           "summary": "A single freezing beam that can also freeze aircraft, which then fall and shatter. It reaches further than the Cryo Legionnaire on foot or the Cryocopter.",
           "patterns": ["passenger-sets-weapon"]
@@ -789,7 +775,7 @@
           "delivery": "projectile",
           "range": "medium",
           "can_target": ["low-air", "high-air"],
-          "traits": [],
+          "traits": ["anti-air"],
           "condition": "A Soviet Flak Trooper rides inside.",
           "summary": "Anti-air only, a little stronger than the Soviets' own flak transport, on a fast chassis that keeps up with aircraft.",
           "patterns": ["passenger-sets-weapon"]
@@ -901,7 +887,7 @@
           "delivery": "projectile",
           "range": "long",
           "can_target": ["low-air", "high-air", "infantry"],
-          "traits": [],
+          "traits": ["anti-air"],
           "condition": "An Empire Archer Maiden rides inside (Uprising only).",
           "summary": "Arrows that hit both aircraft and infantry, with a little more anti-air reach than on foot.",
           "patterns": ["passenger-sets-weapon"]
@@ -1188,11 +1174,6 @@
       ],
       "atypical": [
         {
-          "path": "armament/0/can_target",
-          "rule": "weapon-families:rockets target-types high-air",
-          "note": "The default missiles are the car's anti-air weapon and, like every anti-air weapon in RA3, reach all aircraft; our rockets family leaves high air to the anti-air families. No source says whether they steer, which would make them guided missiles."
-        },
-        {
           "path": "armament/2/traits",
           "rule": "weapon-traits:stun min_tier t2",
           "note": "The source's tier-1 IFV stuns when carrying a dog or bear; our word list keeps stun for tier 2 and up."
@@ -1204,32 +1185,19 @@
         },
         {
           "path": "armament/14/damage",
-          "rule": "weapon-families:laser damage-types kinetic",
+          "rule": "weapon-families:laser allowed.damage-types kinetic",
           "note": "The wiki calls the Imperial Warrior version a laser but gives it the game's gun damage type, which maps to kinetic; our laser family allows only energy or fire damage."
         },
         {
-          "path": "armament/17/can_target",
-          "rule": "weapon-families:small-arms target-types high-air",
-          "note": "The wiki calls the bow an anti-aircraft as well as anti-infantry weapon, so, like every anti-air weapon in RA3, it reaches all aircraft; our small-arms family leaves high air to the anti-air families."
-        },
-        {
           "path": "armament/18/can_target",
-          "rule": "weapon-families:psionic target-types structure",
+          "rule": "weapon-families:psionic allowed.target-types structure",
           "note": "StrategyWiki warns that this combination can quickly wreck a base, so it hits buildings, which our psionic family's target list leaves out."
         }
       ],
       "researched_by": "step-7 samples",
       "review": {
         "status": "unchecked"
-      },
-      "fit_notes": [
-        {
-          "path": "armament/8/can_target",
-          "used": "low-air",
-          "wanted": "every aircraft",
-          "note": "RA3 has one air layer, and the beam freezes any aircraft. It is an all-round weapon rather than a dedicated anti-air one, so under our rule for the two layers it is coded for low air only."
-        }
-      ]
+      }
     }
   ]
 }

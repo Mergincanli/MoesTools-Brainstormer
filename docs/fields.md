@@ -10,7 +10,7 @@ Every field of every record type, generated from the JSON schemas in `schemas/`.
 - **Typed links** are written `kind:id`, such as `role:anti-air`, `size:<=small` or `hits:high-air`. A link always describes a unit: in strengths, weaknesses and pattern requirements it describes the unit itself; in *counters* the unit it beats; in *countered by* the unit that beats it; in combos the teammate. Ranked kinds accept `<=` and `>=`. Kinds: `class` (is of this class), `role` (has this role (primary or secondary)), `tier` (is this tier), `damage` (has a weapon that deals this damage), `armour-class` (has this armour class), `armour-model` (has this armour model), `weapon` (has a weapon of this family), `mobility` (moves this way), `mobility-trait` (has this mobility trait), `handling` (handles this way), `body` (has this body plan), `size` (is this size), `speed` (moves at this speed), `crew` (has this crew model), `passengers` (has this many passenger seats (a number, usually with >= or <=)), `mount` (has a weapon on this mount), `delivery` (has a weapon with this delivery), `range` (has a weapon with this range), `weapon-trait` (has a weapon with this trait), `target` (is this kind of target (from its mobility and size)), `hits` (has a weapon that can hit this kind of target), `sight` (sees this far through the fog of war), `sensor` (has this sensor trait), `nature` (is organic, a crewed machine or an uncrewed machine), `category` (has an ability whose pattern is in this category), `resource` (uses this resource), `pattern` (has this mechanic pattern (an id in data/patterns)), `unit` (is this source unit (research data only; never on a generated card)).
 - **Proposals vs facts.** Fields marked *proposal* (handling, weapon mount and seat, flavour affinity and 'as a player'), and crew, on-death and sensors wherever their basis says 'proposal', are our design suggestions for a player version. The checker skips them and confidence covers only sourced facts.
 - **Weapons vs abilities.** Anything fired with an attack button is a weapon. An ability exists only when the source has a separate button, cooldown, toggle, or a triggered or passive effect. A weapon swapped in by an ability gets both: an `alternate` weapon and a `toggle` ability, linking the same pattern. A weapon gained on a kill gets an `acquired` weapon and a `triggered` ability. Unarmed units have an empty weapon list.
-- **Granularity.** Same player-facing interaction and same counterplay = one pattern; differences in fiction, delivery or size are variants. Plain mechanics (sprint, self-heal, stat buff) get generic patterns that stay out of the top-30 list.
+- **Granularity.** Same player-facing interaction and same counterplay = one pattern; differences in fiction, delivery or size are variants. Plain mechanics (sprint, healing yourself, stat buff) get generic patterns that stay out of the top-30 list. A pattern that mirrors a word-list term (a weapon trait or family, an armour model, a sensor trait) is the home for the ability version only; a weapon or always-on effect uses the term.
 - **Copyright.** Paraphrase only, no quoted voice lines or flavour text, no images. Real names are reference only and never reach a generated card.
 
 ## Source unit
@@ -155,8 +155,8 @@ One researched unit from a real game. File: `data/units/<game>.json`. Schema: `s
 | `fit_notes[].wanted` | text |  |  |  |
 | `fit_notes[].note` | text | yes |  |  |
 | `atypical[]` | list of groups |  |  | Combination rules this real unit breaks. Found by the validator and recorded here; never blocks a source unit, and useful evidence for relaxing a rule. |
-| `atypical[].path` | text | yes |  |  |
-| `atypical[].rule` | text | yes |  |  |
+| `atypical[].path` | text | yes |  | Where the break shows on this unit: field names and list positions separated by '/', e.g. 'armament/0/can_target'. It must exist on the unit. |
+| `atypical[].rule` | text | yes |  | The broken rule's exact string, as the validator prints it at the end of the ATYPICAL line: '&lt;list&gt;:&lt;term&gt; &lt;field&gt; &lt;value&gt;'. The field is 'classes' (value: the unit's class), 'min_tier' (value: the term's lowest tier), 'allowed.&lt;list&gt;' (value: the unit's or weapon's term that the allowed list leaves out), 'excluded.&lt;list&gt;' (value: the term that the excluded list names) or 'requires' (value: the group's links joined by '\|'). Example: 'weapon-families:rockets allowed.target-types high-air'. Two weapons that break the same rule share one string. |
 | `atypical[].note` | text | yes |  |  |
 
 ## Mechanic pattern
@@ -175,7 +175,7 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `source_terms` | list of texts |  |  | In-game names for this mechanic, reference only; never shown by the generator. |
 | `category` | term | yes | `pattern-categories` | A term from *Pattern categories*. |
 | `also_in` | list of terms (max 2) |  | `pattern-categories` | Up to two more categories for filtering. |
-| `generic` | boolean |  |  | True for plain mechanics (sprint, self-heal, stat buff) kept so every ability can link a pattern; excluded from the top-30 list. |
+| `generic` | boolean |  |  | True for plain mechanics (sprint, healing yourself, stat buff) kept so every ability can link a pattern; excluded from the top-30 list. |
 | `summary` | text | yes |  | What it does, in plain words. |
 | `counterplay` | list of texts (min 1) | yes |  | How the enemy deals with it. |
 | `source_units` | list of unit ids (min 1) | yes |  | Unit ids that use this pattern. Must match the units that link it (the validator checks; a build step will compute it). |
@@ -479,7 +479,7 @@ One entry in the games registry, `data/games.json`. Schema: `schemas/game.schema
 | `expansions[].id` | id | yes |  | Expansion id, e.g. 'ra3-uprising'. |
 | `expansions[].title` | text | yes |  |  |
 | `expansions[].year` | integer | yes |  |  |
-| `factions[]` | list of groups (min 1) | yes |  | Playable sides. Use the reserved id 'shared' for units every side can field or games without factions. A unit belongs to the most general faction that fields it. |
+| `factions[]` | list of groups (min 1) | yes |  | Sides, including AI-only enemies that are researched as units. Use the reserved id 'shared' for units every side can field or games without factions. A unit belongs to the most general faction that fields it. |
 | `factions[].id` | id | yes |  | Faction id, e.g. 'soviet'. |
 | `factions[].name` | text | yes |  |  |
 | `factions[].parent` | id |  |  | For subfactions (e.g. a general or splinter group): the main faction id. |

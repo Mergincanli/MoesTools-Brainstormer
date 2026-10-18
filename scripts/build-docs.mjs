@@ -8,15 +8,19 @@
 // it writes nothing.
 //
 // This began as a port of the original Python builder (build_docs.py), byte-identical in output up to word-list
-// version 0.3.0; changes since then (class rarities, versioned titles, sensors) are made here only. The functions and their
-// order still follow the Python version. Where JavaScript behaves differently from Python, the small helpers in
-// the next section make it behave like Python.
+// version 0.3.0; changes since then (class rarities, versioned titles, sensors, the fixed sample list) are made
+// here only. The functions and their order still follow the Python version. Where JavaScript behaves differently
+// from Python, the small helpers in the next section make it behave like Python.
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 export const OUTPUTS = ['docs/vocabularies.md', 'docs/fields.md', 'docs/samples.md']
+// What docs/samples.md shows, in this order: the three source units and three patterns written as the samples for
+// the brief's first step. The page stays this size however many units and patterns the research run adds.
+export const SAMPLE_UNITS = ['ra3.soviet.terror-drone', 'ra3.soviet.hammer-tank', 'ra3.allied.multigunner-ifv']
+export const SAMPLE_PATTERNS = ['infest-vehicle', 'leech-weapon-on-kill', 'passenger-sets-weapon']
 const GEN_NOTE = '<!-- Generated from the JSON in data/ and schemas/. Edit the JSON, not this file. -->\n'
 
 // ------------------------------------------------------------------ Python behaviour
@@ -280,7 +284,8 @@ function refText(ref, unitNames = null, patternNames = null) {
 
 // ------------------------------------------------------------------ vocabularies
 
-const ALL_CLASSES = ['infantry', 'vehicle', 'walker', 'hover', 'aircraft', 'drone']
+// The classes a generated card can have: every class in the word list except those kept for research only.
+const generatorClasses = () => VOCABS.classes.terms.filter(t => get(t, 'source_only') !== true).map(t => t.id)
 
 // A class_rarity map as text, rarest last: 'uncommon on: Hovercraft; rare on: Aircraft, Drone / support'.
 function classRarityText(cr) {
@@ -297,7 +302,7 @@ function rulesText(t) {
   if (given(t, 'classes')) {
     const cl = t.classes
     const set = new Set(cl)
-    parts.push('classes: ' + (ALL_CLASSES.every(c => set.has(c)) ? 'all' : lab('classes', cl)))
+    parts.push('classes: ' + (generatorClasses().every(c => set.has(c)) ? 'all' : lab('classes', cl)))
   }
   if (given(t, 'class_rarity')) parts.push(classRarityText(t.class_rarity))
   for (const [k, h] of [['default_damage', ['damage-types', 'default damage']], ['default_aim', ['aim-models', 'default mount']],
@@ -532,7 +537,8 @@ function fieldsDocs() {
     f`Kinds: ${kinds}.`,
     "- **Proposals vs facts.** Fields marked *proposal* (handling, weapon mount and seat, flavour affinity and 'as a player'), and crew, on-death and sensors wherever their basis says 'proposal', are our design suggestions for a player version. The checker skips them and confidence covers only sourced facts.",
     '- **Weapons vs abilities.** Anything fired with an attack button is a weapon. An ability exists only when the source has a separate button, cooldown, toggle, or a triggered or passive effect. A weapon swapped in by an ability gets both: an `alternate` weapon and a `toggle` ability, linking the same pattern. A weapon gained on a kill gets an `acquired` weapon and a `triggered` ability. Unarmed units have an empty weapon list.',
-    '- **Granularity.** Same player-facing interaction and same counterplay = one pattern; differences in fiction, delivery or size are variants. Plain mechanics (sprint, self-heal, stat buff) get generic patterns that stay out of the top-30 list.',
+    '- **Granularity.** Same player-facing interaction and same counterplay = one pattern; differences in fiction, delivery or size are variants. Plain mechanics (sprint, healing yourself, stat buff) get generic patterns that stay out of the top-30 list. ' +
+    'A pattern that mirrors a word-list term (a weapon trait or family, an armour model, a sensor trait) is the home for the ability version only; a weapon or always-on effect uses the term.',
     '- **Copyright.** Paraphrase only, no quoted voice lines or flavour text, no images. Real names are reference only and never reach a generated card.\n']
   for (const [file, title, blurb, ptr] of SCHEMAS) {
     rows.length = 0
@@ -567,13 +573,34 @@ function fieldsDocs() {
 // ------------------------------------------------------------------ samples
 
 function samplesDocs() {
-  const units = []
-  for (const file of listJson('data/units')) units.push(...readJson(file).units)
-  const patterns = listJson('data/patterns').map(file => readJson(file))
+  // Every unit and pattern is loaded so links to them read as names; only the samples are shown.
+  const rel = file => path.relative(ROOT, file).split(path.sep).join('/')
+  const allUnits = []
+  const allPatterns = []
+  const fileOf = {} // record id -> its file, for the intro
+  for (const file of listJson('data/units')) {
+    for (const u of readJson(file).units) {
+      allUnits.push(u)
+      fileOf[u.id] = rel(file)
+    }
+  }
+  for (const file of listJson('data/patterns')) {
+    const p = readJson(file)
+    allPatterns.push(p)
+    fileOf[p.id] = rel(file)
+  }
+  const pick = (all, ids, what) => ids.map(id => {
+    const x = next(all, y => y.id === id, null)
+    if (x === null) throw new Error(`docs/samples.md: sample ${what} '${id}' is not in the data (SAMPLE_${what.toUpperCase()}S)`)
+    return x
+  })
+  const units = pick(allUnits, SAMPLE_UNITS, 'unit')
+  const patterns = pick(allPatterns, SAMPLE_PATTERNS, 'pattern')
   const games = strict(Object.fromEntries(load('data/games.json').games.map(g => [g.id, g])))
-  const un = strict(Object.fromEntries(units.map(u => [u.id, u.name])))
-  const pn = strict(Object.fromEntries(patterns.map(p => [p.id, p.name])))
+  const un = strict(Object.fromEntries(allUnits.map(u => [u.id, u.name])))
+  const pn = strict(Object.fromEntries(allPatterns.map(p => [p.id, p.name])))
   const r = ref => refText(ref, un, pn)
+  const sampleFiles = [...new Set([...SAMPLE_UNITS, ...SAMPLE_PATTERNS].map(id => fileOf[id]))].map(x => f`\`${x}\``)
 
   function src(s) {
     return f`[${s.title}](${s.url})`
@@ -618,7 +645,8 @@ function samplesDocs() {
 
   const out = [GEN_NOTE, f`# Sample entries (draft v${VERSION})\n`,
     'The three source units and three mechanic patterns the brief asks for, fully filled in, plus one hand-made concept card showing what the generator will produce. ' +
-    'Rendered from `data/units/ra3.json`, `data/patterns/*.json` and `docs/examples/concept-card.example.json`. Real unit and weapon names are reference only.\n',
+    f`Rendered from ${join(', ', sampleFiles)} and \`docs/examples/concept-card.example.json\`; ` +
+    'the page shows only these samples (listed in `scripts/build-docs.mjs`), not the whole database. Real unit and weapon names are reference only.\n',
     '**How to read it.** *(proposal)* marks our design suggestions for the player version, not sourced facts. ' +
     'The tag in square brackets after each strength, weakness or counter is the coded link the generator uses. ' +
     "'Review: unchecked' means the research run's sampling checker hasn't signed the record yet; this draft's fact-check is summarised in the pull request.\n",
@@ -774,9 +802,9 @@ function samplesDocs() {
     const [P, T] = [c.parts, c.text]
     out.push('<a id="example-card"></a>\n## Example concept card (hand-made)\n')
     const sig = P.signature
-    const spat = next(patterns, x => x.id === sig.pattern, null)
+    const spat = next(allPatterns, x => x.id === sig.pattern, null)
     const svar = next(get(or(spat, {}), 'variants', []), v => v.id === get(sig, 'variant'), null)
-    const srcUnit = next(units, u => c.inspiration.source_units.includes(u.id), null) // `src` in the Python version
+    const srcUnit = next(allUnits, u => c.inspiration.source_units.includes(u.id), null) // `src` in the Python version
     let moved = ''
     if (truthy(srcUnit)) {
       const sfac = next(games[srcUnit.game].factions, fc => fc.id === srcUnit.faction).name
@@ -815,7 +843,9 @@ function samplesDocs() {
     const closest = truthy(svar) && given(svar, 'seen_in') ? f` (${svar.name.toLowerCase()} variant; closest real examples: ${esc(svar.seen_in)})` : ''
     out.push(f`| Inspiration | ${get(pn, c.inspiration.patterns[0])}${closest}; ${join(', ', c.inspiration.source_units.map(x => get(un, x, x)))} |`)
     const b = c.balance
-    out.push(f`| Balance hints | cost ${lab('cost-bands', b.cost_band).toLowerCase()}, power ${b.power}/10, complexity ${b.complexity}/10, ${b.keys} keys (T1 allows 2), no flags |`)
+    const maxKeys = next(VOCABS.tiers.terms, t => t.id === P.tier).max_keys
+    const flags = truthy(b.flags) ? f`flags: ${lab('balance-flags', b.flags)}` : 'no flags'
+    out.push(f`| Balance hints | cost ${lab('cost-bands', b.cost_band).toLowerCase()}, power ${b.power}/10, complexity ${b.complexity}/10, ${b.keys} keys (${L.tiers[P.tier]} allows ${maxKeys}), ${flags} |`)
     out.push(f`| Seed | \`${c.seed}\` at spice ${c.spice} |\n`)
   }
   return join('\n', out) + '\n'

@@ -1,17 +1,41 @@
 // Validates the Unit Forge data. Usage: node scripts/validate.mjs [root]   (root defaults to the repo root)
 //
-// What it checks:
-// 1) JSON Schema validation (Ajv, draft 2020-12) of every file in data/ and the example cards, with an
-//    x-vocab keyword that checks term ids against the word lists in data/vocab/.
-// 2) Word-list integrity: allowed/excluded/favoured/avoided maps, typed links, ranks, key-bound patterns, class
-//    rarities (every class_rarity key must be in the term's classes), and one version shared by all word lists.
-// 3) Cross-references: patterns <-> units, the pattern registry, games and factions, typed links.
-// 4) Combination rules (classes, allowed, excluded, requires, min_tier, sensors included; per weapon, its family's
-//    and its delivery's lists, such as which air layers it reaches): errors on example concept cards;
-//    on researched units each broken rule is printed as ATYPICAL and must be recorded in the unit's
-//    'atypical' list (and every 'atypical' entry must match a broken rule).
-// 5) Card rules: key and passive budgets per tier, cooldowns, strength/weakness pairing, matchups that
-//    describe the card's own parts, and no real unit names or unit links on a card.
+// It works in two passes.
+//
+// Pass 1, shape. Every file in data/ and the example cards must be valid JSON and pass its JSON Schema (Ajv, draft
+// 2020-12), with an x-vocab keyword that checks term ids against the word lists in data/vocab/ (each list's file is
+// named <id>.json). If anything fails here the report stops, because the rule checks below rely on the shape.
+//
+// Pass 2, rules.
+// 1) Word-list integrity: unique term ids; ranks (on a ranked list every term has one and no two share one);
+//    allowed/excluded/favoured/avoided maps; typed links; key-bound patterns; class rarities (every class_rarity key
+//    must be in the term's classes); one version shared by all word lists; and every term with combination rules
+//    sits in a list the rules read, with maps keyed only by lists the rules read, so no rule is skipped unseen.
+// 2) Cross-references: unique game, faction and unit ids; patterns <-> units, the pattern registry, games and
+//    factions, typed links.
+// 3) Combination rules: every term's classes, min_tier, allowed, excluded and requires. A unit or card is read as
+//    unit-wide parts (UNIT_PARTS) and, per weapon, weapon parts (WEAPON_PARTS). A weapon term's maps are compared
+//    with that weapon's own parts and with the unit-wide parts; a unit-wide term's maps with the unit-wide parts and
+//    with every weapon's parts. Requires links are always matched against the whole unit or card. Two exemptions,
+//    stated in the word lists' prose: a weapon with the 'anti-air' trait may reach high air when its family reaches low
+//    air (its delivery still binds it: lobbed, dropped, placed and melee shots never hit high fliers), and an 'adaptive' weapon has no fixed
+//    family, so no list of allowed weapon families binds it.
+//    On example concept cards every break is an error. On researched units every break is printed as ATYPICAL and
+//    must be recorded in the unit's 'atypical' list under its exact rule string (below); every 'atypical' entry
+//    must match a rule the unit breaks, and its path must exist on the unit.
+// 4) Card rules: key and passive budgets per tier and cooldowns; each ability's pattern must be written, with a
+//    generator, and the card must meet its rules (or its variant's): kinds, slot, min_tier, classes, requires,
+//    excludes, implies, conflicts_with; strength/weakness pairing, matchups that describe the card's own parts, and
+//    no real unit names or unit links on a card.
+//
+// Rule strings. Each broken combination rule has exactly one string, '<list>:<term> <field> <value>':
+//   <list>:<term> classes <class>            the term's classes leave out the unit's class
+//   <list>:<term> min_tier <tier>            the term starts at <tier> (its min_tier) and the unit is lower
+//   <list>:<term> allowed.<list2> <term2>    the unit (or the weapon) has <term2>, which the term's allowed.<list2> leaves out
+//   <list>:<term> excluded.<list2> <term2>   the unit (or the weapon) has <term2>, which the term's excluded.<list2> names
+//   <list>:<term> requires <link>|<link>...  the unit has none of the links in that requires group (joined by '|', in order)
+// For example 'weapon-families:rockets allowed.target-types high-air' or 'weapon-traits:stun min_tier t2'. Each
+// ATYPICAL line ends with the string to record. Two weapons that break the same rule share one string.
 //
 // Output: a summary line, then WARN, ATYPICAL and ERROR lines, then OK or FAILED. Exit code 1 on errors.
 import fs from 'node:fs'
@@ -22,25 +46,83 @@ import addFormats from 'ajv-formats'
 
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
+// The parts of a unit or card (as a profile, see unitProfile) that the combination rules read, by word list.
+const UNIT_PARTS = {
+  classes: P => [P.class],
+  tiers: P => [P.tier],
+  nature: P => [P.nature],
+  availability: P => [P.availability],
+  roles: P => P.roles,
+  mobility: P => [P.mobility],
+  handling: P => [P.handling],
+  'mobility-traits': P => P.traits,
+  'speed-bands': P => [P.speed],
+  bodies: P => [P.body],
+  sizes: P => [P.size],
+  'armour-classes': P => [P.armour],
+  'armour-models': P => P.armourModels,
+  'sight-bands': P => [P.sight],
+  'sensor-traits': P => P.sensors,
+  'crew-models': P => [P.crew],
+  resources: P => P.resources,
+  'ability-kinds': P => P.abilityKinds,
+  'on-death': P => P.onDeath,
+}
+// The parts of one weapon, by word list, and how each is named in messages.
+const WEAPON_PARTS = {
+  'weapon-families': w => [w.family],
+  'aim-models': w => [w.mount],
+  'damage-types': w => [w.damage],
+  'weapon-delivery': w => [w.delivery],
+  'target-types': w => w.can_target,
+  'range-bands': w => [w.range],
+  'weapon-traits': w => w.traits,
+}
+const WEAPON_PART_NAME = {
+  'weapon-families': 'family', 'aim-models': 'mount', 'damage-types': 'damage', 'weapon-delivery': 'delivery',
+  'target-types': 'target', 'range-bands': 'range', 'weapon-traits': 'trait',
+}
+const READ_LISTS = new Set([...Object.keys(UNIT_PARTS), ...Object.keys(WEAPON_PARTS)])
+const RULE_FIELDS = ['classes', 'min_tier', 'allowed', 'excluded', 'requires']
+// Reads a part table: each list's values, without gaps or repeats.
+const partsOf = (table, x) => Object.fromEntries(Object.entries(table).map(([k, get]) => [k, [...new Set((get(x) || []).filter(v => v != null))]]))
+const repeated = xs => [...new Set(xs.filter((x, i) => xs.indexOf(x) !== i))]
+
 /** Validates the data under `root` and returns { errors, warnings, atypical, summary }. */
 export function validate(root = REPO_ROOT) {
-  const read = p => JSON.parse(fs.readFileSync(path.join(root, p), 'utf8'))
-  const ls = d => fs.existsSync(path.join(root, d))
-    ? fs.readdirSync(path.join(root, d)).filter(f => f.endsWith('.json')).sort().map(f => path.join(d, f))
-    : []
-
   const errors = [], warnings = [], atypical = []
   const missingUnits = new Set() // unit links to units not researched yet; reported once at the end
   const err = m => errors.push(m)
   const warn = m => warnings.push(m)
+  // Paths in messages always use '/', whatever the system.
+  const ls = d => fs.existsSync(path.join(root, d))
+    ? fs.readdirSync(path.join(root, d)).filter(f => f.endsWith('.json')).sort().map(f => `${d}/${f}`)
+    : []
+  const exists = p => fs.existsSync(path.join(root, p))
+  // Reads a JSON file, or reports it and returns undefined when it isn't valid JSON.
+  function read(p) {
+    try { return JSON.parse(fs.readFileSync(path.join(root, p), 'utf8')) }
+    catch (e) { err(`${p}: not valid JSON (${e.message})`); return undefined }
+  }
 
-  // ---------------------------------------------------------------- word lists and schemas
-  const vocabFiles = ls('data/vocab')
+  let games = [], units = [], patterns = []
   const vocab = {}, terms = {}
-  for (const f of vocabFiles) {
-    const v = read(f)
-    vocab[v.id] = new Set(v.terms.map(t => t.id))
-    terms[v.id] = Object.fromEntries(v.terms.map(t => [t.id, t]))
+  const vocabFiles = ls('data/vocab')
+  function done() {
+    const termCount = Object.values(vocab).reduce((n, s) => n + s.size, 0)
+    const summary = `vocabularies: ${vocabFiles.length}, terms: ${termCount}, games: ${games.length}, units: ${units.length}, patterns: ${patterns.length}`
+    return { errors, warnings, atypical, summary }
+  }
+
+  // ================================================================ pass 1: JSON and schemas
+  const vocabDocs = vocabFiles.map(f => ({ f, v: read(f) }))
+  for (const { f, v } of vocabDocs) {
+    if (v === undefined) continue
+    if (path.posix.basename(f) !== `${v?.id}.json`) err(`${f}: file name must be <id>.json (the list's id is '${v?.id}')`)
+    if (typeof v?.id !== 'string' || !Array.isArray(v.terms)) continue // the schema reports it
+    const list = v.terms.filter(t => typeof t?.id === 'string')
+    vocab[v.id] = new Set(list.map(t => t.id))
+    terms[v.id] = Object.fromEntries(list.map(t => [t.id, t]))
   }
   const rank = (vid, id) => terms[vid]?.[id]?.rank
 
@@ -62,14 +144,24 @@ export function validate(root = REPO_ROOT) {
   // Notes for readers; the real rule is an if/then in the same schema.
   ajv.addKeyword({ keyword: 'x-required-unless', schemaType: 'string' })
   ajv.addKeyword({ keyword: 'x-required-when', schemaType: 'string' })
-  const schemas = Object.fromEntries(ls('schemas').map(f => [path.basename(f), read(f)]))
-  for (const s of Object.values(schemas)) ajv.addSchema(s)
-  const REF_KINDS = schemas['common.schema.json']['x-ref-kinds']
+  const schemaFiles = ls('schemas')
+  if (!schemaFiles.length) err('schemas/: no schema files found')
+  const schemas = {}
+  for (const f of schemaFiles) {
+    const s = read(f)
+    if (s === undefined) continue
+    schemas[path.posix.basename(f)] = s
+    try { ajv.addSchema(s) } catch (e) { err(`${f}: not a usable schema (${e.message})`) }
+  }
+  const REF_KINDS = schemas['common.schema.json']?.['x-ref-kinds'] || {}
+  if (errors.length) return done()
 
-  // Validates one file against a schema, reports every schema error and returns the data.
-  function check(file, schemaId) {
-    const data = read(file)
-    const fn = ajv.getSchema(schemaId)
+  // Validates parsed data against a schema and reports every schema error; returns the data.
+  function check(file, schemaId, data) {
+    if (data === undefined) return undefined
+    let fn
+    try { fn = ajv.getSchema(schemaId) } catch (e) { err(`${file}: schema ${schemaId} does not compile (${e.message})`); return data }
+    if (!fn) { err(`${file}: no schema '${schemaId}'`); return data }
     if (!fn(data)) {
       for (const e of fn.errors) {
         const allowed = e.params?.allowedValues ? ' ' + JSON.stringify(e.params.allowedValues) : ''
@@ -78,12 +170,28 @@ export function validate(root = REPO_ROOT) {
     }
     return data
   }
+  const readChecked = (f, schemaId) => check(f, schemaId, read(f))
 
-  for (const f of vocabFiles) check(f, 'vocabulary.schema.json')
+  for (const { f, v } of vocabDocs) check(f, 'vocabulary.schema.json', v)
+  const GAMES = 'data/games.json', REGISTRY = 'data/pattern-registry.json'
+  const gamesDoc = exists(GAMES) ? readChecked(GAMES, 'game.schema.json') : undefined
+  const patternDocs = ls('data/patterns').map(f => ({ f, p: readChecked(f, 'pattern.schema.json') }))
+  const registryDoc = exists(REGISTRY) ? readChecked(REGISTRY, 'pattern-registry.schema.json') : undefined
+  const unitDocs = ls('data/units').map(f => ({ f, d: readChecked(f, 'source-unit.schema.json') }))
+  const cardDocs = ls('docs/examples').filter(f => f.includes('concept-card')).map(f => ({ f, c: readChecked(f, 'concept-card.schema.json') }))
+  if (errors.length) {
+    warn('JSON or schema errors were found, so the rule checks (word lists, links, combination and card rules) did not run; fix those errors first')
+    // Count what was read, so the summary line doesn't claim the data is empty.
+    games = Array.isArray(gamesDoc?.games) ? gamesDoc.games : []
+    units = unitDocs.flatMap(x => Array.isArray(x.d?.units) ? x.d.units : [])
+    patterns = patternDocs.filter(x => x.p !== undefined).map(x => x.p)
+    return done()
+  }
 
+  // ================================================================ pass 2: rules
   // The word lists are versioned together; the docs print this one version, and data files record it as vocab_version.
   const vocabVersions = {}
-  for (const f of vocabFiles) (vocabVersions[read(f).version] ||= []).push(f)
+  for (const { f, v } of vocabDocs) (vocabVersions[v.version] ||= []).push(f)
   const vocabVersion = Object.entries(vocabVersions).sort((a, b) => b[1].length - a[1].length)[0]?.[0]
   for (const [ver, files] of Object.entries(vocabVersions)) {
     if (ver !== vocabVersion) for (const f of files) err(`${f}: version ${ver} differs from the other word lists' ${vocabVersion}`)
@@ -94,6 +202,16 @@ export function validate(root = REPO_ROOT) {
     }
   }
 
+  // Term ids are unique; on a ranked list (one a ranked link kind names, or one whose terms carry ranks) every term
+  // has a whole-number rank and no two terms share one.
+  const rankedLists = new Set(Object.values(REF_KINDS).filter(k => k.ranked && k.vocab).map(k => k.vocab))
+  for (const { f, v } of vocabDocs) {
+    for (const id of repeated(v.terms.map(t => t.id))) err(`${f}: duplicate term id '${id}'`)
+    if (!rankedLists.has(v.id) && !v.terms.some(t => t.rank !== undefined)) continue
+    for (const t of v.terms) if (!Number.isInteger(t.rank)) err(`${f} ${t.id}: no rank, but every term of a ranked list needs a whole-number rank`)
+    for (const r of repeated(v.terms.map(t => t.rank).filter(Number.isInteger))) err(`${f}: rank ${r} is used by more than one term`)
+  }
+
   // class_rarity keys must be classes the term or pattern allows at all (values are checked by the schema).
   function checkClassRarity(where, classRarity, classes) {
     for (const c of Object.keys(classRarity || {})) {
@@ -102,25 +220,26 @@ export function validate(root = REPO_ROOT) {
   }
 
   // ---------------------------------------------------------------- games, patterns, units
-  const games = fs.existsSync(path.join(root, 'data/games.json')) ? check('data/games.json', 'game.schema.json').games : []
+  games = gamesDoc?.games || []
   const gameById = Object.fromEntries(games.map(g => [g.id, g]))
-  const patterns = []
-  for (const f of ls('data/patterns')) {
-    const p = check(f, 'pattern.schema.json')
-    if (path.basename(f) !== `${p.id}.json`) err(`${f}: file name must be <id>.json`)
+  for (const id of repeated(games.map(g => g.id))) err(`${GAMES}: duplicate game id '${id}'`)
+  for (const g of games) {
+    for (const id of repeated(g.factions.map(x => x.id))) err(`${GAMES} ${g.id}: duplicate faction id '${id}'`)
+    for (const id of repeated((g.expansions || []).map(x => x.id))) err(`${GAMES} ${g.id}: duplicate expansion id '${id}'`)
+  }
+  for (const { f, p } of patternDocs) {
+    if (path.posix.basename(f) !== `${p.id}.json`) err(`${f}: file name must be <id>.json`)
     checkVocabVersion(f, p)
     patterns.push({ ...p, _file: f })
   }
   const patternById = Object.fromEntries(patterns.map(p => [p.id, p]))
   // The registry lists every pattern id agents may use. Written = has a file; planned = registry only.
-  const registry = fs.existsSync(path.join(root, 'data/pattern-registry.json'))
-    ? check('data/pattern-registry.json', 'pattern-registry.schema.json').patterns
-    : []
+  const registry = registryDoc?.patterns || []
   const registryById = Object.fromEntries(registry.map(p => [p.id, p]))
-  if (new Set(registry.map(p => p.id)).size !== registry.length) err('data/pattern-registry.json: duplicate pattern ids')
+  if (new Set(registry.map(p => p.id)).size !== registry.length) err(`${REGISTRY}: duplicate pattern ids`)
   for (const p of patterns) {
     const r = registryById[p.id]
-    if (!r) err(`${p._file}: pattern '${p.id}' is not in data/pattern-registry.json`)
+    if (!r) err(`${p._file}: pattern '${p.id}' is not in ${REGISTRY}`)
     else if (r.category !== p.category) err(`${p._file}: category '${p.category}' differs from the registry's '${r.category}'`)
   }
   // Returns false (and reports) when a pattern id is neither written nor planned.
@@ -130,11 +249,12 @@ export function validate(root = REPO_ROOT) {
     err(`${where}: ${what} '${id}' is not in the pattern registry`)
     return false
   }
-  const units = []
-  for (const f of ls('data/units')) {
-    const d = check(f, 'source-unit.schema.json')
+  for (const { f, d } of unitDocs) {
     checkVocabVersion(f, d)
     for (const u of d.units) units.push({ ...u, _file: f, _game: d.game })
+  }
+  for (const id of repeated(units.map(u => u.id))) {
+    err(`duplicate unit id '${id}' (in ${[...new Set(units.filter(u => u.id === id).map(u => u._file))].join(', ')})`)
   }
   const unitIds = new Set(units.map(u => u.id))
 
@@ -163,15 +283,22 @@ export function validate(root = REPO_ROOT) {
     else if (onCard && terms[spec.vocab][id].source_only) err(`${where}: ${ref} is research-only and can't be used on a card`)
   }
 
-  // Word-list integrity: maps and links inside terms.
+  // Word-list integrity: maps and links inside terms, and rules the combination checks would never read.
   for (const [vid, tm] of Object.entries(terms)) {
     for (const t of Object.values(tm)) {
       const w = `data/vocab/${vid}.json ${t.id}`
       for (const key of ['allowed', 'excluded', 'favoured', 'avoided']) {
         for (const [k, list] of Object.entries(t[key] || {})) {
           if (!vocab[k]) { err(`${w}.${key}: unknown vocabulary '${k}'`); continue }
+          if ((key === 'allowed' || key === 'excluded') && !READ_LISTS.has(k)) {
+            err(`${w}.${key}.${k}: the combination rules read no '${k}' part from a unit or card, so this map is never checked`)
+          }
           for (const x of list) if (!vocab[k].has(x)) err(`${w}.${key}.${k}: unknown term '${x}'`)
         }
+      }
+      const rules = RULE_FIELDS.filter(k => t[k] !== undefined)
+      if (rules.length && !READ_LISTS.has(vid)) {
+        err(`${w}: has combination rules (${rules.join(', ')}), but the combination rules read no '${vid}' part from a unit or card, so they are never checked`)
       }
       for (const key of ['strong_vs', 'weak_vs', 'immune']) for (const r of t[key] || []) checkRef(w, r)
       for (const g of t.requires || []) for (const r of g) checkRef(w, r)
@@ -182,11 +309,11 @@ export function validate(root = REPO_ROOT) {
 
   // ---------------------------------------------------------------- profiles and matching
   // A profile is the flat set of parts that typed links and combination rules are matched against.
-  const isKey = kind => terms['ability-kinds'][kind]?.uses_key === true
+  const isKey = kind => terms['ability-kinds']?.[kind]?.uses_key === true
   // What kind of target a unit is, from its mobility: a flier is 'low-air' (jetpack, hovering flight) or
   // 'high-air' (jet, airship), and a tiny or small ground unit counts as infantry.
   function targetType(p) {
-    const tt = terms.mobility[p.mobility]?.target_type
+    const tt = terms.mobility?.[p.mobility]?.target_type
     if (tt === 'ground-vehicle' && (rank('sizes', p.size) ?? 9) <= 2) return 'infantry'
     return tt
   }
@@ -194,24 +321,28 @@ export function validate(root = REPO_ROOT) {
     const weapons = u.armament || []
     const abil = u.abilities || []
     return {
-      class: u.class, tier: u.tier.band, nature: u.nature, roles: [u.roles.primary, ...(u.roles.secondary || [])],
+      class: u.class, tier: u.tier.band, nature: u.nature, availability: u.availability,
+      roles: [u.roles.primary, ...(u.roles.secondary || [])],
       mobility: u.mobility.base, handling: u.mobility.handling, traits: u.mobility.traits || [], speed: u.mobility.speed,
-      body: u.body.plan, size: u.body.size, armour: u.armour.class, armourModels: u.armour.models,
+      body: u.body.plan, size: u.body.size, armour: u.armour.class, armourModels: u.armour.models || [],
       sight: u.sensors?.sight, sensors: u.sensors?.traits || [],
       crew: u.crew.model, passengers: u.crew.passengers?.seats || 0, resources: u.resources || [],
-      weapons, patterns: [...new Set([...abil.flatMap(a => a.patterns), ...weapons.flatMap(w => w.patterns || [])])],
+      abilityKinds: abil.map(a => a.kind), onDeath: u.on_death?.outcomes || [],
+      weapons, patterns: [...new Set([...abil.flatMap(a => a.patterns || []), ...weapons.flatMap(w => w.patterns || [])])],
     }
   }
   function cardProfile(c) {
     const p = c.parts
-    const weapons = [p.armament.primary, p.armament.secondary, ...p.armament.conditional.map(x => x.weapon)].filter(Boolean)
-    const abil = [p.signature, ...p.abilities]
+    const weapons = [p.armament.primary, p.armament.secondary, ...(p.armament.conditional || []).map(x => x.weapon)].filter(Boolean)
+    const abil = [p.signature, ...(p.abilities || [])]
     return {
-      class: p.class, tier: p.tier, nature: p.nature, roles: [p.roles.primary, ...p.roles.secondary],
-      mobility: p.mobility.base, handling: p.mobility.handling, traits: p.mobility.traits, speed: p.mobility.speed,
-      body: p.body.plan, size: p.body.size, armour: p.armour.class, armourModels: p.armour.models,
+      class: p.class, tier: p.tier, nature: p.nature, availability: p.availability,
+      roles: [p.roles.primary, ...(p.roles.secondary || [])],
+      mobility: p.mobility.base, handling: p.mobility.handling, traits: p.mobility.traits || [], speed: p.mobility.speed,
+      body: p.body.plan, size: p.body.size, armour: p.armour.class, armourModels: p.armour.models || [],
       sight: p.sensors?.sight, sensors: p.sensors?.traits || [],
       crew: p.crew.model, passengers: p.crew.passengers?.seats || 0, resources: p.resource ? [p.resource] : [],
+      abilityKinds: abil.map(a => a.kind), onDeath: p.on_death || [],
       weapons, patterns: abil.map(a => a.pattern),
     }
   }
@@ -253,92 +384,62 @@ export function validate(root = REPO_ROOT) {
       case 'sight': return cmpRank('sight-bands', P.sight, cmp, id)
       case 'sensor': return P.sensors.includes(id)
       case 'nature': return P.nature === id
-      case 'category': return P.patterns.some(pid => patternById[pid]?.category === id)
+      // A planned pattern has no file yet, but the registry already gives its category.
+      case 'category': return P.patterns.some(pid => (patternById[pid] || registryById[pid])?.category === id)
       case 'resource': return P.resources.includes(id)
       case 'pattern': return P.patterns.includes(id)
       default: return false
     }
   }
 
-  // Combination rules: returns a list of { key: '<vocab>:<term>', msg } problems for a profile.
+  // Exemptions that the word lists state in prose (see the header).
+  function exempt(vid, k, x, w) {
+    if (vid === 'weapon-families' && k === 'target-types' && x === 'high-air') {
+      // Only a family that already reaches low air can be lifted to high air by the trait.
+      return (w?.traits || []).includes('anti-air') && (terms[vid][w.family]?.allowed?.['target-types'] || ['low-air']).includes('low-air')
+    }
+    if (k === 'weapon-families' && x === 'adaptive') return true
+    return false
+  }
+  // Combination rules: returns a list of { rule, msg } problems for a profile (rule strings as in the header).
   function combinationProblems(P) {
     const out = []
-    const used = {
-      classes: [P.class], tiers: [P.tier], nature: [P.nature], roles: P.roles, mobility: [P.mobility], handling: [P.handling],
-      'mobility-traits': P.traits, 'speed-bands': [P.speed], bodies: [P.body], sizes: [P.size], 'armour-classes': [P.armour],
-      'armour-models': P.armourModels, 'sight-bands': [P.sight], 'sensor-traits': P.sensors, 'crew-models': [P.crew], resources: P.resources,
-      'aim-models': [...new Set(P.weapons.map(w => w.mount).filter(Boolean))],
-      'weapon-families': [...new Set(P.weapons.map(w => w.family))],
-    }
-    // These lists are checked per weapon below, not against the whole profile.
-    const perWeapon = new Set(['damage-types', 'weapon-delivery', 'target-types', 'range-bands', 'weapon-traits'])
+    const U = partsOf(UNIT_PARTS, P)
+    const perWeapon = P.weapons.map(w => partsOf(WEAPON_PARTS, w))
+    const allWeapons = Object.fromEntries(Object.keys(WEAPON_PARTS).map(k => [k, [...new Set(perWeapon.flatMap(W => W[k]))]]))
     const tierRank = rank('tiers', P.tier)
-    for (const [vid, ids] of Object.entries(used)) {
-      for (const id of ids) {
-        const t = terms[vid]?.[id]
-        if (!t) continue
-        const name = `${vid} '${id}'`, key = `${vid}:${id}`
-        const add = m => out.push({ key, msg: m })
-        if (t.classes && !t.classes.includes(P.class)) add(`${name} is not for class '${P.class}'`)
-        if (t.min_tier && tierRank < rank('tiers', t.min_tier)) add(`${name} needs tier ${t.min_tier} or higher`)
-        for (const [k, list] of Object.entries(t.allowed || {})) {
-          if (perWeapon.has(k)) continue
-          for (const x of used[k] || []) if (!list.includes(x)) add(`${name} doesn't combine with ${k} '${x}'`)
-        }
-        for (const [k, list] of Object.entries(t.excluded || {})) {
-          if (perWeapon.has(k)) continue
-          for (const x of used[k] || []) if (list.includes(x)) add(`${name} excludes ${k} '${x}'`)
-        }
-        for (const g of t.requires || []) if (!g.some(r => matches(r, P))) add(`${name} requires one of [${g.join(', ')}]`)
+    // Checks one term's rules; has(k) gives the parts its allowed and excluded maps are compared with.
+    function checkTerm(vid, id, has, w) {
+      const t = terms[vid]?.[id]
+      if (!t) return
+      const name = w ? `weapon '${w.name || w.family}': ${WEAPON_PART_NAME[vid]} '${id}'` : `${vid} '${id}'`
+      const add = (rule, msg) => out.push({ rule: `${vid}:${id} ${rule}`, msg: `${name} ${msg}` })
+      if (t.classes && !t.classes.includes(P.class)) add(`classes ${P.class}`, `is not for class '${P.class}'`)
+      if (t.min_tier && tierRank < rank('tiers', t.min_tier)) add(`min_tier ${t.min_tier}`, `needs tier ${t.min_tier} or higher`)
+      for (const [k, list] of Object.entries(t.allowed || {})) {
+        for (const x of has(k)) if (!list.includes(x) && !exempt(vid, k, x, w)) add(`allowed.${k} ${x}`, `doesn't combine with ${k} '${x}'`)
       }
+      for (const [k, list] of Object.entries(t.excluded || {})) {
+        for (const x of has(k)) if (list.includes(x)) add(`excluded.${k} ${x}`, `excludes ${k} '${x}'`)
+      }
+      for (const g of t.requires || []) if (!g.some(r => matches(r, P))) add(`requires ${g.join('|')}`, `requires one of [${g.join(', ')}]`)
     }
-    for (const w of P.weapons) {
-      const fam = terms['weapon-families'][w.family]
-      if (!fam) continue
-      const add = (key, m) => out.push({ key, msg: m })
-      const label = `weapon '${w.name || w.family}'`
-      const checkFamily = (k, vals) => {
-        const list = fam.allowed?.[k]
-        if (list) {
-          for (const x of vals.filter(Boolean)) {
-            if (!list.includes(x)) add(`weapon-families:${w.family}`, `${label}: family '${w.family}' doesn't combine with ${k} '${x}'`)
-          }
-        }
-      }
-      checkFamily('damage-types', [w.damage])
-      checkFamily('weapon-delivery', [w.delivery])
-      checkFamily('target-types', w.can_target || [])
-      // A delivery can limit what the weapon reaches: a lobbed or dropped shot lands on the ground, so it never hits fliers.
-      const reach = terms['weapon-delivery'][w.delivery]?.allowed?.['target-types']
-      if (reach) {
-        for (const x of (w.can_target || []).filter(Boolean)) {
-          if (!reach.includes(x)) add(`weapon-delivery:${w.delivery}`, `${label}: delivery '${w.delivery}' doesn't combine with target-types '${x}'`)
-        }
-      }
-      const body = terms.bodies[P.body]
-      if (body?.allowed?.['aim-models'] && w.mount && !body.allowed['aim-models'].includes(w.mount)) {
-        add(`bodies:${P.body}`, `body '${P.body}' doesn't take mount '${w.mount}'`)
-      }
-      if (body?.allowed?.['weapon-families'] && !body.allowed['weapon-families'].includes(w.family) && w.family !== 'adaptive') {
-        add(`bodies:${P.body}`, `body '${P.body}' doesn't take weapon family '${w.family}'`)
-      }
-      const traits = w.traits || []
-      for (const tr of traits) {
-        for (const x of terms['weapon-traits'][tr]?.excluded?.['weapon-traits'] || []) {
-          if (traits.includes(x)) add(`weapon-traits:${tr}`, `${label}: trait '${tr}' excludes '${x}'`)
-        }
-      }
-      for (const tr of traits) {
-        const mt = terms['weapon-traits'][tr]?.min_tier
-        if (mt && tierRank < rank('tiers', mt)) add(`weapon-traits:${tr}`, `${label}: trait '${tr}' needs tier ${mt}`)
-      }
-    }
-    for (const r of P.roles) {
-      for (const g of terms.roles[r]?.requires || []) {
-        if (!g.some(x => matches(x, P))) out.push({ key: `roles:${r}`, msg: `role '${r}' requires one of [${g.join(', ')}]` })
-      }
-    }
+    for (const vid of Object.keys(UNIT_PARTS)) for (const id of U[vid]) checkTerm(vid, id, k => U[k] || allWeapons[k] || [])
+    P.weapons.forEach((w, i) => {
+      const W = perWeapon[i]
+      for (const vid of Object.keys(WEAPON_PARTS)) for (const id of W[vid]) checkTerm(vid, id, k => W[k] || U[k] || [], w)
+    })
     return out
+  }
+  // Does a '/'-separated path of field names and list positions exist on an object?
+  function pathExists(obj, p) {
+    if (typeof p !== 'string' || p === '') return false
+    let at = obj
+    for (const seg of p.split('/')) {
+      if (at === null || typeof at !== 'object' || !Object.hasOwn(at, seg)) return false
+      at = at[seg]
+    }
+    return true
   }
 
   // ---------------------------------------------------------------- units
@@ -395,7 +496,7 @@ export function validate(root = REPO_ROOT) {
     for (const m of u.modes || []) patternKnown(w, m.via, `pattern behind mode '${m.id}'`)
     if (u.roles.secondary?.includes(u.roles.primary)) err(`${w}: primary role repeated in secondary`)
     if (u.crew.passengers && !String(u.crew.passengers.kind).startsWith('passenger')) err(`${w}: passengers.kind must be a passenger seat role`)
-    const multiSeat = (terms['crew-models'][u.crew.model]?.max_players || 1) > 1
+    const multiSeat = (terms['crew-models']?.[u.crew.model]?.max_players || 1) > 1
     if (multiSeat && !u.crew.solo_fallback) err(`${w}: multi-seat crew model needs solo_fallback`)
     for (const wp of u.armament) {
       if (['passenger', 'acquired', 'alternate'].includes(wp.slot) && !wp.condition) err(`${w}: weapon '${wp.name}' (${wp.slot}) needs a condition`)
@@ -406,15 +507,19 @@ export function validate(root = REPO_ROOT) {
         warn(`${w}: strength/weakness link ${r.ref} doesn't describe this unit's own parts`)
       }
     }
-    // A real unit may break a rule; it must say so in 'atypical' (rule starts with the '<vocab>:<term>' key).
-    const problems = combinationProblems(P)
+    // A real unit may break a rule; it must record it in 'atypical' under the exact rule string.
+    const broken = new Map() // rule string -> first message
+    for (const pr of combinationProblems(P)) {
+      atypical.push(`${w}: ${pr.msg} (rule '${pr.rule}')`)
+      if (!broken.has(pr.rule)) broken.set(pr.rule, pr.msg)
+    }
     const recorded = u.atypical || []
-    for (const pr of problems) {
-      atypical.push(`${w}: ${pr.msg}`)
-      if (!recorded.some(a => a.rule.split(' ')[0] === pr.key)) err(`${w}: breaks a combination rule (${pr.msg}) but 'atypical' has no entry for '${pr.key}'`)
+    for (const [rule, msg] of broken) {
+      if (!recorded.some(a => a.rule === rule)) err(`${w}: breaks a combination rule (${msg}) but 'atypical' has no entry with rule '${rule}'`)
     }
     for (const a of recorded) {
-      if (!problems.some(pr => pr.key === a.rule.split(' ')[0])) err(`${w}: atypical entry '${a.rule}' at ${a.path} matches no broken rule`)
+      if (!broken.has(a.rule)) err(`${w}: atypical entry '${a.rule}' at ${a.path} matches no broken rule (the rule must be the exact string an ATYPICAL line ends with)`)
+      if (!pathExists(u, a.path)) err(`${w}: atypical entry '${a.rule}' has path '${a.path}', which does not exist on this unit`)
     }
   }
 
@@ -445,15 +550,12 @@ export function validate(root = REPO_ROOT) {
       const o = v.overrides || {}
       for (const r of [...(o.requires || []).flat(), ...(o.excludes || []), ...(o.implies || [])]) checkRef(`${w} variant ${v.id}`, r)
       checkClassRarity(`${w} variant ${v.id}`, o.class_rarity, o.classes || G.classes)
-    }
-    for (const v of p.variants) {
-      const o = v.overrides || {}
       for (const r of [...(o.adds_strengths || []), ...(o.adds_weaknesses || []), ...(o.counters || []), ...(o.countered_by || [])]) {
         checkRef(`${w} variant ${v.id}`, r.ref, { onCard: true })
       }
     }
     for (const k of G.kinds) {
-      const mt = terms['ability-kinds'][k]?.min_tier
+      const mt = terms['ability-kinds']?.[k]?.min_tier
       if (mt && rank('tiers', G.min_tier) < rank('tiers', mt)) warn(`${w}: kind '${k}' needs ${mt} but pattern min_tier is ${G.min_tier}`)
     }
   }
@@ -461,34 +563,56 @@ export function validate(root = REPO_ROOT) {
   // ---------------------------------------------------------------- example cards
   const simpleName = s => s.toLowerCase().replace(/[^a-z0-9]/g, '')
   const realNames = new Set(units.map(u => simpleName(u.name)))
-  for (const f of ls('docs/examples')) {
-    if (!f.includes('concept-card')) continue
-    const c = check(f, 'concept-card.schema.json')
+  for (const { f, c } of cardDocs) {
     const P = cardProfile(c)
     for (const pr of combinationProblems(P)) err(`${f}: ${pr.msg}`)
-    const tier = terms.tiers[c.parts.tier]
+    const tier = terms.tiers?.[c.parts.tier] || {}
     const abil = [c.parts.signature, ...c.parts.abilities]
     const keys = abil.filter(a => isKey(a.kind)).length
-      + c.parts.mobility.traits.filter(t => terms['mobility-traits'][t]?.uses_key).length
+      + c.parts.mobility.traits.filter(t => terms['mobility-traits']?.[t]?.uses_key).length
       + (c.parts.armament.secondary ? 1 : 0)
     const passives = abil.filter(a => !isKey(a.kind)).length
     if (keys > tier.max_keys) err(`${f}: ${keys} keys exceeds ${c.parts.tier} budget ${tier.max_keys}`)
     if (passives > tier.max_passive) err(`${f}: ${passives} passives exceeds ${c.parts.tier} budget ${tier.max_passive}`)
     if (keys !== c.balance.keys) err(`${f}: balance.keys says ${c.balance.keys}, counted ${keys}`)
-    for (const a of abil) {
+    const cardTier = rank('tiers', c.parts.tier)
+    abil.forEach((a, i) => {
+      const slot = i === 0 ? 'signature' : 'extra'
       if (isKey(a.kind) && !a.cooldown) err(`${f}: ability '${a.pattern}' uses a key but has no cooldown`)
       const pat = patternById[a.pattern]
-      if (!pat) { patternKnown(f, a.pattern, 'ability pattern'); continue }
-      if (!pat.generator.kinds.includes(a.kind)) err(`${f}: pattern '${a.pattern}' can't be a '${a.kind}' ability`)
-      if (a.variant && !pat.variants.some(v => v.id === a.variant)) err(`${f}: unknown variant '${a.variant}' of '${a.pattern}'`)
-      const vo = pat.variants.find(v => v.id === a.variant)?.overrides || {}
-      for (const g of vo.requires || pat.generator.requires || []) {
-        if (!g.some(r => matches(r, P))) err(`${f}: pattern '${a.pattern}' requires one of [${g.join(', ')}]`)
+      if (!pat) {
+        if (registryById[a.pattern]) err(`${f}: pattern '${a.pattern}' is planned, not written yet, so a card can't use it`)
+        else err(`${f}: pattern '${a.pattern}' is not in the pattern registry`)
+        return
       }
-      for (const r of vo.excludes || pat.generator.excludes || []) if (matches(r, P)) err(`${f}: pattern '${a.pattern}' excludes ${r}`)
-      for (const r of vo.implies || pat.generator.implies || []) if (!matches(r, P)) err(`${f}: pattern '${a.pattern}' implies ${r}, which the card lacks`)
-      const cls = vo.classes || pat.generator.classes
-      if (!cls.includes(c.parts.class)) err(`${f}: pattern '${a.pattern}' is not for class '${c.parts.class}'`)
+      if (pat.status === 'merged' || pat.status === 'rejected') err(`${f}: pattern '${a.pattern}' is ${pat.status}, so a card can't use it`)
+      if (!pat.generator) { err(`${f}: pattern '${a.pattern}' has no generator yet, so a card can't use it`); return }
+      const G = pat.generator
+      const v = a.variant ? pat.variants.find(x => x.id === a.variant) : undefined
+      if (a.variant && !v) err(`${f}: unknown variant '${a.variant}' of '${a.pattern}'`)
+      const vo = v?.overrides || {}
+      const what = `pattern '${a.pattern}'${v ? ` (variant '${v.id}')` : ''}`
+      if (!(vo.kinds || G.kinds).includes(a.kind)) err(`${f}: ${what} can't be a '${a.kind}' ability`)
+      if (G.slot === 'signature' && slot !== 'signature') err(`${f}: ${what} can only be the card's signature ability`)
+      if (G.slot === 'extra' && slot !== 'extra') err(`${f}: ${what} can only be an extra ability, not the signature`)
+      const mt = vo.min_tier || G.min_tier
+      if (cardTier < rank('tiers', mt)) err(`${f}: ${what} needs tier ${mt} or higher`)
+      const cls = vo.classes || G.classes
+      if (!cls.includes(c.parts.class)) err(`${f}: ${what} is not for class '${c.parts.class}'`)
+      for (const g of vo.requires || G.requires || []) {
+        if (!g.some(r => matches(r, P))) err(`${f}: ${what} requires one of [${g.join(', ')}]`)
+      }
+      for (const r of vo.excludes || G.excludes || []) if (matches(r, P)) err(`${f}: ${what} excludes ${r}`)
+      for (const r of vo.implies || G.implies || []) if (!matches(r, P)) err(`${f}: ${what} implies ${r}, which the card lacks`)
+    })
+    // Patterns that may not share a card (either side may list the other).
+    for (let i = 0; i < abil.length; i++) {
+      for (let j = i + 1; j < abil.length; j++) {
+        const [a, b] = [abil[i].pattern, abil[j].pattern]
+        if ((patternById[a]?.generator?.conflicts_with || []).includes(b) || (patternById[b]?.generator?.conflicts_with || []).includes(a)) {
+          err(`${f}: patterns '${a}' and '${b}' conflict, so they may not share a card`)
+        }
+      }
     }
     const M = c.matchups
     for (const s of M.strengths) if (s.paired_with >= M.weaknesses.length) err(`${f}: strength '${s.ref}' paired with a missing weakness`)
@@ -498,14 +622,12 @@ export function validate(root = REPO_ROOT) {
     }
     for (const r of [...M.countered_by, ...M.counters]) checkRef(f, r.ref, { onCard: true })
     if (realNames.has(simpleName(c.text.name))) err(`${f}: working name matches a real unit name`)
-    if ((terms['crew-models'][c.parts.crew.model]?.max_players || 1) > 1 && !c.parts.crew.solo_fallback) err(`${f}: multi-seat crew needs a solo fallback`)
-    for (const fl of c.balance.flags) if (terms['balance-flags'][fl].severity === 'block') err(`${f}: blocking flag '${fl}' on a rolled card`)
+    if ((terms['crew-models']?.[c.parts.crew.model]?.max_players || 1) > 1 && !c.parts.crew.solo_fallback) err(`${f}: multi-seat crew needs a solo fallback`)
+    for (const fl of c.balance.flags) if (terms['balance-flags']?.[fl]?.severity === 'block') err(`${f}: blocking flag '${fl}' on a rolled card`)
   }
 
   if (missingUnits.size) warn(`${missingUnits.size} unit link(s) point to units not researched yet: ${[...missingUnits].sort().join(', ')}`)
-  const termCount = Object.values(vocab).reduce((n, s) => n + s.size, 0)
-  const summary = `vocabularies: ${vocabFiles.length}, terms: ${termCount}, games: ${games.length}, units: ${units.length}, patterns: ${patterns.length}`
-  return { errors, warnings, atypical, summary }
+  return done()
 }
 
 /** The printed report: summary, WARN, ATYPICAL and ERROR lines, then OK or FAILED. */
@@ -521,7 +643,15 @@ export function formatReport({ errors, warnings, atypical, summary }) {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const root = path.resolve(process.argv[2] || REPO_ROOT)
-  const result = validate(root)
-  console.log(formatReport(result))
-  process.exitCode = result.errors.length ? 1 : 0
+  try {
+    const result = validate(root)
+    console.log(formatReport(result))
+    process.exitCode = result.errors.length ? 1 : 0
+  } catch (e) {
+    // A crash is a bug in the validator, but it must still fail the check with a readable line.
+    console.log(`ERROR    internal: ${e.message}`)
+    console.log('FAILED with 1 error(s)')
+    console.error(e.stack)
+    process.exitCode = 1
+  }
 }

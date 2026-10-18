@@ -1,12 +1,13 @@
-// Tests for the docs builder: the generated pages in docs/ match the data, the builder gives the same output
-// every time, and --check reports stale pages without writing anything.
+// Tests for the docs builder: the generated pages in docs/ match the data, a change to the data shows up in the
+// pages (in a throwaway copy), samples.md keeps to its fixed list, the builder gives the same output every
+// time, and --check reports stale pages without writing anything.
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { describe, it, after } from 'node:test'
-import { REPO_ROOT, OUTPUTS, buildDocs } from '../scripts/build-docs.mjs'
+import { REPO_ROOT, OUTPUTS, SAMPLE_PATTERNS, SAMPLE_UNITS, buildDocs } from '../scripts/build-docs.mjs'
 
 const BUILD = path.join(REPO_ROOT, 'scripts/build-docs.mjs')
 const run = (...args) => spawnSync(process.execPath, [BUILD, ...args], { cwd: REPO_ROOT, encoding: 'utf8' })
@@ -63,6 +64,63 @@ describe('docs builder', () => {
     assert.doesNotMatch(res.stdout, /out of date: docs\/vocabularies\.md/)
     assert.ok(fs.readFileSync(fields, 'utf8').endsWith('hand edit\n'), '--check must not rewrite files')
     assert.ok(!fs.existsSync(path.join(dir, 'docs/samples.md')), '--check must not create files')
+  })
+
+  it('renders what the data says: a changed term label shows up in vocabularies.md', () => {
+    const dir = copyRepo()
+    const file = path.join(dir, 'data/vocab/sizes.json')
+    const v = JSON.parse(fs.readFileSync(file, 'utf8'))
+    const t = v.terms[0]
+    assert.ok(!readDocs(REPO_ROOT)['docs/vocabularies.md'].includes('Testing Label Zq'))
+    t.label = 'Testing Label Zq'
+    fs.writeFileSync(file, JSON.stringify(v, null, 2))
+    assert.equal(run('--root', dir).status, 0)
+    assert.ok(readDocs(dir)['docs/vocabularies.md'].includes(`| \`${t.id}\` | Testing Label Zq |`))
+  })
+
+  it("says 'classes: all' only while a term has every generator class in the word list", () => {
+    const dir = copyRepo()
+    assert.equal(run('--root', dir).status, 0)
+    assert.match(readDocs(dir)['docs/vocabularies.md'], /classes: all/)
+    const file = path.join(dir, 'data/vocab/classes.json')
+    const v = JSON.parse(fs.readFileSync(file, 'utf8'))
+    v.terms.push({ id: 'testclass', label: 'Test class', description: 'A class added by a test.', rarity: 'rare' })
+    fs.writeFileSync(file, JSON.stringify(v, null, 2))
+    assert.equal(run('--root', dir).status, 0)
+    assert.doesNotMatch(readDocs(dir)['docs/vocabularies.md'], /classes: all/)
+  })
+
+  it("takes the example card's key allowance and balance flags from the data", () => {
+    const dir = copyRepo()
+    const cardFile = path.join(dir, 'docs/examples/concept-card.example.json')
+    const card = JSON.parse(fs.readFileSync(cardFile, 'utf8'))
+    card.balance.flags = ['off-flavour']
+    fs.writeFileSync(cardFile, JSON.stringify(card, null, 2))
+    const tiersFile = path.join(dir, 'data/vocab/tiers.json')
+    const tiers = JSON.parse(fs.readFileSync(tiersFile, 'utf8'))
+    const tier = tiers.terms.find(t => t.id === card.parts.tier)
+    tier.max_keys = 7
+    fs.writeFileSync(tiersFile, JSON.stringify(tiers, null, 2))
+    assert.equal(run('--root', dir).status, 0)
+    const line = readDocs(dir)['docs/samples.md'].split('\n').find(l => l.startsWith('| Balance hints |'))
+    assert.match(line, new RegExp(`\\(${tier.label} allows 7\\), flags: Off-flavour \\|$`))
+  })
+
+  it('samples.md shows only the listed samples, however many records the data holds', () => {
+    const dir = copyRepo()
+    assert.equal(run('--root', dir).status, 0)
+    const before = readDocs(dir)['docs/samples.md']
+    fs.writeFileSync(path.join(dir, 'data/units/zz-extra.json'), JSON.stringify({ units: [{ id: 'zz.x.extra-unit', name: 'Extra Unit Zq' }] }))
+    fs.writeFileSync(path.join(dir, 'data/patterns/zz-extra.json'), JSON.stringify({ id: 'zz-extra', name: 'Extra Pattern Zq' }))
+    assert.equal(run('--root', dir).status, 0)
+    assert.equal(readDocs(dir)['docs/samples.md'], before)
+    assert.equal(SAMPLE_UNITS.length, 3)
+    assert.equal(SAMPLE_PATTERNS.length, 3)
+
+    fs.rmSync(path.join(dir, `data/patterns/${SAMPLE_PATTERNS[0]}.json`))
+    const res = run('--root', dir)
+    assert.notEqual(res.status, 0)
+    assert.match(res.stderr, new RegExp(`sample pattern '${SAMPLE_PATTERNS[0]}' is not in the data`))
   })
 
   it('rejects unknown arguments', () => {

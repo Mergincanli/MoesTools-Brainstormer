@@ -29,14 +29,49 @@ const dump = (dir, f, d) => fs.writeFileSync(path.join(dir, f), JSON.stringify(d
 const unit = (d, slug) => d.units.find(u => u.id.endsWith('.' + slug)) ?? assert.fail(`no unit '${slug}' in the data`)
 const UNITS = 'data/units/ra3.json'
 const REGISTRY = 'data/pattern-registry.json'
+const GAMES = 'data/games.json'
 const CARD = 'docs/examples/concept-card.example.json'
 const PATTERN = id => `data/patterns/${id}.json`
 const VOCAB = id => `data/vocab/${id}.json`
 // The first term in a word list that has a class rarity (decision 4B), so the cases don't depend on one term.
 const crossOverTerm = v => v.terms.find(t => t.class_rarity) ?? assert.fail(`no term in '${v.id}' has a class_rarity`)
+const term = (v, id) => v.terms.find(t => t.id === id) ?? assert.fail(`no term '${id}' in '${v.id}'`)
+// Changes one word list (or pattern, unit file, card) in a copy.
+const edit = (dir, f, fn) => { const d = load(dir, f); fn(d); dump(dir, f, d) }
+const editTerm = (dir, list, id, fn) => edit(dir, VOCAB(list), v => fn(term(v, id)))
+// Puts a plain 'anti-air' weapon trait in a copy: the data may not have it yet, or may give it rules of its own.
+function plainAntiAir(dir) {
+  edit(dir, VOCAB('weapon-traits'), v => {
+    v.terms = v.terms.filter(t => t.id !== 'anti-air')
+    v.terms.push({ id: 'anti-air', label: 'Anti-air', description: 'Test copy: reaches high air whatever its family.' })
+  })
+}
+const allowedTargets = (dir, family) => term(load(dir, VOCAB('weapon-families')), family).allowed['target-types']
+// The IFV weapon (and its index) whose break an atypical entry records, found by the start of the entry's rule.
+function recordedWeapon(u, rulePrefix) {
+  const a = u.atypical.find(x => x.rule.startsWith(rulePrefix)) ?? assert.fail(`no atypical entry starting '${rulePrefix}'`)
+  const i = Number(a.path.split('/')[1])
+  return { i, w: u.armament[i] }
+}
+// A rule-free role nobody has, now requiring the category of a planned pattern the Hammer Tank doesn't reach yet;
+// the Hammer Tank takes that role. Returns what a case needs to link the planned pattern.
+function categoryRole(dir) {
+  const d = load(dir, UNITS), c = load(dir, CARD), reg = load(dir, REGISTRY).patterns
+  const used = new Set([...d.units.flatMap(u => [u.roles.primary, ...(u.roles.secondary || [])]), c.parts.roles.primary, ...c.parts.roles.secondary])
+  const roles = load(dir, VOCAB('roles'))
+  const role = roles.terms.find(t => !t.requires && !t.classes && !used.has(t.id)) ?? assert.fail('no free role without rules')
+  const u = unit(d, 'hammer-tank')
+  const linked = new Set([...u.abilities, ...u.armament].flatMap(a => a.patterns || []))
+  const have = new Set(reg.filter(p => linked.has(p.id)).map(p => p.category))
+  const planned = reg.find(p => !fs.existsSync(path.join(dir, PATTERN(p.id))) && !have.has(p.category)) ?? assert.fail('no planned pattern to use')
+  role.requires = [[`category:${planned.category}`]]; dump(dir, VOCAB('roles'), roles)
+  u.roles.secondary = [...(u.roles.secondary || []), role.id]
+  return { d, u, role, planned }
+}
 
 // Each case breaks one thing in a fresh copy. kind 'error': a new ERROR containing `expect`;
 // kind 'warn': a new WARN containing `expect` and no new error; kind 'ok': no new error at all.
+// `expect` may be a function of the copy, for text that comes from the word lists.
 const cases = [
   ['unit links an unknown pattern', 'is not in the pattern registry', 'error', dir => {
     const d = load(dir, UNITS); unit(d, 'terror-drone').abilities[0].patterns.push('made-up-pattern'); dump(dir, UNITS, d)
@@ -92,7 +127,8 @@ const cases = [
     const c = load(dir, CARD); c.parts.class = 'aircraft'; c.parts.mobility.base = 'tracks'; dump(dir, CARD, c)
   }],
   ['card: active ability without cooldown', 'uses a key but has no cooldown', 'error', dir => {
-    const c = load(dir, CARD); delete c.parts.signature.cooldown; dump(dir, CARD, c)
+    // The schema requires the field (null for passive and triggered abilities), so the break is a null cooldown.
+    const c = load(dir, CARD); c.parts.signature.cooldown = null; dump(dir, CARD, c)
   }],
   ['card: real unit link in matchups', 'real unit names may not appear', 'error', dir => {
     const c = load(dir, CARD); c.matchups.countered_by.push({ ref: 'unit:ra3.soviet.hammer-tank', why: 'test' }); dump(dir, CARD, c)
@@ -141,8 +177,9 @@ const cases = [
   ['unit: a cross-over within classes is no rule break', '', 'ok', dir => {
     const d = load(dir, UNITS); unit(d, 'terror-drone').armour.models.push('interceptor'); dump(dir, UNITS, d)
   }],
-  ['unit: a hard class ban still needs an atypical entry', "but 'atypical' has no entry for 'armour-models:downed-revive'", 'error', dir => {
-    const d = load(dir, UNITS); unit(d, 'hammer-tank').armour.models.push('downed-revive'); dump(dir, UNITS, d)
+  ['unit: a hard class ban still needs an atypical entry', "but 'atypical' has no entry with rule 'armour-models:downed-revive classes vehicle'", 'error', dir => {
+    const d = load(dir, UNITS); const u = unit(d, 'hammer-tank'); assert.equal(u.class, 'vehicle')
+    u.armour.models.push('downed-revive'); dump(dir, UNITS, d)
   }],
   ['word lists with different versions', "differs from the other word lists'", 'error', dir => {
     const v = load(dir, VOCAB('rarity')); v.version = '0.0.1'; dump(dir, VOCAB('rarity'), v)
@@ -170,11 +207,8 @@ const cases = [
     const c = load(dir, CARD); const w = c.parts.armament.secondary; assert.equal(w.family, 'cryo')
     w.delivery = 'lobbed'; w.can_target.push('low-air'); dump(dir, CARD, c)
   }],
-  ['unit: anti-air weapon on a family without high air needs an atypical entry', "but 'atypical' has no entry for 'weapon-families:rockets'", 'error', dir => {
-    const d = load(dir, UNITS); const u = unit(d, 'multigunner-ifv')
-    u.atypical = u.atypical.filter(a => !a.rule.startsWith('weapon-families:rockets ')); dump(dir, UNITS, d)
-  }],
-  ['card: anti-air role with nothing that reaches the air', "role 'anti-air' requires one of [hits:low-air, hits:high-air]", 'error', dir => {
+  // The expected text is the role's own requires group, whatever the word list says it is.
+  ['card: anti-air role with nothing that reaches the air', dir => `roles 'anti-air' requires one of [${term(load(dir, VOCAB('roles')), 'anti-air').requires[0].join(', ')}]`, 'error', dir => {
     const c = load(dir, CARD); c.parts.roles.secondary.push('anti-air'); dump(dir, CARD, c)
   }],
   ['card: stealth on a huge body', "sensor-traits 'stealth' excludes sizes 'huge'", 'error', dir => {
@@ -195,6 +229,225 @@ const cases = [
   ['unit: a flier link on a ground unit (warn only)', "link target:low-air doesn't describe this unit's own parts", 'warn', dir => {
     // A walking drone is a ground target (infantry-sized), not a low flier.
     const d = load(dir, UNITS); unit(d, 'terror-drone').strengths.push({ ref: 'target:low-air', why: 'test' }); dump(dir, UNITS, d)
+  }],
+
+  // Only an anti-air weapon reaches high air outside the anti-air families (decision 6C, review fix).
+  ['unit: high air on a family without it needs an atypical entry', "but 'atypical' has no entry with rule 'weapon-families:rockets allowed.target-types high-air'", 'error', dir => {
+    // The IFV's missiles reach every aircraft; without the anti-air trait, the rockets family's target list is broken.
+    assert.ok(!allowedTargets(dir, 'rockets').includes('high-air'))
+    const d = load(dir, UNITS); const u = unit(d, 'multigunner-ifv'); const w = u.armament[0]; assert.equal(w.family, 'rockets')
+    w.traits = (w.traits || []).filter(t => t !== 'anti-air')
+    if (!w.can_target.includes('high-air')) w.can_target.push('high-air')
+    u.atypical = u.atypical.filter(a => a.rule !== 'weapon-families:rockets allowed.target-types high-air'); dump(dir, UNITS, d)
+  }],
+  ['unit: an anti-air weapon reaches high air when its family reaches low air', '', 'ok', dir => {
+    plainAntiAir(dir)
+    const d = load(dir, UNITS); const u = unit(d, 'multigunner-ifv'); const w = u.armament[0]; assert.equal(w.family, 'rockets')
+    w.traits = [...new Set([...(w.traits || []), 'anti-air'])]
+    if (!w.can_target.includes('high-air')) w.can_target.push('high-air')
+    u.atypical = u.atypical.filter(a => a.rule !== 'weapon-families:rockets allowed.target-types high-air'); dump(dir, UNITS, d)
+  }],
+  ['card: an anti-air weapon reaches high air when its family reaches low air', '', 'ok', dir => {
+    plainAntiAir(dir); assert.ok(!allowedTargets(dir, 'cryo').includes('high-air'))
+    const c = load(dir, CARD); const w = c.parts.armament.secondary; assert.equal(w.family, 'cryo')
+    w.can_target.push('high-air'); w.traits.push('anti-air'); dump(dir, CARD, c)
+  }],
+  ['card: high air on a family without it, with no anti-air trait', "family 'cryo' doesn't combine with target-types 'high-air'", 'error', dir => {
+    assert.ok(!allowedTargets(dir, 'cryo').includes('high-air'))
+    const c = load(dir, CARD); const w = c.parts.armament.secondary; assert.equal(w.family, 'cryo'); assert.ok(!w.traits.includes('anti-air'))
+    w.can_target.push('high-air'); dump(dir, CARD, c)
+  }],
+  ['card: the anti-air trait does not lift a ground-only family (blades)', "family 'blades' doesn't combine with target-types 'high-air'", 'error', dir => {
+    plainAntiAir(dir); assert.ok(!allowedTargets(dir, 'blades').includes('low-air'))
+    const c = load(dir, CARD); const w = c.parts.armament.primary; assert.equal(w.family, 'blades')
+    w.can_target.push('high-air'); w.traits.push('anti-air'); dump(dir, CARD, c)
+  }],
+  ['card: the anti-air trait does not lift a ground-only family (flamethrower)', "family 'flamethrower' doesn't combine with target-types 'high-air'", 'error', dir => {
+    plainAntiAir(dir); assert.ok(!allowedTargets(dir, 'flamethrower').includes('low-air'))
+    const c = load(dir, CARD); const w = c.parts.armament.secondary
+    w.family = 'flamethrower'; w.damage = 'fire'; w.range = 'short'; w.can_target = ['infantry', 'high-air']; w.traits = ['anti-air']; dump(dir, CARD, c)
+  }],
+  ['card: the anti-air trait never goes with a melee delivery', "'melee'", 'error', dir => {
+    const c = load(dir, CARD); const w = c.parts.armament.primary
+    w.delivery = 'melee'; w.traits.push('anti-air'); dump(dir, CARD, c)
+  }],
+  ['card: the anti-air trait does not lift the delivery rule', "delivery 'lobbed' doesn't combine with target-types 'high-air'", 'error', dir => {
+    plainAntiAir(dir)
+    const c = load(dir, CARD); const w = c.parts.armament.secondary
+    w.delivery = 'lobbed'; w.can_target.push('high-air'); w.traits.push('anti-air'); dump(dir, CARD, c)
+  }],
+
+  // A delivery (or any weapon term) may require something of the weapon's unit or card (review fix).
+  ['card: a dropped weapon on a unit that does not fly', "delivery 'drop' requires one of [target:low-air, target:high-air]", 'error', dir => {
+    editTerm(dir, 'weapon-delivery', 'drop', t => { t.requires = [['target:low-air', 'target:high-air']] })
+    const c = load(dir, CARD); c.parts.armament.primary.delivery = 'drop'; dump(dir, CARD, c)
+  }],
+  ['unit: a delivery requirement the unit misses needs an atypical entry', "has no entry with rule 'weapon-delivery:attach requires size:>=large'", 'error', dir => {
+    // The Terror Drone's claws attach, and it is tiny.
+    editTerm(dir, 'weapon-delivery', 'attach', t => { t.requires = [['size:>=large']] })
+  }],
+  ['unit and card: a delivery requirement both meet', '', 'ok', dir => {
+    editTerm(dir, 'weapon-delivery', 'attach', t => { t.requires = [['size:<=small']] })
+  }],
+  ['card: a weapon trait limited to other classes', "trait 'mark' is not for class 'drone'", 'error', dir => {
+    assert.ok(load(dir, CARD).parts.armament.primary.traits.includes('mark'))
+    editTerm(dir, 'weapon-traits', 'mark', t => { t.classes = ['infantry'] })
+  }],
+  ['card: a delivery that excludes a unit-wide part', "delivery 'attach' excludes mobility 'hover'", 'error', dir => {
+    assert.equal(load(dir, CARD).parts.mobility.base, 'hover')
+    editTerm(dir, 'weapon-delivery', 'attach', t => { t.excluded = { mobility: ['hover'] } })
+  }],
+  ["card: a family's list for another part of the same weapon", "family 'blades' doesn't combine with weapon-traits 'mark'", 'error', dir => {
+    editTerm(dir, 'weapon-families', 'blades', t => { t.allowed['weapon-traits'] = ['damage-over-time'] })
+  }],
+
+  // Word lists that were never checked: on-death, availability and ability kinds (review fix).
+  ['card: pilot eject on a drone', "on-death 'pilot-eject' is not for class 'drone'", 'error', dir => {
+    assert.ok(!term(load(dir, VOCAB('on-death')), 'pilot-eject').classes.includes('drone'))
+    const c = load(dir, CARD); c.parts.on_death = ['pilot-eject']; dump(dir, CARD, c)
+  }],
+  ['card: a wreck left by infantry', "on-death 'wreck' excludes classes 'infantry'", 'error', dir => {
+    const c = load(dir, CARD); c.parts.class = 'infantry'; c.parts.on_death = ['wreck']; dump(dir, CARD, c)
+  }],
+  ['unit: pilot eject on the Terror Drone needs an atypical entry', "has no entry with rule 'on-death:pilot-eject classes drone'", 'error', dir => {
+    const d = load(dir, UNITS); unit(d, 'terror-drone').on_death.outcomes.push('pilot-eject'); dump(dir, UNITS, d)
+  }],
+  ['unit: a break recorded under its exact rule string passes', '', 'ok', dir => {
+    const d = load(dir, UNITS); const u = unit(d, 'terror-drone'); u.on_death.outcomes.push('pilot-eject')
+    u.atypical = [...(u.atypical || []), { path: `on_death/outcomes/${u.on_death.outcomes.length - 1}`, rule: 'on-death:pilot-eject classes drone', note: 'test' }]
+    dump(dir, UNITS, d)
+  }],
+  ['unit: a unique unit below the tier its availability needs', "has no entry with rule 'availability:unique min_tier t2'", 'error', dir => {
+    const d = load(dir, UNITS); const u = unit(d, 'terror-drone'); assert.equal(u.tier.band, 't1'); u.availability = 'unique'; dump(dir, UNITS, d)
+  }],
+  ['unit: an ultimate ability on a tier-1 unit', "has no entry with rule 'ability-kinds:ultimate min_tier t3'", 'error', dir => {
+    const d = load(dir, UNITS); unit(d, 'terror-drone').abilities[0].kind = 'ultimate'; dump(dir, UNITS, d)
+  }],
+  ['card: an ultimate ability on a tier-1 card', "ability-kinds 'ultimate' needs tier t3 or higher", 'error', dir => {
+    const c = load(dir, CARD); assert.equal(c.parts.tier, 't1'); c.parts.signature.kind = 'ultimate'; dump(dir, CARD, c)
+  }],
+  ['word list: rules on a list the combination rules never read', "has combination rules (min_tier), but the combination rules read no 'test-rules' part", 'error', dir => {
+    const version = load(dir, VOCAB('rarity')).version
+    dump(dir, VOCAB('test-rules'), {
+      id: 'test-rules', label: 'Test rules', description: 'Test list.', group: 'supporting', status: 'draft', version,
+      terms: [{ id: 'a', label: 'A', description: 'A.', min_tier: 't2' }, { id: 'b', label: 'B', description: 'B.' }],
+    })
+  }],
+  ['word list: a map keyed by a list the combination rules never read', "the combination rules read no 'seat-roles' part", 'error', dir => {
+    editTerm(dir, 'bodies', 'humanoid', t => { t.allowed['seat-roles'] = ['driver'] })
+  }],
+
+  // Atypical entries match the whole rule string, not just '<list>:<term>' (review fix).
+  ['unit: an entry covers only its own rule, not every break of the term', "has no entry with rule 'weapon-families:laser allowed.target-types high-air'", 'error', dir => {
+    // The Imperial Warrior laser records a damage break; reaching high air is a second, unrecorded break.
+    assert.ok(!allowedTargets(dir, 'laser').includes('high-air'))
+    const d = load(dir, UNITS); const { w } = recordedWeapon(unit(d, 'multigunner-ifv'), 'weapon-families:laser ')
+    assert.ok(!(w.traits || []).includes('anti-air')); w.can_target.push('high-air'); dump(dir, UNITS, d)
+  }],
+  ['unit: a new delivery break is not covered by an entry for the family', "has no entry with rule 'weapon-families:rockets allowed.weapon-delivery drop'", 'error', dir => {
+    assert.ok(!term(load(dir, VOCAB('weapon-families')), 'rockets').allowed['weapon-delivery'].includes('drop'))
+    const d = load(dir, UNITS); const w = unit(d, 'multigunner-ifv').armament[0]; assert.equal(w.family, 'rockets')
+    w.delivery = 'drop'; dump(dir, UNITS, d)
+  }],
+  ['unit: an entry with the right term but the wrong rule', "has no entry with rule 'weapon-traits:stun min_tier t2'", 'error', dir => {
+    const d = load(dir, UNITS); const u = unit(d, 'multigunner-ifv')
+    for (const a of u.atypical) if (a.rule === 'weapon-traits:stun min_tier t2') a.rule = 'weapon-traits:stun min_tier t3'
+    dump(dir, UNITS, d)
+  }],
+  ['unit: an atypical path that does not exist', "has path 'armament/99/can_target', which does not exist on this unit", 'error', dir => {
+    const d = load(dir, UNITS); const u = d.units.find(x => x.atypical?.length); u.atypical[0].path = 'armament/99/can_target'; dump(dir, UNITS, d)
+  }],
+
+  // Cards meet the tier floors of their patterns, variants and ability kinds, and the rest of a pattern's rules (review fix).
+  ["card: a variant above the card's tier", "pattern 'infest-vehicle' (variant 'latched-control') needs tier t3 or higher", 'error', dir => {
+    const v = load(dir, PATTERN('infest-vehicle')).variants.find(x => x.id === 'latched-control'); assert.equal(v?.overrides?.min_tier, 't3')
+    const c = load(dir, CARD); assert.equal(c.parts.tier, 't1'); c.parts.signature.variant = 'latched-control'; dump(dir, CARD, c)
+  }],
+  ["card: a pattern above the card's tier", "pattern 'infest-vehicle' needs tier t3 or higher", 'error', dir => {
+    edit(dir, PATTERN('infest-vehicle'), p => { p.generator.min_tier = 't3' })
+    const c = load(dir, CARD); c.parts.signature.variant = null; dump(dir, CARD, c)
+  }],
+  ['card: a variant at its own tier', '', 'ok', dir => {
+    const c = load(dir, CARD); c.parts.tier = 't3'; c.parts.signature.variant = 'latched-control'; dump(dir, CARD, c)
+  }],
+  ["card: a variant's kinds replace the pattern's", "pattern 'infest-vehicle' (variant 'tracker') can't be a 'active' ability", 'error', dir => {
+    const c = load(dir, CARD); assert.equal(c.parts.signature.variant, 'tracker'); assert.equal(c.parts.signature.kind, 'active')
+    edit(dir, PATTERN('infest-vehicle'), p => { p.variants.find(x => x.id === 'tracker').overrides = { kinds: ['passive'] } })
+  }],
+  ['card: a signature-only pattern as an extra ability', "pattern 'infest-vehicle' (variant 'tracker') can only be the card's signature ability", 'error', dir => {
+    assert.equal(load(dir, PATTERN('infest-vehicle')).generator.slot, 'signature')
+    const c = load(dir, CARD); c.parts.abilities.push({ ...c.parts.signature }); dump(dir, CARD, c)
+  }],
+  ['card: two patterns that conflict', "patterns 'infest-vehicle' and 'passenger-sets-weapon' conflict", 'error', dir => {
+    edit(dir, PATTERN('infest-vehicle'), p => { p.generator.conflicts_with = ['passenger-sets-weapon'] })
+    const c = load(dir, CARD); c.parts.abilities.push({ pattern: 'passenger-sets-weapon', variant: null, kind: 'passive', seat: 'driver', cooldown: null }); dump(dir, CARD, c)
+  }],
+  ['card: a rejected pattern', "pattern 'infest-vehicle' is rejected, so a card can't use it", 'error', dir => {
+    edit(dir, PATTERN('infest-vehicle'), p => { p.status = 'rejected' })
+  }],
+  ['card: a planned pattern', "is planned, not written yet, so a card can't use it", 'error', dir => {
+    const planned = load(dir, REGISTRY).patterns.find(p => !fs.existsSync(path.join(dir, PATTERN(p.id))))
+    const c = load(dir, CARD); c.parts.signature.pattern = planned.id; c.parts.signature.variant = null; dump(dir, CARD, c)
+  }],
+  ['card: a pattern with no generator yet', "pattern 'infest-vehicle' has no generator yet", 'error', dir => {
+    edit(dir, PATTERN('infest-vehicle'), p => { assert.equal(p.status, 'proposed'); delete p.generator })
+  }],
+
+  // Schema-invalid data is reported, not a crash (review fix).
+  ['card: unknown tier', "'t9' is not a term of vocabulary 'tiers'", 'error', dir => {
+    const c = load(dir, CARD); c.parts.tier = 't9'; dump(dir, CARD, c)
+  }],
+  ['card: unknown balance flag', "'no-such-flag' is not a term of vocabulary 'balance-flags'", 'error', dir => {
+    const c = load(dir, CARD); c.balance.flags = ['no-such-flag']; dump(dir, CARD, c)
+  }],
+  ['unit without roles', "must have required property 'roles'", 'error', dir => {
+    const d = load(dir, UNITS); delete unit(d, 'hammer-tank').roles; dump(dir, UNITS, d)
+  }],
+  ['a file that is not valid JSON', `${UNITS}: not valid JSON`, 'error', dir => {
+    fs.writeFileSync(path.join(dir, UNITS), '{ "units": [')
+  }],
+
+  // Integrity checks the header promised (review fix).
+  ['word list: duplicate term id', "data/vocab/sizes.json: duplicate term id 'tiny'", 'error', dir => {
+    edit(dir, VOCAB('sizes'), v => { v.terms.push({ ...term(v, 'tiny'), rank: 99 }) })
+  }],
+  ["word list: file name differs from the list's id", "data/vocab/rarity-copy.json: file name must be <id>.json", 'error', dir => {
+    fs.copyFileSync(path.join(dir, VOCAB('rarity')), path.join(dir, VOCAB('rarity-copy')))
+  }],
+  ['word list: a ranked term without a rank', 'no rank, but every term of a ranked list needs a whole-number rank', 'error', dir => {
+    edit(dir, VOCAB('sizes'), v => { delete v.terms.at(-1).rank })
+  }],
+  ['word list: two terms with one rank', 'data/vocab/sight-bands.json: rank 1 is used by more than one term', 'error', dir => {
+    edit(dir, VOCAB('sight-bands'), v => { v.terms.forEach((t, i) => { t.rank = i === 0 ? 1 : i }) })
+  }],
+  ['duplicate unit id', "duplicate unit id 'ra3.soviet.hammer-tank'", 'error', dir => {
+    const d = load(dir, UNITS); d.units.push(structuredClone(unit(d, 'hammer-tank'))); dump(dir, UNITS, d)
+  }],
+  ['duplicate game id', 'data/games.json: duplicate game id', 'error', dir => {
+    edit(dir, GAMES, g => { g.games.push(structuredClone(g.games[0])) })
+  }],
+  ['duplicate faction id', 'duplicate faction id', 'error', dir => {
+    edit(dir, GAMES, g => { const f = g.games[0].factions; f.push({ ...f[0] }) })
+  }],
+
+  // One rule is checked once, and an adaptive weapon is not bound by a body's family list (review fix).
+  ["unit: an adaptive weapon is not bound by a body's family list", '', 'ok', dir => {
+    const u = unit(load(dir, UNITS), 'hammer-tank'); assert.ok(u.armament.some(w => w.family === 'adaptive'))
+    const families = [...new Set(u.armament.map(w => w.family).filter(f => f !== 'adaptive'))]
+    editTerm(dir, 'bodies', u.body.plan, t => { t.allowed['weapon-families'] = families })
+  }],
+  ["unit: a body's family list binds the other families", "has no entry with rule 'bodies:hull-turret allowed.weapon-families drain'", 'error', dir => {
+    const u = unit(load(dir, UNITS), 'hammer-tank'); assert.equal(u.body.plan, 'hull-turret')
+    assert.ok(u.armament.some(w => w.family === 'drain')); assert.ok(u.armament.some(w => w.family === 'cannon'))
+    editTerm(dir, 'bodies', 'hull-turret', t => { t.allowed['weapon-families'] = ['cannon'] })
+  }],
+
+  // 'category:' links also see the category of a planned pattern, from the registry (review fix).
+  ['unit: a category link met by a planned pattern', '', 'ok', dir => {
+    const { d, u, planned } = categoryRole(dir); u.abilities[0].patterns.push(planned.id); dump(dir, UNITS, d)
+  }],
+  ['unit: a category link nothing meets', "has no entry with rule 'roles:", 'error', dir => {
+    const { d } = categoryRole(dir); dump(dir, UNITS, d)
   }],
 ]
 
@@ -223,6 +476,53 @@ describe('validator', () => {
     assert.match(r.stdout.trim().split('\n').at(-1), /^FAILED with \d+ error\(s\)$/)
   })
 
+  it('the command turns a crash into an ERROR line and exits 1', () => {
+    // A file where the word-list folder should be makes reading the folder throw.
+    const dir = freshCopy()
+    fs.rmSync(path.join(dir, 'data/vocab'), { recursive: true }); fs.writeFileSync(path.join(dir, 'data/vocab'), 'not a folder')
+    const r = spawnSync(process.execPath, [VALIDATE, dir], { encoding: 'utf8' })
+    assert.equal(r.status, 1)
+    assert.match(r.stdout, /^ERROR {4}internal: /m)
+    assert.equal(r.stdout.trim().split('\n').at(-1), 'FAILED with 1 error(s)')
+  })
+
+  it('an empty folder fails with a clear error', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'unit-forge-empty-')); tmpDirs.push(dir)
+    const { errors } = validate(dir)
+    assert.ok(errors.some(e => e.includes('no schema files found')), errors.join('\n'))
+  })
+
+  it('stops after JSON or schema errors, before the rule checks', () => {
+    // The unknown tier is a schema error; the real unit name would be a rule error, and must not be reached.
+    const dir = freshCopy()
+    const c = load(dir, CARD); c.parts.tier = 't9'; c.text.name = 'Terror Drone'; dump(dir, CARD, c)
+    const { errors, warnings } = validate(dir)
+    assert.ok(errors.some(e => e.includes("'t9' is not a term of vocabulary 'tiers'")), errors.join('\n'))
+    assert.ok(!errors.some(e => e.includes('working name matches')), 'a rule check ran after a schema error')
+    assert.ok(warnings.some(w => w.includes('the rule checks') && w.includes('did not run')))
+  })
+
+  it('reports one broken rule once', () => {
+    // The role's requires and the body's mount list were each checked twice before.
+    const dir = freshCopy()
+    const c = load(dir, CARD); c.parts.roles.secondary.push('anti-air'); dump(dir, CARD, c)
+    const d = load(dir, UNITS); const u = unit(d, 'hammer-tank')
+    assert.ok(!term(load(dir, VOCAB('bodies')), u.body.plan).allowed['aim-models'].includes('body-aim'))
+    u.armament[0].mount = 'body-aim'; dump(dir, UNITS, d)
+    const { errors, atypical } = validate(dir)
+    assert.equal(errors.filter(e => e.includes("'anti-air' requires")).length, 1, errors.join('\n'))
+    assert.equal(atypical.filter(a => a.includes('hammer-tank') && a.includes("'body-aim'")).length, 1, atypical.join('\n'))
+    assert.equal(errors.filter(e => e.includes('hammer-tank') && e.includes('body-aim')).length, 1, errors.join('\n'))
+  })
+
+  it('each ATYPICAL line ends with the rule string to record, and every recorded rule string is printed', () => {
+    const { atypical } = validate(REPO_ROOT)
+    const printed = new Set(atypical.map(a => a.match(/\(rule '([^']+)'\)$/)?.[1]).filter(Boolean))
+    const units = load(REPO_ROOT, UNITS).units
+    for (const u of units) for (const a of u.atypical || []) assert.ok(printed.has(a.rule), `'${a.rule}' is not printed`)
+    for (const r of printed) assert.match(r, /^[a-z0-9-]+:[a-z0-9-]+ (classes|min_tier|requires|(allowed|excluded)\.[a-z0-9-]+) \S+$/)
+  })
+
   describe('negative cases: one break each', () => {
     let baseline, baselineWarnings
     before(() => {
@@ -230,14 +530,15 @@ describe('validator', () => {
       baseline = new Set(r.errors)
       baselineWarnings = new Set(r.warnings)
     })
-    for (const [name, expect, kind, breakIt] of cases) {
+    for (const [name, expected, kind, breakIt] of cases) {
       it(name, () => {
         const dir = freshCopy()
         breakIt(dir)
+        const expect = typeof expected === 'function' ? expected(dir) : expected
         const { errors, warnings } = validate(dir)
         const fresh = errors.filter(e => !baseline.has(e))
         if (kind === 'error') {
-          assert.ok(fresh.some(e => e.includes(expect)), `expected an ERROR containing "${expect}"; new errors:\n${fresh.slice(0, 4).join('\n')}`)
+          assert.ok(fresh.some(e => e.includes(expect)), `expected an ERROR containing "${expect}"; new errors:\n${fresh.slice(0, 6).join('\n')}`)
         } else if (kind === 'ok') {
           assert.deepEqual(fresh, [], 'expected no new errors')
         } else {
@@ -312,6 +613,9 @@ describe('copy-check matching (offline)', () => {
     assert.deepEqual(mediaWikiTarget('https://cnc.fandom.com/wiki/Hammer_tank').apis, ['https://cnc.fandom.com/api.php'])
     assert.equal(mediaWikiTarget('https://www.halopedia.org/Red_Team').title, 'Red Team')
     assert.equal(mediaWikiTarget('https://cncnz.com/games/red-alert-2/soviet-units/'), null)
+    assert.deepEqual(mediaWikiTarget('https://www.sarna.net/wiki/Atlas').apis, ['https://www.sarna.net/wiki/api.php'])
+    assert.deepEqual(mediaWikiTarget('https://liquipedia.net/starcraft2/Siege_Tank_(Legacy_of_the_Void)'),
+      { title: 'Siege Tank (Legacy of the Void)', apis: ['https://liquipedia.net/starcraft2/api.php'] })
   })
 
   it('collects cited URLs from nested sources and skips citation fields as prose', () => {
