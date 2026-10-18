@@ -19,6 +19,7 @@ A creativity tool for designing units for **Shamble Frontlines**, a browser team
 | `schemas/` | JSON Schemas for every record type. |
 | `docs/` | Proposal, generated reference pages and the example concept card (`docs/examples/`). |
 | `scripts/` | Validator, docs builder, JSON formatter, copy-check and checker sampler. |
+| `research/` | Research working notes; `research/registry-notes/` has the step-1 notes for each research batch. |
 | `tests/` | Tests for the scripts (`node:test`). |
 | `.github/workflows/` | CI, which runs `npm run check` on every push to `main` and every pull request. |
 
