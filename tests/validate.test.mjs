@@ -1,4 +1,4 @@
-// Tests for the validator (the repo passes; 19 broken copies each fail in the expected way) and for the
+// Tests for the validator (the repo passes; broken copies each fail in the expected way, or only warn) and for the
 // research checker's tools (the sampler's deterministic pick, and copy-check's word matching, offline).
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
@@ -62,6 +62,10 @@ const cases = [
   ['stale atypical entry', 'matches no broken rule', 'error', dir => {
     const d = load(dir, UNITS); const u = unit(d, 'hammer-tank')
     u.atypical = [...(u.atypical || []), { path: 'class', rule: 'classes:tank invented', note: 'test' }]; dump(dir, UNITS, d)
+  }],
+  ["tier gate of another faction", "not in ra3's tier_map", 'error', dir => {
+    // The Terror Drone is Soviet; the Armor Facility is an Allied gate.
+    const d = load(dir, UNITS); unit(d, 'terror-drone').tier.gate = 'Armor Facility'; dump(dir, UNITS, d)
   }],
   ['weapon missing damage while not adaptive', "must have required property 'damage'", 'error', dir => {
     const d = load(dir, UNITS); delete unit(d, 'hammer-tank').armament[0].damage; dump(dir, UNITS, d)

@@ -327,7 +327,10 @@ export function validate(root = REPO_ROOT) {
         const band = raw >= th['very-high'] ? 'very-high' : raw >= th.high ? 'high' : raw >= th.medium ? 'medium' : raw >= th.low ? 'low' : 'very-low'
         if (band !== u.cost_band.band) err(`${w}: cost ${raw} maps to '${band}' under ${g.id}'s thresholds, not '${u.cost_band.band}'`)
       }
-      if (u.tier.gate && g.tier_map && !g.tier_map.some(t => t.gate === u.tier.gate && t.band === u.tier.band && (!t.faction || t.faction === u.faction))) {
+      // A gate tagged with a faction also serves its subfactions; 'shared' units may use any side's gate.
+      const parent = g.factions.find(x => x.id === u.faction)?.parent
+      const gateFits = t => !t.faction || t.faction === u.faction || t.faction === parent || u.faction === 'shared'
+      if (u.tier.gate && g.tier_map && !g.tier_map.some(t => t.gate === u.tier.gate && t.band === u.tier.band && gateFits(t))) {
         err(`${w}: tier gate '${u.tier.gate}' / ${u.tier.band} not in ${g.id}'s tier_map`)
       }
       if (typeof u.mobility.speed_raw === 'number') {
