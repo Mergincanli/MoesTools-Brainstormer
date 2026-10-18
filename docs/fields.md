@@ -8,7 +8,7 @@ Every field of every record type, generated from the JSON schemas in `schemas/`.
 
 - **Ids.** Lower-case, ASCII, words joined by dashes; apostrophes and full stops dropped, `&` becomes `and`, numbers and roman numerals kept (`mammoth-mk-ii`, `v4-rocket-launcher`). Unit ids are `<game>.<faction>.<slug>`; pattern ids are generic English, verb first (`infest-vehicle`). Expansions are never game ids. The faction id `shared` is reserved for units every side can field.
 - **Typed links** are written `kind:id`, such as `role:anti-air`, `size:<=small` or `hits:aircraft`. A link always describes a unit: in strengths, weaknesses and pattern requirements it describes the unit itself; in *counters* the unit it beats; in *countered by* the unit that beats it; in combos the teammate. Ranked kinds accept `<=` and `>=`. Kinds: `class` (is of this class), `role` (has this role (primary or secondary)), `tier` (is this tier), `damage` (has a weapon that deals this damage), `armour-class` (has this armour class), `armour-model` (has this armour model), `weapon` (has a weapon of this family), `mobility` (moves this way), `mobility-trait` (has this mobility trait), `handling` (handles this way), `body` (has this body plan), `size` (is this size), `speed` (moves at this speed), `crew` (has this crew model), `passengers` (has this many passenger seats (a number, usually with >= or <=)), `mount` (has a weapon on this mount), `delivery` (has a weapon with this delivery), `range` (has a weapon with this range), `weapon-trait` (has a weapon with this trait), `target` (is this kind of target (from its mobility and size)), `hits` (has a weapon that can hit this kind of target), `nature` (is organic, a crewed machine or an uncrewed machine), `category` (has an ability whose pattern is in this category), `resource` (uses this resource), `pattern` (has this mechanic pattern (an id in data/patterns)), `unit` (is this source unit (research data only; never on a generated card)).
-- **Proposals vs facts.** Fields marked *proposal* (aim and seat per weapon, handling, crew for RTS units, what happens on death, 'as a player') are our design suggestions for a player version. The checker skips them and confidence covers only sourced facts.
+- **Proposals vs facts.** Fields marked *proposal* (handling, weapon mount and seat, flavour affinity and 'as a player'), and crew and on-death wherever their basis says 'proposal', are our design suggestions for a player version. The checker skips them and confidence covers only sourced facts.
 - **Weapons vs abilities.** Anything fired with an attack button is a weapon. An ability exists only when the source has a separate button, cooldown, toggle, or a triggered or passive effect. A weapon swapped in by an ability gets both: an `alternate` weapon and a `toggle` ability, linking the same pattern. A weapon gained on a kill gets an `acquired` weapon and a `triggered` ability. Unarmed units have an empty weapon list.
 - **Granularity.** Same player-facing interaction and same counterplay = one pattern; differences in fiction, delivery or size are variants. Plain mechanics (sprint, self-heal, stat buff) get generic patterns that stay out of the top-30 list.
 - **Copyright.** Paraphrase only, no quoted voice lines or flavour text, no images. Real names are reference only and never reach a generated card.
@@ -19,7 +19,7 @@ One researched unit from a real game. File: `data/units/<game>.json`. Schema: `s
 
 | Field | Type | Required | Vocabulary | Meaning |
 |---|---|---|---|---|
-| `id` | unit id | yes |  | Source unit id: <game>.<faction>.<slug>, e.g. 'ra3.soviet.terror-drone'. |
+| `id` | unit id | yes |  | Source unit id: &lt;game&gt;.&lt;faction&gt;.&lt;slug&gt;, e.g. 'ra3.soviet.terror-drone'. |
 | `game` | id | yes |  | Game id; must match the file. |
 | `introduced_in` | id |  |  | Game or expansion id where this version first appears, if not the base game. |
 | `faction` | id | yes |  | Faction id from the game's entry in data/games.json. |
@@ -49,7 +49,7 @@ One researched unit from a real game. File: `data/units/<game>.json`. Schema: `s
 | `body` | group | yes |  |  |
 | `body.plan` | term | yes | `bodies` | A term from *Body plans*. |
 | `body.size` | term | yes | `sizes` | A term from *Sizes*. |
-| `body.count` | integer |  |  | Bodies per purchase in the source, e.g. 5 for a squad. Default 1. |
+| `body.count` | integer (1-) |  |  | Bodies per purchase in the source, e.g. 5 for a squad. Default 1. |
 | `body.notes` | text |  |  |  |
 | `armour` | group | yes |  |  |
 | `armour.class` | term | yes | `armour-classes` | A term from *Armour classes*. |
@@ -79,12 +79,12 @@ One researched unit from a real game. File: `data/units/<game>.json`. Schema: `s
 | `crew.basis` | one of `in-game`, `lore`, `proposal` | yes |  | in-game = the source has these seats; lore = the source describes a crew; proposal = our suggestion for a player version. |
 | `crew.solo_fallback` | term |  | `solo-fallback` | For multi-seat models: what a lone player can do. |
 | `crew.passengers` | group |  |  | Passenger seats, if any. Any crew model can carry passengers; the card then shows 'transport with passengers'. |
-| `crew.passengers.seats` | integer | yes |  |  |
+| `crew.passengers.seats` | integer (1-) | yes |  |  |
 | `crew.passengers.kind` | term | yes | `seat-roles` | A term from *Seat roles*. |
 | `crew.notes` | text |  |  |  |
 | `crew.seats[]` | list of groups |  |  | Exact seat layout when the preset doesn't say it all (e.g. one driver and two gunners). |
 | `crew.seats[].role` | term | yes | `seat-roles` | A term from *Seat roles*. |
-| `crew.seats[].count` | integer | yes |  |  |
+| `crew.seats[].count` | integer (1-) | yes |  |  |
 | `abilities[]` | list of groups | yes |  |  |
 | `abilities[].name` | text | yes |  | In-game ability name, for reference only. |
 | `abilities[].kind` | term | yes | `ability-kinds` | A term from *Ability kinds*. |
@@ -95,7 +95,7 @@ One researched unit from a real game. File: `data/units/<game>.json`. Schema: `s
 | `abilities[].source` | term |  | `ability-sources` | Where the ability comes from. Default: innate. |
 | `abilities[].exclusive_group` | id |  |  | Abilities in the same group exclude each other (loadout or upgrade choices). |
 | `modes[]` | list of groups (max 3) |  |  | Second forms: transform, deploy or siege modes. |
-| `modes[].id` | id | yes |  | Lower-case id with dashes, e.g. 'infest-vehicle'. |
+| `modes[].id` | id | yes |  | Mode id, e.g. 'siege'. |
 | `modes[].name` | text | yes |  |  |
 | `modes[].via` | id | yes |  | The pattern that switches to this mode. |
 | `modes[].class` | term |  | `classes` | A term from *Unit classes*. |
@@ -162,7 +162,7 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 |---|---|---|---|---|
 | `schema_version` | text | yes |  |  |
 | `vocab_version` | text | yes |  |  |
-| `id` | id | yes |  | Generic English, verb first: <verb>-<object>[-<qualifier>], e.g. 'infest-vehicle'. No fiction words. |
+| `id` | id | yes |  | Generic English, verb first: `<verb>-<object>[-<qualifier>]`, e.g. `infest-vehicle`. No fiction words. |
 | `status` | one of `proposed`, `accepted`, `merged`, `rejected` | yes |  | proposed = written, not yet reviewed and calibrated; accepted = reviewed and calibrated in the merge pass; merged = folded into another pattern; rejected. |
 | `merged_into` | id |  |  | Required when status is merged. |
 | `name` | text | yes |  | Our own generic name, never a trademark. |
@@ -175,7 +175,7 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `counterplay` | list of texts (min 1) | yes |  | How the enemy deals with it. |
 | `source_units` | list of unit ids (min 1) | yes |  | Unit ids that use this pattern. Must match the units that link it (the validator checks; a build step will compute it). |
 | `other_examples[]` | list of groups |  |  | Further uses found during research that are not (yet) entered as source units. |
-| `other_examples[].game` | text | yes |  | Game id from the registry, or 'extra:<title>' for a game outside it. |
+| `other_examples[].game` | text | yes |  | Game id from the registry, or 'extra:&lt;title&gt;' for a game outside it. |
 | `other_examples[].unit` | text | yes |  | Unit, ability or mechanic name (reference only). |
 | `other_examples[].note` | text | yes |  | How it works there, paraphrased. |
 | `other_examples[].sources[]` | list of groups (min 1, max 3) | yes |  | A citation. Paraphrase only; never copy text or images. |
@@ -190,7 +190,7 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `other_examples[].unit_id` | unit id |  |  | Unit id, once the unit is in the database. |
 | `other_examples[].franchise` | text |  |  | Franchise name, for counting how many franchises use a pattern. |
 | `shooter_analogues[]` | list of groups |  |  | Where players already do this in shooters or action games. |
-| `shooter_analogues[].game` | text | yes |  | Game id from the registry, or 'extra:<title>' for a game outside it. |
+| `shooter_analogues[].game` | text | yes |  | Game id from the registry, or 'extra:&lt;title&gt;' for a game outside it. |
 | `shooter_analogues[].unit` | text | yes |  | Unit, ability or mechanic name (reference only). |
 | `shooter_analogues[].note` | text | yes |  | How it works there, paraphrased. |
 | `shooter_analogues[].sources[]` | list of groups (min 1, max 3) | yes |  | A citation. Paraphrase only; never copy text or images. |
@@ -227,10 +227,10 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `risks.readability.level` | term | yes | `ratings` | A term from *Ratings*. |
 | `risks.readability.notes` | list of texts (min 1) | yes |  |  |
 | `variants[]` | list of groups (min 1) | yes |  | Distinct twists the generator can roll. Higher min_spice = wilder. |
-| `variants[].id` | id | yes |  | Lower-case id with dashes, e.g. 'infest-vehicle'. |
+| `variants[].id` | id | yes |  | Variant id, e.g. 'chain-jump'. |
 | `variants[].name` | text | yes |  |  |
 | `variants[].summary` | text | yes |  |  |
-| `variants[].min_spice` | integer | yes |  |  |
+| `variants[].min_spice` | integer (1-5) | yes |  |  |
 | `variants[].seen_in` | text |  |  | Where this twist comes from (game or unit names, reference only). |
 | `variants[].overrides` | group |  |  | Generator rules that differ for this variant. |
 | `variants[].overrides.classes` | list of terms |  | `classes` | Terms from *Unit classes*. |
@@ -257,11 +257,11 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `generator.counters` | list of link + reasons |  |  |  |
 | `generator.countered_by` | list of link + reasons (min 1) | yes |  | The typed twin of counterplay: what beats a card with this pattern. |
 | `generator.points` | group |  |  | Weights for the generator's balance hints, 0-3 each. Proposed with the generator (Phase 2). |
-| `generator.points.cost` | integer | yes |  |  |
-| `generator.points.power` | integer | yes |  |  |
-| `generator.points.complexity` | integer | yes |  |  |
+| `generator.points.cost` | integer (0-3) | yes |  |  |
+| `generator.points.power` | integer (0-3) | yes |  |  |
+| `generator.points.complexity` | integer (0-3) | yes |  |  |
 | `related[]` | list of groups |  |  |  |
-| `related[].id` | id | yes |  | Lower-case id with dashes, e.g. 'infest-vehicle'. |
+| `related[].id` | id | yes |  | Pattern id from the registry, e.g. 'hijack-vehicle'. |
 | `related[].kind` | one of `variant-of`, `generalises`, `often-confused-with`, `counters`, `combos-with` | yes |  |  |
 | `open_questions` | list of texts |  |  | Design questions for Mustafa that the research raised. |
 | `confidence` | term | yes | `confidence` | Confidence that the linked source units implement the mechanic as summarised; each example carries its own confidence. |
@@ -273,7 +273,7 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `review.wrong_paths` | list of texts |  |  |  |
 | `review.notes` | text |  |  |  |
 | `shooter_fit` | group | yes |  | How well the pattern suits a player-controlled, top-down team shooter. Feeds the top-30 list. |
-| `shooter_fit.score` | integer | yes |  |  |
+| `shooter_fit.score` | integer (1-5) | yes |  |  |
 | `shooter_fit.reason` | text | yes |  |  |
 
 ## Concept card
@@ -288,7 +288,7 @@ One generated unit concept (Phase 2). Example: [docs/examples/concept-card.examp
 | `generator.version` | text | yes |  | Generator code version. |
 | `generator.data_version` | text | yes |  | Content hash of the vocabularies and patterns used (data/manifest.json). |
 | `seed` | text | yes |  | Shareable seed string. |
-| `spice` | integer | yes |  | 1 = grounded (common parts, on-flavour) ... 5 = wild (rare cross-overs). |
+| `spice` | integer (1-5) | yes |  | 1 = grounded (common parts, on-flavour) ... 5 = wild (rare cross-overs). |
 | `inputs` | group | yes |  | What the user picked before rolling. Null = let the generator choose. |
 | `inputs.class` | term or empty | yes | `classes` | A term from *Unit classes*. |
 | `inputs.tier` | term or empty | yes | `tiers` | A term from *Tier bands*. |
@@ -312,9 +312,9 @@ One generated unit concept (Phase 2). Example: [docs/examples/concept-card.examp
 | `parts.body` | group | yes |  |  |
 | `parts.body.plan` | term | yes | `bodies` | A term from *Body plans*. |
 | `parts.body.size` | term | yes | `sizes` | A term from *Sizes*. |
-| `parts.body.count` | integer | yes |  | 1 unless the crew model is squad (then 2-5). |
+| `parts.body.count` | integer (1-5) | yes |  | 1 unless the crew model is squad (then 2-5). |
 | `parts.armament` | group | yes |  |  |
-| `parts.armament.primary` | group | yes |  | Null for an unarmed unit (its signature must then be support, transport, infiltration, summon or control).May be empty. |
+| `parts.armament.primary` | group | yes |  | Null for an unarmed unit (its signature must then be support, transport, infiltration, summon or control). May be empty. |
 | `parts.armament.primary.family` | term | yes | `weapon-families` | A term from *Weapon families*. |
 | `parts.armament.primary.damage` | term or empty | yes | `damage-types` | A term from *Damage types*. |
 | `parts.armament.primary.mount` | term | yes | `aim-models` | A term from *Aim / mount*. |
@@ -335,7 +335,7 @@ One generated unit concept (Phase 2). Example: [docs/examples/concept-card.examp
 | `parts.armament.secondary.traits` | list of terms (max 3) | yes | `weapon-traits` | Terms from *Weapon traits*. |
 | `parts.armament.secondary.seat` | term | yes | `seat-roles` | A term from *Seat roles*. |
 | `parts.armament.conditional[]` | list of groups (max 4) | yes |  | Weapons that depend on a passenger, a kill or a mode. Needed when a weapon's family is 'adaptive'. |
-| `parts.armament.conditional[].when` | typed link | yes |  | Typed link <kind>:<id>, e.g. 'role:anti-air', 'size:<=small' or 'hits:aircraft'. A link always describes a unit. In strengths, weaknesses, requires, excludes and implies it describes this unit; in counters, the unit this one beats; in countered_by, the unit that beats this one; in combos, the teammate it works well with. Kinds and their vocabularies are listed in x-ref-kinds; ranked kinds accept <= and >=. |
+| `parts.armament.conditional[].when` | typed link | yes |  | Typed link `<kind>:<id>`, e.g. `role:anti-air`, `size:<=small` or `hits:aircraft`. A link always describes a unit. In strengths, weaknesses, requires, excludes and implies it describes this unit; in counters, the unit this one beats; in countered_by, the unit that beats this one; in combos, the teammate it works well with. Kinds are listed under Conventions in docs/fields.md; ranked kinds accept `<=` and `>=`. |
 | `parts.armament.conditional[].weapon` | group | yes |  |  |
 | `parts.armament.conditional[].weapon.family` | term | yes | `weapon-families` | A term from *Weapon families*. |
 | `parts.armament.conditional[].weapon.damage` | term or empty | yes | `damage-types` | A term from *Damage types*. |
@@ -353,22 +353,22 @@ One generated unit concept (Phase 2). Example: [docs/examples/concept-card.examp
 | `parts.crew.model` | term | yes | `crew-models` | A term from *Crew models*. |
 | `parts.crew.solo_fallback` | term or empty | yes | `solo-fallback` | Null for single-seat models. |
 | `parts.crew.passengers` | group | yes |  | May be empty. |
-| `parts.crew.passengers.seats` | integer | yes |  |  |
+| `parts.crew.passengers.seats` | integer (1-8) | yes |  |  |
 | `parts.crew.passengers.kind` | term | yes | `seat-roles` | A term from *Seat roles*. |
 | `parts.signature` | group | yes |  |  |
-| `parts.signature.pattern` | id | yes |  | Lower-case id with dashes, e.g. 'infest-vehicle'. |
+| `parts.signature.pattern` | id | yes |  | Pattern id, e.g. 'infest-vehicle'. |
 | `parts.signature.variant` | text or empty | yes |  |  |
 | `parts.signature.kind` | term | yes | `ability-kinds` | A term from *Ability kinds*. |
 | `parts.signature.seat` | term | yes | `seat-roles` | A term from *Seat roles*. |
 | `parts.signature.cooldown` | term or empty | yes | `cooldown-bands` | Null for passive and triggered abilities. |
 | `parts.abilities[]` | list of groups (max 3) | yes |  | Extra abilities. Keys (signature included) fit the tier's budget. |
-| `parts.abilities[].pattern` | id | yes |  | Lower-case id with dashes, e.g. 'infest-vehicle'. |
+| `parts.abilities[].pattern` | id | yes |  | Pattern id, e.g. 'infest-vehicle'. |
 | `parts.abilities[].variant` | text or empty | yes |  |  |
 | `parts.abilities[].kind` | term | yes | `ability-kinds` | A term from *Ability kinds*. |
 | `parts.abilities[].seat` | term | yes | `seat-roles` | A term from *Seat roles*. |
 | `parts.abilities[].cooldown` | term or empty | yes | `cooldown-bands` | Null for passive and triggered abilities. |
 | `parts.modes[]` | list of groups (max 1) |  |  | A second form from a transform or deploy pattern. |
-| `parts.modes[].via` | id | yes |  | Lower-case id with dashes, e.g. 'infest-vehicle'. |
+| `parts.modes[].via` | id | yes |  | Pattern id, e.g. 'infest-vehicle'. |
 | `parts.modes[].class` | term | yes | `classes` | A term from *Unit classes*. |
 | `parts.modes[].mobility` | group | yes |  |  |
 | `parts.modes[].mobility.base` | term | yes | `mobility` | A term from *Mobility types*. |
@@ -390,7 +390,7 @@ One generated unit concept (Phase 2). Example: [docs/examples/concept-card.examp
 | `matchups.strengths[]` | list of groups (min 1) | yes |  |  |
 | `matchups.strengths[].ref` | typed link | yes |  |  |
 | `matchups.strengths[].why` | text | yes |  |  |
-| `matchups.strengths[].paired_with` | integer | yes |  | Index of the weakness that balances this strength. |
+| `matchups.strengths[].paired_with` | integer (0-) | yes |  | Index of the weakness that balances this strength. |
 | `matchups.weaknesses` | list of link + reasons (min 1) | yes |  |  |
 | `matchups.countered_by` | list of link + reasons (min 1) | yes |  |  |
 | `matchups.counters` | list of link + reasons (min 1) | yes |  |  |
@@ -419,29 +419,33 @@ One generated unit concept (Phase 2). Example: [docs/examples/concept-card.examp
 | `inspiration.remix_of` | list of typed links (max 3) |  |  | Set when the card came from Remix. |
 | `balance` | group | yes |  | Hints, not verdicts. |
 | `balance.cost_band` | term | yes | `cost-bands` | A term from *Cost bands*. |
-| `balance.power` | integer | yes |  |  |
-| `balance.complexity` | integer | yes |  |  |
-| `balance.keys` | integer | yes |  | Buttons the card uses, counted against the tier budget. |
+| `balance.power` | integer (1-10) | yes |  |  |
+| `balance.complexity` | integer (1-10) | yes |  |  |
+| `balance.keys` | integer (0-) | yes |  | Buttons the card uses, counted against the tier budget. |
 | `balance.flags` | list of terms | yes | `balance-flags` | Terms from *Balance flags*. |
 | `created_at` | text |  |  | Not part of the reproduction key. |
 
-## Board card
+## Board
 
-A concept card saved on the board (Phase 3). Schema: `schemas/board.schema.json`.
+The saved board (Phase 3): a version number for migrations and the cards on it. Schema: `schemas/board.schema.json`.
 
 | Field | Type | Required | Vocabulary | Meaning |
 |---|---|---|---|---|
-| `card` | concept card | yes |  | The full concept card (see above). |
-| `column` | one of `ideas`, `promising`, `shortlist`, `rejected` | yes |  |  |
-| `position` | integer | yes |  | Order within the column. |
-| `notes` | text | yes |  |  |
-| `tags` | list of texts | yes |  |  |
-| `stars` | integer | yes |  |  |
-| `origin` | one of `rolled`, `duplicate`, `remix`, `manual` | yes |  |  |
-| `parent_id` | text |  |  | The card this was duplicated from. |
-| `edited_fields` | list of texts |  |  | Parts and texts changed by hand; a reroll never overwrites these. |
-| `added_at` | text | yes |  |  |
-| `updated_at` | text |  |  |  |
+| `schema_version` | text | yes |  | Bumped on every format change; the app migrates older boards on load. |
+| `app_version` | text |  |  |  |
+| `saved_at` | text | yes |  |  |
+| `cards[]` | list of groups | yes |  |  |
+| `cards[].card` | concept card | yes |  | The full concept card (see above). |
+| `cards[].column` | one of `ideas`, `promising`, `shortlist`, `rejected` | yes |  |  |
+| `cards[].position` | integer (0-) | yes |  | Order within the column. |
+| `cards[].notes` | text | yes |  |  |
+| `cards[].tags` | list of texts | yes |  |  |
+| `cards[].stars` | integer (0-5) | yes |  |  |
+| `cards[].origin` | one of `rolled`, `duplicate`, `remix`, `manual` | yes |  |  |
+| `cards[].parent_id` | text |  |  | The card this was duplicated from. |
+| `cards[].edited_fields` | list of texts |  |  | Parts and texts changed by hand; a reroll never overwrites these. |
+| `cards[].added_at` | text | yes |  |  |
+| `cards[].updated_at` | text |  |  |  |
 
 ## Game
 
@@ -453,18 +457,18 @@ One entry in the games registry, `data/games.json`. Schema: `schemas/game.schema
 | `title` | text | yes |  |  |
 | `kind` | one of `game`, `series` | yes |  | game = one title; series = researched as one entry through a representative title (e.g. Battlefield vehicle archetypes). |
 | `titles` | list of texts |  |  | For a series: the titles it covers. |
-| `year` | integer |  |  |  |
+| `year` | integer (1980-) |  |  |  |
 | `developer` | text |  |  |  |
 | `franchise` | text | yes |  |  |
 | `control` | one of `commanded`, `piloted`, `both` | yes |  | commanded = the player orders units (RTS); piloted = the player is the unit (shooter); both. |
 | `research_bucket` | id | yes |  | The research agent batch this game belongs to. |
 | `version_researched` | text |  |  | Patch, edition or date the research describes. |
 | `expansions[]` | list of groups |  |  |  |
-| `expansions[].id` | id | yes |  | Lower-case id with dashes, e.g. 'infest-vehicle'. |
+| `expansions[].id` | id | yes |  | Expansion id, e.g. 'ra3-uprising'. |
 | `expansions[].title` | text | yes |  |  |
 | `expansions[].year` | integer | yes |  |  |
 | `factions[]` | list of groups (min 1) | yes |  | Playable sides. Use the reserved id 'shared' for units every side can field or games without factions. A unit belongs to the most general faction that fields it. |
-| `factions[].id` | id | yes |  | Lower-case id with dashes, e.g. 'infest-vehicle'. |
+| `factions[].id` | id | yes |  | Faction id, e.g. 'soviet'. |
 | `factions[].name` | text | yes |  |  |
 | `factions[].parent` | id |  |  | For subfactions (e.g. a general or splinter group): the main faction id. |
 | `factions[].introduced_in` | id |  |  | Expansion id, if the faction is not in the base game. |
@@ -474,7 +478,7 @@ One entry in the games registry, `data/games.json`. Schema: `schemas/game.schema
 | `tier_map[]` | list of groups |  |  | Which tech gates map to which tier band. |
 | `tier_map[].gate` | text | yes |  | Building, research or level that unlocks units, in plain words. |
 | `tier_map[].band` | term | yes | `tiers` | A term from *Tier bands*. |
-| `tier_map[].faction` | id |  |  | Lower-case id with dashes, e.g. 'infest-vehicle'. |
+| `tier_map[].faction` | id |  |  | Faction id from this game's factions, e.g. 'soviet'. |
 | `cost_thresholds` | group |  |  | Lowest price for each cost band above 'very low', in the game's currency. |
 | `cost_thresholds.currency` | text | yes |  |  |
 | `cost_thresholds.low` | number | yes |  |  |
@@ -497,6 +501,84 @@ One entry in the games registry, `data/games.json`. Schema: `schemas/game.schema
 | `sources[].supports` | list of texts |  |  | Which fields this source backs, as paths such as 'tier', 'cost_band' or 'abilities/0'. |
 | `sources[].version` | text |  |  | Patch, edition or remaster the page describes, for games that change. |
 
+## Pattern registry
+
+The shared list of pattern ids, `data/pattern-registry.json`. Schema: `schemas/pattern-registry.schema.json`.
+
+| Field | Type | Required | Vocabulary | Meaning |
+|---|---|---|---|---|
+| `schema_version` | text | yes |  |  |
+| `patterns[]` | list of groups | yes |  |  |
+| `patterns[].id` | id | yes |  | Lower-case id with dashes. |
+| `patterns[].name` | text | yes |  |  |
+| `patterns[].category` | term | yes | `pattern-categories` | A term from *Pattern categories*. |
+| `patterns[].summary` | text | yes |  |  |
+| `patterns[].from_brief` | boolean |  |  | True if the brief names it as an example. |
+
+## Word list
+
+One fixed word list, `data/vocab/<list>.json`, with the fields each term may carry. Schema: `schemas/vocabulary.schema.json`.
+
+| Field | Type | Required | Vocabulary | Meaning |
+|---|---|---|---|---|
+| `id` | id | yes |  | Lower-case id with dashes. |
+| `label` | text | yes |  |  |
+| `description` | text | yes |  |  |
+| `group` | one of `core`, `supporting` | yes |  | core = named in the brief; supporting = added to make the core lists work. |
+| `status` | one of `draft`, `approved` | yes |  |  |
+| `version` | text | yes |  |  |
+| `terms[]` | list of groups (min 2) | yes |  |  |
+| `terms[].id` | id | yes |  | Lower-case id with dashes. |
+| `terms[].label` | text | yes |  |  |
+| `terms[].description` | text | yes |  |  |
+| `terms[].aliases` | list of texts |  |  |  |
+| `terms[].notes` | text |  |  |  |
+| `terms[].examples` | list of texts |  |  | Reference examples from the research, paraphrased. |
+| `terms[].rarity` | term |  | `rarity` | How readily the generator offers this term (see the rarity list). |
+| `terms[].source_only` | boolean |  |  | Recorded for research; never rolled by the generator. |
+| `terms[].rank` | integer |  |  | Order on a scale (speed, size, cost, armour...). |
+| `terms[].classes` | list of terms |  | `classes` | Unit classes allowed to use this term. This is how 'aircraft don't get tracks' is enforced. |
+| `terms[].allowed` | map |  |  | Whitelist of terms this one may combine with on the same unit, keyed by vocabulary id. Checked both ways. |
+| `terms[].excluded` | map |  |  | Terms this one may not combine with on the same unit, keyed by vocabulary id. |
+| `terms[].requires` | list of lists |  |  | What the unit must also have for this term to make sense. |
+| `terms[].min_tier` | term |  | `tiers` | Lowest tier that may use this term. |
+| `terms[].uses_key` | boolean |  |  | Ability kinds and mobility traits: true if it is a button that counts toward the tier's key budget. |
+| `terms[].pattern` | id |  |  | Mobility traits: the mechanic pattern a key-bound trait stands for. |
+| `terms[].default_damage` | term |  | `damage-types` | A term from *Damage types*. |
+| `terms[].default_aim` | term |  | `aim-models` | A term from *Aim / mount*. |
+| `terms[].default_delivery` | term |  | `weapon-delivery` | A term from *Weapon delivery*. |
+| `terms[].default_range` | term |  | `range-bands` | A term from *Range bands*. |
+| `terms[].default_handling` | term |  | `handling` | A term from *Handling*. |
+| `terms[].target_type` | term |  | `target-types` | Mobility: what kind of target a unit moving this way is. |
+| `terms[].strong_vs` | list of typed links |  |  | Damage types: what this damage is good against (typed links to what the target is). |
+| `terms[].weak_vs` | list of typed links |  |  |  |
+| `terms[].immune` | list of typed links |  |  | Damage types: targets this damage does nothing to. |
+| `terms[].seats` | list of terms |  | `seat-roles` | Terms from *Seat roles*. |
+| `terms[].min_players` | integer (1-) |  |  |  |
+| `terms[].max_players` | integer (1-) |  |  |  |
+| `terms[].max_keys` | integer (0-) |  |  | Tiers: most buttons a unit may have, signature included. |
+| `terms[].max_passive` | integer (0-) |  |  |  |
+| `terms[].max_keys_per_seat` | integer (1-) |  |  |  |
+| `terms[].source_rule` | text |  |  | Tiers: how a source game's tech level maps to this tier. |
+| `terms[].themes` | list of texts |  |  |  |
+| `terms[].favoured` | map |  |  | Faction flavours: term ids the flavour leans toward, keyed by vocabulary id. |
+| `terms[].avoided` | map |  |  | Faction flavours: term ids held back at low spice, keyed by vocabulary id. |
+| `terms[].favoured_weight` | number (1-) |  |  | Faction flavours: how much more likely favoured terms are. |
+| `terms[].avoided_until_spice` | integer (1-5) |  |  |  |
+| `terms[].name_style` | text |  |  |  |
+| `terms[].min_spice` | integer (1-5) |  |  |  |
+| `terms[].weights` | list of numbers (min 5, max 5) |  |  | Rarity: relative weight at spice 1-5. |
+| `terms[].severity` | one of `block`, `warn` |  |  | Balance flags: block = never on a rolled card; warn = shown as a hint. |
+| `terms[].points` | group |  |  | Weights for the generator's balance hints, 0-3 each. Proposed with the generator (Phase 2). |
+| `terms[].points.cost` | integer (0-3) | yes |  |  |
+| `terms[].points.power` | integer (0-3) | yes |  |  |
+| `terms[].points.complexity` | integer (0-3) | yes |  |  |
+| `terms[].brings` | group |  |  | What this term adds to a card's matchups when rolled (filled in with the generator, Phase 2). |
+| `terms[].brings.strengths` | list of link + reasons |  |  |  |
+| `terms[].brings.weaknesses` | list of link + reasons |  |  |  |
+| `terms[].brings.counters` | list of link + reasons |  |  |  |
+| `terms[].brings.countered_by` | list of link + reasons |  |  |  |
+
 ## Shared parts
 
 **source**: A citation. Paraphrase only; never copy text or images.
@@ -505,7 +587,7 @@ One entry in the games registry, `data/games.json`. Schema: `schemas/game.schema
 |---|---|---|---|---|
 | `url` | URL | yes |  | The page actually read (https only; never an image). |
 | `title` | text | yes |  | Page title and site. |
-| `kind` | text | yes | `source-kinds` |  |
+| `kind` | term | yes | `source-kinds` |  |
 | `accessed` | text | yes |  | Date the page was read. |
 | `note` | text |  |  |  |
 | `supports` | list |  |  | Which fields this source backs, as paths such as 'tier', 'cost_band' or 'abilities/0'. |

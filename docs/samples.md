@@ -4,6 +4,8 @@
 
 The three source units and three mechanic patterns the brief asks for, fully filled in, plus one hand-made concept card showing what the generator will produce. Rendered from `data/units/ra3.json`, `data/patterns/*.json` and `docs/examples/concept-card.example.json`. Real unit and weapon names are reference only.
 
+**How to read it.** *(proposal)* marks our design suggestions for the player version, not sourced facts. The tag in square brackets after each strength, weakness or counter is the coded link the generator uses. 'Review: unchecked' means the research run's sampling checker hasn't signed the record yet; this draft's fact-check is summarised in the pull request.
+
 Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-hammer-tank) · [Multigunner IFV](#ra3-allied-multigunner-ifv) · [Infest a vehicle](#infest-vehicle) · [Leech the weapon of what you destroy](#leech-weapon-on-kill) · [A weapon that changes with the passenger](#passenger-sets-weapon) · [Example concept card](#example-card)
 
 ## Source units
@@ -33,11 +35,11 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 | Weapon | Slot | Family | Damage | Mount / delivery / range | Hits | Traits | What it does |
 |---|---|---|---|---|---|---|---|
 | Dismantler Claws | primary | Melee weapon | Melee | free aim / attach / melee | infantry, ground vehicles, naval | Damage over time | Closes to touching distance and strikes. Infantry die in one strike. A vehicle or ship (even a submerged one) gets the drone inside it and takes damage from within until it dies or the drone is removed. Aircraft can be infested only while landed. *Pattern:* Infest a vehicle. |
-| Electro-Stasis Ray | alternate | EMP | EMP | free aim / beam / long | ground vehicles, naval | Root / pin | A long-range beam that pins a vehicle in place: it can't move, transform or deploy, but its guns still work. One documented exception, the Allied aircraft carrier, is shut down completely. *When:* In stasis mode, switched with the mode toggle. *Pattern:* disable machine (planned). |
+| Electro-Stasis Ray | alternate | EMP | EMP | free aim / beam / long | ground vehicles, naval | Root / pin | A long-range beam that pins a vehicle in place: it can't move, transform or deploy, but its guns still work. One documented exception, the Allied aircraft carrier, is shut down completely. *When:* In stasis mode, switched with the mode toggle. *Pattern:* Disable a machine (planned). |
 
 **Abilities**
 
-- **Electro-Stasis Ray / Dismantler Claws** (toggle / mode switch): Swaps between the claws and the stasis ray. It uses one at a time, so pinning and infesting the same target takes two drones. *Pattern:* switch weapon mode (planned), disable machine (planned).
+- **Electro-Stasis Ray / Dismantler Claws** (toggle / mode switch): Swaps between the claws and the stasis ray. It uses one at a time, so pinning and infesting the same target takes two drones. *Pattern:* Switch weapon mode (planned), Disable a machine (planned).
 - **Escape from destroyed host** (triggered): If its own damage destroys the host, the drone can escape (it parachutes down from an aircraft) and attack again. If anything else destroys the host first, the drone dies with it. *Pattern:* Infest a vehicle.
 
 **Strengths**
@@ -53,7 +55,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 
 - Very little health: machine guns, snipers and electric weapons destroy it quickly. *[Light (armour)]*
 - The claws need touching distance, so it is exposed on the approach and can't reach aircraft. *[Melee (range)]*
-- One mode at a time, and the ray stops movement but not the target's guns. *[switch weapon mode (planned pattern)]*
+- One mode at a time, and the ray stops movement but not the target's guns. *[Switch weapon mode (planned pattern)]*
 - Dies with the host if someone else destroys the vehicle first. *[Attach (delivery)]*
 - Electric weapons do many times normal damage, and normal repair can't heal it. *[Uncrewed machine (nature)]*
 
@@ -81,10 +83,19 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 
 **Less certain**
 
-- No source gives the stasis ray's exact range or duration; a patch note implies the drone keeps the beam on the target rather than firing once.
-- The official profile says only repair crews at facilities can remove an infesting drone; the main wiki lists many more ways (repair drones, teleporting the host, several special attacks). The entry follows the wiki. (sources disagree)
-- Game data gives the claws explosive-type damage against vehicles and a sniper-type hit against infantry big enough to kill even a commando at once; 'melee' is used only because the blades family requires it.
-- Sources call it small or diminutive, and each drone fills a soldier's seat in a transport; no source compares its actual size to a soldier.
+- *Electro-Stasis Ray:* No source gives the stasis ray's exact range or duration; a patch note implies the drone keeps the beam on the target rather than firing once.
+- *Countered by:* The official profile says only repair crews at facilities can remove an infesting drone; the main wiki lists many more ways (repair drones, teleporting the host, several special attacks). The entry follows the wiki. (sources disagree)
+- *Dismantler Claws, damage:* Game data gives the claws explosive-type damage against vehicles and a sniper-type hit against infantry big enough to kill even a commando at once; 'melee' is used only because the blades family requires it.
+- *Body size:* Sources call it small or diminutive, and each drone fills a soldier's seat in a transport; no source compares its actual size to a soldier.
+
+**Rule breaks** (kept as the game has them; our word lists would not allow them)
+
+- *Dismantler Claws, targets:* The claws also infest ships, even submerged ones, which the blades family's target list leaves out.
+
+**Where no word-list term fitted**
+
+- *Dismantler Claws, damage* (used melee; wanted explosive (against vehicles) or kinetic (against infantry)): Game data gives the claws explosive-type damage against vehicles and sniper-type damage against infantry, which maps to kinetic. The blades family allows only melee, electric or energy damage, so a player version may want explosive or kinetic.
+- *Electro-Stasis Ray, damage* (used emp): The beam only immobilises: the target can't move, transform or deploy, but its weapons keep working (the Allied aircraft carrier is the one exception). The emp damage type stands for a full shutdown.
 
 **Sources**
 
@@ -117,12 +128,12 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 | Weapon | Slot | Family | Damage | Mount / delivery / range | Hits | Traits | What it does |
 |---|---|---|---|---|---|---|---|
 | 85 mm cannon | primary | Cannon | Armour-piercing | free aim / projectile / medium | infantry, ground vehicles, structures | - | A fast-firing anti-vehicle gun. Poor against infantry and unable to hit aircraft. |
-| Leech Beam | alternate | Drain beam | Energy | free aim / beam / long | ground vehicles, naval, structures | Self-heal | Reaches about twice as far as the cannon. Deals modest damage that ignores armour type, and repairs the tank while it stays on target. A vehicle that dies in the beam can hand over its weapon if the tank has none yet. *When:* In leech mode. Since patch 1.11 the tank must stand still to use it. *Pattern:* Leech the weapon of what you destroy, drain health (planned). |
+| Leech Beam | alternate | Drain beam | Energy | free aim / beam / long | ground vehicles, naval, structures | Self-heal | Reaches about twice as far as the cannon. Deals modest damage that ignores armour type, and repairs the tank while it stays on target. A vehicle that dies in the beam can hand over its weapon if the tank has none yet. *When:* In leech mode. Since patch 1.11 the tank must stand still to use it. *Pattern:* Leech the weapon of what you destroy, Drain health (planned). |
 | Auxiliary weapon port | acquired | Adaptive | - | from the kill | from the kill | - | Empty when built. Holds one weapon taken from the dead vehicle, such as anti-air flak, an anti-infantry gun, a tesla coil or artillery. It fires alongside the cannon, one weapon at a time, and is silent in leech mode; a Sky Knight drone taken from an aircraft carrier is the one exception; a Multigunner IFV gives anti-air rockets whoever rides inside. *When:* Filled once, by a vehicle that dies in the leech beam; can't be swapped. It is kept for the life of the tank, except that losing a Sky Knight drone taken from an aircraft carrier frees the slot in the base game (not in Uprising). *Pattern:* Leech the weapon of what you destroy. |
 
 **Abilities**
 
-- **Leech Beam (mode switch)** (toggle / mode switch): Switches between the cannon and the leech beam. Leeching kills more slowly than the cannon; it is a choice to heal or to loot, not to deal more damage. *Pattern:* switch weapon mode (planned), Leech the weapon of what you destroy.
+- **Leech Beam (mode switch)** (toggle / mode switch): Switches between the cannon and the leech beam. Leeching kills more slowly than the cannon; it is a choice to heal or to loot, not to deal more damage. *Pattern:* Switch weapon mode (planned), Leech the weapon of what you destroy.
 - **Weapon salvage** (triggered): When a vehicle dies while held in the beam, whoever lands the kill, a tank with an empty port mounts that vehicle's weapon and can't swap it later. It works on friendly vehicles with force-fire. Structures give nothing, and neither do a few vehicles, among them the Grinder, the Mortar Cycle and some ships and submarines. *Pattern:* Leech the weapon of what you destroy.
 
 **Strengths**
@@ -158,14 +169,22 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 - An anti-air escort, or leeching a friendly anti-air vehicle on purpose, covers its weakness to aircraft. *[Anti-air (role)]*
 - Teammates soften a big enemy vehicle while the tank holds the beam on it; the tank still gets the weapon if someone else lands the kill. *[Frontline assault (role)]*
 
-**As a player** *(proposal)***:** A mid-tier brawler with a cannon on left mouse. Hold right mouse for a long tether that heals you while it holds; while tethering you are heavily slowed but not rooted, your turret stays locked on the target and the cannon is silent. Tether what your team is already killing: if it dies in your beam, a tier-scaled copy of its gun goes on Q for this life.
+**As a player** *(proposal)***:** A mid-tier brawler with a cannon on left mouse. Hold Q for a long tether that heals you while it holds; while tethering you are heavily slowed but not rooted, your turret stays locked on the target and the cannon is silent. Tether what your team is already killing: if it dies in your beam, a tier-scaled copy of its gun goes on right mouse for this life.
 
 **Less certain**
 
-- Sources disagree on what a few Uprising vehicles give when leeched (Pacifier, Reaper). (sources disagree)
-- No source states outright that the beam can't target infantry; it is described as working on ground vehicles, ships (submarines only when surfaced) and buildings.
-- Taken from the cannon family default; no source describes the shell's travel.
-- The game classes the beam's damage as 'Magic', which ignores armour: every armour type takes it in full. 'energy' is our approximation, and the only damage type the drain family allows.
+- *Auxiliary weapon port:* Sources disagree on what a few Uprising vehicles give when leeched (Pacifier, Reaper). (sources disagree)
+- *Leech Beam, targets:* No source states outright that the beam can't target infantry; it is described as working on ground vehicles, ships (submarines only when surfaced) and buildings.
+- *85 mm cannon, delivery:* Taken from the cannon family default; no source describes the shell's travel.
+- *Leech Beam, damage:* The game classes the beam's damage as 'Magic', which ignores armour: every armour type takes it in full. 'energy' is our approximation, and the only damage type the drain family allows.
+
+**Rule breaks** (kept as the game has them; our word lists would not allow them)
+
+- *Leech Beam, targets:* The leech beam also drains ships and surfaced submarines, which the drain family's target list leaves out.
+
+**Where no word-list term fitted**
+
+- *Leech Beam, damage* (used energy; wanted a damage type that ignores armour): The game classes the beam's damage as 'Magic', which every armour type takes in full; the drain family allows only energy, and no damage type ignores armour.
 
 **Sources**
 
@@ -247,7 +266,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 
 - Its default missiles are built for anti-air, with extra damage and range against aircraft. *[Aircraft (class)]*
 - With a sniper, commando, tesla or radiation passenger it deletes infantry while staying hard to catch. *[Infantry (class)]*
-- With an engineer aboard it strips infesting drones out of friendly vehicles; with a spy it can shoot drones. *[Infest a vehicle]*
+- With an engineer aboard it strips infesting drones out of friendly vehicles; with a spy it can shoot drones. *[Infest a vehicle (pattern)]*
 
 **Notable combos**
 
@@ -259,25 +278,32 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 
 **Less certain**
 
-- Sources list Soviet and Empire soldiers as passengers but don't say how they normally end up in an Allied car (bribed soldiers, captured barracks or mixed teams).
-- No cited source says whether the Javelin version can hit aircraft.
-- The wiki gives figures for about half the mounted weapons (and says the Tanya, Natasha and Desolator versions match the soldiers' own weapons); this entry records only relative strength.
-- Delivery terms for the passenger weapons are not sourced weapon by weapon: most are family defaults, while the shuriken and arrow versions are coded as projectiles (and the arrow version as long range) from their descriptions. Ranges are family defaults where the wiki gives none.
-- The cited pages tie only the Desolator version to the Uprising expansion; the Uprising tags on the Cryo Legionnaire and Archer Maiden versions come from those soldiers' own wiki pages.
-- No source says whether the default missiles steer or lock on; the wiki calls them rockets, so they are coded as unguided.
-- The wiki gives no damage category for the default missiles; explosive is chosen from their light anti-vehicle and anti-air role.
-- No source says how the repair tool reaches its target (StrategyWiki calls it a passive repair tool); beam is the repair-tool family default.
-- No source describes how the stun travels; beam is the sonic family default. The main wiki says the stun covers a tiny area, while StrategyWiki says it stuns one enemy at a time. (sources disagree)
-- As for the attack dog version: beam is the sonic family default, and the two wikis disagree on a tiny area versus one target at a time. (sources disagree)
-- The wiki's damage note for tanks and the other heavy targets is read as half damage, the way the wiki writes damage modifiers elsewhere; it gives no other context.
-- The wiki calls Tanya's mounted guns autocannons; machine-gun is our classification of her own anti-infantry guns.
-- Aircraft are named outright; ground targets are implied, not stated.
-- No source gives the flak version's range; medium is the flak family default.
-- The cited pages say only that it matches the Desolator's own spray, so no trait is recorded and its range and targets are not sourced. Short is the chemical family default, though the Desolator's own wiki page suggests a longer reach than a basic rifle.
-- The wiki gives no damage category for the Tankbuster version; energy is the laser family default.
-- Enclosed carrier or open buggy: the sources describe it both ways.
-- The wiki doesn't say whether side or rear hits do extra damage to it.
-- The Hammer tank and Terror Drone entries in countered_by rest on those units' own cited pages (the Hammer tank page and the Terror drone page); none of this unit's three sources covers them.
+- *Armament:* Sources list Soviet and Empire soldiers as passengers but don't say how they normally end up in an Allied car (bribed soldiers, captured barracks or mixed teams).
+- *Missile pod (Javelin soldier), targets:* No cited source says whether the Javelin version can hit aircraft.
+- *Armament:* The wiki gives figures for about half the mounted weapons (and says the Tanya, Natasha and Desolator versions match the soldiers' own weapons); this entry records only relative strength.
+- *Armament:* Delivery terms for the passenger weapons are not sourced weapon by weapon: most are family defaults, while the shuriken and arrow versions are coded as projectiles (and the arrow version as long range) from their descriptions. Ranges are family defaults where the wiki gives none.
+- *Armament:* The cited pages tie only the Desolator version to the Uprising expansion; the Uprising tags on the Cryo Legionnaire and Archer Maiden versions come from those soldiers' own wiki pages.
+- *Multipurpose missile launcher, delivery:* No source says whether the default missiles steer or lock on; the wiki calls them rockets, so they are coded as unguided.
+- *Multipurpose missile launcher, damage:* The wiki gives no damage category for the default missiles; explosive is chosen from their light anti-vehicle and anti-air role.
+- *Repair tool (any engineer), delivery:* No source says how the repair tool reaches its target (StrategyWiki calls it a passive repair tool); beam is the repair-tool family default.
+- *Stun bark (attack dog), delivery:* No source describes how the stun travels; beam is the sonic family default. The main wiki says the stun covers a tiny area, while StrategyWiki says it stuns one enemy at a time. (sources disagree)
+- *Stun roar (war bear), delivery:* As for the attack dog version: beam is the sonic family default, and the two wikis disagree on a tiny area versus one target at a time. (sources disagree)
+- *Missile pod (Javelin soldier), summary:* The wiki's damage note for tanks and the other heavy targets is read as half damage, the way the wiki writes damage modifiers elsewhere; it gives no other context.
+- *Anti-infantry autocannons (Tanya), family:* The wiki calls Tanya's mounted guns autocannons; machine-gun is our classification of her own anti-infantry guns.
+- *Cryo beam (Cryo Legionnaire), targets:* Aircraft are named outright; ground targets are implied, not stated.
+- *Flak cannon (Flak Trooper), range:* No source gives the flak version's range; medium is the flak family default.
+- *Radiation spray (Desolator):* The cited pages say only that it matches the Desolator's own spray, so no trait is recorded and its range and targets are not sourced. Short is the chemical family default, though the Desolator's own wiki page suggests a longer reach than a basic rifle.
+- *Anti-vehicle laser (Tankbuster), damage:* The wiki gives no damage category for the Tankbuster version; energy is the laser family default.
+- *Body plan:* Enclosed carrier or open buggy: the sources describe it both ways.
+- *Armour models:* The wiki doesn't say whether side or rear hits do extra damage to it.
+- *Countered by:* The Hammer tank and Terror Drone entries in countered_by rest on those units' own cited pages (the Hammer tank page and the Terror drone page); none of this unit's three sources covers them.
+
+**Rule breaks** (kept as the game has them; our word lists would not allow them)
+
+- *Stun bark (attack dog), traits:* The source's tier-1 IFV stuns when carrying a dog or bear; our word list keeps stun for tier 2 and up.
+- *Stun roar (war bear), traits:* The source's tier-1 IFV stuns when carrying a dog or bear; our word list keeps stun for tier 2 and up.
+- *Infantry laser (Imperial Warrior), damage:* The wiki calls the Imperial Warrior version a laser but gives it the game's gun damage type, which maps to kinetic; our laser family allows only energy or fire damage.
+- *Psychokinetic blast (Yuriko Omega), targets:* StrategyWiki warns that this combination can quickly wreck a base, so it hits buildings, which our psionic family's target list leaves out.
 
 **Sources**
 
@@ -304,7 +330,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 - Use a self-cleanse on a cooldown, such as an electric discharge, smoke or a hold-to-shake-off input.
 - Get a teammate to shoot the rider off, or to use an ability that clears the hull.
 - Teleport or make the host invulnerable, which drops or suspends the infester.
-- Sacrifice or abandon the host: bail out, or destroy your own vehicle to deny a chain jump or a hijack.
+- Abandon the host: hold X to bail out and deny the kill (in the RTS originals, owners even destroyed their own infested vehicle to stop a chain jump).
 - Spread vehicles out so a chain jump or contagion can't spread through a group.
 
 **Source units in the database:** Terror Drone
@@ -313,11 +339,11 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 
 - *Command & Conquer: Red Alert 2 / Yuri's Revenge*, Terror Drone (Soviets): The original: leaps inside a vehicle, can't be hit while inside, and pops out to dive the next vehicle if its own damage kills the host. One drone per vehicle; an infested construction vehicle can't deploy. Repair (a service depot, a tech outpost or an IFV carrying an engineer) is the standard way to remove it; edge cases such as the Iron Curtain or a Chrono Miner's teleport also drop it. (high; [Terror drone (Red Alert 2), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Terror_drone_(Red_Alert_2)), [Red Alert 2 Soviet units, CNCNZ](https://cncnz.com/games/red-alert-2/soviet-units/))
 - *Command & Conquer: Red Alert 3*, Burst Drone (Empire): A flying scout that clings to the outside of a vehicle or aircraft, slows it and can self-destruct a few seconds later to hurt the host and its neighbours. Unlike the terror drone it can be shot off while attached, and repair drones destroy it. (high; [Burst drone, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Burst_drone), [Red Alert 3: Empire units, StrategyWiki](https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Empire_of_the_Rising_Sun_units))
-- *Command & Conquer: Tiberian Sun - Firestorm*, Limpet Drone (GDI and Nod): Waits hidden like a mine, welds itself under the first vehicle that drives over it, slows it down and reports what it sees. It does no real damage: a tracker, not a killer. Repair removes it; sensors reveal it and EMP destroys it. (high; [Limpet drone, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Limpet_drone), [Research Lab: drones, CNCNZ](https://cncnz.com/features/nmenths-research-lab/drones/))
-- *Command & Conquer: Generals / Zero Hour*, Hijacker and hero sniper crew kill (GLA): A GLA infantry unit, unarmed and stealthed while idle, that takes over most enemy vehicles on contact; a related hero shot (Jarmen Kell) kills a vehicle's crew from range and leaves it empty for anyone to claim. The hijacker can't take uncrewed vehicles such as drones, or transports carrying passengers; Kell's shot instead forces the passengers out. (high; [Hijacker (Generals), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Hijacker_(Generals_1)), [Jarmen Kell, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Jarmen_Kell), [Generals GLA units, CNCNZ](https://cncnz.com/games/generals/gla-units/))
+- *Command & Conquer: Tiberian Sun - Firestorm*, Limpet Drone (GDI and Nod): Waits hidden like a mine, welds itself under the first vehicle that drives over it, slows it down and reports what it sees. It does no real damage: a tracker, not a killer. Repair removes it; sensors reveal it and EMP destroys it. (medium; [Limpet drone, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Limpet_drone), [Research Lab: drones, CNCNZ](https://cncnz.com/features/nmenths-research-lab/drones/))
+- *Command & Conquer: Generals / Zero Hour*, Hijacker and hero sniper crew kill (GLA): For contrast (belongs to the planned hijack-vehicle pattern): a GLA infantry unit, unarmed and stealthed while idle, that takes over most enemy vehicles on contact; a related hero shot (Jarmen Kell) kills a vehicle's crew from range and leaves it empty for anyone to claim. The hijacker can't take uncrewed vehicles such as drones, or transports carrying passengers; Kell's shot instead forces the passengers out. (high; [Hijacker (Generals 1), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Hijacker_(Generals_1)), [Jarmen Kell, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Jarmen_Kell), [Generals GLA units, CNCNZ](https://cncnz.com/games/generals/gla-units/))
 - *StarCraft II: Legacy of the Void*, Viper's parasitic bomb (Zerg): Attaches a parasitic cloud to one enemy aircraft that damages it and every aircraft near it over several seconds, so the victim's best move is to leave its group. Damage values differ between versions. (high; [Viper, StarCraft Wiki](https://starcraft.fandom.com/wiki/Viper), [Legacy of the Void beta patch notes, Blizzard](https://news.blizzard.com/en-us/article/18483059/starcraft-ii-legacy-of-the-void-beta-patchnotes-1-0))
-- *StarCraft II*, Infestor's neural parasite (Zerg): A tether that takes control of one enemy unit for a short time (11 seconds in Legacy of the Void); control also ends early if the caster dies or the victim gets too far away. Kill the caster or pull the victim out of range to break it. (medium; [Infestor, StarCraft Wiki](https://starcraft.fandom.com/wiki/Infestor))
-- *Halo Wars / Halo Wars 2*, Spartan vehicle hijack (UNSC): Spartan heroes take over enemy vehicles; the target is frozen during the takeover, which is cancelled if the Spartan dies. In the sequel an EMP leap pins the target first. (medium; [Red Team, Halopedia](https://www.halopedia.org/Red_Team), [Boarding (gameplay mechanic), Halopedia](https://www.halopedia.org/Boarding_(gameplay_mechanic)))
+- *StarCraft II*, Infestor's neural parasite (Zerg): A tether that takes control of one enemy unit for a short, fixed time; control also ends early if the caster dies or the victim gets too far away. Kill the caster or pull the victim out of range to break it. (medium; [Infestor, StarCraft Wiki](https://starcraft.fandom.com/wiki/Infestor))
+- *Halo Wars / Halo Wars 2*, Spartan vehicle hijack (UNSC): For contrast (belongs to the planned hijack-vehicle pattern): spartan heroes take over enemy vehicles; the target is frozen during the takeover, which is cancelled if the Spartan dies. In the sequel an EMP leap pins the target first. (medium; [Red Team, Halopedia](https://www.halopedia.org/Red_Team), [Boarding (gameplay mechanic), Halopedia](https://www.halopedia.org/Boarding_(gameplay_mechanic)))
 
 **Shooter analogues (where players already do this)**
 
@@ -334,7 +360,7 @@ A cheap, very fast, fragile pouncer whose skill is the approach. Once latched, t
 
 - You buy a cheap T1 unit with very low health and a short respawn; losing it on the approach is normal, not a disaster.
 - The skill is the approach: flank, use cover, wait for a stalled or lone vehicle, or have a teammate pin it first. The pounce is a short committed leap toward the cursor that snaps onto any enemy hull it touches.
-- Once latched, your camera follows the host and you still have decisions: hold to drill if your variant does damage (it ramps up), pick your sabotage on a multi-seat host by where you land (on the turret to jam it, on the rear to cut the engine, on the front to block deploying), and choose when to leap off.
+- Once latched, your camera follows the host and you still have decisions: hold to drill if your variant does damage (it ramps up), with the anchor variant pick your sabotage on a multi-seat host by where you land (on the turret to jam it, on the rear to cut the engine, on the front to block deploying), and choose when to leap off.
 - If your own damage finishes the host, you pop out with a short grace period. If anything else destroys it, you are thrown clear at low health and briefly stunned, so your team can finish a host you are riding without killing you.
 - Against infantry, a pounce should not kill outright as in the RTS; at most it finishes weakened soldiers.
 
@@ -357,7 +383,7 @@ A cheap, very fast, fragile pouncer whose skill is the approach. Once latched, t
 - Move with WASD and aim with the mouse.
 - Left mouse: pounce toward the cursor, snapping to the nearest enemy hull in a small cone.
 - Right mouse (optional per variant): a pin beam held on an enemy vehicle. Its range is capped so the pinner always stays on the victim's screen, and the cap is drawn as a ring around the pinner.
-- While latched: hold left mouse to drill (variants that do damage, such as gnaw). On a multi-seat host, where you land picks the sabotage (turret: gun jammed, rear: engine cut, front: deploying blocked), shown as an icon at that spot. Space leaps off; with the ticking-charge variant, leaping off arms the charge. With the pin that is two counted keys (right mouse and Space), within the T1 budget.
+- While latched: hold left mouse to drill (variants that do damage, such as gnaw). With the anchor variant, where you land on a multi-seat host picks the sabotage (turret: gun jammed, rear: engine cut, front: deploying blocked), shown as an icon at that spot. Space leaps off; with the ticking-charge variant, leaping off arms the charge. With the pin that is two counted keys (right mouse and Space), within the T1 budget, as long as the pounce is the unit's primary weapon; an infester with a gun on left mouse needs Q for the pounce, so it can take the pin only from T2.
 - Victim, with the universal keys: hold F for a moment to shake it off; it works from every seat and while pinned, and you can drive but not fire while shaking. Hold X to bail out. Teammates: the repair tool's main fire removes the infester.
 
 **Readability cues**
@@ -406,32 +432,34 @@ A cheap, very fast, fragile pouncer whose skill is the approach. Once latched, t
 
 **Variants the generator can roll**
 
-| Variant | From spice | What changes | Seen in |
-|---|---|---|---|
-| Gnaw from inside (`gnaw`) | 1 | Steady damage from inside until the host dies or the infester is removed; can't be shot while inside. | Red Alert 2 and 3 terror drones |
-| Anchor (`anchor`) | 1 | Little or no damage; it slows the host or stops it deploying or transforming, so teammates can catch it. | RA3 burst drone, Firestorm limpet drone |
-| Parasite tracker (`tracker`) | 1 | Shows the host to the infester's team or enables lock-on; lasts long or until cleansed. | Firestorm limpet drone, Battlefield tracer dart |
-| Chain jump (`chain-jump`) | 2 | If its own damage kills the host it pops out unharmed and can dive the next vehicle (two jumps at most); if anything else kills the host it is thrown clear at low health instead of dying with it. | Red Alert 2 and 3 terror drones |
-| Ticking charge (`ticking-charge`) | 2 | Latches, then arms a charge as it leaps off; the charge detonates after a short fuse, hurting the host and nearby vehicles, and the victim gets a window to shake it off or spread out. | RA3 burst drone (Halo's grenade dropped into a tank's hatch is a looser, player-planted version) |
-| Pin then pounce (`pin-then-pounce`) | 2 | A ranged pin holds the vehicle first so the latch lands safely; can be split between two teammates. The pin never blocks the victim's shake-off. | RA3 terror drone stasis ray, Halo plasma-pistol EMP before boarding |
-| Grab and run (`grab-and-run`) | 3 | A brief latch that rips a resource out of the host (a battery, a shield) and leaps off; the host chases the thief, and the stolen resource can power up a friendly vehicle. | Titanfall 2 rodeo |
-| Mine latch (`mine-latch`) | 3 | You plant up to two hidden latch-mines; the first enemy vehicle to drive over one is tagged (tracker) or slowed (anchor), never gnawed, and you get a ping. You never wait inside the mine yourself. | Firestorm limpet drone |
-| Contagion (`contagion`) | 4 | The latched effect also hurts the host's allies nearby, so the victim's best move is to leave its group. | StarCraft II parasitic bomb |
-| Tethered control (`tethered-control`) | 5 | Takes over only the host's weapon, never its movement, for a few seconds at most while the attacker stays alive and within leash range; the victim can still drive, shake it off or drive out of the leash. | StarCraft II neural parasite |
+| Variant | From spice | What changes | Rules that differ | Seen in |
+|---|---|---|---|---|
+| Gnaw from inside (`gnaw`) | 1 | Steady damage from inside until the host dies or the infester is removed; can't be shot while inside. | - | Red Alert 2 and 3 terror drones |
+| Anchor (`anchor`) | 1 | Little or no damage; it slows the host, blocks its deploying or transforming, or jams its gun, and on a multi-seat host where it lands picks which, so teammates can catch it. | - | RA3 burst drone, Firestorm limpet drone |
+| Parasite tracker (`tracker`) | 1 | Shows the host to the infester's team or enables lock-on; lasts long or until cleansed. | - | Firestorm limpet drone, Battlefield tracer dart |
+| Chain jump (`chain-jump`) | 2 | If its own damage kills the host it pops out unharmed and can dive the next vehicle (two jumps at most); if anything else kills the host it is thrown clear at low health instead of dying with it. | - | Red Alert 2 and 3 terror drones |
+| Ticking charge (`ticking-charge`) | 2 | Latches, then arms a charge as it leaps off; the charge detonates after a short fuse, hurting the host and nearby vehicles, and the victim gets a window to shake it off or spread out. | - | RA3 burst drone (Halo's grenade dropped into a tank's hatch is a looser, player-planted version) |
+| Pin then pounce (`pin-then-pounce`) | 2 | A ranged pin holds the vehicle first so the latch lands safely; can be split between two teammates. The pin never blocks the victim's shake-off. | sets first: Attach (delivery), Melee (range), Root / pin (weapon trait) | RA3 terror drone stasis ray, Halo plasma-pistol EMP before boarding |
+| Grab and run (`grab-and-run`) | 3 | A brief latch that rips a resource out of the host (a battery, a shield) after a short, visible pull that a quick shake-off stops; the thief then leaps off, the host can chase it, and the stolen resource can power up a friendly vehicle. | - | Titanfall 2 rodeo |
+| Mine latch (`mine-latch`) | 3 | You plant up to two hidden latch-mines; the first enemy vehicle to drive over one is tagged (tracker) or slowed (anchor), never gnawed, and you get a ping. You never wait inside the mine yourself. | as: active; sets first: Place (delivery); its own strengths and weaknesses: Works while you are elsewhere: the first vehicle over a hidden mine is tagged or slowed, and you get a ping. [Place (delivery)]; A mine sits still and does nothing until a vehicle drives over it; a driver who spots it goes around it or shoots it. [Place (delivery)] | Firestorm limpet drone |
+| Contagion (`contagion`) | 4 | The latched effect also hurts the host's allies nearby, so the victim's best move is to leave its group. | - | StarCraft II parasitic bomb |
+| Tethered control (`tethered-control`) | 5 | Latches on and takes over only the host's weapon, never its movement, for a few seconds at most; it ends at once if the infester is shaken off, repaired off or killed, and the victim can drive the whole time. | from T3 | StarCraft II neural parasite |
+
+The pattern itself is uncommon, so on a rolled card these variants appear from spice 2 at the earliest.
 
 **Generator rules**
 
 - Classes: Drone / support, Infantry. From T1. As: active, signature slot. Rarity: uncommon. Leans: Soviets.
 - Needs: at most Small (size).
 - Never with: at least 1 passenger seat(s).
-- Sets first: Attach (delivery).
+- Sets first: Attach (delivery), Melee (range).
 - Adds strength: While latched it is hard to hit and keeps working until the host shakes it off, gets repaired or a teammate removes it. *[Attach (delivery)]*
 - Adds weakness: It has to reach touching distance, so it is exposed on the way in. *[Melee (range)]*
 - Counters: Lone or slow vehicles without an escort or a cleanse are its prey. *[Tank / ground vehicle (class)]*
 - Countered by: Sustained anti-infantry fire stops a fragile infester before it connects. *[Machine gun (weapon)]*
 - Countered by: Repair tools pull the infester out of the host. *[Repair tool (weapon)]*
 - Countered by: Out of its reach: it can't latch onto or hit aircraft in flight, and they can shoot it freely. *[Aircraft (class)]*
-- Related: disable machine (planned) (combos with), hijack vehicle (planned) (often confused with).
+- Related: Disable a machine (planned; combos with), Hijack a vehicle (planned; often confused with).
 
 **Open design questions**
 
@@ -444,7 +472,7 @@ A cheap, very fast, fragile pouncer whose skill is the approach. Once latched, t
 
 *Category:* Conversion (also Weapon behaviour). *Also called:* weapon salvage, loot the kill, steal a weapon. *Shooter fit:* 4/5. *Confidence:* high. *Status:* proposed (review: unchecked).
 
-**What it does.** A unit turns enemy losses into its own power. It first claims a donor: a tether held on the target, a finishing blow, or touching the wreck or a dropped item. When the donor dies (or, for hijacking and battery theft, while it is still alive), something moves to the claimer: a copy of the donor's weapon (so the reward depends on what was killed), a generic upgrade step, the donor's whole vehicle, or materials. The usual limits are one slot or a short ladder of upgrades, a short window to claim, and a vulnerable claiming state. It changes what a kill means: players pick targets by what they will get, and damaged players learn to back off before they become loot. Variants change one axis of the tether-and-copy base.
+**What it does.** A unit turns enemy losses into its own power. It first claims a donor: a tether held on the target, a finishing blow, or touching the wreck or a dropped item. When the donor dies, something moves to the claimer: a copy of the donor's weapon (so the reward depends on what was killed), a generic upgrade step, a new loadout or materials. Taking a living enemy's whole vehicle or its battery belongs to other patterns (hijack a vehicle; infest's grab-and-run). The usual limits are one slot or a short ladder of upgrades, a short window to claim, and a vulnerable claiming state. It changes what a kill means: players pick targets by what they will get, and damaged players learn to back off before they become loot. Variants change one axis of the tether-and-copy base.
 
 **Why it suits Shamble Frontlines.** Turns every kill into a loadout decision and rewards 'soften and claim' team play, but needs firm rules (tier scaling, no farming teammates) to avoid snowballing.
 
@@ -462,8 +490,8 @@ A cheap, very fast, fragile pouncer whose skill is the approach. Once latched, t
 **Other examples found (to be entered as source units during the research run)**
 
 - *Command & Conquer: Generals / Zero Hour*, Salvage crates (GLA Technical, Marauder, Scorpion and others): Destroyed vehicles drop crates that only the leeching faction can see. Each compatible vehicle climbs a fixed two-step upgrade ladder, whatever the donor was; vehicles already at the top get a little cash and experience instead. (high; [Salvaging, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Salvaging), [Technical (Generals 1), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Technical_(Generals_1)), [Command & Conquer: Generals – Zero Hour – Kassad's Units, CNCNZ](https://cncnz.com/games/zero-hour/kassads-units/))
-- *Command & Conquer: Generals / Zero Hour*, Hijacker (GLA): The whole-vehicle version: an unarmed soldier, stealthed while idle, takes most enemy vehicles on contact and keeps their veterancy. It can't get out until the vehicle is destroyed, then climbs out to steal another. (high; [Hijacker (Generals 1), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Hijacker_(Generals_1)), [Command & Conquer: Generals – Zero Hour – Kassad's Units, CNCNZ](https://cncnz.com/games/zero-hour/kassads-units/))
-- *Command & Conquer: Tiberian Sun*, Mutant Hijacker (Forgotten): A one-at-a-time commando that can steal any vehicle, even the heaviest walkers, and pops out to steal again when it is destroyed. (medium; [Mutant hijacker, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Mutant_hijacker))
+- *Command & Conquer: Generals / Zero Hour*, Hijacker (GLA): For contrast (belongs to the planned hijack-vehicle pattern): an unarmed soldier, stealthed while idle, takes most enemy vehicles on contact and keeps their veterancy. It can't get out until the vehicle is destroyed, then climbs out to steal another. (high; [Hijacker (Generals 1), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Hijacker_(Generals_1)), [Command & Conquer: Generals – Zero Hour – Kassad's Units, CNCNZ](https://cncnz.com/games/zero-hour/kassads-units/))
+- *Command & Conquer: Tiberian Sun*, Mutant Hijacker (Forgotten): For contrast (belongs to the planned hijack-vehicle pattern): a one-at-a-time commando that can steal any vehicle, even the heaviest walkers, and pops out to steal again when it is destroyed. (medium; [Mutant hijacker, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Mutant_hijacker))
 - *Command & Conquer 3: Tiberium Wars / Kane's Wrath*, Avatar walker's commandeer, and walker husks (Nod): The Avatar tears parts off four Nod vehicle types (flame tank, attack bike, stealth tank, beam cannon), friendly or enemy, destroying the donor, and mounts them on itself: a flamethrower, a stealth detector, a cloak or a second beam. Heavy walkers leave husks that an engineer from either side can revive; a revived Avatar returns at half health. (medium; [Avatar (Tiberium Wars), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Avatar_(Tiberium_Wars)), [Husk, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Husk))
 - *Company of Heroes*, Dropped weapons and abandoned team weapons (all factions): Specialist weapons sometimes drop when the soldiers carrying them are killed, and another infantry squad, even an enemy one, can pick them up. A crew-served gun left with too few crew is abandoned, and an infantry squad of any faction can recrew it with at least two men. (medium; [Infantry weapons, Company of Heroes Wiki](https://companyofheroes.fandom.com/wiki/Infantry_Weapons), [Weapon team, Company of Heroes Wiki](https://companyofheroes.fandom.com/wiki/Weapon_Team))
 - *Iron Harvest*, Infantry weapon kits: Picking up a kit converts a whole squad into that class, always in the picker's own faction version. The beta-era wiki says kits come from crates and from killed enemy infantry; that needs a second source for the released game. (low; [Weapon, Iron Harvest Wiki](https://iron-harvest.fandom.com/wiki/Weapon), [Iron Harvest early impressions, Wayward Strategy](https://waywardstrategy.com/2018/08/27/iron-harvest-early-impressions/))
@@ -471,15 +499,15 @@ A cheap, very fast, fragile pouncer whose skill is the approach. Once latched, t
 
 **Shooter analogues (where players already do this)**
 
-- *Titanfall 2*, Battery theft: A pilot rips the battery out of an enemy Titan, which damages it, and carries it to a friendly Titan for a shield and health boost; the carrier drops it on death, so the enemy can chase it back. (medium; [Rodeo, Titanfall Wiki](https://titanfall.fandom.com/wiki/Rodeo), [Battery, Titanfall Wiki](https://titanfall.fandom.com/wiki/Battery))
+- *Titanfall 2*, Battery theft: For contrast (closer to infest's grab-and-run variant): a pilot rips the battery out of an enemy Titan, which damages it, and carries it to a friendly Titan for a shield and health boost; the carrier drops it on death, so the enemy can chase it back. (medium; [Rodeo, Titanfall Wiki](https://titanfall.fandom.com/wiki/Rodeo), [Battery, Titanfall Wiki](https://titanfall.fandom.com/wiki/Battery))
 - *Battlefield series*, Kit pickup: A killed player's kit can be picked up and used at once; dropped kits vanish after a short time. (medium; [Kit, Battlefield Wiki](https://battlefield.fandom.com/wiki/Kit))
 - *Mega Man (classic series)*, Boss weapons: Beating a boss permanently gives its weapon, which runs on limited energy that must be refilled: the cleanest 'kill it, get its gun' with an ammo limit. (medium; [Special Weapon, Mega Man Knowledge Base](https://megaman.fandom.com/wiki/Special_Weapon))
 - *ARC Raiders*, Salvaging machines: Destroyed machines drop power cells, which recharge shields mid-fight or go into crafting, and parts such as a damaged Hornet driver that are recycled into crafting materials: kills pay out in resources. (medium; [ARC, ARC Raiders Wiki](https://arc-raiders.fandom.com/wiki/ARC), [ARC Powercell, ARC Raiders Wiki](https://arc-raiders.fandom.com/wiki/ARC_Powercell), [Damaged Hornet Driver, ARC Raiders Wiki](https://arc-raiders.fandom.com/wiki/Damaged_Hornet_Driver))
-- *Halo series*, Vehicle hijacking: Throwing a driver out and taking the seat: the whole-vehicle version in a shooter. (medium; [Boarding (gameplay mechanic), Halopedia](https://www.halopedia.org/Boarding_(gameplay_mechanic)))
+- *Halo series*, Vehicle hijacking: For contrast (belongs to the planned hijack-vehicle pattern): throwing a driver out and taking the seat. (medium; [Boarding (gameplay mechanic), Halopedia](https://www.halopedia.org/Boarding_(gameplay_mechanic)))
 
 #### Translation to a player-controlled unit
 
-A mid-tier vehicle with a main gun and a tether. Hold the tether on a target the team is killing; if it dies while tethered, whoever landed the kill, a copy of its weapon scaled to your tier snaps onto your chassis and fires on Q.
+A mid-tier vehicle with a main gun and a tether. Hold the tether on a target the team is killing; if it dies while tethered, whoever landed the kill, a copy of its weapon scaled to your tier snaps onto your chassis and fires on right mouse.
 
 **As the user**
 
@@ -504,10 +532,10 @@ A mid-tier vehicle with a main gun and a tether. Hold the tether on a target the
 **Controls (proposal)**
 
 - Move with WASD and aim with the mouse; the enemy vehicle under the cursor previews the weapon it would give. Left mouse: main gun.
-- Hold right mouse: tether the enemy vehicle under the cursor while it is in range and in line of sight. Tether range is capped so you always stay on the target's screen, and the cap is drawn as a ring around you.
-- Q: fire the stolen weapon on its own trigger and cooldown (no hidden alternation with the main gun).
+- Hold Q: tether the enemy vehicle under the cursor while it is in range and in line of sight. Tether range is capped so you always stay on the target's screen, and the cap is drawn as a ring around you.
+- Right mouse: fire the stolen weapon, your secondary slot, on its own trigger and cooldown (empty until your first claim; no hidden alternation with the main gun).
 - No swap key: a new claim always replaces the stolen weapon, and a preview ring on the target shows the swap before the claim lands.
-- Middle mouse, the universal ping, on the tethered target: 'leeching, finish it'. The pattern uses two counted keys (right mouse and Q), within the T2 budget; the other universal keys (E, hold F, hold X, 1-3) work as on every unit.
+- Middle mouse, the universal ping, on the tethered target: 'leeching, finish it'. The pattern uses two counted keys (Q and right mouse), within the T2 budget; the other universal keys (E, hold F, hold X, 1-3) work as on every unit.
 - Target, with the universal keys: hold F for a moment to shake the tether off; you can drive but not fire while shaking.
 
 **Readability cues**
@@ -527,7 +555,7 @@ A mid-tier vehicle with a main gun and a tether. Hold the tether on a target the
 - Give the stolen weapon its own trigger instead of RA3's hidden one-weapon-at-a-time alternation.
 - RA3 locks the slot after the first steal; here a new claim replaces it, previewed before it lands, so a poor first steal isn't a mistake for the whole life.
 - Instead of RA3's full root, leeching applies a heavy slow and locks the turret onto the target.
-- Decide what happens to a stolen weapon on death and respawn.
+- RA3's stolen weapon dies with the tank; here it drops as a short-lived salvage crate that only leech-capable units can claim (the open questions keep the alternatives).
 
 **Team-play potential: high.** Hooks: Setup and finisher, Share the spoils, Needs an escort, Counter-pick. The claim-at-death rule rewards coordination directly: one player claims, others finish. The enemy has to coordinate its retreats and deny wrecks.
 
@@ -555,16 +583,17 @@ A mid-tier vehicle with a main gun and a tether. Hold the tether on a target the
 
 **Variants the generator can roll**
 
-| Variant | From spice | What changes | Seen in |
-|---|---|---|---|
-| Tether and copy (`tether-copy`) | 1 | Hold a beam on the target; if it dies while tethered, whoever landed the kill, you mount a copy of its weapon, so the enemy roster becomes a loot table. The copy can be weaker or altered; here it is scaled to your tier. | RA3 Hammer Tank; Mega Man boss weapons (a donor copy without the tether) |
-| Upgrade ladder (`upgrade-ladder`) | 1 | Every claim moves the unit one step up a fixed ladder, whatever the donor was; extra claims become cash or experience. Easier to read and balance. | Generals salvage crates |
-| Wreck crate race (`wreck-crate`) | 2 | A kill drops a pickup that the first unit to touch claims, before it decays; enemies can grab or destroy it first. | Battlefield kits, Company of Heroes dropped weapons and abandoned team weapons, Generals salvage (only GLA players can see or take crates) |
-| Kit swap (`kit-swap`) | 2 | A pickup replaces the whole loadout or class for this life instead of adding a weapon, but only with a kit of the picker's tier or lower. | Iron Harvest kits, Battlefield kits |
-| Loot as currency (`loot-currency`) | 2 | Wrecks pay out in resources or crafting material rather than direct power. | Supreme Commander reclaim, ARC Raiders salvage |
-| Limited-ammo copy (`limited-copy`) | 2 | The gained weapon runs on limited energy or ammo; when it runs dry it stays mounted but can't fire until refilled. | Mega Man |
-| Revive the husk (`revive-husk`) | 3 | Heavy units leave a fragile wreck that an engineer from either side can bring back for their own team at reduced health. | Tiberium Wars husks |
-| Willing donor (`willing-donor`) | 3 | A living teammate chooses to hand over their vehicle's second weapon: they park beside the leecher and confirm with interact. The leecher mounts a copy at its own tier, and the donor loses that weapon for this life but keeps its main gun. One gift per life on each side and never by force, so teammates can't be farmed. | An original twist on the Tiberium Wars Avatar, which strips friendly vehicles by destroying them; here the ally consents and survives |
+| Variant | From spice | What changes | Rules that differ | Seen in |
+|---|---|---|---|---|
+| Tether and copy (`tether-copy`) | 1 | Hold a beam on the target; if it dies while tethered, whoever landed the kill, you mount a copy of its weapon, so the enemy roster becomes a loot table. The copy can be weaker or altered; here it is scaled to your tier. | as: channel; sets first: Adaptive (weapon); its own strengths and weaknesses: Starts each life with an empty stolen-weapon slot, loses it on death, and goes quiet while it tethers. [Adaptive (weapon)] | RA3 Hammer Tank; Mega Man boss weapons (a donor copy without the tether) |
+| Upgrade ladder (`upgrade-ladder`) | 1 | Every claim moves the unit one step up a fixed ladder, whatever the donor was; extra claims become cash or experience. Easier to read and balance. | classes: Tank / ground vehicle, Walker / mech, Hovercraft, Infantry; from T1; as: triggered; its own strengths and weaknesses: Each claim moves it one step up a fixed upgrade ladder, whatever the donor was. [Leech the weapon of what you destroy (pattern)]; Starts each life at the bottom of the ladder and loses its steps on death; once at the top, claims pay only a little. [Leech the weapon of what you destroy (pattern)] | Generals salvage crates |
+| Wreck crate race (`wreck-crate`) | 2 | A kill drops a pickup that the first unit to touch claims, before it decays; enemies can grab or destroy it first. | as: triggered; its own strengths and weaknesses: Any wreck it reaches first can arm it, whoever made the kill. [Adaptive (weapon)]; Starts each life with an empty slot and must reach a crate before it decays or an enemy grabs or destroys it. [Adaptive (weapon)] | Battlefield kits, Company of Heroes dropped weapons and abandoned team weapons, Generals salvage (only GLA players can see or take crates) |
+| Kit swap (`kit-swap`) | 2 | A pickup replaces the whole loadout or class for this life instead of adding a weapon, but only with a kit of the picker's tier or lower. | classes: Infantry; from T1; as: triggered; its own strengths and weaknesses: Can become another class mid-fight by picking up a kit. [Leech the weapon of what you destroy (pattern)]; Takes only kits of its own tier or lower, only where they drop, and loses the new loadout on death. [Leech the weapon of what you destroy (pattern)] | Iron Harvest kits, Battlefield kits |
+| Loot as currency (`loot-currency`) | 2 | Wrecks pay out in resources or crafting material rather than direct power. | as: triggered; its own strengths and weaknesses: Every wreck it salvages pays out resources or materials for later purchases. [Leech the weapon of what you destroy (pattern)]; Salvage adds no power in the current fight, and wrecks must be reached before they decay or the enemy denies them. [Leech the weapon of what you destroy (pattern)] | Supreme Commander reclaim, ARC Raiders salvage |
+| Limited-ammo copy (`limited-copy`) | 2 | The gained weapon runs on limited energy or ammo; when it runs dry it stays mounted but can't fire until refilled. | its own strengths and weaknesses: Its stolen weapon runs dry and stays silent until refilled, and it starts each life with an empty slot. [Adaptive (weapon)] | Mega Man |
+| Willing donor (`willing-donor`) | 3 | A living teammate chooses to hand over their vehicle's second weapon: they park beside the leecher and confirm with interact. The leecher mounts a copy at its own tier, and the donor loses that weapon for this life but keeps its main gun. One gift per life on each side and never by force, so teammates can't be farmed. | as: triggered; its own strengths and weaknesses: A teammate can hand it a copy of their second weapon, so the team chooses what it carries. [Adaptive (weapon)]; Needs a teammate to park beside it, at most once per life, and the gift costs that teammate their second weapon. [Adaptive (weapon)] | An original twist on the Tiberium Wars Avatar, which strips friendly vehicles by destroying them; here the ally consents and survives |
+
+The pattern itself is uncommon, so on a rolled card these variants appear from spice 2 at the earliest.
 
 **Generator rules**
 
@@ -572,12 +601,12 @@ A mid-tier vehicle with a main gun and a tether. Hold the tether on a target the
 - Needs: Cannon (weapon) or Autocannon (weapon) or Machine gun (weapon) or Laser (weapon) or Tesla / electric (weapon) or Rockets (weapon) or Railgun / gauss (weapon) or Flamethrower (weapon) or Small arms (weapon).
 - Sets first: Adaptive (weapon).
 - Adds strength: Gains a weapon from kills that can cover its own gaps. *[Adaptive (weapon)]*
-- Adds weakness: Starts each life with an empty stolen-weapon slot, loses it on death, and goes quiet while it tethers. *[Adaptive (weapon)]*
+- Adds weakness: Starts each life with an empty stolen-weapon slot and loses it on death. *[Adaptive (weapon)]*
 - Counters: Every vehicle it helps kill can arm it. *[Tank / ground vehicle (class)]*
 - Countered by: Ground claimers usually can't tether aircraft and have no anti-air until they steal it. *[Aircraft (class)]*
 - Countered by: Fast targets leave tether range before they die. *[at least Fast (speed)]*
 - Countered by: Punishes it while it is busy claiming. *[Anti-armour (role)]*
-- Related: drain health (planned) (combos with), hijack vehicle (planned) (often confused with), Infest a vehicle (combos with), switch weapon mode (planned) (combos with).
+- Related: Drain health (planned; combos with), Hijack a vehicle (planned; often confused with), Infest a vehicle (combos with), Switch weapon mode (planned; combos with).
 
 **Open design questions**
 
@@ -612,7 +641,7 @@ A mid-tier vehicle with a main gun and a tether. Hold the tether on a target the
 - *Command & Conquer: Red Alert 2 / Yuri's Revenge*, IFV (Allies): The original: one infantry passenger picks the weapon pod (machine gun, repair crane, sniper rifle, tesla, psychic blast, suicide bomb and more). Only the vehicle's own rank counts, and an elite IFV is very strong. (high; [Infantry Fighting Vehicle, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Infantry_Fighting_Vehicle), [Red Alert 2 Allied units, CNCNZ](https://cncnz.com/games/red-alert-2/allied-units/))
 - *Command & Conquer: Red Alert 2 - Yuri's Revenge*, Battle Fortress (Allies) and Tank Bunker (Yuri): A heavy carrier whose five passengers fire their own weapons out of gun ports with a range and damage bonus, so the loadout defines the vehicle. The Tank Bunker inverts it: a vehicle parks inside a bunker and fights with its own weapon, boosted. (medium; [Battle Fortress, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Battle_Fortress), [Tank bunker, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Tank_bunker))
 - *Command & Conquer: Generals / Zero Hour*, Battle Bus (GLA), Humvee and Combat Chinook (USA): The bus has no weapon of its own: its damage and range are whatever the passengers bring. When first destroyed it becomes an immobile bunker whose wounded passengers keep fighting. The Humvee and the Air Force General's Combat Chinook also have gun ports for their passengers; Humvee passengers die with the vehicle. (medium; [Battle bus (Zero Hour), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Battle_bus_(Zero_Hour)), [Humvee (Generals), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Humvee_(Generals)), [Combat Chinook, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Combat_Chinook))
-- *Command & Conquer: Generals / Zero Hour*, Overlord battle bunker and Helix bunker (China): A one-time add-on choice: a bunker that lets five infantry fire from the tank or helicopter, instead of a gatling cannon or a propaganda tower. (medium; [Overlord tank (Generals), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Overlord_tank_(Generals_1)), [Helix (Zero Hour), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Helix_(Zero_Hour)))
+- *Command & Conquer: Generals / Zero Hour*, Overlord battle bunker and Helix bunker (China): A one-time add-on choice: a bunker that lets five infantry fire from the tank or helicopter, instead of a gatling cannon or a propaganda tower. (medium; [Overlord tank (Generals 1), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Overlord_tank_(Generals_1)), [Helix (Zero Hour), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Helix_(Zero_Hour)))
 - *Command & Conquer 3: Kane's Wrath*, Reckoner (Nod): An unarmed carrier whose squads can't fire out of it at all until it deploys into a static bunker, on order or automatically when first destroyed, and it can't pack up again; deployed, it gains room for one more squad and they can all fire. (medium; [Reckoner (Kane's Wrath), Command & Conquer Wiki](https://cnc.fandom.com/wiki/Reckoner_(Kane's_Wrath)))
 - *Company of Heroes 2 / Tales of Valor*, M5 half-track (Soviets) and Kangaroo carrier (British): Squads fire out of the open-topped M5 half-track (Company of Heroes 2). The British Kangaroo carrier comes from Tales of Valor, an expansion for the first Company of Heroes: it carries more infantry than any other transport in that game, but fewer than half of them can shoot out of the top, so firepower is capped by ports, not capacity. (medium; [M5 Half-Track Transport, Company of Heroes Wiki](https://companyofheroes.fandom.com/wiki/M5_Half-Track_Transport), [Kangaroo Carrier, Company of Heroes Wiki](https://companyofheroes.fandom.com/wiki/Kangaroo_Carrier))
 - *Command & Conquer: Red Alert 3*, Bullfrog (Soviets): The passengers are the ammunition: its only exit is a man-cannon that fires them over obstacles, and they parachute down, exposed to anti-air. (medium; [Bullfrog, Command & Conquer Wiki](https://cnc.fandom.com/wiki/Bullfrog))
@@ -700,17 +729,19 @@ A cheap, fast two-seat car. Alone, the driver has a modest default weapon. When 
 
 **Variants the generator can roll**
 
-| Variant | From spice | What changes | Seen in |
-|---|---|---|---|
-| Class swap (`class-swap`) | 1 | One specialist seat: the passenger's class replaces the default weapon with a vehicle-sized version of its own; empty, the default returns. | Red Alert 2 and 3 IFVs |
-| Tool seat (`tool-seat`) | 1 | Some passengers give a tool instead of a gun: a repair beam that also strips parasites, a slowing horn (a stun only on T2 and higher carriers), a heal aura or a detector. | RA3 Multigunner IFV with an engineer (repairs and removes Terror Drones) or an attack dog or war bear (stuns infantry); RA2 IFV with an engineer (repair crane); the heal aura and detector are new ideas |
-| Fire ports (`fire-ports`) | 1 | Passengers shoot their own weapons out of ports, possibly with a bonus; the vehicle's output is the sum of who is aboard. | Battle Fortress, Battle Bus, half-tracks, Warthog, Battlefield Little Bird benches, PlanetSide 2 Harasser rumble seat |
-| Modular bay (`modular-bay`) | 2 | A one-time purchase decides whether a slot is a passenger bunker or a fixed weapon or aura; the options exclude each other. | Overlord and Helix add-ons |
-| Anchor to fire (`anchor-to-fire`) | 3 | Passengers can only shoot once the vehicle deploys into a static bunker, trading mobility for firepower. | Kane's Wrath Reckoner |
-| Wreck bunker (`wreck-bunker`) | 3 | When the vehicle is destroyed it leaves an immobile bunker from which the hurt passengers keep fighting. | Zero Hour Battle Bus |
-| Human ammunition (`human-ammunition`) | 4 | The passengers are the payload: the vehicle launches them over obstacles into the fight, briefly exposed in the air. | RA3 Bullfrog |
-| Vehicle as passenger (`vehicle-as-passenger`) | 4 | A host, in the known example a static bunker, takes a smaller vehicle inside and fires its weapon with a boost while the small one can't move. | Yuri's Revenge tank bunker (a static structure that holds one turreted vehicle) |
-| Cross-faction hybrids (`cross-faction`) | 5 | A passenger from another faction produces its own distinct result, so captured or allied troops unlock hybrid weapons. | RA3 IFV result tables for all three factions |
+| Variant | From spice | What changes | Rules that differ | Seen in |
+|---|---|---|---|---|
+| Class swap (`class-swap`) | 1 | One specialist seat: the passenger's class replaces the default weapon with a vehicle-sized version of its own; empty, the default returns. | - | Red Alert 2 and 3 IFVs |
+| Tool seat (`tool-seat`) | 1 | Some passengers give a tool instead of a gun: a repair beam that also strips parasites, a slowing horn (a stun only on T2 and higher carriers), a heal aura or a detector. | - | RA3 Multigunner IFV with an engineer (repairs and removes Terror Drones) or an attack dog or war bear (stuns infantry); RA2 IFV with an engineer (repair crane); the heal aura and detector are new ideas |
+| Fire ports (`fire-ports`) | 1 | Passengers shoot their own weapons out of ports, possibly with a bonus; the vehicle's output is the sum of who is aboard. | sets first: at least 1 passenger seat(s) | Battle Fortress, Battle Bus, half-tracks, Warthog, Battlefield Little Bird benches, PlanetSide 2 Harasser rumble seat |
+| Modular bay (`modular-bay`) | 2 | A one-time purchase fits the bay as a passenger bunker whose riders fire their own weapons out of it, instead of a fixed weapon or aura; the options exclude each other. | sets first: at least 1 passenger seat(s) | Overlord and Helix add-ons |
+| Anchor to fire (`anchor-to-fire`) | 3 | Passengers can only shoot once the vehicle deploys into a static bunker, trading mobility for firepower. | classes: Tank / ground vehicle, Hovercraft, Walker / mech; as: deploy; sets first: at least 1 passenger seat(s) | Kane's Wrath Reckoner |
+| Wreck bunker (`wreck-bunker`) | 3 | When the vehicle dies, both players are thrown out hurt as usual, but the wreck stays behind as hard cover they can fight from until it is destroyed. | classes: Tank / ground vehicle, Hovercraft, Walker / mech | Zero Hour Battle Bus |
+| Human ammunition (`human-ammunition`) | 4 | The passengers are the payload: the vehicle launches them over obstacles into the fight, briefly exposed in the air. | as: active | RA3 Bullfrog |
+| Vehicle as passenger (`vehicle-as-passenger`) | 4 | A host, in the known example a static bunker, takes a smaller vehicle inside and fires its weapon with a boost while the small one can't move. | classes: Tank / ground vehicle, Walker / mech; from T2; needs at least Large (size) | Yuri's Revenge tank bunker (a static structure that holds one turreted vehicle) |
+| Cross-faction hybrids (`cross-faction`) | 5 | A passenger from another faction produces its own distinct result, so captured or allied troops unlock hybrid weapons. | - | RA3 IFV result tables for all three factions |
+
+The pattern itself is uncommon, so on a rolled card these variants appear from spice 2 at the earliest.
 
 **Generator rules**
 
@@ -719,10 +750,10 @@ A cheap, fast two-seat car. Alone, the driver has a modest default weapon. When 
 - Sets first: at least 1 passenger seat(s), Adaptive (weapon).
 - Adds strength: Changes role mid-match depending on who climbs in. *[at least 1 passenger seat(s)]*
 - Adds weakness: Alone it has at most a modest default weapon, and losing the vehicle leaves two hurt players on foot. *[at least 1 passenger seat(s)]*
-- Counters: Brings whichever amplified class weapon the fight needs to soldiers who can't outrun it. *[Infantry (class)]*
+- Counters: Brings whichever vehicle-sized class weapon the fight needs to soldiers who can't outrun it. *[Infantry (class)]*
 - Countered by: Its light hull falls fast to anti-armour, throwing both players out hurt. *[Anti-armour (role)]*
 - Countered by: Splash and burst damage kill the light hull and then catch the two hurt players it throws out. *[Splash (weapon trait)]*
-- Related: switch weapon mode (planned) (often confused with), Infest a vehicle (counters).
+- Related: Switch weapon mode (planned; often confused with), Infest a vehicle (counters).
 
 **Open design questions**
 
@@ -746,19 +777,20 @@ A hand-written illustration of the card format, not generator output. It moves t
 | Role | Scout / recon; secondary: Disabler / control |
 | Mobility | Hover, drift, fast |
 | Body | Micro-bot, tiny |
-| Primary | Melee weapon (melee, attach, melee range; hits ground vehicles; mark) |
+| Primary | Melee weapon (no damage, attach, melee range; hits ground vehicles; mark) |
 | Secondary | Cryo (cryo, beam, medium range; hits infantry, ground vehicles; slow) |
 | Armour | Light, charged shield |
 | Crew | Solo |
-| Signature | **Frost Tag**: Latch onto an enemy vehicle: it shows on your team's minimap, and every hit your team lands while you ride adds frost; at full frost you are flung clear and the hull turns brittle for a short window, taking extra damage from every hit. *(pattern: Infest a vehicle, variant tracker; medium cooldown)* |
+| Signature | **Frost Tag**: Latch onto an enemy vehicle: it shows on your team's minimap, and every hit your team lands while you ride adds frost; at full frost you are flung clear and the hull turns brittle for a short window, taking extra damage from every hit. If you leave or are removed before that, the frost melts away. *(pattern: Infest a vehicle, variant tracker; medium cooldown)* |
 | Team-play hook | Ride the tank while your team pours fire into it: every hit adds frost, and at full frost it turns brittle. *(Setup and finisher)* |
 | Strengths | Once latched it is hard to hit and stays on until a shake-off, repair or EMP removes it; every hit the team lands builds toward the brittle window. The hover frame reaches vehicles quickly and slips away again. |
 | Weaknesses | It has to touch the vehicle, so it is exposed on the way in. A light frame: once its charged shield is gone, one burst ends it. |
 | Countered by | Sustained fire stops it before it reaches the hull. A repair beam pulls it off the host. EMP drops its shield and knocks it off. Nothing on it can reach aircraft, and they can shoot it freely. |
 | Counters | A ridden vehicle shows up for the whole team, and their focused fire turns it brittle. |
-| How it plays | **As the user:** Skim in fast, pounce on a vehicle and ride it while your team piles on; the more they hit it, the sooner it turns brittle and flings you clear. You can't fire while riding, so leap off early to chill infantry coming to help. **As the target:** A pale glint lands on your hull, frost starts creeping across it and the enemy team sees you on their minimap. Hold F to shake it off, drive onto a repair pad, or get out of their fire: frost only builds when they hit you. **Teammates:** The ridden vehicle shows on your minimap. Every hit on it adds frost, and heavy hitters cash in on the brittle window; a repair player is the host's best friend. |
+| Counterplay | Shoot it on the way in: it is tiny and lightly protected. Hold F to shake it off, or drive onto a repair pad. Break away from the enemy's guns: frost only builds while they hit you. |
+| How it plays | **As the user:** Skim in fast, pounce on a vehicle and ride it while your team piles on; the more they hit it, the sooner it turns brittle and flings you clear. You can't fire while riding, so leap off early to chill infantry coming to help. **As the target:** A pale glint lands on your hull, frost starts creeping across it and the enemy team sees you on their minimap. Hold F to shake it off, drive onto a repair pad, or get out of their fire: frost only builds when they hit you. Shaking it off clears the frost. **Teammates:** The ridden vehicle shows on your minimap. Every hit on it adds frost, and heavy hitters cash in on the brittle window; a repair player is the host's best friend. |
 | Controls | LMB: Pounce and latch (Frost Tag); RMB: Cryo beam: slows infantry and vehicles (not while latched); Space: Leap off |
-| Tells | A pale blue glint on the hull, a frost layer that visibly spreads across the vehicle from above as it fills, and a crack-and-flash when it turns brittle. |
+| Tells | A pale blue glint on the hull, a frost layer that visibly spreads across the vehicle from above as it fills, a crack-and-flash when it turns brittle, and cracked, glowing ice on the hull for as long as the brittle window lasts. |
 | Inspiration | Infest a vehicle (parasite tracker variant; closest real examples: Firestorm limpet drone, Battlefield tracer dart); Terror Drone |
 | Balance hints | cost low, power 4/10, complexity 3/10, 2 keys (T1 allows 2), no flags |
 | Seed | `example-rime-burr` at spice 2 |

@@ -8,6 +8,7 @@ Fixed word lists. Every source unit, pattern and generated card may only use the
 - **Rules** say which terms can go together. They bind generated cards (so the generator can't roll tracks on an aircraft). Real units that break them are recorded as they are and listed as 'atypical'. Real games breaking our rules is useful spice material, and evidence for relaxing a rule.
 - **Rarity** feeds the spice control: common terms appear at every spice level, rare ones only when spice is turned up.
 - **Typed links** such as 'at most Small (size)' or 'can hit aircraft' point at other terms; see [fields](fields.md).
+- **'Seen in'** examples illustrate a term and are not cited here; the research run cites them on the units.
 
 37 lists, 299 terms.
 
@@ -22,7 +23,7 @@ Fixed word lists. Every source unit, pattern and generated card may only use the
 <a id="classes"></a>
 ### Unit classes (`classes`)
 
-What kind of body the player controls. The six generator classes come from the brief; 'naval' is kept for research only.
+What kind of body the player controls. The six generator classes come from the brief; 'naval' is kept for research only. Rarity applies only when the class is left open; a class you pick is always used.
 
 | Id | Label | Meaning | Rarity |
 |---|---|---|---|
@@ -48,7 +49,7 @@ How early, cheap and complex a unit is. Tiers cap the number of keys: every butt
 <a id="faction-flavours"></a>
 ### Faction flavours (`faction-flavours`)
 
-Generic faction identities in Red Alert 3's spirit. A flavour makes its favoured parts three times as likely and holds back its avoided parts until spice 3.
+Generic faction identities in Red Alert 3's spirit. A flavour makes its favoured parts three times as likely and one step more common for that faction (rare counts as uncommon, uncommon as common), so a grounded Soviet card can roll tesla weapons and an Allied card at spice 2 can roll prism. It holds back its avoided parts until spice 3.
 
 #### Soviets (`soviet`): Heavy, brute force, electric weapons.
 
@@ -119,7 +120,7 @@ What the unit is for: its job or target, never its mechanic (mechanics are patte
 | Id | Label | Meaning | Rules |
 |---|---|---|---|
 | `assault` | Frontline assault | Leads pushes, soaks damage and brawls at short to medium range. |  |
-| `anti-armour` | Anti-armour | Kills vehicles and mechs. | needs Armour-piercing (damage) or Energy (damage) or Electric (damage) or EMP (damage) or infest vehicle (planned pattern) |
+| `anti-armour` | Anti-armour | Kills vehicles and mechs. | needs Armour-piercing (damage) or Energy (damage) or Electric (damage) or EMP (damage) or Infest a vehicle (pattern) |
 | `anti-infantry` | Anti-infantry | Clears soldiers and light targets. |  |
 | `anti-air` | Anti-air | Brings down aircraft and drones. | needs can hit aircraft |
 | `siege` | Artillery / siege | Hits from very far or over cover; breaks defences and structures. | needs Lobbed (delivery) or at least Long (range) |
@@ -320,7 +321,7 @@ How the unit absorbs damage. A card has one or two; a researched unit up to thre
 | Id | Label | Meaning | Rules | Rarity |
 |---|---|---|---|---|
 | `flat-pool` | Single health bar | One health bar; every hit subtracts. The easiest to read. Used only when no other model applies. *Seen in:* Red Alert 3: one health value per unit, with damage first scaled by the unit's armour type; Iron Harvest: fixed damage per armour class comes straight off health. |  | common |
-| `directional` | Directional armour | The front is tougher than the sides and rear, so flanking pays off. Reads well from above if facing is obvious. *Seen in:* Company of Heroes: rear hits multiply penetration; Broken Arrow: separate front, side, rear and top armour; tanks have almost none at the rear; PlanetSide 2: damage scales with the side the attacker stands on; Red Alert 3: mild, 5-10% extra from the side and rear. |  | common |
+| `directional` | Directional armour | The front is tougher than the sides and rear, so flanking pays off. Reads well from above if facing is obvious. *Seen in:* Company of Heroes: rear hits multiply penetration; Broken Arrow: separate front, side, rear and top armour; tanks have almost none at the rear; PlanetSide 2: damage scales with the side the attacker stands on; Red Alert 3: mild; side and rear hits do slightly more. |  | common |
 | `penetration-check` | Penetration check | Each hit is checked against the armour, and depending on angle or the weapon's penetration it may bounce for little or no damage. *Seen in:* Company of Heroes: every hit rolls its penetration chance and bounces on a failure; Foxhole: hidden armour points; penetration chance rises as armour wears down; Wargame and Broken Arrow: weapons below the target's armour value do little or won't fire. | only with armour classes: Medium, Heavy, Super-heavy | uncommon |
 | `zonal` | Zonal damage | Hits land on parts such as tracks, turret, engine, legs or a weapon, which can break and switch off functions before the unit dies. *Seen in:* MechWarrior and BattleTech: head, arm, leg and torso locations with their own armour; Foxhole: tracks, turret and fuel can be disabled by hits there; Company of Heroes: critical hits damage engines or kill gunners; Battlefield 4: heavy hits cause mobility kills. | never with sizes: Tiny, Small | uncommon |
 | `crew-casualties` | Crew casualties | Hits can knock out seats: in a multi-seat vehicle a player can be ejected or killed while the vehicle survives. *Seen in:* Company of Heroes: each soldier and gun crewman is tracked; a gun without crew can be captured; Foxhole: exposed seats leave their occupants open to fire; Wargame: crew critical hits disable specific systems. | never with crew models: Solo, Squad, Remote operator | rare |
@@ -333,7 +334,7 @@ How the unit absorbs damage. A card has one or two; a researched unit up to thre
 | `downed-revive` | Downed, revivable | At zero health it goes down instead of dying: it can crawl, and a teammate can revive it or an enemy finish it. | classes: Infantry | uncommon |
 | `weak-point` | Weak point | An exposed weak spot, such as a vent, reactor or rear hatch, takes extra damage. *Seen in:* ARC Raiders machines: shoot the joints and rear cylinders; Iron Harvest: many mechs take double damage at the back. |  | uncommon |
 | `interceptor` | Interceptor | An active protection system shoots down incoming missiles and rockets; it has few charges and must reload, so a volley can overwhelm it. *Seen in:* Broken Arrow: active protection stops HEAT rounds fully, kinetic ones partly, then reloads; Battlefield 4: active protection detonates incoming missiles for a moment, then recharges. | classes: Tank / ground vehicle, Walker / mech, Hovercraft | rare |
-| `critical-burn` | Critical burn | Below a health threshold it is disabled and burning, and dies unless a teammate repairs it in time. *Seen in:* Battlefield: vehicles below a threshold are disabled and burn out unless repaired; PlanetSide 2: vehicles catch fire at 20% health; Foxhole: many vehicles are disabled below a health threshold. | never with unit classes: Infantry | uncommon |
+| `critical-burn` | Critical burn | Below a health threshold it is disabled and burning, and dies unless a teammate repairs it in time. *Seen in:* Battlefield: vehicles below a threshold are disabled and burn out unless repaired; PlanetSide 2: vehicles catch fire at low health; Foxhole: many vehicles are disabled below a health threshold. | never with unit classes: Infantry | uncommon |
 
 <a id="availability"></a>
 ### Availability (`availability`)
@@ -423,12 +424,12 @@ Extras on top of the base mobility; a card has up to two. Traits marked 'uses a 
 | `amphibious` | Amphibious | Moves on water as well as land. | classes: Infantry, Tank / ground vehicle, Walker / mech, Drone / support; never with mobility types: Hovering flight, Jet, Airship, Jetpack / wings, Hover | uncommon |
 | `climb` | Climb | Climbs walls and cliffs. | classes: Infantry, Walker / mech, Drone / support; only with mobility types: On foot, Many legs | uncommon |
 | `crush` | Crush | Runs over smaller units in its path: infantry and small drones; super-heavies also crush light vehicles. | classes: Tank / ground vehicle, Walker / mech, Hovercraft; only with sizes: Large, Huge | common |
-| `leap` | Leap | Jumps over walls or gaps. | classes: Infantry, Walker / mech, Drone / support; never with mobility types: Hovering flight, Jet, Airship, Jetpack / wings, Hover; uses a key (pattern: leap) | uncommon |
-| `boost` | Boost | A short burst of speed or a dash. | classes: all; uses a key (pattern: dash) | common |
-| `burrow` | Burrow / submerge | Goes underground or underwater to hide or travel; must surface to act. | classes: Infantry, Tank / ground vehicle, Walker / mech, Drone / support; never with mobility types: Hovering flight, Jet, Airship, Jetpack / wings; uses a key (pattern: burrow) | rare |
-| `teleport` | Teleport | Blinks a short distance or jumps through space. | classes: Infantry, Tank / ground vehicle, Walker / mech, Hovercraft, Drone / support; uses a key (pattern: teleport) | rare |
-| `transform` | Transform | Switches between two forms, such as walker and jet; the unit records the second form in its modes. | classes: Tank / ground vehicle, Walker / mech, Hovercraft, Aircraft; uses a key (pattern: transform) | rare |
-| `deploy-anchor` | Deploy / anchor | Stops to enter a stronger stationary mode; must pack up to move. | classes: Infantry, Tank / ground vehicle, Walker / mech, Hovercraft; uses a key (pattern: deploy siege mode) | uncommon |
+| `leap` | Leap | Jumps over walls or gaps. | classes: Infantry, Walker / mech, Drone / support; never with mobility types: Hovering flight, Jet, Airship, Jetpack / wings, Hover; uses a key (pattern: Leap (planned)) | uncommon |
+| `boost` | Boost | A short burst of speed or a dash. | classes: all; uses a key (pattern: Dash (planned)) | common |
+| `burrow` | Burrow / submerge | Goes underground or underwater to hide or travel; must surface to act. | classes: Infantry, Tank / ground vehicle, Walker / mech, Drone / support; never with mobility types: Hovering flight, Jet, Airship, Jetpack / wings; uses a key (pattern: Burrow or submerge (planned)) | rare |
+| `teleport` | Teleport | Blinks a short distance or jumps through space. | classes: Infantry, Tank / ground vehicle, Walker / mech, Hovercraft, Drone / support; uses a key (pattern: Teleport (planned)) | rare |
+| `transform` | Transform | Switches between two forms, such as walker and jet; the unit records the second form in its modes. | classes: Tank / ground vehicle, Walker / mech, Hovercraft, Aircraft; uses a key (pattern: Transform between two forms (planned)) | rare |
+| `deploy-anchor` | Deploy / anchor | Stops to enter a stronger stationary mode; must pack up to move. | classes: Infantry, Tank / ground vehicle, Walker / mech, Hovercraft; uses a key (pattern: Deploy into siege mode (planned)) | uncommon |
 
 <a id="nature"></a>
 ### Nature (`nature`)
@@ -491,7 +492,7 @@ How far a weapon reaches, relative to the top-down screen.
 <a id="rarity"></a>
 ### Rarity (`rarity`)
 
-How readily the generator offers a term at each spice level (1 = grounded, 5 = wild). Weights are relative.
+How readily the generator offers a term at each spice level (1 = grounded, 5 = wild). Weights are relative. A faction's favoured parts count one step more common for that faction. Rarity applies only to parts the generator picks; a class or part you choose yourself is always used.
 
 | Id | Label | Meaning | Rules |
 |---|---|---|---|
@@ -644,7 +645,7 @@ How a shot reaches its target.
 <a id="weapon-traits"></a>
 ### Weapon traits (`weapon-traits`)
 
-Combinable twists on a weapon. A weapon has up to three.
+Combinable twists on a weapon. A card's weapon has up to three; a researched weapon up to four.
 
 | Id | Label | Meaning | Rules |
 |---|---|---|---|

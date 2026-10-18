@@ -22,6 +22,7 @@
   "other_examples": [
     {
       "game": "extra:Command & Conquer: Red Alert 2 / Yuri's Revenge",
+      "franchise": "Command & Conquer",
       "unit": "IFV (Allies)",
       "note": "The original: one infantry passenger picks the weapon pod (machine gun, repair crane, sniper rifle, tesla, psychic blast, suicide bomb and more). Only the vehicle's own rank counts, and an elite IFV is very strong.",
       "sources": [
@@ -42,6 +43,7 @@
     },
     {
       "game": "extra:Command & Conquer: Red Alert 2 - Yuri's Revenge",
+      "franchise": "Command & Conquer",
       "unit": "Battle Fortress (Allies) and Tank Bunker (Yuri)",
       "note": "A heavy carrier whose five passengers fire their own weapons out of gun ports with a range and damage bonus, so the loadout defines the vehicle. The Tank Bunker inverts it: a vehicle parks inside a bunker and fights with its own weapon, boosted.",
       "sources": [
@@ -62,6 +64,7 @@
     },
     {
       "game": "extra:Command & Conquer: Generals / Zero Hour",
+      "franchise": "Command & Conquer",
       "unit": "Battle Bus (GLA), Humvee and Combat Chinook (USA)",
       "note": "The bus has no weapon of its own: its damage and range are whatever the passengers bring. When first destroyed it becomes an immobile bunker whose wounded passengers keep fighting. The Humvee and the Air Force General's Combat Chinook also have gun ports for their passengers; Humvee passengers die with the vehicle.",
       "sources": [
@@ -88,12 +91,13 @@
     },
     {
       "game": "extra:Command & Conquer: Generals / Zero Hour",
+      "franchise": "Command & Conquer",
       "unit": "Overlord battle bunker and Helix bunker (China)",
       "note": "A one-time add-on choice: a bunker that lets five infantry fire from the tank or helicopter, instead of a gatling cannon or a propaganda tower.",
       "sources": [
         {
           "url": "https://cnc.fandom.com/wiki/Overlord_tank_(Generals_1)",
-          "title": "Overlord tank (Generals), Command & Conquer Wiki",
+          "title": "Overlord tank (Generals 1), Command & Conquer Wiki",
           "kind": "wiki",
           "accessed": "2026-10-17"
         },
@@ -108,6 +112,7 @@
     },
     {
       "game": "extra:Command & Conquer 3: Kane's Wrath",
+      "franchise": "Command & Conquer",
       "unit": "Reckoner (Nod)",
       "note": "An unarmed carrier whose squads can't fire out of it at all until it deploys into a static bunker, on order or automatically when first destroyed, and it can't pack up again; deployed, it gains room for one more squad and they can all fire.",
       "sources": [
@@ -122,6 +127,7 @@
     },
     {
       "game": "extra:Company of Heroes 2 / Tales of Valor",
+      "franchise": "Company of Heroes",
       "unit": "M5 half-track (Soviets) and Kangaroo carrier (British)",
       "note": "Squads fire out of the open-topped M5 half-track (Company of Heroes 2). The British Kangaroo carrier comes from Tales of Valor, an expansion for the first Company of Heroes: it carries more infantry than any other transport in that game, but fewer than half of them can shoot out of the top, so firepower is capped by ports, not capacity.",
       "sources": [
@@ -142,6 +148,7 @@
     },
     {
       "game": "ra3",
+      "franchise": "Command & Conquer",
       "unit": "Bullfrog (Soviets)",
       "note": "The passengers are the ammunition: its only exit is a man-cannon that fires them over obstacles, and they parachute down, exposed to anti-air.",
       "sources": [
@@ -158,6 +165,7 @@
   "shooter_analogues": [
     {
       "game": "extra:Battlefield 3 / Battlefield 4",
+      "franchise": "Battlefield",
       "unit": "Scout helicopter side benches",
       "note": "Passengers on the side seats keep their own kit, so the helicopter's extra firepower depends on who sits there: an engineer's repair tool, a lock-on launcher, or other classes' weapons fired in narrow side arcs.",
       "sources": [
@@ -172,6 +180,7 @@
     },
     {
       "game": "extra:PlanetSide 2",
+      "franchise": "PlanetSide",
       "unit": "Harasser rumble seat",
       "note": "A three-seat buggy whose rear rider fights with their own loadout, so the third gun depends on who climbs on; the seat is exposed.",
       "sources": [
@@ -186,6 +195,7 @@
     },
     {
       "game": "extra:Halo series",
+      "franchise": "Halo",
       "unit": "Warthog passenger seat",
       "note": "Driver, mounted gunner and a passenger who fires their own carried weapon; a rocket-carrying passenger turns it into an anti-vehicle car.",
       "sources": [
@@ -200,6 +210,7 @@
     },
     {
       "game": "extra:Foxhole",
+      "franchise": "Foxhole",
       "unit": "Crewed tank seats",
       "note": "Each seat owns a weapon or job (driver, gunners, commander), so firepower depends on how many seats are filled and by whom.",
       "sources": [
@@ -319,9 +330,12 @@
     {
       "id": "modular-bay",
       "name": "Modular bay",
-      "summary": "A one-time purchase decides whether a slot is a passenger bunker or a fixed weapon or aura; the options exclude each other.",
+      "summary": "A one-time purchase fits the bay as a passenger bunker whose riders fire their own weapons out of it, instead of a fixed weapon or aura; the options exclude each other.",
       "min_spice": 2,
-      "seen_in": "Overlord and Helix add-ons"
+      "seen_in": "Overlord and Helix add-ons",
+      "overrides": {
+        "implies": ["passengers:>=1"]
+      }
     },
     {
       "id": "anchor-to-fire",
@@ -331,13 +345,14 @@
       "seen_in": "Kane's Wrath Reckoner",
       "overrides": {
         "classes": ["vehicle", "hover", "walker"],
-        "kinds": ["deploy"]
+        "kinds": ["deploy"],
+        "implies": ["passengers:>=1"]
       }
     },
     {
       "id": "wreck-bunker",
       "name": "Wreck bunker",
-      "summary": "When the vehicle is destroyed it leaves an immobile bunker from which the hurt passengers keep fighting.",
+      "summary": "When the vehicle dies, both players are thrown out hurt as usual, but the wreck stays behind as hard cover they can fight from until it is destroyed.",
       "min_spice": 3,
       "seen_in": "Zero Hour Battle Bus",
       "overrides": {
@@ -398,7 +413,7 @@
     "counters": [
       {
         "ref": "class:infantry",
-        "why": "Brings whichever amplified class weapon the fight needs to soldiers who can't outrun it."
+        "why": "Brings whichever vehicle-sized class weapon the fight needs to soldiers who can't outrun it."
       }
     ],
     "countered_by": [

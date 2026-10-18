@@ -1,10 +1,10 @@
 # Unit Forge
 
-A creativity tool for designing units for **Shamble Frontlines**, a browser team shooter with a top-down camera where every player buys and *becomes* a unit. Unit Forge turns a researched database of real RTS and shooter unit designs into randomly combined, original unit concepts. You save them on a board, refine them, and export them to the game. It works like a morphological box: break units into building blocks, then recombine them.
+A creativity tool for designing units for **Shamble Frontlines**, a browser team shooter with a top-down camera where every player buys and *becomes* a unit. Unit Forge turns a researched database of real RTS and shooter unit designs into randomly combined, original unit concepts. You save them on a board, refine them, and export them as Markdown for design docs and as JSON for a later import into the game. It works like a morphological box: break units into building blocks, then recombine them.
 
 ## Status
 
-**The brief's first step (step 7): proposal, waiting for approval.** Nothing is built yet beyond draft data and schemas.
+**The brief's first step (section 7 of the brief): proposal, waiting for approval.** Nothing is built yet beyond draft data and schemas.
 
 - [Proposal](docs/proposal.md): the plan, repository structure, decisions needed. Start here.
 - [Samples](docs/samples.md): three researched units (RA3 Terror Drone, Hammer Tank, Multigunner IFV), three mechanic patterns and an example concept card.
