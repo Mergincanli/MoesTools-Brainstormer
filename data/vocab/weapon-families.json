@@ -2,7 +2,7 @@
   "$schema": "../../schemas/vocabulary.schema.json",
   "id": "weapon-families",
   "label": "Weapon families",
-  "description": "What the weapon is, judged by how it behaves in the source, not by its name. Each family has defaults (damage, mount, delivery, range) and lists what it may be combined with. Tie-breaks: a missile that steers is guided, an unguided one is a rocket; a soldier's personal gun is small arms, a belt-fed or mounted gun is a machine gun; prism only if the beam splits, travelling bolts are plasma; placed or thrown charges are explosives, dropped ones are bombs; artillery only for arcing or out-of-sight fire.",
+  "description": "What the weapon is, judged by how it behaves in the source, not by its name. Each family has defaults (damage, mount, delivery, range) and lists what it may be combined with. Tie-breaks: a missile that steers is guided, an unguided one is a rocket; a soldier's personal gun is small arms, a belt-fed or mounted gun is a machine gun; prism only if the beam splits, travelling bolts are plasma; placed or thrown charges are explosives, dropped ones are bombs; artillery only for arcing or out-of-sight fire. Air: every family lists the target types it can reach. Only anti-air families (flak, guided missiles, autocannons) reach high air, besides adaptive, which takes whatever weapon it gains; most direct-fire families reach low air; lobbed, dropped, melee and short-range area families stay on the ground.",
   "group": "core",
   "status": "draft",
   "version": "0.4.0",
@@ -23,7 +23,8 @@
       "default_range": "medium",
       "allowed": {
         "damage-types": ["kinetic", "armour-piercing"],
-        "weapon-delivery": ["hitscan", "projectile"]
+        "weapon-delivery": ["hitscan", "projectile"],
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -38,7 +39,8 @@
       "default_range": "medium",
       "allowed": {
         "damage-types": ["kinetic", "armour-piercing", "fire"],
-        "weapon-delivery": ["hitscan", "projectile"]
+        "weapon-delivery": ["hitscan", "projectile"],
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -58,7 +60,7 @@
       "allowed": {
         "damage-types": ["kinetic", "fire"],
         "weapon-delivery": ["hitscan", "projectile"],
-        "target-types": ["infantry", "ground-vehicle", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure"]
       }
     },
     {
@@ -78,13 +80,13 @@
       "allowed": {
         "damage-types": ["kinetic", "armour-piercing", "energy"],
         "weapon-delivery": ["hitscan", "projectile"],
-        "target-types": ["infantry", "ground-vehicle"]
+        "target-types": ["infantry", "ground-vehicle", "low-air"]
       }
     },
     {
       "id": "autocannon",
       "label": "Autocannon",
-      "description": "Rapid medium-calibre shells, often able to hit aircraft.",
+      "description": "Rapid medium-calibre shells. Anti-aircraft guns are often autocannons, so it is one of the few families that can reach high air.",
       "rarity": "common",
       "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
       "class_rarity": {
@@ -97,7 +99,8 @@
       "default_range": "medium",
       "allowed": {
         "damage-types": ["explosive", "kinetic", "armour-piercing"],
-        "weapon-delivery": ["projectile"]
+        "weapon-delivery": ["projectile"],
+        "target-types": ["infantry", "ground-vehicle", "low-air", "high-air", "structure", "naval"]
       }
     },
     {
@@ -118,7 +121,7 @@
       "allowed": {
         "damage-types": ["armour-piercing", "explosive"],
         "weapon-delivery": ["projectile"],
-        "target-types": ["infantry", "ground-vehicle", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure"]
       }
     },
     {
@@ -152,7 +155,8 @@
       "default_range": "medium",
       "allowed": {
         "damage-types": ["explosive", "armour-piercing", "fire"],
-        "weapon-delivery": ["projectile", "lobbed"]
+        "weapon-delivery": ["projectile", "lobbed"],
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -167,7 +171,8 @@
       "default_range": "long",
       "allowed": {
         "damage-types": ["armour-piercing", "explosive", "emp"],
-        "weapon-delivery": ["lock-on"]
+        "weapon-delivery": ["lock-on"],
+        "target-types": ["infantry", "ground-vehicle", "low-air", "high-air", "structure", "naval"]
       }
     },
     {
@@ -187,7 +192,7 @@
       "allowed": {
         "damage-types": ["explosive"],
         "weapon-delivery": ["projectile"],
-        "target-types": ["aircraft", "infantry"]
+        "target-types": ["infantry", "low-air", "high-air"]
       }
     },
     {
@@ -223,7 +228,7 @@
       "allowed": {
         "damage-types": ["electric"],
         "weapon-delivery": ["hitscan", "beam"],
-        "target-types": ["infantry", "ground-vehicle", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure"]
       }
     },
     {
@@ -238,7 +243,8 @@
       "default_range": "medium",
       "allowed": {
         "damage-types": ["energy", "fire"],
-        "weapon-delivery": ["beam", "hitscan"]
+        "weapon-delivery": ["beam", "hitscan"],
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -256,7 +262,8 @@
       "default_range": "long",
       "allowed": {
         "damage-types": ["energy"],
-        "weapon-delivery": ["beam"]
+        "weapon-delivery": ["beam"],
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -271,7 +278,8 @@
       "default_range": "medium",
       "allowed": {
         "damage-types": ["cryo"],
-        "weapon-delivery": ["beam", "projectile", "lobbed"]
+        "weapon-delivery": ["beam", "projectile", "lobbed"],
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -286,7 +294,8 @@
       "default_range": "medium",
       "allowed": {
         "damage-types": ["energy"],
-        "weapon-delivery": ["projectile"]
+        "weapon-delivery": ["projectile"],
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -398,7 +407,8 @@
       "default_range": "medium",
       "allowed": {
         "damage-types": ["emp"],
-        "weapon-delivery": ["projectile", "beam", "hitscan", "drop"]
+        "weapon-delivery": ["projectile", "beam", "hitscan", "drop"],
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -417,7 +427,7 @@
       "allowed": {
         "damage-types": ["energy"],
         "weapon-delivery": ["beam"],
-        "target-types": ["infantry", "ground-vehicle", "structure"]
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure"]
       },
       "notes": "Always carries the self-heal weapon trait."
     },
@@ -437,7 +447,8 @@
       "default_range": "long",
       "allowed": {
         "damage-types": ["armour-piercing", "kinetic"],
-        "weapon-delivery": ["hitscan"]
+        "weapon-delivery": ["hitscan"],
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -453,8 +464,9 @@
       "allowed": {
         "damage-types": ["kinetic"],
         "weapon-delivery": ["beam"],
-        "target-types": ["ground-vehicle", "aircraft"]
-      }
+        "target-types": ["ground-vehicle", "low-air"]
+      },
+      "notes": "Can pull down a low flier such as a helicopter; jets and airships fly out of its reach."
     },
     {
       "id": "nanites",
@@ -468,7 +480,8 @@
       "default_range": "short",
       "allowed": {
         "damage-types": ["toxic", "repair"],
-        "weapon-delivery": ["projectile", "lobbed", "drop"]
+        "weapon-delivery": ["projectile", "lobbed", "drop"],
+        "target-types": ["infantry", "ground-vehicle", "structure", "naval"]
       }
     },
     {
@@ -488,7 +501,7 @@
       "allowed": {
         "damage-types": ["psionic"],
         "weapon-delivery": ["beam", "hitscan"],
-        "target-types": ["infantry", "ground-vehicle"]
+        "target-types": ["infantry", "ground-vehicle", "low-air"]
       }
     },
     {
@@ -502,7 +515,8 @@
       "default_delivery": "projectile",
       "default_range": "long",
       "allowed": {
-        "damage-types": ["explosive", "kinetic", "emp"]
+        "damage-types": ["explosive", "kinetic", "emp"],
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -517,7 +531,8 @@
       "default_range": "short",
       "allowed": {
         "damage-types": ["repair"],
-        "weapon-delivery": ["beam", "projectile"]
+        "weapon-delivery": ["beam", "projectile"],
+        "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
     },
     {
@@ -525,7 +540,10 @@
       "label": "Adaptive",
       "description": "No fixed family: the weapon is taken from a passenger, a kill or the current mode. The signature pattern says how.",
       "rarity": "rare",
-      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"]
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "allowed": {
+        "target-types": ["infantry", "ground-vehicle", "low-air", "high-air", "structure", "naval"]
+      }
     },
     {
       "id": "torpedoes",

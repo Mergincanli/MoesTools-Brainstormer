@@ -6,7 +6,8 @@
 // 2) Word-list integrity: allowed/excluded/favoured/avoided maps, typed links, ranks, key-bound patterns, class
 //    rarities (every class_rarity key must be in the term's classes), and one version shared by all word lists.
 // 3) Cross-references: patterns <-> units, the pattern registry, games and factions, typed links.
-// 4) Combination rules (classes, allowed, excluded, requires, min_tier): errors on example concept cards;
+// 4) Combination rules (classes, allowed, excluded, requires, min_tier, sensors included; per weapon, its family's
+//    and its delivery's lists, such as which air layers it reaches): errors on example concept cards;
 //    on researched units each broken rule is printed as ATYPICAL and must be recorded in the unit's
 //    'atypical' list (and every 'atypical' entry must match a broken rule).
 // 5) Card rules: key and passive budgets per tier, cooldowns, strength/weakness pairing, matchups that
@@ -182,6 +183,8 @@ export function validate(root = REPO_ROOT) {
   // ---------------------------------------------------------------- profiles and matching
   // A profile is the flat set of parts that typed links and combination rules are matched against.
   const isKey = kind => terms['ability-kinds'][kind]?.uses_key === true
+  // What kind of target a unit is, from its mobility: a flier is 'low-air' (jetpack, hovering flight) or
+  // 'high-air' (jet, airship), and a tiny or small ground unit counts as infantry.
   function targetType(p) {
     const tt = terms.mobility[p.mobility]?.target_type
     if (tt === 'ground-vehicle' && (rank('sizes', p.size) ?? 9) <= 2) return 'infantry'
@@ -194,6 +197,7 @@ export function validate(root = REPO_ROOT) {
       class: u.class, tier: u.tier.band, nature: u.nature, roles: [u.roles.primary, ...(u.roles.secondary || [])],
       mobility: u.mobility.base, handling: u.mobility.handling, traits: u.mobility.traits || [], speed: u.mobility.speed,
       body: u.body.plan, size: u.body.size, armour: u.armour.class, armourModels: u.armour.models,
+      sight: u.sensors?.sight, sensors: u.sensors?.traits || [],
       crew: u.crew.model, passengers: u.crew.passengers?.seats || 0, resources: u.resources || [],
       weapons, patterns: [...new Set([...abil.flatMap(a => a.patterns), ...weapons.flatMap(w => w.patterns || [])])],
     }
@@ -206,6 +210,7 @@ export function validate(root = REPO_ROOT) {
       class: p.class, tier: p.tier, nature: p.nature, roles: [p.roles.primary, ...p.roles.secondary],
       mobility: p.mobility.base, handling: p.mobility.handling, traits: p.mobility.traits, speed: p.mobility.speed,
       body: p.body.plan, size: p.body.size, armour: p.armour.class, armourModels: p.armour.models,
+      sight: p.sensors?.sight, sensors: p.sensors?.traits || [],
       crew: p.crew.model, passengers: p.crew.passengers?.seats || 0, resources: p.resource ? [p.resource] : [],
       weapons, patterns: abil.map(a => a.pattern),
     }
@@ -245,6 +250,8 @@ export function validate(root = REPO_ROOT) {
       case 'weapon-trait': return W.some(w => (w.traits || []).includes(id))
       case 'target': return targetType(P) === id
       case 'hits': return W.some(w => (w.can_target || []).includes(id))
+      case 'sight': return cmpRank('sight-bands', P.sight, cmp, id)
+      case 'sensor': return P.sensors.includes(id)
       case 'nature': return P.nature === id
       case 'category': return P.patterns.some(pid => patternById[pid]?.category === id)
       case 'resource': return P.resources.includes(id)
@@ -259,7 +266,7 @@ export function validate(root = REPO_ROOT) {
     const used = {
       classes: [P.class], tiers: [P.tier], nature: [P.nature], roles: P.roles, mobility: [P.mobility], handling: [P.handling],
       'mobility-traits': P.traits, 'speed-bands': [P.speed], bodies: [P.body], sizes: [P.size], 'armour-classes': [P.armour],
-      'armour-models': P.armourModels, 'crew-models': [P.crew], resources: P.resources,
+      'armour-models': P.armourModels, 'sight-bands': [P.sight], 'sensor-traits': P.sensors, 'crew-models': [P.crew], resources: P.resources,
       'aim-models': [...new Set(P.weapons.map(w => w.mount).filter(Boolean))],
       'weapon-families': [...new Set(P.weapons.map(w => w.family))],
     }
@@ -301,6 +308,13 @@ export function validate(root = REPO_ROOT) {
       checkFamily('damage-types', [w.damage])
       checkFamily('weapon-delivery', [w.delivery])
       checkFamily('target-types', w.can_target || [])
+      // A delivery can limit what the weapon reaches: a lobbed or dropped shot lands on the ground, so it never hits fliers.
+      const reach = terms['weapon-delivery'][w.delivery]?.allowed?.['target-types']
+      if (reach) {
+        for (const x of (w.can_target || []).filter(Boolean)) {
+          if (!reach.includes(x)) add(`weapon-delivery:${w.delivery}`, `${label}: delivery '${w.delivery}' doesn't combine with target-types '${x}'`)
+        }
+      }
       const body = terms.bodies[P.body]
       if (body?.allowed?.['aim-models'] && w.mount && !body.allowed['aim-models'].includes(w.mount)) {
         add(`bodies:${P.body}`, `body '${P.body}' doesn't take mount '${w.mount}'`)

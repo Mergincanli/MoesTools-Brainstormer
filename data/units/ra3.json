@@ -46,6 +46,12 @@
         "models": ["flat-pool"],
         "notes": "Very little health. Machine guns and snipers hurt it badly and electric weapons do many times normal damage; melee animals and radiation can't hurt it."
       },
+      "sensors": {
+        "sight": "short",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The wiki gives a single sight figure of 100 (game units), half the Hammer tank's vision of 200 on that tank's page, so short. Patch 1.11 lengthened its view in stasis ray mode."
+      },
       "armament": [
         {
           "name": "Dismantler Claws",
@@ -212,6 +218,7 @@
             "mobility",
             "body",
             "armour",
+            "sensors",
             "armament",
             "abilities",
             "strengths",
@@ -258,6 +265,10 @@
         {
           "path": "body/size",
           "note": "Sources call it small or diminutive, and each drone fills a soldier's seat in a transport; no source compares its actual size to a soldier."
+        },
+        {
+          "path": "sensors/sight",
+          "note": "The infobox's sight figure has no label, while the Hammer tank's page splits vision from fog clearing, so it isn't clear which one this is, or whether it predates patch 1.11."
         }
       ],
       "fit_notes": [
@@ -325,6 +336,12 @@
         "class": "heavy",
         "models": ["directional"],
         "notes": "The toughest of the three factions' main battle tanks. Machine-gun fire does much less damage to it. Facing matters only mildly: side and rear hits do slightly more (game data on the wiki)."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The wiki gives 200 for vision and 500 for clearing the fog (game units), between its cannon range of 150 and its beam range of 300: it sees about as far as it shoots, so medium. Patch 1.11 lengthened its view in leech mode."
       },
       "armament": [
         {
@@ -483,6 +500,7 @@
             "mobility",
             "body",
             "armour",
+            "sensors",
             "armament",
             "abilities",
             "strengths",
@@ -526,6 +544,10 @@
         {
           "path": "armament/1/damage",
           "note": "The game classes the beam's damage as 'Magic', which ignores armour: every armour type takes it in full. 'energy' is our approximation, and the only damage type the drain family allows."
+        },
+        {
+          "path": "sensors/sight",
+          "note": "The band follows the vision figure, as the Terror Drone entry does; the fog-clearing figure is over twice as large and would point to long sight."
         }
       ],
       "atypical": [
@@ -590,6 +612,12 @@
         "models": ["flat-pool"],
         "notes": "Light armour (the wiki calls it very light); it trades armour for speed."
       },
+      "sensors": {
+        "sight": "medium",
+        "traits": ["radar"],
+        "basis": "proposal",
+        "notes": "No cited page gives a vision range; the main wiki calls it a recon unit and the Allies' main anti-air vehicle, so the player version sees an ordinary distance and has radar to warn of aircraft."
+      },
       "armament": [
         {
           "name": "Multipurpose missile launcher",
@@ -599,7 +627,7 @@
           "mount": "body-aim",
           "delivery": "projectile",
           "range": "long",
-          "can_target": ["aircraft", "ground-vehicle", "infantry"],
+          "can_target": ["low-air", "high-air", "ground-vehicle", "infantry"],
           "traits": [],
           "condition": "Only when nobody is riding inside.",
           "summary": "Rapid, light missiles. Against aircraft they hit about three times as hard, and reach about twice as far, as against ground targets. Good against aircraft and light vehicles, weak against armour.",
@@ -728,7 +756,7 @@
           "mount": "free-aim",
           "delivery": "beam",
           "range": "long",
-          "can_target": ["infantry", "ground-vehicle", "aircraft"],
+          "can_target": ["infantry", "ground-vehicle", "low-air"],
           "traits": [],
           "condition": "An Allied Cryo Legionnaire rides inside (Uprising only).",
           "summary": "A single freezing beam that can also freeze aircraft, which then fall and shatter. It reaches further than the Cryo Legionnaire on foot or the Cryocopter.",
@@ -760,7 +788,7 @@
           "mount": "free-aim",
           "delivery": "projectile",
           "range": "medium",
-          "can_target": ["aircraft"],
+          "can_target": ["low-air", "high-air"],
           "traits": [],
           "condition": "A Soviet Flak Trooper rides inside.",
           "summary": "Anti-air only, a little stronger than the Soviets' own flak transport, on a fast chassis that keeps up with aircraft.",
@@ -872,7 +900,7 @@
           "mount": "free-aim",
           "delivery": "projectile",
           "range": "long",
-          "can_target": ["aircraft", "infantry"],
+          "can_target": ["low-air", "high-air", "infantry"],
           "traits": [],
           "condition": "An Empire Archer Maiden rides inside (Uprising only).",
           "summary": "Arrows that hit both aircraft and infantry, with a little more anti-air reach than on foot.",
@@ -930,8 +958,12 @@
           "why": "Outruns most ground vehicles: a cheap anti-air escort and rapid responder from the first minutes."
         },
         {
-          "ref": "hits:aircraft",
-          "why": "Empty, its missiles hit aircraft about three times as hard as ground targets, from about twice as far."
+          "ref": "hits:high-air",
+          "why": "Empty, its missiles reach every aircraft, jets and airships included, hitting them about three times as hard as ground targets from about twice as far."
+        },
+        {
+          "ref": "hits:low-air",
+          "why": "The same missiles, with the same extra damage and reach, work against helicopters and other low fliers."
         },
         {
           "ref": "passengers:>=1",
@@ -1020,6 +1052,7 @@
             "mobility",
             "body",
             "armour",
+            "sensors",
             "armament",
             "crew",
             "abilities",
@@ -1040,8 +1073,8 @@
           "accessed": "2026-10-17",
           "supports": [
             "armament",
-            "strengths/2",
             "strengths/3",
+            "strengths/4",
             "weaknesses/2",
             "counters/1",
             "counters/2",
@@ -1155,6 +1188,11 @@
       ],
       "atypical": [
         {
+          "path": "armament/0/can_target",
+          "rule": "weapon-families:rockets target-types high-air",
+          "note": "The default missiles are the car's anti-air weapon and, like every anti-air weapon in RA3, reach all aircraft; our rockets family leaves high air to the anti-air families. No source says whether they steer, which would make them guided missiles."
+        },
+        {
           "path": "armament/2/traits",
           "rule": "weapon-traits:stun min_tier t2",
           "note": "The source's tier-1 IFV stuns when carrying a dog or bear; our word list keeps stun for tier 2 and up."
@@ -1170,6 +1208,11 @@
           "note": "The wiki calls the Imperial Warrior version a laser but gives it the game's gun damage type, which maps to kinetic; our laser family allows only energy or fire damage."
         },
         {
+          "path": "armament/17/can_target",
+          "rule": "weapon-families:small-arms target-types high-air",
+          "note": "The wiki calls the bow an anti-aircraft as well as anti-infantry weapon, so, like every anti-air weapon in RA3, it reaches all aircraft; our small-arms family leaves high air to the anti-air families."
+        },
+        {
           "path": "armament/18/can_target",
           "rule": "weapon-families:psionic target-types structure",
           "note": "StrategyWiki warns that this combination can quickly wreck a base, so it hits buildings, which our psionic family's target list leaves out."
@@ -1178,7 +1221,15 @@
       "researched_by": "step-7 samples",
       "review": {
         "status": "unchecked"
-      }
+      },
+      "fit_notes": [
+        {
+          "path": "armament/8/can_target",
+          "used": "low-air",
+          "wanted": "every aircraft",
+          "note": "RA3 has one air layer, and the beam freezes any aircraft. It is an all-round weapon rather than a dedicated anti-air one, so under our rule for the two layers it is coded for low air only."
+        }
+      ]
     }
   ]
 }

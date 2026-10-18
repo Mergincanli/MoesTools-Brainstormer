@@ -2,7 +2,7 @@
   "$schema": "../../schemas/vocabulary.schema.json",
   "id": "mobility",
   "label": "Mobility types",
-  "description": "How the unit moves. Each type lists the classes that may use it (this is how 'aircraft don't get tracks' is enforced), its default handling, the speeds that make sense, and what kind of target it is.",
+  "description": "How the unit moves. Each type lists the classes that may use it (this is how 'aircraft don't get tracks' is enforced), its default handling, the speeds that make sense, and what kind of target it is (a flier is in low air or high air).",
   "group": "core",
   "status": "draft",
   "version": "0.4.0",
@@ -22,11 +22,11 @@
     {
       "id": "jetpack",
       "label": "Jetpack / wings",
-      "description": "Personal flight at low height on a jetpack or wings. Hops over walls and hovers; counts as airborne while flying.",
+      "description": "Personal flight at low height on a jetpack or wings. Hops over walls and hovers; counts as a low flier while airborne.",
       "classes": ["infantry"],
       "rarity": "uncommon",
       "default_handling": "strafe",
-      "target_type": "aircraft",
+      "target_type": "low-air",
       "allowed": {
         "speed-bands": ["medium", "fast"]
       }
@@ -90,16 +90,16 @@
       "allowed": {
         "speed-bands": ["medium", "fast", "very-fast"]
       },
-      "notes": "Only for ground-level skimmers. If only anti-air can hit it and it flies over cliffs, use hovering flight instead."
+      "notes": "Only for ground-level skimmers, which ground weapons hit like any vehicle. If it flies over cliffs and walls, use hovering flight (a low flier) instead."
     },
     {
       "id": "rotor",
       "label": "Hovering flight",
-      "description": "Rotor, VTOL or anti-grav flight. Can hover in place and strafe; flies low enough for most anti-air and some ground weapons to hit it.",
+      "description": "Rotor, VTOL or anti-grav flight. Can hover in place and strafe. Flies low, so most direct-fire weapons can reach it, not only anti-air.",
       "classes": ["aircraft", "drone"],
       "rarity": "common",
       "default_handling": "strafe",
-      "target_type": "aircraft",
+      "target_type": "low-air",
       "allowed": {
         "speed-bands": ["medium", "fast", "very-fast"]
       }
@@ -107,11 +107,11 @@
     {
       "id": "jet",
       "label": "Jet",
-      "description": "Fixed-wing flight. Very fast, must keep moving and attacks in passes.",
+      "description": "Fixed-wing flight. Very fast, must keep moving and attacks in passes. Flies high, so only anti-air weapons reach it.",
       "classes": ["aircraft"],
       "rarity": "uncommon",
       "default_handling": "forward-only",
-      "target_type": "aircraft",
+      "target_type": "high-air",
       "allowed": {
         "speed-bands": ["fast", "very-fast"]
       }
@@ -119,11 +119,11 @@
     {
       "id": "airship",
       "label": "Airship",
-      "description": "Lighter-than-air flight. Very slow and very tough; a looming, visible threat.",
+      "description": "Lighter-than-air flight. Very slow and very tough; a looming, visible threat that flies high, so only anti-air weapons reach it.",
       "classes": ["aircraft"],
       "rarity": "rare",
       "default_handling": "drift",
-      "target_type": "aircraft",
+      "target_type": "high-air",
       "min_tier": "t3",
       "allowed": {
         "speed-bands": ["very-slow", "slow"]

@@ -26,6 +26,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 | Mobility | Many legs; handling: strafe *(proposal)*; traits: Amphibious; speed: very fast. One of the fastest ground units in the game. It crosses water and can even reach submerged submarines. |
 | Body | Spider frame, tiny. A spider-like robot. Although it comes from the vehicle factory, the game treats it much like infantry: it rides in troop transports, but it heals only at a captured hospital or dry dock or at top veterancy, not from an engineer's medical tent or from repair drones. The player version keeps the tiny look but gives it a soldier-sized hitbox (see 'As a player'). |
 | Armour | Light; model: Single health bar. Very little health. Machine guns and snipers hurt it badly and electric weapons do many times normal damage; melee animals and radiation can't hurt it. |
+| Sensors | Short sight; traits: none (in-game). The wiki gives a single sight figure of 100 (game units), half the Hammer tank's vision of 200 on that tank's page, so short. Patch 1.11 lengthened its view in stasis ray mode. |
 | Crew | Solo (proposal). One player is the drone. While it is inside a host, the camera rides along with the host. |
 | On death | Respawn (proposal) |
 | Confidence | high (review: unchecked) |
@@ -87,6 +88,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 - *Countered by:* The official profile says only repair crews at facilities can remove an infesting drone; the main wiki lists many more ways (repair drones, teleporting the host, several special attacks). The entry follows the wiki. (sources disagree)
 - *Dismantler Claws, damage:* Game data gives the claws explosive-type damage against vehicles and a sniper-type hit against infantry big enough to kill even a commando at once; 'melee' is used only because the blades family requires it.
 - *Body size:* Sources call it small or diminutive, and each drone fills a soldier's seat in a transport; no source compares its actual size to a soldier.
+- *Sensors sight:* The infobox's sight figure has no label, while the Hammer tank's page splits vision from fog clearing, so it isn't clear which one this is, or whether it predates patch 1.11.
 
 **Rule breaks** (kept as the game has them; our word lists would not allow them)
 
@@ -119,6 +121,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 | Mobility | Tracks; handling: pivot (tank controls) *(proposal)*; traits: Crush; speed: medium. Slower than the Allied main battle tank and not amphibious. Heavy enough to run over infantry, but crushing is a fallback, not a plan. |
 | Body | Hull with turret, large.  |
 | Armour | Heavy; model: Directional armour. The toughest of the three factions' main battle tanks. Machine-gun fire does much less damage to it. Facing matters only mildly: side and rear hits do slightly more (game data on the wiki). |
+| Sensors | Medium sight; traits: none (in-game). The wiki gives 200 for vision and 500 for clearing the fog (game units), between its cannon range of 150 and its beam range of 300: it sees about as far as it shoots, so medium. Patch 1.11 lengthened its view in leech mode. |
 | Crew | Solo (proposal). One player drives, fires the cannon and holds the beam. A two-seat version could give the beam and the stolen weapon to a second player. |
 | On death | Bail out (proposal) |
 | Confidence | high (review: unchecked) |
@@ -177,6 +180,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 - *Leech Beam, targets:* No source states outright that the beam can't target infantry; it is described as working on ground vehicles, ships (submarines only when surfaced) and buildings.
 - *85 mm cannon, delivery:* Taken from the cannon family default; no source describes the shell's travel.
 - *Leech Beam, damage:* The game classes the beam's damage as 'Magic', which ignores armour: every armour type takes it in full. 'energy' is our approximation, and the only damage type the drain family allows.
+- *Sensors sight:* The band follows the vision figure, as the Terror Drone entry does; the fog-clearing figure is over twice as large and would point to long sight.
 
 **Rule breaks** (kept as the game has them; our word lists would not allow them)
 
@@ -208,6 +212,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 | Mobility | Wheels; handling: steer *(proposal)*; traits: none; speed: fast. Outruns most ground vehicles. Not amphibious, and it can't crush infantry. |
 | Body | Troop carrier, medium. No rotating turret: in the game the whole car turns to aim (its Red Alert 2 ancestor had a turret). The wiki calls it an up-armoured dune buggy, the official profile an armoured car; its size is inferred from that, as no source gives dimensions. Most passenger types show their own roof weapon model (the wiki's gallery shows each version). The player version adds a free-aiming roof turret for the passenger only (see crew notes). |
 | Armour | Light; model: Single health bar. Light armour (the wiki calls it very light); it trades armour for speed. |
+| Sensors | Medium sight; traits: radar (proposal). No cited page gives a vision range; the main wiki calls it a recon unit and the Allies' main anti-air vehicle, so the player version sees an ordinary distance and has radar to warn of aircraft. |
 | Crew | Solo (proposal); 1 passenger seat (sets the weapon). One driver and one infantry passenger; the single passenger seat is in-game. Proposal for a player version: the passenger's class sets the roof weapon, and the passenger fires it from a small roof turret that aims freely while the driver steers (the official profile already describes a 'multiturret', though in the game it has no turret and the whole car turns to fire). The driver's own missiles stay fixed forward and are aimed by turning the car. |
 | On death | Bail out (proposal) |
 | Confidence | high (review: unchecked) |
@@ -216,7 +221,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 
 | Weapon | Slot | Family | Damage | Mount / delivery / range | Hits | Traits | What it does |
 |---|---|---|---|---|---|---|---|
-| Multipurpose missile launcher | primary | Rockets | Explosive | body aim / projectile / long | aircraft, ground vehicles, infantry | - | Rapid, light missiles. Against aircraft they hit about three times as hard, and reach about twice as far, as against ground targets. Good against aircraft and light vehicles, weak against armour. *When:* Only when nobody is riding inside. *Pattern:* A weapon that changes with the passenger. |
+| Multipurpose missile launcher | primary | Rockets | Explosive | body aim / projectile / long | low air, high air, ground vehicles, infantry | - | Rapid, light missiles. Against aircraft they hit about three times as hard, and reach about twice as far, as against ground targets. Good against aircraft and light vehicles, weak against armour. *When:* Only when nobody is riding inside. *Pattern:* A weapon that changes with the passenger. |
 | Repair tool (any engineer) | passenger seat (sets the weapon) | Repair tool | Repair | free aim / beam / short | ground vehicles (allies) | - | Replaces the weapon with a repair tool for friendly vehicles. It drives to nearby damaged friends on its own and removes Terror Drones from them. It can't attack. *When:* An engineer of any faction rides inside. *Pattern:* A weapon that changes with the passenger. |
 | Stun bark (attack dog) | passenger seat (sets the weapon) | Sonic | Sonic | free aim / beam / long | infantry | Stun | Loudspeakers amplify the dog's bark to stun enemy infantry for a few seconds at long range. Commandos are immune. *When:* An Allied attack dog rides inside. *Pattern:* A weapon that changes with the passenger. |
 | Stun roar (war bear) | passenger seat (sets the weapon) | Sonic | Sonic | free aim / beam / long | infantry | Stun | Loudspeakers amplify the bear's roar to stun enemy infantry for a few seconds at long range, over a slightly larger area than the dog version. Commandos are immune. *When:* A Soviet war bear rides inside. *Pattern:* A weapon that changes with the passenger. |
@@ -224,16 +229,16 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 | Missile pod (Javelin soldier) | passenger seat (sets the weapon) | Rockets | Armour-piercing | free aim / projectile / medium | ground vehicles, naval | Magazine | Fires a large burst of rockets, then pauses a few seconds to reload. Lets the car take on heavier units, though the wiki says it does only half damage to tanks, King Onis, ore collectors and Assault Destroyers. *When:* An Allied Javelin soldier rides inside. *Pattern:* A weapon that changes with the passenger. |
 | Sniper rifle (Spy) | passenger seat (sets the weapon) | Sniper | Kinetic | free aim / hitscan / long | infantry | - | Kills infantry in one shot and can fire on the move. Also hits terror drones, but no vehicles. *When:* An Allied Spy rides inside. *Pattern:* A weapon that changes with the passenger. |
 | Anti-infantry autocannons (Tanya) | passenger seat (sets the weapon) | Machine gun | Kinetic | free aim / hitscan / medium | infantry | - | The commando's own guns, mounted with identical stats: shreds groups of infantry but can attack nothing else. *When:* Tanya, the Allied commando, rides inside. *Pattern:* A weapon that changes with the passenger. |
-| Cryo beam (Cryo Legionnaire) | passenger seat (sets the weapon) | Cryo | Cryo | free aim / beam / long | infantry, ground vehicles, aircraft | - | A single freezing beam that can also freeze aircraft, which then fall and shatter. It reaches further than the Cryo Legionnaire on foot or the Cryocopter. *When:* An Allied Cryo Legionnaire rides inside (Uprising only). *Pattern:* A weapon that changes with the passenger. |
+| Cryo beam (Cryo Legionnaire) | passenger seat (sets the weapon) | Cryo | Cryo | free aim / beam / long | infantry, ground vehicles, low air | - | A single freezing beam that can also freeze aircraft, which then fall and shatter. It reaches further than the Cryo Legionnaire on foot or the Cryocopter. *When:* An Allied Cryo Legionnaire rides inside (Uprising only). *Pattern:* A weapon that changes with the passenger. |
 | Gatling gun (Conscript) | passenger seat (sets the weapon) | Machine gun | Kinetic | free aim / hitscan / medium | infantry, ground vehicles | - | A weak gatling gun; even against infantry it is not very effective. *When:* A Soviet Conscript rides inside. *Pattern:* A weapon that changes with the passenger. |
-| Flak cannon (Flak Trooper) | passenger seat (sets the weapon) | Flak | Explosive | free aim / projectile / medium | aircraft | - | Anti-air only, a little stronger than the Soviets' own flak transport, on a fast chassis that keeps up with aircraft. *When:* A Soviet Flak Trooper rides inside. *Pattern:* A weapon that changes with the passenger. |
+| Flak cannon (Flak Trooper) | passenger seat (sets the weapon) | Flak | Explosive | free aim / projectile / medium | low air, high air | - | Anti-air only, a little stronger than the Soviets' own flak transport, on a fast chassis that keeps up with aircraft. *When:* A Soviet Flak Trooper rides inside. *Pattern:* A weapon that changes with the passenger. |
 | Tesla gun (Tesla Trooper) | passenger seat (sets the weapon) | Tesla / electric | Electric | free aim / hitscan / medium | infantry, ground vehicles, structures | - | Kills infantry in one zap and hurts vehicles and buildings. A beta patch added a pre-attack delay and lowered its overall damage output. *When:* A Soviet Tesla Trooper rides inside. *Pattern:* A weapon that changes with the passenger. |
 | Radiation spray (Desolator) | passenger seat (sets the weapon) | Chemical / radiation | Toxic | free aim / projectile / short | infantry, ground vehicles | - | The Desolator's own radiation spray with identical stats, good for clearing groups of infantry. *When:* A Soviet Desolator rides inside (Uprising only). *Pattern:* A weapon that changes with the passenger. |
 | Piercing sniper rifle (Natasha) | passenger seat (sets the weapon) | Sniper | Kinetic | free aim / hitscan / long | infantry | Pierce | Kills several infantry in a line, but can't fire while moving. *When:* Natasha, the Soviet commando, rides inside. *Pattern:* A weapon that changes with the passenger. |
 | Infantry laser (Imperial Warrior) | passenger seat (sets the weapon) | Laser | Kinetic | free aim / beam / medium | infantry, ground vehicles | - | An anti-infantry laser that is also fair against light vehicles. *When:* An Empire Imperial Warrior rides inside. *Pattern:* A weapon that changes with the passenger. |
 | Anti-vehicle laser (Tankbuster) | passenger seat (sets the weapon) | Laser | Energy | free aim / beam / long | ground vehicles, infantry, structures | - | A fast-firing anti-vehicle laser with a much longer reach than the soldier on foot; StrategyWiki rates the combination as highly versatile and strong. *When:* An Empire Tankbuster rides inside. *Pattern:* A weapon that changes with the passenger. |
 | Shuriken launcher (Shinobi) | passenger seat (sets the weapon) | Sniper | Kinetic | free aim / projectile / long | infantry | - | Throws shuriken that deal heavy sniper-type damage to infantry, firing slightly faster than the Spy version. *When:* An Empire Shinobi rides inside. *Pattern:* A weapon that changes with the passenger. |
-| Bow launcher (Archer Maiden) | passenger seat (sets the weapon) | Small arms | Kinetic | free aim / projectile / long | aircraft, infantry | - | Arrows that hit both aircraft and infantry, with a little more anti-air reach than on foot. *When:* An Empire Archer Maiden rides inside (Uprising only). *Pattern:* A weapon that changes with the passenger. |
+| Bow launcher (Archer Maiden) | passenger seat (sets the weapon) | Small arms | Kinetic | free aim / projectile / long | low air, high air, infantry | - | Arrows that hit both aircraft and infantry, with a little more anti-air reach than on foot. *When:* An Empire Archer Maiden rides inside (Uprising only). *Pattern:* A weapon that changes with the passenger. |
 | Psychokinetic blast (Yuriko Omega) | passenger seat (sets the weapon) | Psionic | Psionic | free aim / beam / medium | infantry, ground vehicles, structures | - | A mounted version of her psychic attack. The gain is mostly range, speed and protection rather than damage. *When:* Yuriko Omega, the Empire's psychic commando, rides inside. *Pattern:* A weapon that changes with the passenger. |
 
 **Abilities**
@@ -244,7 +249,8 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 **Strengths**
 
 - Outruns most ground vehicles: a cheap anti-air escort and rapid responder from the first minutes. *[Fast (speed)]*
-- Empty, its missiles hit aircraft about three times as hard as ground targets, from about twice as far. *[can hit aircraft]*
+- Empty, its missiles reach every aircraft, jets and airships included, hitting them about three times as hard as ground targets from about twice as far. *[can hit high air]*
+- The same missiles, with the same extra damage and reach, work against helicopters and other low fliers. *[can hit low air]*
 - Changes role mid-match by swapping the passenger: anti-air, anti-tank, anti-infantry, stun or field repair. *[at least 1 passenger seat(s)]*
 - With an engineer aboard it repairs tanks in the field and pulls infesting drones out of them. *[Repair tool (weapon)]*
 
@@ -300,10 +306,16 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 
 **Rule breaks** (kept as the game has them; our word lists would not allow them)
 
+- *Multipurpose missile launcher, targets:* The default missiles are the car's anti-air weapon and, like every anti-air weapon in RA3, reach all aircraft; our rockets family leaves high air to the anti-air families. No source says whether they steer, which would make them guided missiles.
 - *Stun bark (attack dog), traits:* The source's tier-1 IFV stuns when carrying a dog or bear; our word list keeps stun for tier 2 and up.
 - *Stun roar (war bear), traits:* The source's tier-1 IFV stuns when carrying a dog or bear; our word list keeps stun for tier 2 and up.
 - *Infantry laser (Imperial Warrior), damage:* The wiki calls the Imperial Warrior version a laser but gives it the game's gun damage type, which maps to kinetic; our laser family allows only energy or fire damage.
+- *Bow launcher (Archer Maiden), targets:* The wiki calls the bow an anti-aircraft as well as anti-infantry weapon, so, like every anti-air weapon in RA3, it reaches all aircraft; our small-arms family leaves high air to the anti-air families.
 - *Psychokinetic blast (Yuriko Omega), targets:* StrategyWiki warns that this combination can quickly wreck a base, so it hits buildings, which our psionic family's target list leaves out.
+
+**Where no word-list term fitted**
+
+- *Cryo beam (Cryo Legionnaire), targets* (used low-air; wanted every aircraft): RA3 has one air layer, and the beam freezes any aircraft. It is an all-round weapon rather than a dedicated anti-air one, so under our rule for the two layers it is coded for low air only.
 
 **Sources**
 
@@ -780,13 +792,14 @@ A hand-written illustration of the card format, not generator output. It moves t
 | Primary | Melee weapon (no damage, attach, melee range; hits ground vehicles; mark) |
 | Secondary | Cryo (cryo, beam, medium range; hits infantry, ground vehicles; slow) |
 | Armour | Light, charged shield |
+| Sensors | Long sight; detector |
 | Crew | Solo |
 | Signature | **Frost Tag**: Latch onto an enemy vehicle: it shows on your team's minimap, and every hit your team lands while you ride adds frost; at full frost you are flung clear and the hull turns brittle for a short window, taking extra damage from every hit. If you leave or are removed before that, the frost melts away. *(pattern: Infest a vehicle, variant tracker; medium cooldown)* |
 | Team-play hook | Ride the tank while your team pours fire into it: every hit adds frost, and at full frost it turns brittle. *(Setup and finisher)* |
 | Strengths | Once latched it is hard to hit and stays on until a shake-off, repair or EMP removes it; every hit the team lands builds toward the brittle window. The hover frame reaches vehicles quickly and slips away again. |
 | Weaknesses | It has to touch the vehicle, so it is exposed on the way in. A light frame: once its charged shield is gone, one burst ends it. |
 | Countered by | Sustained fire stops it before it reaches the hull. A repair beam pulls it off the host. EMP drops its shield and knocks it off. Nothing on it can reach aircraft, and they can shoot it freely. |
-| Counters | A ridden vehicle shows up for the whole team, and their focused fire turns it brittle. |
+| Counters | A ridden vehicle shows up for the whole team, and their focused fire turns it brittle. Its detector shows stealthy and disguised enemies near it to the whole team. |
 | Counterplay | Shoot it on the way in: it is tiny and lightly protected. Hold F to shake it off, or drive onto a repair pad. Break away from the enemy's guns: frost only builds while they hit you. |
 | How it plays | **As the user:** Skim in fast, pounce on a vehicle and ride it while your team piles on; the more they hit it, the sooner it turns brittle and flings you clear. You can't fire while riding, and leaping off early to chill infantry coming to help lets the frost melt. **As the target:** A pale glint lands on your hull, frost starts creeping across it and the enemy team sees you on their minimap. Hold F to shake it off, drive onto a repair pad, or get out of their fire: frost only builds when they hit you. Shaking it off clears the frost. **Teammates:** The ridden vehicle shows on your minimap. Every hit on it adds frost, and heavy hitters cash in on the brittle window; a repair player is the host's best friend. |
 | Controls | LMB: Pounce and latch (Frost Tag); RMB: Cryo beam: slows infantry and vehicles (not while latched); Space: Leap off |

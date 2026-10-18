@@ -46,6 +46,7 @@
         "mobility",
         "body",
         "armour",
+        "sensors",
         "armament",
         "crew",
         "abilities",
@@ -240,6 +241,35 @@
                 "type": "string",
                 "x-vocab": "armour-models"
               }
+            },
+            "notes": {
+              "type": "string"
+            }
+          }
+        },
+        "sensors": {
+          "description": "How it sees and is seen under fog of war.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sight", "traits", "basis"],
+          "properties": {
+            "sight": {
+              "description": "How far it sees, judged against the game's other units.",
+              "type": "string",
+              "x-vocab": "sight-bands"
+            },
+            "traits": {
+              "description": "Always-on sensor traits. Required, so 'none' is an explicit empty list.",
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "x-vocab": "sensor-traits"
+              }
+            },
+            "basis": {
+              "description": "in-game = from the source: its vision range compared with the game's other units, and any sensor traits it has; proposal = the source gives no vision range, so this is our suggestion for a player version. When the two are mixed, say which part is which in notes.",
+              "enum": ["in-game", "proposal"]
             },
             "notes": {
               "type": "string"

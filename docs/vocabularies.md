@@ -7,16 +7,16 @@ Fixed word lists. Every source unit, pattern and generated card may only use the
 - **Core** lists are the ten the brief asks for. **Supporting** lists make them usable: scales, aim, traits, seats and so on.
 - **Rules** say which terms can go together. They bind generated cards (so the generator can't roll tracks on an aircraft). Real units that break them are recorded as they are and listed as 'atypical'. Real games breaking our rules is useful spice material, and evidence for relaxing a rule. A term's classes are every class it is physically possible for; a class left out is a hard ban.
 - **Rarity** feeds the spice control: common terms appear at every spice level, rare ones only when spice is turned up. A part that is possible but unusual for a class has its own rarity there ('rare on: Aircraft' in the rules), so cross-overs such as a flamethrower on an aircraft appear only at high spice.
-- **Typed links** such as 'at most Small (size)' or 'can hit aircraft' point at other terms; see [fields](fields.md).
+- **Typed links** such as 'at most Small (size)' or 'can hit high air' point at other terms; see [fields](fields.md).
 - **'Seen in'** examples illustrate a term and are not cited here; the research run cites them on the units.
 
-37 lists, 299 terms.
+39 lists, 307 terms.
 
 ## Contents
 
 **Core:** [Unit classes](#classes) (7) · [Tier bands](#tiers) (3) · [Faction flavours](#faction-flavours) (3) · [Roles](#roles) (16) · [Mobility types](#mobility) (12) · [Body plans](#bodies) (18) · [Weapon families](#weapon-families) (32) · [Damage types](#damage-types) (13) · [Armour classes](#armour-classes) (5) · [Crew models](#crew-models) (5)
 
-**Supporting:** [Ability kinds](#ability-kinds) (7) · [Ability sources](#ability-sources) (5) · [Aim / mount](#aim-models) (6) · [Armour models](#armour-models) (15) · [Availability](#availability) (3) · [Balance flags](#balance-flags) (9) · [Confidence levels](#confidence) (3) · [Cooldown bands](#cooldown-bands) (5) · [Cost bands](#cost-bands) (5) · [Handling](#handling) (5) · [Mobility traits](#mobility-traits) (9) · [Nature](#nature) (3) · [On death](#on-death) (5) · [Pattern categories](#pattern-categories) (13) · [Range bands](#range-bands) (5) · [Rarity](#rarity) (3) · [Ratings](#ratings) (3) · [Resources](#resources) (5) · [Seat roles](#seat-roles) (6) · [Sizes](#sizes) (5) · [Solo fallback](#solo-fallback) (4) · [Source kinds](#source-kinds) (6) · [Speed bands](#speed-bands) (5) · [Target types](#target-types) (5) · [Team-play hooks](#team-play-hooks) (13) · [Weapon delivery](#weapon-delivery) (10) · [Weapon traits](#weapon-traits) (22)
+**Supporting:** [Ability kinds](#ability-kinds) (7) · [Ability sources](#ability-sources) (5) · [Aim / mount](#aim-models) (6) · [Armour models](#armour-models) (15) · [Availability](#availability) (3) · [Balance flags](#balance-flags) (9) · [Confidence levels](#confidence) (3) · [Cooldown bands](#cooldown-bands) (5) · [Cost bands](#cost-bands) (5) · [Handling](#handling) (5) · [Mobility traits](#mobility-traits) (9) · [Nature](#nature) (3) · [On death](#on-death) (5) · [Pattern categories](#pattern-categories) (13) · [Range bands](#range-bands) (5) · [Rarity](#rarity) (3) · [Ratings](#ratings) (3) · [Resources](#resources) (5) · [Seat roles](#seat-roles) (6) · [Sensor traits](#sensor-traits) (4) · [Sight bands](#sight-bands) (3) · [Sizes](#sizes) (5) · [Solo fallback](#solo-fallback) (4) · [Source kinds](#source-kinds) (6) · [Speed bands](#speed-bands) (5) · [Target types](#target-types) (6) · [Team-play hooks](#team-play-hooks) (13) · [Weapon delivery](#weapon-delivery) (10) · [Weapon traits](#weapon-traits) (22)
 
 ## Core vocabularies
 
@@ -122,10 +122,10 @@ What the unit is for: its job or target, never its mechanic (mechanics are patte
 | `assault` | Frontline assault | Leads pushes, soaks damage and brawls at short to medium range. |  |
 | `anti-armour` | Anti-armour | Kills vehicles and mechs. | needs Armour-piercing (damage) or Energy (damage) or Electric (damage) or EMP (damage) or Infest a vehicle (pattern) |
 | `anti-infantry` | Anti-infantry | Clears soldiers and light targets. |  |
-| `anti-air` | Anti-air | Brings down aircraft and drones. | needs can hit aircraft |
+| `anti-air` | Anti-air | Brings down aircraft and flying drones, in low air, high air or both. | needs can hit low air or can hit high air |
 | `siege` | Artillery / siege | Hits from very far or over cover; breaks defences and structures. | needs Lobbed (delivery) or at least Long (range) |
 | `marksman` | Marksman / overwatch | Holds long sightlines and picks off targets with precise shots. | needs at least Long (range) |
-| `scout` | Scout / recon | Finds, spots and marks enemies; usually fast and fragile. | needs at least Fast (speed) or Stealth and deception (pattern category) or Mark (weapon trait) |
+| `scout` | Scout / recon | Finds, spots and marks enemies; usually fast and fragile. | needs at least Fast (speed) or Stealth and deception (pattern category) or Mark (weapon trait) or at least Long (sight) or Radar (sensor) or Detector (sensor) or Spotter (sensor) or Stealth (sensor) |
 | `support` | Support | Heals, repairs or resupplies teammates. | needs Repair tool (weapon) or Support (pattern category) |
 | `transport` | Transport | Carries teammates around the map. | classes: Tank / ground vehicle, Walker / mech, Hovercraft, Aircraft; needs at least 2 passenger seat(s) |
 | `infiltrator` | Infiltrator / saboteur | Acts inside enemy units, lines or buildings: sabotage, steal, capture. |  |
@@ -139,20 +139,20 @@ What the unit is for: its job or target, never its mechanic (mechanics are patte
 <a id="mobility"></a>
 ### Mobility types (`mobility`)
 
-How the unit moves. Each type lists the classes that may use it (this is how 'aircraft don't get tracks' is enforced), its default handling, the speeds that make sense, and what kind of target it is.
+How the unit moves. Each type lists the classes that may use it (this is how 'aircraft don't get tracks' is enforced), its default handling, the speeds that make sense, and what kind of target it is (a flier is in low air or high air).
 
 | Id | Label | Meaning | Rules | Rarity |
 |---|---|---|---|---|
 | `foot` | On foot | Walks and runs. Can take cover and enter buildings and vehicles. | classes: Infantry; handling: strafe; counts as: infantry; only with speed bands: Slow, Medium, Fast | common |
-| `jetpack` | Jetpack / wings | Personal flight at low height on a jetpack or wings. Hops over walls and hovers; counts as airborne while flying. | classes: Infantry; handling: strafe; counts as: aircraft; only with speed bands: Medium, Fast | uncommon |
+| `jetpack` | Jetpack / wings | Personal flight at low height on a jetpack or wings. Hops over walls and hovers; counts as a low flier while airborne. | classes: Infantry; handling: strafe; counts as: low air; only with speed bands: Medium, Fast | uncommon |
 | `wheels` | Wheels | Fast on roads and open ground, turns in arcs, struggles on rough terrain. | classes: Tank / ground vehicle, Drone / support; handling: steer; counts as: ground vehicles; only with speed bands: Medium, Fast, Very fast | common |
 | `tracks` | Tracks | Slower, but turns on the spot and handles rough ground. | classes: Tank / ground vehicle, Drone / support; handling: pivot (tank controls); counts as: ground vehicles; only with speed bands: Very slow, Slow, Medium, Fast | common |
 | `legs-biped` | Two legs | Walks on two legs, stepping over low walls and swaying as it moves. Small ones are nimble; big ones are slow and imposing. | classes: Walker / mech; handling: pivot (tank controls); counts as: ground vehicles; only with speed bands: Very slow, Slow, Medium, Fast | common |
 | `legs-multi` | Many legs | Three or more legs, like a spider or a four-legged walker. Stable, scuttles over rubble and can straddle obstacles. | classes: Walker / mech, Drone / support; handling: pivot (tank controls); counts as: ground vehicles; only with speed bands: Slow, Medium, Fast, Very fast | uncommon |
-| `hover` | Hover | Air cushion or anti-grav. Crosses land and water, drifts in turns, avoids steep slopes. *Note:* Only for ground-level skimmers. If only anti-air can hit it and it flies over cliffs, use hovering flight instead. | classes: Hovercraft, Drone / support; handling: drift; counts as: ground vehicles; only with speed bands: Medium, Fast, Very fast | common |
-| `rotor` | Hovering flight | Rotor, VTOL or anti-grav flight. Can hover in place and strafe; flies low enough for most anti-air and some ground weapons to hit it. | classes: Aircraft, Drone / support; handling: strafe; counts as: aircraft; only with speed bands: Medium, Fast, Very fast | common |
-| `jet` | Jet | Fixed-wing flight. Very fast, must keep moving and attacks in passes. | classes: Aircraft; handling: forward only; counts as: aircraft; only with speed bands: Fast, Very fast | uncommon |
-| `airship` | Airship | Lighter-than-air flight. Very slow and very tough; a looming, visible threat. | classes: Aircraft; handling: drift; counts as: aircraft; only with speed bands: Very slow, Slow; from T3 | rare |
+| `hover` | Hover | Air cushion or anti-grav. Crosses land and water, drifts in turns, avoids steep slopes. *Note:* Only for ground-level skimmers, which ground weapons hit like any vehicle. If it flies over cliffs and walls, use hovering flight (a low flier) instead. | classes: Hovercraft, Drone / support; handling: drift; counts as: ground vehicles; only with speed bands: Medium, Fast, Very fast | common |
+| `rotor` | Hovering flight | Rotor, VTOL or anti-grav flight. Can hover in place and strafe. Flies low, so most direct-fire weapons can reach it, not only anti-air. | classes: Aircraft, Drone / support; handling: strafe; counts as: low air; only with speed bands: Medium, Fast, Very fast | common |
+| `jet` | Jet | Fixed-wing flight. Very fast, must keep moving and attacks in passes. Flies high, so only anti-air weapons reach it. | classes: Aircraft; handling: forward only; counts as: high air; only with speed bands: Fast, Very fast | uncommon |
+| `airship` | Airship | Lighter-than-air flight. Very slow and very tough; a looming, visible threat that flies high, so only anti-air weapons reach it. | classes: Aircraft; handling: drift; counts as: high air; only with speed bands: Very slow, Slow; from T3 | rare |
 | `naval-surface` | Ship hull | Floats on the water surface. Research only. *(research only)* | classes: Naval (research only); counts as: naval |  |
 | `naval-submerged` | Submarine | Moves underwater, surfacing to attack or be seen. Research only. *(research only)* | classes: Naval (research only); counts as: naval |  |
 
@@ -185,40 +185,40 @@ The unit's upper-body shape and silhouette (legs and wheels live in mobility, sc
 <a id="weapon-families"></a>
 ### Weapon families (`weapon-families`)
 
-What the weapon is, judged by how it behaves in the source, not by its name. Each family has defaults (damage, mount, delivery, range) and lists what it may be combined with. Tie-breaks: a missile that steers is guided, an unguided one is a rocket; a soldier's personal gun is small arms, a belt-fed or mounted gun is a machine gun; prism only if the beam splits, travelling bolts are plasma; placed or thrown charges are explosives, dropped ones are bombs; artillery only for arcing or out-of-sight fire.
+What the weapon is, judged by how it behaves in the source, not by its name. Each family has defaults (damage, mount, delivery, range) and lists what it may be combined with. Tie-breaks: a missile that steers is guided, an unguided one is a rocket; a soldier's personal gun is small arms, a belt-fed or mounted gun is a machine gun; prism only if the beam splits, travelling bolts are plasma; placed or thrown charges are explosives, dropped ones are bombs; artillery only for arcing or out-of-sight fire. Air: every family lists the target types it can reach. Only anti-air families (flak, guided missiles, autocannons) reach high air, besides adaptive, which takes whatever weapon it gains; most direct-fire families reach low air; lobbed, dropped, melee and short-range area families stay on the ground.
 
 | Id | Label | Meaning | Rules | Rarity |
 |---|---|---|---|---|
-| `small-arms` | Small arms | Rifles, carbines, SMGs and pistols. | classes: all; uncommon on: Hovercraft; rare on: Aircraft; default damage: kinetic; default mount: free aim; default delivery: hitscan; default range: medium; only with damage types: Kinetic, Armour-piercing; only with weapon delivery: Hitscan, Projectile | common |
-| `machine-gun` | Machine gun | Sustained automatic fire, from light to heavy machine guns. | classes: all; default damage: kinetic; default mount: free aim; default delivery: hitscan; default range: medium; only with damage types: Kinetic, Armour-piercing, Fire; only with weapon delivery: Hitscan, Projectile | common |
-| `shotgun` | Shotgun | A short-range spread of pellets or slugs. | classes: all; rare on: Aircraft, Drone / support; default damage: kinetic; default mount: free aim; default delivery: hitscan; default range: short; only with damage types: Kinetic, Fire; only with weapon delivery: Hitscan, Projectile; only with target types: Infantry, Ground vehicles, Structures | uncommon |
-| `sniper` | Sniper | Precision shots at long range, slow to fire. | classes: all; uncommon on: Hovercraft; rare on: Aircraft; default damage: kinetic; default mount: free aim; default delivery: hitscan; default range: long; only with damage types: Kinetic, Armour-piercing, Energy; only with weapon delivery: Hitscan, Projectile; only with target types: Infantry, Ground vehicles | uncommon |
-| `autocannon` | Autocannon | Rapid medium-calibre shells, often able to hit aircraft. | classes: all; rare on: Infantry, Drone / support; default damage: explosive; default mount: free aim; default delivery: projectile; default range: medium; only with damage types: Explosive, Kinetic, Armour-piercing; only with weapon delivery: Projectile | common |
-| `cannon` | Cannon | A direct-fire gun firing heavy shells. | classes: all; uncommon on: Aircraft; rare on: Infantry, Drone / support; default damage: armour-piercing; default mount: free aim; default delivery: projectile; default range: medium; only with damage types: Armour-piercing, Explosive; only with weapon delivery: Projectile; only with target types: Infantry, Ground vehicles, Structures | common |
+| `small-arms` | Small arms | Rifles, carbines, SMGs and pistols. | classes: all; uncommon on: Hovercraft; rare on: Aircraft; default damage: kinetic; default mount: free aim; default delivery: hitscan; default range: medium; only with damage types: Kinetic, Armour-piercing; only with weapon delivery: Hitscan, Projectile; only with target types: Infantry, Ground vehicles, Low air, Structures, Naval | common |
+| `machine-gun` | Machine gun | Sustained automatic fire, from light to heavy machine guns. | classes: all; default damage: kinetic; default mount: free aim; default delivery: hitscan; default range: medium; only with damage types: Kinetic, Armour-piercing, Fire; only with weapon delivery: Hitscan, Projectile; only with target types: Infantry, Ground vehicles, Low air, Structures, Naval | common |
+| `shotgun` | Shotgun | A short-range spread of pellets or slugs. | classes: all; rare on: Aircraft, Drone / support; default damage: kinetic; default mount: free aim; default delivery: hitscan; default range: short; only with damage types: Kinetic, Fire; only with weapon delivery: Hitscan, Projectile; only with target types: Infantry, Ground vehicles, Low air, Structures | uncommon |
+| `sniper` | Sniper | Precision shots at long range, slow to fire. | classes: all; uncommon on: Hovercraft; rare on: Aircraft; default damage: kinetic; default mount: free aim; default delivery: hitscan; default range: long; only with damage types: Kinetic, Armour-piercing, Energy; only with weapon delivery: Hitscan, Projectile; only with target types: Infantry, Ground vehicles, Low air | uncommon |
+| `autocannon` | Autocannon | Rapid medium-calibre shells. Anti-aircraft guns are often autocannons, so it is one of the few families that can reach high air. | classes: all; rare on: Infantry, Drone / support; default damage: explosive; default mount: free aim; default delivery: projectile; default range: medium; only with damage types: Explosive, Kinetic, Armour-piercing; only with weapon delivery: Projectile; only with target types: Infantry, Ground vehicles, Low air, High air, Structures, Naval | common |
+| `cannon` | Cannon | A direct-fire gun firing heavy shells. | classes: all; uncommon on: Aircraft; rare on: Infantry, Drone / support; default damage: armour-piercing; default mount: free aim; default delivery: projectile; default range: medium; only with damage types: Armour-piercing, Explosive; only with weapon delivery: Projectile; only with target types: Infantry, Ground vehicles, Low air, Structures | common |
 | `artillery` | Artillery / mortar | Shells lobbed over cover onto a target point. | classes: Infantry, Tank / ground vehicle, Walker / mech, Hovercraft, Drone / support; rare on: Drone / support; default damage: explosive; default mount: free aim; default delivery: lobbed; default range: long; only with damage types: Explosive, Fire, Toxic, Cryo; only with weapon delivery: Lobbed; only with target types: Infantry, Ground vehicles, Structures | common |
-| `rockets` | Rockets | Unguided rockets or rocket pods. | classes: all; default damage: explosive; default mount: free aim; default delivery: projectile; default range: medium; only with damage types: Explosive, Armour-piercing, Fire; only with weapon delivery: Projectile, Lobbed | common |
-| `guided-missiles` | Guided missiles | Missiles that lock on and steer toward the target. | classes: all; default damage: armour-piercing; default mount: free aim; default delivery: lock-on; default range: long; only with damage types: Armour-piercing, Explosive, EMP; only with weapon delivery: Lock-on | common |
-| `flak` | Flak | Air-bursting shells, mainly against aircraft. | classes: all; rare on: Aircraft, Drone / support; default damage: explosive; default mount: free aim; default delivery: projectile; default range: medium; only with damage types: Explosive; only with weapon delivery: Projectile; only with target types: Aircraft, Infantry | uncommon |
+| `rockets` | Rockets | Unguided rockets or rocket pods. | classes: all; default damage: explosive; default mount: free aim; default delivery: projectile; default range: medium; only with damage types: Explosive, Armour-piercing, Fire; only with weapon delivery: Projectile, Lobbed; only with target types: Infantry, Ground vehicles, Low air, Structures, Naval | common |
+| `guided-missiles` | Guided missiles | Missiles that lock on and steer toward the target. | classes: all; default damage: armour-piercing; default mount: free aim; default delivery: lock-on; default range: long; only with damage types: Armour-piercing, Explosive, EMP; only with weapon delivery: Lock-on; only with target types: Infantry, Ground vehicles, Low air, High air, Structures, Naval | common |
+| `flak` | Flak | Air-bursting shells, mainly against aircraft. | classes: all; rare on: Aircraft, Drone / support; default damage: explosive; default mount: free aim; default delivery: projectile; default range: medium; only with damage types: Explosive; only with weapon delivery: Projectile; only with target types: Infantry, Low air, High air | uncommon |
 | `flamethrower` | Flamethrower | A short-range stream of fire that sets the ground alight. | classes: all; rare on: Aircraft, Drone / support; default damage: fire; default mount: free aim; default delivery: projectile; default range: short; only with damage types: Fire, Toxic; only with weapon delivery: Projectile; only with target types: Infantry, Ground vehicles, Structures | uncommon |
-| `tesla` | Tesla / electric | Electric arcs that can jump between targets. | classes: all; default damage: electric; default mount: free aim; default delivery: hitscan; default range: medium; only with damage types: Electric; only with weapon delivery: Hitscan, Beam; only with target types: Infantry, Ground vehicles, Structures | uncommon |
-| `laser` | Laser | A continuous or pulsed beam of light. | classes: all; default damage: energy; default mount: free aim; default delivery: beam; default range: medium; only with damage types: Energy, Fire; only with weapon delivery: Beam, Hitscan | uncommon |
-| `prism` | Prism | A light beam that splits or refracts to hit several targets. | classes: all; rare on: Drone / support; default damage: energy; default mount: free aim; default delivery: beam; default range: long; only with damage types: Energy; only with weapon delivery: Beam | rare |
-| `cryo` | Cryo | A freezing ray or shell: slows, then freezes the target solid. | classes: all; default damage: cryo; default mount: free aim; default delivery: beam; default range: medium; only with damage types: Cryo; only with weapon delivery: Beam, Projectile, Lobbed | uncommon |
-| `plasma` | Plasma / energy bolt | Bolts of charged energy, often charged up before release. | classes: all; default damage: energy; default mount: free aim; default delivery: projectile; default range: medium; only with damage types: Energy; only with weapon delivery: Projectile | uncommon |
+| `tesla` | Tesla / electric | Electric arcs that can jump between targets. | classes: all; default damage: electric; default mount: free aim; default delivery: hitscan; default range: medium; only with damage types: Electric; only with weapon delivery: Hitscan, Beam; only with target types: Infantry, Ground vehicles, Low air, Structures | uncommon |
+| `laser` | Laser | A continuous or pulsed beam of light. | classes: all; default damage: energy; default mount: free aim; default delivery: beam; default range: medium; only with damage types: Energy, Fire; only with weapon delivery: Beam, Hitscan; only with target types: Infantry, Ground vehicles, Low air, Structures, Naval | uncommon |
+| `prism` | Prism | A light beam that splits or refracts to hit several targets. | classes: all; rare on: Drone / support; default damage: energy; default mount: free aim; default delivery: beam; default range: long; only with damage types: Energy; only with weapon delivery: Beam; only with target types: Infantry, Ground vehicles, Low air, Structures, Naval | rare |
+| `cryo` | Cryo | A freezing ray or shell: slows, then freezes the target solid. | classes: all; default damage: cryo; default mount: free aim; default delivery: beam; default range: medium; only with damage types: Cryo; only with weapon delivery: Beam, Projectile, Lobbed; only with target types: Infantry, Ground vehicles, Low air, Structures, Naval | uncommon |
+| `plasma` | Plasma / energy bolt | Bolts of charged energy, often charged up before release. | classes: all; default damage: energy; default mount: free aim; default delivery: projectile; default range: medium; only with damage types: Energy; only with weapon delivery: Projectile; only with target types: Infantry, Ground vehicles, Low air, Structures, Naval | uncommon |
 | `sonic` | Sonic | Sound or pressure waves that push targets and pass through them. | classes: all; rare on: Aircraft, Drone / support; default damage: sonic; default mount: free aim; default delivery: beam; default range: short; only with damage types: Sonic; only with weapon delivery: Beam, Projectile; only with target types: Infantry, Ground vehicles, Structures | rare |
 | `blades` | Melee weapon | Blades, claws, fists, hammers, saws or drills used up close. | classes: all; uncommon on: Hovercraft; rare on: Aircraft; default damage: melee; default mount: free aim; default delivery: melee; default range: melee; only with damage types: Melee, Electric, Energy; only with weapon delivery: Melee, Attach; only with target types: Infantry, Ground vehicles, Structures | uncommon |
 | `chemical` | Chemical / radiation | Toxic gas, acid or radiation that lingers as a hazard zone. | classes: all; rare on: Hovercraft, Drone / support; default damage: toxic; default mount: free aim; default delivery: projectile; default range: short; only with damage types: Toxic; only with weapon delivery: Projectile, Lobbed, Drop; only with target types: Infantry, Ground vehicles, Structures | rare |
 | `explosives` | Explosives | Grenades, satchel charges, mines, sticky bombs and bomb trucks. | classes: all; uncommon on: Walker / mech, Hovercraft; rare on: Aircraft; default damage: explosive; default mount: free aim; default delivery: place; default range: short; only with damage types: Explosive, EMP, Fire; only with weapon delivery: Place, Lobbed, Attach, Ram / kamikaze; only with target types: Infantry, Ground vehicles, Structures | common |
 | `bombs` | Bombs | Ordnance dropped from above. | classes: Aircraft, Drone / support; default damage: explosive; default mount: body aim; default delivery: drop; default range: short; only with damage types: Explosive, Fire, Toxic, EMP; only with weapon delivery: Drop; only with target types: Infantry, Ground vehicles, Structures | common |
-| `emp` | EMP | An electromagnetic pulse that shuts down machines and shields. | classes: all; default damage: emp; default mount: free aim; default delivery: projectile; default range: medium; only with damage types: EMP; only with weapon delivery: Projectile, Beam, Hitscan, Drop | uncommon |
-| `drain` | Drain beam | A beam that pulls health or energy from the target into the attacker. *Note:* Always carries the self-heal weapon trait. | classes: all; rare on: Aircraft; default damage: energy; default mount: free aim; default delivery: beam; default range: medium; only with damage types: Energy; only with weapon delivery: Beam; only with target types: Infantry, Ground vehicles, Structures | rare |
-| `railgun` | Railgun / gauss | A magnetically fired slug: an instant, piercing line shot with a long reload. | classes: all; rare on: Aircraft, Drone / support; default damage: armour-piercing; default mount: free aim; default delivery: hitscan; default range: long; only with damage types: Armour-piercing, Kinetic; only with weapon delivery: Hitscan | rare |
-| `magnetic` | Magnetic | Magnetic beams or harpoons that pull, lift or pin vehicles. | classes: Tank / ground vehicle, Walker / mech, Hovercraft, Aircraft; default damage: kinetic; default mount: free aim; default delivery: beam; default range: medium; only with damage types: Kinetic; only with weapon delivery: Beam; only with target types: Ground vehicles, Aircraft | rare |
-| `nanites` | Nanites | A cloud or swarm of nano-machines that eats armour or repairs allies. | classes: all; default damage: toxic; default mount: free aim; default delivery: projectile; default range: short; only with damage types: Toxic, Repair; only with weapon delivery: Projectile, Lobbed, Drop | rare |
-| `psionic` | Psionic | Mind attacks: control, confusion or fear. Machines without a crew are immune. | classes: all; rare on: Hovercraft, Aircraft; default damage: psionic; default mount: free aim; default delivery: beam; default range: medium; only with damage types: Psionic; only with weapon delivery: Beam, Hitscan; only with target types: Infantry, Ground vehicles | rare |
-| `drone-launcher` | Drone launcher | Launches small drones or munitions that act on their own. | classes: all; default damage: explosive; default mount: auto-target; default delivery: projectile; default range: long; only with damage types: Explosive, Kinetic, EMP | rare |
-| `repair-tool` | Repair tool | A torch, beam or spray that restores health to allies or vehicles instead of harming enemies. | classes: all; default damage: repair; default mount: free aim; default delivery: beam; default range: short; only with damage types: Repair; only with weapon delivery: Beam, Projectile | uncommon |
-| `adaptive` | Adaptive | No fixed family: the weapon is taken from a passenger, a kill or the current mode. The signature pattern says how. | classes: all | rare |
+| `emp` | EMP | An electromagnetic pulse that shuts down machines and shields. | classes: all; default damage: emp; default mount: free aim; default delivery: projectile; default range: medium; only with damage types: EMP; only with weapon delivery: Projectile, Beam, Hitscan, Drop; only with target types: Infantry, Ground vehicles, Low air, Structures, Naval | uncommon |
+| `drain` | Drain beam | A beam that pulls health or energy from the target into the attacker. *Note:* Always carries the self-heal weapon trait. | classes: all; rare on: Aircraft; default damage: energy; default mount: free aim; default delivery: beam; default range: medium; only with damage types: Energy; only with weapon delivery: Beam; only with target types: Infantry, Ground vehicles, Low air, Structures | rare |
+| `railgun` | Railgun / gauss | A magnetically fired slug: an instant, piercing line shot with a long reload. | classes: all; rare on: Aircraft, Drone / support; default damage: armour-piercing; default mount: free aim; default delivery: hitscan; default range: long; only with damage types: Armour-piercing, Kinetic; only with weapon delivery: Hitscan; only with target types: Infantry, Ground vehicles, Low air, Structures, Naval | rare |
+| `magnetic` | Magnetic | Magnetic beams or harpoons that pull, lift or pin vehicles. *Note:* Can pull down a low flier such as a helicopter; jets and airships fly out of its reach. | classes: Tank / ground vehicle, Walker / mech, Hovercraft, Aircraft; default damage: kinetic; default mount: free aim; default delivery: beam; default range: medium; only with damage types: Kinetic; only with weapon delivery: Beam; only with target types: Ground vehicles, Low air | rare |
+| `nanites` | Nanites | A cloud or swarm of nano-machines that eats armour or repairs allies. | classes: all; default damage: toxic; default mount: free aim; default delivery: projectile; default range: short; only with damage types: Toxic, Repair; only with weapon delivery: Projectile, Lobbed, Drop; only with target types: Infantry, Ground vehicles, Structures, Naval | rare |
+| `psionic` | Psionic | Mind attacks: control, confusion or fear. Machines without a crew are immune. | classes: all; rare on: Hovercraft, Aircraft; default damage: psionic; default mount: free aim; default delivery: beam; default range: medium; only with damage types: Psionic; only with weapon delivery: Beam, Hitscan; only with target types: Infantry, Ground vehicles, Low air | rare |
+| `drone-launcher` | Drone launcher | Launches small drones or munitions that act on their own. | classes: all; default damage: explosive; default mount: auto-target; default delivery: projectile; default range: long; only with damage types: Explosive, Kinetic, EMP; only with target types: Infantry, Ground vehicles, Low air, Structures, Naval | rare |
+| `repair-tool` | Repair tool | A torch, beam or spray that restores health to allies or vehicles instead of harming enemies. | classes: all; default damage: repair; default mount: free aim; default delivery: beam; default range: short; only with damage types: Repair; only with weapon delivery: Beam, Projectile; only with target types: Infantry, Ground vehicles, Low air, Structures, Naval | uncommon |
+| `adaptive` | Adaptive | No fixed family: the weapon is taken from a passenger, a kill or the current mode. The signature pattern says how. | classes: all; only with target types: Infantry, Ground vehicles, Low air, High air, Structures, Naval | rare |
 | `torpedoes` | Torpedoes | Underwater weapons. Research only. *(research only)* | classes: Naval (research only); default damage: armour-piercing; default delivery: projectile |  |
 | `none` | Unarmed | No weapon. Research only; a generated card shows an empty slot instead. *(research only)* |  |  |
 
@@ -538,6 +538,29 @@ What one player in a multi-seat unit controls.
 | `passenger-firing` | Passenger (firing) | Rides inside and fires their own weapon out of a port or an open top. *Seen in:* PlanetSide 2: rumble seats let riders use their own weapons, exposed to fire; Halo: the Mongoose passenger fires their own weapon. |
 | `passenger-module` | Passenger (module) | Who rides inside decides the vehicle's weapon or ability; the passenger may aim it. *Seen in:* Red Alert 3: the Multigunner IFV's weapon depends on its passenger; Foxhole: the battle tank's engineer seat reloads the gun and repairs. |
 
+<a id="sensor-traits"></a>
+### Sensor traits (`sensor-traits`)
+
+Always-on ways a unit finds enemies or hides from them, on top of its sight band. They need no key; the same effects on a key are patterns (cloak, reveal an area, mark a target, jam sensors).
+
+| Id | Label | Meaning | Rules | Rarity |
+|---|---|---|---|---|
+| `radar` | Radar | Shows enemies in a wide circle beyond its sight as blips on the team's minimap: where they are, not what they are. A blip can't be aimed at until someone sees it, and stealthy enemies don't show. | classes: all; rare on: Infantry | uncommon |
+| `detector` | Detector | Reveals stealthy, cloaked, burrowed and disguised enemies close to it, for the whole team. | classes: all | uncommon |
+| `stealth` | Stealth | Hard to spot: enemies see it only at close range, and radar never shows it. Firing gives it away for a moment, and a detector nearby reveals it. *Note:* Always on. Turning fully invisible, on a key or not, is the cloak pattern. | classes: all; rare on: Tank / ground vehicle, Walker / mech, Hovercraft, Aircraft; never with mobility types: Airship; never with sizes: Huge | uncommon |
+| `spotter` | Spotter | Enemies it sees stay marked for the whole team for a few seconds after they leave its sight, visible through walls and fog while the mark lasts. *Note:* Unlike the mark weapon trait, it marks everything it sees, not only what it hits, and adds no extra damage. | classes: all | uncommon |
+
+<a id="sight-bands"></a>
+### Sight bands (`sight-bands`)
+
+How far a unit sees through the fog of war, measured against the top-down screen. Walls and buildings block sight, and what one unit sees its whole team sees. For source units the band is judged against the game's other units, as speed and cost are.
+
+| Id | Label | Meaning |
+|---|---|---|
+| `short` | Short | Clears the fog only well inside the screen, so the edges of the player's own view stay dark until a teammate sees them. |
+| `medium` | Medium | Clears the fog to about the edges of the screen: the player sees what the camera shows. The usual sight. |
+| `long` | Long | Sees past the edge of the screen. The player can't look that far, so the extra reach serves the team: enemies out there show on the minimap and on the screens of teammates nearer to them. |
+
 <a id="sizes"></a>
 ### Sizes (`sizes`)
 
@@ -593,13 +616,14 @@ Speed as a ratio to a reference unit: for source units, the game's basic rifle i
 <a id="target-types"></a>
 ### Target types (`target-types`)
 
-What a weapon can hit (on a weapon) or what kind of target a unit is (from its mobility; a tiny or small ground unit counts as infantry).
+What a weapon can hit (on a weapon) or what kind of target a unit is (from its mobility; a tiny or small ground unit counts as infantry). Fliers are in one of two air layers: low air, which most direct-fire weapons can reach, and high air, which only anti-air weapons reach.
 
 | Id | Label | Meaning |
 |---|---|---|
 | `infantry` | Infantry | Soldiers, animals and other infantry-sized ground targets, including small ground drones. |
 | `ground-vehicle` | Ground vehicles | Vehicles, walkers and hovercraft. |
-| `aircraft` | Aircraft | Anything flying, including flying drones and jetpack infantry in the air. |
+| `low-air` | Low air | Helicopters, flying drones, jetpack troops and other low fliers. Most direct-fire weapons can reach them, not only anti-air. |
+| `high-air` | High air | Jets and airships flying high above the fight. Only anti-air weapons reach them. |
 | `structure` | Structures | Buildings, turrets and deployables. |
 | `naval` | Naval | Ships and submarines. Research only. *(research only)* |
 
@@ -629,18 +653,18 @@ The ways a unit creates teamwork. Used on patterns and cards, and filterable in 
 
 How a shot reaches its target.
 
-| Id | Label | Meaning |
-|---|---|---|
-| `hitscan` | Hitscan | Hits instantly along the line of fire. |
-| `projectile` | Projectile | A visible shot with travel time that can be dodged. |
-| `beam` | Beam | A continuous beam held on the target; the effect builds while it stays on. |
-| `lobbed` | Lobbed | Arcs over cover onto a ground point; travel time and a minimum range. |
-| `lock-on` | Lock-on | Hold on a target to lock, then fire homing shots; the target gets a warning. |
-| `melee` | Melee | Strikes or lunges at touching distance. |
-| `attach` | Attach | Works by latching onto or getting inside the target. |
-| `place` | Place | Sets down charges, mines or devices on the ground or a target. |
-| `drop` | Drop | Released below or just ahead of the unit; you aim by flying over the target. |
-| `ram` | Ram / kamikaze | The unit itself is the weapon: it hits by colliding with or diving into the target, often destroying itself. |
+| Id | Label | Meaning | Rules |
+|---|---|---|---|
+| `hitscan` | Hitscan | Hits instantly along the line of fire. |  |
+| `projectile` | Projectile | A visible shot with travel time that can be dodged. |  |
+| `beam` | Beam | A continuous beam held on the target; the effect builds while it stays on. |  |
+| `lobbed` | Lobbed | Arcs over cover onto a ground point; travel time and a minimum range. | only with target types: Infantry, Ground vehicles, Structures, Naval |
+| `lock-on` | Lock-on | Hold on a target to lock, then fire homing shots; the target gets a warning. |  |
+| `melee` | Melee | Strikes or lunges at touching distance. |  |
+| `attach` | Attach | Works by latching onto or getting inside the target. |  |
+| `place` | Place | Sets down charges, mines or devices on the ground or a target. |  |
+| `drop` | Drop | Released below or just ahead of the unit; you aim by flying over the target. It falls to the ground, so it never hits fliers. | only with target types: Infantry, Ground vehicles, Structures, Naval |
+| `ram` | Ram / kamikaze | The unit itself is the weapon: it hits by colliding with or diving into the target, often destroying itself. |  |
 
 <a id="weapon-traits"></a>
 ### Weapon traits (`weapon-traits`)

@@ -150,6 +150,52 @@ const cases = [
   ['units coded against an older word-list version (warn only)', 'coded against word lists 0.0.1', 'warn', dir => {
     const d = load(dir, UNITS); d.vocab_version = '0.0.1'; dump(dir, UNITS, d)
   }],
+  // Decision 6C: two air layers (low air, high air) and a sensors field.
+  ['unit: unknown sensor trait', "'x-ray-eyes' is not a term of vocabulary 'sensor-traits'", 'error', dir => {
+    const d = load(dir, UNITS); unit(d, 'hammer-tank').sensors.traits = ['x-ray-eyes']; dump(dir, UNITS, d)
+  }],
+  ['card: unknown sensor trait', "'x-ray-eyes' is not a term of vocabulary 'sensor-traits'", 'error', dir => {
+    const c = load(dir, CARD); c.parts.sensors.traits = ['x-ray-eyes']; dump(dir, CARD, c)
+  }],
+  ['unit without sensors', "must have required property 'sensors'", 'error', dir => {
+    const d = load(dir, UNITS); delete unit(d, 'terror-drone').sensors; dump(dir, UNITS, d)
+  }],
+  ['card: high-air target on a ground-only weapon family', "family 'blades' doesn't combine with target-types 'high-air'", 'error', dir => {
+    // The card's claws are melee, a family that stays on the ground.
+    const c = load(dir, CARD); assert.equal(c.parts.armament.primary.family, 'blades')
+    c.parts.armament.primary.can_target.push('high-air'); dump(dir, CARD, c)
+  }],
+  ['card: a lobbed shot aimed at low air', "delivery 'lobbed' doesn't combine with target-types 'low-air'", 'error', dir => {
+    // Cryo allows lobbed shells and low air, but not together: a lobbed shell lands on the ground.
+    const c = load(dir, CARD); const w = c.parts.armament.secondary; assert.equal(w.family, 'cryo')
+    w.delivery = 'lobbed'; w.can_target.push('low-air'); dump(dir, CARD, c)
+  }],
+  ['unit: anti-air weapon on a family without high air needs an atypical entry', "but 'atypical' has no entry for 'weapon-families:rockets'", 'error', dir => {
+    const d = load(dir, UNITS); const u = unit(d, 'multigunner-ifv')
+    u.atypical = u.atypical.filter(a => !a.rule.startsWith('weapon-families:rockets ')); dump(dir, UNITS, d)
+  }],
+  ['card: anti-air role with nothing that reaches the air', "role 'anti-air' requires one of [hits:low-air, hits:high-air]", 'error', dir => {
+    const c = load(dir, CARD); c.parts.roles.secondary.push('anti-air'); dump(dir, CARD, c)
+  }],
+  ['card: stealth on a huge body', "sensor-traits 'stealth' excludes sizes 'huge'", 'error', dir => {
+    const c = load(dir, CARD); c.parts.sensors.traits = ['stealth']; c.parts.body.size = 'huge'; dump(dir, CARD, c)
+  }],
+  ['card: link to an unknown sight band', "sight:far does not resolve in 'sight-bands'", 'error', dir => {
+    const c = load(dir, CARD); c.matchups.counters.push({ ref: 'sight:far', why: 'test' }); dump(dir, CARD, c)
+  }],
+  ['card: sensor strength the card lacks', "matchup link sensor:radar doesn't match the card's own parts", 'error', dir => {
+    const c = load(dir, CARD); assert.ok(!c.parts.sensors.traits.includes('radar'))
+    c.matchups.strengths.push({ ref: 'sensor:radar', why: 'test', paired_with: 0 }); dump(dir, CARD, c)
+  }],
+  ['card: sight and sensor strengths it has', '', 'ok', dir => {
+    const c = load(dir, CARD); assert.equal(c.parts.sensors.sight, 'long'); assert.ok(c.parts.sensors.traits.includes('detector'))
+    c.matchups.strengths.push({ ref: 'sight:>=medium', why: 'test', paired_with: 0 }, { ref: 'sensor:detector', why: 'test', paired_with: 1 })
+    dump(dir, CARD, c)
+  }],
+  ['unit: a flier link on a ground unit (warn only)', "link target:low-air doesn't describe this unit's own parts", 'warn', dir => {
+    // A walking drone is a ground target (infantry-sized), not a low flier.
+    const d = load(dir, UNITS); unit(d, 'terror-drone').strengths.push({ ref: 'target:low-air', why: 'test' }); dump(dir, UNITS, d)
+  }],
 ]
 
 // ---------------------------------------------------------------- the validator

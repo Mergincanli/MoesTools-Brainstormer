@@ -8,7 +8,7 @@
 // it writes nothing.
 //
 // This began as a port of the original Python builder (build_docs.py), byte-identical in output up to word-list
-// version 0.3.0; changes since then (class rarities, versioned titles) are made here only. The functions and their
+// version 0.3.0; changes since then (class rarities, versioned titles, sensors) are made here only. The functions and their
 // order still follow the Python version. Where JavaScript behaves differently from Python, the small helpers in
 // the next section make it behave like Python.
 import fs from 'node:fs'
@@ -272,7 +272,7 @@ function refText(ref, unitNames = null, patternNames = null) {
     'damage': 'damage', 'class': 'class', 'role': 'role', 'speed': 'speed', 'size': 'size',
     'range': 'range', 'tier': 'tier', 'body': 'body', 'crew': 'crew', 'nature': 'nature',
     'category': 'pattern category', 'mobility': 'mobility', 'armour-model': 'armour model',
-    'handling': 'handling', 'resource': 'resource',
+    'handling': 'handling', 'resource': 'resource', 'sight': 'sight', 'sensor': 'sensor',
   }, kind, kind)
   if (kind === 'hits' || kind === 'target') return f`${kindLabel} ${label.toLowerCase()}`
   return f`${cmpTxt}${label} (${kindLabel})`
@@ -347,7 +347,7 @@ function vocabDocs() {
     "A term's classes are every class it is physically possible for; a class left out is a hard ban.",
     '- **Rarity** feeds the spice control: common terms appear at every spice level, rare ones only when spice is turned up. ' +
     "A part that is possible but unusual for a class has its own rarity there ('rare on: Aircraft' in the rules), so cross-overs such as a flamethrower on an aircraft appear only at high spice.",
-    "- **Typed links** such as 'at most Small (size)' or 'can hit aircraft' point at other terms; see [fields](fields.md).",
+    "- **Typed links** such as 'at most Small (size)' or 'can hit high air' point at other terms; see [fields](fields.md).",
     "- **'Seen in'** examples illustrate a term and are not cited here; the research run cites them on the units.\n",
     f`${vocabs.length} lists, ${vocabs.reduce((n, v) => n + v.terms.length, 0)} terms.\n`,
     '## Contents\n']
@@ -528,9 +528,9 @@ function fieldsDocs() {
     '**Vocabulary** names the fixed word list a field draws from (see [vocabularies](vocabularies.md)).\n',
     '## Conventions\n',
     '- **Ids.** Lower-case, ASCII, words joined by dashes; apostrophes and full stops dropped, `&` becomes `and`, numbers and roman numerals kept (`mammoth-mk-ii`, `v4-rocket-launcher`). Unit ids are `<game>.<faction>.<slug>`; pattern ids are generic English, verb first (`infest-vehicle`). Expansions are never game ids. The faction id `shared` is reserved for units every side can field.',
-    '- **Typed links** are written `kind:id`, such as `role:anti-air`, `size:<=small` or `hits:aircraft`. A link always describes a unit: in strengths, weaknesses and pattern requirements it describes the unit itself; in *counters* the unit it beats; in *countered by* the unit that beats it; in combos the teammate. Ranked kinds accept `<=` and `>=`. ' +
+    '- **Typed links** are written `kind:id`, such as `role:anti-air`, `size:<=small` or `hits:high-air`. A link always describes a unit: in strengths, weaknesses and pattern requirements it describes the unit itself; in *counters* the unit it beats; in *countered by* the unit that beats it; in combos the teammate. Ranked kinds accept `<=` and `>=`. ' +
     f`Kinds: ${kinds}.`,
-    "- **Proposals vs facts.** Fields marked *proposal* (handling, weapon mount and seat, flavour affinity and 'as a player'), and crew and on-death wherever their basis says 'proposal', are our design suggestions for a player version. The checker skips them and confidence covers only sourced facts.",
+    "- **Proposals vs facts.** Fields marked *proposal* (handling, weapon mount and seat, flavour affinity and 'as a player'), and crew, on-death and sensors wherever their basis says 'proposal', are our design suggestions for a player version. The checker skips them and confidence covers only sourced facts.",
     '- **Weapons vs abilities.** Anything fired with an attack button is a weapon. An ability exists only when the source has a separate button, cooldown, toggle, or a triggered or passive effect. A weapon swapped in by an ability gets both: an `alternate` weapon and a `toggle` ability, linking the same pattern. A weapon gained on a kill gets an `acquired` weapon and a `triggered` ability. Unarmed units have an empty weapon list.',
     '- **Granularity.** Same player-facing interaction and same counterplay = one pattern; differences in fiction, delivery or size are variants. Plain mechanics (sprint, self-heal, stat buff) get generic patterns that stay out of the top-30 list.',
     '- **Copyright.** Paraphrase only, no quoted voice lines or flavour text, no images. Real names are reference only and never reach a generated card.\n']
@@ -644,6 +644,8 @@ function samplesDocs() {
     out.push(f`| Body | ${lab('bodies', b.plan)}, ${lab('sizes', b.size).toLowerCase()}. ${esc(get(b, 'notes', ''))} |`)
     const a = u.armour
     out.push(f`| Armour | ${lab('armour-classes', a.class)}; model: ${lab('armour-models', a.models)}. ${esc(get(a, 'notes', ''))} |`)
+    const se = u.sensors
+    out.push(f`| Sensors | ${lab('sight-bands', se.sight)} sight; traits: ${lab('sensor-traits', se.traits).toLowerCase()} (${se.basis}). ${esc(get(se, 'notes', ''))} |`)
     const cr = u.crew
     const pnSeats = given(cr, 'passengers') ? cr.passengers.seats : 0
     const pas = given(cr, 'passengers')
@@ -798,6 +800,7 @@ function samplesDocs() {
     out.push(f`| Primary | ${wp(P.armament.primary)} |`)
     out.push(f`| Secondary | ${wp(P.armament.secondary)} |`)
     out.push(f`| Armour | ${lab('armour-classes', P.armour.class)}, ${lab('armour-models', P.armour.models).toLowerCase()} |`)
+    out.push(f`| Sensors | ${lab('sight-bands', P.sensors.sight)} sight; ${given(P.sensors, 'traits') ? lab('sensor-traits', P.sensors.traits).toLowerCase() : 'no sensor traits'} |`)
     out.push(f`| Crew | ${lab('crew-models', P.crew.model)} |`)
     out.push(f`| Signature | **${T.signature.name}**: ${T.signature.effect} *(pattern: ${get(pn, P.signature.pattern)}, variant ${P.signature.variant}; ${lab('cooldown-bands', P.signature.cooldown).toLowerCase()} cooldown)* |`)
     out.push(f`| Team-play hook | ${T.team_play_hook.text} *(${lab('team-play-hooks', T.team_play_hook.hook)})* |`)
