@@ -241,6 +241,8 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `variants[].overrides.implies` | list of typed links |  |  |  |
 | `variants[].overrides.adds_strengths` | list of link + reasons |  |  | Replaces the base generator's adds_strengths for this variant (for example a mine variant that no longer has to reach its target). |
 | `variants[].overrides.adds_weaknesses` | list of link + reasons |  |  | Replaces the base generator's adds_weaknesses for this variant. |
+| `variants[].overrides.counters` | list of link + reasons |  |  | Replaces the base generator's counters for this variant. |
+| `variants[].overrides.countered_by` | list of link + reasons |  |  | Replaces the base generator's countered_by for this variant. |
 | `generator` | group | when status is accepted |  | Rules for the generator. Links in requires, excludes, implies, adds_strengths and adds_weaknesses describe the card itself; counters and countered_by describe the enemy. |
 | `generator.classes` | list of terms (min 1) | yes | `classes` | Classes that can roll this pattern. |
 | `generator.min_tier` | term | yes | `tiers` | A term from *Tier bands*. |
@@ -368,7 +370,7 @@ One generated unit concept (Phase 2). Example: [docs/examples/concept-card.examp
 | `parts.abilities[].seat` | term | yes | `seat-roles` | A term from *Seat roles*. |
 | `parts.abilities[].cooldown` | term or empty | yes | `cooldown-bands` | Null for passive and triggered abilities. |
 | `parts.modes[]` | list of groups (max 1) |  |  | A second form from a transform or deploy pattern. |
-| `parts.modes[].via` | id | yes |  | Pattern id, e.g. 'infest-vehicle'. |
+| `parts.modes[].via` | id | yes |  | Pattern id of the transform or deploy pattern, e.g. 'transform' or 'deploy-siege-mode'. |
 | `parts.modes[].class` | term | yes | `classes` | A term from *Unit classes*. |
 | `parts.modes[].mobility` | group | yes |  |  |
 | `parts.modes[].mobility.base` | term | yes | `mobility` | A term from *Mobility types*. |

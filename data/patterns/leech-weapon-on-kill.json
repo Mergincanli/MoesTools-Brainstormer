@@ -9,7 +9,7 @@
   "source_terms": ["Leech Beam", "salvage crate", "commandeer", "battery rodeo"],
   "category": "conversion",
   "also_in": ["weapon-behaviour"],
-  "summary": "A unit turns enemy losses into its own power. It first claims a donor: a tether held on the target, a finishing blow, or touching the wreck or a dropped item. When the donor dies, something moves to the claimer: a copy of the donor's weapon (so the reward depends on what was killed), a generic upgrade step, a new loadout or materials. Taking a living enemy's whole vehicle or its battery belongs to other patterns (hijack a vehicle; infest's grab-and-run). The usual limits are one slot or a short ladder of upgrades, a short window to claim, and a vulnerable claiming state. It changes what a kill means: players pick targets by what they will get, and damaged players learn to back off before they become loot. Variants change one axis of the tether-and-copy base.",
+  "summary": "A unit turns enemy losses into its own power. It first claims a donor: a tether held on the target, a finishing blow, or touching the wreck or a dropped item. When the donor dies, something moves to the claimer: a copy of its weapon (so the reward depends on what was killed), an upgrade step, a new loadout or materials. The only living donor is a teammate who chooses to give (the willing-donor variant); taking a living enemy's vehicle or battery belongs to other patterns (hijack a vehicle; infest's grab-and-run). The usual limits are one slot or a short upgrade ladder, a short window to claim, and a vulnerable claiming state. Players pick targets by what they will get, and damaged players learn to back off before they become loot.",
   "counterplay": [
     "Break the claim: get out of tether range before you die, so the enemy gets nothing.",
     "Attack the claimer while it is busy: claiming usually silences its main gun and slows or roots it.",
@@ -87,7 +87,7 @@
       "game": "extra:Command & Conquer 3: Tiberium Wars / Kane's Wrath",
       "franchise": "Command & Conquer",
       "unit": "Avatar walker's commandeer, and walker husks (Nod)",
-      "note": "The Avatar tears parts off four Nod vehicle types (flame tank, attack bike, stealth tank, beam cannon), friendly or enemy, destroying the donor, and mounts them on itself: a flamethrower, a stealth detector, a cloak or a second beam. Heavy walkers leave husks that an engineer from either side can revive; a revived Avatar returns at half health.",
+      "note": "The Avatar tears parts off four Nod vehicle types (flame tank, attack bike, stealth tank, beam cannon), friendly or enemy, destroying the donor, and mounts them on itself: a flamethrower, a stealth detector, a cloak or a second beam. For contrast (a death outcome, not a leech): heavy walkers leave husks that an engineer from either side can revive, and a revived Avatar returns at reduced health.",
       "sources": [
         {
           "url": "https://cnc.fandom.com/wiki/Avatar_(Tiberium_Wars)",
@@ -363,7 +363,6 @@
       "seen_in": "Generals salvage crates",
       "overrides": {
         "min_tier": "t1",
-        "classes": ["vehicle", "walker", "hover", "infantry"],
         "kinds": ["triggered"],
         "implies": [],
         "adds_strengths": [
@@ -423,6 +422,18 @@
           {
             "ref": "pattern:leech-weapon-on-kill",
             "why": "Takes only kits of its own tier or lower, only where they drop, and loses the new loadout on death."
+          }
+        ],
+        "counters": [
+          {
+            "ref": "class:infantry",
+            "why": "Soldiers it helps kill drop kits it can take."
+          }
+        ],
+        "countered_by": [
+          {
+            "ref": "class:vehicle",
+            "why": "A kit only swaps one soldier loadout for another, so vehicles still outclass it."
           }
         ]
       }
@@ -484,6 +495,13 @@
             "ref": "weapon:adaptive",
             "why": "Needs a teammate to park beside it, at most once per life, and the gift costs that teammate their second weapon."
           }
+        ],
+        "counters": [],
+        "countered_by": [
+          {
+            "ref": "role:anti-armour",
+            "why": "Catches it and its donor while they park side by side for the gift."
+          }
         ]
       }
     }
@@ -524,17 +542,17 @@
     "counters": [
       {
         "ref": "class:vehicle",
-        "why": "Every vehicle it helps kill can arm it."
+        "why": "Every vehicle it helps kill pays it something: a weapon, an upgrade step or materials."
       }
     ],
     "countered_by": [
       {
         "ref": "class:aircraft",
-        "why": "Ground claimers usually can't tether aircraft and have no anti-air until they steal it."
+        "why": "Ground claimers usually can't reach aircraft or their wrecks, and have no anti-air until they gain some."
       },
       {
         "ref": "speed:>=fast",
-        "why": "Fast targets leave tether range before they die."
+        "why": "Fast targets get away before they die near it, leaving nothing to claim."
       },
       {
         "ref": "role:anti-armour",
