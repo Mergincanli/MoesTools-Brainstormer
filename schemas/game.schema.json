@@ -1,0 +1,275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "game.schema.json",
+  "title": "Games registry",
+  "description": "data/games.json: every game the research draws from, its factions and expansions, and the rules that turn its numbers into our bands. Filled in for the whole starting scope before the research run, so all agents share one set of ids.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "games"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "games": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/game"
+      }
+    }
+  },
+  "$defs": {
+    "game": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "franchise",
+        "control",
+        "research_bucket",
+        "has_tiers",
+        "has_costs",
+        "factions",
+        "speed_reference",
+        "scope",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "description": "Short id used as the first part of unit ids. Expansions are never game ids.",
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "title": {
+          "type": "string"
+        },
+        "kind": {
+          "description": "game = one title; series = researched as one entry through a representative title (e.g. Battlefield vehicle archetypes).",
+          "enum": ["game", "series"]
+        },
+        "titles": {
+          "description": "For a series: the titles it covers.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 1980
+        },
+        "developer": {
+          "type": "string"
+        },
+        "franchise": {
+          "type": "string"
+        },
+        "control": {
+          "description": "commanded = the player orders units (RTS); piloted = the player is the unit (shooter); both.",
+          "enum": ["commanded", "piloted", "both"]
+        },
+        "research_bucket": {
+          "description": "The research agent batch this game belongs to.",
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "version_researched": {
+          "description": "Patch, edition or date the research describes.",
+          "type": "string"
+        },
+        "expansions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "title", "year"],
+            "properties": {
+              "id": {
+                "$ref": "common.schema.json#/$defs/slug",
+                "description": "Expansion id, e.g. 'ra3-uprising'."
+              },
+              "title": {
+                "type": "string"
+              },
+              "year": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "factions": {
+          "description": "Playable sides. Use the reserved id 'shared' for units every side can field or games without factions. A unit belongs to the most general faction that fields it.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "name"],
+            "properties": {
+              "id": {
+                "$ref": "common.schema.json#/$defs/slug",
+                "description": "Faction id, e.g. 'soviet'."
+              },
+              "name": {
+                "type": "string"
+              },
+              "parent": {
+                "description": "For subfactions (e.g. a general or splinter group): the main faction id.",
+                "$ref": "common.schema.json#/$defs/slug"
+              },
+              "introduced_in": {
+                "description": "Expansion id, if the faction is not in the base game.",
+                "$ref": "common.schema.json#/$defs/slug"
+              },
+              "flavour_affinity": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "x-vocab": "faction-flavours"
+                }
+              }
+            }
+          }
+        },
+        "has_tiers": {
+          "description": "False if the game has no tech gating; its units then record no tier band.",
+          "type": "boolean"
+        },
+        "has_costs": {
+          "description": "False if units are not bought; its units then record no cost band.",
+          "type": "boolean"
+        },
+        "tier_map": {
+          "description": "Which tech gates map to which tier band.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["gate", "band"],
+            "properties": {
+              "gate": {
+                "description": "Building, research or level that unlocks units, in plain words.",
+                "type": "string"
+              },
+              "band": {
+                "type": "string",
+                "x-vocab": "tiers"
+              },
+              "faction": {
+                "$ref": "common.schema.json#/$defs/slug",
+                "description": "Faction id from this game's factions, e.g. 'soviet'."
+              }
+            }
+          }
+        },
+        "cost_thresholds": {
+          "description": "Lowest price for each cost band above 'very low', in the game's currency.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["currency", "low", "medium", "high", "very-high"],
+          "properties": {
+            "currency": {
+              "type": "string"
+            },
+            "low": {
+              "type": "number"
+            },
+            "medium": {
+              "type": "number"
+            },
+            "high": {
+              "type": "number"
+            },
+            "very-high": {
+              "type": "number"
+            }
+          }
+        },
+        "speed_reference": {
+          "description": "The unit whose speed counts as 1.0 for speed bands, usually the basic rifle infantry.",
+          "type": "string"
+        },
+        "damage_map": {
+          "description": "The game's own damage categories mapped to our damage types.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-vocab": "damage-types"
+          }
+        },
+        "armour_map": {
+          "description": "The game's own armour categories mapped to our armour classes.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-vocab": "armour-classes"
+          }
+        },
+        "scope": {
+          "description": "starting = in the brief's list; added = added during research.",
+          "enum": ["starting", "added"]
+        },
+        "added_reason": {
+          "description": "Required for added games: the new mechanic it teaches.",
+          "type": "string"
+        },
+        "teaches_patterns": {
+          "description": "For added games: the patterns that justified adding it.",
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/slug"
+          }
+        },
+        "status": {
+          "enum": ["planned", "in-progress", "done"]
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/source"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "scope": {
+                "const": "added"
+              }
+            }
+          },
+          "then": {
+            "required": ["added_reason", "teaches_patterns"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "has_tiers": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "required": ["tier_map"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "has_costs": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "required": ["cost_thresholds"]
+          }
+        }
+      ]
+    }
+  }
+}

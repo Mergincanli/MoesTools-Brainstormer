@@ -1,0 +1,703 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "source-unit.schema.json",
+  "title": "Source units file",
+  "description": "data/units/<game>.json: researched units from one game. Real names are reference only; generated concepts never reuse them. Fields marked x-provenance 'proposal' are our design suggestions for a player version: the checker skips them and confidence does not cover them.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "vocab_version", "game", "units"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "game": {
+      "description": "Game id from data/games.json.",
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "units": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/unit"
+      }
+    },
+    "vocab_version": {
+      "description": "Version of the vocabularies the file was coded against.",
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "game",
+        "faction",
+        "name",
+        "class",
+        "nature",
+        "availability",
+        "roles",
+        "tier",
+        "cost_band",
+        "mobility",
+        "body",
+        "armour",
+        "armament",
+        "crew",
+        "abilities",
+        "on_death",
+        "strengths",
+        "weaknesses",
+        "combos",
+        "countered_by",
+        "counters",
+        "memorable",
+        "as_player",
+        "sources",
+        "confidence",
+        "review",
+        "researched_by"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "common.schema.json#/$defs/unitId"
+        },
+        "game": {
+          "description": "Game id; must match the file.",
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "introduced_in": {
+          "description": "Game or expansion id where this version first appears, if not the base game.",
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "faction": {
+          "description": "Faction id from the game's entry in data/games.json.",
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "name": {
+          "description": "In-game name, for reference only.",
+          "type": "string"
+        },
+        "flavour_affinity": {
+          "description": "Which of our faction flavours this design fits, if any.",
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "x-vocab": "faction-flavours"
+          },
+          "x-provenance": "proposal"
+        },
+        "class": {
+          "type": "string",
+          "x-vocab": "classes"
+        },
+        "nature": {
+          "type": "string",
+          "x-vocab": "nature"
+        },
+        "availability": {
+          "description": "How many a side may field: open, limited or unique (heroes).",
+          "type": "string",
+          "x-vocab": "availability"
+        },
+        "roles": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["primary"],
+          "properties": {
+            "primary": {
+              "type": "string",
+              "x-vocab": "roles"
+            },
+            "secondary": {
+              "type": "array",
+              "maxItems": 2,
+              "items": {
+                "type": "string",
+                "x-vocab": "roles"
+              }
+            }
+          }
+        },
+        "tier": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["band", "basis"],
+          "properties": {
+            "band": {
+              "description": "Null only when the game has no tech tiers.",
+              "type": ["string", "null"],
+              "x-vocab": "tiers"
+            },
+            "gate": {
+              "description": "The tech gate from the game's tier_map, e.g. 'Super Reactor'.",
+              "type": "string"
+            },
+            "basis": {
+              "description": "Why this band, in plain words.",
+              "type": "string"
+            }
+          }
+        },
+        "cost_band": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["band", "basis"],
+          "properties": {
+            "band": {
+              "description": "Null only when units are not bought in the game.",
+              "type": ["string", "null"],
+              "x-vocab": "cost-bands"
+            },
+            "raw": {
+              "description": "The price in the game's currency. Stored only so the band can be recomputed; the generator and app never show or use it.",
+              "type": "number"
+            },
+            "basis": {
+              "type": "string"
+            }
+          }
+        },
+        "mobility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["base", "handling", "speed"],
+          "properties": {
+            "base": {
+              "type": "string",
+              "x-vocab": "mobility"
+            },
+            "handling": {
+              "description": "Our proposal for how a player version would handle.",
+              "type": "string",
+              "x-vocab": "handling",
+              "x-provenance": "proposal"
+            },
+            "traits": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "x-vocab": "mobility-traits"
+              }
+            },
+            "speed": {
+              "description": "Relative to the game's basic infantry.",
+              "type": "string",
+              "x-vocab": "speed-bands"
+            },
+            "notes": {
+              "type": "string"
+            },
+            "speed_raw": {
+              "description": "Speed as a ratio to the game's speed reference, when a stat table gives it. Stored only so the band can be recomputed.",
+              "type": "number"
+            }
+          }
+        },
+        "body": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["plan", "size"],
+          "properties": {
+            "plan": {
+              "type": "string",
+              "x-vocab": "bodies"
+            },
+            "size": {
+              "type": "string",
+              "x-vocab": "sizes"
+            },
+            "count": {
+              "description": "Bodies per purchase in the source, e.g. 5 for a squad. Default 1.",
+              "type": "integer",
+              "minimum": 1
+            },
+            "notes": {
+              "type": "string"
+            }
+          }
+        },
+        "armour": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["class", "models"],
+          "properties": {
+            "class": {
+              "type": "string",
+              "x-vocab": "armour-classes"
+            },
+            "models": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "x-vocab": "armour-models"
+              }
+            },
+            "notes": {
+              "type": "string"
+            }
+          }
+        },
+        "armament": {
+          "description": "Weapons, in slot order. Empty for unarmed units.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/weapon"
+          }
+        },
+        "crew": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["model", "basis"],
+          "properties": {
+            "model": {
+              "description": "Who operates the unit.",
+              "type": "string",
+              "x-vocab": "crew-models"
+            },
+            "basis": {
+              "description": "in-game = the source has these seats; lore = the source describes a crew; proposal = our suggestion for a player version.",
+              "enum": ["in-game", "lore", "proposal"]
+            },
+            "solo_fallback": {
+              "description": "For multi-seat models: what a lone player can do.",
+              "type": "string",
+              "x-vocab": "solo-fallback"
+            },
+            "passengers": {
+              "description": "Passenger seats, if any. Any crew model can carry passengers; the card then shows 'transport with passengers'.",
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["seats", "kind"],
+              "properties": {
+                "seats": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "kind": {
+                  "type": "string",
+                  "x-vocab": "seat-roles"
+                }
+              }
+            },
+            "notes": {
+              "type": "string"
+            },
+            "seats": {
+              "description": "Exact seat layout when the preset doesn't say it all (e.g. one driver and two gunners).",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["role", "count"],
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "x-vocab": "seat-roles"
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "abilities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ability"
+          }
+        },
+        "modes": {
+          "description": "Second forms: transform, deploy or siege modes.",
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/mode"
+          }
+        },
+        "resources": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "type": "string",
+            "x-vocab": "resources"
+          }
+        },
+        "on_death": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["outcomes", "basis"],
+          "properties": {
+            "outcomes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2,
+              "items": {
+                "type": "string",
+                "x-vocab": "on-death"
+              }
+            },
+            "basis": {
+              "enum": ["in-game", "proposal"]
+            }
+          }
+        },
+        "strengths": {
+          "description": "What this unit is good at; links describe the unit itself.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "common.schema.json#/$defs/relation"
+          }
+        },
+        "weaknesses": {
+          "description": "Where it falls short; links describe the unit itself.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "common.schema.json#/$defs/relation"
+          }
+        },
+        "countered_by": {
+          "description": "What beats it; links describe the enemy.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "common.schema.json#/$defs/relation"
+          }
+        },
+        "counters": {
+          "description": "What it beats; links describe the enemy.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "common.schema.json#/$defs/relation"
+          }
+        },
+        "combos": {
+          "description": "Notable combinations; links describe the teammate or the setup. Required, so 'none known' is an explicit empty list.",
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/relation"
+          }
+        },
+        "memorable": {
+          "description": "One line: why this unit is memorable.",
+          "type": "string",
+          "maxLength": 200
+        },
+        "as_player": {
+          "description": "Two or three lines: how it would play if one player controlled it.",
+          "type": "string",
+          "maxLength": 500,
+          "x-provenance": "proposal"
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "$ref": "common.schema.json#/$defs/source"
+          }
+        },
+        "confidence": {
+          "$ref": "common.schema.json#/$defs/confidence"
+        },
+        "uncertain": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/uncertain"
+          }
+        },
+        "review": {
+          "$ref": "common.schema.json#/$defs/review"
+        },
+        "researched_by": {
+          "description": "Research bucket or agent that wrote the entry.",
+          "type": "string"
+        },
+        "lineage": {
+          "description": "Shared id for the same design across games, e.g. 'terror-drone' for the RA2 and RA3 versions.",
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "variant_of": {
+          "description": "For subfaction or general-specific versions: the base unit id.",
+          "$ref": "common.schema.json#/$defs/unitId"
+        },
+        "fit_notes": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/fitNote"
+          }
+        },
+        "atypical": {
+          "description": "Combination rules this real unit breaks. Found by the validator and recorded here; never blocks a source unit, and useful evidence for relaxing a rule.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "rule", "note"],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "rule": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "weapon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "slot", "family", "summary"],
+      "properties": {
+        "name": {
+          "description": "In-game weapon name, for reference only.",
+          "type": "string"
+        },
+        "slot": {
+          "description": "primary / secondary; alternate = switched to by an ability or mode; passenger = depends on who rides inside (one entry per distinct result); acquired = gained during play, e.g. salvaged from a kill; option = one of several loadout choices (see option_group).",
+          "enum": ["primary", "secondary", "alternate", "passenger", "acquired", "option"]
+        },
+        "seat": {
+          "description": "Which seat fires it in a player version. Default: driver.",
+          "type": "string",
+          "x-vocab": "seat-roles",
+          "x-provenance": "proposal"
+        },
+        "family": {
+          "type": "string",
+          "x-vocab": "weapon-families"
+        },
+        "damage": {
+          "type": "string",
+          "x-vocab": "damage-types",
+          "x-required-unless": "family is adaptive"
+        },
+        "mount": {
+          "description": "Our proposed mount for a player version.",
+          "type": "string",
+          "x-vocab": "aim-models",
+          "x-provenance": "proposal",
+          "x-required-unless": "family is adaptive"
+        },
+        "delivery": {
+          "type": "string",
+          "x-vocab": "weapon-delivery",
+          "x-required-unless": "family is adaptive"
+        },
+        "range": {
+          "description": "Relative to the source's other weapons.",
+          "type": "string",
+          "x-vocab": "range-bands",
+          "x-required-unless": "family is adaptive"
+        },
+        "can_target": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "x-vocab": "target-types"
+          },
+          "x-required-unless": "family is adaptive"
+        },
+        "affects": {
+          "description": "Default: enemies. Repair and buff tools affect allies.",
+          "enum": ["enemies", "allies", "both"]
+        },
+        "traits": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "type": "string",
+            "x-vocab": "weapon-traits"
+          }
+        },
+        "summary": {
+          "description": "What it does, in plain words.",
+          "type": "string"
+        },
+        "when": {
+          "description": "For passenger, alternate or acquired weapons: a typed link saying when it applies, e.g. the passenger's unit id (unit:...) or role (role:engineer).",
+          "$ref": "common.schema.json#/$defs/ref"
+        },
+        "condition": {
+          "description": "The same condition in plain words.",
+          "type": "string"
+        },
+        "patterns": {
+          "description": "Pattern ids (from data/pattern-registry.json) this weapon is an example of.",
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/slug"
+          }
+        },
+        "mode": {
+          "description": "Mode id from the unit's modes, if the weapon only works in that mode.",
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "option_group": {
+          "description": "For option weapons: options in the same group exclude each other.",
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "default": {
+          "description": "For option weapons: the one fitted by default.",
+          "type": "boolean"
+        }
+      },
+      "if": {
+        "properties": {
+          "family": {
+            "not": {
+              "const": "adaptive"
+            }
+          }
+        }
+      },
+      "then": {
+        "required": ["damage", "mount", "delivery", "range", "can_target"]
+      }
+    },
+    "ability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "kind", "summary", "patterns"],
+      "properties": {
+        "name": {
+          "description": "In-game ability name, for reference only.",
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "x-vocab": "ability-kinds"
+        },
+        "seat": {
+          "description": "Which seat triggers it in a player version. Default: driver.",
+          "type": "string",
+          "x-vocab": "seat-roles",
+          "x-provenance": "proposal"
+        },
+        "cooldown": {
+          "description": "How often it can be used, if the source says or it is clear.",
+          "type": "string",
+          "x-vocab": "cooldown-bands"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "patterns": {
+          "description": "Every ability links to at least one mechanic pattern.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "common.schema.json#/$defs/slug"
+          }
+        },
+        "source": {
+          "description": "Where the ability comes from. Default: innate.",
+          "type": "string",
+          "x-vocab": "ability-sources"
+        },
+        "exclusive_group": {
+          "description": "Abilities in the same group exclude each other (loadout or upgrade choices).",
+          "$ref": "common.schema.json#/$defs/slug"
+        }
+      }
+    },
+    "mode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "via", "summary"],
+      "properties": {
+        "id": {
+          "$ref": "common.schema.json#/$defs/slug",
+          "description": "Mode id, e.g. 'siege'."
+        },
+        "name": {
+          "type": "string"
+        },
+        "via": {
+          "description": "The pattern that switches to this mode.",
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "class": {
+          "type": "string",
+          "x-vocab": "classes"
+        },
+        "mobility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["base"],
+          "properties": {
+            "base": {
+              "type": "string",
+              "x-vocab": "mobility"
+            },
+            "handling": {
+              "type": "string",
+              "x-vocab": "handling"
+            },
+            "speed": {
+              "type": "string",
+              "x-vocab": "speed-bands"
+            }
+          }
+        },
+        "summary": {
+          "type": "string",
+          "description": "What changes in this mode."
+        },
+        "body": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["plan"],
+          "properties": {
+            "plan": {
+              "type": "string",
+              "x-vocab": "bodies"
+            },
+            "size": {
+              "type": "string",
+              "x-vocab": "sizes"
+            }
+          }
+        },
+        "armour": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["class"],
+          "properties": {
+            "class": {
+              "type": "string",
+              "x-vocab": "armour-classes"
+            },
+            "models": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "x-vocab": "armour-models"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

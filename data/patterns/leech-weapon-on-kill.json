@@ -1,0 +1,596 @@
+{
+  "$schema": "../../schemas/pattern.schema.json",
+  "schema_version": "0.3.0",
+  "vocab_version": "0.3.0",
+  "id": "leech-weapon-on-kill",
+  "status": "proposed",
+  "name": "Leech the weapon of what you destroy",
+  "aliases": ["weapon salvage", "loot the kill", "steal a weapon"],
+  "source_terms": ["Leech Beam", "salvage crate", "commandeer", "battery rodeo"],
+  "category": "conversion",
+  "also_in": ["weapon-behaviour"],
+  "summary": "A unit turns enemy losses into its own power. It first claims a donor: a tether held on the target, a finishing blow, or touching the wreck or a dropped item. When the donor dies, something moves to the claimer: a copy of its weapon (so the reward depends on what was killed), an upgrade step, a new loadout or materials. The only living donor is a teammate who chooses to give (the willing-donor variant); taking a living enemy's vehicle or battery belongs to other patterns (hijack a vehicle; infest's grab-and-run). The usual limits are one slot or a short upgrade ladder, a short window to claim, and a vulnerable claiming state. Players pick targets by what they will get, and damaged players learn to back off before they become loot.",
+  "counterplay": [
+    "Break the claim: get out of tether range before you die, so the enemy gets nothing.",
+    "Attack the claimer while it is busy: claiming usually silences its main gun and slows or roots it.",
+    "Deny the leftovers: destroy wrecks, crates and dropped weapons, or reach them first.",
+    "Bring units that give nothing useful, or nothing that fills the claimer's gap (for example no anti-air donors).",
+    "Use aircraft against ground claimers that can't tether them.",
+    "Use hard counters against the stolen weapon itself, such as point defence against salvaged rockets."
+  ],
+  "source_units": ["ra3.soviet.hammer-tank"],
+  "other_examples": [
+    {
+      "game": "extra:Command & Conquer: Generals / Zero Hour",
+      "franchise": "Command & Conquer",
+      "unit": "Salvage crates (GLA Technical, Marauder, Scorpion and others)",
+      "note": "Destroyed vehicles drop crates that only the leeching faction can see. Each compatible vehicle climbs a fixed two-step upgrade ladder, whatever the donor was; vehicles already at the top get a little cash and experience instead.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Salvaging",
+          "title": "Salvaging, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Technical_(Generals_1)",
+          "title": "Technical (Generals 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        },
+        {
+          "url": "https://cncnz.com/games/zero-hour/kassads-units/",
+          "title": "Command & Conquer: Generals – Zero Hour – Kassad's Units, CNCNZ",
+          "kind": "database",
+          "accessed": "2026-10-17"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "game": "extra:Command & Conquer: Generals / Zero Hour",
+      "franchise": "Command & Conquer",
+      "unit": "Hijacker (GLA)",
+      "note": "For contrast (belongs to the planned hijack-vehicle pattern): an unarmed soldier, stealthed while idle, takes most enemy vehicles on contact and keeps their veterancy. It can't get out until the vehicle is destroyed, then climbs out to steal another.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Hijacker_(Generals_1)",
+          "title": "Hijacker (Generals 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        },
+        {
+          "url": "https://cncnz.com/games/zero-hour/kassads-units/",
+          "title": "Command & Conquer: Generals – Zero Hour – Kassad's Units, CNCNZ",
+          "kind": "database",
+          "accessed": "2026-10-18"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "game": "extra:Command & Conquer: Tiberian Sun",
+      "franchise": "Command & Conquer",
+      "unit": "Mutant Hijacker (Forgotten)",
+      "note": "For contrast (belongs to the planned hijack-vehicle pattern): a one-at-a-time commando that can steal any vehicle, even the heaviest walkers, and pops out to steal again when it is destroyed.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Mutant_hijacker",
+          "title": "Mutant hijacker, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "extra:Command & Conquer 3: Tiberium Wars / Kane's Wrath",
+      "franchise": "Command & Conquer",
+      "unit": "Avatar walker's commandeer, and walker husks (Nod)",
+      "note": "The Avatar tears parts off four Nod vehicle types (flame tank, attack bike, stealth tank, beam cannon), friendly or enemy, destroying the donor, and mounts them on itself: a flamethrower, a stealth detector, a cloak or a second beam. For contrast (a death outcome, not a leech): heavy walkers leave husks that an engineer from either side can revive, and a revived Avatar returns at reduced health.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Avatar_(Tiberium_Wars)",
+          "title": "Avatar (Tiberium Wars), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Husk",
+          "title": "Husk, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "extra:Company of Heroes",
+      "franchise": "Company of Heroes",
+      "unit": "Dropped weapons and abandoned team weapons (all factions)",
+      "note": "Specialist weapons sometimes drop when the soldiers carrying them are killed, and another infantry squad, even an enemy one, can pick them up. A crew-served gun left with too few crew is abandoned, and an infantry squad of any faction can recrew it with at least two men.",
+      "sources": [
+        {
+          "url": "https://companyofheroes.fandom.com/wiki/Infantry_Weapons",
+          "title": "Infantry weapons, Company of Heroes Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        },
+        {
+          "url": "https://companyofheroes.fandom.com/wiki/Weapon_Team",
+          "title": "Weapon team, Company of Heroes Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "extra:Iron Harvest",
+      "franchise": "Iron Harvest",
+      "unit": "Infantry weapon kits",
+      "note": "Picking up a kit converts a whole squad into that class, always in the picker's own faction version. The beta-era wiki says kits come from crates and from killed enemy infantry; that needs a second source for the released game.",
+      "sources": [
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Weapon",
+          "title": "Weapon, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        },
+        {
+          "url": "https://waywardstrategy.com/2018/08/27/iron-harvest-early-impressions/",
+          "title": "Iron Harvest early impressions, Wayward Strategy",
+          "kind": "guide",
+          "accessed": "2026-10-17"
+        }
+      ],
+      "confidence": "low"
+    },
+    {
+      "game": "extra:Supreme Commander",
+      "franchise": "Supreme Commander",
+      "unit": "Reclaim",
+      "note": "Wrecks are broken down into the economy's mass by builders and a few combat units: the loot-as-currency version.",
+      "sources": [
+        {
+          "url": "https://supcom.fandom.com/wiki/Reclaim",
+          "title": "Reclaim, Supreme Commander Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        }
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "shooter_analogues": [
+    {
+      "game": "extra:Titanfall 2",
+      "franchise": "Titanfall",
+      "unit": "Battery theft",
+      "note": "For contrast (closer to infest's grab-and-run variant): a pilot rips the battery out of an enemy Titan, which damages it, and carries it to a friendly Titan for a shield and health boost; the carrier drops it on death, so the enemy can chase it back.",
+      "sources": [
+        {
+          "url": "https://titanfall.fandom.com/wiki/Rodeo",
+          "title": "Rodeo, Titanfall Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        },
+        {
+          "url": "https://titanfall.fandom.com/wiki/Battery",
+          "title": "Battery, Titanfall Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "extra:Battlefield series",
+      "franchise": "Battlefield",
+      "unit": "Kit pickup",
+      "note": "A killed player's kit can be picked up and used at once; dropped kits vanish after a short time.",
+      "sources": [
+        {
+          "url": "https://battlefield.fandom.com/wiki/Kit",
+          "title": "Kit, Battlefield Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "extra:Mega Man (classic series)",
+      "franchise": "Mega Man",
+      "unit": "Boss weapons",
+      "note": "Beating a boss permanently gives its weapon, which runs on limited energy that must be refilled: the cleanest 'kill it, get its gun' with an ammo limit.",
+      "sources": [
+        {
+          "url": "https://megaman.fandom.com/wiki/Special_Weapon",
+          "title": "Special Weapon, Mega Man Knowledge Base",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "extra:ARC Raiders",
+      "franchise": "ARC Raiders",
+      "unit": "Salvaging machines",
+      "note": "Destroyed machines drop power cells, which recharge shields mid-fight or go into crafting, and parts such as a damaged Hornet driver that are recycled into crafting materials: kills pay out in resources.",
+      "sources": [
+        {
+          "url": "https://arc-raiders.fandom.com/wiki/ARC",
+          "title": "ARC, ARC Raiders Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        },
+        {
+          "url": "https://arc-raiders.fandom.com/wiki/ARC_Powercell",
+          "title": "ARC Powercell, ARC Raiders Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-18"
+        },
+        {
+          "url": "https://arc-raiders.fandom.com/wiki/Damaged_Hornet_Driver",
+          "title": "Damaged Hornet Driver, ARC Raiders Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-18"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "extra:Halo series",
+      "franchise": "Halo",
+      "unit": "Vehicle hijacking",
+      "note": "For contrast (belongs to the planned hijack-vehicle pattern): throwing a driver out and taking the seat.",
+      "sources": [
+        {
+          "url": "https://www.halopedia.org/Boarding_(gameplay_mechanic)",
+          "title": "Boarding (gameplay mechanic), Halopedia",
+          "kind": "wiki",
+          "accessed": "2026-10-17"
+        }
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "player_translation": {
+    "summary": "A mid-tier vehicle with a main gun and a tether. Hold the tether on a target the team is killing; if it dies while tethered, whoever landed the kill, a copy of its weapon scaled to your tier snaps onto your chassis and fires on right mouse.",
+    "as_user": [
+      "The choice is tether or shoot: while tethered your main gun and stolen weapon are silent, you are heavily slowed and your turret stays locked on the target. Good players tether the target their team is already focusing.",
+      "Target choice becomes a shopping list: hunt the enemy's anti-air vehicle to cover your weakness to aircraft, or a heavy tank for its cannon. The vehicle under your cursor previews what it would give.",
+      "The stolen weapon lasts for this life; on death it drops as a salvage crate for a short time that only a leech-capable unit can claim and anyone can shoot to destroy.",
+      "A new claim always replaces the stolen weapon. The target's preview ring shows the swap before you start the tether, so not tethering is how you keep what you have."
+    ],
+    "as_target": [
+      "A tether on you is a countdown: if you die now, the enemy gets your gun. Get out of range, break line of sight, hold F to shake the tether off, or burst the slowed claimer while its guns are silent.",
+      "Damaged vehicles near a leecher should retreat earlier: 'don't feed' becomes a skill.",
+      "Seeing your own weapon on an enemy tank is readable and gives a revenge goal: kill it and the weapon drops as salvage."
+    ],
+    "teammates": [
+      "Claim and finish: the leecher pings its tethered target and allies burst it, because the claim doesn't need the killing blow.",
+      "Escort the leecher while it is slowed and its guns are quiet.",
+      "The team decides which weapon to take, based on what the team lacks.",
+      "Friendly donations are limited to wrecks, abandoned allied vehicles and, in the willing-donor variant, a teammate who chooses to give; a leecher never takes from a living teammate by force, so teammates can't farm each other."
+    ],
+    "controls": [
+      "Move with WASD and aim with the mouse; the enemy vehicle under the cursor previews the weapon it would give. Left mouse: main gun.",
+      "Hold Q: tether the enemy vehicle under the cursor while it is in range and in line of sight. Tether range is capped so you always stay on the target's screen, and the cap is drawn as a ring around you.",
+      "Right mouse: fire the stolen weapon, your secondary slot, on its own trigger and cooldown (empty until your first claim; no hidden alternation with the main gun).",
+      "No swap key: a new claim always replaces the stolen weapon, and a preview ring on the target shows the swap before the claim lands.",
+      "Middle mouse, the universal ping, on the tethered target: 'leeching, finish it'. The pattern uses two counted keys (Q and right mouse), within the T2 budget; the other universal keys (E, hold F, hold X, 1-3) work as on every unit.",
+      "Target, with the universal keys: hold F for a moment to shake the tether off; you can drive but not fire while shaking."
+    ],
+    "feedback": [
+      "A thick beam in the leecher's team colour that pulses with the drain, and a hum that rises as the target's health drops.",
+      "A ring and icon over the enemy vehicle under your cursor, and over your tethered target, that preview the weapon you would get and show when it would replace the one you carry.",
+      "On a claim: a distinct sound, the weapon visibly snapping onto the chassis, and the donor's icon in the HUD slot.",
+      "On the target: a red edge vignette and a 'leeched' warning with an arrow to the source and a hold-F prompt.",
+      "Each stolen weapon class has an oversized, distinct attachment model readable from above; claimable wrecks glow and show a despawn ring."
+    ],
+    "changes_from_rts": [
+      "Map the donor table to units players can actually buy; RA3's naval and epic donors don't exist here.",
+      "Replace RA3's random pick between several leechers with a visible rule, such as first to latch.",
+      "Forbid leeching living teammates by force, which invites farming; allow only enemies and abandoned or wrecked allies (the willing-donor variant lets a teammate choose to give).",
+      "Scale stolen weapons to the leecher's tier so a T2 can't carry a T3 gun at full power.",
+      "Give the stolen weapon its own trigger instead of RA3's hidden one-weapon-at-a-time alternation.",
+      "RA3 locks the slot after the first steal; here a new claim replaces it, previewed before it lands, so a poor first steal isn't a mistake for the whole life.",
+      "Instead of RA3's full root, leeching applies a heavy slow and locks the turret onto the target.",
+      "RA3's stolen weapon dies with the tank; here it drops as a short-lived salvage crate that only leech-capable units can claim (the open questions keep the alternatives)."
+    ]
+  },
+  "team_play": {
+    "potential": "high",
+    "hooks": ["setup-finisher", "share-spoils", "escort-dependency", "counter-pick"],
+    "notes": "The claim-at-death rule rewards coordination directly: one player claims, others finish. The enemy has to coordinate its retreats and deny wrecks."
+  },
+  "build_difficulty": {
+    "level": "medium",
+    "notes": [
+      "A generic upgrade ladder is cheap: one upgrade track per eligible unit and a pickup.",
+      "The donor-specific version needs a donor-to-weapon table plus sockets, models and effects for every stolen weapon on every leecher; content grows with donors times leechers.",
+      "The claim at the moment of death must be decided by the server; ties and latency create disputes.",
+      "A tether weapon needs range and line-of-sight checks, a slow and turret-lock state, drain and heal ticks, and break rules.",
+      "UI: donor previews, target warnings, kill-feed icons and loadout slot states."
+    ]
+  },
+  "risks": {
+    "balance": {
+      "level": "high",
+      "notes": [
+        "Snowballing: the team winning fights collects the most stolen weapons and wins more fights.",
+        "Players hunt the best donor instead of playing the objective.",
+        "Stealing anti-air or anti-infantry removes the leecher's designed weakness and flattens the counter wheel.",
+        "Cheap units carrying top-tier weapons undermine top-tier prices.",
+        "Drain, healing and extra damage together can make the leecher very hard to kill."
+      ]
+    },
+    "readability": {
+      "level": "medium",
+      "notes": [
+        "Players may not see which stolen weapon an enemy carries unless each class has a distinct, oversized silhouette.",
+        "A tank firing another faction's weapon effects can make players misjudge it and pick the wrong counter.",
+        "With several beams in a brawl it can be unclear who will get the claim."
+      ]
+    }
+  },
+  "variants": [
+    {
+      "id": "tether-copy",
+      "name": "Tether and copy",
+      "summary": "Hold a beam on the target; if it dies while tethered, whoever landed the kill, you mount a copy of its weapon, so the enemy roster becomes a loot table. The copy can be weaker or altered; here it is scaled to your tier.",
+      "min_spice": 1,
+      "seen_in": "RA3 Hammer Tank; Mega Man boss weapons (a donor copy without the tether)",
+      "overrides": {
+        "kinds": ["channel"],
+        "implies": ["weapon:adaptive"],
+        "adds_weaknesses": [
+          {
+            "ref": "weapon:adaptive",
+            "why": "Starts each life with an empty stolen-weapon slot, loses it on death, and goes quiet while it tethers."
+          }
+        ]
+      }
+    },
+    {
+      "id": "upgrade-ladder",
+      "name": "Upgrade ladder",
+      "summary": "Every claim moves the unit one step up a fixed ladder, whatever the donor was; extra claims become cash or experience. Easier to read and balance.",
+      "min_spice": 1,
+      "seen_in": "Generals salvage crates",
+      "overrides": {
+        "min_tier": "t1",
+        "kinds": ["triggered"],
+        "implies": [],
+        "adds_strengths": [
+          {
+            "ref": "pattern:leech-weapon-on-kill",
+            "why": "Each claim moves it one step up a fixed upgrade ladder, whatever the donor was."
+          }
+        ],
+        "adds_weaknesses": [
+          {
+            "ref": "pattern:leech-weapon-on-kill",
+            "why": "Starts each life at the bottom of the ladder and loses its steps on death; once at the top, claims pay only a little."
+          }
+        ]
+      }
+    },
+    {
+      "id": "wreck-crate",
+      "name": "Wreck crate race",
+      "summary": "A kill drops a pickup that the first unit to touch claims, before it decays; enemies can grab or destroy it first.",
+      "min_spice": 2,
+      "seen_in": "Battlefield kits, Company of Heroes dropped weapons and abandoned team weapons, Generals salvage (only GLA players can see or take crates)",
+      "overrides": {
+        "kinds": ["triggered"],
+        "adds_strengths": [
+          {
+            "ref": "weapon:adaptive",
+            "why": "Any wreck it reaches first can arm it, whoever made the kill."
+          }
+        ],
+        "adds_weaknesses": [
+          {
+            "ref": "weapon:adaptive",
+            "why": "Starts each life with an empty slot and must reach a crate before it decays or an enemy grabs or destroys it."
+          }
+        ]
+      }
+    },
+    {
+      "id": "kit-swap",
+      "name": "Kit swap",
+      "summary": "A pickup replaces the whole loadout or class for this life instead of adding a weapon, but only with a kit of the picker's tier or lower.",
+      "min_spice": 2,
+      "seen_in": "Iron Harvest kits, Battlefield kits",
+      "overrides": {
+        "classes": ["infantry"],
+        "min_tier": "t1",
+        "kinds": ["triggered"],
+        "implies": [],
+        "adds_strengths": [
+          {
+            "ref": "pattern:leech-weapon-on-kill",
+            "why": "Can become another class mid-fight by picking up a kit."
+          }
+        ],
+        "adds_weaknesses": [
+          {
+            "ref": "pattern:leech-weapon-on-kill",
+            "why": "Takes only kits of its own tier or lower, only where they drop, and loses the new loadout on death."
+          }
+        ],
+        "counters": [
+          {
+            "ref": "class:infantry",
+            "why": "Soldiers it helps kill drop kits it can take."
+          }
+        ],
+        "countered_by": [
+          {
+            "ref": "class:vehicle",
+            "why": "A kit only swaps one soldier loadout for another, so vehicles still outclass it."
+          }
+        ]
+      }
+    },
+    {
+      "id": "loot-currency",
+      "name": "Loot as currency",
+      "summary": "Wrecks pay out in resources or crafting material rather than direct power.",
+      "min_spice": 2,
+      "seen_in": "Supreme Commander reclaim, ARC Raiders salvage",
+      "overrides": {
+        "kinds": ["triggered"],
+        "implies": [],
+        "adds_strengths": [
+          {
+            "ref": "pattern:leech-weapon-on-kill",
+            "why": "Every wreck it salvages pays out resources or materials for later purchases."
+          }
+        ],
+        "adds_weaknesses": [
+          {
+            "ref": "pattern:leech-weapon-on-kill",
+            "why": "Salvage adds no power in the current fight, and wrecks must be reached before they decay or the enemy denies them."
+          }
+        ]
+      }
+    },
+    {
+      "id": "limited-copy",
+      "name": "Limited-ammo copy",
+      "summary": "The gained weapon runs on limited energy or ammo; when it runs dry it stays mounted but can't fire until refilled.",
+      "min_spice": 2,
+      "seen_in": "Mega Man",
+      "overrides": {
+        "adds_weaknesses": [
+          {
+            "ref": "weapon:adaptive",
+            "why": "Its stolen weapon runs dry and stays silent until refilled, and it starts each life with an empty slot."
+          }
+        ]
+      }
+    },
+    {
+      "id": "willing-donor",
+      "name": "Willing donor",
+      "summary": "A living teammate chooses to hand over their vehicle's second weapon: they park beside the leecher and confirm with interact. The leecher mounts a copy at its own tier, and the donor loses that weapon for this life but keeps its main gun. One gift per life on each side and never by force, so teammates can't be farmed.",
+      "min_spice": 3,
+      "seen_in": "An original twist on the Tiberium Wars Avatar, which strips friendly vehicles by destroying them; here the ally consents and survives",
+      "overrides": {
+        "kinds": ["triggered"],
+        "adds_strengths": [
+          {
+            "ref": "weapon:adaptive",
+            "why": "A teammate can hand it a copy of their second weapon, so the team chooses what it carries."
+          }
+        ],
+        "adds_weaknesses": [
+          {
+            "ref": "weapon:adaptive",
+            "why": "Needs a teammate to park beside it, at most once per life, and the gift costs that teammate their second weapon."
+          }
+        ],
+        "counters": [],
+        "countered_by": [
+          {
+            "ref": "role:anti-armour",
+            "why": "Catches it and its donor while they park side by side for the gift."
+          }
+        ]
+      }
+    }
+  ],
+  "generator": {
+    "classes": ["vehicle", "walker", "hover"],
+    "min_tier": "t2",
+    "kinds": ["channel", "triggered"],
+    "slot": "signature",
+    "rarity": "uncommon",
+    "flavour_lean": ["soviet"],
+    "requires": [
+      [
+        "weapon:cannon",
+        "weapon:autocannon",
+        "weapon:machine-gun",
+        "weapon:laser",
+        "weapon:tesla",
+        "weapon:rockets",
+        "weapon:railgun",
+        "weapon:flamethrower",
+        "weapon:small-arms"
+      ]
+    ],
+    "implies": ["weapon:adaptive"],
+    "adds_strengths": [
+      {
+        "ref": "weapon:adaptive",
+        "why": "Gains a weapon from kills that can cover its own gaps."
+      }
+    ],
+    "adds_weaknesses": [
+      {
+        "ref": "weapon:adaptive",
+        "why": "Starts each life with an empty stolen-weapon slot and loses it on death."
+      }
+    ],
+    "counters": [
+      {
+        "ref": "class:vehicle",
+        "why": "Every vehicle it helps kill pays it something: a weapon, an upgrade step or materials."
+      }
+    ],
+    "countered_by": [
+      {
+        "ref": "class:aircraft",
+        "why": "Ground claimers usually can't reach aircraft or their wrecks, and have no anti-air until they gain some."
+      },
+      {
+        "ref": "speed:>=fast",
+        "why": "Fast targets get away before they die near it, leaving nothing to claim."
+      },
+      {
+        "ref": "role:anti-armour",
+        "why": "Punishes it while it is busy claiming."
+      }
+    ]
+  },
+  "related": [
+    {
+      "id": "drain-health",
+      "kind": "combos-with"
+    },
+    {
+      "id": "hijack-vehicle",
+      "kind": "often-confused-with"
+    },
+    {
+      "id": "infest-vehicle",
+      "kind": "combos-with"
+    },
+    {
+      "id": "switch-weapon-mode",
+      "kind": "combos-with"
+    }
+  ],
+  "open_questions": [
+    "What happens to a stolen weapon on death: lost, dropped as salvage, or kept until the round resets?",
+    "Should the slot lock once filled (as in RA3), be replaceable, or run on limited ammo?",
+    "The universal shake-off (hold F) also breaks a tether: how long must the target hold it, and how soon may the leecher re-tether the same target?",
+    "Should leeching be one faction's signature (the Soviets, in RA3's spirit) or shared by all factions?",
+    "In a multi-seat vehicle, who controls the stolen weapon and the tether?"
+  ],
+  "shooter_fit": {
+    "score": 4,
+    "reason": "Turns every kill into a loadout decision and rewards 'soften and claim' team play, but needs firm rules (tier scaling, no farming teammates) to avoid snowballing."
+  },
+  "confidence": "high",
+  "review": {
+    "status": "unchecked"
+  }
+}

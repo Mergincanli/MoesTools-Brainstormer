@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "common.schema.json",
+  "title": "Shared definitions",
+  "description": "Building blocks shared by the Unit Forge schemas. Fields marked x-vocab must hold a term id from that vocabulary in data/vocab/; the validator checks this.",
+  "x-ref-kinds": {
+    "class": {
+      "vocab": "classes",
+      "means": "is of this class"
+    },
+    "role": {
+      "vocab": "roles",
+      "means": "has this role (primary or secondary)"
+    },
+    "tier": {
+      "vocab": "tiers",
+      "means": "is this tier",
+      "ranked": true
+    },
+    "damage": {
+      "vocab": "damage-types",
+      "means": "has a weapon that deals this damage"
+    },
+    "armour-class": {
+      "vocab": "armour-classes",
+      "means": "has this armour class",
+      "ranked": true
+    },
+    "armour-model": {
+      "vocab": "armour-models",
+      "means": "has this armour model"
+    },
+    "weapon": {
+      "vocab": "weapon-families",
+      "means": "has a weapon of this family"
+    },
+    "mobility": {
+      "vocab": "mobility",
+      "means": "moves this way"
+    },
+    "mobility-trait": {
+      "vocab": "mobility-traits",
+      "means": "has this mobility trait"
+    },
+    "handling": {
+      "vocab": "handling",
+      "means": "handles this way"
+    },
+    "body": {
+      "vocab": "bodies",
+      "means": "has this body plan"
+    },
+    "size": {
+      "vocab": "sizes",
+      "means": "is this size",
+      "ranked": true
+    },
+    "speed": {
+      "vocab": "speed-bands",
+      "means": "moves at this speed",
+      "ranked": true
+    },
+    "crew": {
+      "vocab": "crew-models",
+      "means": "has this crew model"
+    },
+    "passengers": {
+      "vocab": null,
+      "means": "has this many passenger seats (a number, usually with >= or <=)",
+      "ranked": true
+    },
+    "mount": {
+      "vocab": "aim-models",
+      "means": "has a weapon on this mount"
+    },
+    "delivery": {
+      "vocab": "weapon-delivery",
+      "means": "has a weapon with this delivery"
+    },
+    "range": {
+      "vocab": "range-bands",
+      "means": "has a weapon with this range",
+      "ranked": true
+    },
+    "weapon-trait": {
+      "vocab": "weapon-traits",
+      "means": "has a weapon with this trait"
+    },
+    "target": {
+      "vocab": "target-types",
+      "means": "is this kind of target (from its mobility and size)"
+    },
+    "hits": {
+      "vocab": "target-types",
+      "means": "has a weapon that can hit this kind of target"
+    },
+    "nature": {
+      "vocab": "nature",
+      "means": "is organic, a crewed machine or an uncrewed machine"
+    },
+    "category": {
+      "vocab": "pattern-categories",
+      "means": "has an ability whose pattern is in this category"
+    },
+    "resource": {
+      "vocab": "resources",
+      "means": "uses this resource"
+    },
+    "pattern": {
+      "vocab": null,
+      "means": "has this mechanic pattern (an id in data/patterns)"
+    },
+    "unit": {
+      "vocab": null,
+      "means": "is this source unit (research data only; never on a generated card)"
+    }
+  },
+  "$defs": {
+    "slug": {
+      "description": "Lower-case id with dashes.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "unitId": {
+      "description": "Source unit id: <game>.<faction>.<slug>, e.g. 'ra3.soviet.terror-drone'.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*\\.[a-z0-9]+(-[a-z0-9]+)*\\.[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "ref": {
+      "description": "Typed link `<kind>:<id>`, e.g. `role:anti-air`, `size:<=small` or `hits:aircraft`. A link always describes a unit. In strengths, weaknesses, requires, excludes and implies it describes this unit; in counters, the unit this one beats; in countered_by, the unit that beats this one; in combos, the teammate it works well with. Kinds are listed under Conventions in docs/fields.md; ranked kinds accept `<=` and `>=`.",
+      "type": "string",
+      "pattern": "^(class|role|tier|damage|armour-class|armour-model|weapon|mobility|mobility-trait|handling|body|size|speed|crew|passengers|mount|delivery|range|weapon-trait|target|hits|nature|category|resource|pattern|unit):(<=|>=)?[a-z0-9]+([.-][a-z0-9]+)*$"
+    },
+    "relation": {
+      "description": "A typed link plus a plain-words reason.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "why"],
+      "properties": {
+        "ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "why": {
+          "description": "The reason, in plain words.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 300
+        }
+      }
+    },
+    "cnf": {
+      "description": "Conditions as groups of typed links: every group must hold, and one link in a group is enough.",
+      "type": "array",
+      "items": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "$ref": "#/$defs/ref"
+        }
+      }
+    },
+    "points": {
+      "description": "Weights for the generator's balance hints, 0-3 each. Proposed with the generator (Phase 2).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cost", "power", "complexity"],
+      "properties": {
+        "cost": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "power": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "complexity": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        }
+      }
+    },
+    "rating": {
+      "type": "string",
+      "x-vocab": "ratings"
+    },
+    "confidence": {
+      "type": "string",
+      "x-vocab": "confidence"
+    },
+    "source": {
+      "description": "A citation. Paraphrase only; never copy text or images.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url", "title", "kind", "accessed"],
+      "properties": {
+        "url": {
+          "description": "The page actually read (https only; never an image).",
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://(?!.*\\.(png|jpe?g|gif|webp|svg)([?#].*)?$)"
+        },
+        "title": {
+          "description": "Page title and site.",
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "x-vocab": "source-kinds"
+        },
+        "accessed": {
+          "description": "Date the page was read.",
+          "type": "string",
+          "format": "date"
+        },
+        "note": {
+          "type": "string"
+        },
+        "supports": {
+          "description": "Which fields this source backs, as paths such as 'tier', 'cost_band' or 'abilities/0'.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "version": {
+          "description": "Patch, edition or remaster the page describes, for games that change.",
+          "type": "string"
+        }
+      }
+    },
+    "review": {
+      "description": "Checker status. The research run samples entries and re-checks them against their sources.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "enum": ["unchecked", "checked", "disputed"]
+        },
+        "checked_by": {
+          "type": "string"
+        },
+        "checked_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "checked_paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "wrong_paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "fitNote": {
+      "description": "Where no vocabulary term fitted well. Collected into a vocabulary-gaps report that feeds the next vocabulary version.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "used", "note"],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "used": {
+          "type": "string"
+        },
+        "wanted": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "uncertain": {
+      "description": "A specific point that is less certain than the overall confidence, or where sources disagree.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "note"],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "sources_disagree": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

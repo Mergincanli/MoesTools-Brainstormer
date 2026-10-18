@@ -1,0 +1,290 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "vocabulary.schema.json",
+  "title": "Vocabulary file",
+  "description": "One fixed word list, e.g. classes or damage types. Every data file and every generated card may only use term ids from these lists. Constraint fields (classes, allowed, excluded, requires, min_tier) bind generated cards; on researched units a break is only reported as 'atypical'.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "label", "description", "group", "status", "version", "terms"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "label": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "group": {
+      "description": "core = named in the brief; supporting = added to make the core lists work.",
+      "enum": ["core", "supporting"]
+    },
+    "status": {
+      "enum": ["draft", "approved"]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "terms": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "$ref": "#/$defs/term"
+      }
+    }
+  },
+  "$defs": {
+    "idMap": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "common.schema.json#/$defs/slug"
+      },
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "term": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "description"],
+      "properties": {
+        "id": {
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "string"
+        },
+        "examples": {
+          "description": "Reference examples from the research, paraphrased.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rarity": {
+          "description": "How readily the generator offers this term (see the rarity list).",
+          "type": "string",
+          "x-vocab": "rarity"
+        },
+        "source_only": {
+          "description": "Recorded for research; never rolled by the generator.",
+          "type": "boolean"
+        },
+        "rank": {
+          "description": "Order on a scale (speed, size, cost, armour...).",
+          "type": "integer"
+        },
+        "classes": {
+          "description": "Unit classes allowed to use this term. This is how 'aircraft don't get tracks' is enforced.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "x-vocab": "classes"
+          }
+        },
+        "allowed": {
+          "description": "Whitelist of terms this one may combine with on the same unit, keyed by vocabulary id. Checked both ways.",
+          "$ref": "#/$defs/idMap"
+        },
+        "excluded": {
+          "description": "Terms this one may not combine with on the same unit, keyed by vocabulary id.",
+          "$ref": "#/$defs/idMap"
+        },
+        "requires": {
+          "description": "What the unit must also have for this term to make sense.",
+          "$ref": "common.schema.json#/$defs/cnf"
+        },
+        "min_tier": {
+          "description": "Lowest tier that may use this term.",
+          "type": "string",
+          "x-vocab": "tiers"
+        },
+        "uses_key": {
+          "description": "Ability kinds and mobility traits: true if it is a button that counts toward the tier's key budget.",
+          "type": "boolean"
+        },
+        "pattern": {
+          "description": "Mobility traits: the mechanic pattern a key-bound trait stands for.",
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "default_damage": {
+          "type": "string",
+          "x-vocab": "damage-types"
+        },
+        "default_aim": {
+          "type": "string",
+          "x-vocab": "aim-models"
+        },
+        "default_delivery": {
+          "type": "string",
+          "x-vocab": "weapon-delivery"
+        },
+        "default_range": {
+          "type": "string",
+          "x-vocab": "range-bands"
+        },
+        "default_handling": {
+          "type": "string",
+          "x-vocab": "handling"
+        },
+        "target_type": {
+          "description": "Mobility: what kind of target a unit moving this way is.",
+          "type": "string",
+          "x-vocab": "target-types"
+        },
+        "strong_vs": {
+          "description": "Damage types: what this damage is good against (typed links to what the target is).",
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/ref"
+          }
+        },
+        "weak_vs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/ref"
+          }
+        },
+        "immune": {
+          "description": "Damage types: targets this damage does nothing to.",
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/ref"
+          }
+        },
+        "seats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "x-vocab": "seat-roles"
+          }
+        },
+        "min_players": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_players": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_keys": {
+          "description": "Tiers: most buttons a unit may have, signature included.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_passive": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_keys_per_seat": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "source_rule": {
+          "description": "Tiers: how a source game's tech level maps to this tier.",
+          "type": "string"
+        },
+        "themes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "favoured": {
+          "description": "Faction flavours: term ids the flavour leans toward, keyed by vocabulary id.",
+          "$ref": "#/$defs/idMap"
+        },
+        "avoided": {
+          "description": "Faction flavours: term ids held back at low spice, keyed by vocabulary id.",
+          "$ref": "#/$defs/idMap"
+        },
+        "favoured_weight": {
+          "description": "Faction flavours: how much more likely favoured terms are.",
+          "type": "number",
+          "minimum": 1
+        },
+        "avoided_until_spice": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "name_style": {
+          "type": "string"
+        },
+        "min_spice": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "weights": {
+          "description": "Rarity: relative weight at spice 1-5.",
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "severity": {
+          "description": "Balance flags: block = never on a rolled card; warn = shown as a hint.",
+          "enum": ["block", "warn"]
+        },
+        "points": {
+          "$ref": "common.schema.json#/$defs/points"
+        },
+        "brings": {
+          "description": "What this term adds to a card's matchups when rolled (filled in with the generator, Phase 2).",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "strengths": {
+              "type": "array",
+              "items": {
+                "$ref": "common.schema.json#/$defs/relation"
+              }
+            },
+            "weaknesses": {
+              "type": "array",
+              "items": {
+                "$ref": "common.schema.json#/$defs/relation"
+              }
+            },
+            "counters": {
+              "type": "array",
+              "items": {
+                "$ref": "common.schema.json#/$defs/relation"
+              }
+            },
+            "countered_by": {
+              "type": "array",
+              "items": {
+                "$ref": "common.schema.json#/$defs/relation"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
