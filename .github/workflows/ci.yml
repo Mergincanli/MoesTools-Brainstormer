@@ -1,0 +1,32 @@
+name: CI
+
+# Pushes to main and every pull request; a branch with a pull request open runs once, through the pull request.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# The checks only read the repository.
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check (${{ matrix.os }}, Node ${{ matrix.node }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [22, 24]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      # Formatting, the validator, generated docs in sync, and the tests. The copy-check needs the network,
+      # so it is not run here.
+      - run: npm run check

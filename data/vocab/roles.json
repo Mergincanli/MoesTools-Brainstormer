@@ -5,7 +5,7 @@
   "description": "What the unit is for: its job or target, never its mechanic (mechanics are patterns). A card has one primary role and up to two secondary roles. 'Requires' says what a unit needs before it can claim the role. Tie-breaks: use anti-X as the primary only if the game gives a bonus against X or calls the unit that; generalists are assault. Damage first is a raider, information first is a scout. A disabler acts on units, area denial acts on ground.",
   "group": "core",
   "status": "draft",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "terms": [
     {
       "id": "assault",
@@ -26,8 +26,8 @@
     {
       "id": "anti-air",
       "label": "Anti-air",
-      "description": "Brings down aircraft and drones.",
-      "requires": [["hits:aircraft"]]
+      "description": "Brings down aircraft, including jets and airships in high air.",
+      "requires": [["hits:high-air"]]
     },
     {
       "id": "siege",
@@ -45,13 +45,26 @@
       "id": "scout",
       "label": "Scout / recon",
       "description": "Finds, spots and marks enemies; usually fast and fragile.",
-      "requires": [["speed:>=fast", "category:stealth-deception", "weapon-trait:mark"]]
+      "requires": [
+        [
+          "speed:>=fast",
+          "category:stealth-deception",
+          "weapon-trait:mark",
+          "sight:>=long",
+          "sensor:radar",
+          "sensor:detector",
+          "sensor:lingering-sight",
+          "sensor:stealth",
+          "pattern:reveal-area",
+          "pattern:mark-target"
+        ]
+      ]
     },
     {
       "id": "support",
       "label": "Support",
       "description": "Heals, repairs or resupplies teammates.",
-      "requires": [["weapon:repair-tool", "category:support"]]
+      "requires": [["weapon:repair-tool", "pattern:repair-allies", "pattern:resupply-allies"]]
     },
     {
       "id": "transport",

@@ -78,7 +78,7 @@
       }
     },
     "generic": {
-      "description": "True for plain mechanics (sprint, self-heal, stat buff) kept so every ability can link a pattern; excluded from the top-30 list.",
+      "description": "True for plain mechanics (sprint, healing yourself, stat buff) kept so every ability can link a pattern; excluded from the top-30 list.",
       "type": "boolean"
     },
     "summary": {
@@ -260,11 +260,16 @@
             "additionalProperties": false,
             "properties": {
               "classes": {
+                "description": "Replaces the base generator's classes for this variant.",
                 "type": "array",
                 "items": {
                   "type": "string",
                   "x-vocab": "classes"
                 }
+              },
+              "class_rarity": {
+                "description": "Replaces the base generator's class_rarity for this variant. Every key must be in the variant's classes (its own, or the base generator's). Without it, the base generator's class_rarity applies to whichever of its classes the variant keeps.",
+                "$ref": "common.schema.json#/$defs/classRarity"
               },
               "min_tier": {
                 "type": "string",
@@ -332,13 +337,17 @@
       "required": ["classes", "min_tier", "kinds", "slot", "rarity", "countered_by"],
       "properties": {
         "classes": {
-          "description": "Classes that can roll this pattern.",
+          "description": "Classes that can roll this pattern: every class it is physically possible for. A class left out is a hard ban.",
           "type": "array",
           "minItems": 1,
           "items": {
             "type": "string",
             "x-vocab": "classes"
           }
+        },
+        "class_rarity": {
+          "description": "Rarity of this pattern for particular classes, used instead of 'rarity' when the card is of that class; classes not listed use 'rarity'. Every key must be in 'classes'. Cross-overs that are possible but unusual for a class are listed here as rare (or uncommon).",
+          "$ref": "common.schema.json#/$defs/classRarity"
         },
         "min_tier": {
           "type": "string",

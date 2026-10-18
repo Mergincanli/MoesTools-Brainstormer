@@ -94,6 +94,15 @@
       "vocab": "target-types",
       "means": "has a weapon that can hit this kind of target"
     },
+    "sight": {
+      "vocab": "sight-bands",
+      "means": "sees this far through the fog of war",
+      "ranked": true
+    },
+    "sensor": {
+      "vocab": "sensor-traits",
+      "means": "has this sensor trait"
+    },
     "nature": {
       "vocab": "nature",
       "means": "is organic, a crewed machine or an uncrewed machine"
@@ -127,9 +136,9 @@
       "pattern": "^[a-z0-9]+(-[a-z0-9]+)*\\.[a-z0-9]+(-[a-z0-9]+)*\\.[a-z0-9]+(-[a-z0-9]+)*$"
     },
     "ref": {
-      "description": "Typed link `<kind>:<id>`, e.g. `role:anti-air`, `size:<=small` or `hits:aircraft`. A link always describes a unit. In strengths, weaknesses, requires, excludes and implies it describes this unit; in counters, the unit this one beats; in countered_by, the unit that beats this one; in combos, the teammate it works well with. Kinds are listed under Conventions in docs/fields.md; ranked kinds accept `<=` and `>=`.",
+      "description": "Typed link `<kind>:<id>`, e.g. `role:anti-air`, `size:<=small` or `hits:high-air`. A link always describes a unit. In strengths, weaknesses, requires, excludes and implies it describes this unit; in counters, the unit this one beats; in countered_by, the unit that beats this one; in combos, the teammate it works well with. Kinds are listed under Conventions in docs/fields.md; ranked kinds accept `<=` and `>=`.",
       "type": "string",
-      "pattern": "^(class|role|tier|damage|armour-class|armour-model|weapon|mobility|mobility-trait|handling|body|size|speed|crew|passengers|mount|delivery|range|weapon-trait|target|hits|nature|category|resource|pattern|unit):(<=|>=)?[a-z0-9]+([.-][a-z0-9]+)*$"
+      "pattern": "^(class|role|tier|damage|armour-class|armour-model|weapon|mobility|mobility-trait|handling|body|size|speed|crew|passengers|mount|delivery|range|weapon-trait|target|hits|sight|sensor|nature|category|resource|pattern|unit):(<=|>=)?[a-z0-9]+([.-][a-z0-9]+)*$"
     },
     "relation": {
       "description": "A typed link plus a plain-words reason.",
@@ -157,6 +166,19 @@
         "items": {
           "$ref": "#/$defs/ref"
         }
+      }
+    },
+    "classRarity": {
+      "description": "Rarity per class (class id to rarity id), used instead of the usual rarity when the unit is of that class. Every key must also be in the classes list beside it. Used for cross-overs: parts that are possible but unusual for a class are listed here as rare (or uncommon), so they appear only at higher spice. A faction's one-step bonus for favoured parts does not apply to a class rarity.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "x-vocab": "classes"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "x-vocab": "rarity"
       }
     },
     "points": {

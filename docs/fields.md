@@ -1,16 +1,16 @@
 <!-- Generated from the JSON in data/ and schemas/. Edit the JSON, not this file. -->
 
-# Field reference (draft v0.3)
+# Field reference (draft v0.4.0)
 
 Every field of every record type, generated from the JSON schemas in `schemas/`. **Vocabulary** names the fixed word list a field draws from (see [vocabularies](vocabularies.md)).
 
 ## Conventions
 
 - **Ids.** Lower-case, ASCII, words joined by dashes; apostrophes and full stops dropped, `&` becomes `and`, numbers and roman numerals kept (`mammoth-mk-ii`, `v4-rocket-launcher`). Unit ids are `<game>.<faction>.<slug>`; pattern ids are generic English, verb first (`infest-vehicle`). Expansions are never game ids. The faction id `shared` is reserved for units every side can field.
-- **Typed links** are written `kind:id`, such as `role:anti-air`, `size:<=small` or `hits:aircraft`. A link always describes a unit: in strengths, weaknesses and pattern requirements it describes the unit itself; in *counters* the unit it beats; in *countered by* the unit that beats it; in combos the teammate. Ranked kinds accept `<=` and `>=`. Kinds: `class` (is of this class), `role` (has this role (primary or secondary)), `tier` (is this tier), `damage` (has a weapon that deals this damage), `armour-class` (has this armour class), `armour-model` (has this armour model), `weapon` (has a weapon of this family), `mobility` (moves this way), `mobility-trait` (has this mobility trait), `handling` (handles this way), `body` (has this body plan), `size` (is this size), `speed` (moves at this speed), `crew` (has this crew model), `passengers` (has this many passenger seats (a number, usually with >= or <=)), `mount` (has a weapon on this mount), `delivery` (has a weapon with this delivery), `range` (has a weapon with this range), `weapon-trait` (has a weapon with this trait), `target` (is this kind of target (from its mobility and size)), `hits` (has a weapon that can hit this kind of target), `nature` (is organic, a crewed machine or an uncrewed machine), `category` (has an ability whose pattern is in this category), `resource` (uses this resource), `pattern` (has this mechanic pattern (an id in data/patterns)), `unit` (is this source unit (research data only; never on a generated card)).
-- **Proposals vs facts.** Fields marked *proposal* (handling, weapon mount and seat, flavour affinity and 'as a player'), and crew and on-death wherever their basis says 'proposal', are our design suggestions for a player version. The checker skips them and confidence covers only sourced facts.
+- **Typed links** are written `kind:id`, such as `role:anti-air`, `size:<=small` or `hits:high-air`. A link always describes a unit: in strengths, weaknesses and pattern requirements it describes the unit itself; in *counters* the unit it beats; in *countered by* the unit that beats it; in combos the teammate. Ranked kinds accept `<=` and `>=`. Kinds: `class` (is of this class), `role` (has this role (primary or secondary)), `tier` (is this tier), `damage` (has a weapon that deals this damage), `armour-class` (has this armour class), `armour-model` (has this armour model), `weapon` (has a weapon of this family), `mobility` (moves this way), `mobility-trait` (has this mobility trait), `handling` (handles this way), `body` (has this body plan), `size` (is this size), `speed` (moves at this speed), `crew` (has this crew model), `passengers` (has this many passenger seats (a number, usually with >= or <=)), `mount` (has a weapon on this mount), `delivery` (has a weapon with this delivery), `range` (has a weapon with this range), `weapon-trait` (has a weapon with this trait), `target` (is this kind of target (from its mobility and size)), `hits` (has a weapon that can hit this kind of target), `sight` (sees this far through the fog of war), `sensor` (has this sensor trait), `nature` (is organic, a crewed machine or an uncrewed machine), `category` (has an ability whose pattern is in this category), `resource` (uses this resource), `pattern` (has this mechanic pattern (an id in data/patterns)), `unit` (is this source unit (research data only; never on a generated card)).
+- **Proposals vs facts.** Fields marked *proposal* (handling, weapon mount and seat, flavour affinity and 'as a player'), and crew, on-death and sensors wherever their basis says 'proposal', are our design suggestions for a player version. The checker skips them and confidence covers only sourced facts.
 - **Weapons vs abilities.** Anything fired with an attack button is a weapon. An ability exists only when the source has a separate button, cooldown, toggle, or a triggered or passive effect. A weapon swapped in by an ability gets both: an `alternate` weapon and a `toggle` ability, linking the same pattern. A weapon gained on a kill gets an `acquired` weapon and a `triggered` ability. Unarmed units have an empty weapon list.
-- **Granularity.** Same player-facing interaction and same counterplay = one pattern; differences in fiction, delivery or size are variants. Plain mechanics (sprint, self-heal, stat buff) get generic patterns that stay out of the top-30 list.
+- **Granularity.** Same player-facing interaction and same counterplay = one pattern; differences in fiction, delivery or size are variants. Plain mechanics (sprint, healing yourself, stat buff) get generic patterns that stay out of the top-30 list. A pattern that mirrors a word-list term (a weapon trait or family, an armour model, a sensor trait) is the home for the ability version only; a weapon or always-on effect uses the term.
 - **Copyright.** Paraphrase only, no quoted voice lines or flavour text, no images. Real names are reference only and never reach a generated card.
 
 ## Source unit
@@ -55,6 +55,11 @@ One researched unit from a real game. File: `data/units/<game>.json`. Schema: `s
 | `armour.class` | term | yes | `armour-classes` | A term from *Armour classes*. |
 | `armour.models` | list of terms (min 1, max 3) | yes | `armour-models` | Terms from *Armour models*. |
 | `armour.notes` | text |  |  |  |
+| `sensors` | group | yes |  | How it sees and is seen under fog of war. |
+| `sensors.sight` | term | yes | `sight-bands` | How far it sees, judged against the game's other units. |
+| `sensors.traits` | list of terms (max 3) | yes | `sensor-traits` | Always-on sensor traits. Required, so 'none' is an explicit empty list. |
+| `sensors.basis` | one of `in-game`, `proposal` | yes |  | in-game = from the source: its vision range compared with the game's other units, and any sensor traits it has; proposal = the source gives no vision range, so this is our suggestion for a player version. When the two are mixed, say which part is which in notes. |
+| `sensors.notes` | text |  |  |  |
 | `armament[]` | list of groups | yes |  | Weapons, in slot order. Empty for unarmed units. |
 | `armament[].name` | text | yes |  | In-game weapon name, for reference only. |
 | `armament[].slot` | one of `primary`, `secondary`, `alternate`, `passenger`, `acquired`, `option` | yes |  | primary / secondary; alternate = switched to by an ability or mode; passenger = depends on who rides inside (one entry per distinct result); acquired = gained during play, e.g. salvaged from a kill; option = one of several loadout choices (see option_group). |
@@ -150,8 +155,8 @@ One researched unit from a real game. File: `data/units/<game>.json`. Schema: `s
 | `fit_notes[].wanted` | text |  |  |  |
 | `fit_notes[].note` | text | yes |  |  |
 | `atypical[]` | list of groups |  |  | Combination rules this real unit breaks. Found by the validator and recorded here; never blocks a source unit, and useful evidence for relaxing a rule. |
-| `atypical[].path` | text | yes |  |  |
-| `atypical[].rule` | text | yes |  |  |
+| `atypical[].path` | text | yes |  | Where the break shows on this unit: field names and list positions separated by '/', e.g. 'armament/0/can_target'. It must exist on the unit. |
+| `atypical[].rule` | text | yes |  | The broken rule's exact string, as the validator prints it at the end of the ATYPICAL line: '&lt;list&gt;:&lt;term&gt; &lt;field&gt; &lt;value&gt;'. The field is 'classes' (value: the unit's class), 'min_tier' (value: the term's lowest tier), 'allowed.&lt;list&gt;' (value: the unit's or weapon's term that the allowed list leaves out), 'excluded.&lt;list&gt;' (value: the term that the excluded list names) or 'requires' (value: the group's links joined by '\|'). Example: 'weapon-families:rockets allowed.target-types high-air'. Two weapons that break the same rule share one string. |
 | `atypical[].note` | text | yes |  |  |
 
 ## Mechanic pattern
@@ -170,7 +175,7 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `source_terms` | list of texts |  |  | In-game names for this mechanic, reference only; never shown by the generator. |
 | `category` | term | yes | `pattern-categories` | A term from *Pattern categories*. |
 | `also_in` | list of terms (max 2) |  | `pattern-categories` | Up to two more categories for filtering. |
-| `generic` | boolean |  |  | True for plain mechanics (sprint, self-heal, stat buff) kept so every ability can link a pattern; excluded from the top-30 list. |
+| `generic` | boolean |  |  | True for plain mechanics (sprint, healing yourself, stat buff) kept so every ability can link a pattern; excluded from the top-30 list. |
 | `summary` | text | yes |  | What it does, in plain words. |
 | `counterplay` | list of texts (min 1) | yes |  | How the enemy deals with it. |
 | `source_units` | list of unit ids (min 1) | yes |  | Unit ids that use this pattern. Must match the units that link it (the validator checks; a build step will compute it). |
@@ -233,7 +238,8 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `variants[].min_spice` | integer (1-5) | yes |  |  |
 | `variants[].seen_in` | text |  |  | Where this twist comes from (game or unit names, reference only). |
 | `variants[].overrides` | group |  |  | Generator rules that differ for this variant. |
-| `variants[].overrides.classes` | list of terms |  | `classes` | Terms from *Unit classes*. |
+| `variants[].overrides.classes` | list of terms |  | `classes` | Replaces the base generator's classes for this variant. |
+| `variants[].overrides.class_rarity` | map |  |  | Replaces the base generator's class_rarity for this variant. Every key must be in the variant's classes (its own, or the base generator's). Without it, the base generator's class_rarity applies to whichever of its classes the variant keeps. |
 | `variants[].overrides.min_tier` | term |  | `tiers` | A term from *Tier bands*. |
 | `variants[].overrides.kinds` | list of terms |  | `ability-kinds` | Terms from *Ability kinds*. |
 | `variants[].overrides.requires` | list of lists |  |  | Conditions as groups of typed links: every group must hold, and one link in a group is enough. |
@@ -244,7 +250,8 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `variants[].overrides.counters` | list of link + reasons |  |  | Replaces the base generator's counters for this variant. |
 | `variants[].overrides.countered_by` | list of link + reasons |  |  | Replaces the base generator's countered_by for this variant. |
 | `generator` | group | when status is accepted |  | Rules for the generator. Links in requires, excludes, implies, adds_strengths and adds_weaknesses describe the card itself; counters and countered_by describe the enemy. |
-| `generator.classes` | list of terms (min 1) | yes | `classes` | Classes that can roll this pattern. |
+| `generator.classes` | list of terms (min 1) | yes | `classes` | Classes that can roll this pattern: every class it is physically possible for. A class left out is a hard ban. |
+| `generator.class_rarity` | map |  |  | Rarity of this pattern for particular classes, used instead of 'rarity' when the card is of that class; classes not listed use 'rarity'. Every key must be in 'classes'. Cross-overs that are possible but unusual for a class are listed here as rare (or uncommon). |
 | `generator.min_tier` | term | yes | `tiers` | A term from *Tier bands*. |
 | `generator.kinds` | list of terms (min 1) | yes | `ability-kinds` | Ability kinds this pattern can take on a card. |
 | `generator.slot` | one of `signature`, `extra`, `any` | yes |  | signature = only as the card's signature ability; extra = only as an extra ability; any = either. |
@@ -337,7 +344,7 @@ One generated unit concept (Phase 2). Example: [docs/examples/concept-card.examp
 | `parts.armament.secondary.traits` | list of terms (max 3) | yes | `weapon-traits` | Terms from *Weapon traits*. |
 | `parts.armament.secondary.seat` | term | yes | `seat-roles` | A term from *Seat roles*. |
 | `parts.armament.conditional[]` | list of groups (max 4) | yes |  | Weapons that depend on a passenger, a kill or a mode. Needed when a weapon's family is 'adaptive'. |
-| `parts.armament.conditional[].when` | typed link | yes |  | Typed link `<kind>:<id>`, e.g. `role:anti-air`, `size:<=small` or `hits:aircraft`. A link always describes a unit. In strengths, weaknesses, requires, excludes and implies it describes this unit; in counters, the unit this one beats; in countered_by, the unit that beats this one; in combos, the teammate it works well with. Kinds are listed under Conventions in docs/fields.md; ranked kinds accept `<=` and `>=`. |
+| `parts.armament.conditional[].when` | typed link | yes |  | Typed link `<kind>:<id>`, e.g. `role:anti-air`, `size:<=small` or `hits:high-air`. A link always describes a unit. In strengths, weaknesses, requires, excludes and implies it describes this unit; in counters, the unit this one beats; in countered_by, the unit that beats this one; in combos, the teammate it works well with. Kinds are listed under Conventions in docs/fields.md; ranked kinds accept `<=` and `>=`. |
 | `parts.armament.conditional[].weapon` | group | yes |  |  |
 | `parts.armament.conditional[].weapon.family` | term | yes | `weapon-families` | A term from *Weapon families*. |
 | `parts.armament.conditional[].weapon.damage` | term or empty | yes | `damage-types` | A term from *Damage types*. |
@@ -351,6 +358,9 @@ One generated unit concept (Phase 2). Example: [docs/examples/concept-card.examp
 | `parts.armour` | group | yes |  |  |
 | `parts.armour.class` | term | yes | `armour-classes` | A term from *Armour classes*. |
 | `parts.armour.models` | list of terms (min 1, max 2) | yes | `armour-models` | Terms from *Armour models*. |
+| `parts.sensors` | group | yes |  | How far it sees through the fog of war, and its always-on sensor traits. |
+| `parts.sensors.sight` | term | yes | `sight-bands` | A term from *Sight bands*. |
+| `parts.sensors.traits` | list of terms (max 2) | yes | `sensor-traits` | Terms from *Sensor traits*. |
 | `parts.crew` | group | yes |  |  |
 | `parts.crew.model` | term | yes | `crew-models` | A term from *Crew models*. |
 | `parts.crew.solo_fallback` | term or empty | yes | `solo-fallback` | Null for single-seat models. |
@@ -463,13 +473,13 @@ One entry in the games registry, `data/games.json`. Schema: `schemas/game.schema
 | `developer` | text |  |  |  |
 | `franchise` | text | yes |  |  |
 | `control` | one of `commanded`, `piloted`, `both` | yes |  | commanded = the player orders units (RTS); piloted = the player is the unit (shooter); both. |
-| `research_bucket` | id | yes |  | The research agent batch this game belongs to. |
+| `research_bucket` | id | yes |  | The research batch this game belongs to: r1 Red Alert; r2 Tiberium series and Renegade; r3 Generals, Tempest Rising, Iron Harvest; r4 Company of Heroes, World in Conflict, Wargame, Broken Arrow; r5 Supreme Commander, Planetary Annihilation, StarCraft II, Halo Wars 2, Dawn of War; r6 shooters and hybrids (Battlefield, PlanetSide 2, Foxhole, WARDOGS, Arc Raiders, MechWarrior/BattleTech). |
 | `version_researched` | text |  |  | Patch, edition or date the research describes. |
 | `expansions[]` | list of groups |  |  |  |
 | `expansions[].id` | id | yes |  | Expansion id, e.g. 'ra3-uprising'. |
 | `expansions[].title` | text | yes |  |  |
 | `expansions[].year` | integer | yes |  |  |
-| `factions[]` | list of groups (min 1) | yes |  | Playable sides. Use the reserved id 'shared' for units every side can field or games without factions. A unit belongs to the most general faction that fields it. |
+| `factions[]` | list of groups (min 1) | yes |  | Sides, including AI-only enemies that are researched as units. Use the reserved id 'shared' for units every side can field or games without factions. A unit belongs to the most general faction that fields it. |
 | `factions[].id` | id | yes |  | Faction id, e.g. 'soviet'. |
 | `factions[].name` | text | yes |  |  |
 | `factions[].parent` | id |  |  | For subfactions (e.g. a general or splinter group): the main faction id. |
@@ -481,12 +491,13 @@ One entry in the games registry, `data/games.json`. Schema: `schemas/game.schema
 | `tier_map[].gate` | text | yes |  | Building, research or level that unlocks units, in plain words. |
 | `tier_map[].band` | term | yes | `tiers` | A term from *Tier bands*. |
 | `tier_map[].faction` | id |  |  | Faction id from this game's factions, e.g. 'soviet'. |
-| `cost_thresholds` | group |  |  | Lowest price for each cost band above 'very low', in the game's currency. |
+| `cost_thresholds` | group |  |  | Lowest price for each cost band above 'very low', in the game's currency. Method: pick an anchor, the price of the game's standard main battle tank (or its main line combat unit if it has no tanks); the thresholds are about 0.5, 0.9, 1.4 and 2 times the anchor, rounded. 'basis' names the anchor. |
 | `cost_thresholds.currency` | text | yes |  |  |
 | `cost_thresholds.low` | number | yes |  |  |
 | `cost_thresholds.medium` | number | yes |  |  |
 | `cost_thresholds.high` | number | yes |  |  |
 | `cost_thresholds.very-high` | number | yes |  |  |
+| `cost_thresholds.basis` | text | yes |  | The anchor unit and its price, and how a multi-resource cost is turned into one number. |
 | `speed_reference` | text | yes |  | The unit whose speed counts as 1.0 for speed bands, usually the basic rifle infantry. |
 | `damage_map` | map |  |  | The game's own damage categories mapped to our damage types. |
 | `armour_map` | map |  |  | The game's own armour categories mapped to our armour classes. |
@@ -539,7 +550,8 @@ One fixed word list, `data/vocab/<list>.json`, with the fields each term may car
 | `terms[].rarity` | term |  | `rarity` | How readily the generator offers this term (see the rarity list). |
 | `terms[].source_only` | boolean |  |  | Recorded for research; never rolled by the generator. |
 | `terms[].rank` | integer |  |  | Order on a scale (speed, size, cost, armour...). |
-| `terms[].classes` | list of terms |  | `classes` | Unit classes allowed to use this term. This is how 'aircraft don't get tracks' is enforced. |
+| `terms[].classes` | list of terms |  | `classes` | The unit classes this term is physically possible for. A class left out is a hard ban: the generator never rolls the term for it. This is how 'aircraft don't get tracks' is enforced. A class for which the term is possible but unusual stays in this list and gets a rarity in class_rarity. |
+| `terms[].class_rarity` | map |  |  | Rarity of this term for particular classes, used instead of 'rarity' when the unit is of that class; classes not listed use 'rarity'. Every key must be in 'classes'. This is how cross-overs such as a flamethrower on an aircraft stay rare and appear only at high spice. A faction's one-step bonus for favoured parts does not apply to it. |
 | `terms[].allowed` | map |  |  | Whitelist of terms this one may combine with on the same unit, keyed by vocabulary id. Checked both ways. |
 | `terms[].excluded` | map |  |  | Terms this one may not combine with on the same unit, keyed by vocabulary id. |
 | `terms[].requires` | list of lists |  |  | What the unit must also have for this term to make sense. |

@@ -5,7 +5,7 @@
   "description": "Who operates the unit, and how many players that takes. Passenger seats are counted separately, so any crew model can also carry passengers. That covers the brief's 'transport with passengers' (shown on the card whenever there are passenger seats) and IFVs that have both a gunner and passengers.",
   "group": "core",
   "status": "draft",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "terms": [
     {
       "id": "solo",
@@ -29,9 +29,15 @@
       "seats": ["driver", "gunner"],
       "min_players": 1,
       "max_players": 2,
-      "classes": ["vehicle", "walker", "hover", "aircraft"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft"],
+      "class_rarity": {
+        "infantry": "rare"
+      },
       "allowed": {
         "sizes": ["medium", "large", "huge"]
+      },
+      "excluded": {
+        "bodies": ["power-suit"]
       },
       "examples": [
         "Battlefield and PlanetSide 2 battle tanks: the driver fires the main gun, a second seat mans a top gun",
@@ -80,7 +86,17 @@
       "seats": ["driver"],
       "min_players": 1,
       "max_players": 1,
-      "classes": ["drone"]
+      "classes": ["vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "vehicle": "rare",
+        "walker": "rare",
+        "hover": "rare",
+        "aircraft": "rare"
+      },
+      "excluded": {
+        "on-death": ["pilot-eject", "bail-out"],
+        "nature": ["organic", "crewed-machine"]
+      }
     }
   ]
 }
