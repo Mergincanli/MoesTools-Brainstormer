@@ -1,0 +1,687 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "concept-card.schema.json",
+  "title": "Concept card (draft for Phase 2)",
+  "description": "One generated unit concept. Reproduction key = generator.version + generator.data_version + seed + spice + inputs + the values of the locked parts. Each field draws from its own random stream (seed + field name), so locking one field never changes the others. Matchups, balance and text are always recomputed from the parts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "schema_version",
+    "generator",
+    "seed",
+    "spice",
+    "inputs",
+    "locks",
+    "parts",
+    "matchups",
+    "text",
+    "inspiration",
+    "balance"
+  ],
+  "properties": {
+    "id": {
+      "description": "Hash of the reproduction key, so the same roll always has the same id.",
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "data_version"],
+      "properties": {
+        "version": {
+          "description": "Generator code version.",
+          "type": "string"
+        },
+        "data_version": {
+          "description": "Content hash of the vocabularies and patterns used (data/manifest.json).",
+          "type": "string"
+        }
+      }
+    },
+    "seed": {
+      "description": "Shareable seed string.",
+      "type": "string",
+      "minLength": 1
+    },
+    "spice": {
+      "description": "1 = grounded (common parts, on-flavour) ... 5 = wild (rare cross-overs).",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "inputs": {
+      "description": "What the user picked before rolling. Null = let the generator choose.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class", "tier", "flavour", "role"],
+      "properties": {
+        "class": {
+          "type": ["string", "null"],
+          "x-vocab": "classes"
+        },
+        "tier": {
+          "type": ["string", "null"],
+          "x-vocab": "tiers"
+        },
+        "flavour": {
+          "type": ["string", "null"],
+          "x-vocab": "faction-flavours"
+        },
+        "role": {
+          "type": ["string", "null"],
+          "x-vocab": "roles"
+        }
+      }
+    },
+    "locks": {
+      "description": "Parts kept when rerolling.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/lockable"
+      }
+    },
+    "parts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "class",
+        "tier",
+        "flavour",
+        "nature",
+        "availability",
+        "roles",
+        "mobility",
+        "body",
+        "armament",
+        "armour",
+        "crew",
+        "signature",
+        "abilities",
+        "on_death"
+      ],
+      "properties": {
+        "class": {
+          "type": "string",
+          "x-vocab": "classes"
+        },
+        "tier": {
+          "type": "string",
+          "x-vocab": "tiers"
+        },
+        "flavour": {
+          "type": "string",
+          "x-vocab": "faction-flavours"
+        },
+        "nature": {
+          "type": "string",
+          "x-vocab": "nature"
+        },
+        "availability": {
+          "type": "string",
+          "x-vocab": "availability"
+        },
+        "roles": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["primary", "secondary"],
+          "properties": {
+            "primary": {
+              "type": "string",
+              "x-vocab": "roles"
+            },
+            "secondary": {
+              "type": "array",
+              "maxItems": 2,
+              "items": {
+                "type": "string",
+                "x-vocab": "roles"
+              }
+            }
+          }
+        },
+        "mobility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["base", "handling", "traits", "speed"],
+          "properties": {
+            "base": {
+              "type": "string",
+              "x-vocab": "mobility"
+            },
+            "handling": {
+              "type": "string",
+              "x-vocab": "handling"
+            },
+            "traits": {
+              "type": "array",
+              "maxItems": 2,
+              "items": {
+                "type": "string",
+                "x-vocab": "mobility-traits"
+              }
+            },
+            "speed": {
+              "type": "string",
+              "x-vocab": "speed-bands"
+            }
+          }
+        },
+        "body": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["plan", "size", "count"],
+          "properties": {
+            "plan": {
+              "type": "string",
+              "x-vocab": "bodies"
+            },
+            "size": {
+              "type": "string",
+              "x-vocab": "sizes"
+            },
+            "count": {
+              "description": "1 unless the crew model is squad (then 2-5).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            }
+          }
+        },
+        "armament": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["primary", "secondary", "conditional"],
+          "properties": {
+            "primary": {
+              "description": "Null for an unarmed unit (its signature must then be support, transport, infiltration, summon or control).",
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/weaponPart"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "secondary": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/weaponPart"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "conditional": {
+              "description": "Weapons that depend on a passenger, a kill or a mode. Needed when a weapon's family is 'adaptive'.",
+              "type": "array",
+              "maxItems": 4,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["when", "weapon"],
+                "properties": {
+                  "when": {
+                    "$ref": "common.schema.json#/$defs/ref"
+                  },
+                  "weapon": {
+                    "$ref": "#/$defs/weaponPart"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "armour": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["class", "models"],
+          "properties": {
+            "class": {
+              "type": "string",
+              "x-vocab": "armour-classes"
+            },
+            "models": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2,
+              "items": {
+                "type": "string",
+                "x-vocab": "armour-models"
+              }
+            }
+          }
+        },
+        "crew": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["model", "solo_fallback", "passengers"],
+          "properties": {
+            "model": {
+              "type": "string",
+              "x-vocab": "crew-models"
+            },
+            "solo_fallback": {
+              "description": "Null for single-seat models.",
+              "type": ["string", "null"],
+              "x-vocab": "solo-fallback"
+            },
+            "passengers": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["seats", "kind"],
+                  "properties": {
+                    "seats": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 8
+                    },
+                    "kind": {
+                      "type": "string",
+                      "x-vocab": "seat-roles"
+                    }
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "signature": {
+          "$ref": "#/$defs/abilityPart"
+        },
+        "abilities": {
+          "description": "Extra abilities. Keys (signature included) fit the tier's budget.",
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/abilityPart"
+          }
+        },
+        "modes": {
+          "description": "A second form from a transform or deploy pattern.",
+          "type": "array",
+          "maxItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["via", "class", "mobility"],
+            "properties": {
+              "via": {
+                "$ref": "common.schema.json#/$defs/slug"
+              },
+              "class": {
+                "type": "string",
+                "x-vocab": "classes"
+              },
+              "mobility": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["base", "handling", "speed"],
+                "properties": {
+                  "base": {
+                    "type": "string",
+                    "x-vocab": "mobility"
+                  },
+                  "handling": {
+                    "type": "string",
+                    "x-vocab": "handling"
+                  },
+                  "speed": {
+                    "type": "string",
+                    "x-vocab": "speed-bands"
+                  }
+                }
+              },
+              "armament": {
+                "type": "array",
+                "maxItems": 2,
+                "items": {
+                  "$ref": "#/$defs/weaponPart"
+                }
+              }
+            }
+          }
+        },
+        "resource": {
+          "type": ["string", "null"],
+          "x-vocab": "resources"
+        },
+        "on_death": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "type": "string",
+            "x-vocab": "on-death"
+          }
+        }
+      }
+    },
+    "matchups": {
+      "description": "Every strength is paired with a weakness; every card has at least one counter that some valid card can satisfy. Never stores unit: links (real names stay in inspiration).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strengths", "weaknesses", "countered_by", "counters", "counterplay"],
+      "properties": {
+        "strengths": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["ref", "why", "paired_with"],
+            "properties": {
+              "ref": {
+                "$ref": "common.schema.json#/$defs/ref"
+              },
+              "why": {
+                "type": "string"
+              },
+              "paired_with": {
+                "description": "Index of the weakness that balances this strength.",
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "weaknesses": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "common.schema.json#/$defs/relation"
+          }
+        },
+        "countered_by": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "common.schema.json#/$defs/relation"
+          }
+        },
+        "counters": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "common.schema.json#/$defs/relation"
+          }
+        },
+        "counterplay": {
+          "description": "What the player on the receiving end can do right now (from the patterns).",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "text": {
+      "description": "Built from templates (no AI in v1). Hand edits on the board overwrite these.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "pitch", "signature", "team_play_hook", "how_it_plays"],
+      "properties": {
+        "name": {
+          "description": "Original working name; checked against every real unit name in the database.",
+          "type": "string"
+        },
+        "pitch": {
+          "description": "One line.",
+          "type": "string",
+          "maxLength": 160
+        },
+        "signature": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "effect"],
+          "properties": {
+            "name": {
+              "description": "Original ability name.",
+              "type": "string"
+            },
+            "effect": {
+              "description": "One line.",
+              "type": "string"
+            }
+          }
+        },
+        "team_play_hook": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["hook", "text"],
+          "properties": {
+            "hook": {
+              "type": "string",
+              "x-vocab": "team-play-hooks"
+            },
+            "text": {
+              "type": "string"
+            }
+          }
+        },
+        "how_it_plays": {
+          "description": "How it plays as a player.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["as_user", "as_target", "teammates", "controls", "tells"],
+          "properties": {
+            "as_user": {
+              "type": "string"
+            },
+            "as_target": {
+              "description": "What fighting it feels like, and the escape.",
+              "type": "string"
+            },
+            "teammates": {
+              "type": "string"
+            },
+            "controls": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["seat", "input", "action"],
+                "properties": {
+                  "seat": {
+                    "type": "string",
+                    "x-vocab": "seat-roles"
+                  },
+                  "input": {
+                    "description": "e.g. LMB, RMB, Q, E, Shift, Space.",
+                    "type": "string"
+                  },
+                  "action": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "tells": {
+              "description": "How enemies read it from above.",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "inspiration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["patterns", "source_units"],
+      "properties": {
+        "patterns": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/slug"
+          }
+        },
+        "source_units": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/unitId"
+          }
+        },
+        "remix_of": {
+          "description": "Set when the card came from Remix.",
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "$ref": "common.schema.json#/$defs/ref"
+          }
+        }
+      }
+    },
+    "balance": {
+      "description": "Hints, not verdicts.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cost_band", "power", "complexity", "keys", "flags"],
+      "properties": {
+        "cost_band": {
+          "type": "string",
+          "x-vocab": "cost-bands"
+        },
+        "power": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "complexity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "keys": {
+          "description": "Buttons the card uses, counted against the tier budget.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "flags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "x-vocab": "balance-flags"
+          }
+        }
+      }
+    },
+    "created_at": {
+      "description": "Not part of the reproduction key.",
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "lockable": {
+      "enum": [
+        "class",
+        "tier",
+        "flavour",
+        "name",
+        "roles",
+        "mobility",
+        "speed",
+        "body",
+        "size",
+        "primary",
+        "secondary",
+        "conditional",
+        "armour",
+        "crew",
+        "signature",
+        "abilities",
+        "modes",
+        "resource",
+        "on_death"
+      ]
+    },
+    "weaponPart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "damage", "mount", "delivery", "range", "can_target", "traits", "seat"],
+      "properties": {
+        "family": {
+          "type": "string",
+          "x-vocab": "weapon-families"
+        },
+        "damage": {
+          "type": ["string", "null"],
+          "x-vocab": "damage-types"
+        },
+        "mount": {
+          "type": "string",
+          "x-vocab": "aim-models"
+        },
+        "delivery": {
+          "type": ["string", "null"],
+          "x-vocab": "weapon-delivery"
+        },
+        "range": {
+          "type": ["string", "null"],
+          "x-vocab": "range-bands"
+        },
+        "can_target": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "x-vocab": "target-types"
+          }
+        },
+        "affects": {
+          "enum": ["enemies", "allies", "both"]
+        },
+        "traits": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "x-vocab": "weapon-traits"
+          }
+        },
+        "seat": {
+          "type": "string",
+          "x-vocab": "seat-roles"
+        }
+      }
+    },
+    "abilityPart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pattern", "variant", "kind", "seat", "cooldown"],
+      "properties": {
+        "pattern": {
+          "$ref": "common.schema.json#/$defs/slug"
+        },
+        "variant": {
+          "type": ["string", "null"]
+        },
+        "kind": {
+          "type": "string",
+          "x-vocab": "ability-kinds"
+        },
+        "seat": {
+          "type": "string",
+          "x-vocab": "seat-roles"
+        },
+        "cooldown": {
+          "description": "Null for passive and triggered abilities.",
+          "type": ["string", "null"],
+          "x-vocab": "cooldown-bands"
+        }
+      }
+    }
+  }
+}

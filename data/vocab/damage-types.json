@@ -1,0 +1,105 @@
+{
+  "$schema": "../../schemas/vocabulary.schema.json",
+  "id": "damage-types",
+  "label": "Damage types",
+  "description": "What a hit does. 'Strong vs', 'weak vs' and 'no effect on' are typed links to what the target is (armour class, nature, armour model, target type). They drive the generator's counter hints and are relative, not numbers.",
+  "group": "core",
+  "status": "draft",
+  "version": "0.3.0",
+  "terms": [
+    {
+      "id": "kinetic",
+      "label": "Kinetic",
+      "description": "Bullets and slugs.",
+      "strong_vs": ["armour-class:unarmoured", "armour-class:light"],
+      "weak_vs": ["armour-class:heavy", "armour-class:super-heavy"]
+    },
+    {
+      "id": "armour-piercing",
+      "label": "Armour-piercing",
+      "description": "Penetrating shells and anti-tank warheads.",
+      "strong_vs": ["armour-class:medium", "armour-class:heavy", "armour-class:super-heavy"],
+      "weak_vs": ["armour-class:unarmoured"]
+    },
+    {
+      "id": "explosive",
+      "label": "Explosive",
+      "description": "Blast and shrapnel with an area effect. Good against groups and structures.",
+      "strong_vs": ["armour-class:unarmoured", "armour-class:light", "target:structure"],
+      "weak_vs": ["armour-class:super-heavy"]
+    },
+    {
+      "id": "fire",
+      "label": "Fire",
+      "description": "Burns over time and can leave burning ground.",
+      "strong_vs": ["nature:organic"],
+      "weak_vs": ["armour-class:heavy", "armour-class:super-heavy"]
+    },
+    {
+      "id": "electric",
+      "label": "Electric",
+      "description": "Shocks that can chain between targets; especially hard on drones and electronics.",
+      "strong_vs": ["nature:uncrewed-machine", "armour-class:light", "armour-class:medium"]
+    },
+    {
+      "id": "energy",
+      "label": "Energy",
+      "description": "Lasers, plasma and prism light. Precise and good at burning through plating.",
+      "strong_vs": ["armour-class:medium", "armour-class:heavy"],
+      "weak_vs": ["armour-class:unarmoured"]
+    },
+    {
+      "id": "cryo",
+      "label": "Cryo",
+      "description": "Little damage by itself: it slows, then freezes. A frozen target takes heavy bonus damage from the next hit (shatter), so it is a setup for teammates.",
+      "strong_vs": [],
+      "weak_vs": ["armour-class:super-heavy"]
+    },
+    {
+      "id": "sonic",
+      "label": "Sonic",
+      "description": "Concussive waves that pass through targets and push them back.",
+      "strong_vs": ["nature:organic", "target:structure"],
+      "weak_vs": ["armour-class:super-heavy"]
+    },
+    {
+      "id": "toxic",
+      "label": "Toxic",
+      "description": "Gas, acid, radiation or nanites. Lingers as a zone; sealed vehicles resist it.",
+      "strong_vs": ["nature:organic"],
+      "weak_vs": ["nature:crewed-machine"],
+      "immune": ["nature:uncrewed-machine"]
+    },
+    {
+      "id": "emp",
+      "label": "EMP",
+      "description": "Almost no damage: it shuts down vehicles, drones and energy shields for a time.",
+      "strong_vs": [
+        "nature:uncrewed-machine",
+        "nature:crewed-machine",
+        "armour-model:regen-shield",
+        "armour-model:charge-shield"
+      ],
+      "immune": ["nature:organic"]
+    },
+    {
+      "id": "melee",
+      "label": "Melee",
+      "description": "Blades, claws and bites up close.",
+      "strong_vs": ["armour-class:unarmoured", "armour-class:light"],
+      "weak_vs": ["armour-class:heavy", "armour-class:super-heavy"]
+    },
+    {
+      "id": "psionic",
+      "label": "Psionic",
+      "description": "Affects minds: control, confusion, fear.",
+      "strong_vs": ["nature:organic"],
+      "immune": ["nature:uncrewed-machine"]
+    },
+    {
+      "id": "repair",
+      "label": "Repair",
+      "description": "Restores health to friendly units instead of harming enemies."
+    }
+  ]
+}

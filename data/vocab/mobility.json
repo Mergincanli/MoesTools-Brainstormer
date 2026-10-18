@@ -1,0 +1,149 @@
+{
+  "$schema": "../../schemas/vocabulary.schema.json",
+  "id": "mobility",
+  "label": "Mobility types",
+  "description": "How the unit moves. Each type lists the classes that may use it (this is how 'aircraft don't get tracks' is enforced), its default handling, the speeds that make sense, and what kind of target it is.",
+  "group": "core",
+  "status": "draft",
+  "version": "0.3.0",
+  "terms": [
+    {
+      "id": "foot",
+      "label": "On foot",
+      "description": "Walks and runs. Can take cover and enter buildings and vehicles.",
+      "classes": ["infantry"],
+      "rarity": "common",
+      "default_handling": "strafe",
+      "target_type": "infantry",
+      "allowed": {
+        "speed-bands": ["slow", "medium", "fast"]
+      }
+    },
+    {
+      "id": "jetpack",
+      "label": "Jetpack / wings",
+      "description": "Personal flight at low height on a jetpack or wings. Hops over walls and hovers; counts as airborne while flying.",
+      "classes": ["infantry"],
+      "rarity": "uncommon",
+      "default_handling": "strafe",
+      "target_type": "aircraft",
+      "allowed": {
+        "speed-bands": ["medium", "fast"]
+      }
+    },
+    {
+      "id": "wheels",
+      "label": "Wheels",
+      "description": "Fast on roads and open ground, turns in arcs, struggles on rough terrain.",
+      "classes": ["vehicle", "drone"],
+      "rarity": "common",
+      "default_handling": "steer",
+      "target_type": "ground-vehicle",
+      "allowed": {
+        "speed-bands": ["medium", "fast", "very-fast"]
+      }
+    },
+    {
+      "id": "tracks",
+      "label": "Tracks",
+      "description": "Slower, but turns on the spot and handles rough ground.",
+      "classes": ["vehicle", "drone"],
+      "rarity": "common",
+      "default_handling": "pivot",
+      "target_type": "ground-vehicle",
+      "allowed": {
+        "speed-bands": ["very-slow", "slow", "medium", "fast"]
+      }
+    },
+    {
+      "id": "legs-biped",
+      "label": "Two legs",
+      "description": "Walks on two legs, stepping over low walls and swaying as it moves. Small ones are nimble; big ones are slow and imposing.",
+      "classes": ["walker"],
+      "rarity": "common",
+      "default_handling": "pivot",
+      "target_type": "ground-vehicle",
+      "allowed": {
+        "speed-bands": ["very-slow", "slow", "medium", "fast"]
+      }
+    },
+    {
+      "id": "legs-multi",
+      "label": "Many legs",
+      "description": "Three or more legs, like a spider or a four-legged walker. Stable, scuttles over rubble and can straddle obstacles.",
+      "classes": ["walker", "drone"],
+      "rarity": "uncommon",
+      "default_handling": "pivot",
+      "target_type": "ground-vehicle",
+      "allowed": {
+        "speed-bands": ["slow", "medium", "fast", "very-fast"]
+      }
+    },
+    {
+      "id": "hover",
+      "label": "Hover",
+      "description": "Air cushion or anti-grav. Crosses land and water, drifts in turns, avoids steep slopes.",
+      "classes": ["hover", "drone"],
+      "rarity": "common",
+      "default_handling": "drift",
+      "target_type": "ground-vehicle",
+      "allowed": {
+        "speed-bands": ["medium", "fast", "very-fast"]
+      },
+      "notes": "Only for ground-level skimmers. If only anti-air can hit it and it flies over cliffs, use hovering flight instead."
+    },
+    {
+      "id": "rotor",
+      "label": "Hovering flight",
+      "description": "Rotor, VTOL or anti-grav flight. Can hover in place and strafe; flies low enough for most anti-air and some ground weapons to hit it.",
+      "classes": ["aircraft", "drone"],
+      "rarity": "common",
+      "default_handling": "strafe",
+      "target_type": "aircraft",
+      "allowed": {
+        "speed-bands": ["medium", "fast", "very-fast"]
+      }
+    },
+    {
+      "id": "jet",
+      "label": "Jet",
+      "description": "Fixed-wing flight. Very fast, must keep moving and attacks in passes.",
+      "classes": ["aircraft"],
+      "rarity": "uncommon",
+      "default_handling": "forward-only",
+      "target_type": "aircraft",
+      "allowed": {
+        "speed-bands": ["fast", "very-fast"]
+      }
+    },
+    {
+      "id": "airship",
+      "label": "Airship",
+      "description": "Lighter-than-air flight. Very slow and very tough; a looming, visible threat.",
+      "classes": ["aircraft"],
+      "rarity": "rare",
+      "default_handling": "drift",
+      "target_type": "aircraft",
+      "min_tier": "t3",
+      "allowed": {
+        "speed-bands": ["very-slow", "slow"]
+      }
+    },
+    {
+      "id": "naval-surface",
+      "label": "Ship hull",
+      "description": "Floats on the water surface. Research only.",
+      "classes": ["naval"],
+      "source_only": true,
+      "target_type": "naval"
+    },
+    {
+      "id": "naval-submerged",
+      "label": "Submarine",
+      "description": "Moves underwater, surfacing to attack or be seen. Research only.",
+      "classes": ["naval"],
+      "source_only": true,
+      "target_type": "naval"
+    }
+  ]
+}

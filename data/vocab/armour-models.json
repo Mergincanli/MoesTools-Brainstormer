@@ -1,0 +1,186 @@
+{
+  "$schema": "../../schemas/vocabulary.schema.json",
+  "id": "armour-models",
+  "label": "Armour models",
+  "description": "How the unit absorbs damage. A card has one or two; a researched unit up to three. Shields you switch on, barriers that protect allies, invulnerability and 'draw fire' are abilities, so they live in patterns instead.",
+  "group": "supporting",
+  "status": "draft",
+  "version": "0.3.0",
+  "terms": [
+    {
+      "id": "flat-pool",
+      "label": "Single health bar",
+      "description": "One health bar; every hit subtracts. The easiest to read. Used only when no other model applies.",
+      "rarity": "common",
+      "examples": [
+        "Red Alert 3: one health value per unit, with damage first scaled by the unit's armour type",
+        "Iron Harvest: fixed damage per armour class comes straight off health"
+      ]
+    },
+    {
+      "id": "directional",
+      "label": "Directional armour",
+      "description": "The front is tougher than the sides and rear, so flanking pays off. Reads well from above if facing is obvious.",
+      "rarity": "common",
+      "examples": [
+        "Company of Heroes: rear hits multiply penetration",
+        "Broken Arrow: separate front, side, rear and top armour; tanks have almost none at the rear",
+        "PlanetSide 2: damage scales with the side the attacker stands on",
+        "Red Alert 3: mild, 5-10% extra from the side and rear"
+      ]
+    },
+    {
+      "id": "penetration-check",
+      "label": "Penetration check",
+      "description": "Each hit is checked against the armour, and depending on angle or the weapon's penetration it may bounce for little or no damage.",
+      "rarity": "uncommon",
+      "allowed": {
+        "armour-classes": ["medium", "heavy", "super-heavy"]
+      },
+      "examples": [
+        "Company of Heroes: every hit rolls its penetration chance and bounces on a failure",
+        "Foxhole: hidden armour points; penetration chance rises as armour wears down",
+        "Wargame and Broken Arrow: weapons below the target's armour value do little or won't fire"
+      ]
+    },
+    {
+      "id": "zonal",
+      "label": "Zonal damage",
+      "description": "Hits land on parts such as tracks, turret, engine, legs or a weapon, which can break and switch off functions before the unit dies.",
+      "rarity": "uncommon",
+      "excluded": {
+        "sizes": ["tiny", "small"]
+      },
+      "examples": [
+        "MechWarrior and BattleTech: head, arm, leg and torso locations with their own armour",
+        "Foxhole: tracks, turret and fuel can be disabled by hits there",
+        "Company of Heroes: critical hits damage engines or kill gunners",
+        "Battlefield 4: heavy hits cause mobility kills"
+      ]
+    },
+    {
+      "id": "crew-casualties",
+      "label": "Crew casualties",
+      "description": "Hits can knock out seats: in a multi-seat vehicle a player can be ejected or killed while the vehicle survives.",
+      "rarity": "rare",
+      "excluded": {
+        "crew-models": ["solo", "squad", "remote"]
+      },
+      "examples": [
+        "Company of Heroes: each soldier and gun crewman is tracked; a gun without crew can be captured",
+        "Foxhole: exposed seats leave their occupants open to fire",
+        "Wargame: crew critical hits disable specific systems"
+      ]
+    },
+    {
+      "id": "regen-shield",
+      "label": "Recharging shield",
+      "description": "A shield layer over health soaks damage and recharges after a short pause without being hit.",
+      "rarity": "uncommon",
+      "examples": [
+        "Halo: shields refill a few seconds after the last hit",
+        "StarCraft II: Protoss shields regenerate out of combat",
+        "PlanetSide 2: every soldier has a regenerating personal shield"
+      ]
+    },
+    {
+      "id": "charge-shield",
+      "label": "Charged shield",
+      "description": "A shield with its own charge that reduces incoming damage while it lasts; once drained, it has to be recharged with an item or at a station.",
+      "rarity": "uncommon",
+      "examples": [
+        "ARC Raiders: light, medium and heavy shields take roughly half of each hit while charged; heavier ones slow you; refilled with recharger items or power cells from destroyed machines"
+      ]
+    },
+    {
+      "id": "ablative-plates",
+      "label": "Ablative plates",
+      "description": "Armour plates soak hits and break off one by one, exposing the hull.",
+      "rarity": "uncommon",
+      "excluded": {
+        "armour-classes": ["unarmoured"]
+      },
+      "examples": [
+        "Battlefield 3: reactive armour panels cancel the first anti-vehicle hit on each side",
+        "ARC Raiders: a heavy round can blow armour plates off a drone",
+        "BattleTech: bolt-on modular armour soaks damage first"
+      ]
+    },
+    {
+      "id": "damage-reduction",
+      "label": "Damage reduction",
+      "description": "Armour takes a fixed amount off every hit, so small hits do little or nothing.",
+      "rarity": "uncommon",
+      "allowed": {
+        "armour-classes": ["medium", "heavy", "super-heavy"]
+      },
+      "examples": [
+        "StarCraft II: armour takes a fixed amount off every hit, minimum 1",
+        "PlanetSide 2: main battle tanks ignore small arms completely"
+      ]
+    },
+    {
+      "id": "self-repair",
+      "label": "Self-repair",
+      "description": "Slowly regains health on its own, often only out of combat.",
+      "rarity": "common",
+      "examples": [
+        "Red Alert 3: top-rank and some heavy vehicles heal themselves",
+        "PlanetSide 2: an auto-repair module heals vehicles out of combat",
+        "Battlefield 3: vehicles slowly regain armour"
+      ]
+    },
+    {
+      "id": "evasive",
+      "label": "Evasive",
+      "description": "Survives by dodging: the game gives it an explicit evasion mechanic (a dodge roll, a miss chance), not just a small size.",
+      "rarity": "common",
+      "allowed": {
+        "sizes": ["tiny", "small", "medium"],
+        "armour-classes": ["unarmoured", "light", "medium"]
+      }
+    },
+    {
+      "id": "downed-revive",
+      "label": "Downed, revivable",
+      "description": "At zero health it goes down instead of dying: it can crawl, and a teammate can revive it or an enemy finish it.",
+      "rarity": "uncommon",
+      "classes": ["infantry"]
+    },
+    {
+      "id": "weak-point",
+      "label": "Weak point",
+      "description": "An exposed weak spot, such as a vent, reactor or rear hatch, takes extra damage.",
+      "rarity": "uncommon",
+      "examples": [
+        "ARC Raiders machines: shoot the joints and rear cylinders",
+        "Iron Harvest: many mechs take double damage at the back"
+      ]
+    },
+    {
+      "id": "interceptor",
+      "label": "Interceptor",
+      "description": "An active protection system shoots down incoming missiles and rockets; it has few charges and must reload, so a volley can overwhelm it.",
+      "rarity": "rare",
+      "classes": ["vehicle", "walker", "hover"],
+      "examples": [
+        "Broken Arrow: active protection stops HEAT rounds fully, kinetic ones partly, then reloads",
+        "Battlefield 4: active protection detonates incoming missiles for a moment, then recharges"
+      ]
+    },
+    {
+      "id": "critical-burn",
+      "label": "Critical burn",
+      "description": "Below a health threshold it is disabled and burning, and dies unless a teammate repairs it in time.",
+      "rarity": "uncommon",
+      "excluded": {
+        "classes": ["infantry"]
+      },
+      "examples": [
+        "Battlefield: vehicles below a threshold are disabled and burn out unless repaired",
+        "PlanetSide 2: vehicles catch fire at 20% health",
+        "Foxhole: many vehicles are disabled below a health threshold"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "id": "example-0001",
+  "schema_version": "0.3.0",
+  "generator": {
+    "version": "hand-made example",
+    "data_version": "draft 0.3.0"
+  },
+  "seed": "example-rime-burr",
+  "spice": 2,
+  "inputs": {
+    "class": "drone",
+    "tier": "t1",
+    "flavour": "allied",
+    "role": null
+  },
+  "locks": [],
+  "parts": {
+    "class": "drone",
+    "tier": "t1",
+    "flavour": "allied",
+    "nature": "uncrewed-machine",
+    "availability": "open",
+    "roles": {
+      "primary": "scout",
+      "secondary": ["disabler"]
+    },
+    "mobility": {
+      "base": "hover",
+      "handling": "drift",
+      "traits": [],
+      "speed": "fast"
+    },
+    "body": {
+      "plan": "micro-bot",
+      "size": "tiny",
+      "count": 1
+    },
+    "armament": {
+      "primary": {
+        "family": "blades",
+        "damage": "melee",
+        "mount": "free-aim",
+        "delivery": "attach",
+        "range": "melee",
+        "can_target": ["ground-vehicle"],
+        "traits": ["mark"],
+        "seat": "driver"
+      },
+      "secondary": {
+        "family": "cryo",
+        "damage": "cryo",
+        "mount": "free-aim",
+        "delivery": "beam",
+        "range": "medium",
+        "can_target": ["infantry", "ground-vehicle"],
+        "traits": ["slow"],
+        "seat": "driver"
+      },
+      "conditional": []
+    },
+    "armour": {
+      "class": "light",
+      "models": ["charge-shield"]
+    },
+    "crew": {
+      "model": "solo",
+      "solo_fallback": null,
+      "passengers": null
+    },
+    "signature": {
+      "pattern": "infest-vehicle",
+      "variant": "tracker",
+      "kind": "active",
+      "seat": "driver",
+      "cooldown": "short"
+    },
+    "abilities": [],
+    "modes": [],
+    "resource": null,
+    "on_death": ["respawn"]
+  },
+  "matchups": {
+    "strengths": [
+      {
+        "ref": "delivery:attach",
+        "why": "Once latched it is hard to shake off, and the whole team can see the host.",
+        "paired_with": 0
+      },
+      {
+        "ref": "speed:fast",
+        "why": "The hover frame reaches vehicles quickly and slips away again.",
+        "paired_with": 1
+      }
+    ],
+    "weaknesses": [
+      {
+        "ref": "range:melee",
+        "why": "It has to touch the vehicle, so it is exposed on the way in."
+      },
+      {
+        "ref": "armour-class:light",
+        "why": "A light frame: once its charged shield is gone, one burst ends it."
+      }
+    ],
+    "countered_by": [
+      {
+        "ref": "weapon:machine-gun",
+        "why": "Sustained fire stops it before it reaches the hull."
+      },
+      {
+        "ref": "weapon:repair-tool",
+        "why": "A repair beam pulls it off the host."
+      },
+      {
+        "ref": "damage:emp",
+        "why": "EMP drops its shield and knocks it off."
+      }
+    ],
+    "counters": [
+      {
+        "ref": "class:vehicle",
+        "why": "A tagged vehicle gets focused by the whole team."
+      }
+    ],
+    "counterplay": [
+      "Shoot it on the way in: it is tiny and lightly protected.",
+      "Hold E to shake it off, or drive onto a repair pad.",
+      "Break line of sight from enemy launchers while you are tagged."
+    ]
+  },
+  "text": {
+    "name": "Rime Burr",
+    "pitch": "A tiny Allied hover-drone that latches onto enemy vehicles, frosts them and paints them for the whole team.",
+    "signature": {
+      "name": "Frost Tag",
+      "effect": "Latch onto a vehicle: while attached, the host is slowed and visible to your team through walls."
+    },
+    "team_play_hook": {
+      "hook": "spotter",
+      "text": "Tag the tank, and your rocket teammates lock on to it."
+    },
+    "how_it_plays": {
+      "as_user": "Skim in fast, pounce on a vehicle and ride it while your team focuses it. Hop off before the crew shakes you loose, or freeze infantry that come to help.",
+      "as_target": "A pale glint lands on your hull and your vehicle shows up for the enemy. Hold E to shake it off, drive to a repair pad, or get out of the launchers' sight.",
+      "teammates": "Rocket and missile players get free locks on the tagged vehicle; a repair player is the host's best friend.",
+      "controls": [
+        {
+          "seat": "driver",
+          "input": "LMB",
+          "action": "Pounce and latch (Frost Tag)"
+        },
+        {
+          "seat": "driver",
+          "input": "RMB",
+          "action": "Cryo beam: slows infantry and vehicles"
+        },
+        {
+          "seat": "driver",
+          "input": "Space",
+          "action": "Leap off"
+        }
+      ],
+      "tells": "A pale blue glint and crackle on the hull, and a frost icon over the tagged vehicle that everyone can see."
+    }
+  },
+  "inspiration": {
+    "patterns": ["infest-vehicle"],
+    "source_units": ["ra3.soviet.terror-drone"]
+  },
+  "balance": {
+    "cost_band": "low",
+    "power": 4,
+    "complexity": 3,
+    "keys": 2,
+    "flags": []
+  },
+  "created_at": "2026-10-17T12:00:00Z"
+}

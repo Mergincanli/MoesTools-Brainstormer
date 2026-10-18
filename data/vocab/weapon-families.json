@@ -1,0 +1,483 @@
+{
+  "$schema": "../../schemas/vocabulary.schema.json",
+  "id": "weapon-families",
+  "label": "Weapon families",
+  "description": "What the weapon is, judged by how it behaves in the source, not by its name. Each family has defaults (damage, mount, delivery, range) and lists what it may be combined with. Tie-breaks: a missile that steers is guided, an unguided one is a rocket; a soldier's personal gun is small arms, a belt-fed or mounted gun is a machine gun; prism only if the beam splits, travelling bolts are plasma; placed or thrown charges are explosives, dropped ones are bombs; artillery only for arcing or out-of-sight fire.",
+  "group": "core",
+  "status": "draft",
+  "version": "0.3.0",
+  "terms": [
+    {
+      "id": "small-arms",
+      "label": "Small arms",
+      "description": "Rifles, carbines, SMGs and pistols.",
+      "rarity": "common",
+      "classes": ["infantry", "vehicle", "walker", "drone"],
+      "default_damage": "kinetic",
+      "default_aim": "free-aim",
+      "default_delivery": "hitscan",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["kinetic", "armour-piercing"],
+        "weapon-delivery": ["hitscan", "projectile"]
+      }
+    },
+    {
+      "id": "machine-gun",
+      "label": "Machine gun",
+      "description": "Sustained automatic fire, from light to heavy machine guns.",
+      "rarity": "common",
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "default_damage": "kinetic",
+      "default_aim": "free-aim",
+      "default_delivery": "hitscan",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["kinetic", "armour-piercing", "fire"],
+        "weapon-delivery": ["hitscan", "projectile"]
+      }
+    },
+    {
+      "id": "shotgun",
+      "label": "Shotgun",
+      "description": "A short-range spread of pellets or slugs.",
+      "rarity": "uncommon",
+      "classes": ["infantry", "vehicle", "walker", "hover"],
+      "default_damage": "kinetic",
+      "default_aim": "free-aim",
+      "default_delivery": "hitscan",
+      "default_range": "short",
+      "allowed": {
+        "damage-types": ["kinetic", "fire"],
+        "weapon-delivery": ["hitscan", "projectile"],
+        "target-types": ["infantry", "ground-vehicle", "structure"]
+      }
+    },
+    {
+      "id": "sniper",
+      "label": "Sniper",
+      "description": "Precision shots at long range, slow to fire.",
+      "rarity": "uncommon",
+      "classes": ["infantry", "vehicle", "walker", "drone"],
+      "default_damage": "kinetic",
+      "default_aim": "free-aim",
+      "default_delivery": "hitscan",
+      "default_range": "long",
+      "allowed": {
+        "damage-types": ["kinetic", "armour-piercing", "energy"],
+        "weapon-delivery": ["hitscan", "projectile"],
+        "target-types": ["infantry", "ground-vehicle"]
+      }
+    },
+    {
+      "id": "autocannon",
+      "label": "Autocannon",
+      "description": "Rapid medium-calibre shells, often able to hit aircraft.",
+      "rarity": "common",
+      "classes": ["vehicle", "walker", "hover", "aircraft"],
+      "default_damage": "explosive",
+      "default_aim": "free-aim",
+      "default_delivery": "projectile",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["explosive", "kinetic", "armour-piercing"],
+        "weapon-delivery": ["projectile"]
+      }
+    },
+    {
+      "id": "cannon",
+      "label": "Cannon",
+      "description": "A direct-fire gun firing heavy shells.",
+      "rarity": "common",
+      "classes": ["vehicle", "walker", "hover"],
+      "default_damage": "armour-piercing",
+      "default_aim": "free-aim",
+      "default_delivery": "projectile",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["armour-piercing", "explosive"],
+        "weapon-delivery": ["projectile"],
+        "target-types": ["infantry", "ground-vehicle", "structure"]
+      }
+    },
+    {
+      "id": "artillery",
+      "label": "Artillery / mortar",
+      "description": "Shells lobbed over cover onto a target point.",
+      "rarity": "common",
+      "classes": ["infantry", "vehicle", "walker", "hover"],
+      "default_damage": "explosive",
+      "default_aim": "free-aim",
+      "default_delivery": "lobbed",
+      "default_range": "long",
+      "allowed": {
+        "damage-types": ["explosive", "fire", "toxic", "cryo"],
+        "weapon-delivery": ["lobbed"],
+        "target-types": ["infantry", "ground-vehicle", "structure"]
+      }
+    },
+    {
+      "id": "rockets",
+      "label": "Rockets",
+      "description": "Unguided rockets or rocket pods.",
+      "rarity": "common",
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "default_damage": "explosive",
+      "default_aim": "free-aim",
+      "default_delivery": "projectile",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["explosive", "armour-piercing", "fire"],
+        "weapon-delivery": ["projectile", "lobbed"]
+      }
+    },
+    {
+      "id": "guided-missiles",
+      "label": "Guided missiles",
+      "description": "Missiles that lock on and steer toward the target.",
+      "rarity": "common",
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "default_damage": "armour-piercing",
+      "default_aim": "free-aim",
+      "default_delivery": "lock-on",
+      "default_range": "long",
+      "allowed": {
+        "damage-types": ["armour-piercing", "explosive", "emp"],
+        "weapon-delivery": ["lock-on"]
+      }
+    },
+    {
+      "id": "flak",
+      "label": "Flak",
+      "description": "Air-bursting shells, mainly against aircraft.",
+      "rarity": "uncommon",
+      "classes": ["infantry", "vehicle", "walker", "hover"],
+      "default_damage": "explosive",
+      "default_aim": "free-aim",
+      "default_delivery": "projectile",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["explosive"],
+        "weapon-delivery": ["projectile"],
+        "target-types": ["aircraft", "infantry"]
+      }
+    },
+    {
+      "id": "flamethrower",
+      "label": "Flamethrower",
+      "description": "A short-range stream of fire that sets the ground alight.",
+      "rarity": "uncommon",
+      "classes": ["infantry", "vehicle", "walker", "hover"],
+      "default_damage": "fire",
+      "default_aim": "free-aim",
+      "default_delivery": "projectile",
+      "default_range": "short",
+      "allowed": {
+        "damage-types": ["fire", "toxic"],
+        "weapon-delivery": ["projectile"],
+        "target-types": ["infantry", "ground-vehicle", "structure"]
+      }
+    },
+    {
+      "id": "tesla",
+      "label": "Tesla / electric",
+      "description": "Electric arcs that can jump between targets.",
+      "rarity": "uncommon",
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "default_damage": "electric",
+      "default_aim": "free-aim",
+      "default_delivery": "hitscan",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["electric"],
+        "weapon-delivery": ["hitscan", "beam"],
+        "target-types": ["infantry", "ground-vehicle", "structure"]
+      }
+    },
+    {
+      "id": "laser",
+      "label": "Laser",
+      "description": "A continuous or pulsed beam of light.",
+      "rarity": "uncommon",
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "default_damage": "energy",
+      "default_aim": "free-aim",
+      "default_delivery": "beam",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["energy", "fire"],
+        "weapon-delivery": ["beam", "hitscan"]
+      }
+    },
+    {
+      "id": "prism",
+      "label": "Prism",
+      "description": "A light beam that splits or refracts to hit several targets.",
+      "rarity": "rare",
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft"],
+      "default_damage": "energy",
+      "default_aim": "free-aim",
+      "default_delivery": "beam",
+      "default_range": "long",
+      "allowed": {
+        "damage-types": ["energy"],
+        "weapon-delivery": ["beam"]
+      }
+    },
+    {
+      "id": "cryo",
+      "label": "Cryo",
+      "description": "A freezing ray or shell: slows, then freezes the target solid.",
+      "rarity": "uncommon",
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "default_damage": "cryo",
+      "default_aim": "free-aim",
+      "default_delivery": "beam",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["cryo"],
+        "weapon-delivery": ["beam", "projectile", "lobbed"]
+      }
+    },
+    {
+      "id": "plasma",
+      "label": "Plasma / energy bolt",
+      "description": "Bolts of charged energy, often charged up before release.",
+      "rarity": "uncommon",
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "default_damage": "energy",
+      "default_aim": "free-aim",
+      "default_delivery": "projectile",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["energy"],
+        "weapon-delivery": ["projectile"]
+      }
+    },
+    {
+      "id": "sonic",
+      "label": "Sonic",
+      "description": "Sound or pressure waves that push targets and pass through them.",
+      "rarity": "rare",
+      "classes": ["infantry", "vehicle", "walker", "hover"],
+      "default_damage": "sonic",
+      "default_aim": "free-aim",
+      "default_delivery": "beam",
+      "default_range": "short",
+      "allowed": {
+        "damage-types": ["sonic"],
+        "weapon-delivery": ["beam", "projectile"],
+        "target-types": ["infantry", "ground-vehicle", "structure"]
+      }
+    },
+    {
+      "id": "blades",
+      "label": "Melee weapon",
+      "description": "Blades, claws, fists, hammers, saws or drills used up close.",
+      "rarity": "uncommon",
+      "classes": ["infantry", "walker", "drone", "vehicle"],
+      "default_damage": "melee",
+      "default_aim": "free-aim",
+      "default_delivery": "melee",
+      "default_range": "melee",
+      "allowed": {
+        "damage-types": ["melee", "electric", "energy"],
+        "weapon-delivery": ["melee", "attach"],
+        "target-types": ["infantry", "ground-vehicle", "structure"]
+      }
+    },
+    {
+      "id": "chemical",
+      "label": "Chemical / radiation",
+      "description": "Toxic gas, acid or radiation that lingers as a hazard zone.",
+      "rarity": "rare",
+      "classes": ["infantry", "vehicle", "walker", "aircraft"],
+      "default_damage": "toxic",
+      "default_aim": "free-aim",
+      "default_delivery": "projectile",
+      "default_range": "short",
+      "allowed": {
+        "damage-types": ["toxic"],
+        "weapon-delivery": ["projectile", "lobbed", "drop"],
+        "target-types": ["infantry", "ground-vehicle", "structure"]
+      }
+    },
+    {
+      "id": "explosives",
+      "label": "Explosives",
+      "description": "Grenades, satchel charges, mines, sticky bombs and bomb trucks.",
+      "rarity": "common",
+      "classes": ["infantry", "drone", "vehicle"],
+      "default_damage": "explosive",
+      "default_aim": "free-aim",
+      "default_delivery": "place",
+      "default_range": "short",
+      "allowed": {
+        "damage-types": ["explosive", "emp", "fire"],
+        "weapon-delivery": ["place", "lobbed", "attach", "ram"],
+        "target-types": ["infantry", "ground-vehicle", "structure"]
+      }
+    },
+    {
+      "id": "bombs",
+      "label": "Bombs",
+      "description": "Ordnance dropped from above.",
+      "rarity": "common",
+      "classes": ["aircraft", "drone"],
+      "default_damage": "explosive",
+      "default_aim": "body-aim",
+      "default_delivery": "drop",
+      "default_range": "short",
+      "allowed": {
+        "damage-types": ["explosive", "fire", "toxic", "emp"],
+        "weapon-delivery": ["drop"],
+        "target-types": ["infantry", "ground-vehicle", "structure"]
+      }
+    },
+    {
+      "id": "emp",
+      "label": "EMP",
+      "description": "An electromagnetic pulse that shuts down machines and shields.",
+      "rarity": "uncommon",
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "default_damage": "emp",
+      "default_aim": "free-aim",
+      "default_delivery": "projectile",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["emp"],
+        "weapon-delivery": ["projectile", "beam", "hitscan", "drop"]
+      }
+    },
+    {
+      "id": "drain",
+      "label": "Drain beam",
+      "description": "A beam that pulls health or energy from the target into the attacker.",
+      "rarity": "rare",
+      "classes": ["infantry", "vehicle", "walker", "hover", "drone"],
+      "default_damage": "energy",
+      "default_aim": "free-aim",
+      "default_delivery": "beam",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["energy"],
+        "weapon-delivery": ["beam"],
+        "target-types": ["infantry", "ground-vehicle", "structure"]
+      },
+      "notes": "Always carries the self-heal weapon trait."
+    },
+    {
+      "id": "railgun",
+      "label": "Railgun / gauss",
+      "description": "A magnetically fired slug: an instant, piercing line shot with a long reload.",
+      "rarity": "rare",
+      "classes": ["infantry", "vehicle", "walker", "hover"],
+      "default_damage": "armour-piercing",
+      "default_aim": "free-aim",
+      "default_delivery": "hitscan",
+      "default_range": "long",
+      "allowed": {
+        "damage-types": ["armour-piercing", "kinetic"],
+        "weapon-delivery": ["hitscan"]
+      }
+    },
+    {
+      "id": "magnetic",
+      "label": "Magnetic",
+      "description": "Magnetic beams or harpoons that pull, lift or pin vehicles.",
+      "rarity": "rare",
+      "classes": ["vehicle", "walker", "hover", "aircraft"],
+      "default_damage": "kinetic",
+      "default_aim": "free-aim",
+      "default_delivery": "beam",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["kinetic"],
+        "weapon-delivery": ["beam"],
+        "target-types": ["ground-vehicle", "aircraft"]
+      }
+    },
+    {
+      "id": "nanites",
+      "label": "Nanites",
+      "description": "A cloud or swarm of nano-machines that eats armour or repairs allies.",
+      "rarity": "rare",
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "default_damage": "toxic",
+      "default_aim": "free-aim",
+      "default_delivery": "projectile",
+      "default_range": "short",
+      "allowed": {
+        "damage-types": ["toxic", "repair"],
+        "weapon-delivery": ["projectile", "lobbed", "drop"]
+      }
+    },
+    {
+      "id": "psionic",
+      "label": "Psionic",
+      "description": "Mind attacks: control, confusion or fear. Machines without a crew are immune.",
+      "rarity": "rare",
+      "classes": ["infantry", "walker", "drone", "vehicle"],
+      "default_damage": "psionic",
+      "default_aim": "free-aim",
+      "default_delivery": "beam",
+      "default_range": "medium",
+      "allowed": {
+        "damage-types": ["psionic"],
+        "weapon-delivery": ["beam", "hitscan"],
+        "target-types": ["infantry", "ground-vehicle"]
+      }
+    },
+    {
+      "id": "drone-launcher",
+      "label": "Drone launcher",
+      "description": "Launches small drones or munitions that act on their own.",
+      "rarity": "rare",
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "default_damage": "explosive",
+      "default_aim": "auto-target",
+      "default_delivery": "projectile",
+      "default_range": "long",
+      "allowed": {
+        "damage-types": ["explosive", "kinetic", "emp"]
+      }
+    },
+    {
+      "id": "repair-tool",
+      "label": "Repair tool",
+      "description": "A torch, beam or spray that restores health to allies or vehicles instead of harming enemies.",
+      "rarity": "uncommon",
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "default_damage": "repair",
+      "default_aim": "free-aim",
+      "default_delivery": "beam",
+      "default_range": "short",
+      "allowed": {
+        "damage-types": ["repair"],
+        "weapon-delivery": ["beam", "projectile"]
+      }
+    },
+    {
+      "id": "adaptive",
+      "label": "Adaptive",
+      "description": "No fixed family: the weapon is taken from a passenger, a kill or the current mode. The signature pattern says how.",
+      "rarity": "rare",
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"]
+    },
+    {
+      "id": "torpedoes",
+      "label": "Torpedoes",
+      "description": "Underwater weapons. Research only.",
+      "classes": ["naval"],
+      "source_only": true,
+      "default_damage": "armour-piercing",
+      "default_delivery": "projectile"
+    },
+    {
+      "id": "none",
+      "label": "Unarmed",
+      "description": "No weapon. Research only; a generated card shows an empty slot instead.",
+      "source_only": true
+    }
+  ]
+}

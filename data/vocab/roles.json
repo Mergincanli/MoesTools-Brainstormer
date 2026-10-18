@@ -1,0 +1,112 @@
+{
+  "$schema": "../../schemas/vocabulary.schema.json",
+  "id": "roles",
+  "label": "Roles",
+  "description": "What the unit is for: its job or target, never its mechanic (mechanics are patterns). A card has one primary role and up to two secondary roles. 'Requires' says what a unit needs before it can claim the role. Tie-breaks: use anti-X as the primary only if the game gives a bonus against X or calls the unit that; generalists are assault. Damage first is a raider, information first is a scout. A disabler acts on units, area denial acts on ground.",
+  "group": "core",
+  "status": "draft",
+  "version": "0.3.0",
+  "terms": [
+    {
+      "id": "assault",
+      "label": "Frontline assault",
+      "description": "Leads pushes, soaks damage and brawls at short to medium range."
+    },
+    {
+      "id": "anti-armour",
+      "label": "Anti-armour",
+      "description": "Kills vehicles and mechs.",
+      "requires": [["damage:armour-piercing", "damage:energy", "damage:electric", "damage:emp", "pattern:infest-vehicle"]]
+    },
+    {
+      "id": "anti-infantry",
+      "label": "Anti-infantry",
+      "description": "Clears soldiers and light targets."
+    },
+    {
+      "id": "anti-air",
+      "label": "Anti-air",
+      "description": "Brings down aircraft and drones.",
+      "requires": [["hits:aircraft"]]
+    },
+    {
+      "id": "siege",
+      "label": "Artillery / siege",
+      "description": "Hits from very far or over cover; breaks defences and structures.",
+      "requires": [["delivery:lobbed", "range:>=long"]]
+    },
+    {
+      "id": "marksman",
+      "label": "Marksman / overwatch",
+      "description": "Holds long sightlines and picks off targets with precise shots.",
+      "requires": [["range:>=long"]]
+    },
+    {
+      "id": "scout",
+      "label": "Scout / recon",
+      "description": "Finds, spots and marks enemies; usually fast and fragile.",
+      "requires": [["speed:>=fast", "category:stealth-deception", "weapon-trait:mark"]]
+    },
+    {
+      "id": "support",
+      "label": "Support",
+      "description": "Heals, repairs or resupplies teammates.",
+      "requires": [["weapon:repair-tool", "category:support"]]
+    },
+    {
+      "id": "transport",
+      "label": "Transport",
+      "description": "Carries teammates around the map.",
+      "requires": [["passengers:>=2"]],
+      "classes": ["vehicle", "walker", "hover", "aircraft"]
+    },
+    {
+      "id": "infiltrator",
+      "label": "Infiltrator / saboteur",
+      "description": "Acts inside enemy units, lines or buildings: sabotage, steal, capture."
+    },
+    {
+      "id": "disabler",
+      "label": "Disabler / control",
+      "description": "Stops enemies from acting: stun, root, silence, freeze, slow.",
+      "requires": [
+        [
+          "weapon-trait:stun",
+          "weapon-trait:root",
+          "weapon-trait:silence",
+          "weapon-trait:slow",
+          "damage:cryo",
+          "damage:emp",
+          "category:control"
+        ]
+      ]
+    },
+    {
+      "id": "raider",
+      "label": "Raider / flanker",
+      "description": "Hits and runs, picking off isolated targets.",
+      "requires": [["speed:>=fast"]]
+    },
+    {
+      "id": "area-denial",
+      "label": "Area denial",
+      "description": "Controls ground with mines, fire, turrets or fortifications.",
+      "requires": [["weapon-trait:zone", "category:area", "category:summon"]]
+    },
+    {
+      "id": "buffer",
+      "label": "Buffer / aura",
+      "description": "Boosts nearby allies with auras, call-ins or team abilities (spotting belongs to scout)."
+    },
+    {
+      "id": "engineer",
+      "label": "Engineer / builder",
+      "description": "Builds, captures or deploys structures and gadgets."
+    },
+    {
+      "id": "logistics",
+      "label": "Logistics",
+      "description": "Earns, carries or delivers resources for the team: harvesting, salvage, supply runs."
+    }
+  ]
+}

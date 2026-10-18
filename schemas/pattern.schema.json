@@ -1,0 +1,596 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pattern.schema.json",
+  "title": "Mechanic pattern",
+  "description": "data/patterns/<pattern-id>.json: one reusable building block abstracted from source units, one file per pattern. The research's most important output and the generator's main input. Research agents write new patterns with status 'proposed'; a merge pass accepts, merges or rejects them and then fills in the generator rules.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "vocab_version",
+    "id",
+    "status",
+    "name",
+    "category",
+    "summary",
+    "counterplay",
+    "source_units",
+    "player_translation",
+    "team_play",
+    "build_difficulty",
+    "risks",
+    "variants",
+    "shooter_fit",
+    "confidence",
+    "review"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "vocab_version": {
+      "type": "string"
+    },
+    "id": {
+      "$ref": "common.schema.json#/$defs/slug",
+      "description": "Generic English, verb first: <verb>-<object>[-<qualifier>], e.g. 'infest-vehicle'. No fiction words."
+    },
+    "status": {
+      "description": "proposed = written, not yet reviewed and calibrated; accepted = reviewed and calibrated in the merge pass; merged = folded into another pattern; rejected.",
+      "enum": [
+        "proposed",
+        "accepted",
+        "merged",
+        "rejected"
+      ]
+    },
+    "merged_into": {
+      "description": "Required when status is merged.",
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "name": {
+      "description": "Our own generic name, never a trademark.",
+      "type": "string"
+    },
+    "aliases": {
+      "description": "Generic synonyms and old ids merged into this one (the resolver accepts them).",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_terms": {
+      "description": "In-game names for this mechanic, reference only; never shown by the generator.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "category": {
+      "type": "string",
+      "x-vocab": "pattern-categories"
+    },
+    "also_in": {
+      "description": "Up to two more categories for filtering.",
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "string",
+        "x-vocab": "pattern-categories"
+      }
+    },
+    "generic": {
+      "description": "True for plain mechanics (sprint, self-heal, stat buff) kept so every ability can link a pattern; excluded from the top-30 list.",
+      "type": "boolean"
+    },
+    "summary": {
+      "description": "What it does, in plain words.",
+      "type": "string",
+      "maxLength": 800
+    },
+    "counterplay": {
+      "description": "How the enemy deals with it.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_units": {
+      "description": "Unit ids that use this pattern. Must match the units that link it (the validator checks; a build step will compute it).",
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/unitId"
+      },
+      "minItems": 1
+    },
+    "other_examples": {
+      "description": "Further uses found during research that are not (yet) entered as source units.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/example"
+      }
+    },
+    "shooter_analogues": {
+      "description": "Where players already do this in shooters or action games.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/example"
+      }
+    },
+    "player_translation": {
+      "description": "The heart of the tool: how the pattern plays when one player controls the unit.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "as_user",
+        "as_target",
+        "teammates",
+        "controls",
+        "feedback",
+        "changes_from_rts"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "as_user": {
+          "description": "What the player using it does and feels.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "as_target": {
+          "description": "What the player on the receiving end sees, and what they can do about it right now.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "teammates": {
+          "description": "How teammates on both sides get involved.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "controls": {
+          "description": "A proposed input mapping.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "feedback": {
+          "description": "Sound, visual and UI cues that keep it readable from a top-down camera.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "changes_from_rts": {
+          "description": "What has to change compared with the RTS original, and why.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "team_play": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "potential",
+        "hooks",
+        "notes"
+      ],
+      "properties": {
+        "potential": {
+          "$ref": "common.schema.json#/$defs/rating"
+        },
+        "hooks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "x-vocab": "team-play-hooks"
+          }
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "build_difficulty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "level",
+        "notes"
+      ],
+      "properties": {
+        "level": {
+          "$ref": "common.schema.json#/$defs/rating"
+        },
+        "notes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "risks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "balance",
+        "readability"
+      ],
+      "properties": {
+        "balance": {
+          "$ref": "#/$defs/risk"
+        },
+        "readability": {
+          "$ref": "#/$defs/risk"
+        }
+      }
+    },
+    "variants": {
+      "description": "Distinct twists the generator can roll. Higher min_spice = wilder.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "summary",
+          "min_spice"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/slug"
+          },
+          "name": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "min_spice": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "seen_in": {
+            "description": "Where this twist comes from (game or unit names, reference only).",
+            "type": "string"
+          },
+          "overrides": {
+            "description": "Generator rules that differ for this variant.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "classes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "x-vocab": "classes"
+                }
+              },
+              "min_tier": {
+                "type": "string",
+                "x-vocab": "tiers"
+              },
+              "kinds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "x-vocab": "ability-kinds"
+                }
+              },
+              "requires": {
+                "$ref": "common.schema.json#/$defs/cnf"
+              },
+              "excludes": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                }
+              },
+              "implies": {
+                "type": "array",
+                "items": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "generator": {
+      "description": "Rules for the generator. Links in requires, excludes, implies, adds_strengths and adds_weaknesses describe the card itself; counters and countered_by describe the enemy.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classes",
+        "min_tier",
+        "kinds",
+        "slot",
+        "rarity",
+        "countered_by"
+      ],
+      "properties": {
+        "classes": {
+          "description": "Classes that can roll this pattern.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "x-vocab": "classes"
+          }
+        },
+        "min_tier": {
+          "type": "string",
+          "x-vocab": "tiers"
+        },
+        "kinds": {
+          "description": "Ability kinds this pattern can take on a card.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "x-vocab": "ability-kinds"
+          }
+        },
+        "slot": {
+          "description": "signature = only as the card's signature ability; extra = only as an extra ability; any = either.",
+          "enum": [
+            "signature",
+            "extra",
+            "any"
+          ]
+        },
+        "rarity": {
+          "type": "string",
+          "x-vocab": "rarity"
+        },
+        "flavour_lean": {
+          "description": "Flavours that roll it more often.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "x-vocab": "faction-flavours"
+          }
+        },
+        "requires": {
+          "description": "What the card must have.",
+          "$ref": "common.schema.json#/$defs/cnf"
+        },
+        "excludes": {
+          "description": "What the card must not have.",
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/ref"
+          }
+        },
+        "implies": {
+          "description": "Parts the generator sets before rolling the rest.",
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/ref"
+          }
+        },
+        "conflicts_with": {
+          "description": "Pattern ids that may not appear on the same card.",
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/slug"
+          }
+        },
+        "adds_strengths": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/relation"
+          }
+        },
+        "adds_weaknesses": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/relation"
+          }
+        },
+        "counters": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/relation"
+          }
+        },
+        "countered_by": {
+          "description": "The typed twin of counterplay: what beats a card with this pattern.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "common.schema.json#/$defs/relation"
+          }
+        },
+        "points": {
+          "$ref": "common.schema.json#/$defs/points"
+        }
+      },
+      "x-required-when": "status is accepted"
+    },
+    "related": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/slug"
+          },
+          "kind": {
+            "enum": [
+              "variant-of",
+              "generalises",
+              "often-confused-with",
+              "counters",
+              "combos-with"
+            ]
+          }
+        }
+      }
+    },
+    "open_questions": {
+      "description": "Design questions for Mustafa that the research raised.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "confidence": {
+      "$ref": "common.schema.json#/$defs/confidence",
+      "description": "Confidence that the linked source units implement the mechanic as summarised; each example carries its own confidence."
+    },
+    "review": {
+      "$ref": "common.schema.json#/$defs/review"
+    },
+    "shooter_fit": {
+      "description": "How well the pattern suits a player-controlled, top-down team shooter. Feeds the top-30 list.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "score",
+        "reason"
+      ],
+      "properties": {
+        "score": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 400
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "accepted"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "generator"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "merged"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "merged_into"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "game",
+        "unit",
+        "note",
+        "sources",
+        "confidence"
+      ],
+      "properties": {
+        "game": {
+          "type": "string",
+          "description": "Game id from the registry, or 'extra:<title>' for a game outside it.",
+          "pattern": "^([a-z0-9]+(-[a-z0-9]+)*|extra:.+)$"
+        },
+        "unit": {
+          "description": "Unit, ability or mechanic name (reference only).",
+          "type": "string"
+        },
+        "note": {
+          "description": "How it works there, paraphrased.",
+          "type": "string"
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "$ref": "common.schema.json#/$defs/source"
+          }
+        },
+        "confidence": {
+          "$ref": "common.schema.json#/$defs/confidence"
+        },
+        "unit_id": {
+          "description": "Unit id, once the unit is in the database.",
+          "$ref": "common.schema.json#/$defs/unitId"
+        },
+        "franchise": {
+          "description": "Franchise name, for counting how many franchises use a pattern.",
+          "type": "string"
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "level",
+        "notes"
+      ],
+      "properties": {
+        "level": {
+          "$ref": "common.schema.json#/$defs/rating"
+        },
+        "notes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

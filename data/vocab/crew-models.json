@@ -1,0 +1,86 @@
+{
+  "$schema": "../../schemas/vocabulary.schema.json",
+  "id": "crew-models",
+  "label": "Crew models",
+  "description": "Who operates the unit, and how many players that takes. Passenger seats are counted separately, so any crew model can also carry passengers. That covers the brief's 'transport with passengers' (shown on the card whenever there are passenger seats) and IFVs that have both a gunner and passengers.",
+  "group": "core",
+  "status": "draft",
+  "version": "0.3.0",
+  "terms": [
+    {
+      "id": "solo",
+      "label": "Solo",
+      "description": "One player moves, aims and uses abilities.",
+      "rarity": "common",
+      "seats": ["driver"],
+      "min_players": 1,
+      "max_players": 1,
+      "examples": [
+        "Titanfall: one pilot runs the Titan, which fights on its own when the pilot gets out",
+        "MechWarrior: one pilot per mech",
+        "PlanetSide 2: the Lightning light tank is built for one player"
+      ]
+    },
+    {
+      "id": "driver-gunner",
+      "label": "Driver + gunner",
+      "description": "Two operating seats: the driver moves (and may fire the main gun), the gunner mans a turret. Each weapon records which seat fires it; the solo fallback says what a lone player can do.",
+      "rarity": "common",
+      "seats": ["driver", "gunner"],
+      "min_players": 1,
+      "max_players": 2,
+      "classes": ["vehicle", "walker", "hover", "aircraft"],
+      "allowed": {
+        "sizes": ["medium", "large", "huge"]
+      },
+      "examples": [
+        "Battlefield and PlanetSide 2 battle tanks: the driver fires the main gun, a second seat mans a top gun",
+        "C&C Renegade: the driver drives and the gunner fires; alone, the driver fires too",
+        "Foxhole light tanks: the driver only drives, a separate seat fires the main gun",
+        "Halo Warthog: driver, turret gunner and a passenger"
+      ]
+    },
+    {
+      "id": "driver-gunner-commander",
+      "label": "Driver + gunner + commander",
+      "description": "Adds a commander seat that spots and marks targets, sees further, and triggers abilities or a secondary weapon.",
+      "rarity": "uncommon",
+      "seats": ["driver", "gunner", "commander"],
+      "min_players": 1,
+      "max_players": 3,
+      "min_tier": "t2",
+      "classes": ["vehicle", "walker", "hover", "aircraft"],
+      "allowed": {
+        "sizes": ["large", "huge"]
+      },
+      "examples": [
+        "Foxhole battle tanks: driver, gunners, a commander with a better view, and an engineer who reloads and repairs",
+        "Battlefield 3: an optional commander seat adds zoom, thermal vision and laser designation"
+      ]
+    },
+    {
+      "id": "squad",
+      "label": "Squad",
+      "description": "One player leads a small group (a leader with AI followers, or a pack of tiny drones) that moves as one; losing members weakens it before it dies.",
+      "rarity": "rare",
+      "seats": ["driver"],
+      "min_players": 1,
+      "max_players": 1,
+      "classes": ["infantry", "drone"],
+      "allowed": {
+        "sizes": ["tiny", "small"]
+      },
+      "examples": ["Company of Heroes: infantry squads share one health bar but lose firepower as soldiers die"]
+    },
+    {
+      "id": "remote",
+      "label": "Remote operator",
+      "description": "The player pilots a remote body while their own soldier stays parked and vulnerable; losing the remote returns them to that soldier.",
+      "rarity": "rare",
+      "seats": ["driver"],
+      "min_players": 1,
+      "max_players": 1,
+      "classes": ["drone"]
+    }
+  ]
+}

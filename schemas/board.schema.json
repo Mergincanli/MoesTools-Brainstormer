@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "board.schema.json",
+  "title": "Board (draft for Phase 3)",
+  "description": "Mustafa's saved board. Stored in the browser with a version number, and exported or imported as this JSON.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "saved_at", "cards"],
+  "properties": {
+    "schema_version": {
+      "description": "Bumped on every format change; the app migrates older boards on load.",
+      "type": "string"
+    },
+    "app_version": {
+      "type": "string"
+    },
+    "saved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cards": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/boardCard"
+      }
+    }
+  },
+  "$defs": {
+    "boardCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["card", "column", "position", "notes", "tags", "stars", "origin", "added_at"],
+      "properties": {
+        "card": {
+          "$ref": "concept-card.schema.json"
+        },
+        "column": {
+          "enum": ["ideas", "promising", "shortlist", "rejected"]
+        },
+        "position": {
+          "description": "Order within the column.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "notes": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "stars": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "origin": {
+          "enum": ["rolled", "duplicate", "remix", "manual"]
+        },
+        "parent_id": {
+          "description": "The card this was duplicated from.",
+          "type": "string"
+        },
+        "edited_fields": {
+          "description": "Parts and texts changed by hand; a reroll never overwrites these.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "concept-card.schema.json#/$defs/lockable"
+              },
+              {
+                "enum": ["pitch", "signature_text", "team_play_hook", "how_it_plays", "matchups"]
+              }
+            ]
+          }
+        },
+        "added_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}
