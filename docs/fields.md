@@ -1,6 +1,6 @@
 <!-- Generated from the JSON in data/ and schemas/. Edit the JSON, not this file. -->
 
-# Field reference (draft v0.3)
+# Field reference (draft v0.4.0)
 
 Every field of every record type, generated from the JSON schemas in `schemas/`. **Vocabulary** names the fixed word list a field draws from (see [vocabularies](vocabularies.md)).
 
@@ -233,7 +233,8 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `variants[].min_spice` | integer (1-5) | yes |  |  |
 | `variants[].seen_in` | text |  |  | Where this twist comes from (game or unit names, reference only). |
 | `variants[].overrides` | group |  |  | Generator rules that differ for this variant. |
-| `variants[].overrides.classes` | list of terms |  | `classes` | Terms from *Unit classes*. |
+| `variants[].overrides.classes` | list of terms |  | `classes` | Replaces the base generator's classes for this variant. |
+| `variants[].overrides.class_rarity` | map |  |  | Replaces the base generator's class_rarity for this variant. Every key must be in the variant's classes (its own, or the base generator's). Without it, the base generator's class_rarity applies to whichever of its classes the variant keeps. |
 | `variants[].overrides.min_tier` | term |  | `tiers` | A term from *Tier bands*. |
 | `variants[].overrides.kinds` | list of terms |  | `ability-kinds` | Terms from *Ability kinds*. |
 | `variants[].overrides.requires` | list of lists |  |  | Conditions as groups of typed links: every group must hold, and one link in a group is enough. |
@@ -244,7 +245,8 @@ A reusable building block abstracted from units. File: `data/patterns/<pattern-i
 | `variants[].overrides.counters` | list of link + reasons |  |  | Replaces the base generator's counters for this variant. |
 | `variants[].overrides.countered_by` | list of link + reasons |  |  | Replaces the base generator's countered_by for this variant. |
 | `generator` | group | when status is accepted |  | Rules for the generator. Links in requires, excludes, implies, adds_strengths and adds_weaknesses describe the card itself; counters and countered_by describe the enemy. |
-| `generator.classes` | list of terms (min 1) | yes | `classes` | Classes that can roll this pattern. |
+| `generator.classes` | list of terms (min 1) | yes | `classes` | Classes that can roll this pattern: every class it is physically possible for. A class left out is a hard ban. |
+| `generator.class_rarity` | map |  |  | Rarity of this pattern for particular classes, used instead of 'rarity' when the card is of that class; classes not listed use 'rarity'. Every key must be in 'classes'. Cross-overs that are possible but unusual for a class are listed here as rare (or uncommon). |
 | `generator.min_tier` | term | yes | `tiers` | A term from *Tier bands*. |
 | `generator.kinds` | list of terms (min 1) | yes | `ability-kinds` | Ability kinds this pattern can take on a card. |
 | `generator.slot` | one of `signature`, `extra`, `any` | yes |  | signature = only as the card's signature ability; extra = only as an extra ability; any = either. |
@@ -540,7 +542,8 @@ One fixed word list, `data/vocab/<list>.json`, with the fields each term may car
 | `terms[].rarity` | term |  | `rarity` | How readily the generator offers this term (see the rarity list). |
 | `terms[].source_only` | boolean |  |  | Recorded for research; never rolled by the generator. |
 | `terms[].rank` | integer |  |  | Order on a scale (speed, size, cost, armour...). |
-| `terms[].classes` | list of terms |  | `classes` | Unit classes allowed to use this term. This is how 'aircraft don't get tracks' is enforced. |
+| `terms[].classes` | list of terms |  | `classes` | The unit classes this term is physically possible for. A class left out is a hard ban: the generator never rolls the term for it. This is how 'aircraft don't get tracks' is enforced. A class for which the term is possible but unusual stays in this list and gets a rarity in class_rarity. |
+| `terms[].class_rarity` | map |  |  | Rarity of this term for particular classes, used instead of 'rarity' when the unit is of that class; classes not listed use 'rarity'. Every key must be in 'classes'. This is how cross-overs such as a flamethrower on an aircraft stay rare and appear only at high spice. A faction's one-step bonus for favoured parts does not apply to it. |
 | `terms[].allowed` | map |  |  | Whitelist of terms this one may combine with on the same unit, keyed by vocabulary id. Checked both ways. |
 | `terms[].excluded` | map |  |  | Terms this one may not combine with on the same unit, keyed by vocabulary id. |
 | `terms[].requires` | list of lists |  |  | What the unit must also have for this term to make sense. |

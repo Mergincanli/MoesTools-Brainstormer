@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "vocabulary.schema.json",
   "title": "Vocabulary file",
-  "description": "One fixed word list, e.g. classes or damage types. Every data file and every generated card may only use term ids from these lists. Constraint fields (classes, allowed, excluded, requires, min_tier) bind generated cards; on researched units a break is only reported as 'atypical'.",
+  "description": "One fixed word list, e.g. classes or damage types. Every data file and every generated card may only use term ids from these lists. Constraint fields (classes, allowed, excluded, requires, min_tier) bind generated cards; on researched units a break is only reported as 'atypical'. Rarity fields (rarity, class_rarity) only weight the generator's choices.",
   "type": "object",
   "additionalProperties": false,
   "required": ["id", "label", "description", "group", "status", "version", "terms"],
@@ -95,12 +95,16 @@
           "type": "integer"
         },
         "classes": {
-          "description": "Unit classes allowed to use this term. This is how 'aircraft don't get tracks' is enforced.",
+          "description": "The unit classes this term is physically possible for. A class left out is a hard ban: the generator never rolls the term for it. This is how 'aircraft don't get tracks' is enforced. A class for which the term is possible but unusual stays in this list and gets a rarity in class_rarity.",
           "type": "array",
           "items": {
             "type": "string",
             "x-vocab": "classes"
           }
+        },
+        "class_rarity": {
+          "description": "Rarity of this term for particular classes, used instead of 'rarity' when the unit is of that class; classes not listed use 'rarity'. Every key must be in 'classes'. This is how cross-overs such as a flamethrower on an aircraft stay rare and appear only at high spice. A faction's one-step bonus for favoured parts does not apply to it.",
+          "$ref": "common.schema.json#/$defs/classRarity"
         },
         "allowed": {
           "description": "Whitelist of terms this one may combine with on the same unit, keyed by vocabulary id. Checked both ways.",

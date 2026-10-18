@@ -7,9 +7,10 @@
 // --check builds the three pages in memory, lists the ones that differ from the files on disk and exits 1;
 // it writes nothing.
 //
-// This is a port of the original Python builder (build_docs.py) and its output is byte-identical. The
-// functions and their order follow the Python version, so the two read side by side. Where JavaScript
-// behaves differently from Python, the small helpers in the next section make it behave like Python.
+// This began as a port of the original Python builder (build_docs.py), byte-identical in output up to word-list
+// version 0.3.0; changes since then (class rarities, versioned titles) are made here only. The functions and their
+// order still follow the Python version. Where JavaScript behaves differently from Python, the small helpers in
+// the next section make it behave like Python.
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -192,7 +193,7 @@ function stem(name) {
 
 // ------------------------------------------------------------------ loading
 
-let ROOT, VOCABS, L, VL, REF_KINDS, REGISTRY, WRITTEN
+let ROOT, VOCABS, L, VL, REF_KINDS, REGISTRY, WRITTEN, VERSION
 
 const UTF8 = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }) // like read_text(encoding="utf-8")
 
@@ -228,6 +229,7 @@ function loadShared(root) {
   REF_KINDS = load('schemas/common.schema.json')['x-ref-kinds']
   REGISTRY = strict(Object.fromEntries(load('data/pattern-registry.json').patterns.map(p => [p.id, p])))
   WRITTEN = strict(Object.fromEntries(listJson('data/patterns').map(file => { const p = readJson(file); return [p.id, p.name] })))
+  VERSION = items(VOCABS)[0][1].version // the word lists share one version; the validator checks that they agree
 }
 
 function patternLabel(pid) {
@@ -280,6 +282,16 @@ function refText(ref, unitNames = null, patternNames = null) {
 
 const ALL_CLASSES = ['infantry', 'vehicle', 'walker', 'hover', 'aircraft', 'drone']
 
+// A class_rarity map as text, rarest last: 'uncommon on: Hovercraft; rare on: Aircraft, Drone / support'.
+function classRarityText(cr) {
+  const parts = []
+  for (const r of VOCABS.rarity.terms) {
+    const cls = items(cr).filter(([, v]) => v === r.id).map(([c]) => c)
+    if (cls.length) parts.push(f`${r.label.toLowerCase()} on: ${lab('classes', cls)}`)
+  }
+  return join('; ', parts)
+}
+
 function rulesText(t) {
   const parts = []
   if (given(t, 'classes')) {
@@ -287,6 +299,7 @@ function rulesText(t) {
     const set = new Set(cl)
     parts.push('classes: ' + (ALL_CLASSES.every(c => set.has(c)) ? 'all' : lab('classes', cl)))
   }
+  if (given(t, 'class_rarity')) parts.push(classRarityText(t.class_rarity))
   for (const [k, h] of [['default_damage', ['damage-types', 'default damage']], ['default_aim', ['aim-models', 'default mount']],
     ['default_delivery', ['weapon-delivery', 'default delivery']], ['default_range', ['range-bands', 'default range']],
     ['default_handling', ['handling', 'handling']], ['target_type', ['target-types', 'counts as']]]) {
@@ -325,14 +338,15 @@ function vocabDocs() {
     'armour-classes', 'crew-models']
   const core = sorted(vocabs.filter(v => v.group === 'core'), v => (order.includes(v.id) ? order.indexOf(v.id) : 99))
   const supporting = sorted(vocabs.filter(v => v.group === 'supporting'), v => v.label)
-  const version = vocabs[0].version
-  const out = [GEN_NOTE, f`# Vocabularies (draft v${version})\n`,
+  const out = [GEN_NOTE, f`# Vocabularies (draft v${VERSION})\n`,
     'Fixed word lists. Every source unit, pattern and generated card may only use these terms, and the validator rejects anything else. ' +
     'Ids (in `code`) are what the data stores; labels are what the app shows.\n',
     '- **Core** lists are the ten the brief asks for. **Supporting** lists make them usable: scales, aim, traits, seats and so on.',
     "- **Rules** say which terms can go together. They bind generated cards (so the generator can't roll tracks on an aircraft). " +
-    "Real units that break them are recorded as they are and listed as 'atypical'. Real games breaking our rules is useful spice material, and evidence for relaxing a rule.",
-    '- **Rarity** feeds the spice control: common terms appear at every spice level, rare ones only when spice is turned up.',
+    "Real units that break them are recorded as they are and listed as 'atypical'. Real games breaking our rules is useful spice material, and evidence for relaxing a rule. " +
+    "A term's classes are every class it is physically possible for; a class left out is a hard ban.",
+    '- **Rarity** feeds the spice control: common terms appear at every spice level, rare ones only when spice is turned up. ' +
+    "A part that is possible but unusual for a class has its own rarity there ('rare on: Aircraft' in the rules), so cross-overs such as a flamethrower on an aircraft appear only at high spice.",
     "- **Typed links** such as 'at most Small (size)' or 'can hit aircraft' point at other terms; see [fields](fields.md).",
     "- **'Seen in'** examples illustrate a term and are not cited here; the research run cites them on the units.\n",
     f`${vocabs.length} lists, ${vocabs.reduce((n, v) => n + v.terms.length, 0)} terms.\n`,
@@ -509,7 +523,7 @@ function fieldsDocs() {
 
   const common = schemas['common.schema.json']
   const kinds = join(', ', items(common['x-ref-kinds']).map(([k, v]) => f`\`${k}\` (${v.means})`))
-  const out = [GEN_NOTE, '# Field reference (draft v0.3)\n',
+  const out = [GEN_NOTE, f`# Field reference (draft v${VERSION})\n`,
     'Every field of every record type, generated from the JSON schemas in `schemas/`. ' +
     '**Vocabulary** names the fixed word list a field draws from (see [vocabularies](vocabularies.md)).\n',
     '## Conventions\n',
@@ -585,6 +599,7 @@ function samplesDocs() {
   function overridesText(o) {
     const bits = []
     if (given(o, 'classes')) bits.push('classes: ' + lab('classes', o.classes))
+    if (given(o, 'class_rarity')) bits.push(classRarityText(o.class_rarity))
     if (given(o, 'min_tier')) bits.push('from ' + L.tiers[o.min_tier])
     if (given(o, 'kinds')) bits.push('as: ' + lab('ability-kinds', o.kinds).toLowerCase())
     if (given(o, 'requires')) bits.push('needs ' + join('; and ', o.requires.map(g => join(' or ', g.map(x => r(x))))))
@@ -601,7 +616,7 @@ function samplesDocs() {
     return get(get(games, g, {}), 'title', g)
   }
 
-  const out = [GEN_NOTE, '# Sample entries (draft v0.3)\n',
+  const out = [GEN_NOTE, f`# Sample entries (draft v${VERSION})\n`,
     'The three source units and three mechanic patterns the brief asks for, fully filled in, plus one hand-made concept card showing what the generator will produce. ' +
     'Rendered from `data/units/ra3.json`, `data/patterns/*.json` and `docs/examples/concept-card.example.json`. Real unit and weapon names are reference only.\n',
     '**How to read it.** *(proposal)* marks our design suggestions for the player version, not sourced facts. ' +
@@ -729,7 +744,8 @@ function samplesDocs() {
     }
     if (truthy(gr)) {
       out.push('\n**Generator rules**\n')
-      out.push(f`- Classes: ${lab('classes', gr.classes)}. From ${L.tiers[gr.min_tier]}. As: ${lab('ability-kinds', gr.kinds).toLowerCase()}, ${gr.slot} slot. Rarity: ${gr.rarity}. Leans: ${lab('faction-flavours', get(gr, 'flavour_lean', []))}.`)
+      const cr = given(gr, 'class_rarity') ? f` (${classRarityText(gr.class_rarity)})` : ''
+      out.push(f`- Classes: ${lab('classes', gr.classes)}. From ${L.tiers[gr.min_tier]}. As: ${lab('ability-kinds', gr.kinds).toLowerCase()}, ${gr.slot} slot. Rarity: ${gr.rarity}${cr}. Leans: ${lab('faction-flavours', get(gr, 'flavour_lean', []))}.`)
       if (given(gr, 'requires')) out.push('- Needs: ' + join('; and ', gr.requires.map(g => join(' or ', g.map(x => r(x))))) + '.')
       if (given(gr, 'excludes')) out.push('- Never with: ' + join(', ', gr.excludes.map(x => r(x))) + '.')
       if (given(gr, 'implies')) out.push('- Sets first: ' + join(', ', gr.implies.map(x => r(x))) + '.')

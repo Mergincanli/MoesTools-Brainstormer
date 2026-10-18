@@ -1,6 +1,6 @@
 <!-- Generated from the JSON in data/ and schemas/. Edit the JSON, not this file. -->
 
-# Sample entries (draft v0.3)
+# Sample entries (draft v0.4.0)
 
 The three source units and three mechanic patterns the brief asks for, fully filled in, plus one hand-made concept card showing what the generator will produce. Rendered from `data/units/ra3.json`, `data/patterns/*.json` and `docs/examples/concept-card.example.json`. Real unit and weapon names are reference only.
 
@@ -449,7 +449,7 @@ The pattern itself is uncommon, so on a rolled card these variants appear from s
 
 **Generator rules**
 
-- Classes: Drone / support, Infantry. From T1. As: active, signature slot. Rarity: uncommon. Leans: Soviets.
+- Classes: Infantry, Aircraft, Drone / support. From T1. As: active, signature slot. Rarity: uncommon (rare on: Aircraft). Leans: Soviets.
 - Needs: at most Small (size).
 - Never with: at least 1 passenger seat(s).
 - Sets first: Attach (delivery), Melee (range).
@@ -735,10 +735,10 @@ A cheap, fast two-seat car. Alone, the driver has a modest default weapon. When 
 | Tool seat (`tool-seat`) | 1 | Some passengers give a tool instead of a gun: a repair beam that also strips parasites, a slowing horn (a stun only on T2 and higher carriers), a heal aura or a detector. | - | RA3 Multigunner IFV with an engineer (repairs and removes Terror Drones) or a dog or bear (stuns infantry); RA2 IFV with an engineer (repair crane); the heal aura and detector are new ideas |
 | Fire ports (`fire-ports`) | 1 | Passengers shoot their own weapons out of ports, possibly with a bonus; the vehicle's output is the sum of who is aboard. | sets first: at least 1 passenger seat(s) | Battle Fortress, Battle Bus, half-tracks, Warthog, Battlefield Little Bird benches, PlanetSide 2 Harasser rumble seat |
 | Modular bay (`modular-bay`) | 2 | A one-time purchase fits the bay as a passenger bunker whose riders fire their own weapons out of it, instead of a fixed weapon or aura; the options exclude each other. | sets first: at least 1 passenger seat(s) | Overlord and Helix add-ons |
-| Anchor to fire (`anchor-to-fire`) | 3 | Passengers can only shoot once the vehicle deploys into a static bunker, trading mobility for firepower. | classes: Tank / ground vehicle, Hovercraft, Walker / mech; as: deploy; sets first: at least 1 passenger seat(s) | Kane's Wrath Reckoner |
-| Wreck bunker (`wreck-bunker`) | 3 | When the vehicle dies, both players are thrown out hurt as usual, but the wreck stays behind as hard cover they can fight from until it is destroyed. | classes: Tank / ground vehicle, Hovercraft, Walker / mech | Zero Hour Battle Bus |
+| Anchor to fire (`anchor-to-fire`) | 3 | Passengers can only shoot once the vehicle deploys into a static bunker, trading mobility for firepower. | rare on: Aircraft; as: deploy; sets first: at least 1 passenger seat(s) | Kane's Wrath Reckoner |
+| Wreck bunker (`wreck-bunker`) | 3 | When the vehicle dies, both players are thrown out hurt as usual, but the wreck stays behind as hard cover they can fight from until it is destroyed. | uncommon on: Aircraft | Zero Hour Battle Bus |
 | Human ammunition (`human-ammunition`) | 4 | The passengers are the payload: the vehicle launches them over obstacles into the fight, briefly exposed in the air. | as: active | RA3 Bullfrog |
-| Vehicle as passenger (`vehicle-as-passenger`) | 4 | A host, in the known example a static bunker, takes a smaller vehicle inside and fires its weapon with a boost while the small one can't move. | classes: Tank / ground vehicle, Walker / mech; from T2; needs at least Large (size) | Yuri's Revenge tank bunker (a static structure that holds one turreted vehicle) |
+| Vehicle as passenger (`vehicle-as-passenger`) | 4 | A host, in the known example a static bunker, takes a smaller vehicle inside and fires its weapon with a boost while the small one can't move. | uncommon on: Hovercraft; rare on: Aircraft; from T2; needs at least Large (size) | Yuri's Revenge tank bunker (a static structure that holds one turreted vehicle) |
 | Cross-faction hybrids (`cross-faction`) | 5 | A passenger from another faction produces its own distinct result, so captured or allied troops unlock hybrid weapons. | - | RA3 IFV result tables for all three factions |
 
 The pattern itself is uncommon, so on a rolled card these variants appear from spice 2 at the earliest.

@@ -5,14 +5,18 @@
   "description": "What the weapon is, judged by how it behaves in the source, not by its name. Each family has defaults (damage, mount, delivery, range) and lists what it may be combined with. Tie-breaks: a missile that steers is guided, an unguided one is a rocket; a soldier's personal gun is small arms, a belt-fed or mounted gun is a machine gun; prism only if the beam splits, travelling bolts are plasma; placed or thrown charges are explosives, dropped ones are bombs; artillery only for arcing or out-of-sight fire.",
   "group": "core",
   "status": "draft",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "terms": [
     {
       "id": "small-arms",
       "label": "Small arms",
       "description": "Rifles, carbines, SMGs and pistols.",
       "rarity": "common",
-      "classes": ["infantry", "vehicle", "walker", "drone"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "hover": "uncommon",
+        "aircraft": "rare"
+      },
       "default_damage": "kinetic",
       "default_aim": "free-aim",
       "default_delivery": "hitscan",
@@ -42,7 +46,11 @@
       "label": "Shotgun",
       "description": "A short-range spread of pellets or slugs.",
       "rarity": "uncommon",
-      "classes": ["infantry", "vehicle", "walker", "hover"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "aircraft": "rare",
+        "drone": "rare"
+      },
       "default_damage": "kinetic",
       "default_aim": "free-aim",
       "default_delivery": "hitscan",
@@ -58,7 +66,11 @@
       "label": "Sniper",
       "description": "Precision shots at long range, slow to fire.",
       "rarity": "uncommon",
-      "classes": ["infantry", "vehicle", "walker", "drone"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "hover": "uncommon",
+        "aircraft": "rare"
+      },
       "default_damage": "kinetic",
       "default_aim": "free-aim",
       "default_delivery": "hitscan",
@@ -74,7 +86,11 @@
       "label": "Autocannon",
       "description": "Rapid medium-calibre shells, often able to hit aircraft.",
       "rarity": "common",
-      "classes": ["vehicle", "walker", "hover", "aircraft"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "infantry": "rare",
+        "drone": "rare"
+      },
       "default_damage": "explosive",
       "default_aim": "free-aim",
       "default_delivery": "projectile",
@@ -89,7 +105,12 @@
       "label": "Cannon",
       "description": "A direct-fire gun firing heavy shells.",
       "rarity": "common",
-      "classes": ["vehicle", "walker", "hover"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "infantry": "rare",
+        "aircraft": "uncommon",
+        "drone": "rare"
+      },
       "default_damage": "armour-piercing",
       "default_aim": "free-aim",
       "default_delivery": "projectile",
@@ -105,7 +126,10 @@
       "label": "Artillery / mortar",
       "description": "Shells lobbed over cover onto a target point.",
       "rarity": "common",
-      "classes": ["infantry", "vehicle", "walker", "hover"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "drone"],
+      "class_rarity": {
+        "drone": "rare"
+      },
       "default_damage": "explosive",
       "default_aim": "free-aim",
       "default_delivery": "lobbed",
@@ -151,7 +175,11 @@
       "label": "Flak",
       "description": "Air-bursting shells, mainly against aircraft.",
       "rarity": "uncommon",
-      "classes": ["infantry", "vehicle", "walker", "hover"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "aircraft": "rare",
+        "drone": "rare"
+      },
       "default_damage": "explosive",
       "default_aim": "free-aim",
       "default_delivery": "projectile",
@@ -167,7 +195,11 @@
       "label": "Flamethrower",
       "description": "A short-range stream of fire that sets the ground alight.",
       "rarity": "uncommon",
-      "classes": ["infantry", "vehicle", "walker", "hover"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "aircraft": "rare",
+        "drone": "rare"
+      },
       "default_damage": "fire",
       "default_aim": "free-aim",
       "default_delivery": "projectile",
@@ -214,7 +246,10 @@
       "label": "Prism",
       "description": "A light beam that splits or refracts to hit several targets.",
       "rarity": "rare",
-      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "drone": "rare"
+      },
       "default_damage": "energy",
       "default_aim": "free-aim",
       "default_delivery": "beam",
@@ -259,7 +294,11 @@
       "label": "Sonic",
       "description": "Sound or pressure waves that push targets and pass through them.",
       "rarity": "rare",
-      "classes": ["infantry", "vehicle", "walker", "hover"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "aircraft": "rare",
+        "drone": "rare"
+      },
       "default_damage": "sonic",
       "default_aim": "free-aim",
       "default_delivery": "beam",
@@ -275,7 +314,11 @@
       "label": "Melee weapon",
       "description": "Blades, claws, fists, hammers, saws or drills used up close.",
       "rarity": "uncommon",
-      "classes": ["infantry", "walker", "drone", "vehicle"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "hover": "uncommon",
+        "aircraft": "rare"
+      },
       "default_damage": "melee",
       "default_aim": "free-aim",
       "default_delivery": "melee",
@@ -291,7 +334,11 @@
       "label": "Chemical / radiation",
       "description": "Toxic gas, acid or radiation that lingers as a hazard zone.",
       "rarity": "rare",
-      "classes": ["infantry", "vehicle", "walker", "aircraft"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "hover": "rare",
+        "drone": "rare"
+      },
       "default_damage": "toxic",
       "default_aim": "free-aim",
       "default_delivery": "projectile",
@@ -307,7 +354,12 @@
       "label": "Explosives",
       "description": "Grenades, satchel charges, mines, sticky bombs and bomb trucks.",
       "rarity": "common",
-      "classes": ["infantry", "drone", "vehicle"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "walker": "uncommon",
+        "hover": "uncommon",
+        "aircraft": "rare"
+      },
       "default_damage": "explosive",
       "default_aim": "free-aim",
       "default_delivery": "place",
@@ -354,7 +406,10 @@
       "label": "Drain beam",
       "description": "A beam that pulls health or energy from the target into the attacker.",
       "rarity": "rare",
-      "classes": ["infantry", "vehicle", "walker", "hover", "drone"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "aircraft": "rare"
+      },
       "default_damage": "energy",
       "default_aim": "free-aim",
       "default_delivery": "beam",
@@ -371,7 +426,11 @@
       "label": "Railgun / gauss",
       "description": "A magnetically fired slug: an instant, piercing line shot with a long reload.",
       "rarity": "rare",
-      "classes": ["infantry", "vehicle", "walker", "hover"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "aircraft": "rare",
+        "drone": "rare"
+      },
       "default_damage": "armour-piercing",
       "default_aim": "free-aim",
       "default_delivery": "hitscan",
@@ -417,7 +476,11 @@
       "label": "Psionic",
       "description": "Mind attacks: control, confusion or fear. Machines without a crew are immune.",
       "rarity": "rare",
-      "classes": ["infantry", "walker", "drone", "vehicle"],
+      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+      "class_rarity": {
+        "hover": "rare",
+        "aircraft": "rare"
+      },
       "default_damage": "psionic",
       "default_aim": "free-aim",
       "default_delivery": "beam",

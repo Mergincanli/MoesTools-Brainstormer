@@ -3,7 +3,8 @@
 // What it checks:
 // 1) JSON Schema validation (Ajv, draft 2020-12) of every file in data/ and the example cards, with an
 //    x-vocab keyword that checks term ids against the word lists in data/vocab/.
-// 2) Word-list integrity: allowed/excluded/favoured/avoided maps, typed links, ranks, key-bound patterns.
+// 2) Word-list integrity: allowed/excluded/favoured/avoided maps, typed links, ranks, key-bound patterns, class
+//    rarities (every class_rarity key must be in the term's classes), and one version shared by all word lists.
 // 3) Cross-references: patterns <-> units, the pattern registry, games and factions, typed links.
 // 4) Combination rules (classes, allowed, excluded, requires, min_tier): errors on example concept cards;
 //    on researched units each broken rule is printed as ATYPICAL and must be recorded in the unit's
@@ -79,6 +80,26 @@ export function validate(root = REPO_ROOT) {
 
   for (const f of vocabFiles) check(f, 'vocabulary.schema.json')
 
+  // The word lists are versioned together; the docs print this one version, and data files record it as vocab_version.
+  const vocabVersions = {}
+  for (const f of vocabFiles) (vocabVersions[read(f).version] ||= []).push(f)
+  const vocabVersion = Object.entries(vocabVersions).sort((a, b) => b[1].length - a[1].length)[0]?.[0]
+  for (const [ver, files] of Object.entries(vocabVersions)) {
+    if (ver !== vocabVersion) for (const f of files) err(`${f}: version ${ver} differs from the other word lists' ${vocabVersion}`)
+  }
+  function checkVocabVersion(file, data) {
+    if (vocabVersion && data.vocab_version !== vocabVersion) {
+      warn(`${file}: coded against word lists ${data.vocab_version}, but they are now ${vocabVersion}; re-check it and update vocab_version`)
+    }
+  }
+
+  // class_rarity keys must be classes the term or pattern allows at all (values are checked by the schema).
+  function checkClassRarity(where, classRarity, classes) {
+    for (const c of Object.keys(classRarity || {})) {
+      if (!(classes || []).includes(c)) err(`${where}: class_rarity names '${c}', which is not in its classes`)
+    }
+  }
+
   // ---------------------------------------------------------------- games, patterns, units
   const games = fs.existsSync(path.join(root, 'data/games.json')) ? check('data/games.json', 'game.schema.json').games : []
   const gameById = Object.fromEntries(games.map(g => [g.id, g]))
@@ -86,6 +107,7 @@ export function validate(root = REPO_ROOT) {
   for (const f of ls('data/patterns')) {
     const p = check(f, 'pattern.schema.json')
     if (path.basename(f) !== `${p.id}.json`) err(`${f}: file name must be <id>.json`)
+    checkVocabVersion(f, p)
     patterns.push({ ...p, _file: f })
   }
   const patternById = Object.fromEntries(patterns.map(p => [p.id, p]))
@@ -110,6 +132,7 @@ export function validate(root = REPO_ROOT) {
   const units = []
   for (const f of ls('data/units')) {
     const d = check(f, 'source-unit.schema.json')
+    checkVocabVersion(f, d)
     for (const u of d.units) units.push({ ...u, _file: f, _game: d.game })
   }
   const unitIds = new Set(units.map(u => u.id))
@@ -152,6 +175,7 @@ export function validate(root = REPO_ROOT) {
       for (const key of ['strong_vs', 'weak_vs', 'immune']) for (const r of t[key] || []) checkRef(w, r)
       for (const g of t.requires || []) for (const r of g) checkRef(w, r)
       if (t.pattern) patternKnown(w, t.pattern, 'pattern behind this key-bound trait')
+      checkClassRarity(w, t.class_rarity, t.classes)
     }
   }
 
@@ -395,6 +419,7 @@ export function validate(root = REPO_ROOT) {
     if (p.status === 'merged' && !patternById[p.merged_into]) err(`${w}: merged_into '${p.merged_into}' does not exist`)
     if (!p.generator) continue
     const G = p.generator
+    checkClassRarity(`${w} generator`, G.class_rarity, G.classes)
     for (const r of [...(G.requires || []).flat(), ...(G.excludes || []), ...(G.implies || [])]) checkRef(w, r)
     for (const r of [...(G.adds_strengths || []), ...(G.adds_weaknesses || []), ...(G.counters || []), ...G.countered_by]) {
       checkRef(w, r.ref, { onCard: true })
@@ -405,6 +430,7 @@ export function validate(root = REPO_ROOT) {
     for (const v of p.variants) {
       const o = v.overrides || {}
       for (const r of [...(o.requires || []).flat(), ...(o.excludes || []), ...(o.implies || [])]) checkRef(`${w} variant ${v.id}`, r)
+      checkClassRarity(`${w} variant ${v.id}`, o.class_rarity, o.classes || G.classes)
     }
     for (const v of p.variants) {
       const o = v.overrides || {}

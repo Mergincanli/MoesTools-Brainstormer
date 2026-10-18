@@ -31,9 +31,12 @@ const UNITS = 'data/units/ra3.json'
 const REGISTRY = 'data/pattern-registry.json'
 const CARD = 'docs/examples/concept-card.example.json'
 const PATTERN = id => `data/patterns/${id}.json`
+const VOCAB = id => `data/vocab/${id}.json`
+// The first term in a word list that has a class rarity (decision 4B), so the cases don't depend on one term.
+const crossOverTerm = v => v.terms.find(t => t.class_rarity) ?? assert.fail(`no term in '${v.id}' has a class_rarity`)
 
 // Each case breaks one thing in a fresh copy. kind 'error': a new ERROR containing `expect`;
-// kind 'warn': a new WARN containing `expect` and no new error.
+// kind 'warn': a new WARN containing `expect` and no new error; kind 'ok': no new error at all.
 const cases = [
   ['unit links an unknown pattern', 'is not in the pattern registry', 'error', dir => {
     const d = load(dir, UNITS); unit(d, 'terror-drone').abilities[0].patterns.push('made-up-pattern'); dump(dir, UNITS, d)
@@ -103,6 +106,50 @@ const cases = [
   ['card: unknown variant', 'unknown variant', 'error', dir => {
     const c = load(dir, CARD); c.parts.signature.variant = 'no-such-variant'; dump(dir, CARD, c)
   }],
+  // Decision 4B: classes are hard bans; class_rarity only makes a cross-over rarer.
+  ['word list: class_rarity names a class outside classes', 'which is not in its classes', 'error', dir => {
+    const v = load(dir, VOCAB('weapon-families')); const t = crossOverTerm(v)
+    const [cls] = Object.keys(t.class_rarity); t.classes = t.classes.filter(c => c !== cls); dump(dir, VOCAB('weapon-families'), v)
+  }],
+  ['word list: class_rarity with an unknown rarity', "is not a term of vocabulary 'rarity'", 'error', dir => {
+    const v = load(dir, VOCAB('weapon-families')); const t = crossOverTerm(v)
+    t.class_rarity[Object.keys(t.class_rarity)[0]] = 'legendary'; dump(dir, VOCAB('weapon-families'), v)
+  }],
+  ['word list: class_rarity with an unknown class', "is not a term of vocabulary 'classes'", 'error', dir => {
+    const v = load(dir, VOCAB('weapon-families')); crossOverTerm(v).class_rarity.spaceship = 'rare'; dump(dir, VOCAB('weapon-families'), v)
+  }],
+  ['pattern generator: class_rarity names a class outside classes', 'which is not in its classes', 'error', dir => {
+    const p = load(dir, PATTERN('leech-weapon-on-kill')); const G = p.generator
+    const outside = ['infantry', 'vehicle', 'walker', 'hover', 'aircraft', 'drone'].find(c => !G.classes.includes(c))
+    G.class_rarity = { [outside]: 'rare' }; dump(dir, PATTERN('leech-weapon-on-kill'), p)
+  }],
+  ['pattern generator: class_rarity with an unknown rarity', "is not a term of vocabulary 'rarity'", 'error', dir => {
+    const p = load(dir, PATTERN('leech-weapon-on-kill')); p.generator.class_rarity = { [p.generator.classes[0]]: 'legendary' }
+    dump(dir, PATTERN('leech-weapon-on-kill'), p)
+  }],
+  ["pattern variant: class_rarity names a class outside the variant's classes", 'which is not in its classes', 'error', dir => {
+    // kit-swap narrows the pattern to infantry, so a vehicle rarity on it is out of place.
+    const p = load(dir, PATTERN('leech-weapon-on-kill')); const v = p.variants.find(x => x.id === 'kit-swap')
+    assert.deepEqual(v.overrides.classes, ['infantry']); v.overrides.class_rarity = { vehicle: 'rare' }; dump(dir, PATTERN('leech-weapon-on-kill'), p)
+  }],
+  ['card: a cross-over within classes is allowed', '', 'ok', dir => {
+    // Interceptor armour is rare on drones but possible, so the drone card may carry it.
+    const t = load(dir, VOCAB('armour-models')).terms.find(x => x.id === 'interceptor')
+    assert.equal(t.class_rarity?.drone, 'rare')
+    const c = load(dir, CARD); assert.equal(c.parts.class, 'drone'); c.parts.armour.models.push('interceptor'); dump(dir, CARD, c)
+  }],
+  ['unit: a cross-over within classes is no rule break', '', 'ok', dir => {
+    const d = load(dir, UNITS); unit(d, 'terror-drone').armour.models.push('interceptor'); dump(dir, UNITS, d)
+  }],
+  ['unit: a hard class ban still needs an atypical entry', "but 'atypical' has no entry for 'armour-models:downed-revive'", 'error', dir => {
+    const d = load(dir, UNITS); unit(d, 'hammer-tank').armour.models.push('downed-revive'); dump(dir, UNITS, d)
+  }],
+  ['word lists with different versions', "differs from the other word lists'", 'error', dir => {
+    const v = load(dir, VOCAB('rarity')); v.version = '0.0.1'; dump(dir, VOCAB('rarity'), v)
+  }],
+  ['units coded against an older word-list version (warn only)', 'coded against word lists 0.0.1', 'warn', dir => {
+    const d = load(dir, UNITS); d.vocab_version = '0.0.1'; dump(dir, UNITS, d)
+  }],
 ]
 
 // ---------------------------------------------------------------- the validator
@@ -145,6 +192,8 @@ describe('validator', () => {
         const fresh = errors.filter(e => !baseline.has(e))
         if (kind === 'error') {
           assert.ok(fresh.some(e => e.includes(expect)), `expected an ERROR containing "${expect}"; new errors:\n${fresh.slice(0, 4).join('\n')}`)
+        } else if (kind === 'ok') {
+          assert.deepEqual(fresh, [], 'expected no new errors')
         } else {
           assert.ok(warnings.some(w => !baselineWarnings.has(w) && w.includes(expect)), `expected a new WARN containing "${expect}"`)
           assert.deepEqual(fresh, [], 'expected a warning only, but got new errors')
