@@ -463,7 +463,7 @@ One entry in the games registry, `data/games.json`. Schema: `schemas/game.schema
 | `developer` | text |  |  |  |
 | `franchise` | text | yes |  |  |
 | `control` | one of `commanded`, `piloted`, `both` | yes |  | commanded = the player orders units (RTS); piloted = the player is the unit (shooter); both. |
-| `research_bucket` | id | yes |  | The research agent batch this game belongs to. |
+| `research_bucket` | id | yes |  | The research batch this game belongs to: r1 Red Alert; r2 Tiberium series and Renegade; r3 Generals, Tempest Rising, Iron Harvest; r4 Company of Heroes, World in Conflict, Wargame, Broken Arrow; r5 Supreme Commander, Planetary Annihilation, StarCraft II, Halo Wars 2, Dawn of War; r6 shooters and hybrids (Battlefield, PlanetSide 2, Foxhole, WARDOGS, Arc Raiders, MechWarrior/BattleTech). |
 | `version_researched` | text |  |  | Patch, edition or date the research describes. |
 | `expansions[]` | list of groups |  |  |  |
 | `expansions[].id` | id | yes |  | Expansion id, e.g. 'ra3-uprising'. |
@@ -481,12 +481,13 @@ One entry in the games registry, `data/games.json`. Schema: `schemas/game.schema
 | `tier_map[].gate` | text | yes |  | Building, research or level that unlocks units, in plain words. |
 | `tier_map[].band` | term | yes | `tiers` | A term from *Tier bands*. |
 | `tier_map[].faction` | id |  |  | Faction id from this game's factions, e.g. 'soviet'. |
-| `cost_thresholds` | group |  |  | Lowest price for each cost band above 'very low', in the game's currency. |
+| `cost_thresholds` | group |  |  | Lowest price for each cost band above 'very low', in the game's currency. Method: pick an anchor, the price of the game's standard main battle tank (or its main line combat unit if it has no tanks); the thresholds are about 0.5, 0.9, 1.4 and 2 times the anchor, rounded. 'basis' names the anchor. |
 | `cost_thresholds.currency` | text | yes |  |  |
 | `cost_thresholds.low` | number | yes |  |  |
 | `cost_thresholds.medium` | number | yes |  |  |
 | `cost_thresholds.high` | number | yes |  |  |
 | `cost_thresholds.very-high` | number | yes |  |  |
+| `cost_thresholds.basis` | text | yes |  | The anchor unit and its price, and how a multi-resource cost is turned into one number. |
 | `speed_reference` | text | yes |  | The unit whose speed counts as 1.0 for speed bands, usually the basic rifle infantry. |
 | `damage_map` | map |  |  | The game's own damage categories mapped to our damage types. |
 | `armour_map` | map |  |  | The game's own armour categories mapped to our armour classes. |

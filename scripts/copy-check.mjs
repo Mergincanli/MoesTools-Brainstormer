@@ -1,0 +1,409 @@
+// Copy-check: flags wording copied from the pages the data cites.
+//
+// For every source URL cited in data/units/*.json (each unit), data/patterns/*.json (each pattern, through
+// its other_examples and shooter_analogues) and data/games.json (each game), it fetches the page text and
+// reports every run of N or more consecutive words (default 6) that the page shares with any prose string
+// of the record that cites it. Words are compared lower-cased with punctuation stripped, and British and
+// American spellings count as the same word ('armour' = 'armor'). Runs that are only a title or name
+// (a game, unit or page title found in the data) are ignored.
+//
+// Pages come from MediaWiki sites (Fandom, wiki.gg, StrategyWiki, Halopedia, Wikipedia and others) as
+// wikitext through the site's api.php (action=parse), and from other sites as HTML turned into text.
+// Every page is cached under .cache/sources/ (git-ignored), so later runs work offline. Requests go one
+// at a time with a pause between them, and a 429 or 503 answer is retried with a growing wait.
+//
+// This needs the network, so CI does not run it: research agents and checkers run it by hand.
+//
+// Usage: node scripts/copy-check.mjs [root] [options]
+//   --offline          use cached pages only; uncached pages are listed as not checked
+//   --min-words N      shortest shared run to report (default 6)
+//   --only TEXT        only check pages whose URL contains TEXT (repeatable)
+//   --max-fetch N      fetch at most N pages from the network in this run; the rest count as not checked
+//   --refresh          fetch again even when a page is cached
+//   --delay MS         pause between network requests (default 1500)
+// Exit code: 1 when shared runs are found, 2 on bad arguments, otherwise 0.
+import crypto from 'node:crypto'
+import { spawnSync } from 'node:child_process'
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const USER_AGENT = 'UnitForgeCopyCheck/1.0 (checks research notes for copied wording; one request at a time)'
+
+// Keys whose values are names, titles, ids or citations rather than our own prose.
+const NOT_PROSE = new Set([
+  '$schema', 'url', 'title', 'accessed', 'supports', 'kind', 'id', 'ref', 'name', 'aliases', 'unit', 'game',
+  'franchise', 'source_terms', 'developer', 'gate', 'currency',
+])
+// Keys whose values are names or titles; runs made only of these words are not reported.
+const NAME_KEYS = new Set(['title', 'name', 'aliases', 'unit', 'game', 'franchise', 'developer', 'gate'])
+
+// ---------------------------------------------------------------- words
+
+// British spellings mapped to American ones (the word starts with the key), so a copy that only changed
+// the spelling is still found. The same mapping is applied to both sides.
+const UK_US = {
+  armour: 'armor', colour: 'color', favour: 'favor', behaviour: 'behavior', honour: 'honor', harbour: 'harbor',
+  vapour: 'vapor', rumour: 'rumor', labour: 'labor', flavour: 'flavor', neighbour: 'neighbor', valour: 'valor',
+  vigour: 'vigor', humour: 'humor', endeavour: 'endeavor', defence: 'defense', offence: 'offense',
+  licence: 'license', centre: 'center', metre: 'meter', litre: 'liter', fibre: 'fiber', theatre: 'theater',
+  calibre: 'caliber', sabre: 'saber', spectre: 'specter', manoeuvr: 'maneuver', grey: 'gray', tyre: 'tire',
+  aluminium: 'aluminum', programme: 'program', catalogue: 'catalog', analys: 'analyz', paralys: 'paralyz',
+}
+const UK_US_RE = new RegExp(`^(${Object.keys(UK_US).join('|')})`)
+
+function spelling(w) {
+  w = w.replace(UK_US_RE, m => UK_US[m])
+  w = w.replace(/^(\p{L}{3,})is(e|ed|es|ing|ation|ations)$/u, '$1iz$2') // immobilise -> immobilize
+  w = w.replace(/^(\p{L}{2,}[ae])ll(ed|ing|er|ers)$/u, '$1l$2') // travelled -> traveled
+  return w
+}
+
+/** Splits text into normalised words: lower-case, no punctuation, apostrophes dropped, US spelling. */
+export function words(text) {
+  return text
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/['‘’`´]/g, '')
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter(Boolean)
+    .map(spelling)
+}
+
+/** The set of all n-word runs in a list of words, each joined with spaces. */
+export function grams(ws, n) {
+  const out = new Set()
+  for (let i = 0; i + n <= ws.length; i++) out.add(ws.slice(i, i + n).join(' '))
+  return out
+}
+
+/**
+ * Finds the runs of n or more consecutive words of `ws` that also occur in a page, given the page's n-gram
+ * set. Overlapping hits are merged into one maximal run. `ignore` holds n-grams that never count.
+ * Returns the runs as strings of words.
+ */
+export function sharedRuns(ws, pageGrams, n, ignore = new Set()) {
+  const hit = i => {
+    const g = ws.slice(i, i + n).join(' ')
+    return pageGrams.has(g) && !ignore.has(g)
+  }
+  const runs = []
+  let i = 0
+  while (i + n <= ws.length) {
+    if (!hit(i)) { i++; continue }
+    let j = i + 1
+    while (j + n <= ws.length && hit(j)) j++
+    runs.push(ws.slice(i, j - 1 + n).join(' '))
+    i = j // position j is not a hit; a later, overlapping run is reported on its own
+  }
+  return runs
+}
+
+// ---------------------------------------------------------------- page text
+
+const NAMED_ENTITIES = {
+  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', ndash: '–', mdash: '—', hellip: '…',
+  lsquo: '‘', rsquo: '’', ldquo: '“', rdquo: '”', laquo: '«', raquo: '»', middot: '·', bull: '•',
+  times: '×', eacute: 'é', egrave: 'è', aacute: 'á', agrave: 'à', ouml: 'ö', uuml: 'ü', auml: 'ä', szlig: 'ß',
+}
+export function decodeEntities(s) {
+  return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e) => {
+    if (e[0] === '#') {
+      const cp = e[1].toLowerCase() === 'x' ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10)
+      return cp > 0 && cp <= 0x10ffff ? String.fromCodePoint(cp) : ' '
+    }
+    return NAMED_ENTITIES[e.toLowerCase()] ?? m
+  })
+}
+
+/** Turns MediaWiki wikitext into plain text: link labels kept, markup and comments dropped. */
+export function wikitextToText(t) {
+  t = t.replace(/<!--[\s\S]*?-->/g, ' ')
+  // [[target|label]] -> label, [[target]] -> target; repeated so links inside image captions resolve.
+  for (let prev = null; prev !== t;) {
+    prev = t
+    t = t.replace(/\[\[(?:[^[\]|]*\|)*([^[\]|]*)\]\]/g, '$1')
+  }
+  t = t.replace(/\[(?:https?:)?\/\/[^\s\]]+\s*([^\]]*)\]/g, '$1') // [http://x label] -> label
+  t = t.replace(/'{2,}/g, '') // bold and italics
+  t = t.replace(/<[^>]+>/g, ' ')
+  return decodeEntities(t)
+}
+
+/** Turns an HTML page into plain text: scripts, styles and tags dropped, entities decoded. */
+export function htmlToText(h) {
+  h = h.replace(/<!--[\s\S]*?-->/g, ' ')
+  h = h.replace(/<(script|style|noscript|svg|template|head)\b[\s\S]*?<\/\1\s*>/gi, ' ')
+  h = h.replace(/<[^>]+>/g, ' ')
+  return decodeEntities(h)
+}
+
+// ---------------------------------------------------------------- fetching
+
+// MediaWiki sites whose page URLs have no /wiki/ prefix (https://www.halopedia.org/Page_title).
+const ROOT_PATH_WIKIS = new Set(['www.halopedia.org', 'halopedia.org'])
+
+// Where a site's MediaWiki API lives, by host; other hosts with /wiki/ URLs are probed.
+function apiCandidates(u) {
+  const h = u.hostname
+  if (h.endsWith('.fandom.com') || h.endsWith('.wiki.gg') || h === 'www.halopedia.org' || h === 'halopedia.org') {
+    return [`${u.origin}/api.php`]
+  }
+  if (h === 'strategywiki.org' || h.endsWith('.wikipedia.org') || h.endsWith('.wikimedia.org') || h.endsWith('.wiktionary.org')) {
+    return [`${u.origin}/w/api.php`]
+  }
+  return [`${u.origin}/w/api.php`, `${u.origin}/api.php`]
+}
+
+/** For a wiki page URL, the page title and the API endpoints to try; null for other URLs. */
+export function mediaWikiTarget(url) {
+  const u = new URL(url)
+  let title = null
+  const m = u.pathname.match(/^\/wiki\/(.+)$/)
+  if (m) title = m[1]
+  else if (/\/index\.php$/.test(u.pathname) && u.searchParams.get('title')) title = u.searchParams.get('title')
+  else if (ROOT_PATH_WIKIS.has(u.hostname) && u.pathname.length > 1) title = u.pathname.slice(1)
+  if (!title) return null
+  return { title: safeDecode(title).replace(/_/g, ' '), apis: apiCandidates(u) }
+}
+
+function safeDecode(s) {
+  try { return decodeURIComponent(s) } catch { return s }
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms))
+
+// One request at a time; retries 429/503 and network errors with a growing wait (Retry-After if given).
+async function politeGet(url, state, { tries = 6 } = {}) {
+  for (let attempt = 1; ; attempt++) {
+    const wait = state.lastRequest + state.delay - Date.now()
+    if (wait > 0) await sleep(wait)
+    state.lastRequest = Date.now()
+    state.requests++
+    let res
+    try {
+      res = await fetch(url, { headers: { 'User-Agent': USER_AGENT }, redirect: 'follow', signal: AbortSignal.timeout(30000) })
+    } catch (e) {
+      if (attempt >= tries) throw new Error(`network error: ${e.cause?.code || e.message}`)
+      await sleep(2000 * 2 ** (attempt - 1))
+      continue
+    }
+    if ((res.status === 429 || res.status === 503) && attempt < tries) {
+      const retryAfter = Number(res.headers.get('retry-after'))
+      const backoff = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 2000 * 2 ** (attempt - 1)
+      console.error(`  ${res.status} from ${new URL(url).host}, waiting ${Math.round(backoff / 1000)}s (try ${attempt} of ${tries})`)
+      await res.body?.cancel()
+      await sleep(Math.min(backoff, 120000))
+      continue
+    }
+    return res
+  }
+}
+
+async function fetchPage(url, state) {
+  const wiki = mediaWikiTarget(url)
+  if (wiki) {
+    for (const api of wiki.apis) {
+      const q = `${api}?action=parse&page=${encodeURIComponent(wiki.title)}&prop=wikitext&redirects=1&format=json`
+      const res = await politeGet(q, state)
+      if (res.status === 404) { await res.body?.cancel(); continue } // no API at this path
+      if (!res.ok) throw new Error(`HTTP ${res.status} from ${api}`)
+      const body = await res.text()
+      let data
+      try { data = JSON.parse(body) } catch { continue } // not an API here; try the next one
+      if (data.error) throw new Error(`wiki API: ${data.error.code}${data.error.info ? ` (${data.error.info})` : ''}`)
+      const wt = data.parse?.wikitext
+      const raw = typeof wt === 'string' ? wt : wt?.['*']
+      if (typeof raw === 'string') return { format: 'wikitext', via: q, raw }
+    }
+  }
+  const res = await politeGet(url, state)
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  return { format: 'html', via: url, raw: await res.text() }
+}
+
+export function cachePath(cacheDir, url) {
+  const u = new URL(url)
+  const slug = safeDecode(u.pathname + u.search).replace(/[^A-Za-z0-9._-]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 80) || 'index'
+  const hash = crypto.createHash('sha256').update(url).digest('hex').slice(0, 10)
+  return path.join(cacheDir, u.hostname, `${slug}-${hash}.json`)
+}
+
+// ---------------------------------------------------------------- records and prose
+
+/** Every record that cites sources: { file, id, value }. */
+export function collectRecords(root) {
+  const read = f => JSON.parse(fs.readFileSync(path.join(root, f), 'utf8'))
+  const ls = d => (fs.existsSync(path.join(root, d)) ? fs.readdirSync(path.join(root, d)).filter(f => f.endsWith('.json')).sort().map(f => `${d}/${f}`) : [])
+  const records = []
+  for (const f of ls('data/units')) for (const u of read(f).units || []) records.push({ file: f, id: u.id, value: u })
+  for (const f of ls('data/patterns')) { const p = read(f); records.push({ file: f, id: p.id, value: p }) }
+  if (fs.existsSync(path.join(root, 'data/games.json'))) for (const g of read('data/games.json').games || []) records.push({ file: 'data/games.json', id: g.id, value: g })
+  return records
+}
+
+/** URLs cited anywhere inside a record (any 'sources' list, including those of examples and analogues). */
+export function citedUrls(value) {
+  const out = new Set()
+  const walk = (x, key) => {
+    if (Array.isArray(x)) {
+      for (const v of x) {
+        if (key === 'sources' && v && typeof v.url === 'string') out.add(v.url)
+        walk(v, null)
+      }
+    } else if (x && typeof x === 'object') {
+      for (const [k, v] of Object.entries(x)) walk(v, k)
+    }
+  }
+  walk(value, null)
+  return [...out]
+}
+
+/** Our own prose strings inside a record, as [jsonPath, text]. */
+export function proseStrings(value) {
+  const out = []
+  const walk = (x, p) => {
+    if (typeof x === 'string') out.push([p || '/', x])
+    else if (Array.isArray(x)) x.forEach((v, i) => walk(v, `${p}/${i}`))
+    else if (x && typeof x === 'object') for (const [k, v] of Object.entries(x)) if (!NOT_PROSE.has(k)) walk(v, `${p}/${k}`)
+  }
+  walk(value, '')
+  return out
+}
+
+function nameStrings(x, key = null, out = []) {
+  if (typeof x === 'string') { if (NAME_KEYS.has(key)) out.push(x) }
+  else if (Array.isArray(x)) for (const v of x) nameStrings(v, key, out)
+  else if (x && typeof x === 'object') for (const [k, v] of Object.entries(x)) nameStrings(v, k, out)
+  return out
+}
+
+// ---------------------------------------------------------------- the check
+
+function parseArgs(argv) {
+  const opts = { root: REPO_ROOT, offline: false, minWords: 6, only: [], maxFetch: Infinity, refresh: false, delay: 1500 }
+  const num = (a, v) => { const n = Number(v); if (!Number.isInteger(n) || n < 0) throw new Error(`${a} needs a whole number`); return n }
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i]
+    if (a === '--offline') opts.offline = true
+    else if (a === '--refresh') opts.refresh = true
+    else if (a === '--min-words') opts.minWords = Math.max(2, num(a, argv[++i]))
+    else if (a === '--max-fetch') opts.maxFetch = num(a, argv[++i])
+    else if (a === '--delay') opts.delay = num(a, argv[++i])
+    else if (a === '--only') { if (!argv[i + 1]) throw new Error('--only needs a text'); opts.only.push(argv[++i]) }
+    else if (a.startsWith('--')) throw new Error(`unknown option '${a}'`)
+    else opts.root = path.resolve(a)
+  }
+  return opts
+}
+
+export async function copyCheck(opts) {
+  const n = opts.minWords
+  const cacheDir = path.join(opts.root, '.cache', 'sources')
+  const records = collectRecords(opts.root)
+  const ignore = new Set()
+  for (const r of records) for (const s of nameStrings(r.value)) for (const g of grams(words(s), n)) ignore.add(g)
+
+  const allUrls = [...new Set(records.flatMap(r => citedUrls(r.value)))].sort()
+  const urls = opts.only.length ? allUrls.filter(u => opts.only.some(t => u.includes(t))) : allUrls
+  const state = { delay: opts.delay, lastRequest: 0, requests: 0 }
+  const pages = new Map() // url -> gram set
+  const notChecked = [] // [url, reason]
+  let fromCache = 0, fetched = 0
+  for (const url of urls) {
+    const file = cachePath(cacheDir, url)
+    let page = null
+    if (fs.existsSync(file) && !opts.refresh) {
+      try { page = JSON.parse(fs.readFileSync(file, 'utf8')); fromCache++ } catch { page = null }
+    }
+    if (!page) {
+      if (opts.offline) { notChecked.push([url, 'offline and not cached']); continue }
+      if (fetched >= opts.maxFetch) { notChecked.push([url, `over --max-fetch ${opts.maxFetch}`]); continue }
+      try {
+        console.error(`fetching ${url}`)
+        page = { url, fetched: new Date().toISOString(), ...(await fetchPage(url, state)) }
+        fs.mkdirSync(path.dirname(file), { recursive: true })
+        fs.writeFileSync(file, JSON.stringify(page, null, 1) + '\n')
+        fetched++
+      } catch (e) {
+        notChecked.push([url, e.message])
+        continue
+      }
+    }
+    const text = page.format === 'wikitext' ? wikitextToText(page.raw) : htmlToText(page.raw)
+    pages.set(url, grams(words(text), n))
+  }
+
+  const findings = [] // { file, id, path, run, urls }
+  for (const r of records) {
+    const cited = citedUrls(r.value).filter(u => pages.has(u))
+    if (!cited.length) continue
+    for (const [p, s] of proseStrings(r.value)) {
+      const ws = words(s)
+      if (ws.length < n) continue
+      const byRun = new Map()
+      for (const u of cited) for (const run of sharedRuns(ws, pages.get(u), n, ignore)) {
+        if (!byRun.has(run)) byRun.set(run, [])
+        byRun.get(run).push(u)
+      }
+      for (const [run, us] of byRun) findings.push({ file: r.file, id: r.id, path: p, run, urls: us })
+    }
+  }
+  return { urls, allUrls, pagesChecked: pages.size, fromCache, fetched, notChecked, findings, records: records.length }
+}
+
+export function formatCopyReport(res, opts) {
+  const lines = []
+  const scope = opts.only.length ? `${res.urls.length} of ${res.allUrls.length} cited page(s) (--only)` : `${res.urls.length} cited page(s)`
+  lines.push(`copy-check: ${scope} in ${res.records} record(s); reporting shared runs of ${opts.minWords}+ words`)
+  lines.push(`pages checked: ${res.pagesChecked} (${res.fromCache} from cache, ${res.fetched} fetched); not checked: ${res.notChecked.length}`)
+  for (const f of res.findings) {
+    lines.push('')
+    lines.push(`FOUND    ${f.file} ${f.id} ${f.path}`)
+    lines.push(`         "${f.run}" (${f.run.split(' ').length} words)`)
+    for (const u of f.urls) lines.push(`         shared with ${u}`)
+  }
+  const byReason = new Map()
+  for (const [u, why] of res.notChecked) {
+    if (!byReason.has(why)) byReason.set(why, [])
+    byReason.get(why).push(u)
+  }
+  for (const [why, us] of byReason) {
+    lines.push('', `NOT CHECKED (${why}): ${us.length} page(s)`)
+    for (const u of us) lines.push(`  ${u}`)
+  }
+  lines.push('')
+  if (res.findings.length) lines.push(`FAILED: ${res.findings.length} shared run(s); rewrite them in your own words`)
+  else if (res.notChecked.length) lines.push(`OK for the ${res.pagesChecked} page(s) checked; ${res.notChecked.length} page(s) not checked`)
+  else lines.push('OK: no shared runs')
+  return lines.join('\n')
+}
+
+// Node's fetch ignores HTTPS_PROXY unless NODE_USE_ENV_PROXY=1 (Node 22.21+ and 24.5+), so behind a proxy
+// the script runs itself again with that set.
+function rerunWithProxy() {
+  const proxied = process.env.HTTPS_PROXY || process.env.https_proxy
+  if (!proxied || process.env.NODE_USE_ENV_PROXY) return null
+  const args = ['--disable-warning=UNDICI-EHPA', ...process.execArgv, ...process.argv.slice(1)] // quiet "experimental" notice
+  const r = spawnSync(process.execPath, args, {
+    stdio: 'inherit',
+    env: { ...process.env, NODE_USE_ENV_PROXY: '1' },
+  })
+  return r.status ?? 1
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  let opts
+  try {
+    opts = parseArgs(process.argv.slice(2))
+  } catch (e) {
+    console.error(`${e.message}\nusage: node scripts/copy-check.mjs [root] [--offline] [--min-words N] [--only TEXT] [--max-fetch N] [--refresh] [--delay MS]`)
+    process.exit(2)
+  }
+  const status = opts.offline ? null : rerunWithProxy()
+  if (status !== null) process.exit(status)
+  const res = await copyCheck(opts)
+  console.log(formatCopyReport(res, opts))
+  process.exitCode = res.findings.length ? 1 : 0
+}
