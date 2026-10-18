@@ -137,6 +137,12 @@ describe('coder folders, the reference and the command line', () => {
     const cls = ref.find(x => x.path === 'class')
     assert.equal(cls.comparisons, 9)
     assert.equal(cls.agreement, Math.round((8 / 9) * 1000) / 1000)
+    assert.deepEqual(cls.differs, []) // one coder of three differs: not most
+    const two = structuredClone(codings)
+    const first = RA3.units[0].id
+    two['coder-b'][first].class = two['coder-c'][first].class
+    const again = compareWithReference(two, Object.fromEntries(RA3.units.map(u => [u.id, unitCoding(u)])), { fields: UNIT_FIELDS })
+    assert.deepEqual(again.find(x => x.path === 'class').differs.map(d => d.item), [first])
   })
   it('needs at least two coder folders', () => {
     const lone = tmp()
@@ -147,9 +153,10 @@ describe('coder folders, the reference and the command line', () => {
     const r = spawnSync(process.execPath, [AGREEMENT, root, '--reference', path.join(REPO_ROOT, 'data/units')], { encoding: 'utf8' })
     assert.equal(r.status, 0, r.stderr)
     assert.match(r.stdout, /^# Agreement between coders/)
-    assert.match(r.stdout, /\| class \| one \| 3 \| 78% \|/)
-    assert.match(r.stdout, /### class \(78%, below the threshold\)/)
+    assert.match(r.stdout, /\| class \| one \| 3 \| 77\.8% \|/)
+    assert.match(r.stdout, /### class \(77\.8%, below the threshold\)/)
     assert.match(r.stdout, /## Compared with the reference/)
+    assert.doesNotMatch(r.stdout, /### Where most coders differ from the reference/) // only one coder of three differs
   })
   it('prints JSON with --json', () => {
     const r = spawnSync(process.execPath, [AGREEMENT, root, '--json'], { encoding: 'utf8' })
@@ -190,5 +197,6 @@ describe('table files', () => {
     const md = renderMarkdown(r, { title: 'Speed' })
     assert.match(md, /^# Speed/)
     assert.match(md, /### band_a \(50%, below the threshold\)/)
+    assert.match(md, /\| band_a \| one \| 2 \| 50% \| 100% \|/)
   })
 })

@@ -182,19 +182,27 @@ export function measure(codings, { fields, ranks = {}, threshold = 0.8 }) {
   return { coders, items, threshold, fields: out }
 }
 
-/** How often each coder matches a reference coding (for example the published sample units), per field. */
+/**
+ * How often each coder matches a reference coding (for example the published sample units), per field, and the items
+ * where most coders gave something other than the reference (with every value), which point at a rule or a reference
+ * to fix.
+ */
 export function compareWithReference(codings, reference, { fields }) {
   return fields.map(f => {
     let n = 0
     let sum = 0
-    for (const c of Object.keys(codings)) {
-      for (const [item, coding] of Object.entries(codings[c])) {
-        if (!reference[item]) continue
-        n++
-        sum += score(f, coding[f.path], reference[item][f.path])
+    const differs = []
+    for (const item of Object.keys(reference).sort()) {
+      const by = Object.keys(codings).sort().filter(c => codings[c][item])
+      if (!by.length) continue
+      const scores = by.map(c => score(f, codings[c][item][f.path], reference[item][f.path]))
+      n += by.length
+      sum += scores.reduce((a, b) => a + b, 0)
+      if (scores.filter(s => s < 1).length * 2 > by.length) {
+        differs.push({ item, reference: reference[item][f.path], values: Object.fromEntries(by.map(c => [c, codings[c][item][f.path]])) })
       }
     }
-    return { path: f.path, comparisons: n, agreement: n ? round(sum / n) : null }
+    return { path: f.path, comparisons: n, agreement: n ? round(sum / n) : null, gated: f.gate !== false, differs }
   })
 }
 
@@ -242,7 +250,7 @@ const cell = v => {
   const s = Array.isArray(v) ? (v.length ? v.join(', ') : '(none)') : String(v)
   return s.replace(/\|/g, '\\|')
 }
-const pct = x => (x === null ? 'n/a' : `${Math.round(x * 100)}%`)
+const pct = x => (x === null ? 'n/a' : `${Math.round(x * 1000) / 10}%`)
 
 /** The report as Markdown. */
 export function renderMarkdown(result, { title = 'Agreement between coders', reference = null } = {}) {
@@ -278,6 +286,12 @@ export function renderMarkdown(result, { title = 'Agreement between coders', ref
   if (reference) {
     lines.push('', '## Compared with the reference', '', 'How often a coder matched the reference coding, per field (sets score their overlap).', '', '| Field | Comparisons | Agreement |', '|---|---|---|')
     for (const r of reference) lines.push(`| ${r.path} | ${r.comparisons} | ${pct(r.agreement)} |`)
+    const differs = reference.filter(r => r.gated && r.differs.length)
+    if (differs.length) {
+      const coders = result.coders
+      lines.push('', '### Where most coders differ from the reference', '', 'Either the reference or a rule needs a look.', '', `| Field | Item | Reference | ${coders.join(' | ')} |`, `|---|---|---|${coders.map(() => '---').join('|')}|`)
+      for (const r of differs) for (const d of r.differs) lines.push(`| ${r.path} | ${d.item} | ${cell(d.reference)} | ${coders.map(c => (c in d.values ? cell(d.values[c]) : '')).join(' | ')} |`)
+    }
   }
   return lines.join('\n') + '\n'
 }

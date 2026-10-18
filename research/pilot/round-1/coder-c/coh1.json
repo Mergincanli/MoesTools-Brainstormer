@@ -1,0 +1,434 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "0.4.0",
+  "vocab_version": "0.4.0",
+  "game": "coh1",
+  "units": [
+    {
+      "id": "coh1.us.riflemen",
+      "game": "coh1",
+      "faction": "us",
+      "name": "Riflemen Squad",
+      "flavour_affinity": ["soviet", "allied"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["anti-infantry", "engineer"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Barracks",
+        "basis": "Recruited at the US Barracks, which an Engineer Squad can put up from the start of the match with no prerequisite; the registry maps the Barracks to t1."
+      },
+      "cost_band": {
+        "band": "very-low",
+        "raw": 270,
+        "basis": "270 manpower and no fuel, so 270 + 3 x 0 = 270 under the coh1 weighting, below the 325 threshold for 'low'. Population, upkeep and the per-man reinforcement price are left out, as the registry says."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "This squad is the game's speed reference itself (3 m/s), so the ratio is exactly 1.0, which sits on the slow/medium border; the validator reads 1.0 as medium. Most vehicles are about twice as fast or more. Suppression makes the men crawl, and the Retreat order gives a large temporary speed bonus."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "count": 6,
+        "notes": "Six soldiers who move and fight as one squad: five riflemen and a sergeant with a radio pack. Each man has his own health and weapon; orders go only to the whole squad."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Plain infantry, among the flimsiest soldiers in the game; each man has his own small health pool, so the squad thins out man by man. Survival leans on the game's cover system (light, heavy and building cover make men harder to hit and cut damage and suppression; open ground does the reverse). Veterancy makes the men harder to hit (rank 1) and adds damage reduction (rank 2); retreating also makes them harder to hit and cuts damage while they run."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Sees 35 m, the usual sight range shared by infantry and most other units; the scout Jeep's 55 m is the longest in the game, and snipers and anti-tank guns can shoot further than they see. No camouflage or detection."
+      },
+      "armament": [
+        {
+          "name": ".30 Cal M1 Garand",
+          "slot": "primary",
+          "seat": "driver",
+          "family": "small-arms",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle"],
+          "summary": "Five semi-automatic rifles, slow between shots and needing several hits per kill. Their rate of fire climbs sharply at close range and drops off at long range, so the squad wins by closing in and loses drawn-out long-range duels with Axis bolt-action rifles. Next to useless against armour."
+        },
+        {
+          "name": ".30 Cal M1 Carbine",
+          "slot": "secondary",
+          "seat": "driver",
+          "family": "small-arms",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle"],
+          "summary": "The sergeant's lighter carbine: a little quicker to fire and slower to run dry than the Garand, and the least hurt by firing on the move of any infantry weapon, but it hits softer and is less accurate far out."
+        },
+        {
+          "name": "M1918 Browning Automatic Rifle (BAR)",
+          "slot": "acquired",
+          "seat": "driver",
+          "family": "small-arms",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle"],
+          "traits": ["magazine", "suppress"],
+          "summary": "Two automatic rifles firing short bursts, with a reload every handful of bursts. They become the squad's main firepower at every infantry range and can pin enemy squads, even without the Suppression Fire ability when close enough. The squad keeps both as long as two men are alive.",
+          "condition": "Once the BAR global upgrade has been bought at the Barracks; it then equips every existing and future Riflemen Squad.",
+          "patterns": ["upgrade-in-field"]
+        },
+        {
+          "name": "Picked-up infantry weapon",
+          "slot": "acquired",
+          "seat": "driver",
+          "family": "adaptive",
+          "summary": "Any specialist infantry weapon left on the ground by a fallen soldier of either side (light machine guns, automatic rifles, anti-tank launchers and so on) can be picked up if the squad has free weapon slots; one rifleman swaps his rifle for it and keeps it until it is lost.",
+          "condition": "When the squad is ordered onto an abandoned infantry weapon and has enough open weapon slots for it.",
+          "patterns": ["leech-weapon-on-kill"]
+        }
+      ],
+      "crew": {
+        "model": "squad",
+        "basis": "in-game",
+        "notes": "One order-taker for six men. Losing men weakens the squad's fire before it dies, and it is lost only when the last man falls. Lost men are bought back one at a time near the HQ, a Forward Barracks or an M3 Halftrack. The squad can garrison buildings and ride in transports, which protect it."
+      },
+      "abilities": [
+        {
+          "name": "Throw Grenade",
+          "kind": "active",
+          "seat": "driver",
+          "cooldown": "medium",
+          "summary": "Lobs a fragmentation grenade at a chosen spot after a short fuse; it kills or badly wounds infantry nearby and is the squad's best tool against dug-in weapon teams and troops in cover or buildings. Costs munitions per throw and barely scratches armour.",
+          "patterns": ["throw-explosive"],
+          "source": "upgrade"
+        },
+        {
+          "name": "Throw Sticky Bomb",
+          "kind": "active",
+          "seat": "driver",
+          "cooldown": "medium",
+          "summary": "Throws a charge that clings to a chosen enemy vehicle and blows a few seconds later, almost always damaging the engine or immobilising it; light vehicles can die outright. It never misses once thrown, so the only escape is staying out of throwing range. Costs munitions per throw.",
+          "patterns": ["throw-explosive"],
+          "source": "upgrade"
+        },
+        {
+          "name": "Suppression Fire",
+          "kind": "active",
+          "seat": "driver",
+          "cooldown": "medium",
+          "summary": "For a short burst the squad fires twice as fast and its shots pile on far more suppression, rising in two steps, at the cost of much worse accuracy; enemy infantry outside buildings is soon pinned. Needs the BAR upgrade and costs munitions.",
+          "patterns": ["suppress-with-fire"],
+          "source": "upgrade"
+        },
+        {
+          "name": "Reinforce",
+          "kind": "active",
+          "seat": "driver",
+          "summary": "Near the HQ, a Forward Barracks or an M3 Halftrack, each press buys back one lost man for a small share of the squad's price, up to the original six.",
+          "patterns": ["reinforce-squad"]
+        },
+        {
+          "name": "Retreat to HQ",
+          "kind": "active",
+          "seat": "driver",
+          "summary": "The squad sprints home to the HQ along the shortest path: it moves much faster, is much harder to hit, takes far less damage and sheds all suppression, but it cannot fire or take orders until it arrives. It keeps veterancy, upgrades and picked-up weapons if it survives.",
+          "patterns": ["dash", "brace"]
+        },
+        {
+          "name": "Upgrade to Barracks",
+          "kind": "active",
+          "seat": "driver",
+          "summary": "From inside a neutral building in friendly, connected territory, spends manpower and half a minute converting the building to a US Forward Barracks, where infantry can top up lost men and some units can be built near the front. Enemy infantry cannot garrison it but can turn it back to neutral over time.",
+          "patterns": ["host-spawn-point", "capture-structure"]
+        },
+        {
+          "name": "Build defences (Defensive Operations)",
+          "kind": "active",
+          "seat": "driver",
+          "summary": "Lays free barbed wire (blocks infantry), sandbags (heavy cover for infantry) and tank traps (block most vehicles) to hold a captured sector until engineers arrive.",
+          "patterns": ["build-cover"],
+          "source": "commander-power"
+        },
+        {
+          "name": "Mines (Defensive Operations)",
+          "kind": "active",
+          "seat": "driver",
+          "summary": "Buries mines that go off under any enemy infantry or vehicle, usually wiping a squad or wrecking a vehicle's engine; friendly units pass safely. Costs munitions per mine.",
+          "patterns": ["lay-mines"],
+          "source": "commander-power"
+        },
+        {
+          "name": "Veterancy",
+          "kind": "passive",
+          "seat": "driver",
+          "summary": "Kills earn experience for this squad alone; three ranks add accuracy, make the men harder to hit, add suppression resistance and damage reduction, lengthen the sticky bomb throw and finally raise weapon damage by half.",
+          "patterns": ["earn-veterancy"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "in-game"
+      },
+      "strengths": [
+        {
+          "ref": "crew:squad",
+          "why": "Six bodies make it hard to wipe out in one go, and a cheap reinforcement price per man turns losses into a small manpower bill instead of a lost unit."
+        },
+        {
+          "ref": "role:engineer",
+          "why": "Captures strategic points half again as fast as most units and can secure them with observation posts, so it leads the early land grab."
+        },
+        {
+          "ref": "weapon-trait:suppress",
+          "why": "With BARs and Suppression Fire it can pin an enemy squad so a second unit can flank it."
+        },
+        {
+          "ref": "pattern:throw-explosive",
+          "why": "Upgrades add grenades for weapon teams and garrisons and sticky bombs that cripple vehicle engines, so one squad covers many jobs."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "Some of the weakest soldiers in the game; any weapon kills them, so they depend on cover and numbers."
+        },
+        {
+          "ref": "range:<=medium",
+          "why": "Its rifles slow down at long range, so it loses long firefights against Axis rifle squads and must close the distance under fire."
+        },
+        {
+          "ref": "damage:kinetic",
+          "why": "Rifle fire does almost nothing to armour; before the sticky bomb upgrade it has no answer to tanks."
+        },
+        {
+          "ref": "target:infantry",
+          "why": "As infantry it suffers suppression: machine guns and heavy fire pin it in place and ruin its aim."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "weapon:machine-gun",
+          "why": "Heavy machine gun teams suppress and pin the squad before it can close in."
+        },
+        {
+          "ref": "weapon:artillery",
+          "why": "Mortars and other indirect fire hit it in cover and in pinned positions."
+        },
+        {
+          "ref": "weapon:flamethrower",
+          "why": "Flamethrowers burn it out of cover and buildings."
+        },
+        {
+          "ref": "armour-class:>=medium",
+          "why": "Armoured vehicles shrug off its rifles; only sticky bombs, at close range and with munitions, can hurt them."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "At close and medium range a full squad outnumbers and outshoots basic Axis rifle squads, and BARs make it strong against most infantry."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "It is the cheap screen that rushes and kills anti-tank gun crews and other anti-tank infantry before the tanks come into their range."
+        },
+        {
+          "ref": "mobility-trait:deploy-anchor",
+          "why": "Grenades punish set-up weapon teams that cannot move away quickly, such as machine gun teams."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Sticky bombs can destroy light vehicles outright whatever health they have left."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "weapon:machine-gun",
+          "why": "A machine gun team pins the enemy while the riflemen flank: the classic fire-and-manoeuvre pair."
+        },
+        {
+          "ref": "unit:coh1.us.riflemen",
+          "why": "Two squads as a platoon: one suppresses and holds, the other moves round to hit the enemy from an uncovered side."
+        },
+        {
+          "ref": "weapon:artillery",
+          "why": "Mortar smoke covers the advance, and mortar shells finish enemies the riflemen have pinned or forced into buildings."
+        },
+        {
+          "ref": "role:transport",
+          "why": "An M3 Halftrack carries the squad between fights and reinforces it in the field."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Later on it leads tank columns, spotting the enemy and killing anti-tank crews before the expensive tanks arrive."
+        }
+      ],
+      "memorable": "The cheap six-man backbone of the US army: endlessly refilled, upgraded with BARs, grenades and sticky bombs, and the fastest unit at grabbing territory.",
+      "as_player": "You lead a six-soldier rifle squad that moves as one; your followers fall as you take damage, so your fire thins before you die. Mid-life buys add grenades, sticky bombs or BARs, you capture points faster than anyone, and you top up lost men at a halftrack or forward base instead of respawning. Pair with a machine-gun teammate: they pin, you flank.",
+      "sources": [
+        {
+          "url": "https://companyofheroes.fandom.com/wiki/Riflemen_Squad",
+          "title": "Riflemen Squad, Company of Heroes Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-18",
+          "version": "Company of Heroes with Opposing Fronts and Tales of Valor; the page does not name a patch",
+          "note": "Read through the MediaWiki API (wikitext). Infobox: 6 men, 270 manpower, 27 per reinforcement, 55 health, 3 m/s, built at the Barracks with no prerequisite; weapons, upgrades, abilities, veterancy and tactics sections.",
+          "supports": [
+            "name",
+            "class",
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility/speed_raw",
+            "body",
+            "armour",
+            "armament/0",
+            "armament/1",
+            "armament/2",
+            "abilities/0",
+            "abilities/1",
+            "abilities/2",
+            "abilities/5",
+            "abilities/6",
+            "abilities/7",
+            "abilities/8",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://companyofheroes.fandom.com/wiki/Infantry",
+          "title": "Infantry, Company of Heroes Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-18",
+          "note": "Read through the MediaWiki API. General infantry rules: 3 m/s base speed, per-man health, reinforcement button, Retreat to HQ bonuses, garrisoning, suppression, cover, weapon slots and picking up abandoned infantry and team weapons; Riflemen capture at 150% of the normal rate.",
+          "supports": [
+            "mobility/speed",
+            "armour",
+            "crew",
+            "armament/3",
+            "abilities/3",
+            "abilities/4",
+            "roles",
+            "strengths/1"
+          ]
+        },
+        {
+          "url": "https://companyofheroes.fandom.com/wiki/Jeep",
+          "title": "Jeep, Company of Heroes Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-18",
+          "note": "Read through the MediaWiki API. States that most units see 35 m and the Jeep 55 m, the longest sight in the game; used only to place the Riflemen's sight in the game's range.",
+          "supports": ["sensors"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "armament/0",
+          "note": "The wiki's pages disagree on the rifles' best range: the Riflemen Squad page says the Garand falls behind Axis rifles at long range and shines up close, while the Barracks page (read but not among the three cited sources) calls the squad good at long range. The longer Riflemen page, which gives the rate-of-fire mechanics, was followed.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/range",
+          "note": "No source gives the rifles' maximum range in metres. 'Medium' follows the wiki's description of rifles as mid-range weapons (best near 20 m) against snipers and anti-tank guns that shoot 50-60 m."
+        },
+        {
+          "path": "sensors/sight",
+          "note": "The 35 m figure comes from the Jeep page's general statement about most units (and the Sniper page says the same of all infantry); no page gives the Riflemen's own sight value."
+        },
+        {
+          "path": "abilities/0/cooldown",
+          "note": "Grenade and sticky bomb cooldowns are 15 seconds, exactly on the line between the 'short' (5-10 s) and 'medium' (15-30 s) bands; medium was used."
+        },
+        {
+          "path": "abilities/7",
+          "note": "Defensive Operations is an Infantry Company command-tree upgrade; the page lists build times of 5 s per mine in the infobox but 10 s in the text."
+        },
+        {
+          "path": "armament/3",
+          "note": "Picking up dropped weapons is a rule for most infantry squads, not something special to the Riflemen; the Riflemen page only mentions it in passing. The squad can also re-crew abandoned team weapons (splitting off men into a new weapon team), which is not recorded as a weapon or ability here."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "pilot round 1, coder C",
+      "lineage": "riflemen",
+      "fit_notes": [
+        {
+          "path": "abilities",
+          "used": "(not recorded as an ability)",
+          "wanted": "a pattern for fortifying a capture point and raising its income",
+          "note": "The squad can build an Observation Post on a captured strategic point, which protects it from capture and raises the sector's resource output. No registry pattern covers it (build-cover is obstacles, gather-resources is harvesting), so the ability is left out."
+        },
+        {
+          "path": "abilities",
+          "used": "(not recorded as an ability)",
+          "wanted": "a faster-capture bonus",
+          "note": "The Riflemen capture strategic points at 150% of the standard rate, their defining early-game job. The registry notes call point capture a game-mode rule rather than a pattern, so it is only described in notes and in the engineer secondary role."
+        },
+        {
+          "path": "abilities",
+          "used": "(not recorded as an ability)",
+          "wanted": "recover-wreck as an ability without its own button",
+          "note": "Re-crewing an abandoned team weapon (machine gun, mortar, anti-tank gun) is a right-click order, not a button, so by the weapons-vs-abilities rule it is no ability; recover-wreck would otherwise fit exactly."
+        },
+        {
+          "path": "abilities/4/patterns",
+          "used": "dash, brace",
+          "wanted": "a retreat or disengage pattern",
+          "note": "Retreat to HQ combines a speed burst (dash) with a stop to firing in exchange for damage reduction (brace), plus loss of control, suppression immunity and a forced run home; neither pattern is the whole mechanic."
+        },
+        {
+          "path": "abilities/5/patterns",
+          "used": "host-spawn-point, capture-structure",
+          "wanted": "turn a building into a forward base",
+          "note": "The squad converts a neutral building into a reinforcement and production point. host-spawn-point assumes teammates spawn at the unit itself; capture-structure assumes an enemy building. Both are partial fits."
+        },
+        {
+          "path": "armour/models",
+          "used": "flat-pool",
+          "wanted": "cover-based protection",
+          "note": "In Company of Heroes infantry protection is mostly positional: cover makes men harder to hit and cuts damage and suppression, open ground does the reverse. No armour model describes protection that depends on where the unit stands."
+        },
+        {
+          "path": "armament/0/traits",
+          "used": "(none)",
+          "wanted": "a range-dependent rate-of-fire trait",
+          "note": "The Garand fires much faster at close range and much slower at long range, the main thing that sets it apart from the Axis rifle; no weapon trait captures fire rate that changes with distance."
+        },
+        {
+          "path": "armament/2/slot",
+          "used": "acquired",
+          "wanted": "a slot or source for weapons added by a purchased upgrade",
+          "note": "The BAR comes from a faction-wide upgrade bought at a building, not from a kill or pickup. 'acquired' (gained during play) was the closest slot; abilities have a 'source: upgrade' term but weapons do not. upgrade-in-field also assumes a per-unit purchase rather than a global one."
+        },
+        {
+          "path": "resources",
+          "used": "(none)",
+          "wanted": "a per-use team currency for abilities",
+          "note": "Grenades, sticky bombs, Suppression Fire and mines each cost munitions from the team's stock. No resources term fits a shared economy rather than a unit gauge, so none is recorded."
+        }
+      ]
+    }
+  ]
+}
