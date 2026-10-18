@@ -1,6 +1,6 @@
 # Unit Forge, first step (section 7 of the brief): plan, fields, vocabularies and samples
 
-**For:** Mustafa · **Status:** waiting for your approval · **Covers:** section 7 of the brief (the plan and repository structure, the full list of fields and vocabularies, and the Terror Drone, Hammer Tank and Allied IFV with three patterns, fully filled in)
+**For:** Mustafa · **Status:** approved on 18 October 2026, decisions 1B 2A 3C 4B 5B 6C 7B 8B 9A (see [Decisions taken](#decisions-taken)) · **Covers:** section 7 of the brief (the plan and repository structure, the full list of fields and vocabularies, and the Terror Drone, Hammer Tank and Allied IFV with three patterns, fully filled in)
 
 ## TL;DR
 
@@ -279,7 +279,10 @@ No variant of the infest or leech pattern lets you steal a whole vehicle; that i
 
 ## Decisions needed
 
-Each one stands on its own. A reply like "1B 2A 3C 4B 5B 6A 7B 8B 9A" is enough.
+<a id="decisions-taken"></a>
+**Decisions taken (Mustafa, 18 October 2026): 1B 2A 3C 4B 5B 6C 7B 8B 9A.** All follow the recommendations; decision 6 is C because Shamble Frontlines will have jets and airships. What changes in step 1 as a result: combination rules become hard bans only for physical nonsense, with a rarity per class for the rest (4B), and units get a sensors field and two air layers, low and high (6C). The other choices match what the draft already uses.
+
+Each one stands on its own. The options as they were put:
 
 1. **What counts toward a tier's ability limit?** The brief says tiers cap abilities.
    - **A.** Count abilities only: active abilities up to the tier number (T1 one, T2 two, T3 three), plus one passive.
