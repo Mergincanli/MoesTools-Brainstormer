@@ -545,6 +545,7 @@ One fixed word list, `data/vocab/<list>.json`, with the fields each term may car
 | `terms[].label` | text | yes |  |  |
 | `terms[].description` | text | yes |  |  |
 | `terms[].aliases` | list of texts |  |  |  |
+| `terms[].replaces` | list of ids |  |  | Term ids of earlier word-list versions that this term takes over (merged or renamed). Data still using them must move to this term. |
 | `terms[].notes` | text |  |  |  |
 | `terms[].examples` | list of texts |  |  | Reference examples from the research, paraphrased. |
 | `terms[].rarity` | term |  | `rarity` | How readily the generator offers this term (see the rarity list). |
@@ -573,7 +574,7 @@ One fixed word list, `data/vocab/<list>.json`, with the fields each term may car
 | `terms[].max_keys` | integer (0-) |  |  | Tiers: most buttons a unit may have, signature included. |
 | `terms[].max_passive` | integer (0-) |  |  |  |
 | `terms[].max_keys_per_seat` | integer (1-) |  |  |  |
-| `terms[].source_rule` | text |  |  | Tiers: how a source game's tech level maps to this tier. |
+| `terms[].source_rule` | text |  |  | How to code a source unit with this term: what in the source decides it. For tiers, how a game's tech level maps to the tier. |
 | `terms[].themes` | list of texts |  |  |  |
 | `terms[].favoured` | map |  |  | Faction flavours: term ids the flavour leans toward, keyed by vocabulary id. |
 | `terms[].avoided` | map |  |  | Faction flavours: term ids held back at low spice, keyed by vocabulary id. |
@@ -592,6 +593,9 @@ One fixed word list, `data/vocab/<list>.json`, with the fields each term may car
 | `terms[].brings.weaknesses` | list of link + reasons |  |  |  |
 | `terms[].brings.counters` | list of link + reasons |  |  |  |
 | `terms[].brings.countered_by` | list of link + reasons |  |  |  |
+| `tie_breaks[]` | list of groups |  |  | Rules for coding source units when two or more terms seem to fit equally well: which one to pick. Written from the calibration pilot, where coders disagreed. A term of another list is written '&lt;list&gt;:&lt;id&gt;'. |
+| `tie_breaks[].terms` | list of texts (min 2) | yes |  | The terms the rule chooses between. |
+| `tie_breaks[].rule` | text | yes |  | Which term to pick, and how to tell, in plain words. |
 
 ## Shared parts
 

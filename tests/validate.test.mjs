@@ -420,6 +420,21 @@ const cases = [
   ['word list: two terms with one rank', 'data/vocab/sight-bands.json: rank 1 is used by more than one term', 'error', dir => {
     edit(dir, VOCAB('sight-bands'), v => { v.terms.forEach((t, i) => { t.rank = i === 0 ? 1 : i }) })
   }],
+  ['word list: a tie-break naming a term that does not exist', "data/vocab/sizes.json tie_breaks/0: 'not-a-size' is not a term of 'sizes'", 'error', dir => {
+    edit(dir, VOCAB('sizes'), v => { v.tie_breaks = [{ terms: ['tiny', 'not-a-size'], rule: 'pick the smaller one' }] })
+  }],
+  ['word list: a tie-break naming an unknown list', "data/vocab/sizes.json tie_breaks/0: unknown word list 'nope' in 'nope:tiny'", 'error', dir => {
+    edit(dir, VOCAB('sizes'), v => { v.tie_breaks = [{ terms: ['tiny', 'nope:tiny'], rule: 'pick the smaller one' }] })
+  }],
+  ['word list: a tie-break naming a term twice', "data/vocab/sizes.json tie_breaks/0: 'tiny' is named twice", 'error', dir => {
+    edit(dir, VOCAB('sizes'), v => { v.tie_breaks = [{ terms: ['tiny', 'tiny'], rule: 'pick the smaller one' }] })
+  }],
+  ['word list: a term replacing one that still exists', "data/vocab/sizes.json small: replaces 'tiny', which is still a term of this list", 'error', dir => {
+    edit(dir, VOCAB('sizes'), v => { v.terms.find(t => t.id === 'small').replaces = ['tiny'] })
+  }],
+  ['word list: two terms replacing the same id', "data/vocab/sizes.json: 'wee' is replaced by more than one term", 'error', dir => {
+    edit(dir, VOCAB('sizes'), v => { v.terms[0].replaces = ['wee']; v.terms[1].replaces = ['wee'] })
+  }],
   ['duplicate unit id', "duplicate unit id 'ra3.soviet.hammer-tank'", 'error', dir => {
     const d = load(dir, UNITS); d.units.push(structuredClone(unit(d, 'hammer-tank'))); dump(dir, UNITS, d)
   }],

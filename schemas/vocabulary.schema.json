@@ -36,6 +36,31 @@
       "items": {
         "$ref": "#/$defs/term"
       }
+    },
+    "tie_breaks": {
+      "description": "Rules for coding source units when two or more terms seem to fit equally well: which one to pick. Written from the calibration pilot, where coders disagreed. A term of another list is written '<list>:<id>'.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["terms", "rule"],
+        "properties": {
+          "terms": {
+            "description": "The terms the rule chooses between.",
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "string",
+              "pattern": "^([a-z0-9]+(-[a-z0-9]+)*:)?[a-z0-9]+([.-][a-z0-9]+)*$"
+            }
+          },
+          "rule": {
+            "description": "Which term to pick, and how to tell, in plain words.",
+            "type": "string",
+            "minLength": 10
+          }
+        }
+      }
     }
   },
   "$defs": {
@@ -69,6 +94,13 @@
           "type": "array",
           "items": {
             "type": "string"
+          }
+        },
+        "replaces": {
+          "description": "Term ids of earlier word-list versions that this term takes over (merged or renamed). Data still using them must move to this term.",
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/slug"
           }
         },
         "notes": {
@@ -205,7 +237,7 @@
           "minimum": 1
         },
         "source_rule": {
-          "description": "Tiers: how a source game's tech level maps to this tier.",
+          "description": "How to code a source unit with this term: what in the source decides it. For tiers, how a game's tech level maps to the tier.",
           "type": "string"
         },
         "themes": {

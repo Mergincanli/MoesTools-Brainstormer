@@ -9,8 +9,9 @@
 // Pass 2, rules.
 // 1) Word-list integrity: unique term ids; ranks (on a ranked list every term has one and no two share one);
 //    allowed/excluded/favoured/avoided maps; typed links; key-bound patterns; class rarities (every class_rarity key
-//    must be in the term's classes); one version shared by all word lists; and every term with combination rules
-//    sits in a list the rules read, with maps keyed only by lists the rules read, so no rule is skipped unseen.
+//    must be in the term's classes); tie-break rules name real terms; ids a term 'replaces' are no longer terms; one
+//    version shared by all word lists; and every term with combination rules sits in a list the rules read, with maps
+//    keyed only by lists the rules read, so no rule is skipped unseen.
 // 2) Cross-references: unique game, faction and unit ids; patterns <-> units, the pattern registry, games and
 //    factions, typed links.
 // 3) Combination rules: every term's classes, min_tier, allowed, excluded and requires. A unit or card is read as
@@ -210,6 +211,22 @@ export function validate(root = REPO_ROOT) {
     if (!rankedLists.has(v.id) && !v.terms.some(t => t.rank !== undefined)) continue
     for (const t of v.terms) if (!Number.isInteger(t.rank)) err(`${f} ${t.id}: no rank, but every term of a ranked list needs a whole-number rank`)
     for (const r of repeated(v.terms.map(t => t.rank).filter(Number.isInteger))) err(`${f}: rank ${r} is used by more than one term`)
+  }
+
+  // A tie-break rule names two or more different terms, of its own list ('id') or of another ('<list>:id'). A term's
+  // 'replaces' names ids of earlier versions, which are no longer terms of the list, each taken over by one term only.
+  for (const { f, v } of vocabDocs) {
+    for (const [i, tb] of (v.tie_breaks || []).entries()) {
+      for (const x of tb.terms) {
+        const [lid, id] = x.includes(':') ? x.split(':') : [v.id, x]
+        if (!vocab[lid]) err(`${f} tie_breaks/${i}: unknown word list '${lid}' in '${x}'`)
+        else if (!vocab[lid].has(id)) err(`${f} tie_breaks/${i}: '${x}' is not a term of '${lid}'`)
+      }
+      for (const x of repeated(tb.terms)) err(`${f} tie_breaks/${i}: '${x}' is named twice`)
+    }
+    const replaced = v.terms.flatMap(t => (t.replaces || []).map(r => ({ r, by: t.id })))
+    for (const { r, by } of replaced) if (vocab[v.id]?.has(r)) err(`${f} ${by}: replaces '${r}', which is still a term of this list`)
+    for (const r of repeated(replaced.map(x => x.r))) err(`${f}: '${r}' is replaced by more than one term`)
   }
 
   // class_rarity keys must be classes the term or pattern allows at all (values are checked by the schema).

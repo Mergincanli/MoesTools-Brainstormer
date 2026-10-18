@@ -387,6 +387,8 @@ function vocabDocs() {
         let meaning = t.description
         if (given(t, 'aliases')) meaning += f` Also called: ${join(', ', t.aliases)}.`
         if (given(t, 'notes')) meaning += f` *Note:* ${t.notes}`
+        if (given(t, 'source_rule') && !has(t, 'max_keys')) meaning += f` *Coding rule:* ${t.source_rule}`
+        if (given(t, 'replaces')) meaning += f` *Replaces:* ${join(', ', t.replaces.map(r => f`\`${r}\``))}.`
         if (given(t, 'examples')) meaning += ' *Seen in:* ' + join('; ', t.examples) + '.'
         if (given(t, 'source_only')) meaning += ' *(research only)*'
         const row = [f`\`${t.id}\``, esc(t.label), esc(meaning)]
@@ -395,9 +397,21 @@ function vocabDocs() {
         out.push('| ' + join(' | ', row) + ' |')
       }
       out.push('')
+      if (given(v, 'tie_breaks')) {
+        out.push('**Tie-breaks** (when two terms seem to fit a source unit):\n')
+        for (const tb of v.tie_breaks) out.push(f`- ${join(' or ', tb.terms.map(x => tieTermText(v.id, x)))}: ${tb.rule}`)
+        out.push('')
+      }
     }
   }
   return join('\n', out) + '\n'
+}
+
+// A term named in a tie-break rule: its label, with its list's name when it is from another list.
+function tieTermText(listId, x) {
+  const [lid, id] = x.includes(':') ? x.split(':') : [listId, x]
+  const label = f`*${L[lid][id]}*`
+  return lid === listId ? label : f`${label} (${VL[lid].toLowerCase()})`
 }
 
 // ------------------------------------------------------------------ fields
