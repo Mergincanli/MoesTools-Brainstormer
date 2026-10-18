@@ -22,7 +22,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 | Tier | T1 (gate: War Factory): Built at the War Factory with no further tech; the wiki lists it as tier 1. |
 | Cost band | Low: A little over half the price of a main battle tank. |
 | Mobility | Many legs; handling: strafe *(proposal)*; traits: Amphibious; speed: very fast. One of the fastest ground units in the game. It crosses water and can even reach submerged submarines. |
-| Body | Spider frame, tiny. A spider-like robot. Although it comes from the vehicle factory, the game treats it much like infantry: it rides in troop transports, but it heals only at a captured hospital or dry dock or at top veterancy, not from medics or repair drones. |
+| Body | Spider frame, tiny. A spider-like robot. Although it comes from the vehicle factory, the game treats it much like infantry: it rides in troop transports, but it heals only at a captured hospital or dry dock or at top veterancy, not from an engineer's medical tent or from repair drones. The player version keeps the tiny look but gives it a soldier-sized hitbox (see as_player). |
 | Armour | Light; model: Single health bar. Very little health. Machine guns and snipers hurt it badly and electric weapons do many times normal damage; melee animals and radiation can't hurt it. |
 | Crew | Solo (proposal). One player is the drone. While it is inside a host, the camera rides along with the host. |
 | On death | Respawn (proposal) |
@@ -32,7 +32,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 
 | Weapon | Slot | Family | Damage | Mount / delivery / range | Hits | Traits | What it does |
 |---|---|---|---|---|---|---|---|
-| Dismantler Claws | primary | Melee weapon | Melee | free aim / attach / melee | infantry, ground vehicles | Damage over time | Closes to touching distance and strikes. Infantry die in one strike. A vehicle or ship (even a submerged one) gets the drone inside it and takes damage from within until it dies or the drone is removed. Aircraft can be infested only while landed. *Pattern:* Infest a vehicle. |
+| Dismantler Claws | primary | Melee weapon | Melee | free aim / attach / melee | infantry, ground vehicles, naval | Damage over time | Closes to touching distance and strikes. Infantry die in one strike. A vehicle or ship (even a submerged one) gets the drone inside it and takes damage from within until it dies or the drone is removed. Aircraft can be infested only while landed. *Pattern:* Infest a vehicle. |
 | Electro-Stasis Ray | alternate | EMP | EMP | free aim / beam / long | ground vehicles, naval | Root / pin | A long-range beam that pins a vehicle in place: it can't move, transform or deploy, but its guns still work. One documented exception, the Allied aircraft carrier, is shut down completely. *When:* In stasis mode, switched with the mode toggle. *Pattern:* disable machine (planned). |
 
 **Abilities**
@@ -82,7 +82,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 **Less certain**
 
 - No source gives the stasis ray's exact range or duration; a patch note implies the drone keeps the beam on the target rather than firing once.
-- The full list of ways to remove an infesting drone comes from one wiki page; the official profile names fewer.
+- The official profile says only repair crews at facilities can remove an infesting drone; the main wiki lists many more ways (repair drones, teleporting the host, several special attacks). The entry follows the wiki. (sources disagree)
 - Game data gives the claws explosive-type damage against vehicles and a sniper-type hit against infantry big enough to kill even a commando at once; 'melee' is used only because the blades family requires it.
 - Sources call it small or diminutive, and each drone fills a soldier's seat in a transport; no source compares its actual size to a soldier.
 
@@ -95,7 +95,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 <a id="ra3-soviet-hammer-tank"></a>
 ### Hammer Tank (`ra3.soviet.hammer-tank`)
 
-> A main battle tank that loots: the first vehicle to die in its beam decides its one-time loadout choice, since it holds only one stolen gun and can't swap it.
+> A main battle tank that loots: the first weapon it takes from a vehicle dying in its beam is its one-time loadout choice, since it holds only one stolen gun and can't swap it.
 
 | Field | Value |
 |---|---|
@@ -108,7 +108,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 | Mobility | Tracks; handling: pivot (tank controls) *(proposal)*; traits: Crush; speed: medium. Slower than the Allied main battle tank and not amphibious. Heavy enough to run over infantry, but crushing is a fallback, not a plan. |
 | Body | Hull with turret, large.  |
 | Armour | Heavy; model: Directional armour. The toughest of the three factions' main battle tanks. Machine-gun fire does much less damage to it. Facing matters only mildly: side and rear hits do slightly more (game data on the wiki). |
-| Crew | Solo (proposal). One player drives, fires and toggles the beam. A two-seat version could give the beam and the stolen weapon to a second player. |
+| Crew | Solo (proposal). One player drives, fires the cannon and holds the beam. A two-seat version could give the beam and the stolen weapon to a second player. |
 | On death | Bail out (proposal) |
 | Confidence | high (review: unchecked) |
 
@@ -118,7 +118,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 |---|---|---|---|---|---|---|---|
 | 85 mm cannon | primary | Cannon | Armour-piercing | free aim / projectile / medium | infantry, ground vehicles, structures | - | A fast-firing anti-vehicle gun. Poor against infantry and unable to hit aircraft. |
 | Leech Beam | alternate | Drain beam | Energy | free aim / beam / long | ground vehicles, naval, structures | Self-heal | Reaches about twice as far as the cannon. Deals modest damage that ignores armour type, and repairs the tank while it stays on target. A vehicle that dies in the beam can hand over its weapon if the tank has none yet. *When:* In leech mode. Since patch 1.11 the tank must stand still to use it. *Pattern:* Leech the weapon of what you destroy, drain health (planned). |
-| Auxiliary weapon port | acquired | Adaptive | - | from the kill | from the kill | - | Empty when built. Holds one weapon taken from the dead vehicle, such as anti-air flak, an anti-infantry gun, a tesla coil or artillery. It fires alongside the cannon, one weapon at a time, and is silent in leech mode; a Sky Knight drone taken from an aircraft carrier is the one exception. *When:* Filled once, by a vehicle that dies in the leech beam; can't be swapped. It is kept for the life of the tank, except that losing a Sky Knight drone taken from an aircraft carrier frees the slot in the base game (not in Uprising). *Pattern:* Leech the weapon of what you destroy. |
+| Auxiliary weapon port | acquired | Adaptive | - | from the kill | from the kill | - | Empty when built. Holds one weapon taken from the dead vehicle, such as anti-air flak, an anti-infantry gun, a tesla coil or artillery. It fires alongside the cannon, one weapon at a time, and is silent in leech mode; a Sky Knight drone taken from an aircraft carrier is the one exception; a Multigunner IFV gives anti-air rockets whoever rides inside. *When:* Filled once, by a vehicle that dies in the leech beam; can't be swapped. It is kept for the life of the tank, except that losing a Sky Knight drone taken from an aircraft carrier frees the slot in the base game (not in Uprising). *Pattern:* Leech the weapon of what you destroy. |
 
 **Abilities**
 
@@ -127,7 +127,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 
 **Strengths**
 
-- More health than the other factions' main battle tanks, which makes it the toughest of the three; beats the Allied and Imperial tanks one-on-one. *[Heavy (armour)]*
+- Its armour is rated the heaviest among main battle tanks, which makes it the toughest of the three; beats the Allied and Imperial tanks one-on-one. *[Heavy (armour)]*
 - Heals itself mid-fight with the beam, so a damaged tank can step behind the line and leech at range to recover instead of leaving the battle. *[Self-heal (weapon trait)]*
 - A stolen weapon can cover its own gaps, such as anti-air or anti-infantry, or add a big-unit gun. *[Adaptive (weapon)]*
 - The beam outranges basic defences such as small turrets. *[Long (range)]*
@@ -136,8 +136,8 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 **Weaknesses**
 
 - Its cannon can't hit aircraft and is poor against infantry; without a stolen weapon it has no answer to air. *[Cannon (weapon)]*
-- While leeching it stands still, kills slowly and its stolen weapon goes quiet (a stolen Sky Knight drone is the one exception). *[Beam (delivery)]*
-- The stolen slot is permanent, so a poor first steal can't be undone. *[Adaptive (weapon)]*
+- While leeching it stands still, kills slowly and its stolen weapon goes quiet (a stolen Sky Knight drone is the one exception). The player version slows it heavily instead of rooting it. *[Beam (delivery)]*
+- A stolen weapon can't be swapped, so a poor first steal can't be undone. *[Adaptive (weapon)]*
 - Needs a Super Reactor built first. *[T2 (tier)]*
 - Slower than the Allied tank and can't cross water. *[Medium (speed)]*
 
@@ -149,7 +149,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 
 **Counters**
 
-- Beats the other factions' main battle tanks one-on-one thanks to more health and steady damage. *[Tank / ground vehicle (class)]*
+- Beats the other factions' main battle tanks one-on-one thanks to heavier armour and steady damage. *[Tank / ground vehicle (class)]*
 - The beam outranges basic defences such as small turrets. *[is a target of type structures]*
 
 **Notable combos**
@@ -240,7 +240,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 
 - Tanks shrug off its light missiles unless an anti-armour passenger rides along. *[Tank / ground vehicle (class)]*
 - Carrying a passenger without an anti-air weapon replaces its missiles, so it can no longer fire back at aircraft. *[Aircraft (class)]*
-- A Hammer tank that leeches it to death gets an anti-air rocket weapon, whoever was riding inside (see the sources on the Hammer tank's entry). *[Hammer Tank]*
+- A Hammer tank shrugs off its light missiles, and leeching the car to death gives the Hammer an anti-air rocket weapon, whoever was riding inside. *[Hammer Tank]*
 - An infesting Terror Drone kills it unless repair drones, an engineer-loaded Multigunner, a Chronosphere teleport or a few special attacks remove it (see the Terror Drone's entry). *[Terror Drone]*
 
 **Counters**
@@ -262,7 +262,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 - Sources list Soviet and Empire soldiers as passengers but don't say how they normally end up in an Allied car (bribed soldiers, captured barracks or mixed teams).
 - No cited source says whether the Javelin version can hit aircraft.
 - The wiki gives figures for about half the mounted weapons (and says the Tanya, Natasha and Desolator versions match the soldiers' own weapons); this entry records only relative strength.
-- Delivery terms for the passenger weapons are family defaults, not sourced weapon by weapon; so are their ranges where the wiki gives none.
+- Delivery terms for the passenger weapons are not sourced weapon by weapon: most are family defaults, while the shuriken and arrow versions are coded as projectiles (and the arrow version as long range) from their descriptions. Ranges are family defaults where the wiki gives none.
 - The cited pages tie only the Desolator version to the Uprising expansion; the Uprising tags on the Cryo Legionnaire and Archer Maiden versions come from those soldiers' own wiki pages.
 - No source says whether the default missiles steer or lock on; the wiki calls them rockets, so they are coded as unguided.
 - The wiki gives no damage category for the default missiles; explosive is chosen from their light anti-vehicle and anti-air role.
@@ -277,6 +277,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 - The wiki gives no damage category for the Tankbuster version; energy is the laser family default.
 - Enclosed carrier or open buggy: the sources describe it both ways.
 - The wiki doesn't say whether side or rear hits do extra damage to it.
+- The Hammer tank and Terror Drone entries in countered_by rest on those units' own cited pages (the Hammer tank page and the Terror drone page); none of this unit's three sources covers them.
 
 **Sources**
 

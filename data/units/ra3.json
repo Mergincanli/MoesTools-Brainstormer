@@ -39,7 +39,7 @@
       "body": {
         "plan": "spider-frame",
         "size": "tiny",
-        "notes": "A spider-like robot. Although it comes from the vehicle factory, the game treats it much like infantry: it rides in troop transports, but it heals only at a captured hospital or dry dock or at top veterancy, not from medics or repair drones."
+        "notes": "A spider-like robot. Although it comes from the vehicle factory, the game treats it much like infantry: it rides in troop transports, but it heals only at a captured hospital or dry dock or at top veterancy, not from an engineer's medical tent or from repair drones. The player version keeps the tiny look but gives it a soldier-sized hitbox (see as_player)."
       },
       "armour": {
         "class": "light",
@@ -55,7 +55,7 @@
           "mount": "free-aim",
           "delivery": "attach",
           "range": "melee",
-          "can_target": ["infantry", "ground-vehicle"],
+          "can_target": ["infantry", "ground-vehicle", "naval"],
           "traits": ["damage-over-time"],
           "summary": "Closes to touching distance and strikes. Infantry die in one strike. A vehicle or ship (even a submerged one) gets the drone inside it and takes damage from within until it dies or the drone is removed. Aircraft can be infested only while landed.",
           "patterns": ["infest-vehicle"]
@@ -248,7 +248,8 @@
         },
         {
           "path": "countered_by",
-          "note": "The full list of ways to remove an infesting drone comes from one wiki page; the official profile names fewer."
+          "note": "The official profile says only repair crews at facilities can remove an infesting drone; the main wiki lists many more ways (repair drones, teleporting the host, several special attacks). The entry follows the wiki.",
+          "sources_disagree": true
         },
         {
           "path": "armament/0/damage",
@@ -267,12 +268,6 @@
           "note": "Game data gives the claws explosive-type damage against vehicles and sniper-type damage against infantry, which maps to kinetic. The blades family allows only melee, electric or energy damage, so a player version may want explosive or kinetic."
         },
         {
-          "path": "armament/0/can_target",
-          "used": "infantry, ground-vehicle",
-          "wanted": "naval",
-          "note": "The claws also infest ships, including submerged ones; the blades family does not allow the naval target type."
-        },
-        {
           "path": "armament/1/damage",
           "used": "emp",
           "note": "The beam only immobilises: the target can't move, transform or deploy, but its weapons keep working (the Allied aircraft carrier is the one exception). The emp damage type stands for a full shutdown."
@@ -281,7 +276,14 @@
       "researched_by": "step-7 samples",
       "review": {
         "status": "unchecked"
-      }
+      },
+      "atypical": [
+        {
+          "path": "armament/0/can_target",
+          "rule": "weapon-families:blades target-types naval",
+          "note": "The claws also infest ships, even submerged ones, which the blades family's target list leaves out."
+        }
+      ]
     },
     {
       "id": "ra3.soviet.hammer-tank",
@@ -356,14 +358,14 @@
           "slot": "acquired",
           "family": "adaptive",
           "condition": "Filled once, by a vehicle that dies in the leech beam; can't be swapped. It is kept for the life of the tank, except that losing a Sky Knight drone taken from an aircraft carrier frees the slot in the base game (not in Uprising).",
-          "summary": "Empty when built. Holds one weapon taken from the dead vehicle, such as anti-air flak, an anti-infantry gun, a tesla coil or artillery. It fires alongside the cannon, one weapon at a time, and is silent in leech mode; a Sky Knight drone taken from an aircraft carrier is the one exception.",
+          "summary": "Empty when built. Holds one weapon taken from the dead vehicle, such as anti-air flak, an anti-infantry gun, a tesla coil or artillery. It fires alongside the cannon, one weapon at a time, and is silent in leech mode; a Sky Knight drone taken from an aircraft carrier is the one exception; a Multigunner IFV gives anti-air rockets whoever rides inside.",
           "patterns": ["leech-weapon-on-kill"]
         }
       ],
       "crew": {
         "model": "solo",
         "basis": "proposal",
-        "notes": "One player drives, fires and toggles the beam. A two-seat version could give the beam and the stolen weapon to a second player."
+        "notes": "One player drives, fires the cannon and holds the beam. A two-seat version could give the beam and the stolen weapon to a second player."
       },
       "abilities": [
         {
@@ -388,7 +390,7 @@
       "strengths": [
         {
           "ref": "armour-class:heavy",
-          "why": "More health than the other factions' main battle tanks, which makes it the toughest of the three; beats the Allied and Imperial tanks one-on-one."
+          "why": "Its armour is rated the heaviest among main battle tanks, which makes it the toughest of the three; beats the Allied and Imperial tanks one-on-one."
         },
         {
           "ref": "weapon-trait:self-heal",
@@ -414,11 +416,11 @@
         },
         {
           "ref": "delivery:beam",
-          "why": "While leeching it stands still, kills slowly and its stolen weapon goes quiet (a stolen Sky Knight drone is the one exception)."
+          "why": "While leeching it stands still, kills slowly and its stolen weapon goes quiet (a stolen Sky Knight drone is the one exception). The player version slows it heavily instead of rooting it."
         },
         {
           "ref": "weapon:adaptive",
-          "why": "The stolen slot is permanent, so a poor first steal can't be undone."
+          "why": "A stolen weapon can't be swapped, so a poor first steal can't be undone."
         },
         {
           "ref": "tier:t2",
@@ -446,7 +448,7 @@
       "counters": [
         {
           "ref": "class:vehicle",
-          "why": "Beats the other factions' main battle tanks one-on-one thanks to more health and steady damage."
+          "why": "Beats the other factions' main battle tanks one-on-one thanks to heavier armour and steady damage."
         },
         {
           "ref": "target:structure",
@@ -467,7 +469,7 @@
           "why": "Teammates soften a big enemy vehicle while the tank holds the beam on it; the tank still gets the weapon if someone else lands the kill."
         }
       ],
-      "memorable": "A main battle tank that loots: the first vehicle to die in its beam decides its one-time loadout choice, since it holds only one stolen gun and can't swap it.",
+      "memorable": "A main battle tank that loots: the first weapon it takes from a vehicle dying in its beam is its one-time loadout choice, since it holds only one stolen gun and can't swap it.",
       "as_player": "A mid-tier brawler with a cannon on left mouse. Hold right mouse for a long tether that heals you while it holds; while tethering you are heavily slowed but not rooted, your turret stays locked on the target and the cannon is silent. Tether what your team is already killing: if it dies in your beam, a tier-scaled copy of its gun goes on Q for this life.",
       "sources": [
         {
@@ -486,7 +488,8 @@
             "strengths",
             "weaknesses",
             "countered_by",
-            "counters"
+            "counters",
+            "memorable"
           ]
         },
         {
@@ -535,7 +538,15 @@
       "researched_by": "step-7 samples",
       "review": {
         "status": "unchecked"
-      }
+      },
+      "fit_notes": [
+        {
+          "path": "armament/1/damage",
+          "used": "energy",
+          "wanted": "a damage type that ignores armour",
+          "note": "The game classes the beam's damage as 'Magic', which every armour type takes in full; the drain family allows only energy, and no damage type ignores armour."
+        }
+      ]
     },
     {
       "id": "ra3.allied.multigunner-ifv",
@@ -960,7 +971,7 @@
         },
         {
           "ref": "unit:ra3.soviet.hammer-tank",
-          "why": "A Hammer tank that leeches it to death gets an anti-air rocket weapon, whoever was riding inside (see the sources on the Hammer tank's entry)."
+          "why": "A Hammer tank shrugs off its light missiles, and leeching the car to death gives the Hammer an anti-air rocket weapon, whoever was riding inside."
         },
         {
           "ref": "unit:ra3.soviet.terror-drone",
@@ -1077,7 +1088,7 @@
         },
         {
           "path": "armament",
-          "note": "Delivery terms for the passenger weapons are family defaults, not sourced weapon by weapon; so are their ranges where the wiki gives none."
+          "note": "Delivery terms for the passenger weapons are not sourced weapon by weapon: most are family defaults, while the shuriken and arrow versions are coded as projectiles (and the arrow version as long range) from their descriptions. Ranges are family defaults where the wiki gives none."
         },
         {
           "path": "armament",
@@ -1136,6 +1147,10 @@
         {
           "path": "armour/models",
           "note": "The wiki doesn't say whether side or rear hits do extra damage to it."
+        },
+        {
+          "path": "countered_by",
+          "note": "The Hammer tank and Terror Drone entries in countered_by rest on those units' own cited pages (the Hammer tank page and the Terror drone page); none of this unit's three sources covers them."
         }
       ],
       "atypical": [
