@@ -1,0 +1,445 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ps2",
+  "units": [
+    {
+      "id": "ps2.vs.magrider",
+      "game": "ps2",
+      "faction": "vs",
+      "name": "Magrider",
+      "flavour_affinity": ["allied", "empire"],
+      "class": "hover",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-armour",
+        "secondary": ["anti-infantry", "anti-air"]
+      },
+      "tier": {
+        "band": null,
+        "basis": "PlanetSide 2 has no tech ladder. A linked Tech Plant only decides where a main battle tank can be pulled, so the registry does not treat it as a tier."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 450,
+        "basis": "It costs the same nanites as every other empire's battle tank, which is the registry's cost anchor, so it lands in the medium band. Skill and facility discounts are left out."
+      },
+      "mobility": {
+        "base": "hover",
+        "handling": "strafe",
+        "traits": ["boost", "crush"],
+        "speed": "fast",
+        "notes": "Handling is strafe instead of the hover default, drift (Handling tie-break, reason 3): players drive it, and the sources show it sliding sideways whenever the driver likes, which is how it dodges fire. It skims over most broken ground and can push its way up cliffs and onto buildings, a climb no trait on our list allows for a hovercraft (see fit_notes). Next to the game's other battle tanks it is the slow one in a straight line: the wiki calls its top speed disappointing and says it cannot keep up with the Prowler. Magburner (the boost trait) adds a brief burst of forward speed and lift. Picks that only change numbers: Racer High Speed Chassis (more top speed, acceleration and hover power), Rival Combat Chassis (better strafing, braking, reversing and hover power) and Multi-directional Exhaust (Magburner refills faster, and the tank can also slide sideways while burning). Crush: it runs down soldiers in its path, the friendly Engineers repairing it included."
+      },
+      "body": {
+        "plan": "casemate",
+        "size": "large",
+        "notes": "A hovering tank hull whose main cannon is built into the hull instead of a turret, so the driver aims it by turning the whole tank. A small turret on top carries the second seat's gun. Casemate is coded for the fixed main gun (see fit_notes). Large, as a battle tank."
+      },
+      "armour": {
+        "class": "heavy",
+        "models": ["directional", "critical-burn", "self-repair"],
+        "notes": "Heavy by step 3 of the armour-class order: it is one of the battle tanks whose price sets the registry's cost anchor. The wiki still rates it the weakest battle tank on paper, with thinner front armour than the Vanguard, and it lacks both the Prowler's lockdown mode and the Vanguard's shield. Directional: like every battle tank, it takes a little more damage from the sides, about half again as much from behind and double from below (resist page, not cited; see uncertain). Critical burn: vehicles catch fire at low health; the Fire Suppression pick puts the fire out. Self-repair is a loadout pick: the Nanite Auto Repair System, the default choice of the defense slot, slowly mends the hull once it has gone a while without being hit. Other defense-slot picks only change numbers: Mine Guard cuts damage from anti-tank mines, and Flanker Armor cuts damage from C4 charges, infantry rocket launchers and air-to-ground missiles. Engineers can repair it, which is game-wide."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "The game has no fog of war, so the sight band is the medium proposal. Two defense-slot picks add senses and are not coded as traits: Proximity Radar puts moving enemy soldiers near the tank on the minimap, but only for the tank's own occupants, not the team; Vehicle Stealth makes enemy lock-ons take longer and shrinks the range at which the tank shows up on enemy minimaps by itself, removing it entirely at the top rank."
+      },
+      "armament": [
+        {
+          "name": "Supernova PC (also Supernova FPC, Supernova VPC)",
+          "slot": "primary",
+          "option_group": "main-cannon",
+          "default": true,
+          "family": "plasma",
+          "damage": "energy",
+          "mount": "body-aim",
+          "delivery": "projectile",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+          "traits": ["splash"],
+          "summary": "The driver's plasma cannon, fixed to the hull, so the whole tank turns to aim it; one charge per reload, with a blast around the impact. The default PC is the all-rounder that works on both vehicles and soldiers and reloads quickest. The FPC fires a faster, harder-hitting charge that is better against armour, with a smaller blast; the VPC has the biggest blast, kills soldiers more easily and does less to armour. The game puts these guns under the tank-shell resist type with an explosive splash; energy follows the registry's plasma exception. Aircraft can be hit when a slope tilts the hull upward."
+        },
+        {
+          "name": "Perihelion VXC",
+          "slot": "option",
+          "option_group": "main-cannon",
+          "family": "plasma",
+          "damage": "energy",
+          "mount": "body-aim",
+          "delivery": "projectile",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+          "traits": ["charge-up", "splash"],
+          "summary": "An alternative hull cannon, described officially as an anti-armour prototype. It fires wide crescent-shaped bolts that fly flat with no drop; holding the trigger longer lets it release up to three of them in a quick burst instead of one."
+        },
+        {
+          "name": "M20 Basilisk (also M12 Kobalt, V42 Pariah)",
+          "slot": "secondary",
+          "seat": "gunner",
+          "option_group": "top-gun",
+          "default": true,
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+          "traits": [],
+          "summary": "The top turret's machine guns. The Basilisk, fitted by default, is a 20 mm heavy gun that hurts every kind of target and is best up close. The Kobalt is a .50 calibre gun meant for soldiers that barely scratches armour. The Pariah, the second free pick, is the Vanu heavy machine gun: its rounds look like plasma but count as bullets, it is steady and quick-firing, and its damage carries further."
+        },
+        {
+          "name": "G30 Walker",
+          "slot": "option",
+          "seat": "gunner",
+          "option_group": "top-gun",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "high-air", "structure"],
+          "traits": ["anti-air"],
+          "summary": "A very fast-firing heavy machine gun whose ammunition is tuned for aircraft and which can point steeply upward. It has no proximity fuse, so the gunner must land direct hits; it still does some harm to soft ground targets."
+        },
+        {
+          "name": "G40-F Ranger",
+          "slot": "option",
+          "seat": "gunner",
+          "option_group": "top-gun",
+          "family": "flak",
+          "damage": "explosive",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "long",
+          "can_target": ["infantry", "low-air", "high-air"],
+          "traits": ["anti-air", "splash"],
+          "summary": "A 40 mm flak gun for keeping aircraft away: its shells burst when they pass close to an enemy flier, so near misses still hurt. Almost useless against ground targets."
+        },
+        {
+          "name": "E540 Halberd",
+          "slot": "option",
+          "seat": "gunner",
+          "option_group": "top-gun",
+          "family": "rockets",
+          "damage": "armour-piercing",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+          "traits": ["splash"],
+          "summary": "A single-shot 85 mm launcher whose unguided armour-piercing rocket hits hard against vehicles, with a long pause to reload between shots and a small blast."
+        },
+        {
+          "name": "Saron HRB (also Proton II PPA)",
+          "slot": "option",
+          "seat": "gunner",
+          "option_group": "top-gun",
+          "family": "plasma",
+          "damage": "energy",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+          "traits": ["splash"],
+          "summary": "Two Vanu energy guns for the top turret, each firing travelling bolts that burst on impact. The Saron sends quick, accurate armour-damaging pulses whose aim wobbles briefly after each shot. The Proton lobs big, slow plasma orbs that explode, best against groups of soldiers and lightly armoured vehicles."
+        },
+        {
+          "name": "Aphelion VEX-4",
+          "slot": "option",
+          "seat": "gunner",
+          "option_group": "top-gun",
+          "family": "plasma",
+          "damage": "energy",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+          "traits": ["spin-up", "pierce"],
+          "summary": "An experimental energy chain gun that is officially called a laser but fires travelling bolts. It speeds up the longer the trigger is held, and the energy that builds up while firing can be let out as a strong wave that reaches further and passes through up to two vehicles. Best at close range against vehicles."
+        }
+      ],
+      "crew": {
+        "model": "driver-gunner",
+        "basis": "in-game",
+        "solo_fallback": "full-control",
+        "notes": "Two seats and no passenger seats: the driver fires the hull cannon and the second seat runs the top turret. Alone, the driver keeps the cannon; the top gun stays quiet unless the driver changes seats."
+      },
+      "abilities": [
+        {
+          "name": "Magburner",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "medium",
+          "summary": "Built into every Magrider. Burns a small fuel tank for about a second to raise top speed, acceleration and hover height while moving forward; the tank then refills by itself in a little over half a minute at the stock rank (faster at later ranks). Drivers use the lift to cross gaps and even to jump over an enemy tank and reach its rear.",
+          "patterns": ["dash"]
+        },
+        {
+          "name": "Smoke Screen",
+          "kind": "active",
+          "source": "loadout",
+          "exclusive_group": "utility-slot",
+          "cooldown": "medium",
+          "summary": "Utility-slot pick. For a few seconds the tank and friendly vehicles near it drop off the enemy's automatic minimap detection and cannot be locked onto, and missiles already locked on fail. Ready again after well over half a minute at rank 1.",
+          "patterns": ["jam-sensors", "fire-countermeasures"]
+        },
+        {
+          "name": "Fire Suppression System",
+          "kind": "active",
+          "source": "loadout",
+          "exclusive_group": "utility-slot",
+          "cooldown": "long",
+          "summary": "Utility-slot pick, the free default. Repairs a modest share of the hull over a few seconds and puts out a fire straight away. Ready again after nearly a minute at rank 1.",
+          "patterns": ["heal-self"]
+        },
+        {
+          "name": "Recharge",
+          "kind": "active",
+          "source": "loadout",
+          "exclusive_group": "utility-slot",
+          "cooldown": "medium",
+          "summary": "Utility-slot pick unique to this tank. Refills the Magburner's fuel at once and breaks any lock-on in progress, defeating missiles already fired, but it does not stop new locks afterwards. Ready again after well over half a minute at rank 1.",
+          "patterns": ["fire-countermeasures"]
+        }
+      ],
+      "resources": ["limited-ammo", "fuel"],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "in-game",
+        "notes": "Whoever is still inside dies with the tank and goes back to spawn selection; leaving by hand before it blows up is the universal bail-out key. A tank left empty decays after a few minutes."
+      },
+      "strengths": [
+        {
+          "ref": "handling:strafe",
+          "why": "It slides sideways whenever it likes, so at range it can step out of the way of tank shells and infantry rockets that other tanks have to soak."
+        },
+        {
+          "ref": "mobility:hover",
+          "why": "It glides over most broken ground and can climb cliffs and even buildings, finding firing angles other tanks cannot reach."
+        },
+        {
+          "ref": "mobility-trait:boost",
+          "why": "Magburner's short burst of speed and lift dodges shots, crosses gaps and can carry it over an enemy tank to shoot its weak rear."
+        },
+        {
+          "ref": "range:long",
+          "why": "Its cannons reach far, and with strafing it is at its best in tank duels at long range."
+        },
+        {
+          "ref": "pattern:fire-countermeasures",
+          "why": "With the Recharge or Smoke Screen pick it can break lock-ons and shake off guided missiles."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "body:casemate",
+          "why": "The main gun is fixed in the hull, so the whole tank must turn to aim, and shooting upward needs a slope to tilt it."
+        },
+        {
+          "ref": "weapon:plasma",
+          "why": "Each cannon shot hits less hard than the Prowler's twin guns or the Vanguard's big gun."
+        },
+        {
+          "ref": "armour-class:heavy",
+          "why": "The thinnest-skinned battle tank: less front armour than the Vanguard and no lockdown or shield to fall back on; it is also slow in a straight line."
+        },
+        {
+          "ref": "armour-model:directional",
+          "why": "Like the other battle tanks it takes more damage from the flanks and even more from behind or below."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "Its free sideways sliding makes it easy to flatten the friendly Engineers who come to repair it."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "weapon:explosives",
+          "why": "A Heavy Assault who gets close can destroy it with two C4 charges."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "Its fixed cannon cannot point up without a slope and its default top gun is no anti-air weapon, so attackers from above are hard to answer."
+        },
+        {
+          "ref": "armour-class:heavy",
+          "why": "Toe to toe, the other empires' battle tanks hit harder per shot, so a head-on slugging match at equal cost goes against it."
+        },
+        {
+          "ref": "unit:ps2.nc.vanguard",
+          "why": "The Vanguard has thicker front armour and a heavier gun, so the Magrider should take it from the side or rear, never head-on."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "armour-model:directional",
+          "why": "Strafing and Magburner hops let it get around slower tanks and hit their weaker sides and rear."
+        },
+        {
+          "ref": "delivery:projectile",
+          "why": "In long-range fights it sidesteps slow travelling shots such as tank shells and infantry rockets."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Its cannon is a standard tool for knocking out the turrets that guard a base."
+        },
+        {
+          "ref": "delivery:lock-on",
+          "why": "Fitted with Recharge or Smoke Screen, it breaks enemy lock-ons and defeats missiles already on their way."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "weapon:repair-tool",
+          "why": "Engineers keep it alive in a fight, as long as they keep moving so the sliding tank does not run them over."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "An anti-air teammate, or a gunner with the Walker or Ranger, covers the attack from above that its fixed cannon struggles with."
+        }
+      ],
+      "memorable": "A hover tank with its cannon built into the hull: it slides sideways to dodge shells, climbs cliffs, and hops over enemy tanks to hit them from behind.",
+      "as_player": "You drive and fire the hull-fixed plasma cannon, aiming by turning the whole tank while you slide sideways at will to dodge. Shift burns a short Magburner boost that can hop you over an enemy tank to reach its rear. A second player in the top turret runs the gunner's pick: an all-round machine gun by default, or an anti-air, anti-infantry or anti-tank gun. Alone, the top gun waits until you swap seats.",
+      "sources": [
+        {
+          "url": "https://planetside.fandom.com/wiki/Magrider/Main",
+          "title": "Magrider (Main tab), PlanetSide 2 Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "version": "Live game; the page is marked current to the 30 March 2022 update",
+          "note": "Its infobox description copies the game's own vehicle text (the Census vehicle collection, source 3), and its certification table copies the in-game descriptions of each slot pick and Magburner rank, with their cooldowns.",
+          "supports": [
+            "class",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "crew",
+            "abilities",
+            "resources",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://planetside.fandom.com/wiki/Magrider/Weapons",
+          "title": "Magrider (Weapons tab), PlanetSide 2 Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "note": "Lists every primary and secondary weapon one by one with the wiki's range word, muzzle velocity, magazine, ammunition pool, blast radii and which picks are free; says the main guns are all built into the hull.",
+          "supports": ["armament", "body", "resources", "strengths/3"]
+        },
+        {
+          "url": "https://census.daybreakgames.com/s:example/get/ps2:v2/vehicle_attachment?vehicle_id=4&item_id=3400,3460,3461,6014236,3402,3401,6011888,3403,3406,3441,3442,3404,802897,3411,3511,6008367,3415,3432,3486,6006096&c:limit=50&c:show=item_id,slot_id,vehicle_id&c:join=vehicle%5Einject_at:vehicle%5Eshow:name.en'description.en&c:join=item%5Einject_at:item%5Eshow:name.en'description.en",
+          "title": "Magrider and its loadout items, Daybreak Census API",
+          "kind": "official",
+          "accessed": "2026-10-19",
+          "note": "Daybreak's public game-data service. One vehicle_attachment query joined with the vehicle and item collections: the game's own description of the Magrider and of each of its weapons and slot picks (rank 1), with the slot each fits.",
+          "supports": ["roles", "armament", "abilities/1", "abilities/2", "abilities/3", "sensors", "armour", "mobility"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "mobility/speed",
+          "note": "No cited or read page gives a speed figure for the Magrider, so there is no speed_raw. Fast is judged from typical battle-tank speeds against the sprinting soldier (6.5 m/s reference) and from the wiki's words that it is the slower tank next to the Prowler; its History tab (read, not cited) says a late-2018 patch raised its base speed somewhat. It could be very fast if its top speed is a little higher than assumed."
+        },
+        {
+          "path": "roles/primary",
+          "note": "Step 1 finds no role in the vehicle's official description. Anti-armour comes from step 4: the default cannon's official text calls its charges anti-tank and effective against armour (and infantry), and the resist page (read, not cited) shows tank-shell hits doing extra damage to vehicles while soldiers take them at face value. Read strictly, the even-handed wording could send the unit on to step 5, which would give assault."
+        },
+        {
+          "path": "armament/0/family",
+          "note": "Plasma is coded because the official texts of all three Supernova guns say they fire plasma charges, and the registry's laser-or-plasma exception names Vanu bolt weapons. In play it works like the other empires' tank cannons (the wiki calls the three the HEAT, HESH and AP equivalents, and the game files them under the tank-shell resist type); coded as a cannon it would be armour-piercing by step 3's direct-hit rule."
+        },
+        {
+          "path": "armament",
+          "note": "The weapon pages read but not cited (no room) give each gun's resist type: tank shells with a common-explosive splash for the Supernova guns and the Perihelion; heavy machine gun for the Basilisk and Pariah; small arms for the Kobalt; anti-air machine gun for the Walker; heavy machine gun with a flak burst for the Ranger; light anti-vehicle with a common-explosive splash for the Halberd, Saron and Proton; gatling guns for the Aphelion. Since no cited page gives them, step 4 was not used; steps 3 and 5 give the same types as the map would, except that plasma and laser weapons take energy under step 3 anyway. The same pages call the top guns gunner weapons and name the Basilisk the default secondary."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "Ranges follow the wiki's range word on the Weapons tab (Long for the Supernova guns, Very Long for the Perihelion, Close for the Aphelion's normal fire). The registry warns that this word is not a reach: the basic NC rifle is also rated Long. With no figures to compare, the words were taken as they stand."
+        },
+        {
+          "path": "armament/7",
+          "note": "The spin-up, the piercing energy wave and the wave's longer reach come from the Aphelion VEX-4's own wiki page (read, not cited); the cited Weapons tab gives only Close range for its normal fire, so medium was chosen for its longest reach. The official text supports only that energy builds up while firing and can be released as a blast."
+        },
+        {
+          "path": "armour/models",
+          "note": "The directional values (a little more damage from the sides, about half again from the rear, double from below) come from the wiki's Vehicle armor and damage resistance page, read but not cited. The cited Main tab only implies directional armour by sending the tank after enemy rear armour and telling it to avoid frontal fights."
+        },
+        {
+          "path": "abilities/0/kind",
+          "note": "The Magburner page (read, not cited) says the boost key is held down while fuel lasts, which reads like channel; no source says it stops the moment the key is released, so the tie-break gives active."
+        },
+        {
+          "path": "abilities/0/cooldown",
+          "note": "Magburner has a fuel tank, not a cooldown: at the stock rank it refills from empty to full in about half a minute, and that full refill was banded. Partial fuel can be burnt sooner."
+        },
+        {
+          "path": "armament/2/delivery",
+          "note": "No source says in words how the bullets travel; projectile was chosen for every gun because the Weapons tab gives each one a finite muzzle velocity, and the cannon history mentions projectile drop."
+        },
+        {
+          "path": "on_death",
+          "note": "The cited pages do not describe the tank's death; respawn follows the rule for vehicles players drive in a game where they come back after dying."
+        },
+        {
+          "path": "crew",
+          "note": "The cited pages name a hull cannon and a secondary gun, and the Main tab speaks of the main and secondary guns, but only the uncited weapon pages say the secondary guns belong to a separate gunner seat; the two-seat layout is copied from them and from the game."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "body/plan",
+          "used": "casemate",
+          "wanted": "a fixed-gun hull that also carries a small secondary turret",
+          "note": "The main gun is built into the hull like a tank destroyer's, but the tank also has a fully turning top turret for the second seat. Casemate fits the main gun, not the gunner's turret, and hull-turret would not fit the fixed main gun."
+        },
+        {
+          "path": "mobility/traits",
+          "used": "boost, crush",
+          "wanted": "climb",
+          "note": "It can push its way up cliffs and onto buildings, but the climb trait is limited to units on foot or on many legs."
+        },
+        {
+          "path": "abilities/3/patterns",
+          "used": "fire-countermeasures",
+          "wanted": "refill your own boost meter on a key",
+          "note": "Breaking lock-ons fits fire-countermeasures; the instant refill of the Magburner fuel, the other half of Recharge, has no pattern."
+        },
+        {
+          "path": "resources",
+          "used": "fuel",
+          "note": "The Magburner tank is a fuel gauge drained by boosting, but it refills by itself over time anywhere, not on landing or at a pad as the fuel term describes."
+        },
+        {
+          "path": "armament/1/traits",
+          "used": "charge-up",
+          "note": "Holding the Perihelion's trigger does not make one shot stronger: it adds up to two extra rounds to a quick burst. Charge-up is the closest trait."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "pilot round 2, coder C",
+      "atypical": [
+        {
+          "path": "armament/2/mount",
+          "rule": "bodies:casemate allowed.aim-models free-aim",
+          "note": "The main cannon is fixed in the hull, which makes the body a casemate, but the second seat fires from a small turret on top that turns freely, so every top-gun entry gets free-aim. Our casemate allows only body-aim or limited-arc mounts."
+        }
+      ]
+    }
+  ]
+}
