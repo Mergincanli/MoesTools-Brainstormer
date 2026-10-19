@@ -1,0 +1,939 @@
+{
+  "proposals": {
+    "summary": "Round 2 leaves 17 split items: roles.primary on 1 unit, roles.secondary on 2, and 14 other fields on one unit each. None is random. Each comes from one of three causes: a rule that two readings both satisfy, a tie-break that is missing, or a page that one coder read and another did not read or could not cite. 16 'must' proposals settle every one. With them, all three coders would code each of the four units the same way:\n- Overlord: anti-armour; secondary [support, transport]; Gattling free-aim.\n- Atlas: assault, no secondary role; LRM off-screen.\n- Marine squad: power-suit and self-repair; flavour [empire].\n- Magrider: fast; climb coded; resources [limited-ammo]; 4 abilities with Magburner as channel on a medium cooldown; no magazine on the Halberd; Smoke Screen linked to jam-sensors and fire-countermeasures; high confidence with Census cited.\n\nThe biggest single fix is R2-15. It says that 'the sources' means the cited pages plus pages named in uncertain entries. It adds a reading floor and an order for filling the source slots, so codes no longer depend on the cap. 'Should' and 'could' proposals settle the conflicts coders found between two rules:\n- 'Assault' against the label 'Frontline assault'\n- the rotary 'Gattling Cannon' caught by two tie-breaks\n- plasma or cannon\n- the MechWarrior title split\n- passenger seats and abilities that an upgrade adds\n- step-4 bonuses written on the target's side\n- secondary roles from roles with no requires\n- 'effective against' as a target label\n- view buttons against timed buffs\n- the trait evidence rules\n- PlanetSide 2 range words\n- the Generals string file and generals' versions\n- casemate with a roof turret\n- muzzle velocity\n- the sergeant example\n- 'count as this' in the rockets tie-break\n- active against ultimate\n- the cost in overclock-self\n- matchup naming\n\nThe proposals add no new link kinds, schema fields or validator checks. The three RA3 samples were checked against every proposal and need no fix. They change some codes that coders had agreed on, and each stays agreed:\n- The DoW2 missile launcher loses magazine.\n- Marine confidence rises to high.\n- A sergeant ability and the Overlord add-ons gain upgrade-in-field.\n- naval goes onto the Atlas LRM for coder A.",
+    "proposals": [
+      {
+        "id": "R2-01",
+        "priority": "must",
+        "fields": [
+          "roles.primary",
+          "roles.secondary"
+        ],
+        "evidence": "Overlord roles.primary split: anti-armour (A, B) against assault (C). All three Generals reports hesitated and each wrote it up as an unclear rule. B-generals: the same question decides the Battlemaster. The MiG's 'Base/Unit Assault' shows that the word names a target, not a job.",
+        "root_cause": "The roles list says official words name a role 'only through the role's label or one of its aliases'. It never says whether one word of a two-word label counts. 'Frontline assault' has no aliases. Slash labels are matched by one half (the registry's own example is 'Purpose: Siege').",
+        "target": "data/vocab/roles.json (list description); research/registry-notes/games-r3.md (Generals official role lines, Designation bullet)",
+        "change": "(1) roles.json description. OLD: Official words name a role only through the role's label or one of its aliases. NEW: Official words name a role only through the role's whole label or one of its aliases; each half of a slash label (Artillery / siege) counts as a label. One word of a longer label is not enough: 'Assault' alone does not name Frontline assault, so a Purpose such as 'Tank/Structure Assault' names no role.\n(2) games-r3.md, Designation bullet, after 'Many entries are phrases that match no role label or alias, and those name no role.' ADD: Entries built on the word Assault (Tank/Structure Assault, Base/Unit Assault) are among them.",
+        "expected": "Overlord: step 1 finds no role, and step 4 reads the tooltip's 'Strong vs. vehicles' line. That gives anti-armour for A, B and C (C changes from assault). Secondary step 1 gives nothing either. The Marine squad, Atlas and Magrider do not change: their lines name no role.",
+        "side_effects": "The Battlemaster and the MiG also go on to step 4. The RA3 samples do not change ('Anti-Armor', 'anti-vehicle', the IFV by step 4). Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-02",
+        "priority": "must",
+        "fields": [
+          "roles.secondary"
+        ],
+        "evidence": "Overlord secondary split: [siege, support] (A, B) against [anti-armour, siege] (C). All three Generals reports hesitated on siege. 'Strong vs. buildings' is not 'built to break', and the role description (very far, from above, over cover) hardly fits a direct-fire tank. C-generals unclear rule: the Overlord's reach just passes the long edge, so it qualifies, but the Battlemaster, with the same Purpose, does not. A and C filed fit_notes asking for a direct-fire role that breaks structures.",
+        "root_cause": "Siege's coding rule ends with 'or a long-range weapon the source says is built to break structures' and never says what counts as that. So any direct-fire gun just past the long edge, with a tooltip line about buildings, becomes siege. That contradicts the next sentence, 'A long-range missile or cannon alone is not siege'.",
+        "target": "data/vocab/roles.json, term siege, source_rule",
+        "change": "Replace the source_rule with: A lobbed weapon that reaches long or further, bombs dropped from the air, a deploy mode whose gun reaches long or further and hits an area, or a long-range missile or rocket that the sources say is built mainly to destroy structures (they name structures as its first or only target). A gun aimed straight at targets in view is never siege by that last clause, even when official text calls it strong against buildings: a gun strong against vehicles and buildings gives the anti-armour role. A long-range missile or cannon alone is not siege, and a team that sets up its gun before firing is not deploying.",
+        "expected": "Overlord, with R2-01: siege drops. Step 3 gives nothing else, because the Weak vs. line drops anti-infantry from the splash cannons. At step 5, each add-on gives one role: the Propaganda Tower gives support, the Battle Bunker gives transport, and the tower also gives buffer. Roles-list order then gives [support, transport] for A, B and C. All three change. The Atlas does not change: siege already failed there on 'a long-range missile alone'.",
+        "side_effects": "Direct-fire tanks with a 'strong vs. buildings' line lose siege, while missile launchers built against bases keep it. The A and C fit_notes asking for a structure-breaker role go to the gap report."
+      },
+      {
+        "id": "R2-03",
+        "priority": "must",
+        "fields": [
+          "roles.secondary",
+          "roles.primary"
+        ],
+        "evidence": "Atlas secondary split: [anti-armour] (A, C) against [] (B). A-mech and C-mech hesitated because the role comes only from the LRM's can_target, which the lock-on rule cut down to 'Mechs. C-mech unclear rule: the lock-on rule plus 'it can hit nothing else' gives anti-armour to any LRM whose pages name only 'Mech targets, which looks like an unintended side effect. A-mech's fit_note says the same.",
+        "root_cause": "'It can hit nothing else' reads the coded target list. That list can be short for reasons that say nothing about the weapon's job: can_target step 2 lists only what a lock-on weapon locks onto, and MechWarrior Online has almost nothing but 'Mechs to shoot at.",
+        "target": "schemas/source-unit.schema.json: roles.secondary and roles.primary descriptions",
+        "change": "(1) roles.secondary. OLD: a source calls it an anti-tank or anti-aircraft weapon, or it can hit nothing else. NEW: a source calls it an anti-tank or anti-aircraft weapon, or it can hit nothing else: the sources say, or the game data shows, that it cannot attack the other kinds of target the game has. A target list that is short only because of can_target step 2 (a lock-on weapon lists what it locks onto), or because the game has few kinds of target, does not count.\n(2) roles.primary, step 4. OLD: or if the main weapon can hit nothing else. NEW: or if the main weapon can hit nothing else (as roles.secondary defines it).",
+        "expected": "Atlas: the LRM no longer gives anti-armour, and no other weapon gives a role. The AC/20 has no anti-tank wording and no bonus, the SRM has no splash, and siege fails its coding rule. Result: [] for A, B and C (A and C change). The Overlord, Marine squad and Magrider do not change. The RA3 sample IFV does not change either: its source says Tanya's guns attack nothing else.",
+        "side_effects": "MechWarrior LRM boats lose an anti-armour role that they had only through the target-list artefact. Lock-on anti-tank and anti-air launchers in other games keep their roles through 'a source calls it an anti-tank or anti-aircraft weapon'. Rebuild docs/fields.md."
+      },
+      {
+        "id": "R2-04",
+        "priority": "must",
+        "fields": [
+          "armament.range"
+        ],
+        "evidence": "Atlas LRM split: off-screen (A, B) against medium (C). A-mech unclear rule: the coding rule names 'fires at targets beyond its own sight' as a reason on its own, but the tie-break says a weapon that is short or medium by its reach keeps that band. B-mech: the rules never say whether indirect fire counts as firing beyond its own sight. A-, B- and C-generals: unclear whether an add-on uses the sight figure of the unit that carries it.",
+        "root_cause": "The tie-break's 'keeps that band' sentence was written for the first reason (reach past the sight figure), but it reads as overriding every reason. Indirect fire at targets that others spot is not named as an example of the second reason.",
+        "target": "data/vocab/range-bands.json: tie-break long/off-screen; off-screen source_rule",
+        "change": "(1) Tie-break long/off-screen. OLD: Check off-screen first, and pick it only for the reasons in its coding rule. A weapon that reaches past its unit's sight but is short or medium by its reach keeps that band. NEW: Check off-screen first, and pick it only for the reasons in its coding rule. Its first reason needs a weapon that is long by its reach: one that reaches past its unit's sight but is short or medium by its reach keeps that band. Its second reason stands on its own, whatever the reach: a weapon the sources say fires indirectly at targets that a teammate or a spotter locks, marks or sees for it fires at targets beyond its own sight.\n(2) off-screen source_rule. OLD: reaches past its own unit's sight figure, the figure its sight band uses; NEW: reaches past its own unit's sight figure, the figure its sight band uses (for an add-on or a turret, the unit that carries it);",
+        "expected": "Atlas LRM: off-screen for A, B and C. C changes, because the cited MechWarrior Online pages say the LRM fires indirectly at targets that teammates lock or TAG. The Overlord does not change: the Gattling stays off-screen against the Overlord's own figure and the twin cannons stay long.",
+        "side_effects": "Indirect-fire weapons that are medium by their reach become off-screen. Off-screen meets siege's requires, but siege's coding rule still turns away long-range missiles. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-05",
+        "priority": "must",
+        "fields": [
+          "body.plan",
+          "flavour_affinity"
+        ],
+        "evidence": "Marine squad body.plan split: power-suit (A, C) against humanoid (B). It also moved flavour_affinity: [empire] against []. All three DoW2 reports hesitated and wrote it up as an unclear rule. There is no tie-break. Power-suit says 'bigger than a soldier' yet 'at small size it is infantry', and the armour-class soldier rule speaks of 'a power suit worn by one soldier (body size small)'. All three body notes already say the marines are power-armoured.",
+        "root_cause": "Power-suit's meaning contradicts itself for a suit of one soldier's size, and no tie-break separates powered armour from ordinary body armour.",
+        "target": "data/vocab/bodies.json: power-suit description; new tie-break",
+        "change": "(1) power-suit description. OLD: An armoured exosuit, bigger than a soldier. At small size it is infantry; at medium size or bigger it is a walker. NEW: Powered armour, an exosuit or a battlesuit around one pilot. At small size (one soldier's size, such as power armour) it is infantry; at medium size or bigger it is a walker.\n(2) New tie-break, terms [humanoid, power-suit]: Power suit when the sources say the soldier wears powered armour, an exosuit or a battlesuit (Space Marines, the PlanetSide 2 MAX, Elementals). Humanoid for a soldier in ordinary body armour or carapace, however heavy. Size and armour class follow their own rules: a suit of one soldier's size is small and light (see Armour classes).",
+        "expected": "Marine squad: power-suit for A, B and C (B changes). flavour_affinity then becomes [empire] for all three: Empire scores 2 (blades from the fists, and the power suit) and Soviet scores 1 (assault). The armour class stays light. The other units do not change.",
+        "side_effects": "Power-armoured Space Marine and Chaos squads become power-suit and gain an Empire flavour point. Scouts and Guardsmen stay humanoid. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-06",
+        "priority": "must",
+        "fields": [
+          "armour.models"
+        ],
+        "evidence": "Marine squad armour.models split: flat-pool (A) against self-repair (B, C). B and C found a slow health regeneration rate on the Leveling tab, which they read but did not cite. The Guardsmen, Scouts and Shoota Boyz tabs give the same rate. Both coded self-repair and added fit_notes asking the merge pass to decide. Their unclear-rule notes (B-dow2, C-dow2) say the Game-wide list does not mention it. A never read the Leveling tab.",
+        "root_cause": "The DoW2 Game-wide list leaves out a shared mechanic. One coder applied the armour-model rule (a model counts even when every unit of its kind shares it), and one never saw the mechanic.",
+        "target": "research/registry-notes/games-r5.md: Game-wide mechanics, Dawn of War II, new bullet after Melee",
+        "change": "ADD bullet: - **Health regeneration** (armour model self-repair): every infantry unit's Leveling tab lists a slow health regeneration rate (the Tactical Marines, Guardsmen, Scouts and Shoota Boyz tabs checked in pilot round 2 give the same rate), and veterancy raises it. It belongs to the unit, so code self-repair on every unit whose Leveling tab lists a rate, as the armour-models rule asks for a model every unit of its kind shares; say in armour.notes that it is slow and shared. A unit whose tab lists none has no self-repair. Read the Leveling tab for this; no fit_note is needed.",
+        "expected": "Marine squad: [self-repair] for A, B and C (A changes; B and C drop their fit_notes). The other units do not change.",
+        "side_effects": "Every DoW2 infantry squad whose tab lists a rate gets self-repair, so flat-pool disappears for them. If Mustafa or the merge pass would rather leave base regeneration off, the same bullet can say 'leave it off and mention it in armour.notes'. Either version settles the split."
+      },
+      {
+        "id": "R2-07",
+        "priority": "must",
+        "fields": [
+          "mobility.speed"
+        ],
+        "evidence": "Magrider speed split: fast (A, C) against very-fast (B). All three PlanetSide 2 reports hesitated: no page gives a speed for any PS2 vehicle. Against the 6.5 m/s sprint reference, a battle tank lands near the 2.5 edge (B: 'near 2.5 times'; C: the edge is about 58.5 km/h). The registry note had warned of this.",
+        "root_cause": "'With nothing usable, judge from figures for neighbouring units or from footage' has no rule for a judgement that lands on an edge, although a ratio on an edge has one.",
+        "target": "data/vocab/speed-bands.json: list description",
+        "change": "OLD: With nothing usable, judge from figures for neighbouring units or from footage, and add an uncertain entry for mobility/speed. NEW: With nothing usable, judge from figures for neighbouring units or from footage, and add an uncertain entry for mobility/speed. A judgement that lands near an edge, with no figure or comparison that puts it clearly past, takes the band nearer medium, as a ratio on an edge does.",
+        "expected": "Magrider: fast for A, B and C (B changes). The other units have figures and do not change.",
+        "side_effects": "PS2 tanks with no speed figure land on fast unless a source says they are clearly faster. That shooter vehicles bunch together under method A is decision 2C, and this proposal does not reopen it."
+      },
+      {
+        "id": "R2-08",
+        "priority": "must",
+        "fields": [
+          "resources",
+          "abilities.cooldown"
+        ],
+        "evidence": "Magrider resources split: [limited-ammo] (A) against [limited-ammo, fuel] (B, C); all three filed fit_notes. A second split hides inside the measured union, on the Magburner's cooldown: medium (A, C) against none (B, who read it as 'held back only by a stock'). Hesitations: A-, B- and C-ps2 on resources; B-ps2 and C-ps2 on cooldown; C-ps2 unclear rule on abilities with a fuel gauge.",
+        "root_cause": "Fuel (a gauge that refills on the ground or at a pad) and the cooldown rule (a stock gives no band) were written for jets and munitions. A boost's own small tank that refills by itself fits neither, so it can be read as a resource, as a stock or as a cooldown.",
+        "target": "data/vocab/resources.json (fuel); data/vocab/cooldown-bands.json (list description)",
+        "change": "(1) fuel. OLD: Flight or boost time drains a gauge that refills on the ground or at a pad. NEW: Flight or boost time drains a gauge that refills on the ground or at a pad. A gauge that only one ability draws on and that refills on its own is that ability's cooldown, not fuel (see Cooldown bands).\n(2) cooldown-bands description, after 'An ability held back only by a stock, such as Company of Heroes munitions or the unit's energy, has no band unless the source also gives a cooldown.' ADD: A gauge that only this ability draws on and that refills on its own (a boost's own fuel tank) is its cooldown, not a stock: band the time it takes to refill from empty.",
+        "expected": "Magrider: resources [limited-ammo] for A, B and C (B and C drop fuel). The Magburner's cooldown is medium for all three, banded from the time to refill from empty at rank 1 (B adds it). Recharge keeps fire-countermeasures and its fit_note. The Atlas keeps heat, because many weapons share that gauge.",
+        "side_effects": "Boosts and afterburners with their own refilling meter get a cooldown band and no fuel. Jetpacks and aircraft that refill on landing keep fuel. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-09",
+        "priority": "must",
+        "fields": [
+          "abilities.kind"
+        ],
+        "evidence": "Magburner kind split: channel (A, B) against active (C). A based channel on the Afterburner page, which says the boost stops when the key is let go; A read it but did not cite it. B based it on the Magburner page's 'press and hold'. C read the same 'press and hold' but chose active, because the tie-break needs the source to say the effect stops on release (C-ps2 hesitation). A-ps2 asked in an unclear-rule note whether uncited pages count.",
+        "root_cause": "The tie-break asks for words about letting go, while sources usually say only 'hold the key'. Channel's own meaning, 'Hold to keep it going', already covers that.",
+        "target": "data/vocab/ability-kinds.json: tie-break active/channel",
+        "change": "OLD: Pick channel only when the source says the effect stops as soon as you let go, move or are interrupted. A timed action that runs to its end on its own is active. NEW: Pick channel when the source says you hold the key to keep the effect going (press and hold), or that it stops as soon as you let go, move or are interrupted. A timed action that runs to its end on its own is active.",
+        "expected": "Magburner: channel for A, B and C (C changes). No other round-2 unit has a held ability.",
+        "side_effects": "None known. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-10",
+        "priority": "must",
+        "fields": [
+          "abilities (number)",
+          "abilities.kind"
+        ],
+        "evidence": "Magrider ability count split: 5 (A, B) against 4 (C). A and B recorded Multi-directional Exhaust as a passive with no pattern; their gaps say no pattern fits a pick that reshapes another ability. C put it in notes as an extension of strafing. A-ps2 unclear rule: a passive pick that changes another ability.",
+        "root_cause": "The rule 'add a passive when the source names the effect and it adds a mechanic' does not say whether changing how another ability works counts as a mechanic of its own.",
+        "target": "schemas/source-unit.schema.json: abilities[] description",
+        "change": "After 'Leave out passives that only change numbers (more armour, faster reload, less sway), and note them in the matching field's notes.' ADD: A pick, upgrade or perk that changes how one of the unit's other abilities or weapons works (a boost that refills faster and can also steer sideways) is not an entry of its own either: say what it changes, and that it is a pick, in that ability's or weapon's summary.",
+        "expected": "Magrider: A and B move Multi-directional Exhaust into the Magburner's summary, so they go from 5 abilities to 4 and lose the passive. C does not change. With R2-09, abilities.kind becomes {active, channel} for all three. The other units do not change.",
+        "side_effects": "Picks and upgrades that change an existing ability stay out of abilities in every game. The gap report can still ask for a dash variant that steers sideways."
+      },
+      {
+        "id": "R2-11",
+        "priority": "must",
+        "fields": [
+          "armament.traits"
+        ],
+        "evidence": "Magrider trait split: magazine on the E540 Halberd (B only). B's reason: the Halberd's own page, which B read but did not cite, names its long reload as a weakness. Single-shot weapons troubled coders elsewhere too. All three DoW2 reports hesitated on the one-missile launcher; C-dow2: 'one missile per reload is an odd fit for a set number of shots'. A-ps2 and C-ps2 hesitated on the Supernova's quick reload (C-ps2 unclear rule).",
+        "root_cause": "Magazine ('a set number of shots, then reload') does not say whether one shot per reload counts. For a single-shot weapon the reload is simply its rate of fire, so whether a page happens to mention it decides the trait.",
+        "target": "data/vocab/weapon-traits.json: term magazine, source_rule",
+        "change": "APPEND to the source_rule: A weapon that holds one shot per reload (a single-shot launcher or cannon) never gets it for that reload: its reload is its rate of fire, so say in the summary how long it takes.",
+        "expected": "Magrider: the Halberd is [splash] for A, B and C (B drops magazine). The Supernova and Perihelion do not change. Marine squad: the missile launcher drops magazine for A, B and C, so the three agree on a new value and their hesitations go. Overlord: the twin cannons stay without magazine, since their two-shot clip appears only in stats. The Atlas does not change. RA3 sample: the IFV's Javelin pod fires a burst and then reloads, so it keeps magazine.",
+        "side_effects": "Single-shot launchers and cannons lose magazine in every game. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-12",
+        "priority": "must",
+        "fields": [
+          "mobility.traits"
+        ],
+        "evidence": "Magrider traits split: [boost, crush, climb] (A, B, each with two atypicals) against [boost, crush] (C, with a fit_note asking for climb). A-ps2 and B-ps2 hesitated. Climb is banned for hover, and the hover type 'avoids steep slopes'. But the vocabularies say a real unit that breaks a rule is recorded as it is and listed as atypical.",
+        "root_cause": "Climb has no coding rule. So coders differ on whether a banned trait that the source shows is coded and listed as atypical, or left to notes.",
+        "target": "data/vocab/mobility-traits.json: term climb, new source_rule",
+        "change": "ADD source_rule: Code it when the sources show the unit going up walls, cliffs or buildings that stop other units of its kind, however it does it (legs, claws, hover thrust). Where the trait's rules leave out the unit's class or mobility, code it anyway; the validator lists the break as atypical, which is evidence for relaxing the rule.",
+        "expected": "Magrider: [boost, crush, climb] for A, B and C. C adds climb and so gets the two climb atypicals. The other units do not change.",
+        "side_effects": "Climb on hover units is listed as atypical, which gives the gap report evidence. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-13",
+        "priority": "must",
+        "fields": [
+          "abilities.patterns"
+        ],
+        "evidence": "Magrider patterns split on Smoke Screen: [jam-sensors, fire-countermeasures] (A, C) against [lay-smoke, jam-sensors] (B). C read the Smoke Screen page: missiles already locked on lose their target, and the smoke is light and only hard to see through. B never read that page. A-, B- and C-ps2 all hesitated.",
+        "root_cause": "The ECM example under Pattern links does not say which part of 'hides you and stops locks' is jam-sensors and which is fire-countermeasures. It also never says when smoke counts as lay-smoke. And this PlanetSide 2 pick, shared by many vehicles, is missing from the registry's list of vehicle slot picks.",
+        "target": "research/registry-notes/games-r6.md (PlanetSide 2 Game-wide mechanics, Vehicle slot picks); scripts/build-docs.mjs (Conventions, Pattern links)",
+        "change": "(1) games-r6.md, Vehicle slot picks bullet, after 'Flares that break locks link fire-countermeasures.' ADD: Smoke Screen, which for a few seconds hides the vehicle and friendly vehicles near it from enemy minimap detection, blocks new lock-ons and makes missiles already locked on lose their target (its own wiki page), links jam-sensors and fire-countermeasures. Its smoke is thin, so it links no lay-smoke.\n(2) build-docs.mjs, Pattern links, after the sentence ending 'links `jam-sensors` and `fire-countermeasures`.' ADD: Blocking new locks is part of `jam-sensors`; add `fire-countermeasures` only when the sources say it also breaks a lock already made or defeats missiles in flight. Smoke links `lay-smoke` only when the sources say it blocks sight or aim.",
+        "expected": "Magrider: Smoke Screen is [jam-sensors, fire-countermeasures] for A, B and C (B changes). Recharge stays [fire-countermeasures]. The other units do not change.",
+        "side_effects": "Every PS2 vehicle that carries Smoke Screen gets the same pair. Rebuild docs/fields.md."
+      },
+      {
+        "id": "R2-14",
+        "priority": "must",
+        "fields": [
+          "confidence"
+        ],
+        "evidence": "Magrider confidence split: high (A, C, who cited Census) against medium (B, who cited only wiki pages). Seven reports hesitated on confidence: A-, B- and C-dow2, B- and C-generals, A-mech and B-ps2. The registry names the DoW2 box description and the PS2 infobox Description field as copies of in-game text. But 'high' asks for 'a faithful copy that says what it copies', and these pages never say so. B-ps2 unclear rule: should the registry's word be enough?",
+        "root_cause": "Confidence and the roles list define official text read through a copy differently. Roles accept the registry's word on which infobox fields copy in-game text. Confidence asks the page itself to say so.",
+        "target": "data/vocab/confidence.json: term high",
+        "change": "OLD: The sources include official text about the unit, read directly or through a faithful copy that says what it copies, or pages from two different established sites that each describe the unit and agree. NEW: The cited sources include official text about the unit, read directly or through a faithful copy: a page that says what it copies, or an infobox field the game's registry note names as a copy of in-game text (the Dawn of War II unit box's description, the PlanetSide 2 Wiki's Description field). Or they include pages from two different established sites that each describe the unit and agree. (The rest of the term stays as it is.)",
+        "expected": "Magrider: high for A, B and C (B changes; its cited Magrider/Main page carries the Description field). Marine squad: high for A, B and C (all three change from medium, because the cited unit page carries the box description, so they still agree). The Overlord and Atlas stay high.",
+        "side_effects": "More units reach high on a single site where the registry names a copied field. The DoW2 note's own check, whether the box field really copies the tooltip, goes to the gap report. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-15",
+        "priority": "must",
+        "fields": [
+          "sources.kind",
+          "confidence",
+          "roles.secondary",
+          "armament.traits",
+          "armament.family",
+          "armament.damage",
+          "armament.delivery",
+          "armament.range",
+          "armament.can_target",
+          "armour.models",
+          "abilities.kind",
+          "abilities.patterns"
+        ],
+        "evidence": "10 of 12 reports hesitated on sources. 86 of 166 uncertain entries rest on pages read but not cited, and every report has some. B-dow2 and C-dow2 unclear rules: damage step 4 and the rockets or guided missiles tie-break say 'the sources cited', while can_target step 3, magazine, splash and roles say just 'the sources'. A-ps2 asked the same about the channel tie-break. Six of the 17 split items trace to this: Magrider sources.kind and confidence (B cited the resistance page instead of Census), Magrider ability kind (C would not use an uncited page), and Marine armour.models and Magrider patterns (a page one coder never read).",
+        "root_cause": "The sources rule lets a band rest on an uncited page (marked uncertain) but says nothing about a term, and two rules limit themselves to cited pages. So which pages fill the slots, and which pages a coder happened to read, change the codes. Nothing says which page takes a slot first.",
+        "target": "schemas/source-unit.schema.json (sources[]; armament[].damage step 4; armament[].delivery; armament[].can_target step 3); data/vocab/weapon-families.json (tie-break rockets/guided-missiles); data/vocab/range-bands.json (tie-break short/medium/long)",
+        "change": "(1) sources[] description, NEW: The pages this entry rests on. Wherever a field rule says the sources, it means these cited pages together with every page read for this unit that an uncertain entry names (title and site, or its URL) and says what it shows. Every rule reads that same set; any code that rests only on an uncited page gets an uncertain entry at its own path. Confidence counts only the cited pages. Read every tab or sub-page of the unit's own page, and the page of each of its weapons, abilities and loadout picks where the site has one. Fill the slots in this order: an official page about the unit when one was read (see Source kinds); the page that lists the unit's weapons one by one, when its weapons change by passenger, mode or loadout; then the pages most of the entry rests on, a mechanic's own page first when it gives a figure the entry uses.\n(2) Damage step 4. OLD: and the sources cited for this unit give. NEW: and the sources give.\n(3) Delivery. OLD: as the cited sources describe it. NEW: as the sources describe it.\n(4) can_target step 3. OLD: plus any kind another cited source says it hurts. NEW: plus any kind another source says it hurts.\n(5) Rockets or guided missiles tie-break. OLD: Guided missiles only when the sources cited for the unit say. NEW: Guided missiles only when the sources say.\n(6) Range tie-break. OLD: from its figure where a cited page or the registry gives one. NEW: from its figure where a source or the registry gives one.",
+        "expected": "Magrider: B cites the Census entry (official) first, so sources.kind is {official, wiki} for all three (B changes). B reads the Smoke Screen page under the reading floor, though R2-13 settles that anyway. The Magburner is channel for all three, with R2-09.\nMarine squad: A reads the Leveling tab (R2-06 settles it anyway). All three cite the Retribution manual first, so sources.kind is {official, wiki} for all three; all change and still agree. The missile launcher's anti-armour role stays for all three, now on the rule's own terms.\nOverlord and Atlas: no official page was read (the MUL refused every request), so their citations stay. Their codes stand: the Atlas ranges and autocannon family, and the Gattling family.",
+        "side_effects": "The cap (3 or 5) no longer changes any code. It now changes only confidence and what the copy-check sees. Uncited pages are not copy-checked, so coders' own checks are still needed. A cited PDF manual, like the DoW2 one, cannot be copy-checked either. A coder who reads raw game data files can set new terms from them: B and C saw in Generals' 1.04 Weapon.ini that the Overlord's blast hurts allies, a friendly-fire trait nobody coded. R2-27 settles that for Generals. Rebuild docs/fields.md and docs/vocabularies.md."
+      },
+      {
+        "id": "R2-16",
+        "priority": "must",
+        "fields": [
+          "armament.mount",
+          "armament (seat, family, mount)"
+        ],
+        "evidence": "Overlord Gattling mount split: free-aim (A, B) against auto-target (C). All three Generals reports hesitated. A- and C-generals unclear rules: step 2 ('fires by itself while the player does something else') and step 5 ('a roof gun is free-aim') both fit, and every RTS weapon picks its own targets. A-, B- and C-ps2 asked whether the Magrider's only turret, which holds the gunner's weapon, counts as its 'main turret'.",
+        "root_cause": "Step 2 was written for shooters, where the player aims. In a commanded game every weapon picks its own targets, so step 2 can swallow any turret. Step 5 never says which turret is 'the main turret'.",
+        "target": "data/vocab/aim-models.json: tie-break",
+        "change": "(1) After '(2) It fires by itself while the unit's player does something else (point defence, interceptors, a deployed sentry gun, or launched drones that act on their own): auto-target.' ADD: In a commanded game every weapon picks targets for itself, so there (2) needs one of those kinds; a turret carried on the unit (an add-on or a roof gun) goes on to the later steps, even when it picks its own targets while the unit is idle.\n(2) In (5). OLD: slow-turret for the main turret of a large or huge unit. NEW: slow-turret for the main turret (the one holding the main weapon) of a large or huge unit. Also OLD: free-aim for any other turret (on a medium vehicle, a roof gun, a chin gun, any aircraft turret). NEW: free-aim for any other turret (on a medium vehicle, a roof gun, a chin gun, a turret holding only another seat's weapon, any aircraft turret).",
+        "expected": "Overlord Gattling: free-aim for A, B and C (C changes). The Magrider's top guns stay free-aim. The Atlas stays limited-arc and the Marine squad free-aim.",
+        "side_effects": "Add-on turrets on RTS units become free-aim. Launched drones stay auto-target. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-17",
+        "priority": "should",
+        "fields": [
+          "armament.family",
+          "armament.damage"
+        ],
+        "evidence": "All three Generals reports wrote it up as an unclear rule: two tie-breaks pull apart on the Overlord's 'Gattling Cannon' add-on (C suggests that the bullet test should win). All three chose machine-gun, but A and B leaned on a page they did not cite. The family flips the damage default (kinetic or explosive), and with it whether high air comes from the family.",
+        "root_cause": "The machine-gun/autocannon/cannon tie-break says 'a rotary cannon counts' as an autocannon. The small-arms/machine-gun tie-break says any rotary gun firing bullets is a machine gun.",
+        "target": "data/vocab/weapon-families.json: tie-break machine-gun/autocannon/cannon",
+        "change": "OLD: An autocannon is a gun the sources call a cannon or autocannon that fires shells rapidly; a rotary cannon counts. NEW: An autocannon fires shells rapidly, whether the sources call it a cannon or an autocannon; a rotary gun counts only when it fires shells. A rotary gun that fires bullets is a machine gun whatever its name (a Gattling Cannon), as the small-arms rule says: what it fires wins over what it is called. A damage category the game gives to small arms or machine guns (Generals' SMALL_ARMS) counts as saying it fires bullets.",
+        "expected": "Overlord Gattling: machine-gun and kinetic for A, B and C. The codes do not change, but they now rest on the cited infobox's damage names instead of an uncited page.",
+        "side_effects": "Rotary 'cannons' that fire bullets in other games become machine guns. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-18",
+        "priority": "should",
+        "fields": [
+          "armament.family",
+          "armament.damage",
+          "flavour_affinity"
+        ],
+        "evidence": "All three PlanetSide 2 reports hesitated and wrote up unclear rules. The Supernova behaves like a tank cannon: one heavy shot, then a reload, with the Tank Shells resist type. But official text calls its shots plasma charges, and the registry's laser-or-plasma exception assumes Vanu bolt guns are plasma. All three chose plasma. The family flips the damage (energy or armour-piercing) and the flavour score.",
+        "root_cause": "No tie-break sets plasma against cannon. The family intro, 'judged by how it behaves, not by its name', points both ways.",
+        "target": "data/vocab/weapon-families.json: new tie-break [plasma, cannon]",
+        "change": "ADD tie-break, terms [plasma, cannon]: A gun that fires one heavy shot, then pauses or reloads, is plasma when the game's own description of the weapon says its shots are plasma or energy bolts or charges, and cannon when they are shells. Its damage category and its cannon-like rhythm do not decide it; say how it fires in the summary. A registry note that sends some damage categories to a bullet family still wins (PlanetSide 2's bullet types).",
+        "expected": "Magrider: the Supernova, Perihelion, Saron/PPA and Aphelion are plasma and energy for A, B and C. No code changes; the three hesitations go.",
+        "side_effects": "Energy-themed cannons in other games are settled by their own game text. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-19",
+        "priority": "should",
+        "fields": [
+          "armament.family",
+          "armament.traits",
+          "armament.can_target",
+          "armament.slot",
+          "armour.models",
+          "on_death",
+          "abilities"
+        ],
+        "evidence": "All three MechWarrior reports wrote up unclear rules on 'the newest counted title'. The tabletop line runs '1984 onwards' and is still published, so its age does not order it against the other titles. Several facts sit between design and play: the rear-facing lasers, whether the autocannon fires one shell or a burst, the LRM's lock, SRM tracking, naval targets, one life per match, the primary weapon when players set their own fire groups, and rear armour values. The coders agreed on the codes, but each got there by a different route.",
+        "root_cause": "The Series convention orders titles by age, which fails for a tabletop line that is still running. The registry splits facts by kind (designs from the tabletop, play from the piloted titles) but never says which fact is which.",
+        "target": "research/registry-notes/games-r6.md (MechWarrior / BattleTech section and its Game-wide mechanics); schemas/source-unit.schema.json (armament[].slot)",
+        "change": "(1) games-r6.md, MechWarrior / BattleTech section. ADD a bullet before '- **Control.**': - **Which title decides** (Series games). This entry splits facts by kind, and the split comes before the newest-title rule. What a 'Mech carries and where comes from its tabletop design on the BattleTechWiki: its weapons and which way each faces, armour values, weight class, speed and the tabletop ranges the range_reference compares. How it plays comes from MechWarrior 5: Clans where its pages cover the 'Mech, otherwise from MechWarrior Online: whether a weapon locks on, fires one shell or a burst, or fires indirectly, and what happens when it dies. Kinds of target come from all counted titles together: the tabletop has infantry, VTOLs (low air) and naval vessels, so 'Mech weapons list them where their own rules allow. So the Atlas's centre-torso lasers face backwards; an Inner Sphere autocannon that MechWarrior Online fires as one shell per shot is a cannon; LRMs lock on and also fire indirectly; SRMs that MechWarrior Online calls non-locking are rockets with no homing trait, and the tabletop's self-guided wording goes in notes. Pilots come back in the next drop or match, so on_death is respawn, basis in-game.\n(2) Game-wide, 'Locations and critical hits'. OLD: Where a design's own armour values leave its rear torso thinner than its front, code directional as well. NEW: Code directional as well: every torso section has front and rear armour, and standard designs put less on the rear. Leave it off only when a source shows the rear as thick as the front.\n(3) Game-wide, 'Design quirks', after 'Record a quirk as a passive only when it adds a mechanic.' ADD: A quirk that changes rolls or numbers, for the 'Mech or for units near it (Command 'Mech, Distracting), is a number change: notes only.\n(4) armament[].slot. OLD: In a shooter it is the weapon the driver seat has selected at spawn (its first fire button); NEW: In a shooter it is the weapon the driver seat has selected at spawn (its first fire button), or, where players build their own fire groups and no source gives the spawn default, the weapon that the registry's design source lists first (MechWarrior: the BattleTechWiki infobox);",
+        "expected": "Atlas: one code changes. Coder A's LRM can_target becomes [ground-vehicle, naval], matching B and C (naval goes on every weapon that lists ground-vehicle). Everything else stays: AC/20 cannon and kinetic with its atypical; LRM guided-missiles and lock-on; SRM rockets with no homing; the rear lasers inside the one laser entry; AC/20 as primary; zonal and directional armour; respawn in-game; no quirk passives.",
+        "side_effects": "Every MechWarrior 'Mech follows the same split. Whether MechWarrior 5: Clans really has VTOLs and Elementals to shoot at is a registry check for the gap report. Rebuild docs/fields.md."
+      },
+      {
+        "id": "R2-20",
+        "priority": "should",
+        "fields": [
+          "crew.passengers",
+          "abilities.source",
+          "abilities.patterns",
+          "body.plan"
+        ],
+        "evidence": "All three Generals reports hesitated on the Battle Bunker. Paired entries says the passenger passive is source innate, Stock values says an ability an upgrade unlocks is source upgrade, and nothing says whether seats that only an upgrade adds are recorded. Coders also split on upgrade-in-field for abilities an in-field upgrade adds: A and B linked it, C did not. The measured union hides this because the Gattling weapon carries the link. A- and B-generals asked whether the add-on turret makes the body multi-turret.",
+        "root_cause": "Paired entries and Stock values each cover part of 'an upgrade bought on the unit adds seats or an ability', and they disagree on the source. upgrade-in-field is spelled out for weapons only.",
+        "target": "scripts/build-docs.mjs: Conventions, Paired entries and Stock values",
+        "change": "(1) Paired entries. OLD: A unit with passenger seats gets one passive ability for them, source innate. NEW: A unit with passenger seats gets one passive ability for them, source innate, or source upgrade when only a bought upgrade adds the seats.\n(2) Paired entries, after the sentence ending 'and no pattern when only units built later get it.' ADD: An ability that such an upgrade adds links `upgrade-in-field` on the same terms, next to the patterns of what it does.\n(3) Stock values, after 'only its bands are taken as unlocked, before further upgrades.' ADD: So are passenger seats that only an upgrade adds: record them in crew.passengers and name the upgrade in crew.notes. The body plan describes the stock unit; an add-on turret goes in body.notes.",
+        "expected": "Overlord: no change to the 5 passenger-firing seats, the bunker passive's source (upgrade) or the hull-turret body. The Battle Bunker becomes [passenger-sets-weapon, upgrade-in-field] and the Propaganda Tower [repair-allies, rally-allies, upgrade-in-field] for A, B and C (C adds both links). Marine squad: And They Shall Know No Fear comes from the Sergeant upgrade bought on the squad, so it links [brace, upgrade-in-field] for all three (all add it). The Atlas and Magrider have no upgrades and do not change.",
+        "side_effects": "upgrade-in-field gains source units from abilities that upgrades add. Transport stays a candidate role for units whose seats come from an upgrade. Rebuild docs/fields.md."
+      },
+      {
+        "id": "R2-21",
+        "priority": "should",
+        "fields": [
+          "roles.primary"
+        ],
+        "evidence": "All three PlanetSide 2 reports hesitated on step 4. A-ps2 and B-ps2 unclear rules: in PS2 the extra damage comes from a vehicle's negative resistance, not from the weapon, and the largest bonus is against aircraft, whose role fails its requires. C-ps2: official text says the gun is 'balanced against armour and infantry', which names two targets, and step 4 has no rule for two. All three chose anti-armour.",
+        "root_cause": "Step 4 assumes one bonus written on the weapon. It has no rule for a bonus written on the target's side, or for several targets that qualify.",
+        "target": "schemas/source-unit.schema.json: roles.primary",
+        "change": "After step 4's 'Doing little damage to other targets is not a bonus.' ADD: Extra damage that the game data writes on the target's side (a resist table where vehicles take more from the weapon's damage type) counts as the weapon's bonus. When this step gives more than one target, skip any whose role's requires the unit fails, then take the one with the largest bonus, or, if that cannot be told, the one official text names first.",
+        "expected": "Magrider: anti-armour for A, B and C, unchanged. Aircraft are skipped because anti-air needs high air. The other units do not change.",
+        "side_effects": "Resist-table games such as PS2 read step 4 the same way. Rebuild docs/fields.md."
+      },
+      {
+        "id": "R2-22",
+        "priority": "should",
+        "fields": [
+          "roles.secondary"
+        ],
+        "evidence": "All 12 reports hesitated on roles.secondary. A-generals unclear rule: 'any other role if the weapon meets the role's requires' is met by default for roles that have no requires (assault, buffer, infiltrator, engineer, logistics). B-ps2 and C-ps2 unclear rules, and A-ps2: can an option weapon meet anti-air's 'can hit high air' at step 5? B- and C-generals: does the Weak vs. line drop roles that only an upgrade gives? B-mech: does siege's coding rule bind secondary candidates? A-dow2: how does a button with a bonus against one target support a role? All coders answered these the same way.",
+        "root_cause": "The candidate test was written for weapons in the stock slots. It never says which roles a weapon cannot give, whether the part that gives a role at step 5 may also meet its requires, or whether drops and coding rules apply at every step.",
+        "target": "schemas/source-unit.schema.json: roles.secondary",
+        "change": "(1) OLD: Drop any role whose target official text calls a weak or limited point of the unit. NEW: Drop any role whose target official text calls a weak or limited point of the unit, whatever step would give it, upgrades included. A role's coding rule binds here as for the primary, unless it says As primary.\n(2) OLD: Any other role if the weapon meets the role's requires. NEW: Any other role whose requires the weapon itself meets; a role with no requires (assault, buffer, infiltrator, engineer, logistics) is never given by a weapon this way.\n(3) OLD: 2. A button or mode that every copy has, and the alternate weapon it switches to. NEW: 2. A button or mode that every copy has, and the alternate weapon it switches to. A button that gives extra damage against one kind of target supports that target's anti role.\n(4) After 'Rank these roles by how many of the options give them.' ADD: A role that enters here may meet its requires through the part that gives it (an anti-air option gun meets anti-air's can hit high air).",
+        "expected": "No round-2 code changes. Magrider stays [anti-infantry, anti-air]. The Overlord's anti-infantry and anti-air from the Gattling are still dropped. Atlas siege still fails its coding rule. Marine squad stays [anti-infantry, anti-armour], with anti-infantry now ranked at step 2 through Kraken Bolts, in the same order.",
+        "side_effects": "None known. Rebuild docs/fields.md."
+      },
+      {
+        "id": "R2-23",
+        "priority": "should",
+        "fields": [
+          "armament.can_target"
+        ],
+        "evidence": "11 of 12 reports hesitated on can_target. Six (A-, B- and C-dow2; A-, B- and C-generals) asked whether 'effective against vehicles' or 'efficiently engages aircraft and infantry' counts as a step-3 label; all used step 4. Three (A-, B- and C-ps2, plus a C-ps2 unclear rule) found that the base sentence ('even a little') and step 4 ('the kinds its family allows') pull apart on a flak gun that scratches vehicles. All left vehicles off.",
+        "root_cause": "Step 3 gives its labels only by example. The base sentence and step 4 do not say which wins when the family leaves out a kind that the weapon hurts a little.",
+        "target": "schemas/source-unit.schema.json: armament[].can_target",
+        "change": "(1) After step 3's sentence ending '...plus any kind another source says it hurts.' ADD: Words about what it is good at (effective against, good against, strong against) are not a label: go on to step 4.\n(2) After step 4's 'Any other weapon lists every ground kind its family allows: infantry, ground vehicles and structures.' ADD: A kind its family leaves out is not listed, even when the sources show the weapon hurting it a little (flak against vehicles); say so in the summary.",
+        "expected": "No round-2 code changes. The DoW2 and Generals weapons stay on step 4. The PS2 Ranger stays [infantry, low-air, high-air].",
+        "side_effects": "None known. Rebuild docs/fields.md."
+      },
+      {
+        "id": "R2-24",
+        "priority": "should",
+        "fields": [
+          "abilities (number)",
+          "abilities.patterns"
+        ],
+        "evidence": "A-dow2 and C-dow2 wrote up unclear rules, and B-dow2 hesitated on the generic pattern. 'A button that only changes numbers (a zoom) is left out' clashes with Granularity, which gives stat buffs generic patterns. Kraken Bolts, a timed damage boost on a key, can be read either way. All three kept it.",
+        "root_cause": "The example, a zoom, changes the view, not the unit's numbers, so the sentence also catches timed buffs it was never meant for.",
+        "target": "schemas/source-unit.schema.json: abilities[] description",
+        "change": "OLD: A button that only changes numbers (a zoom) is left out. NEW: A button that only changes the view (a zoom) is left out. A button that boosts the unit for a time is kept, even when the boost is only numbers, and links a generic pattern (see Granularity).",
+        "expected": "Marine squad: all three keep Kraken Bolts, unchanged. The other units do not change.",
+        "side_effects": "None known. Rebuild docs/fields.md."
+      },
+      {
+        "id": "R2-25",
+        "priority": "should",
+        "fields": [
+          "armament.traits",
+          "resources"
+        ],
+        "evidence": "11 of 12 reports hesitated on armament.traits.\n- Splash: A-, B- and C-generals and C-ps2. The radius is given as a figure and is never called tiny in words.\n- Spin-up: A-, B- and C-generals. It has no sourcing rule, while magazine turns away stats tables.\n- Charge-up: A-, B- and C-ps2. The Perihelion's charge adds rounds, not strength (gaps from B and C). On the Aphelion a split hides in the measured union: A coded charge-up, B and C did not. C-ps2: energy built up by firing could read as charge-up.\n- Ammunition coded twice: A-mech, A-ps2, B-ps2 and C-ps2. The Atlas got both the trait and the resource, the Magrider only the resource; coders agreed within each unit.",
+        "root_cause": "Spin-up and charge-up have no coding rule. Splash's coding rule speaks only of words. Nothing links the finite-ammo trait to the limited-ammo resource.",
+        "target": "data/vocab/weapon-traits.json: splash, spin-up, charge-up, finite-ammo",
+        "change": "(1) splash source_rule, APPEND: A radius figure in the sources counts as saying the hit hurts an area. Tiny or very small must be the sources' own words, never a judgement from the figure.\n(2) spin-up, ADD source_rule: Set it when the sources say or show the rate of fire rising while the weapon keeps firing; continuous-fire stages in a stats table count, because the rise is how it fires.\n(3) charge-up description. OLD: Hold to charge a stronger shot. NEW: Hold to charge, then release: a stronger shot, or a burst of more shots. ADD source_rule: Set it when the sources say the player holds the trigger to build the shot up before it fires. Energy that builds while the weapon keeps firing, released by another key or by itself, is not charge-up: describe it in the summary.\n(4) finite-ammo, ADD source_rule: When the unit has the limited-ammo resource, give this trait only to the weapons that draw on it while others do not (a 'Mech's autocannon and missiles beside its lasers); when every weapon draws on it, the resource alone says so.",
+        "expected": "Overlord: no change; the twin cannons stay [splash] and the Gattling [spin-up, anti-air]. Magrider: the Perihelion is [splash, charge-up] for all three, now without a fit_note. The Aphelion is [spin-up, pierce] for A, B and C (A drops charge-up). The weapons get no finite-ammo and the resource stays limited-ammo, unchanged. Atlas: no change; finite-ammo stays on the AC/20, LRM and SRM, together with limited-ammo.",
+        "side_effects": "None known. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-26",
+        "priority": "should",
+        "fields": [
+          "armament.range"
+        ],
+        "evidence": "A-, B- and C-ps2 hesitated and wrote up unclear rules. B-ps2: 'the registry should give a mapping'. C-ps2: the wiki word is not a reach. The range tie-break accepts a range word but has no rule for Close, Medium-Long or Very Long. All three coded the same bands.",
+        "root_cause": "The PS2 registry has no reference weapon, and its weapon pages give only an effective-range word. No mapping from those words to bands is written down.",
+        "target": "research/registry-notes/games-r6.md: PlanetSide 2 section, new bullet before '- **Flavour.**'",
+        "change": "ADD bullet: - **Range words** (armament[].range; the registry has no reference weapon). Weapon pages give an Effective Range word, not a maximum reach. Read it as the band, the way the range tie-break reads a source calling a weapon short-, medium- or long-ranged: Close and Short are short; Medium and Medium-Long are medium; Long and Very Long are long. A word never makes a weapon off-screen. A weapon with two kinds of fire takes the word of the one that reaches further (the Aphelion's energy wave).",
+        "expected": "Magrider: every band unchanged for A, B and C. The Supernova, Perihelion, Ranger and Halberd stay long; the top machine guns, Walker, Saron/PPA and Aphelion stay medium.",
+        "side_effects": "Writes down what coders already did. The deeper problem (the word is not a reach, and the basic rifle is rated Long) goes to the gap report."
+      },
+      {
+        "id": "R2-27",
+        "priority": "should",
+        "fields": [
+          "confidence",
+          "roles.primary",
+          "on_death",
+          "armament.traits",
+          "armament.mount"
+        ],
+        "evidence": "The registry's Uncertain section still asks whether the generals.str file may be cited. B- and C-generals hesitated on it, and all three coders cited it and rested roles step 4 on it. On Tao's version of the Overlord (faster, radiation shells, death blast), A-, B- and C-generals hesitated on on_death and B and C wrote up unclear rules. A and B asked where to name the generals that lack the unit. All three read the raw 1.04 INI files to check figures; B and C saw a blast that hurts allies, a two-shot clip and the add-on's own AI there.",
+        "root_cause": "The registry left these questions open, and nothing says how far a general's version or a raw data file may change the main entry. Under R2-15 the raw files would start to count as sources.",
+        "target": "research/registry-notes/games-r3.md: Uncertain; research notes for the r3 agents (Generals)",
+        "change": "(1) Uncertain, 'Generals tooltip source' bullet. OLD: Decide whether coders may cite it (kind database, with a note that it copies in-game text). If they may not, no source in reach gives these lines faithfully, and roles step 4 falls back on bonuses in the game data. NEW: Coders may cite it (kind database, with a note that it copies the in-game tooltip). Its tooltip lines are official text read through a faithful copy, for roles and for confidence.\n(2) Research notes, after 'For example, Shin Fai fields neither the Troop Crawler nor the Helix.' ADD: Name those generals in tier.basis. Code every field from the main faction's version; a general's version that differs (Tao's Overlord is faster, its shells leave radiation and it explodes on death) goes in the notes of the fields it would change, never in on_death outcomes or traits.\n(3) ADD a bullet after 'Where to read the tooltip text': - **Raw 1.04 data files** (Weapon.ini, the Object files): read them to check figures, buttons and tooltip labels. A term only they would set (friendly-fire from a blast that hurts allies, magazine from a clip size, auto-target from an add-on's own AI) is not set; mention the fact in notes.",
+        "expected": "Overlord, all unchanged for A, B and C: confidence high; primary anti-armour from the Strong vs. line in the str file; on_death bail-out (proposal) with Tao's blast in notes; twin cannons [splash] with no friendly-fire and no magazine; the Gattling free-aim. It also heads off a new friendly-fire split once R2-15 lets uncited pages count.",
+        "side_effects": "None beyond closing an open registry question."
+      },
+      {
+        "id": "R2-28",
+        "priority": "should",
+        "fields": [
+          "body.plan"
+        ],
+        "evidence": "A-, B- and C-ps2 hesitated and filed gaps. The Magrider's main gun is fixed in the hull, and a small turret on top carries the gunner's weapon. Casemate says 'no turret', hull-turret wants the main gun in the turret, and the body tie-break does not cover casemate. All three chose casemate and recorded an atypical mount.",
+        "root_cause": "Casemate's 'no turret' wording, and no tie-break between casemate and hull-turret.",
+        "target": "data/vocab/bodies.json: casemate description; new tie-break",
+        "change": "(1) casemate. OLD: A chassis with a forward-fixed gun and no turret, like a tank destroyer. NEW: A chassis with a forward-fixed main gun and no main turret, like a tank destroyer.\n(2) ADD tie-break, terms [casemate, hull-turret]: Decide by where the main gun sits: fixed in the hull is casemate, even when a small turret on top carries another seat's gun (the Magrider); in a turret is hull-turret. A roof turret's free aim then breaks casemate's mount rule, and the validator lists that as atypical.",
+        "expected": "Magrider: casemate for all three, unchanged, with the atypical recorded. The other units do not change.",
+        "side_effects": "Whether to let casemate take free-aim mounts goes to the gap report. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-29",
+        "priority": "could",
+        "fields": [
+          "armament.delivery"
+        ],
+        "evidence": "A-, B- and C-ps2 wrote up unclear rules: every PS2 gun has a muzzle velocity in its infobox. The delivery rule lists things that do not count as saying how a shot travels, but not a velocity. All three coded projectile.",
+        "root_cause": "The list of things that do not count is silent on velocity figures.",
+        "target": "schemas/source-unit.schema.json: armament[].delivery",
+        "change": "After 'A rate of fire, the weapon's name or a hidden hit roll does not count as saying.' ADD: A muzzle velocity or travel time in the sources does count: the shot travels, so it is projectile.",
+        "expected": "No round-2 code changes; every Magrider weapon stays projectile.",
+        "side_effects": "None known."
+      },
+      {
+        "id": "R2-30",
+        "priority": "could",
+        "fields": [
+          "armament",
+          "armament.slot",
+          "armament.option_group"
+        ],
+        "evidence": "A- and C-dow2: rule 2's example (a sergeant's carbine merged with the squad's rifles) points against rule 3 (never merge a weapon the unit does not always have) when the Sergeant is bought. All three kept separate entries. A-, B- and C-generals: one set of add-ons that exclude each other holds a weapon and two abilities; all three used one id for both option_group and exclusive_group. A- and B-ps2: two top guns come free, but the default rule assumes only one.",
+        "root_cause": "An example that does not match its rule, and two grouping cases the field rules do not cover.",
+        "target": "scripts/build-docs.mjs (Weapon entries rule 2); schemas/source-unit.schema.json (armament[].option_group, armament[].default)",
+        "change": "(1) Weapon entries rule 2. OLD: (a sergeant's carbine with the squad's rifles, NEW: (a stock sergeant's carbine with the squad's rifles,\n(2) option_group, after 'An upgrade group holds acquired weapons from upgrades that exclude each other, with no default.' ADD: When those upgrades add abilities too, the abilities' exclusive_group uses the same id.\n(3) default, NEW: true on the default choice of a loadout group, and nowhere else. If the source gives several choices free, it is the one the source calls the default, else the first it lists.",
+        "expected": "No round-2 code changes. The Sergeant's weapons stay as separate acquired entries; the Overlord keeps one id across the weapon and the two abilities; rule 5 still merges the Magrider's top guns into one entry.",
+        "side_effects": "None known."
+      },
+      {
+        "id": "R2-31",
+        "priority": "could",
+        "fields": [
+          "armament.family",
+          "armament.traits"
+        ],
+        "evidence": "C-mech unclear rule: in 'Rockets the sources call smart, seeking or self-guided, with no lock step, count as this', 'this' could mean guided missiles or rockets with homing. BattleTech calls both LRMs and SRMs self-guided.",
+        "root_cause": "A pronoun with two possible antecedents.",
+        "target": "data/vocab/weapon-families.json: tie-break rockets/guided-missiles",
+        "change": "OLD: In a piloted game (control piloted or both in data/games.json), a rocket that corrects its own course with no lock step and no warning stays rockets and takes the homing trait. Rockets the sources call smart, seeking or self-guided, with no lock step, count as this. NEW: In a piloted game (control piloted or both in data/games.json), a rocket that corrects its own course with no lock step and no warning stays rockets and takes the homing trait, and so does a rocket the sources call smart, seeking or self-guided with no lock step.",
+        "expected": "Atlas SRM: rockets with no homing, unchanged. R2-19 lets MechWarrior Online decide how it fires, and that title calls SRMs non-locking.",
+        "side_effects": "None known."
+      },
+      {
+        "id": "R2-32",
+        "priority": "could",
+        "fields": [
+          "abilities.kind"
+        ],
+        "evidence": "A-, B- and C-dow2: And They Shall Know No Fear must be charged by damage taken and also has a cooldown. All three wrote up an unclear rule, because no tie-break separates active from ultimate. All three coded ultimate, which is atypical on a T1 unit.",
+        "root_cause": "No tie-break between active and ultimate.",
+        "target": "data/vocab/ability-kinds.json: new tie-break [active, ultimate]",
+        "change": "ADD tie-break, terms [active, ultimate]: Ultimate when the source says the button must be charged through play (kills, or damage dealt or taken) before each use, even when it also has a cooldown; band that cooldown as given. Active when only time or a stock holds it back.",
+        "expected": "No round-2 code changes. Ultimate's T3 minimum stays; it goes to the gap report.",
+        "side_effects": "None known."
+      },
+      {
+        "id": "R2-33",
+        "priority": "could",
+        "fields": [
+          "abilities.patterns"
+        ],
+        "evidence": "All three DoW2 coders linked Kraken Bolts to overclock-self and added a fit_note. A-, B- and C-dow2 hesitated, and B- and C-dow2 wrote up unclear rules. patterns.md calls overclock-self the generic stat-buff pattern, but its summary, which wins, needs a cost in health, heat or a slump. So by the current rules, the link the three coders agreed on is wrong.",
+        "root_cause": "The generic stat-buff pattern's summary is narrower than the job Granularity and patterns.md give it.",
+        "target": "data/pattern-registry.json (overclock-self summary); research/registry-notes/patterns.md (overclock-self boundary)",
+        "change": "(1) Summary. OLD: Enter a short boosted state with more speed, fire rate or damage, paid for in health, heat or a slump afterwards. NEW: Enter a short boosted state with more speed, fire rate or damage, often paid for in health, heat or a slump afterwards.\n(2) patterns.md boundary. OLD: this trades health or heat for offence and speed. NEW: this boosts offence or speed for a time, often at a cost in health or heat.",
+        "expected": "Marine squad: Kraken Bolts stays [overclock-self] for all three, now without a fit_note.",
+        "side_effects": "overclock-self becomes the home of free timed buffs. If the patterns group would rather have a separate pattern, skip this and leave it to the gap report."
+      },
+      {
+        "id": "R2-34",
+        "priority": "could",
+        "fields": [
+          "countered_by",
+          "counters",
+          "weaknesses",
+          "strengths"
+        ],
+        "evidence": "These are information-only fields, but reports hesitated on them often: countered_by in 9, counters in 7, weaknesses in 6. A-, B- and C-generals: 'rocket-armed infantry' names a weapon and a kind of unit at once; all chose weapon:rockets. A- and C-generals and A-ps2: may a strength or weakness link a proposal field, such as mount:slow-turret?",
+        "root_cause": "Matchups rule 1 orders the ways a source names an enemy, but not for one phrase that names it two ways. Nothing says whether a matchup may link a proposal field.",
+        "target": "scripts/build-docs.mjs: Conventions, Matchups",
+        "change": "(1) After 'When they name only a unit, use the same order for what makes that unit win.' ADD: When one phrase names the enemy two ways at once (rocket-armed infantry), take the first that fits in this order.\n(2) After rule (4) ADD: A link may name a proposal field (a mount, a handling) when the reason itself is sourced.",
+        "expected": "No measured field changes. 'Rocket-armed infantry' stays weapon:rockets for all three.",
+        "side_effects": "None known."
+      }
+    ],
+    "leave_for_gap_report": [
+      {
+        "topic": "Free timed self-buff pattern",
+        "why": "Needed if R2-33 is not taken. All three DoW2 coders filed gaps for Kraken Bolts, a free timed damage boost against one kind of target."
+      },
+      {
+        "topic": "Ultimate below T3, and abilities that are charged and also on a cooldown",
+        "why": "Every coder makes the T1 Marine squad's sergeant ability atypical (A-, B- and C-dow2). Whether ultimate's minimum tier fits RTS squads is a word-list change, not a coding rule."
+      },
+      {
+        "topic": "Resource for a meter filled by damage taken",
+        "why": "B-dow2 and C-dow2: kill-charge covers kills or damage dealt, not damage soaked. That needs a new term."
+      },
+      {
+        "topic": "Link kinds for capture speed and for price",
+        "why": "All three DoW2 reports (capture) and A- and B-dow2 (price) found nothing to link to. New link kinds are machinery."
+      },
+      {
+        "topic": "A role for direct-fire units built to break structures",
+        "why": "After R2-02, the Overlord-type tank loses siege. A- and C-generals asked for a role that fits a tank built for structure assault."
+      },
+      {
+        "topic": "Lock-on missiles that also fire indirectly: delivery and the siege role",
+        "why": "A-, B- and C-mech: lock-on comes before lobbed in the delivery order, so an LRM boat never picks up siege, although it bombards targets that teammates spot."
+      },
+      {
+        "topic": "Cannon family against kinetic damage for MechWarrior autocannons",
+        "why": "Every Inner Sphere autocannon coded as a cannon breaks the family's damage list, because the map gives Ballistic as kinetic (A-, B- and C-mech). The fix is to let cannons take kinetic, or to add a step-3 exception."
+      },
+      {
+        "topic": "Casemate with a roof turret, and climb on hover",
+        "why": "The Magrider breaks casemate's mount rule (A-, B- and C-ps2) and climb's mobility rule (R2-12). Both are evidence for relaxing those rules."
+      },
+      {
+        "topic": "Patterns for a pick that modifies another ability, and for refilling your own boost on a key",
+        "why": "A-, B- and C-ps2 filed gaps for Multi-directional Exhaust (a dash that steers sideways) and for Recharge's fuel refill."
+      },
+      {
+        "topic": "Passenger seats that only an upgrade adds, and one exclusion group spanning weapons and abilities",
+        "why": "B- and C-generals asked for a flag on such seats, and C-generals for one group across both kinds. Both need schema fields. R2-20 and R2-30 cover today's coding."
+      },
+      {
+        "topic": "Incoming missiles as a target type; a combined heal-and-buff aura",
+        "why": "A-generals: the Gattling add-on also shoots down missiles, and Generals speaker towers both heal and buff."
+      },
+      {
+        "topic": "A rear-facing arc for a merged weapon entry",
+        "why": "A-mech: one MechWarrior laser entry merges forward and rear-facing lasers, and the mount list cannot say which arc each covers."
+      },
+      {
+        "topic": "Weapon-entry rule 5 merges hide role differences",
+        "why": "A-, B- and C-ps2: merging the Saron with the PPA, and the Kobalt with the Basilisk, hides anti-vehicle against anti-infantry jobs from the secondary-role step."
+      },
+      {
+        "topic": "PlanetSide 2 range scale",
+        "why": "R2-26 only writes down what coders did. The wiki's range words are not a reach, and the basic rifle is rated Long (C-ps2), so a real reference weapon is still needed."
+      },
+      {
+        "topic": "Shooter vehicles bunch at fast and very fast",
+        "why": "This is a known consequence of decision 2C (method A) and is not reopened. All three PlanetSide 2 reports hit it, and the comparison between vehicles lives only in notes."
+      },
+      {
+        "topic": "Registry fact checks",
+        "why": "Four facts need checking at the source. (1) Generals sight pair: does the Ranger's 100-400 really read as vision then fog clearing? It makes the Overlord short-sighted (A-, B- and C-generals). (2) Does the DoW2 box description really copy the in-game tooltip? R2-14 now leans on it. (3) The DoW2 rocket_pvp mapping, which the note already flags. (4) Does MechWarrior 5: Clans have VTOLs and Elementals to shoot at? This matters for low air and infantry on 'Mech weapons under R2-19."
+      },
+      {
+        "topic": "MechWarrior roles step 1 cannot be tested",
+        "why": "The Master Unit List returned HTTP 403 to all three coders, and its role Juggernaut maps to none of our roles."
+      },
+      {
+        "topic": "On-death outcome for one life per match",
+        "why": "B-mech: neither respawn nor bail-out describes a pilot who is out until the next match. R2-19 codes respawn for now."
+      },
+      {
+        "topic": "The copy-check misses transcluded templates, tabbed pages and PDFs",
+        "why": "A-, B- and C-dow2 and A-, B- and C-ps2: the copy-check reads only each cited page's own wikitext. This matters more under R2-15, where uncited pages count."
+      },
+      {
+        "topic": "Pilot unit id keeps the word Squad",
+        "why": "B-dow2: dow2.space-marines.tactical-marine-squad goes against the Ids convention, which drops a final Squad. The research run should use tactical-marine."
+      },
+      {
+        "topic": "Lineage threshold and cross-franchise names",
+        "why": "A-, B- and C-dow2: 'nearly the same name' is undefined (Space Marine Squad against Tactical Marine Squad). B-mech: the MechWarrior Atlas and Planetary Annihilation's Atlas titan share a name."
+      },
+      {
+        "topic": "Factions in links, Star League designs, and introduced_in",
+        "why": "B-mech: the faction part of a link to a unit not yet researched has to be guessed (inner-sphere or shared). A- and C-mech: does a Star League design belong under shared? A- and C-dow2: which game does introduced_in name for a base-game unit researched at an expansion's balance?"
+      },
+      {
+        "topic": "High air in PlanetSide 2",
+        "why": "A-ps2: PS2 aircraft can hover, so it is unclear which PS2 targets count as high air at all."
+      }
+    ],
+    "for_mustafa": [
+      {
+        "question": "Source cap: keep 3 or raise to 5?",
+        "evidence": "- All 12 reports used all three slots, and 10 of 12 said in a sources hesitation that the cap forced a trade-off.\n- 86 of 166 uncertain entries (52%) rest on pages that were read but left uncited. Every report has some, from 2 to 13 per report.\n- In all 12 reports, codes in measured fields rest on such pages: the DoW2 missile launcher's anti-armour role and magazine (3 of 3), the Marine squad's self-repair (2), all four Atlas weapon ranges and the autocannon family (3 of 3), the Overlord's Gattling family (3 of 3), the Magburner's kind (2), the Halberd's magazine (1) and Smoke Screen's countermeasures (1).\n- 4 of 12 reports left an official page uncited for lack of room: the three DoW2 manuals and the PS2 Census entry. Each said citing it would have made confidence high. The Census case is the Magrider's confidence and source-kind split.\n- 6 of the 17 split items trace to a page that one coder read but did not cite, or did not read at all.\n\nWith R2-15 (the sources means cited pages plus pages named in uncertain entries, and official pages fill the first slot), a cap of 3 no longer changes any round-2 code. It then changes only confidence and what the copy-check and the checker see. A cap of 5 would let the DoW2 manual, the Census entry and the MechWarrior weapon pages be cited and copy-checked; the DoW2 manual is a PDF, though, which the copy-check cannot read."
+      },
+      {
+        "question": "Should an ability paid for per use from a shared stock get a resource of its own? It is coded as no for now.",
+        "evidence": "No round-2 unit has such an ability: 0 of 4 units, and no hesitation, gap or unclear-rule note mentions one. Kraken Bolts costs nothing but its cooldown, the Overlord's add-ons are one-off upgrades, and MechWarrior consumables are left off as player kit. Round 2 adds no evidence; the only case is still Company of Heroes munitions from round 1."
+      },
+      {
+        "question": "Flavour rule (computed rule applied) and where infiltrator sits: three wording questions the coders raised.",
+        "evidence": "- The computed rule caused 1 split in 4 units, the Marine squad, and that split came entirely from body.plan. R2-05 settles it.\n- Of the 10 flavour hesitations, 6 said the result hinged on another contested field: the body plan in all 3 DoW2 reports, and cannon or autocannon plus rockets or guided missiles in all 3 MechWarrior reports. 3 found the rule clear.\n\nThe coders raised three wording questions. Since the rule is still yours to decide, they are left to you:\n(a) Does the weapon family score one point at most, or one per matching weapon? A-dow2 read it as one at most; no round-2 result changes either way.\n(b) Should step 3 also skip a flavour whose avoided list holds a part of the unit, as step 1 does? Raised by A-mech; no round-2 result changes.\n(c) Should tied flavours be written in word-list order? Raised by C-mech; all three MechWarrior coders already wrote [soviet, empire].\n\nInfiltrator: no round-2 unit was an infiltrator candidate (0 of 4), so there is no new evidence on moving it."
+      },
+      {
+        "question": "Negated links in matchups (deferred until round-2 data).",
+        "evidence": "- 7 of 12 reports wrote a matchup about something the unit lacks (round 1: 4 of 12). The Marine squad's bolters do almost nothing to vehicles (3 reports), the stock Overlord cannot fire at aircraft (3), and the Magrider's top gun is no anti-air weapon (1).\n- All of them used today's workaround: a weakness hung on the part that causes the gap, and the enemy in countered by.\n- Within each unit every coder chose the same links. Marine squad: the weakness is weapon:small-arms and countered by is class:vehicle, 3 of 3 each. Overlord: the weakness is weapon:cannon and countered by is class:aircraft, 3 of 3 each.\n- No report asked for a negated link."
+      }
+    ]
+  },
+  "review": {
+    "verdicts": [
+      {
+        "id": "R2-01",
+        "verdict": "revise",
+        "reason": "Applied: Overlord step 1 finds no role, so step 4's 'Strong vs. vehicles' line gives anti-armour for A, B and C. C changes, and secondary step 1 gives nothing. Marine, Atlas and Magrider are unchanged. The RA3 samples and the round-1 units are unchanged (the SC2 Siege Tank is siege either way). The rule matches the registry's own 'Purpose: Siege' example. Problem: making each half of a slash label a label in its own right turns everyday words into role names. 'control' (from Disabler / control) would match in mind control or a control point, and 'aura' (from Buffer / aura) would match in a healing aura, although buffer's own description sends healing to support. Units it would code badly: RA2's Yuri mind-control infantry, and any DoW2 healer whose description names a healing aura. Add both words to the list of words that name no role.",
+        "revised_change": "(1) data/vocab/roles.json, description. OLD: Official words name a role only through the role's label or one of its aliases. NEW: Official words name a role only through the role's whole label or one of its aliases; each half of a slash label (Artillery / siege) counts as a label. One word of a longer label is not enough: 'Assault' alone does not name Frontline assault, so a Purpose such as 'Tank/Structure Assault' names no role. Same description. OLD: and support when it means firepower (combat support, fire support, artillery support, close air support). NEW: support when it means firepower (combat support, fire support, artillery support, close air support); control in mind control or a control point; and aura in a healing or repair aura (that job is support).\n(2) research/registry-notes/games-r3.md, Designation bullet, after 'Many entries are phrases that match no role label or alias, and those name no role.' ADD: Entries built on the word Assault (Tank/Structure Assault, Base/Unit Assault) are among them.",
+        "revised_target": "data/vocab/roles.json (description); research/registry-notes/games-r3.md (Designation bullet)"
+      },
+      {
+        "id": "R2-02",
+        "verdict": "revise",
+        "reason": "Applied with R2-01: siege drops from the Overlord. Step 3 gives nothing else, because Weak vs. 'rocket-armed infantry' drops anti-infantry. Step 4 gives no assault, because the main gun is long. Step 5 gives support, transport and buffer one add-on each, and list order gives [support, transport] for A, B and C. The Atlas, the SC2 Siege Tank (deploy mode), the RA3 samples and round 1 are unchanged. Overreach: the clause 'a gun strong against vehicles and buildings gives the anti-armour role' hands out a role from inside siege's coding rule. That skips the roles.secondary test (requires, the Weak vs. drop, the rank steps). Replace it with a pointer. No unit in the 28 games codes badly once that is done.",
+        "revised_change": "data/vocab/roles.json, term siege, replace source_rule with: A lobbed weapon that reaches long or further, bombs dropped from the air, a deploy mode whose gun reaches long or further and hits an area, or a long-range missile or rocket that the sources say is built mainly to destroy structures (they name structures as its first or only target). A gun aimed straight at targets in view is never siege by that last clause, even when official text calls it strong against buildings; what else it is strong against may still give an anti role under roles.secondary. A long-range missile or cannon alone is not siege, and a team that sets up its gun before firing is not deploying."
+      },
+      {
+        "id": "R2-03",
+        "verdict": "revise",
+        "reason": "Applied: the Atlas LRM no longer gives anti-armour. The AC/20, SRM and lasers give nothing, and siege fails its coding rule, so the result is [] for A, B and C. Lock-on AT/AA launchers keep their roles through 'a source calls it...'. The RA3 IFV (Tanya's guns attack nothing else, per the source) and round-1 Battlefield heat seekers ('anti-air') are unchanged. The wording 'because the game has few kinds of target' is a judgement: how few is few? Coders will read it differently in WARDOGS, ARC Raiders or Foxhole. Name the case instead.",
+        "revised_change": "(1) schemas/source-unit.schema.json, roles.secondary. OLD: a source calls it an anti-tank or anti-aircraft weapon, or it can hit nothing else. NEW: a source calls it an anti-tank or anti-aircraft weapon, or it can hit nothing else: the sources say, or the game data shows, that it cannot attack the other kinds of target the game has. A target list that is short only because can_target step 2 lists what a lock-on weapon locks onto, or because the title the entry follows for play has almost nothing else to shoot at (MechWarrior Online's 'Mechs), does not count.\n(2) roles.primary, step 4. OLD: or if the main weapon can hit nothing else. NEW: or if the main weapon can hit nothing else (as roles.secondary defines it)."
+      },
+      {
+        "id": "R2-04",
+        "verdict": "accept",
+        "reason": "Applied: the Atlas LRM becomes off-screen for A, B and C. C changes, because C's cited MWO LRM 20 page gives indirect fire at targets that teammates lock or TAG. MechWarrior has no sight figure (sight_reference None), so only this second reason can ever make an LRM off-screen, and the tie-break now says so. The Overlord Gattling stays off-screen against the tank's own figure, and the twin cannons stay long. The round-1 Siege Tank and the Battlefield TV missile are unaffected. Siege's coding rule still turns away the LRM, so roles.secondary stays []. No contradiction with the validator or the samples. Bad codings: none found. A medium-reach mortar whose page says it fires on spotted targets becomes off-screen, which is what the band means. The wording is plain."
+      },
+      {
+        "id": "R2-05",
+        "verdict": "revise",
+        "reason": "Applied: the Marine squad becomes power-suit for A, B and C, and flavour becomes [empire]: Empire scores 2 (blades fist, power-suit) against Soviet 1 (assault). The armour class stays light by the dow2 map. Problem: the armour-classes soldier rule says 'A power suit worn by one soldier (body size small) is light', and that rule wins over every step. It was almost dead while power-suit meant 'bigger than a soldier'; this proposal brings it to life, and its own 'a suit of one soldier's size is small and light' writes it in. Bad codings: (1) StarCraft II's Marine, whom the StarCraft Wiki describes in a powered combat suit, would become power-suit and then light. But the sc2 note makes Light-Biological units unarmoured, and the unarmoured term says a game's basic rifle infantry is unarmoured (the Marine is sc2's speed reference). (2) Dawn of War Terminators (Infantry Heavy High, medium by the dow1 map) would drop to light, because the soldier rule outranks step 1. Amend the soldier rule.",
+        "revised_change": "(1) data/vocab/bodies.json, power-suit description. OLD: An armoured exosuit, bigger than a soldier. At small size it is infantry; at medium size or bigger it is a walker. NEW: Powered armour, an exosuit or a battlesuit around one pilot. At small size (one soldier's size, such as power armour) it is infantry; at medium size or bigger it is a walker.\n(2) bodies.json, new tie-break, terms [humanoid, power-suit]: Power suit when the sources say the soldier wears powered armour, an exosuit or a battlesuit (Space Marines, the PlanetSide 2 MAX, Elementals). Humanoid for a soldier in ordinary body armour or carapace, however heavy. Size and armour class follow their own rules: one soldier's size is small, and the armour class comes from the armour-class steps and the soldier rule.\n(3) data/vocab/armour-classes.json, tie-break [unarmoured, light, medium]. OLD: A power suit worn by one soldier (body size small) is light; a suit bigger than a soldier (body size medium or more) is medium. NEW: A power suit worn by one soldier (body size small) is light, unless step 1 or 2 gives more (Dawn of War Terminators are medium by the dow1 armour map) or it is the game's basic rifle infantry, which stays unarmoured whatever it wears (the StarCraft II Marine); a suit bigger than a soldier (body size medium or more) is medium.\nRebuild docs/vocabularies.md.",
+        "revised_target": "data/vocab/bodies.json (power-suit, new tie-break); data/vocab/armour-classes.json (soldier tie-break)"
+      },
+      {
+        "id": "R2-06",
+        "verdict": "revise",
+        "reason": "Applied: the Marine squad gets [self-repair] for A, B and C. A changes, and B and C drop their fit_notes. This follows the armour-models rule that a model every unit of its kind shares still counts, and veterancy is not what gives it (the rate exists at rank 0). The wording overclaims: 'every infantry unit's Leveling tab lists a slow health regeneration rate' rests on four tabs (Tactical Marines, Guardsmen, Scouts, Shoota Boyz; B and C). A coder of a unit whose tab shows no rate, or a vehicle with no rate, must not be told it has one. State only what was checked, and tie the code to the unit's own tab. The same mechanic is missing from the SC2 list (Zerg regeneration); see missing.",
+        "revised_change": "research/registry-notes/games-r5.md, Game-wide mechanics, Dawn of War II, new bullet after Melee: - **Health regeneration** (armour model self-repair): the infantry Leveling tabs checked in pilot round 2 (Tactical Marines, Guardsmen, Scouts, Shoota Boyz) list the same slow health regeneration rate, and veterancy raises it. It is part of the unit's own health, so code self-repair on each unit whose own Leveling tab lists a rate, as the armour-models rule asks for a model every unit of its kind shares, and say in armour.notes that it is slow and shared. A unit whose tab lists no rate, or that has no Leveling tab, gets no self-repair from this. Read the Leveling tab of every unit; no fit_note is needed."
+      },
+      {
+        "id": "R2-07",
+        "verdict": "revise",
+        "reason": "Applied: the Magrider becomes fast for A, B and C. All three uncertain notes say the unit could sit on either side of the fast/very-fast edge, so B moves to fast. The units with figures are unchanged. Consistent with decision 2C, and nothing in the samples is affected. The bunching it causes is accepted: PS2's Prowler and Magrider will both land on fast, although the sources call the Prowler faster. Wording: 'near an edge' is undefined. Use the test the coders themselves wrote: they could not tell which side.",
+        "revised_change": "data/vocab/speed-bands.json, description. OLD: With nothing usable, judge from figures for neighbouring units or from footage, and add an uncertain entry for mobility/speed. NEW: With nothing usable, judge from figures for neighbouring units or from footage, and add an uncertain entry for mobility/speed. If the judgement cannot tell which side of an edge the unit falls on, take the band nearer medium, as for a ratio exactly on an edge, and say so in that uncertain entry."
+      },
+      {
+        "id": "R2-08",
+        "verdict": "revise",
+        "reason": "Applied: Magrider resources become [limited-ammo] for A, B and C, and the Magburner's cooldown becomes medium for all three (B: 'a little over half a minute to refill from empty'). The Atlas keeps heat. Problem: 'a gauge that only one ability draws on and that refills on its own is its cooldown' also catches energy pools. It contradicts the cooldown rule two sentences earlier, which says an ability held back only by the unit's energy has no band. Units it would code badly: the StarCraft II Medivac, whose Heal is its only energy ability, and the Phoenix (Graviton Beam). Both would get a long 'cooldown' equal to the time to refill a full energy bar. Limit the rule to a boost's own tank. Open edge for the gap report: a jetpack gauge that refills by itself in the air (PS2 Light Assault) is neither fuel nor a cooldown.",
+        "revised_change": "(1) data/vocab/resources.json, fuel. OLD: Flight or boost time drains a gauge that refills on the ground or at a pad. NEW: Flight or boost time drains a gauge that refills on the ground or at a pad. A boost's own tank, which only that one ability burns and which refills by itself anywhere, is not fuel: it is that ability's cooldown (see Cooldown bands).\n(2) data/vocab/cooldown-bands.json, description, after 'An ability held back only by a stock, such as Company of Heroes munitions or the unit's energy, has no band unless the source also gives a cooldown.' ADD: A boost's own fuel tank, which only that ability burns and which refills by itself, is its cooldown, not a stock: band the time it takes to refill from empty. An energy pool stays a stock even on a unit with only one ability that spends it (the StarCraft II Medivac's Heal).\nRebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-09",
+        "verdict": "revise",
+        "reason": "Applied: the Magburner becomes channel for A, B and C. C read 'press and hold' on the Magburner page, and under R2-15 that page counts. No other round-2 or round-1 unit has a held ability. Wording risk: the bare parenthesis '(press and hold)' invites channel for every hold-then-release button, such as a hold-to-aim grenade or a hold-to-charge jump. Channel's own description ('Hold to keep it going; ends on release') excludes those buttons. Say so.",
+        "revised_change": "data/vocab/ability-kinds.json, tie-break active/channel. OLD: Pick channel only when the source says the effect stops as soon as you let go, move or are interrupted. A timed action that runs to its end on its own is active. NEW: Pick channel when the source says you hold the key to keep the effect going (press and hold to burn a boost, to keep a beam or a shield up), or that it stops as soon as you let go, move or are interrupted. Holding a key to aim or charge and releasing it to act is not channel: the effect starts on release. A timed action that runs to its end on its own is active."
+      },
+      {
+        "id": "R2-10",
+        "verdict": "revise",
+        "reason": "Applied: A and B fold Multi-directional Exhaust into the Magburner summary, so the Magrider has 4 abilities, {active, channel} with R2-09, for A, B and C. The other units are unchanged. Overreach: 'or weapons' goes further than the evidence. A researched upgrade that changes how a weapon works and adds a mechanic is recorded today as a passive with source upgrade (abilities[]: 'the source names the effect as an upgrade and it adds a mechanic'). Under this text it would vanish into a summary. Units it would code badly: the StarCraft II Marauder, whose Concussive Shells slow would disappear, and similar on-hit research elsewhere. Nothing in round 2 needs the weapon case. Keep it to abilities.",
+        "revised_change": "schemas/source-unit.schema.json, abilities[] description, after 'Leave out passives that only change numbers (more armour, faster reload, less sway), and note them in the matching field's notes.' ADD: A pick, upgrade or perk that changes how one of the unit's other abilities works (a boost that refills faster and can also steer sideways) is not an entry of its own either: say what it changes, and that it is a pick or upgrade, in that ability's summary."
+      },
+      {
+        "id": "R2-11",
+        "verdict": "accept",
+        "reason": "Applied: the Halberd becomes [splash] for A, B and C (B drops magazine). The DoW2 missile launcher drops magazine for all three, an agreed change. The Overlord twin cannons stay without magazine (their clip appears only in stats). The Supernova and Perihelion are unchanged. The RA3 IFV Javelin pod keeps magazine (burst, then reload). The round-1 Battlefield TOW and Hellfire were already without it. Consistent with the term's own 'a set number of shots'. Units that lose a trait they might seem to wear: Battlefield MBT cannons and CoH bazooka or Panzerschreck squads. Their reload is their rate of fire and goes in the summary, so this is not a bad coding. Plain."
+      },
+      {
+        "id": "R2-12",
+        "verdict": "revise",
+        "reason": "Applied: the Magrider becomes [boost, crush, climb] for A, B and C. C adds climb and the two climb atypicals. This matches the docs rule that real units are recorded as they are and listed as atypical (decision 4B makes the hover class ban evidence for relaxing it). Wording risk: 'however it does it' merges climb with leap and with flight. Units it would code badly: the StarCraft II Reaper, whose jet-pack cliff jumps would read as climb, and the PS2 Light Assault, who jump-jets onto rooftops (jetpack mobility). Exclude jumps and flight.",
+        "revised_change": "data/vocab/mobility-traits.json, term climb, ADD source_rule: Code it when the sources show the unit moving up walls, cliffs or buildings that stop other units of its kind, however it holds on (legs, claws, hover thrust). A jump or a flight up or over the obstacle is not climb (see leap; a jetpack is the unit's mobility). Where the trait's rules leave out the unit's class or mobility, code it anyway; the validator lists the break as atypical, which is evidence for relaxing the rule. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-13",
+        "verdict": "revise",
+        "reason": "Applied: Smoke Screen becomes [jam-sensors, fire-countermeasures] for A, B and C, and Recharge stays [fire-countermeasures]. The round-1 Battlefield ECM keeps both links (it hides the helicopter from minimaps and breaks locks). Problem: 'Blocking new locks is part of jam-sensors' also catches flares, which keep new locks off for a moment after they are fired. Round-1 Battlefield IR Flares are [fire-countermeasures] for all three coders, and games-r6 says flares link fire-countermeasures only. A coder reading the new sentence could add jam-sensors, opening a new split on the Battlefield helicopter and on every PS2 aircraft with decoy flares. Tie jam-sensors to hiding from radar or minimaps, as its summary does.",
+        "revised_change": "(1) research/registry-notes/games-r6.md, PlanetSide 2 Game-wide mechanics, Vehicle slot picks bullet, after 'Flares that break locks link fire-countermeasures.' ADD: Smoke Screen, which for a few seconds hides the vehicle and friendly vehicles near it from enemy minimap detection, blocks new lock-ons and makes missiles already locked on lose their target (its own wiki page), links jam-sensors and fire-countermeasures. Its smoke is thin, so it links no lay-smoke.\n(2) scripts/build-docs.mjs, Conventions, Pattern links, after the sentence ending 'links `jam-sensors` and `fire-countermeasures`.' ADD: Hiding from radar or minimaps, and blocking new locks while hidden, is `jam-sensors`; breaking a lock already made or pulling missiles in flight off you is `fire-countermeasures`. Flares or chaff that also keep new locks off for a moment after firing link `fire-countermeasures` alone. Smoke links `lay-smoke` only when the sources say it blocks sight or aim.\nRebuild docs/fields.md."
+      },
+      {
+        "id": "R2-14",
+        "verdict": "revise",
+        "reason": "Applied: Magrider B becomes high, because B's cited Magrider/Main page carries the Description field. The games-r6 note says that field was checked against Census, so the copy claim holds. The Overlord and Atlas stay high, and the RA3 samples stay high (their Profile pages say what they copy). Problem: the DoW2 note itself flags its claim, '**Check:** no page says outright that the field copies the game'. The proposal would raise confidence on an unchecked assumption while sending the check to the gap report. Units it would code badly: every DoW2 unit (the Tactical Marines, and the Guardsmen reference too), which would reach high on the box line alone. Exclude claims that a registry note flags. With R2-15, all three DoW2 coders cite the manual and reach high together anyway. Unlisted gain: the round-1 SC2 Siege Tank confidence split (A and B high, C medium) is settled, because the sc2 note names the StarCraft Wiki unit description as official text and C cited that page.",
+        "revised_change": "data/vocab/confidence.json, term high. OLD: The sources include official text about the unit, read directly or through a faithful copy that says what it copies, or pages from two different established sites that each describe the unit and agree. NEW: The cited sources include official text about the unit, read directly or through a faithful copy: a page that says what it copies, or an infobox description or tooltip field that the game's registry note names as a copy of in-game text and does not mark as still to be checked (the PlanetSide 2 Wiki's Description field; the StarCraft II wikis' unit description). Or they include pages from two different established sites that each describe the unit and agree. (The rest of the term stays as it is.) Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-15",
+        "verdict": "revise",
+        "reason": "Applied: B cites Census, so Magrider sources.kind becomes {official, wiki} for all three (B's uncertain entry says B read Census). All three DoW2 coders read the Retribution manual's unit-list entry, so the Marine squad becomes {official, wiki} for all three. Atlas and Overlord are unchanged. The RA3 samples are unchanged: no official page was read, and the IFV's passenger list page keeps its slot. Problems: (a) The registry notes still say 'cite both pages for step 4' (DoW2), 'cite the weapon's page' (MechWarrior) and 'cite the one you read' (PS2). Those instructions cannot be met within 3 slots once an official page takes the first, so the rule set contradicts itself (see missing). (b) Counting uncited pages opens new splits unless other proposals come along. The BattleTechWiki's 'self-guided' Short-Range Missile page against its SRM 6 page and MWO's 'non-locking' splits the Atlas SRM on homing (needs R2-19 and R2-31). Generals' Weapon.ini (blast hurts allies, two-shot clip) splits the Overlord twin cannons on friendly-fire and magazine (needs R2-27). The Strategy and Halberd pages split magazine (needs R2-11). (c) It is a loophole: a code may rest on an uncited forum or guide page while confidence, which reads only cited pages, stays high. (d) The reading floor 'every loadout pick' means about 25 pages for a PS2 tank, many of them numbers-only picks that set no code. Limit it to what the entry records. The extra reading time was not measured against the round-1 speed test. Units it would code badly as written: the Atlas (SRM homing) and the Overlord (friendly-fire).",
+        "revised_change": "(1) schemas/source-unit.schema.json, sources[] description, NEW: The pages this entry rests on. Wherever a field rule says the sources, it means these cited pages together with every other page read for this unit that an uncertain entry names (title and site, or its URL) and says what it shows; every rule reads that same set, and a code that rests only on such an uncited page gets an uncertain entry at its own path. An uncited page may carry a code only when it is of kind official, wiki or database; a guide, video or community page must be cited to count. Confidence counts only the cited pages. Before coding, read the unit's own page on each wiki the entry uses, with every tab or sub-page, and the page of each weapon and ability the entry records, where the site has one; picks that only change numbers need no page. Fill the slots in this order: an official page about the unit, when one was read (see Source kinds); the page that lists the unit's weapons one by one, when its weapons change by passenger, mode or loadout; then the pages most of the entry rests on, a mechanic's own page first when it gives a figure the entry uses. Where a registry note says a rule needs a page (a damage page for step 4, a weapon's own page), naming it in an uncertain entry meets that.\n(2) armament[].damage step 4. OLD: and the sources cited for this unit give. NEW: and the sources give.\n(3) armament[].delivery. OLD: as the cited sources describe it. NEW: as the sources describe it.\n(4) armament[].can_target step 3. OLD: plus any kind another cited source says it hurts. NEW: plus any kind another source says it hurts.\n(5) data/vocab/weapon-families.json, tie-break rockets/guided-missiles. OLD: Guided missiles only when the sources cited for the unit say. NEW: Guided missiles only when the sources say.\n(6) data/vocab/range-bands.json, tie-break short/medium/long. OLD: from its figure where a cited page or the registry gives one. NEW: from its figure where a source or the registry gives one.\nAdopt together with R2-11, R2-19, R2-27 and R2-31, and with the registry edits listed under missing (MISS-1). Rebuild docs/fields.md and docs/vocabularies.md.",
+        "revised_target": "schemas/source-unit.schema.json (sources[]; armament[].damage step 4; armament[].delivery; armament[].can_target step 3); data/vocab/weapon-families.json (tie-break rockets/guided-missiles); data/vocab/range-bands.json (tie-break short/medium/long)"
+      },
+      {
+        "id": "R2-16",
+        "verdict": "accept",
+        "reason": "Applied: the Overlord Gattling becomes free-aim for A, B and C. C's only reason for auto-target was the add-on's own AI, and C wrote that 'as a roof gun it would otherwise be free-aim'. The Magrider top guns stay free-aim (a turret holding only the gunner's weapon). The Atlas stays limited-arc and the Marine squad free-aim. The Hammer and IFV samples, the SC2 Siege Tank and the Battlefield helicopter are unchanged. Consistent with decision 2A and with slow-turret's coding rule. Bad codings: none found. Multi-turret RTS giants (SupCom experimentals) now reach step 5 and split slow-turret or free-aim by which turret holds the main weapon, which is the intent. Plain."
+      },
+      {
+        "id": "R2-17",
+        "verdict": "revise",
+        "reason": "Applied: the Gattling stays machine-gun and kinetic for A, B and C. The first two sentences settle the clash between the two tie-breaks. The third sentence ('a damage category the game gives to small arms or machine guns counts as saying it fires bullets') is a loose evidence rule. The Gattling's main-target category is GATTLING, not SMALL_ARMS (Weapon entries rule 1 codes the family against the main target), so the sentence does not even clearly apply to it. Elsewhere it invites misreadings: the Generals note groups COMANCHE_VULCAN with SMALL_ARMS and GATTLING as 'gunfire' for the soldier rule, so the Comanche's 20 mm rotary cannon (shells, an autocannon) could flip to machine gun. Move the category fact into the Generals note and name the categories. With R2-15, the uncited Gattling page ('twin Gatling machine guns firing bullets') counts anyway.",
+        "revised_change": "(1) data/vocab/weapon-families.json, tie-break machine-gun/autocannon/cannon. OLD: An autocannon is a gun the sources call a cannon or autocannon that fires shells rapidly; a rotary cannon counts. NEW: An autocannon fires shells rapidly, whether the sources call it a cannon or an autocannon; a rotary gun counts only when it fires shells. A rotary gun that fires bullets is a machine gun whatever its name (Generals' Gattling Cannon), as the small-arms rule says: what it fires wins over what it is called.\n(2) research/registry-notes/games-r3.md, Generals damage (which step decides), ADD: GATTLING and SMALL_ARMS are bullet categories: a rotary gun that deals either fires bullets, so it is a machine gun (weapon-families tie-break between machine guns, autocannons and cannons). COMANCHE_VULCAN is not decided here; go by what the sources say the gun fires.\nRebuild docs/vocabularies.md.",
+        "revised_target": "data/vocab/weapon-families.json (tie-break machine-gun/autocannon/cannon); research/registry-notes/games-r3.md (Generals damage notes)"
+      },
+      {
+        "id": "R2-18",
+        "verdict": "accept",
+        "reason": "No code changes: the Supernova, Perihelion, Saron/PPA and Aphelion stay plasma and energy for all three, and the tie-break settles three hesitations. It narrows the family intro's 'by behaviour, not by its name' for this one pair and says so. It keeps the PS2 note's bullet-type exception. Weapons whose own text says neither plasma nor shells (SC2 Immortal's phase disruptors) fall back on behaviour, which is not a bad coding. No sample is affected. Plain."
+      },
+      {
+        "id": "R2-19",
+        "verdict": "revise",
+        "reason": "Applied: A's LRM gets naval (from the existing naval rule). The other codes stand: AC/20 cannon and kinetic with its atypical; LRM lock-on; SRM rockets with no homing; rear lasers; AC/20 primary; zonal and directional; respawn in-game. The proposal settles all three MechWarrior unclear rules on 'newest counted title'. Ambiguity it creates: 'Kinds of target come from all counted titles together: the tabletop has infantry, VTOLs and naval vessels, so 'Mech weapons list them where their own rules allow'. The tabletop LRM has no lock step, so a coder can read that the LRM also lists infantry, low air and structures, while can_target step 2 says a lock-on weapon lists only what it locks onto. The analyst's expected result (only naval added) needs the lock-on case spelled out. Otherwise a new LRM can_target split opens. Unit it would code badly as written: every MechWarrior LRM and Streak boat (the Atlas LRM, the Catapult).",
+        "revised_change": "(1) research/registry-notes/games-r6.md, MechWarrior / BattleTech section, ADD a bullet before '- **Control.**': - **Which title decides** (Series games). This entry splits facts by kind, and the split comes before the newest-title rule. What a 'Mech carries and where comes from its tabletop design on the BattleTechWiki: its weapons and which way each faces, armour values, weight class, speed and the tabletop ranges the range_reference compares. How it plays comes from MechWarrior 5: Clans where its pages cover the 'Mech, otherwise from MechWarrior Online: whether a weapon locks on, fires one shell or a burst, or fires indirectly, and what happens when it dies. Kinds of target come from all counted titles together: the tabletop has infantry, VTOLs (low air) and naval vessels, so 'Mech weapons list them where their own rules allow. A lock-on weapon still lists only what the title that decides its play lets it lock onto (can_target step 2), plus naval by the naval rule; the tabletop's wider list adds nothing to it. So the Atlas's centre-torso lasers face backwards; an Inner Sphere autocannon that MechWarrior Online fires as one shell per shot is a cannon; LRMs lock on and also fire indirectly; SRMs that MechWarrior Online calls non-locking are rockets with no homing trait, and the tabletop's self-guided wording goes in notes. Pilots come back in the next drop or match, so on_death is respawn, basis in-game.\n(2) Game-wide, 'Locations and critical hits'. OLD: Where a design's own armour values leave its rear torso thinner than its front, code directional as well. NEW: Code directional as well: every torso section has front and rear armour, and standard designs put less on the rear. Leave it off only when a source shows the rear as thick as the front.\n(3) Game-wide, 'Design quirks', after 'Record a quirk as a passive only when it adds a mechanic.' ADD: A quirk that changes rolls or numbers, for the 'Mech or for units near it (Command 'Mech, Distracting), is a number change: notes only.\n(4) schemas/source-unit.schema.json, armament[].slot. OLD: In a shooter it is the weapon the driver seat has selected at spawn (its first fire button); NEW: In a shooter it is the weapon the driver seat has selected at spawn (its first fire button), or, where players build their own fire groups and no source gives the spawn default, the weapon that the registry's design source lists first (MechWarrior: the BattleTechWiki infobox);\nRaise to must as a condition of R2-15. Rebuild docs/fields.md."
+      },
+      {
+        "id": "R2-20",
+        "verdict": "revise",
+        "reason": "Applied: Battle Bunker [passenger-sets-weapon, upgrade-in-field] and Propaganda Tower [repair-allies, rally-allies, upgrade-in-field] for A, B and C (C adds both). And They Shall Know No Fear becomes [brace, upgrade-in-field] for all three. Consistent with the weapon rule and with the DoW2 note's 'bought on the unit'. Unlisted side effect: 'on the same terms' brings in side-wide research at a building that reaches units already in the field. In round 1, the CoH1 Riflemen's Throw Grenade, Throw Sticky Bomb and Suppression Fire (source upgrade for A, B and C, from Barracks research and the BAR upgrade) all gain upgrade-in-field. Agreement holds, but the change must be listed. 'such an upgrade' is a back-reference that is easy to misread: name the terms. No bad codings found.",
+        "revised_change": "(1) scripts/build-docs.mjs, Conventions, Paired entries. OLD: A unit with passenger seats gets one passive ability for them, source innate. NEW: A unit with passenger seats gets one passive ability for them, source innate, or source upgrade when only a bought upgrade adds the seats.\n(2) Paired entries, after the sentence ending 'and no pattern when only units built later get it.' ADD: An ability that a bought upgrade or research adds links `upgrade-in-field` on the same terms as such a weapon (bought on the unit, or researched for all of them at a building, and reaching units already in the field), next to the patterns of what it does.\n(3) Stock values, after 'only its bands are taken as unlocked, before further upgrades.' ADD: So are passenger seats that only an upgrade adds: record them in crew.passengers and name the upgrade in crew.notes. The body plan describes the stock unit; an add-on turret goes in body.notes.\nSide effects to list: round-1 CoH1 Riflemen's three upgrade abilities gain upgrade-in-field for A, B and C. Rebuild docs/fields.md."
+      },
+      {
+        "id": "R2-21",
+        "verdict": "revise",
+        "reason": "Applied as the analyst reads it: the Magrider stays anti-armour for all three. Two loose words could re-open splits. (a) 'skip any whose role's requires the unit fails': the validator checks requires against every weapon, options included (scripts/validate.mjs, 'hits' reads all armament). The Magrider's option Walker and Ranger reach high air, so a coder who reads 'fails' the validator's way keeps aircraft, which take the largest bonus, and codes anti-air primary. B wrote 'the validator accepted it' for the secondary. (b) 'vehicles take more from the weapon's damage type': more than what? Read as 'more than other targets', it makes the DoW2 bolter (full damage to infantry, less to the rest) an anti-infantry bonus. That flips the Marine squad from assault, the very question all three DoW2 coders hesitated on. Units it would code badly as written: the Magrider and the Tactical Marine Squad. Say 'stock parts' and 'more than full damage', and apply the same reading in roles.secondary.",
+        "revised_change": "schemas/source-unit.schema.json, roles.primary. (1) Step 1. OLD: Skip a role whose requires the unit fails. NEW: Skip a role whose requires the unit's stock parts fail (what every copy has), even when an option or upgrade weapon would meet them.\n(2) After step 4's 'Doing little damage to other targets is not a bonus.' ADD: Extra damage that the game data writes on the target's side counts as the weapon's bonus: a resist or armour table in which a kind of target takes more than full damage from the weapon's damage type (a negative resistance). Full damage to one kind and less to the rest is still no bonus. When this step gives more than one target, skip any whose role's requires the unit's stock parts fail, then take the one with the largest bonus or, if that cannot be told, the one official text names first.\n(3) roles.secondary, after 'How a weapon gives a role:' ADD: (a bonus is read as in roles.primary step 4).\nRebuild docs/fields.md.",
+        "revised_target": "schemas/source-unit.schema.json: roles.primary (step 1 and step 4), roles.secondary"
+      },
+      {
+        "id": "R2-22",
+        "verdict": "accept",
+        "reason": "No round-2 code change. Overlord [support, transport] (with R2-01 and R2-02), Atlas [] (with R2-03), Magrider [anti-infantry, anti-air], Marine [anti-infantry, anti-armour] in the same order. Round-1 CoH1 [anti-infantry, engineer] (engineer from Upgrade to Barracks, a button) and the SC2 Siege Tank are unchanged. (2) removes A-generals' vacuous-assault reading, (4) matches the validator, and (1) makes siege's coding rule bind at secondary, consistent with R2-02. Possible gap: a buff tool (affects allies) can no longer give buffer through the weapon clause; none was seen in the 28 games. Plain."
+      },
+      {
+        "id": "R2-23",
+        "verdict": "revise",
+        "reason": "(1) is fine: all six DoW2 and Generals reports already went on to step 4. (2) contradicts two rules. It contradicts the base sentence of can_target ('Every kind of target the weapon can be fired at and hurt in the source, even a little: weak, poor or not effective still count'). It also contradicts the vocabularies' principle that 'Real units that break them are recorded as they are and listed as atypical', which R2-12 applies to climb in the same package. A family's allowed target list is a combination rule for cards, not a limit on what a source unit records. Units it would code badly: the PS2 Ranger and the PS2 Skyguard flak, whose direct hits use the heavy machine gun category that vehicles mostly resist but still take. Reverse it. All three coders know the Ranger's direct-hit category (A's uncertain entry, B's cited resist page, C's weapon pages), so they change together.",
+        "revised_change": "schemas/source-unit.schema.json, armament[].can_target. (1) After step 3's sentence ending '...plus any kind another source says it hurts.' ADD: Words about what it is good at (effective against, good against, strong against) are not a label: go on to step 4.\n(2) After step 4's 'Any other weapon lists every ground kind its family allows: infantry, ground vehicles and structures.' ADD: Step 4 fills in only kinds the sources say nothing about. A kind the sources show the weapon hurting, even a little, is listed even when its family leaves it out (a flak gun whose direct hits scratch vehicles); the validator then lists the break as atypical, and the summary says how little it does.\nExpected: the PS2 Ranger becomes [infantry, ground-vehicle, low-air, high-air] for A, B and C, with atypical 'weapon-families:flak allowed.target-types ground-vehicle'; no other round-1 or round-2 code changes. Rebuild docs/fields.md."
+      },
+      {
+        "id": "R2-24",
+        "verdict": "revise",
+        "reason": "Applied: Kraken Bolts is kept by all three, unchanged. But 'links a generic pattern (see Granularity)' points to overclock-self, whose summary still demands a cost in health, heat or a slump. That is exactly why A, B and C each filed a fit_note. R2-24 is a 'should' that only works if R2-33, a 'could', is taken. Without it, coders split between linking overclock-self against its summary and leaving patterns empty. Also say where a free speed-only boost goes (dash), so the two generic patterns do not overlap.",
+        "revised_change": "schemas/source-unit.schema.json, abilities[] description. OLD: A button that only changes numbers (a zoom) is left out. NEW: A button that only changes the view (a zoom) is left out. A button that boosts the unit for a time is kept, even when the boost is only numbers: it links dash when it adds only speed and costs nothing else, otherwise overclock-self, the generic stat-buff pattern (see Granularity). Take with R2-33. Rebuild docs/fields.md."
+      },
+      {
+        "id": "R2-25",
+        "verdict": "accept",
+        "reason": "Applied: the Overlord is unchanged. The Perihelion becomes [splash, charge-up] without a fit_note for all three. The Aphelion becomes [spin-up, pierce] for all three: A drops charge-up, which settles a split hidden inside the measured union. The Atlas keeps finite-ammo on the AC/20, LRM and SRM only, with limited-ammo. The Magrider gets no finite-ammo. The RA3 samples and round 1 are unchanged. Risks noted but acceptable: (1) any radius figure means splash, so Generals main battle tank guns with small radii (Crusader, Battlemaster) get splash and an anti-infantry candidate unless their Weak vs. line drops it. That is deterministic and matches what all three coders did on the Overlord. (3) leaves RTS weapons that charge before each shot without charge-up, as the term's own 'Hold to charge' already does. Plain."
+      },
+      {
+        "id": "R2-26",
+        "verdict": "accept",
+        "reason": "Writes down what all three did, with no code changes: the Supernova, Perihelion, Ranger and Halberd are long; the top machine guns, Walker, Saron/PPA and Aphelion are medium. It agrees with the range tie-break, which takes a source's range word, and with 'calling a weapon long-ranged never makes it off-screen'. The scale itself (the NC1 Gauss rifle rated Long) still mis-bands infantry guns, and the analyst sends that to the gap report. Plain."
+      },
+      {
+        "id": "R2-27",
+        "verdict": "revise",
+        "reason": "Applied: the Overlord is unchanged for all three. It is high, anti-armour from the str file's Strong vs. line, bail-out with Tao's blast in notes, twin cannons [splash] with no friendly-fire or magazine, and the Gattling free-aim. It also heads off the friendly-fire split that R2-15 would open. Contradiction in (3): the same Generals note sends coders to the raw files for terms. Armor.ini sets decide the soldier rule (games-r3: 'a set is tougher armour ... only when it lets less gunfire through than Human Armor does'), and Weapon.ini's DamageType confirms step 4. A blanket 'a term only they would set is not set' would bar Generals soldiers whose armour class rests on their Armor.ini set (the soldier rule's own test). Carve out what the note itself asks for. Naming the generals in tier.basis is a stretch of 'why this band', but it is where the tech gate is explained, and A and B already put them there.",
+        "revised_change": "(1) research/registry-notes/games-r3.md, Uncertain, 'Generals tooltip source' bullet. OLD: Decide whether coders may cite it (kind database, with a note that it copies in-game text). If they may not, no source in reach gives these lines faithfully, and roles step 4 falls back on bonuses in the game data. NEW: Coders may cite it (kind database, with a note that it copies the in-game tooltip). Its tooltip lines are official text read through a faithful copy, for roles and for confidence.\n(2) Research notes, after 'For example, Shin Fai fields neither the Troop Crawler nor the Helix.' ADD: Name those generals in tier.basis. Code every field from the main faction's version; a general's version that differs (Tao's Overlord is faster, its shells leave radiation and it explodes on death) goes in the notes of the fields it would change, never in on_death outcomes or traits.\n(3) After 'Where to read the tooltip text', ADD bullet: - **Raw 1.04 data files** (Weapon.ini, Armor.ini, the Object files): read them to check figures, buttons and tooltip labels, and where this note sends you to them (Armor.ini sets for the soldier rule, Weapon.ini's DamageType to confirm a damage name). Any other term only they would set (friendly-fire from a blast that hurts allies, magazine from a clip size, auto-target from an add-on's own AI) is not set; mention the fact in notes.\nRaise to must as a condition of R2-15."
+      },
+      {
+        "id": "R2-28",
+        "verdict": "accept",
+        "reason": "No code change: casemate for all three, with the casemate/free-aim atypical recorded. Consistent with 'recorded as they are and listed as atypical'. Assault guns with a roof machine gun (CoH2 StuG III, Wargame and Broken Arrow tank destroyers with a remote weapon) will carry the same atypical. That is evidence for the gap report, not a bad coding. Plain."
+      },
+      {
+        "id": "R2-29",
+        "verdict": "revise",
+        "reason": "No round-2 code change: every Magrider gun stays projectile, and the round-1 Battlefield guns too. Wording risk: 'does count: the shot travels, so it is projectile' reads as a rule on its own. But PS2 and Battlefield infoboxes give a velocity for lock-on and guided missiles too (PS2 Annihilator and Coyote lock-ons, Battlefield TOW and TV missiles), and the delivery order puts lock-on and guided first. Say that it only chooses among the three defaults.",
+        "revised_change": "schemas/source-unit.schema.json, armament[].delivery, after 'A rate of fire, the weapon's name or a hidden hit roll does not count as saying.' ADD: A muzzle velocity or travel time in the sources does count as saying the shot travels, so among these three it is projectile; it never replaces a way of hitting the sources describe (lock-on, guided, lobbed and the rest)."
+      },
+      {
+        "id": "R2-30",
+        "verdict": "accept",
+        "reason": "No code changes. (1) matches the round-1 CoH1 Riflemen, whose stock sergeant's carbine is merged by all three, and the DoW2 Sergeant, who is bought and kept apart. (2) matches all three Generals coders, and the validator accepts it. (3)'s 'else the first it lists' can differ between sources, but rule 5 merges the PS2 free top guns anyway. Plain."
+      },
+      {
+        "id": "R2-31",
+        "verdict": "accept",
+        "reason": "Removes a dangling 'this'. The Atlas SRM stays rockets with no homing only because R2-19 lets MechWarrior Online ('non-locking') decide how it fires. Under R2-15 the BattleTechWiki's 'self-guided' page counts as a source, so R2-31 and R2-19 must come with R2-15 (see missing). Round-1 Battlefield Smart Rockets stay rockets with homing. Plain."
+      },
+      {
+        "id": "R2-32",
+        "verdict": "revise",
+        "reason": "No round-2 code change: ultimate stays for all three, and the T3 minimum goes to the gap report. Contradiction: 'Active when only time or a stock holds it back' clashes with ultimate's own description, 'Charges up over time or through play'. An ultimate whose meter fills over time would be pushed to active. Narrow the active clause to cooldowns and stocks.",
+        "revised_change": "data/vocab/ability-kinds.json, ADD tie-break, terms [active, ultimate]: Ultimate when the source says the button must be charged before each use, through play (kills, damage dealt or taken) or by a charge meter of its own, even when it also has a cooldown; band that cooldown as given. Active when only a cooldown or a stock holds it back. Rebuild docs/vocabularies.md."
+      },
+      {
+        "id": "R2-33",
+        "verdict": "revise",
+        "reason": "Clears the three DoW2 fit_notes; Kraken Bolts stays [overclock-self] for all. But removing the cost erases overclock-self's boundary with dash (patterns.md: 'dash is a free speed burst'). Free timed speed boosts would then fit either pattern. Units it would code badly: the StarCraft II Medivac (Ignite Afterburners) and the CoH2 Conscripts (Ura!). Keep free speed on dash. MASC stays overclock-self, because it costs leg damage. Raise to should, because R2-24 depends on it.",
+        "revised_change": "(1) data/pattern-registry.json, overclock-self summary. OLD: Enter a short boosted state with more speed, fire rate or damage, paid for in health, heat or a slump afterwards. NEW: Enter a short boosted state with more speed, fire rate or damage, often paid for in health, heat or a slump afterwards; a free burst of speed alone is dash.\n(2) research/registry-notes/patterns.md, overclock-self boundary. OLD: this trades health or heat for offence and speed. NEW: this boosts offence or speed for a time, often at a cost in health or heat; a free speed burst alone stays dash.\nPriority: should, taken with R2-24."
+      },
+      {
+        "id": "R2-34",
+        "verdict": "accept",
+        "reason": "Information-only fields. (1) matches what all three Generals coders did (weapon:rockets for 'rocket-armed infantry'). (2) fits the rule that typed links describe the unit. A proposal value can change later and leave the link stale, which is acceptable for information-only matchups. No measured field changes. Plain."
+      }
+    ],
+    "missing": [
+      {
+        "id": "MISS-1",
+        "priority": "must (with R2-15)",
+        "fields": [
+          "armament.damage",
+          "sources"
+        ],
+        "evidence": "Three registry notes tell coders to cite pages for damage step 4. games-r5 DoW2: 'Cite both pages for step 4'. games-r6 MechWarrior: 'so cite the weapon's page for step 4'. games-r6 PS2: 'cite the one you read'. A-, B- and C-dow2, B- and C-mech and C-ps2 wrote unclear rules: these instructions cannot be met within 3 slots, and R2-15's slot order now puts an official page first. B-dow2: the rendered Weapons tab already shows each weapon's damage type next to its family. B-mech asked whether the MWO 'Mech page's hardpoint table counts for step 4.",
+        "root_cause": "R2-15 changes what 'the sources' means, but these 'cite' instructions stay in place. A careful coder still believes step 4 needs a cited page and spends a slot on it instead of the official page.",
+        "target": "research/registry-notes/games-r5.md (DoW2 damage, 'Where the type comes from'); research/registry-notes/games-r6.md (MechWarrior damage 'Step 4 binds'; PlanetSide 2 damage 'Step 4 binds')",
+        "change": "(1) games-r5.md. OLD: Cite both pages for step 4. NEW: Step 4 needs both pages among the sources (cited, or named in an uncertain entry). The unit's own Weapons tab, read rendered, shows each weapon's damage type next to its family and can stand in for both. (2) games-r6.md, MechWarrior. OLD: A 'Mech's own page lists its weapons without their kind, so cite the weapon's page for step 4. NEW: A 'Mech's own page lists its weapons without their kind, so step 4 needs the weapon's page, or the MechWarrior Online 'Mech page's hardpoint types, among the sources (cited, or named in an uncertain entry). (3) games-r6.md, PlanetSide 2. OLD: Either page gives the category for step 4; cite the one you read. NEW: Either page gives the category for step 4; cite it or name it in an uncertain entry.",
+        "expected": "No round-2 code changes, and damage stays as coded on all four units. DoW2 coders can cite the manual first, and B-mech's hardpoint question is settled.",
+        "side_effects": "None; these are registry notes only."
+      },
+      {
+        "id": "MISS-2",
+        "priority": "must",
+        "fields": [
+          "armament.traits",
+          "armament.family",
+          "armament.can_target",
+          "abilities.patterns"
+        ],
+        "evidence": "Under R2-15, pages read but not cited count for every rule. In round 2 those pages hold four conflicts. The DoW2 Strategy tab and the Halberd page name long reloads (magazine). The BattleTechWiki Short-Range Missile page says 'self-guided', against its SRM 6 page's 'lack sophisticated guidance' and MWO's 'non-locking' (C-mech: homing). Generals' Weapon.ini shows a blast that hurts allies, a two-shot clip and the add-on's own AI (B- and C-generals). R2-24 tells coders to link a generic pattern that only R2-33 makes fit.",
+        "root_cause": "The package ranks R2-19, R2-27 and R2-31 as should/could and R2-33 as could, but a must (R2-15) and a should (R2-24) depend on them.",
+        "target": "the proposal package (priorities and bundling)",
+        "change": "Make R2-19, R2-27 and R2-31 must, as conditions of R2-15 (R2-11 and R2-16 already are). Take R2-33 whenever R2-24 is taken, or drop the pattern clause from R2-24.",
+        "expected": "For A, B and C: the Atlas SRM stays rockets with no homing; the Overlord twin cannons stay [splash] with no friendly-fire or magazine; the Gattling is free-aim; the DoW2 missile launcher and the Halberd have no magazine; Kraken Bolts is [overclock-self] without fit_notes.",
+        "side_effects": "None."
+      },
+      {
+        "id": "MISS-3",
+        "priority": "should",
+        "fields": [
+          "armour.models"
+        ],
+        "evidence": "R2-06 codes DoW2's shared infantry regeneration as self-repair under the armour-models rule. The SC2 Game-wide list in games-r5.md (written for round 1) covers basic orders, burrow, creep, transports and side-wide upgrades. It leaves out the slow health regeneration every Zerg unit has, and Protoss shields, which the regen-shield term's own examples name. The first Zerg or Protoss unit would repeat round 2's DoW2 split: one coder codes it, one files a fit_note, one misses it.",
+        "root_cause": "The same gap as R2-06: a mechanic shared by a whole race is missing from a Game-wide list.",
+        "target": "research/registry-notes/games-r5.md, Game-wide mechanics, StarCraft II",
+        "change": "ADD bullets. - **Health regeneration** (armour model self-repair): every Zerg unit slowly regains health on its own. Code self-repair on each Zerg unit and say in armour.notes that it is slow and shared by the race. Terran and Protoss units have none. - **Plasma shields** (armour model regen-shield): every Protoss unit has a shield over its health that recharges after a short time out of combat. Code regen-shield on each Protoss unit, as the term's examples say.",
+        "expected": "No round-1 or round-2 change (the Siege Tank is Terran).",
+        "side_effects": "Check both facts against Liquipedia before the SC2 research run."
+      },
+      {
+        "id": "MISS-4",
+        "priority": "should",
+        "fields": [
+          "confidence",
+          "abilities.patterns"
+        ],
+        "evidence": "Round-1 files (research/pilot/round-1/coder-*). SC2 Siege Tank confidence is high for A and B, medium for C. C cited two StarCraft Wiki pages and PTR notes, and the sc2 note names the wikis' unit description as official text. CoH1 Riflemen: Throw Grenade, Throw Sticky Bomb and Suppression Fire are source upgrade for A, B and C (Barracks research and the BAR upgrade, which reach squads already in the field). Battlefield attack helicopter: IR Flares are [fire-countermeasures] for A, B and C.",
+        "root_cause": "The summary checks only the three RA3 samples against the package; the round-1 units were not rechecked.",
+        "target": "the package's side-effect list; the round-1 rescoring",
+        "change": "Add to the side effects. R2-14 (revised) settles round 1's Siege Tank confidence split, because C reaches high through the StarCraft Wiki's unit description. R2-20 adds upgrade-in-field to the CoH1 Riflemen's three upgrade abilities for A, B and C. R2-13 as first written would let flares that keep new locks off for a moment pick up jam-sensors; the revised text keeps the Battlefield IR Flares on fire-countermeasures alone. Rescore round 1 with the adopted package.",
+        "expected": "Round 1's confidence item moves to all three agreeing; the other round-1 changes apply to all three coders together.",
+        "side_effects": "None beyond the rescoring."
+      },
+      {
+        "id": "MISS-5",
+        "priority": "could",
+        "fields": [
+          "atypical (information only)"
+        ],
+        "evidence": "Magrider, rule 'bodies:casemate allowed.aim-models free-aim': A and B record it at body/plan, C at armament/2/mount. The validator accepts any path that exists, so the same break gets different paths.",
+        "root_cause": "atypical[].path says 'where the break shows', and a rule of one list against another shows in two places.",
+        "target": "schemas/source-unit.schema.json, atypical[].path",
+        "change": "After 'Where the break shows on this unit' ADD: For a rule of one term against another list (a body's allowed mounts, a family's allowed targets), use the path of the term that holds the rule: body/plan for a body rule, armament/<i>/family for a family rule.",
+        "expected": "Magrider atypical paths become body/plan for A, B and C.",
+        "side_effects": "Rebuild docs/fields.md."
+      },
+      {
+        "id": "MISS-6",
+        "priority": "could",
+        "fields": [
+          "mobility.notes"
+        ],
+        "evidence": "A-mech unclear rule: mobility.speed asks for a comparison with 'the game's standard tank', but the MechWarrior registry names none, and the rule does not say whether walkers count as vehicles.",
+        "root_cause": "The schema text assumes every game has a standard tank.",
+        "target": "schemas/source-unit.schema.json, mobility.speed",
+        "change": "OLD: For a vehicle or aircraft, also say in mobility.notes, in words, how it compares with the game's standard tank (an aircraft: with the game's other aircraft). NEW: For a vehicle, walker or aircraft, also say in mobility.notes, in words, how it compares with the game's standard tank (an aircraft: with the game's other aircraft); where the registry names no standard tank, compare it with the speed reference and with units of its own weight class or kind.",
+        "expected": "No measured field changes.",
+        "side_effects": "Rebuild docs/fields.md."
+      }
+    ]
+  },
+  "applied": {
+    "applied": [
+      "R2-01 (revised): data/vocab/roles.json description now says a role is named only by its whole label or an alias, that each half of a slash label counts as a label, and that 'Assault' alone names no role. 'control' (mind control, control point) and 'aura' (healing or repair aura) were added to the words that name no role. research/registry-notes/games-r3.md Designation bullet now says entries built on Assault name no role.",
+      "R2-02 (revised): siege source_rule in roles.json. The structure clause now covers only long-range missiles or rockets built mainly to destroy structures. A direct-fire gun is never siege by that clause, and the old 'gives anti-armour' clause became a pointer to roles.secondary.",
+      "R2-03 (revised): source-unit.schema roles.secondary now defines 'can hit nothing else' and excludes target lists that are short only because of can_target step 2 or MechWarrior Online's 'Mechs. roles.primary step 4 now says '(as roles.secondary defines it)'.",
+      "R2-04 (accepted): range-bands long/off-screen tie-break, with the first reason needing a long reach and the second (indirect fire at targets others spot) standing on its own. The off-screen source_rule now says that for an add-on or turret, the sight figure is the carrying unit's.",
+      "R2-05 (revised): bodies.json power-suit description rewritten; new humanoid/power-suit tie-break; armour-classes.json soldier rule amended (Terminators stay medium, basic rifle infantry such as the SC2 Marine stays unarmoured).",
+      "R2-06 (revised): games-r5.md DoW2 Game-wide gains a Health regeneration bullet (self-repair from the unit's own Leveling tab) after the Melee bullet.",
+      "R2-07 (revised): speed-bands.json description. When a judgement cannot tell which side of an edge a unit falls on, it takes the band nearer medium and says so in the uncertain entry.",
+      "R2-08 (revised): resources.json fuel (a boost's own self-refilling tank is a cooldown, not fuel); cooldown-bands.json description (band the refill time from empty; an energy pool stays a stock, e.g. Medivac Heal).",
+      "R2-09 (revised): ability-kinds active/channel tie-break now covers 'press and hold'. It also says that holding a key to aim or charge and then releasing is not channel.",
+      "R2-10 (revised, abilities only): source-unit.schema abilities[]. A pick, upgrade or perk that changes another ability goes in that ability's summary.",
+      "R2-11 (accepted): weapon-traits magazine source_rule now excludes single-shot weapons. I added 'in words' to follow the Bands-with-numbers convention.",
+      "R2-12 (revised): mobility-traits climb gains a source_rule that excludes jumps and flight and has the coder code it anyway, recorded as atypical.",
+      "R2-13 (revised): games-r6.md PS2 Vehicle slot picks now has Smoke Screen as jam-sensors plus fire-countermeasures, with no lay-smoke. build-docs.mjs Pattern links now splits jam-sensors from fire-countermeasures, keeps flares or chaff on fire-countermeasures alone, and says when smoke counts as lay-smoke.",
+      "R2-14 (revised): confidence.json high now reads 'cited sources' and accepts a copied infobox or tooltip field that a registry note names and has not marked as still to be checked (PS2 Description, SC2 unit description).",
+      "R2-15 (revised): source-unit.schema sources[] rewritten (what 'the sources' means, which kinds of uncited page may carry a code, a reading floor, the slot order, and that naming a page in an uncertain entry meets registry page needs). 'cited' was removed from damage step 4, delivery and can_target step 3, from the weapon-families rockets/guided tie-break and from the range-bands short/medium/long tie-break. Follow-through: games-r5.md DoW2 damage 'a weapon's cited sources' became 'a weapon's sources'.",
+      "R2-16 (accepted): aim-models tie-break step (2) for commanded games (turrets carried on the unit go on to later steps). Step (5) now defines the main turret as the one holding the main weapon and lists 'a turret holding only another seat's weapon' as free-aim.",
+      "R2-17 (revised): weapon-families machine-gun/autocannon/cannon tie-break rewritten (a rotary gun is an autocannon only when it fires shells). games-r3.md 'Generals damage: which step decides' gains a Rotary guns bullet (GATTLING and SMALL_ARMS are bullet categories; COMANCHE_VULCAN is not decided).",
+      "R2-18 (accepted): new weapon-families tie-break plasma/cannon, placed after plasma/laser.",
+      "R2-19 (revised): games-r6.md MechWarrior gains a 'Which title decides' bullet before Control, including the lock-on sentence. Locations: directional is now the default. Design quirks: quirks that change rolls or numbers go in notes only. source-unit.schema armament[].slot gains the fire-group fallback (the BattleTechWiki infobox lists the primary first).",
+      "R2-20 (revised): build-docs.mjs Paired entries (passenger passive can be source upgrade; abilities added by upgrades or research link upgrade-in-field on the same terms as weapons). Stock values: passenger seats that only an upgrade adds go in crew.passengers, the upgrade is named in crew.notes, and an add-on turret goes in body.notes.",
+      "R2-21 (revised): roles.primary step 1 now reads 'stock parts'. Step 4 counts target-side resist bonuses (more than full damage) and has a multi-target rule. roles.secondary says a bonus is read as in primary step 4; I placed that parenthesis before the colon so the sentence reads cleanly.",
+      "R2-22 (accepted): roles.secondary. The drop rule now applies at every step, upgrades included, and coding rules bind unless they say As primary. Roles with no requires are never given by a weapon. A step-2 button with bonus damage supports that anti role. At step 5 a role may meet its requires through the part that gives it; I wrote this as \"anti-air's need to hit high air\".",
+      "R2-23 (revised): can_target step 3 says 'effective/good/strong against' is not a label. Step 4 fills in only kinds the sources say nothing about, and a kind the sources show the weapon hurting is listed even when its family leaves it out (recorded as atypical).",
+      "R2-24 (revised): abilities[]. A button that only changes the view is left out. Timed boosts are kept: dash if they add only speed and cost nothing, otherwise overclock-self.",
+      "R2-25 (accepted): weapon-traits splash (a radius figure counts; 'tiny' must be the sources' word). spin-up gains a source_rule. charge-up gets a new description and a source_rule. finite-ammo gets a source_rule tied to the limited-ammo resource.",
+      "R2-26 (accepted): games-r6.md PS2 Range words bullet before Flavour.",
+      "R2-27 (revised): games-r3.md. The Uncertain tooltip-source bullet is now decided: coders may cite the string file, and its lines are official text. A general's version that differs goes in notes, and those generals are named in tier.basis. New Raw 1.04 data files bullet after 'Where to read the tooltip text', with the carve-out for Armor.ini and DamageType.",
+      "R2-28 (accepted): bodies.json casemate description now says main gun / no main turret; new casemate/hull-turret tie-break.",
+      "R2-29 (revised): armament[].delivery. A muzzle velocity or travel time picks projectile only among the three defaults.",
+      "R2-30 (accepted): build-docs.mjs Weapon entries rule 2 now reads 'a stock sergeant's carbine'. option_group: abilities' exclusive_group shares the upgrade group's id. default: which free choice counts as the default.",
+      "R2-31 (accepted): weapon-families rockets/guided tie-break. The dangling 'this' was replaced; it is merged with the R2-15 change in the same rule.",
+      "R2-32 (revised): new ability-kinds tie-break active/ultimate.",
+      "R2-33 (revised, taken with R2-24): data/pattern-registry.json overclock-self summary now reads 'often paid for' and adds 'a free burst of speed alone is dash'. research/registry-notes/patterns.md boundary updated.",
+      "R2-34 (accepted): build-docs.mjs Matchups. When one phrase names the enemy two ways, take the first that fits in the rule-1 order. A sentence after rule (4) lets a link name a proposal field when the reason is sourced.",
+      "MISS-1: games-r5.md DoW2 'Cite both pages for step 4' became 'needs both pages among the sources', and the Weapons tab can stand in for both. games-r6.md MechWarrior step 4 now asks for the weapon page or the MWO hardpoint types among the sources. games-r6.md PS2 step 4 now says 'cite it or name it in an uncertain entry'.",
+      "MISS-2: no file change of its own. It is satisfied because R2-19, R2-27 and R2-31 were all applied with R2-15, and R2-33 with R2-24.",
+      "MISS-3: games-r5.md SC2 Game-wide gains Zerg Health regeneration (self-repair) and Protoss Plasma shields (regen-shield) bullets. I added one header sentence saying both are to be checked against Liquipedia before the SC2 research run, as its side effect asks.",
+      "MISS-5: source-unit.schema atypical[].path now says to use the path of the term that holds the rule (body/plan, armament/<i>/family). I inserted it after the first sentence and changed the example from 'armament/0/can_target' to 'armament/0/traits', because the old example contradicted the new rule. data/units/ra3.json: the Multigunner IFV's laser/kinetic atypical moved from armament/14/damage to armament/14/family to match, and docs/samples.md was regenerated.",
+      "MISS-6: source-unit.schema mobility.speed now covers walkers and gives a fallback when the registry names no standard tank (RA3 samples unaffected)."
+    ],
+    "skipped": [
+      "No proposal was rejected: every R2 item was accepted or revised, so nothing was skipped on that ground.",
+      "MISS-4 was skipped. It asks for two things: rescoring round 1 with the adopted package, which lives in research/pilot/ (off-limits), and adding lines to the package's side-effect list, which is text in the proposal package, not a file in the repo. Its side effects are listed in notes.",
+      "leave_for_gap_report and for_mustafa were not applied. They are not proposals: the source cap stays coded as 3, the pay-per-use resource stays 'no', the infiltrator placement is unchanged and negated links stay deferred."
+    ],
+    "check": "npm run check passes. format:check passes (54 files). validate prints 'vocabularies: 39, terms: 310, games: 28, units: 3, patterns: 3', 3 ATYPICAL lines (the IFV's two stun breaks and its laser/kinetic break), 24 WARN lines (the same 24 'planned pattern' warnings as before the changes) and OK. sync-patterns:check: all 3 pattern files up to date. docs:check: all 3 generated docs up to date. npm test: 231 tests, 231 pass, 0 fail. Run in order: npm run format (rewrote 10 files once, then 0), npm run sync-patterns (updated 0), npm run docs (wrote docs/vocabularies.md, docs/fields.md and docs/samples.md). Nothing is committed. Every word list stays at version 1.0.0, status draft. scripts/validate.mjs and the tests were not changed.",
+    "notes": "Files changed, all under /home/user/MoesTools-Brainstormer:\n- data/vocab/: ability-kinds.json, aim-models.json, armour-classes.json, bodies.json, confidence.json, cooldown-bands.json, mobility-traits.json, range-bands.json, resources.json, roles.json, speed-bands.json, weapon-families.json, weapon-traits.json\n- data/pattern-registry.json and data/units/ra3.json\n- schemas/source-unit.schema.json and scripts/build-docs.mjs\n- research/registry-notes/: games-r3.md, games-r5.md, games-r6.md, patterns.md\n- docs/fields.md, docs/vocabularies.md and docs/samples.md (regenerated)\n- research/pilot/ was not touched.\n\nSmall departures from the review's exact wording, each kept to plain-word paraphrase:\n- R2-21(3): the parenthesis sits before the colon.\n- R2-22(4): \"anti-air's need to hit high air\".\n- R2-11: \"in words\" added.\n- R2-20(3): \"So are passenger seats...\" became \"Passenger seats that only an upgrade adds are recorded too: put them in...\".\n- MISS-5: the example path was changed.\n- MISS-3: a sentence saying both facts still need checking was added.\n- R2-15: the follow-through edit in the DoW2 damage note.\n\nChecks on the RA3 samples:\n- All three were re-checked against the applied rules. The only data change is the MISS-5 atypical path.\n- The IFV's flak passenger gun stays air-only, because its summary says anti-air only, so R2-23 changes nothing there.\n\nSide effects from MISS-4, for the next rescoring of round 1 (no files changed):\n- R2-14 as revised settles round 1's SC2 Siege Tank confidence split (C reaches high through the StarCraft Wiki unit description).\n- R2-20 adds upgrade-in-field to the CoH1 Riflemen's Throw Grenade, Throw Sticky Bomb and Suppression Fire for all three coders.\n- The revised R2-13 keeps the Battlefield IR Flares on fire-countermeasures alone.\n\nHelper scripts used for the edits, kept out of the repo:\n- <scratch>\n- <scratch>"
+  }
+}

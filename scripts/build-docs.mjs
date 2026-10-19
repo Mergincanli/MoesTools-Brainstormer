@@ -551,10 +551,10 @@ function fieldsDocs() {
     '- **Typed links** are written `kind:id`, such as `role:anti-air`, `size:<=small` or `hits:high-air`. A link always describes a unit: in strengths, weaknesses and pattern requirements it describes the unit itself; in *counters* the unit it beats; in *countered by* the unit that beats it; in combos the teammate. Ranked kinds accept `<=` and `>=`. ' +
     f`Kinds: ${kinds}.`,
     '- **Matchups.** Write the reason first, then pick the link that names the part behind it. ' +
-    '(1) Name the other unit the way the sources do: by its job (`role:anti-armour`, `role:anti-air`) when they name a job; by what it fires when they name a weapon (`weapon:machine-gun`) or a kind of harm (`damage:electric`); by what it is (`class:aircraft`, `class:infantry`, `armour-class:heavy`) when they name a kind of unit. When they name only a unit, use the same order for what makes that unit win. ' +
+    '(1) Name the other unit the way the sources do: by its job (`role:anti-armour`, `role:anti-air`) when they name a job; by what it fires when they name a weapon (`weapon:machine-gun`) or a kind of harm (`damage:electric`); by what it is (`class:aircraft`, `class:infantry`, `armour-class:heavy`) when they name a kind of unit. When they name only a unit, use the same order for what makes that unit win. When one phrase names the enemy two ways at once (rocket-armed infantry), take the first that fits in this order. ' +
     '(2) For fliers, use `class:aircraft` when the sources mean air units in general; use `target:low-air` or `target:high-air` only when the point holds for one layer. ' +
     '(3) Prefer word-list and pattern links. Add a `unit:` link only for a same-game partner or rival the sources name, next to a word-list or pattern link for the same reason. A link to the unit itself is fine in combos when the sources say it works best in numbers. ' +
-    "(4) In strengths and weaknesses, give the unit's own value with no `<=` or `>=` (`range:long`, not `range:>=long`; `passengers:1`, not `passengers:>=1`). Use comparators only in counters, countered by and combos, for a group of units. " +
+    "(4) In strengths and weaknesses, give the unit's own value with no `<=` or `>=` (`range:long`, not `range:>=long`; `passengers:1`, not `passengers:>=1`). Use comparators only in counters, countered by and combos, for a group of units. A link may name a proposal field (a mount, a handling) when the reason itself is sourced. " +
     '(5) Something the unit lacks (no weapon reaches aircraft) is not a link of its own: put the enemy that exploits it in countered by (`class:aircraft`), and if you also list it as a weakness, hang it on the part that causes it and name the gap in the reason. ' +
     '(6) The same enemy may sit in counters and in countered by only when the two reasons name different situations. Otherwise put it where the head-on fight at equal cost ends, and give the tactic that turns it in the reason. ' +
     '(7) Most important first; keep each list short, about two to five. A link to a planned pattern is fine; its warning clears when the pattern is written. ' +
@@ -570,7 +570,7 @@ function fieldsDocs() {
     '(1) One in-game weapon is one entry, even when it acts differently against different targets. Code its family and traits as it works against its main target: the target its primary role is about, or else the one the source names first. ' +
     'Its damage and delivery follow their own rules (`armament[].damage` step 5 when its damage category differs by target; the order under `armament[].delivery`). List every target it can hit, and put the other behaviour in the summary. ' +
     "(2) Among the fixed weapons of one seat, make one entry per family. Copies of one gun are one entry (twin cannons, a squad's five rifles). " +
-    "So are different guns of one family that the seat uses on the same attack order, at once or each against its own kind of target (a sergeant's carbine with the squad's rifles, a ground battery with an air battery). " +
+    "So are different guns of one family that the seat uses on the same attack order, at once or each against its own kind of target (a stock sergeant's carbine with the squad's rifles, a ground battery with an air battery). " +
     'Name them all and list every target any of them can hit. A gun of another family is its own entry. A gun of the same family on its own key or button (a pistol beside a rifle) is its own entry too. ' +
     'Where players set their own fire groups (MechWarrior), each family on a seat is one entry. ' +
     '(3) Rule 2 never merges a loadout choice, or a weapon the unit does not always have. Alternate, passenger, acquired and option weapons are counted by their own rules. ' +
@@ -587,8 +587,9 @@ function fieldsDocs() {
     'Both also link the pattern of what the swapped-in weapon does, if one fits. The weapon that is swapped out links no swap pattern. ' +
     'A weapon gained from a kill or a wreck is an acquired weapon plus a triggered ability, both linking the gain pattern (`leech-weapon-on-kill`). ' +
     'A weapon added by a bought upgrade or research has no ability; it links `upgrade-in-field` when the upgrade reaches units already in the field (bought on the unit, or for all of them at a building), and no pattern when only units built later get it. ' +
+    'An ability that a bought upgrade or research adds links `upgrade-in-field` on the same terms as such a weapon (bought on the unit, or researched for all of them at a building, and reaching units already in the field), next to the patterns of what it does. ' +
     'A weapon that comes with a rank links `earn-veterancy`. ' +
-    'A unit with passenger seats gets one passive ability for them, source innate. ' +
+    'A unit with passenger seats gets one passive ability for them, source innate, or source upgrade when only a bought upgrade adds the seats. ' +
     'It links `passenger-sets-weapon` when riders set its weapon or fire their own from it (passenger-module or passenger-firing seats), and `carry-passengers` otherwise (passenger-cargo seats), never both; each passenger weapon links `passenger-sets-weapon` too. ' +
     'The weapon used when nobody rides inside is a plain primary and links no passenger pattern. Load and unload buttons stay off (universal keys).',
     "- **Shared mechanics and universal keys.** Some mechanics belong to the game, not the unit: every unit of its class has them, on its side or in the whole game, apart from a few named exceptions. " +
@@ -605,6 +606,9 @@ function fieldsDocs() {
     "- **Pattern links.** Link a pattern when the ability or weapon gives the player the same interaction and the enemy the same counterplay as the pattern's summary. " +
     "Fiction, delivery and size don't matter (see Granularity). " +
     'Link a second pattern only when it passes the same test on its own: an ECM that hides you from radar and breaks locks links `jam-sensors` and `fire-countermeasures`. ' +
+    'Hiding from radar or minimaps, and blocking new locks while hidden, is `jam-sensors`; breaking a lock already made or pulling missiles in flight off you is `fire-countermeasures`. ' +
+    'Flares or chaff that also keep new locks off for a moment after firing link `fire-countermeasures` alone. ' +
+    'Smoke links `lay-smoke` only when the sources say it blocks sight or aim. ' +
     'Do not link a pattern for a part that only looks like it. `capture-structure` needs an enemy building, so taking over a neutral one is not it. ' +
     'A thrown sticky bomb is `throw-explosive`, not `infest-vehicle`, because nobody latches on. ' +
     'Ending your own burning or disabled state on a key links `heal-self`, unless the patterns group adds a pattern for it. ' +
@@ -624,6 +628,8 @@ function fieldsDocs() {
     '- **Stock values.** Every band describes the stock unit at the version researched: no researched or bought upgrades, no veterancy, no temporary buffs, in its default mode. ' +
     'Put what upgrades change in notes, and what another mode changes in modes. ' +
     'An ability or weapon that an upgrade unlocks is still recorded (ability source upgrade, weapon slot acquired); only its bands are taken as unlocked, before further upgrades. ' +
+    'Passenger seats that only an upgrade adds are recorded too: put them in crew.passengers and name the upgrade in crew.notes. ' +
+    'The body plan describes the stock unit; an add-on turret goes in body.notes. ' +
     "A loadout pick is not an upgrade: each field's own rule says how picks are recorded.",
     '- **Series games.** For a games.json entry of kind series, the counted titles are the lead titles named in `version_researched` and any title named there for the archetype being coded. ' +
     "Only counted titles fill fields; facts from the series' other titles go in notes. " +

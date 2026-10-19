@@ -27,7 +27,7 @@
 
 ### Mode change
 
-- **overclock-self** (Overclock yourself). StarCraft II Marine and Marauder (Stimpack, costs health); MechWarrior Online MASC (speed burst that can damage the legs). *Boundary:* dash is a free speed burst and brace trades speed for armour; this trades health or heat for offence and speed. It is the generic "stat buff" pattern, so it stays out of the top-30.
+- **overclock-self** (Overclock yourself). StarCraft II Marine and Marauder (Stimpack, costs health); MechWarrior Online MASC (speed burst that can damage the legs). *Boundary:* dash is a free speed burst and brace trades speed for armour; this boosts offence or speed for a time, often at a cost in health or heat; a free speed burst alone stays dash. It is the generic "stat buff" pattern, so it stays out of the top-30.
 
 ### Summon
 

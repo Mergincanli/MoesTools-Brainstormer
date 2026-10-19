@@ -299,7 +299,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 
 - *Stun bark (attack dog), traits:* The source's tier-1 IFV stuns when carrying a dog or bear; our word list keeps stun for tier 2 and up.
 - *Stun roar (war bear), traits:* The source's tier-1 IFV stuns when carrying a dog or bear; our word list keeps stun for tier 2 and up.
-- *Infantry laser (Imperial Warrior), damage:* The wiki calls the Imperial Warrior version a laser but gives it the game's gun damage type, which maps to kinetic; our laser family allows only energy or fire damage.
+- *Infantry laser (Imperial Warrior), family:* The wiki calls the Imperial Warrior version a laser but gives it the game's gun damage type, which maps to kinetic; our laser family allows only energy or fire damage.
 
 **Sources**
 
