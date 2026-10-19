@@ -76,7 +76,7 @@ Entries written to `games_r3.json`: `generals` (Command & Conquer: Generals with
   - The drones use Tank Armor; record them as light.
   - The Overlord and Emperor Overlord are super-heavy by size.
   - One-off sets (Dozer, Toxin Truck, QuadCannon, Avenger, Sentry Drone, Battle Bus, Assault Crawler) map by what the unit is.
-- **Tempest Rising damage.** These are the seven types on the wiki's Damage page; Omni (ignores armour) is left out. Most lasers deal Cannon damage, but record a laser weapon as energy because of what it is. The Comms Officer's laser deals Explosive damage.
+- **Tempest Rising damage.** These are the seven types on the wiki's Damage page; Omni (ignores armour) is left out. Every laser weapon is energy, whatever its category (Cannon for most, Explosive for the Comms Officer's). Named exception (step 3 under armament[].damage).
 - **Tempest Rising armour.** Medium vehicle maps to heavy, because the two main battle tanks are Medium vehicles and our heavy class is for main battle tanks. Heavy vehicle also maps to heavy. Lift the biggest units (Tempest Sphere, War Ender) to super-heavy by size. Units also have six armour percentages, but the label is enough for the class.
 - **Iron Harvest damage.** No `damage_map`: each weapon lists a damage value per armour class, and there are no named damage types.
 - **Iron Harvest armour.** Unarmored, Light, Medium and Heavy (plus Structure), shifted one step up to match our definitions:

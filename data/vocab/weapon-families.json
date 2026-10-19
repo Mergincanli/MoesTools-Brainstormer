@@ -2,15 +2,15 @@
   "$schema": "../../schemas/vocabulary.schema.json",
   "id": "weapon-families",
   "label": "Weapon families",
-  "description": "What the weapon is, judged by how it behaves in the source, not by its name. Each family has defaults (damage, mount, delivery, range) and lists what it may be combined with. Tie-breaks: a missile that steers, by itself or by the player's hand, is a guided missile, an unguided one is a rocket; a soldier's personal gun is small arms, a belt-fed or mounted gun is a machine gun; prism only if the beam splits, travelling bolts are plasma; placed or thrown charges are explosives, dropped ones are bombs; artillery only for arcing or out-of-sight fire. Air: every family lists the target types it can reach. High air is reached only by the anti-air families (flak, guided missiles, autocannons), by adaptive, which takes whatever weapon it gains, and by any weapon with the anti-air trait whose family reaches low air. Most direct-fire families reach low air; lobbed, dropped, melee and short-range area families stay on the ground, except that explosives can reach a low flier by ramming it or clinging to it. Whatever the family, a lobbed, dropped or placed shot never hits a flier. Ships (research only) are on every family's list except flak's.",
+  "description": "What the weapon is, judged by how it behaves in the source, not by its name. Each family has defaults (damage, mount, delivery, range) and lists what it may be combined with. Air: every family lists the target types it can reach. High air is reached only by the anti-air families (flak, guided missiles, autocannons), by adaptive, which takes whatever weapon it gains, and by any weapon with the anti-air trait whose family reaches low air. Most direct-fire families reach low air; lobbed, dropped, melee and short-range area families stay on the ground, except that explosives can reach a low flier by ramming it or clinging to it. Whatever the family, a lobbed, dropped or placed shot never hits a flier. Ships (research only) are on every family's list except flak's.",
   "group": "core",
   "status": "draft",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "small-arms",
       "label": "Small arms",
-      "description": "Rifles, carbines, SMGs and pistols.",
+      "description": "Hand-held weapons that fire single shots or short bursts: rifles, carbines, pistols, SMGs and automatic rifles, and also bows, crossbows and thrown blades.",
       "rarity": "common",
       "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
       "class_rarity": {
@@ -146,7 +146,7 @@
     {
       "id": "rockets",
       "label": "Rockets",
-      "description": "Unguided rockets or rocket pods.",
+      "description": "Rockets or rocket pods with no lock and no steering by the shooter. Some correct their own course on the way (homing trait).",
       "rarity": "common",
       "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
       "default_damage": "explosive",
@@ -162,7 +162,7 @@
     {
       "id": "guided-missiles",
       "label": "Guided missiles",
-      "description": "Missiles that steer toward the target: they lock on and home by themselves, or the player steers them by hand.",
+      "description": "Missiles the sources say steer to the target: locked on before firing, steered by the shooter, or, in a commanded game, homing in on the target.",
       "rarity": "common",
       "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
       "default_damage": "armour-piercing",
@@ -361,7 +361,7 @@
     {
       "id": "explosives",
       "label": "Explosives",
-      "description": "Grenades, satchel charges, mines, sticky bombs and bomb trucks.",
+      "description": "Grenades, satchel charges, mines, sticky bombs and bomb trucks. Anti-tank charges and mines are armour-piercing.",
       "rarity": "common",
       "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
       "class_rarity": {
@@ -374,7 +374,7 @@
       "default_delivery": "place",
       "default_range": "short",
       "allowed": {
-        "damage-types": ["explosive", "emp", "fire"],
+        "damage-types": ["explosive", "emp", "fire", "armour-piercing"],
         "weapon-delivery": ["place", "lobbed", "attach", "ram"],
         "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
       }
@@ -402,7 +402,7 @@
     {
       "id": "emp",
       "label": "EMP",
-      "description": "An electromagnetic pulse that shuts down machines and shields.",
+      "description": "An electric or electromagnetic pulse or ray that stops machines and shields for a time: they can't move, can't fire, or both. Little or no damage.",
       "rarity": "uncommon",
       "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
       "default_damage": "emp",
@@ -458,7 +458,7 @@
     {
       "id": "magnetic",
       "label": "Magnetic",
-      "description": "Magnetic beams or harpoons that pull, lift or pin vehicles.",
+      "description": "Magnetic beams or harpoons that physically pull, lift or drag vehicles.",
       "rarity": "rare",
       "classes": ["vehicle", "walker", "hover", "aircraft"],
       "default_damage": "kinetic",
@@ -491,7 +491,7 @@
     {
       "id": "psionic",
       "label": "Psionic",
-      "description": "Mind attacks: control, confusion or fear. Machines without a crew are immune.",
+      "description": "Powers of the mind: control, confusion, fear, or telekinesis that lifts and crushes. Machines without a crew are immune to mind control.",
       "rarity": "rare",
       "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
       "class_rarity": {
@@ -563,6 +563,44 @@
       "label": "Unarmed",
       "description": "No weapon. Research only; a generated card shows an empty slot instead.",
       "source_only": true
+    }
+  ],
+  "tie_breaks": [
+    {
+      "terms": ["small-arms", "machine-gun"],
+      "rule": "Judge by how it fires, not where it sits. Pistols, rifles, carbines and SMGs are always small arms. An automatic rifle or light machine gun is small arms when the sources say it must reload every few bursts (such as the BAR), and a machine gun when it fires long, sustained bursts from a belt, drum or large box. If the sources say neither, a light machine gun is a machine gun. Any belt-fed gun, and any rotary gun firing bullets, is a machine gun, whether a soldier carries it or it sits on a mount. A mounted weapon that the sources say copies a soldier's own gun keeps that soldier's family."
+    },
+    {
+      "terms": ["small-arms", "sniper"],
+      "rule": "Sniper when the sources call it a sniper weapon, give it the game's sniper damage category, or describe slow, precise shots that reach further than ordinary rifles. Killing a soldier in one hit is not enough by itself: commandos' pistols often do. Otherwise a gun, bow, crossbow or thrown blade is small arms."
+    },
+    {
+      "terms": ["machine-gun", "autocannon", "cannon"],
+      "rule": "Machine guns fire bullets in long bursts. An autocannon is a gun the sources call a cannon or autocannon that fires shells rapidly; a rotary cannon counts. A cannon fires one heavy shell at a time, with a pause between shots. Exploding rounds alone, such as bolts, do not make a gun an autocannon: it stays small arms or a machine gun by how it fires. A gun copied from a soldier is settled by the small-arms rule first."
+    },
+    {
+      "terms": ["artillery", "cannon", "rockets"],
+      "rule": "Artillery when a gun or mortar lobs shells over cover onto a ground point, or when the sources call the gun artillery or indirect fire and it reaches further than the unit itself can see, so others must spot for it. A gun aimed straight at targets in view is a cannon, even when it reaches far. Rockets fired in an arc stay rockets with lobbed delivery, even when the sources call them rocket artillery."
+    },
+    {
+      "terms": ["rockets", "guided-missiles"],
+      "rule": "Guided missiles only when the sources cited for the unit say the missile steers to its target: it locks on before it is fired, the shooter steers it (by wire, laser, camera or crosshair), or, in a commanded game, it homes in on or tracks its target. If they do not say it steers, it is rockets, whatever the game calls it. In a piloted game (control piloted or both in data/games.json), a rocket that corrects its own course with no lock step and no warning stays rockets and takes the homing trait. Rockets the sources call smart, seeking or self-guided, with no lock step, count as this."
+    },
+    {
+      "terms": ["prism", "laser"],
+      "rule": "Prism only if the beam splits or bounces to hit several targets; otherwise laser."
+    },
+    {
+      "terms": ["plasma", "laser"],
+      "rule": "Bolts that travel are plasma; light that hits at once or is held on the target is laser."
+    },
+    {
+      "terms": ["explosives", "bombs"],
+      "rule": "Charges that are placed or thrown are explosives; ordnance dropped from a flier is bombs."
+    },
+    {
+      "terms": ["emp", "magnetic", "tesla"],
+      "rule": "EMP for an electric or electromagnetic pulse or ray whose main effect is to stop machines for a time while doing little or no damage. Code what it stops with traits: root when they can't move, silence when they can't fire, root and silence when they can do neither. Use stun only for a very short stop. Magnetic only for a weapon that physically pulls, lifts or drags its target. Tesla for electric arcs that do real damage."
     }
   ]
 }

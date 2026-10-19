@@ -2,10 +2,10 @@
   "$schema": "../../schemas/vocabulary.schema.json",
   "id": "bodies",
   "label": "Body plans",
-  "description": "The unit's upper-body shape and silhouette (legs and wheels live in mobility, scale in size). Each body lists the mobility types and sizes it fits and how its weapons can be mounted. A transforming unit records its second form's body in its modes.",
+  "description": "The unit's upper-body shape and silhouette (legs and wheels live in mobility, scale in size). Each body lists the mobility types and sizes it fits and how its weapons can be mounted. A transforming unit records its second form's body in its modes. A mode records a second body only when the upper body changes shape (a mech folding into a jet); bracing, deploying or raising a gun in place keeps the body.",
   "group": "core",
   "status": "draft",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "humanoid",
@@ -16,7 +16,7 @@
       "allowed": {
         "mobility": ["foot", "jetpack"],
         "sizes": ["small"],
-        "aim-models": ["free-aim", "body-aim", "radial"]
+        "aim-models": ["free-aim", "body-aim", "radial", "limited-arc"]
       }
     },
     {
@@ -53,7 +53,7 @@
       "allowed": {
         "mobility": ["wheels", "tracks", "hover", "legs-multi"],
         "sizes": ["medium", "large", "huge"],
-        "aim-models": ["free-aim", "slow-turret", "auto-target"]
+        "aim-models": ["free-aim", "slow-turret", "auto-target", "limited-arc"]
       }
     },
     {
@@ -83,7 +83,7 @@
     {
       "id": "box-carrier",
       "label": "Troop carrier",
-      "description": "An enclosed, turretless hull with a passenger compartment (a remote weapon mount is fine): APC or IFV.",
+      "description": "An enclosed hull with a passenger compartment, with at most a small turret or a remote weapon mount: APC or IFV.",
       "classes": ["vehicle", "hover"],
       "rarity": "common",
       "allowed": {
@@ -101,7 +101,7 @@
       "allowed": {
         "mobility": ["tracks", "legs-biped", "legs-multi"],
         "sizes": ["huge"],
-        "aim-models": ["free-aim", "slow-turret", "auto-target"]
+        "aim-models": ["free-aim", "slow-turret", "auto-target", "limited-arc"]
       }
     },
     {
@@ -210,6 +210,12 @@
       "description": "Research only.",
       "classes": ["naval"],
       "source_only": true
+    }
+  ],
+  "tie_breaks": [
+    {
+      "terms": ["box-carrier", "hull-turret", "open-mount", "launcher-rack"],
+      "rule": "A hull whose riders sit hidden and protected inside is box-carrier, even with a small turret or a roof launcher (most APCs and IFVs). Hull-turret is for tanks, whose turret and gun are the main body. Open-mount needs crew or riders who sit exposed. Launcher-rack is for a vehicle built around an exposed rack, mast or mortar, with no passenger compartment."
     }
   ]
 }

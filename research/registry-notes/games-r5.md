@@ -34,12 +34,12 @@ Every cited page was checked:
   - Oddly, the database lists the T1 orbital fabrication bot among the Atlas's builders. Treat Titans as t3 anyway.
   - Units launched from the T2 Unit Cannon keep their own factory gate.
   - The commander uses `Start of the match`.
-- **StarCraft II.** There is no in-game tier label, so I matched the Zerg Hatchery, Lair and Hive levels:
+- **StarCraft II.** (Corrected after the fact-check to match data/games.json.) There is no in-game tier label, so I matched the Zerg Hatchery, Lair and Hive levels:
   - **t1:** the first production building, plus the tech building its line units need. Terran: Command Center, Barracks. Zerg: Hatchery, Spawning Pool, Roach Warren, Baneling Nest. Protoss: Nexus, Gateway, Cybernetics Core.
-  - **t2:** the second step. Terran: Factory, Starport, Ghost Academy. Zerg: Lair-tech buildings (Lair, Hydralisk Den, Lurker Den, Infestation Pit, Spire, Nydus Network). Protoss: Robotics Facility, Stargate.
-  - **t3:** the third step. Terran: Armory, Fusion Core. Zerg: Hive-tech buildings (Hive, Ultralisk Cavern, Greater Spire). Protoss: Robotics Bay, Fleet Beacon, Templar Archives, Dark Shrine.
+  - **t2:** the second step. Terran: Factory, Starport, Armory, Ghost Academy. Zerg: Lair-tech buildings (Lair, Hydralisk Den, Lurker Den, Infestation Pit, Spire, Nydus Network). Protoss: Robotics Facility, Stargate.
+  - **t3:** the third step. Terran: Fusion Core, and the Thor, whose own gate is "Factory with tech lab and Armory (Thor)". Zerg: Hive-tech buildings (Hive, Ultralisk Cavern, Greater Spire). Protoss: Robotics Bay, Fleet Beacon, Templar Archives, Dark Shrine.
   - Tech Lab and Reactor add-ons are not a tier step. So the Marauder is t1 and the Siege Tank t2; the Banshee and Raven are t2.
-  - Judgement calls: the Hellbat (a 100-mineral transforming Hellion) is t3, because it needs the Armory. The Starport is t2 although it needs the Factory. The Ghost is t2. The Twilight Council unlocks no unit, so it is left out.
+  - Judgement calls: the Hellbat is t2: it is the Hellion's second mode, and the Armory is t2 in the registry. The Starport is t2 although it needs the Factory. The Ghost is t2. The Twilight Council unlocks no unit, so it is left out.
   - Campaign-only units (for example the WoL Firebat, Goliath, Diamondback and Wraith, or the LotV Reaver): use the multiplayer gate of the building that makes them. Mission unlocks are not tech gates.
   - Co-op Missions values appear in the same wiki infoboxes; ignore them.
 - **Halo Wars 2.**
@@ -157,7 +157,8 @@ Method for all six: price as stated in each basis, anchor on the main battle tan
 - **DoW2 damage.** The keys are the multiplayer (pvp) damage-type names from the wiki's Damage types page.
   - Rockets, melta and anti-vehicle shots map to armour-piercing (RA3 also maps rockets to armour-piercing).
   - Autocannon, suppression and sniper fire map to kinetic.
-  - Left out, because they are unclear or special: barbed_strangler, venom_cannon_pvp, spore, rending, judge_shot_av and boss_cover. Type those weapons by what they are.
+  - Left out, because they are unclear or special: barbed_strangler, venom_cannon_pvp, spore, rending, judge_shot_av and boss_cover. Use step 5 under armament[].damage for those weapons.
+  - Lascannons, meltas and other laser or heat weapons are energy, whatever their category. Named exception (step 3 under armament[].damage).
 - **DoW2 armour.**
   - infantry maps to unarmoured; heavy_infantry maps to light (armoured infantry).
   - `vehicle` covers walkers, transports, tanks and monstrous creatures (the Carnifex is "vehicle"), so set the class per unit.
@@ -169,7 +170,7 @@ Method for all six: price as stated in each basis, anchor on the main battle tan
   - Vehicle High (Land Raider, Killa Kan, Baneblade, Restored Monolith) maps to heavy. Lift the Baneblade and Restored Monolith to super-heavy by size.
   - Left out, to be set per unit: Vehicle Medium (from the Rhino to the Predator), Commander, Daemon Medium and High, and buildings.
   - DoW1 has no named damage types: each weapon lists damage per armour type, so there is no damage_map.
-- **No maps for SupCom, PA, SC2 or HW2.** SC2's attributes (Light, Armored, Biological, Mechanical, Massive, Psionic) cut across our classes. Use them as hints: Massive means heavy or super-heavy, and Light Biological infantry means unarmoured.
+- **No maps for SupCom, PA, SC2 or HW2.** SC2's attributes (Light, Armored, Biological, Mechanical, Massive, Psionic) cut across our classes. For sc2 they are step 2 of the armour-class order. The Siege Tank, the cost anchor, is heavy. Other Massive units are heavy; only check A makes one super-heavy. Other Armored units are medium, or light when they are infantry-sized (body size small, such as the Marauder). Light units are unarmoured when Biological and not Mechanical, otherwise light. A unit that is neither Light nor Armored goes on to step 4.
 
 ## Flavour affinity (a proposal, not a sourced fact)
 
@@ -185,6 +186,22 @@ Method for all six: price as stated in each basis, anchor on the main battle tan
   - Dark Eldar: Empire's speed and blades, but also soul-draining.
   - Space Marines, Chaos, Necrons, Sisters of Battle, Tyranids, Terran, Zerg and UNSC.
   - PA has no factions.
+
+## Game-wide mechanics
+
+Mechanics that belong to the game, not the unit (see Shared mechanics and universal keys in the Conventions). Leave them off every unit's weapons and abilities. A unit that does one of them better or worse than the rest says so in its strengths or weaknesses.
+
+### StarCraft II (`sc2`)
+
+Written for pilot round 1, from the StarCraft Wiki's Burrow page and this note's speed rules.
+
+- **Basic orders** (move, attack, stop, hold position, patrol): every unit. No pattern.
+- **Burrow** (burrow): most Zerg ground units can burrow once the Burrow research is done. Leave it off them; the wiki names the broodling as one that never can. A unit that does more with it records that on the unit: roaches and infestors can move while burrowed, and the lurker attacks only while burrowed.
+- **Creep**: Zerg ground units move faster on creep. Speeds are taken off creep (see Speed above), and creep is not recorded on units.
+- **Entering and leaving a transport or a bunker**: universal keys. The carrier (Medivac, Warp Prism, an Overlord with its transport upgrade) keeps one passive for its passenger seats (see Paired entries).
+- **Weapon and armour upgrades** bought at a research building for a whole class of units (Engineering Bay, Armory, Evolution Chamber, Forge and the like): side-wide upgrades, left off. Bands use the stock unit.
+
+Supreme Commander, Planetary Annihilation, Halo Wars 2 and both Dawn of War games have no list yet. Write one before any of their units is coded.
 
 ## Notes for the r5 research agents
 
@@ -202,6 +219,7 @@ Method for all six: price as stated in each basis, anchor on the main battle tan
 - **StarCraft II.**
   - Liquipedia is the best source. Respect its API terms: one parse request every 30 seconds, gzip and a named user agent. This session was blocked for going faster.
   - The StarCraft Wiki (starcraft.fandom.com) infoboxes have costmin, costgas, supply, produced, req and speed. They also list Co-op values on the same lines; ignore those.
+  - Official role lines: the in-game unit description in the Liquipedia and StarCraft Wiki infoboxes is official text.
   - Blizzard's patch notes are official: 5.0.15 (30 September 2025), 5.0.16 and its hotfix, and 5.0.17 (7 October 2026). 5.0.17 rolled most 5.0.16 changes back to 5.0.15. Wiki values may lag, so check each unit against these three patches.
 - **Halo Wars 2.**
   - Halopedia allows API access and plain page loads.

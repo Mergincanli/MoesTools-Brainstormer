@@ -2,40 +2,59 @@
   "$schema": "../../schemas/vocabulary.schema.json",
   "id": "range-bands",
   "label": "Range bands",
-  "description": "How far a weapon reaches, relative to the top-down screen.",
+  "description": "How far a weapon reaches, relative to the top-down screen. For source units the band compares the weapon with its own game: with the reach of the game's reference weapon (registry range_reference, usually the basic rifle) and with its own unit's sight (see each term's coding rule and the tie-breaks). It does not compare the weapon with the screen or with the unit's other weapons. Each weapon gets one band, from its longest reach against any target, as the stock weapon with no upgrades or veterancy.",
   "group": "supporting",
   "status": "draft",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "melee",
       "label": "Melee",
       "description": "Touching distance.",
-      "rank": 1
+      "rank": 1,
+      "source_rule": "Hits only at touching distance: claws, blades, a bite. A unit that leaps or latches onto its target is still melee."
     },
     {
       "id": "short",
       "label": "Short",
       "description": "A few soldier-lengths: shotguns, flamethrowers.",
-      "rank": 2
+      "rank": 2,
+      "source_rule": "Longest reach under 0.7 times the reference weapon's."
     },
     {
       "id": "medium",
       "label": "Medium",
       "description": "Comfortable on-screen distance: rifles, tank guns.",
-      "rank": 3
+      "rank": 3,
+      "source_rule": "Longest reach from 0.7 up to and including 1.5 times the reference weapon's. The reference weapon itself is medium."
     },
     {
       "id": "long",
       "label": "Long",
       "description": "Near the edge of the visible screen: snipers, missiles.",
-      "rank": 4
+      "rank": 4,
+      "source_rule": "Longest reach over 1.5 times the reference weapon's, unless off-screen applies."
     },
     {
       "id": "off-screen",
       "label": "Off-screen",
       "description": "Beyond the camera view; needs spotting, a zoom or a scope mode.",
-      "rank": 5
+      "rank": 5,
+      "source_rule": "Any one of these: the weapon is long by its reach (figure or words) and reaches past its own unit's sight figure, the figure its sight band uses; the source says it needs spotters or fires at targets beyond its own sight; or the shot is steered through its own camera, such as a TV-guided missile. A scope or zoom alone is not enough, and calling a weapon long-ranged never makes it off-screen."
+    }
+  ],
+  "tie_breaks": [
+    {
+      "terms": ["long", "off-screen"],
+      "rule": "Check off-screen first, and pick it only for the reasons in its coding rule. A weapon that reaches past its unit's sight but is short or medium by its reach keeps that band."
+    },
+    {
+      "terms": ["short", "medium", "long"],
+      "rule": "Use the longest reach against any target: a launcher that reaches twice as far against aircraft is banded by its air reach. Use the maximum reach, not where the weapon works best: \"best at 10-20 m\" is not a reach. When the weapon or the game's reference weapon has no figure, go in this order. First, if the source compares the reach with a named weapon, start from that weapon's band: from its figure where a cited page or the registry gives one, otherwise from its family's default range. Keep that band, and move one band only when the source says much further or much shorter (\"huge\", \"far\"); never past long. Second, if the source calls the weapon short-, medium- or long-ranged, or says it outranges most units (long), take that band. Otherwise take the family's default range."
+    },
+    {
+      "terms": ["melee", "short"],
+      "rule": "Melee only when the blow lands at touching distance, the unit's own leap or latch included. A shot, spray or thrown weapon that crosses any gap is short or longer."
     }
   ]
 }

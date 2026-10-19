@@ -47,7 +47,7 @@ Entries: `cnc-td`, `cnc-ts`, `cnc3`, `renegade` in `games_r2.json`. `check_games
 
 ## Damage and armour maps
 
-- **TW:** lasers (Avatar, Obelisk, Tripod), the Shatterer's sonic beam and the Devourer's shot are all of type "Cannon", and flamethrowers are "Grenade". The map gives the defaults; type each weapon by what it is (energy, sonic, fire).
+- **TW:** lasers (Avatar, Obelisk, Tripod), the Shatterer's sonic beam and the Devourer's shot are all of type "Cannon", and flamethrowers are "Grenade". Lasers (Avatar, Obelisk, Tripod) are energy, the Shatterer's beam is sonic and flamethrowers are fire, whatever their category. Named exception (step 3 under armament[].damage).
 - **TS:** the warhead names are rules.ini names shown in the infoboxes. RailShot and RailShot2 are mapped to armour-piercing as a judgement call. Warheads I could not match to a clear meaning were left out: Super (the Obelisk), TankOGas, Organic, Shard, Slimer, RPG and Fire2.
 - **Renegade:** "Steel" is left out. It covers both bullets (chaingun, ramjet) and explosives (rockets, grenades), and the guide's multipliers make it look anti-infantry. The armour map uses the strategy guide's categories. Unit infoboxes show internal names instead (SkinFlesh, CNCVehicleHeavy), and the Light Tank counts as a heavy vehicle.
 - **No armour_map for TD, TS or TW.** Their categories cut across our classes:
@@ -55,7 +55,7 @@ Entries: `cnc-td`, `cnc-ts`, `cnc3`, `renegade` in `games_r2.json`. `check_games
   - TS's Light covers the Tick tank, Cyborgs and the Banshee.
   - TW gives each unit its own armour percentages.
 
-  Set the armour class per unit from size, role and health.
+  Set the armour class per unit with the armour-class order. The tanks averaged in each cost anchor are heavy, so the Nod Light Tank (TD) and the Tick tank (TS) are heavy, as Renegade's map already has it.
 
 ## Flavour affinity (a proposal, not a sourced fact)
 

@@ -39,6 +39,13 @@ const term = (v, id) => v.terms.find(t => t.id === id) ?? assert.fail(`no term '
 // Changes one word list (or pattern, unit file, card) in a copy.
 const edit = (dir, f, fn) => { const d = load(dir, f); fn(d); dump(dir, f, d) }
 const editTerm = (dir, list, id, fn) => edit(dir, VOCAB(list), v => fn(term(v, id)))
+const editUnit = (dir, slug, fn) => edit(dir, UNITS, d => fn(unit(d, slug)))
+// A copy of one of a unit's weapons under a new name, slot and fields (for loadout and upgrade groups).
+function extraWeapon(u, i, fields) {
+  const { default: _, option_group: __, ...copy } = structuredClone(u.armament[i])
+  u.armament.push({ ...copy, name: `Test copy of ${u.armament[i].name}`, ...fields })
+}
+const gameOf = (dir, u) => load(dir, GAMES).games.find(g => g.id === u.game) ?? assert.fail(`no game '${u.game}'`)
 // Puts a plain 'anti-air' weapon trait in a copy: the data may not have it yet, or may give it rules of its own.
 function plainAntiAir(dir) {
   edit(dir, VOCAB('weapon-traits'), v => {
@@ -70,7 +77,8 @@ function categoryRole(dir) {
 }
 
 // Each case breaks one thing in a fresh copy. kind 'error': a new ERROR containing `expect`;
-// kind 'warn': a new WARN containing `expect` and no new error; kind 'ok': no new error at all.
+// kind 'warn': a new WARN containing `expect` and no new error; kind 'ok': no new error at all;
+// kind 'no-warn': no new error and no new WARN containing `expect`.
 // `expect` may be a function of the copy, for text that comes from the word lists.
 const cases = [
   ['unit links an unknown pattern', 'is not in the pattern registry', 'error', dir => {
@@ -310,12 +318,14 @@ const cases = [
     const c = load(dir, CARD); c.parts.class = 'infantry'; c.parts.on_death = ['wreck']; dump(dir, CARD, c)
   }],
   ['unit: pilot eject on the Terror Drone needs an atypical entry', "has no entry with rule 'on-death:pilot-eject classes drone'", 'error', dir => {
-    const d = load(dir, UNITS); unit(d, 'terror-drone').on_death.outcomes.push('pilot-eject'); dump(dir, UNITS, d)
+    // A sourced outcome (basis in-game), so the 3C default for proposals does not apply.
+    editUnit(dir, 'terror-drone', u => { u.on_death = { ...u.on_death, outcomes: ['pilot-eject'], basis: 'in-game' } })
   }],
   ['unit: a break recorded under its exact rule string passes', '', 'ok', dir => {
-    const d = load(dir, UNITS); const u = unit(d, 'terror-drone'); u.on_death.outcomes.push('pilot-eject')
-    u.atypical = [...(u.atypical || []), { path: `on_death/outcomes/${u.on_death.outcomes.length - 1}`, rule: 'on-death:pilot-eject classes drone', note: 'test' }]
-    dump(dir, UNITS, d)
+    editUnit(dir, 'terror-drone', u => {
+      u.on_death = { ...u.on_death, outcomes: ['pilot-eject'], basis: 'in-game' }
+      u.atypical = [...(u.atypical || []), { path: 'on_death/outcomes/0', rule: 'on-death:pilot-eject classes drone', note: 'test' }]
+    })
   }],
   ['unit: a unique unit below the tier its availability needs', "has no entry with rule 'availability:unique min_tier t2'", 'error', dir => {
     const d = load(dir, UNITS); const u = unit(d, 'terror-drone'); assert.equal(u.tier.band, 't1'); u.availability = 'unique'; dump(dir, UNITS, d)
@@ -464,6 +474,178 @@ const cases = [
   ['unit: a category link nothing meets', "has no entry with rule 'roles:", 'error', dir => {
     const { d } = categoryRole(dir); dump(dir, UNITS, d)
   }],
+
+  // Field rules from pilot round 1 (word lists 1.0). Seats: 'driver' is never written; any other seat is the unit's own.
+  ["unit: a weapon with seat 'driver'", "seat 'driver' is the default; leave it out", 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.armament[0].seat = 'driver' })
+  }],
+  ["unit: an ability with seat 'driver'", "seat 'driver' is the default; leave it out", 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.abilities[0].seat = 'driver' })
+  }],
+  ['unit: a seat the crew model does not have', "seat 'gunner' is not a seat of this unit", 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { assert.equal(u.crew.model, 'solo'); u.armament[1].seat = 'gunner' })
+  }],
+  ['unit: a passenger seat of another kind than crew.passengers', "seat 'passenger-firing' is not a seat of this unit", 'error', dir => {
+    editUnit(dir, 'multigunner-ifv', u => {
+      assert.equal(u.crew.passengers.kind, 'passenger-module'); u.armament.find(x => x.slot === 'passenger').seat = 'passenger-firing'
+    })
+  }],
+  ['unit: a seat named in crew.seats', '', 'ok', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.crew.seats = [{ role: 'driver', count: 1 }, { role: 'gunner', count: 1 }]; u.armament[1].seat = 'gunner' })
+  }],
+
+  // The main weapon: at most one primary, listed first, and the driver's whenever the driver has a weapon.
+  ['unit: two primary weapons', 'a unit has at most one primary weapon, listed first', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.armament[1].slot = 'primary' })
+  }],
+  ['unit: a primary that is not listed first', 'a unit has at most one primary weapon, listed first', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { assert.equal(u.armament[0].slot, 'primary'); u.armament.reverse() })
+  }],
+  ["unit: a gunner's primary while the driver has a weapon", "the driver has a weapon, so the primary is the driver's: leave its seat out", 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => {
+      u.crew.model = 'driver-gunner'; u.crew.solo_fallback = 'full-control'
+      u.armament[0].seat = 'gunner'; u.armament[1].slot = 'secondary'
+    })
+  }],
+  ["unit: a gunner's primary when the driver fires nothing", '', 'ok', dir => {
+    // A Foxhole light tank: the driver only drives, so the first gun seat's main gun is primary.
+    editUnit(dir, 'hammer-tank', u => {
+      u.crew.model = 'driver-gunner'; u.crew.solo_fallback = 'full-control'
+      u.armament[0].seat = 'gunner'; u.armament[1].slot = 'secondary'; u.armament[1].seat = 'gunner'
+    })
+  }],
+
+  // Loadout groups (option entries plus at most one fitted entry, the default) and upgrade groups (acquired entries only).
+  ['unit: an option weapon without an option_group', 'needs an option_group', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => extraWeapon(u, 0, { slot: 'option' }))
+  }],
+  ['unit: default: true outside a loadout group', 'which belongs only on the primary or secondary entry of a loadout group', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.armament[0].default = true })
+  }],
+  ['unit: a loadout group with its default', '', 'ok', dir => {
+    editUnit(dir, 'hammer-tank', u => {
+      Object.assign(u.armament[0], { option_group: 'main-gun', default: true }); extraWeapon(u, 0, { slot: 'option', option_group: 'main-gun' })
+    })
+  }],
+  ['unit: the fitted choice of a loadout group without default: true', 'so it needs default: true', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.armament[0].option_group = 'main-gun'; extraWeapon(u, 0, { slot: 'option', option_group: 'main-gun' }) })
+  }],
+  ['unit: two fitted weapons in one option group', 'it is neither a loadout group', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => {
+      Object.assign(u.armament[0], { option_group: 'main-gun', default: true })
+      extraWeapon(u, 0, { slot: 'secondary', option_group: 'main-gun', default: true })
+    })
+  }],
+  ['unit: an upgrade group of acquired weapons', '', 'ok', dir => {
+    editUnit(dir, 'hammer-tank', u => {
+      const i = u.armament.findIndex(x => x.slot === 'acquired'); assert.ok(i >= 0, 'no acquired weapon')
+      u.armament[i].option_group = 'upgrades'; extraWeapon(u, i, { option_group: 'upgrades' })
+    })
+  }],
+  ['unit: an upgrade group with a default', 'which belongs only on the primary or secondary entry of a loadout group', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => {
+      const i = u.armament.findIndex(x => x.slot === 'acquired')
+      Object.assign(u.armament[i], { option_group: 'upgrades', default: true }); extraWeapon(u, i, { option_group: 'upgrades', default: false })
+    })
+  }],
+  ['unit: an option group that mixes acquired and option weapons', 'it is neither a loadout group', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => {
+      u.armament.find(x => x.slot === 'acquired').option_group = 'mixed'; extraWeapon(u, 0, { slot: 'option', option_group: 'mixed' })
+    })
+  }],
+
+  // 'when' names the rider of a passenger weapon, and only there.
+  ["unit: 'when' on a weapon that is not a passenger weapon", "has 'when': 'when' is for passenger weapons only", 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.armament[1].when = 'unit:ra3.soviet.terror-drone' })
+  }],
+  ["unit: a passenger weapon without 'when'", "has no 'when': 'when' is for passenger weapons only", 'error', dir => {
+    editUnit(dir, 'multigunner-ifv', u => { delete u.armament.find(x => x.slot === 'passenger').when })
+  }],
+
+  // Body-aim turns the whole unit, so only the driver fires it.
+  ['unit: body-aim fired from another seat', 'body-aim is fired from the driver seat', 'error', dir => {
+    editUnit(dir, 'multigunner-ifv', u => { assert.equal(u.armament[0].mount, 'body-aim'); u.armament[0].seat = 'passenger-module' })
+  }],
+  ['card: body-aim fired from another seat', 'armament primary has seat \'gunner\': body-aim is fired from the driver seat', 'error', dir => {
+    edit(dir, CARD, c => { Object.assign(c.parts.armament.primary, { mount: 'body-aim', seat: 'gunner' }) })
+  }],
+
+  // Crew basis and death outcomes in games where players command units (decision 3C for the proposal default).
+  ['unit: an in-game crew in a game where players command units', 'an RTS unit has no player seats; use basis proposal', 'error', dir => {
+    editUnit(dir, 'terror-drone', u => { assert.equal(gameOf(dir, u).control, 'commanded'); u.crew.basis = 'in-game' })
+  }],
+  ['unit: an in-game squad in a game where players command units', '', 'ok', dir => {
+    editUnit(dir, 'terror-drone', u => { Object.assign(u.crew, { model: 'squad', basis: 'in-game' }); u.body.count = 3 })
+  }],
+  ['unit: a proposal death outcome other than the 3C default', 'a proposal death outcome is the 3C default; if the source shows another outcome, set basis in-game', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => {
+      assert.equal(u.nature, 'crewed-machine'); assert.equal(u.on_death.basis, 'proposal'); u.on_death.outcomes = ['respawn']
+    })
+  }],
+  ['unit: a death outcome shown by the source', '', 'ok', dir => {
+    editUnit(dir, 'hammer-tank', u => { Object.assign(u.on_death, { outcomes: ['wreck'], basis: 'in-game' }) })
+  }],
+  ['unit: an in-game respawn in a game where players command units', 'an RTS unit that is simply gone is a proposal', 'error', dir => {
+    editUnit(dir, 'terror-drone', u => { assert.deepEqual(u.on_death.outcomes, ['respawn']); u.on_death.basis = 'in-game' })
+  }],
+  ['unit: a solo fallback on a one-player crew model', 'solo_fallback is only for multi-seat crew models', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { assert.equal(u.crew.model, 'solo'); u.crew.solo_fallback = 'full-control' })
+  }],
+  ['unit: a squad without a body count', 'a squad needs body.count 2 or more', 'error', dir => {
+    editUnit(dir, 'terror-drone', u => { u.crew.model = 'squad'; delete u.body.count })
+  }],
+
+  // Handling: the mobility default unless a listed reason applies, and then the reason goes in mobility.notes.
+  ['unit: handling other than the default with no reason (warn only)', 'say why the handling differs in mobility.notes', 'warn', dir => {
+    editUnit(dir, 'hammer-tank', u => { assert.equal(u.mobility.handling, 'pivot'); u.mobility.handling = 'steer'; delete u.mobility.notes })
+  }],
+  ['unit: handling other than the default with a reason in the notes', 'say why the handling differs', 'no-warn', dir => {
+    editUnit(dir, 'hammer-tank', u => { assert.ok(u.mobility.notes); u.mobility.handling = 'steer' })
+  }],
+  ['unit: a small unit on legs strafes without a note', 'say why the handling differs', 'no-warn', dir => {
+    editUnit(dir, 'terror-drone', u => {
+      assert.ok(u.mobility.base.startsWith('legs')); assert.ok(['tiny', 'small'].includes(u.body.size))
+      u.mobility.handling = 'strafe'; delete u.mobility.notes
+    })
+  }],
+
+  // source_units are filled by npm run sync-patterns in the merge pass, so a stale list only warns.
+  ['unit: links a written pattern that does not list it (warn only)', 'source_units out of date; the merge pass runs npm run sync-patterns', 'warn', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.abilities[0].patterns.push('infest-vehicle') })
+  }],
+  ['pattern: source_units name a unit that does not link it (warn only)', 'source_units out of date; the merge pass runs npm run sync-patterns', 'warn', dir => {
+    edit(dir, PATTERN('infest-vehicle'), p => { p.source_units.push('ra3.soviet.hammer-tank') })
+  }],
+
+  // An ability with no pattern stays, and a fit_note at its patterns says which mechanic is wanted.
+  ['unit: an ability with no pattern and no fit_note', 'an ability with no pattern needs a fit_note naming the mechanic wanted', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.abilities[0].patterns = [] })
+  }],
+  ['unit: an ability with no pattern and a fit_note with no wanted text', 'an ability with no pattern needs a fit_note naming the mechanic wanted', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => {
+      u.abilities[0].patterns = []; u.fit_notes = [...(u.fit_notes || []), { path: 'abilities/0/patterns', used: '(none)', note: 'test' }]
+    })
+  }],
+  ['unit: an ability with no pattern and a fit_note naming the mechanic wanted', '', 'ok', dir => {
+    editUnit(dir, 'hammer-tank', u => {
+      u.abilities[0].patterns = []
+      u.fit_notes = [...(u.fit_notes || []), { path: 'abilities/0/patterns', used: '(none)', wanted: 'a test mechanic', note: 'test' }]
+    })
+  }],
+
+  // Paths in fit_notes, uncertain and sources[].supports use '/' and real positions.
+  ['unit: a path with dots (warn only)', "uses '.' or '*': write paths with / and real positions", 'warn', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.uncertain = [...(u.uncertain || []), { path: 'sensors.sight', note: 'test' }] })
+  }],
+  ['unit: a supports path with a star (warn only)', "uses '.' or '*': write paths with / and real positions", 'warn', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.sources[0].supports = [...(u.sources[0].supports || []), 'abilities/*'] })
+  }],
+  ['unit: a path into a part the unit does not have (warn only)', 'which does not exist on this unit: write paths with / and real positions', 'warn', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.fit_notes = [...(u.fit_notes || []), { path: 'armament/99/damage', used: 'energy', note: 'test' }] })
+  }],
+  ['unit: a path to a field left out of a real part', 'write paths with / and real positions', 'no-warn', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.uncertain = [...(u.uncertain || []), { path: 'armament/0/no-such-field', note: 'test' }] })
+  }],
 ]
 
 // ---------------------------------------------------------------- the validator
@@ -556,6 +738,10 @@ describe('validator', () => {
           assert.ok(fresh.some(e => e.includes(expect)), `expected an ERROR containing "${expect}"; new errors:\n${fresh.slice(0, 6).join('\n')}`)
         } else if (kind === 'ok') {
           assert.deepEqual(fresh, [], 'expected no new errors')
+        } else if (kind === 'no-warn') {
+          assert.deepEqual(fresh, [], 'expected no new errors')
+          const freshWarnings = warnings.filter(w => !baselineWarnings.has(w) && w.includes(expect))
+          assert.deepEqual(freshWarnings, [], `expected no new WARN containing "${expect}"`)
         } else {
           assert.ok(warnings.some(w => !baselineWarnings.has(w) && w.includes(expect)), `expected a new WARN containing "${expect}"`)
           assert.deepEqual(fresh, [], 'expected a warning only, but got new errors')

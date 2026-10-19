@@ -84,9 +84,9 @@
           "type": "string"
         },
         "flavour_affinity": {
-          "description": "Which of our faction flavours this design fits, if any.",
+          "description": "Which of our flavours this design would sit in. 1. Start from the faction's flavours in data/games.json; a subfaction with none takes its parent's. Drop one if any weapon in the primary, secondary or alternate slot, or the body plan, is on that flavour's avoided list. 2. Score each other flavour: one point for each of these four that its favoured lists hold: the primary role; the family of any weapon in the primary, secondary or alternate slot; the mobility; the body plan. 3. Add the top-scoring other flavour if it scores 2 or more and at least as much as each flavour from step 1. If two tie at the top, add both, but only if there is room for both. A faction with no flavour starts empty, so step 3 uses the scores alone. At most two flavours in all; an empty list is fine.",
           "type": "array",
-          "maxItems": 3,
+          "maxItems": 2,
           "items": {
             "type": "string",
             "x-vocab": "faction-flavours"
@@ -112,10 +112,12 @@
           "required": ["primary"],
           "properties": {
             "primary": {
+              "description": "The unit's main job. Go through the steps in order and stop at the first one that gives a role. Use only what every copy has: weapons in the primary, secondary and alternate slots, and innate buttons. Passengers, upgrades, doctrines, option weapons and proposal fields never count; the default choice of a loadout group counts, because it holds the primary or secondary slot. 1. Official role line. Read the unit's designation (its type line). If it has none, read its official one-line description. If that line names one of our roles, use it. If it names two, use the one whose target the main weapon has a bonus against. If neither has a bonus, go on. Skip a role whose requires the unit fails. 2. Not a fighter. If the unit is unarmed, or its only weapon is a tool, or it is built to carry, supply, build or spy and its guns are fired only from gunner or passenger seats (a transport helicopter's door guns), use the job of its main button or main action: transport, support, engineer, logistics or infiltrator. A combat vehicle whose main gun is fired from a gunner seat (a Foxhole light tank) goes on to step 3. 3. Reach. Siege if the main weapon is lobbed and reaches long or further, if it is bombs dropped from the air, or if the unit deploys into a mode whose gun reaches long or further and hits an area. Marksman if the main weapon is a sniper weapon that reaches long or further. 4. Bonus. Anti-armour, anti-air or anti-infantry if the game data gives the main weapon extra damage against that target, if official text says the unit is strong against it, or if the main weapon can hit nothing else. Doing little damage to other targets is not a bonus. 5. Generalist. Raider if the unit is fast or very fast with light or no armour. Otherwise assault.",
               "type": "string",
               "x-vocab": "roles"
             },
             "secondary": {
+              "description": "Up to two more jobs, written in rank order. A candidate is any role, other than the primary, whose requires the unit meets and whose description fits a sourced part of the unit. Proposal fields never count (a proposed sensor, mount or seat). Drop any role whose target official text calls a weak or limited point of the unit. How a weapon gives a role: anti-armour or anti-air if it has a bonus against that target, official text says it is strong against it, a source calls it an anti-tank or anti-aircraft weapon, or it can hit nothing else. Anti-infantry for any of those, for a splash weapon, or for small arms (rifles, pistols, machine guns, shotguns) that do little to vehicles. Any other role if the weapon meets the role's requires. Each candidate ranks at the first of these steps that supports it. Keep the first two. Inside a step, follow the order of the roles list. 1. Official text calls the unit by the role label or one of its aliases. 2. A button or mode that every copy has, and the alternate weapon it switches to. 3. Its weapons in the primary and secondary slots. 4. Speed, armour or senses alone. Raider: fast or very fast with light or no armour. Assault: medium or heavier armour and a short- or medium-range main weapon. Scout: long sight, a sensor trait or stealth, with an in-game basis. 5. Passengers, upgrades, doctrines, option weapons and acquired weapons. Rank these roles by how many of the options give them. Leave a slot empty rather than fill it with a role that rests on none of these.",
               "type": "array",
               "maxItems": 2,
               "items": {
@@ -156,7 +158,7 @@
               "x-vocab": "cost-bands"
             },
             "raw": {
-              "description": "The price in the game's currency. Stored only so the band can be recomputed; the generator and app never show or use it.",
+              "description": "The base price paid to get one unit at the version researched, as one number in the registry's currency; use the registry's formula where a game has several resources (StarCraft II: minerals + 3 x gas). Leave out the cost of reinforcing lost members, upkeep, population, optional upgrades bought for this unit, and upgrades bought for every unit of its type. Stored only so the band can be recomputed; the generator and app never show or use it.",
               "type": "number"
             },
             "basis": {
@@ -174,7 +176,7 @@
               "x-vocab": "mobility"
             },
             "handling": {
-              "description": "Our proposal for how a player version would handle.",
+              "description": "Our proposal for how a player version would handle. Use the mobility type's default unless the Handling tie-break gives a reason to change it; write the reason in mobility.notes.",
               "type": "string",
               "x-vocab": "handling",
               "x-provenance": "proposal"
@@ -188,7 +190,7 @@
               }
             },
             "speed": {
-              "description": "Relative to the game's basic infantry.",
+              "description": "Ratio to the game's speed reference (see Speed bands), for every unit, vehicles and aircraft included. For a vehicle or aircraft, also say in mobility.notes, in words, how it compares with the game's standard tank (an aircraft: with the game's other aircraft).",
               "type": "string",
               "x-vocab": "speed-bands"
             },
@@ -196,7 +198,7 @@
               "type": "string"
             },
             "speed_raw": {
-              "description": "Speed as a ratio to the game's speed reference, when a stat table gives it. Stored only so the band can be recomputed.",
+              "description": "The unit's speed figure divided by the speed reference's figure in the games registry, rounded to two decimals; the validator bands the stored, rounded value. Divide only figures on the same scale: both from the game's own data (unitless game values, such as the Command & Conquer Wiki's land speed, count), or both in real units (convert km/h and m/s). A number whose scale the source does not explain, or that is on a different scale from the reference's figure, does not count. Record it whenever such a figure exists, the reference unit itself included (1). For a series game, take the figure as the Series games convention says, and name the title and model in mobility.notes. With no usable figure, leave it out, set the band from words (see Speed bands) and add an uncertain entry for mobility/speed. Stored only so the band can be recomputed; the generator and app never show or use it.",
               "type": "number"
             }
           }
@@ -215,7 +217,7 @@
               "x-vocab": "sizes"
             },
             "count": {
-              "description": "Bodies per purchase in the source, e.g. 5 for a squad. Default 1.",
+              "description": "Bodies per purchase in the source, e.g. 5 for a squad. Leave it out when it is 1.",
               "type": "integer",
               "minimum": 1
             },
@@ -254,12 +256,12 @@
           "required": ["sight", "traits", "basis"],
           "properties": {
             "sight": {
-              "description": "How far it sees, judged against the game's other units.",
+              "description": "How far it sees, compared with the game's reference unit (see Sight bands).",
               "type": "string",
               "x-vocab": "sight-bands"
             },
             "traits": {
-              "description": "Always-on sensor traits. Required, so 'none' is an explicit empty list.",
+              "description": "Always-on sensor traits the stock unit has in every loadout, as the source gives them (see Sensor traits). A sensor from a loadout pick, an upgrade or veterancy goes in sensors.notes. Never proposed. Required, so none is an explicit empty list.",
               "type": "array",
               "maxItems": 3,
               "items": {
@@ -268,7 +270,7 @@
               }
             },
             "basis": {
-              "description": "in-game = from the source: its vision range compared with the game's other units, and any sensor traits it has; proposal = the source gives no vision range, so this is our suggestion for a player version. When the two are mixed, say which part is which in notes.",
+              "description": "Covers the sight band only. in-game = a source or the registry gives this unit's sight in a form Sight bands accepts: its own figure, a grade on the game's word scale, or a statement about a group it belongs to (\"all infantry see 35 m\", \"most units see 35 m\"). proposal = none of these, or the game has no fog of war; the band is then medium. Sensor traits are never proposals: list only the ones the source gives, so a mixed case cannot happen.",
               "enum": ["in-game", "proposal"]
             },
             "notes": {
@@ -277,7 +279,7 @@
           }
         },
         "armament": {
-          "description": "Weapons, in slot order. Empty for unarmed units.",
+          "description": "Weapons, main weapon first, counted by the Weapon entries rules in the Conventions. Empty for unarmed units.",
           "type": "array",
           "items": {
             "$ref": "#/$defs/weapon"
@@ -289,16 +291,16 @@
           "required": ["model", "basis"],
           "properties": {
             "model": {
-              "description": "Who operates the unit.",
+              "description": "Who operates the unit. In-game: copy the source's seats. A group the source moves as one unit: squad. Otherwise solo, unless the coding rules on Crew models give driver-gunner or remote.",
               "type": "string",
               "x-vocab": "crew-models"
             },
             "basis": {
-              "description": "in-game = the source has these seats; lore = the source describes a crew; proposal = our suggestion for a player version.",
-              "enum": ["in-game", "lore", "proposal"]
+              "description": "in-game = players sit in this unit in the source and its operating seats are copied from there. That happens only for units players drive in a game whose registry control is piloted or both (Battlefield, PlanetSide 2, Foxhole, WARDOGS, Renegade, MechWarrior), not for AI enemies there. It is also in-game when the source moves a group of soldiers or tiny drones as one unit under one order (a squad). proposal = our pick for a player version: every other unit, including every RTS vehicle, aircraft, walker, drone and lone soldier. A crew named only in background text or voice lines changes nothing; mention it in crew.notes. The basis covers the operating seats (model, seats, solo fallback). Passenger seats are always copied from the source.",
+              "enum": ["in-game", "proposal"]
             },
             "solo_fallback": {
-              "description": "For multi-seat models: what a lone player can do.",
+              "description": "Only for multi-seat crew models (driver-gunner, driver-gunner-commander): what a lone player can do. Leave it out for solo, squad and remote.",
               "type": "string",
               "x-vocab": "solo-fallback"
             },
@@ -343,13 +345,14 @@
           }
         },
         "abilities": {
+          "description": "One entry per button the unit has in the source, with these rules. Two buttons that undo each other (siege and unsiege, land and take off) are one entry. Each choice for one loadout button is its own entry, and the choices share an exclusive_group (flares, ECM or extinguisher). A build or call-in menu is one entry per pattern its items serve (all cover pieces are one build-cover entry, mines one lay-mines entry), plus one entry for all the items that no pattern fits; name them in its summary. Two separate buttons that use the same pattern for different jobs (a grenade and a sticky bomb) stay two entries. A button that only changes numbers (a zoom) is left out. Add a passive or triggered entry only when Paired entries asks for one, or when the source names the effect (as an ability, perk, upgrade or loadout pick) and it adds a mechanic, not just numbers. If a word-list term says the same, use the term instead (an always-on scanner is a sensor trait). Leave out passives that only change numbers (more armour, faster reload, less sway), and note them in the matching field's notes. The act of buying an upgrade is never an ability: record what it adds (a weapon, an ability with source upgrade, or a term). An ability that changes something else, such as turning a building into a barracks, is still an ability. Shared mechanics, universal keys and side-wide powers are left out (see Conventions).",
           "type": "array",
           "items": {
             "$ref": "#/$defs/ability"
           }
         },
         "modes": {
-          "description": "Second forms: transform, deploy or siege modes.",
+          "description": "Second forms that change how the unit moves or what it is: deploy, siege and transform modes. The base form is the form the unit is built or bought in; if it can be built in either, it is the form whose name the unit carries. A weapon swap alone is not a mode (see Paired entries). Write only the parts that change from the base form; the unit's own class, body, armour and mobility hold for every mode that leaves them out.",
           "type": "array",
           "maxItems": 3,
           "items": {
@@ -379,12 +382,17 @@
               }
             },
             "basis": {
+              "description": "in-game = the source shows what happens when this unit dies: a wreck others can work on, a blast that hurts what is near, crew or a pilot getting out on their own, or, for a unit players drive in a game where they come back after dying (registry control piloted or both), the player going back to pick again. proposal = the source shows nothing special, because the unit is simply gone (almost every RTS unit, and AI enemies in shooters). Then code the default from decision 3C: bail-out for a crewed machine that is not infantry, respawn for everything else. When the source shows an outcome, code only that, with basis in-game, and never add the default. An outcome the unit gets on its own counts even when it needs veterancy or happens only by chance; give the condition in on_death.notes. A power or upgrade the player picks or buys for the whole faction does not count.",
               "enum": ["in-game", "proposal"]
+            },
+            "notes": {
+              "description": "Facts about the death that don't change the outcome: riders killed with the vehicle, a short window to jump out by hand, weapons, crates or loot left for pickup or for crafting, the condition on an outcome (only with veterancy, only by chance), or a power or upgrade the player picks or buys for the whole faction that changes what happens when units die (an RA3 protocol, a Generals general's upgrade). Such a picked power is not the unit's own outcome. A built-in rule that applies to the unit without any pick, such as a faction whose vehicle crews always bail out, is an outcome.",
+              "type": "string"
             }
           }
         },
         "strengths": {
-          "description": "What this unit is good at; links describe the unit itself.",
+          "description": "What this unit is good at; links describe the unit itself. See Matchups under Conventions.",
           "type": "array",
           "minItems": 1,
           "items": {
@@ -392,7 +400,7 @@
           }
         },
         "weaknesses": {
-          "description": "Where it falls short; links describe the unit itself.",
+          "description": "Where it falls short; links describe the unit itself. See Matchups under Conventions.",
           "type": "array",
           "minItems": 1,
           "items": {
@@ -400,7 +408,7 @@
           }
         },
         "countered_by": {
-          "description": "What beats it; links describe the enemy.",
+          "description": "What beats it; links describe the enemy. See Matchups under Conventions.",
           "type": "array",
           "minItems": 1,
           "items": {
@@ -408,7 +416,7 @@
           }
         },
         "counters": {
-          "description": "What it beats; links describe the enemy.",
+          "description": "What it beats; links describe the enemy. See Matchups under Conventions.",
           "type": "array",
           "minItems": 1,
           "items": {
@@ -416,7 +424,7 @@
           }
         },
         "combos": {
-          "description": "Notable combinations; links describe the teammate or the setup. Required, so 'none known' is an explicit empty list.",
+          "description": "Notable combinations; links describe the teammate or the setup. Required, so 'none known' is an explicit empty list. See Matchups under Conventions.",
           "type": "array",
           "items": {
             "$ref": "common.schema.json#/$defs/relation"
@@ -428,12 +436,13 @@
           "maxLength": 200
         },
         "as_player": {
-          "description": "Two or three lines: how it would play if one player controlled it.",
+          "description": "Two or three lines: how it plays for the player who buys it, and what each other seat adds, if there are any. In a vehicle with several seats the buyer drives and fires the main weapon.",
           "type": "string",
           "maxLength": 500,
           "x-provenance": "proposal"
         },
         "sources": {
+          "description": "The pages this entry rests on; every field rule reads them together. When the unit's weapons change by passenger, mode or loadout and one page lists those weapons one by one, that page must be among them. Cite a mechanic's own page (flares, an extinguisher) when it gives a figure the entry uses. A page read but left out for lack of room goes in uncertain, saying what it shows; a band that rests on it is marked uncertain.",
           "type": "array",
           "minItems": 1,
           "maxItems": 3,
@@ -458,7 +467,7 @@
           "type": "string"
         },
         "lineage": {
-          "description": "Shared id for the same design across games, e.g. 'terror-drone' for the RA2 and RA3 versions.",
+          "description": "Shared id for the same design in two or more games of data/games.json. Link units doing the same job that have the same or nearly the same name (ignore words such as Squad, Team or Mk II), or that a source presents as the same unit in another game. The id is the slug of that unit's id in the earliest such game. If it has no id yet, make one from its name by the id rules, leaving out words such as Squad or Team. Examples: terror-drone (Red Alert 2 and 3), ifv (Red Alert 2's IFV and Red Alert 3's Multigunner IFV), riflemen (Company of Heroes 1 to 3). Leave it out when no other registry game has the design. An expansion is part of its game. A game outside the registry, or the same real-world vehicle in an unrelated series, does not count.",
           "$ref": "common.schema.json#/$defs/slug"
         },
         "variant_of": {
@@ -466,6 +475,7 @@
           "$ref": "common.schema.json#/$defs/unitId"
         },
         "fit_notes": {
+          "description": "Where no word-list term fitted well. Every gap goes here, in the unit file: the gap report for the next word-list version reads only the files.",
           "type": "array",
           "items": {
             "$ref": "common.schema.json#/$defs/fitNote"
@@ -505,43 +515,45 @@
           "type": "string"
         },
         "slot": {
-          "description": "primary / secondary; alternate = switched to by an ability or mode; passenger = depends on who rides inside (one entry per distinct result); acquired = gained during play, e.g. salvaged from a kill; option = one of several loadout choices (see option_group).",
+          "description": "primary = the main weapon, listed first. There is at most one, chosen among the weapons the base form always has. In a shooter it is the weapon the driver seat has selected at spawn (its first fire button); if two loadout groups of the driver seat each have a default, the one in the first weapon slot is primary and the other is secondary. If the driver seat fires nothing in the source with a full crew (a Foxhole light tank, a PlanetSide 2 Sunderer), the main gun of the first gun seat in the source's seat order is primary. In an RTS, where one attack order fires everything, it is the weapon most members carry, otherwise the one the source lists first; the unit's roles never decide it. secondary = any other weapon the base form always has: on its own key, fired by another seat (a gunner's main gun), or used by the same attack order with the primary or against targets the primary cannot hit. A weapon that a mode adds while the primary keeps firing is also secondary, with mode. alternate = swapped in by a button the unit has (an ability or a mode); the weapon it replaces, usually the primary, is silent meanwhile. A weapon the unit picks by itself for the target or range is not alternate. passenger = set by who rides in a passenger-module seat. One entry per rider unit that changes the weapon, counting riders of every faction and expansion that can get in, captured or allied ones too. When the source says any unit of a role gives the same result (any engineer), make one entry for that role instead. acquired = gained during play: taken from a kill or a wreck (with a triggered ability, see Paired entries), or added or swapped in by a bought upgrade, research or a rank (no ability). Say which in condition. option = a loadout choice that is not fitted by default (see option_group).",
           "enum": ["primary", "secondary", "alternate", "passenger", "acquired", "option"]
         },
         "seat": {
-          "description": "Which seat fires it in a player version. Default: driver.",
+          "description": "Proposal, or copied from the source when crew.basis is in-game. Which seat fires it. Leave it out when the driver fires it: that covers every weapon of a solo, squad or remote unit and the driver's own weapons in a multi-seat unit. Write it only for another seat the unit has: gunner or commander when the crew model or crew.seats has that seat, or a passenger seat when it matches crew.passengers.kind. When crew.basis is in-game, write the seat that fires it in the source when every seat is full. A weapon the source hands to a lone driver whenever its own seat is empty (as in Renegade) still belongs to that seat; say in crew.notes that it passes to the driver. When crew.basis is proposal, follow decision 2A: the driver fires the main weapon and any gun that turns with it, and every other weapon on its own mount that the source fires at the same time as the main weapon goes to the gunner.",
           "type": "string",
-          "x-vocab": "seat-roles",
-          "x-provenance": "proposal"
+          "x-vocab": "seat-roles"
         },
         "family": {
           "type": "string",
           "x-vocab": "weapon-families"
         },
         "damage": {
+          "description": "What a hit does to the target. Decide in this order and stop at the first step that fits. 1. It restores health to its target: repair. A weapon that hurts its target and heals its user, such as a drain beam, is not this step. 2. It does no damage at all (it only stuns, pins, slows or marks): its family's default damage. Put the effect in traits and say in the summary that it does no damage. 3. The game's registry note tells you to record this kind of weapon as a damage type: that type. 4. The game has a damage_map in data/games.json, and the sources cited for this unit give this weapon one game damage category that the map lists: the mapped type. The same name written out in words counts. Use it even when the family's list leaves it out, and record that break in atypical. Never change the family to make the damage fit. 5. Anything else (no map, no category given for this weapon on this unit, a category the map leaves out, or different categories against different targets): the family's default damage, with two exceptions. Check them in this order, and use one only when the family allows the type. Armour-piercing when the sources call the weapon anti-tank or anti-armour, say it is built to kill vehicles, or give it a bonus against armoured targets. Explosive when it is built mainly to bring down aircraft, or its hit is a blast that hurts an area. Area damage is also the splash trait, so a shell can be armour-piercing and splash at once.",
           "type": "string",
           "x-vocab": "damage-types",
           "x-required-unless": "family is adaptive"
         },
         "mount": {
-          "description": "Our proposed mount for a player version.",
+          "description": "Our proposed mount for a player version, picked from the source's physical mount by the Aim / mount tie-break.",
           "type": "string",
           "x-vocab": "aim-models",
           "x-provenance": "proposal",
           "x-required-unless": "family is adaptive"
         },
         "delivery": {
+          "description": "How the shot reaches the target, as the cited sources describe it. Use attach, ram, guided, lock-on, lobbed, drop, place or melee when the sources describe that way of hitting. Otherwise pick one of three. A shot seen travelling is projectile; a thrown or launched object such as a shuriken, an arrow or a rocket counts. A hit that lands the moment it is fired is hitscan. A beam kept on the target, whose effect lasts or builds while it stays on, is beam. When the sources do not say how it travels, use the family's default delivery. A rate of fire, the weapon's name or a hidden hit roll does not count as saying. One attack button is one weapon entry, even when it works differently on different targets: code the delivery that comes first in this order: attach, ram, guided, lock-on, lobbed, drop, place, beam, projectile, hitscan, melee. Say what it does to the other targets in the summary, and list every target it can hit in can_target.",
           "type": "string",
           "x-vocab": "weapon-delivery",
           "x-required-unless": "family is adaptive"
         },
         "range": {
-          "description": "Relative to the source's other weapons.",
+          "description": "One band per weapon, from its longest reach against any target, compared with the game's reference weapon and with the unit's own sight (see Range bands); not compared with this unit's other weapons.",
           "type": "string",
           "x-vocab": "range-bands",
           "x-required-unless": "family is adaptive"
         },
         "can_target": {
+          "description": "Every kind of target the weapon can be fired at and hurt in the source, even a little: weak, poor or not effective still count. Leave a kind out when the sources say the weapon cannot attack it or does no damage to it, or when the game has no such targets. Then, in this order: 1. A weapon that does no damage (it repairs, stuns, pins or marks), or that latches on, drains or takes over minds, lists only the kinds the sources name. 2. A lock-on weapon lists only what it can lock onto, unless the sources say it can also fire without a lock. If they do not say what it locks onto, an anti-tank one lists ground vehicles and an anti-air one low air and high air. 3. Commanded games only: a weapon the sources label by its targets (anti-infantry, anti-vehicle, anti-air) or say hits only some kinds lists those kinds, plus any kind another cited source says it hurts. Words such as anything else name every kind. A label on the unit, such as its role, does not count. 4. Any other weapon lists every ground kind its family allows: infantry, ground vehicles and structures. A source that says ground or surface means these. Structures: under steps 1 and 3, and for a family that leaves them out, list them only when the sources say the weapon damages buildings; a mention of a base is not enough. Air: in a commanded game, list low air and high air only when the sources say the weapon attacks air units, unless the game splits its fliers and the weapon reaches only some. In a piloted game (control piloted or both in data/games.json), a weapon the player aims also lists low air when its family allows it. High air and naval follow their coding rules in Target types. A flier that can be hit only while it stands on the ground is not an air target.",
           "type": "array",
           "items": {
             "type": "string",
@@ -566,11 +578,11 @@
           "type": "string"
         },
         "when": {
-          "description": "For passenger, alternate or acquired weapons: a typed link saying when it applies, e.g. the passenger's unit id (unit:...) or role (role:engineer).",
+          "description": "Passenger weapons only, and required there. Write the rider as unit:<id>, built from its in-game name by the id rules (see Ids in the Conventions), even if that unit is not researched yet. For a role entry, write role:<role>. Leave it out on every other slot.",
           "$ref": "common.schema.json#/$defs/ref"
         },
         "condition": {
-          "description": "The same condition in plain words.",
+          "description": "The condition in plain words. Required for passenger, alternate and acquired weapons. For a passenger weapon, name the rider, its faction and any expansion.",
           "type": "string"
         },
         "patterns": {
@@ -581,15 +593,15 @@
           }
         },
         "mode": {
-          "description": "Mode id from the unit's modes, if the weapon only works in that mode.",
+          "description": "Mode id from the unit's modes, when the weapon works only in that mode. A weapon without a mode works in the base form and in every mode, unless an alternate with that mode replaces it. An alternate with a mode replaces another weapon, usually the primary, in that mode. A weapon that a mode adds while the primary keeps firing is secondary, with the mode. If a mode silences a weapon and nothing replaces it, say so in the mode's summary.",
           "$ref": "common.schema.json#/$defs/slug"
         },
         "option_group": {
-          "description": "For option weapons: options in the same group exclude each other.",
+          "description": "Groups weapons that exclude each other. A loadout group holds every choice for one place in the loadout. The default choice keeps its primary or secondary slot and has default: true; the other choices are option. A place that starts empty has no default. An upgrade group holds acquired weapons from upgrades that exclude each other, with no default. How a choice is unlocked (score, rank, progression) is not recorded.",
           "$ref": "common.schema.json#/$defs/slug"
         },
         "default": {
-          "description": "For option weapons: the one fitted by default.",
+          "description": "true on the default choice of a loadout group, and nowhere else.",
           "type": "boolean"
         }
       },
@@ -609,7 +621,7 @@
     "ability": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "kind", "summary", "patterns"],
+      "required": ["name", "kind", "summary", "patterns", "source"],
       "properties": {
         "name": {
           "description": "In-game ability name, for reference only.",
@@ -620,13 +632,12 @@
           "x-vocab": "ability-kinds"
         },
         "seat": {
-          "description": "Which seat triggers it in a player version. Default: driver.",
+          "description": "Proposal, or copied from the source when crew.basis is in-game. Which seat triggers it. Leave it out when the driver does. A passive ability has no seat. Write it only for another seat the unit has, as for weapons.",
           "type": "string",
-          "x-vocab": "seat-roles",
-          "x-provenance": "proposal"
+          "x-vocab": "seat-roles"
         },
         "cooldown": {
-          "description": "How often it can be used, if the source says or it is clear.",
+          "description": "Band of the cooldown figure (see Cooldown bands). Look for the figure on the unit's page and on the page of the mechanic itself (flares, an extinguisher). Leave it out when no source gives one or the ability has no wait; a per-life ability is per-life without a figure.",
           "type": "string",
           "x-vocab": "cooldown-bands"
         },
@@ -634,15 +645,14 @@
           "type": "string"
         },
         "patterns": {
-          "description": "Every ability links to at least one mechanic pattern.",
+          "description": "The mechanic patterns this ability is an example of. If none fits, keep the ability, leave this list empty and add a fit_note at abilities/<i>/patterns that names the mechanic wanted.",
           "type": "array",
-          "minItems": 1,
           "items": {
             "$ref": "common.schema.json#/$defs/slug"
           }
         },
         "source": {
-          "description": "Where the ability comes from. Default: innate.",
+          "description": "Where the ability comes from. Always write it, innate included.",
           "type": "string",
           "x-vocab": "ability-sources"
         },
@@ -673,6 +683,7 @@
           "x-vocab": "classes"
         },
         "mobility": {
+          "description": "Only when the mode moves differently from the base form: a new base, handling or speed. Leave it out when the mode keeps the unit's movement or cannot move at all; when it cannot move, say so in the mode's summary. Its handling follows the Handling tie-break from the mode's own mobility type.",
           "type": "object",
           "additionalProperties": false,
           "required": ["base"],
@@ -711,6 +722,7 @@
           }
         },
         "armour": {
+          "description": "Only when the mode's armour class or models differ from the unit's. Leave it out when they stay the same.",
           "type": "object",
           "additionalProperties": false,
           "required": ["class"],

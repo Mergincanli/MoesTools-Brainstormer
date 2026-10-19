@@ -106,12 +106,33 @@ A six-word copy-check of every text field against all the pages read (wiki text,
   - CoH1 and CoH2 use per-unit armour numbers, and the CoH1 infobox labels (Medium, Heavy) are not used consistently.
   - WiC, Wargame and Broken Arrow use numbers.
 
-  Set the armour class per unit. Medium tanks are heavy, light tanks and armoured cars medium or light, and the King Tiger and Tiger super-heavy or heavy by size and health.
+  Set the armour class per unit with the armour-class order. Medium and heavy tanks, the Tiger and King Tiger included, are heavy; light tanks and armoured cars are medium. A tank is super-heavy only by check A.
 - **No damage maps for CoH1, CoH2, WiC or Broken Arrow.** Their weapons have penetration values, not named types. Broken Arrow's KE and HEAT columns describe armour, and rifles also deal KE.
+
+## Game-wide mechanics
+
+Mechanics that belong to the game, not the unit (see Shared mechanics and universal keys in the Conventions). Leave them off every unit's weapons and abilities. A unit that does one of them better or worse than the rest says so in its strengths or weaknesses.
+
+### Company of Heroes (`coh1`)
+
+Written for pilot round 1, from the Company of Heroes Wiki's Infantry, Weapon Team and Veterancy pages.
+
+Retreat (retreat-to-base); reinforce (reinforce-squad); veterancy (earn-veterancy); re-crewing abandoned team weapons (recover-wreck); picking up dropped weapons (leech-weapon-on-kill); garrison (carry-passengers); point capture (a game-mode rule, no pattern; a unit that captures faster says so in strengths). Who has each:
+
+- **Retreat** (retreat-to-base): every infantry squad can retreat to its headquarters. The wiki says vehicles and weapon teams normally lack it.
+- **Reinforce** (reinforce-squad): infantry squads and most weapon teams, near a base building, a reinforcing vehicle such as the M3 Halftrack, or another reinforcement point. One-man units (the Sniper, officers), some fixed weapon teams and all vehicles cannot.
+- **Veterancy** (earn-veterancy): each side gets it in its own way. American units earn it from their own kills. Panzer Elite units earn it, share part of each kill with units nearby, and the player picks an offensive or a defensive bonus at each level. The Wehrmacht buys it at the Kampfkraft Center for whole groups (infantry, support, vehicles, tanks), a side-wide upgrade; the King Tiger and the Goliath never get it. Most British units get none: the Lieutenant, the Captain and the Cromwell Command Tank earn it and pass bonuses to units near them, an aura recorded on those three units.
+- **Re-crewing abandoned team weapons** (recover-wreck): most infantry squads can take over a team weapon whose crew is gone; part of the squad becomes the new weapon team. Only infantry can.
+- **Picking up dropped weapons** (leech-weapon-on-kill): most infantry squads can pick up special weapons left on the ground. Most basic weapons (rifles, pistols, submachine guns) are never dropped. Only infantry can.
+- **Garrison** (carry-passengers, recorded on the building or transport, not on the riders): every infantry squad can enter neutral or friendly buildings and infantry transports. Vehicles and weapon teams cannot.
+- **Point capture** (a game-mode rule, no pattern): almost every infantry squad captures strategic points. A unit that captures faster or slower says so in strengths or weaknesses (Riflemen capture at one and a half times the usual rate, Panzer Grenadiers at three quarters). Very few vehicles or weapon teams can capture; the Jeep is one.
+
+Company of Heroes 2 and 3, World in Conflict, Wargame and Broken Arrow have no list yet. Write one before any of their units is coded.
 
 ## Research notes for the r4 agents
 
 - **Company of Heroes Wiki** (https://companyofheroes.fandom.com/api.php, `action=parse&prop=wikitext`). It covers all three games, but CoH2 and CoH3 pages are thin. CoH1 coverage is good: infobox fields `unit_cost`, `prereq`, `production_struc` and `speed`. CoH2 page names carry "(CoH 2)", "(CoH2)" or "(COH2)" inconsistently, so search before guessing.
+- **Official role lines.** The role field in the CoH wiki infobox (for example Core Infantry) and the production text quoted on building pages are in-game text; the wiki's own prose is not.
 - **CoH1:** the "American Structures" page carries a delete tag; use the individual building pages instead (Barracks, Motor Pool, Supply Yard and so on). The Changelog page has the 2.602 notes. The Definitive Edition (Relic, due early 2027) may change balance.
 - **CoH2:**
   - Prices and speeds on the wiki often predate the final patch.

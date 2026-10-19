@@ -546,13 +546,92 @@ function fieldsDocs() {
     'Every field of every record type, generated from the JSON schemas in `schemas/`. ' +
     '**Vocabulary** names the fixed word list a field draws from (see [vocabularies](vocabularies.md)).\n',
     '## Conventions\n',
-    '- **Ids.** Lower-case, ASCII, words joined by dashes; apostrophes and full stops dropped, `&` becomes `and`, numbers and roman numerals kept (`mammoth-mk-ii`, `v4-rocket-launcher`). Unit ids are `<game>.<faction>.<slug>`; pattern ids are generic English, verb first (`infest-vehicle`). Expansions are never game ids. The faction id `shared` is reserved for units every side can field.',
+    '- **Ids.** Lower-case, ASCII, words joined by dashes; apostrophes and full stops dropped, `&` becomes `and`, numbers and roman numerals kept (`mammoth-mk-ii`, `v4-rocket-launcher`). Unit ids are `<game>.<faction>.<slug>`; pattern ids are generic English, verb first (`infest-vehicle`). Expansions are never game ids. The faction id `shared` is reserved for units every side can field. ' +
+    'A link to a unit not yet researched (a rider, a rival in matchups, a lineage) uses the slug its entry would get: its in-game name by these rules, dropping a final word such as Squad or Team (Riflemen Squad -> `riflemen`).',
     '- **Typed links** are written `kind:id`, such as `role:anti-air`, `size:<=small` or `hits:high-air`. A link always describes a unit: in strengths, weaknesses and pattern requirements it describes the unit itself; in *counters* the unit it beats; in *countered by* the unit that beats it; in combos the teammate. Ranked kinds accept `<=` and `>=`. ' +
     f`Kinds: ${kinds}.`,
-    "- **Proposals vs facts.** Fields marked *proposal* (handling, weapon mount and seat, flavour affinity and 'as a player'), and crew, on-death and sensors wherever their basis says 'proposal', are our design suggestions for a player version. The checker skips them and confidence covers only sourced facts.",
-    '- **Weapons vs abilities.** Anything fired with an attack button is a weapon. An ability exists only when the source has a separate button, cooldown, toggle, or a triggered or passive effect. A weapon swapped in by an ability gets both: an `alternate` weapon and a `toggle` ability, linking the same pattern. A weapon gained on a kill gets an `acquired` weapon and a `triggered` ability. Unarmed units have an empty weapon list.',
+    '- **Matchups.** Write the reason first, then pick the link that names the part behind it. ' +
+    '(1) Name the other unit the way the sources do: by its job (`role:anti-armour`, `role:anti-air`) when they name a job; by what it fires when they name a weapon (`weapon:machine-gun`) or a kind of harm (`damage:electric`); by what it is (`class:aircraft`, `class:infantry`, `armour-class:heavy`) when they name a kind of unit. When they name only a unit, use the same order for what makes that unit win. ' +
+    '(2) For fliers, use `class:aircraft` when the sources mean air units in general; use `target:low-air` or `target:high-air` only when the point holds for one layer. ' +
+    '(3) Prefer word-list and pattern links. Add a `unit:` link only for a same-game partner or rival the sources name, next to a word-list or pattern link for the same reason. A link to the unit itself is fine in combos when the sources say it works best in numbers. ' +
+    "(4) In strengths and weaknesses, give the unit's own value with no `<=` or `>=` (`range:long`, not `range:>=long`; `passengers:1`, not `passengers:>=1`). Use comparators only in counters, countered by and combos, for a group of units. " +
+    '(5) Something the unit lacks (no weapon reaches aircraft) is not a link of its own: put the enemy that exploits it in countered by (`class:aircraft`), and if you also list it as a weakness, hang it on the part that causes it and name the gap in the reason. ' +
+    '(6) The same enemy may sit in counters and in countered by only when the two reasons name different situations. Otherwise put it where the head-on fight at equal cost ends, and give the tactic that turns it in the reason. ' +
+    '(7) Most important first; keep each list short, about two to five. A link to a planned pattern is fine; its warning clears when the pattern is written. ' +
+    '(8) A `unit:` link to a unit not yet researched uses the slug its entry would get (see Ids).',
+    "- **Proposals vs facts.** Fields marked *proposal* (handling, weapon mount, flavour affinity and 'as a player'), weapon and ability seats unless crew.basis is in-game, crew and on-death wherever their basis says 'proposal', and the sight band where sensors.basis says 'proposal', are our design suggestions for a player version. The checker skips them and confidence covers only sourced facts.",
+    '- **Weapons vs abilities.** Anything fired with an attack button is a weapon. A shot fired from its own ability button (a grenade, a rocket volley on a cooldown) is an ability, not a weapon. Abilities are counted by the rule under `abilities[]` below. ' +
+    'A passive or triggered effect is its own ability only when that rule asks for one: Paired entries asks for it, or the source names the effect and it adds a mechanic. ' +
+    "An effect that is part of how a weapon works (an infester hidden inside its host, or escaping when the host dies) stays in that weapon's summary and patterns. " +
+    'A swap is an ability only when the source lists it as an ability or command with its own name (Electro-Stasis Ray, Leech Beam, special-ammo commands). ' +
+    "Switching a seat's weapons with number keys or a scroll wheel, as in shooters, is not: each weapon is its own primary, secondary or option entry. " +
+    "A weapon may link a pattern whose generator lists only ability kinds (the drone's claws link `infest-vehicle`). The generator makes that an ability on a card, so do not add one to the source unit. Unarmed units have an empty weapon list.",
+    '- **Weapon entries.** Count weapon entries by these rules. ' +
+    '(1) One in-game weapon is one entry, even when it acts differently against different targets. Code its family and traits as it works against its main target: the target its primary role is about, or else the one the source names first. ' +
+    'Its damage and delivery follow their own rules (`armament[].damage` step 5 when its damage category differs by target; the order under `armament[].delivery`). List every target it can hit, and put the other behaviour in the summary. ' +
+    "(2) Among the fixed weapons of one seat, make one entry per family. Copies of one gun are one entry (twin cannons, a squad's five rifles). " +
+    "So are different guns of one family that the seat uses on the same attack order, at once or each against its own kind of target (a sergeant's carbine with the squad's rifles, a ground battery with an air battery). " +
+    'Name them all and list every target any of them can hit. A gun of another family is its own entry. A gun of the same family on its own key or button (a pistol beside a rifle) is its own entry too. ' +
+    'Where players set their own fire groups (MechWarrior), each family on a seat is one entry. ' +
+    '(3) Rule 2 never merges a loadout choice, or a weapon the unit does not always have. Alternate, passenger, acquired and option weapons are counted by their own rules. ' +
+    '(4) Versions of one weapon across the titles of a series entry (the same place in the loadout, renamed or retuned) are one entry. Code the version the Series games convention picks, even when an older version works differently, and put the differences in the summary. ' +
+    '(5) Loadout choices for one place are one entry when they would get the same family, damage, delivery, target list and traits. Name them all; range and other numbers may differ. Otherwise each choice is its own entry (Smart Rockets home in, so they are apart). ' +
+    '(6) A weapon whose kind depends on the donor is one adaptive acquired entry. Do not list the donors. Weapons gained in fixed steps (salvage crates) get one acquired entry per step that changes the family. ' +
+    '(7) Passenger weapons follow the passenger slot rule. Riders who fire their own guns from ports give no entries. ' +
+    '(8) Never record an upgrade that only changes numbers, or a weapon the unit gets through a shared mechanic or a universal key (see Shared mechanics).',
+    "- **Main weapon.** A unit's main weapon is its one primary entry (see `armament[].slot`). Every other weapon the base form always has is secondary, including a second seat's main gun. " +
+    "The roles rules read the main weapon from this entry, so it is chosen without looking at the unit's roles.",
+    '- **Paired entries.** Some weapons always come with an ability, and both entries of the pair link the same patterns. ' +
+    'A weapon swapped in by an ability is an alternate weapon plus a toggle ability (deploy when the unit cannot move in one of the two states). ' +
+    "Both link one swap pattern: the mode's own pattern (its `modes[].via`, such as `deploy-siege-mode`) when the swap comes with a mode, otherwise `switch-weapon-mode`. " +
+    'Both also link the pattern of what the swapped-in weapon does, if one fits. The weapon that is swapped out links no swap pattern. ' +
+    'A weapon gained from a kill or a wreck is an acquired weapon plus a triggered ability, both linking the gain pattern (`leech-weapon-on-kill`). ' +
+    'A weapon added by a bought upgrade or research has no ability; it links `upgrade-in-field` when the upgrade reaches units already in the field (bought on the unit, or for all of them at a building), and no pattern when only units built later get it. ' +
+    'A weapon that comes with a rank links `earn-veterancy`. ' +
+    'A unit with passenger seats gets one passive ability for them, source innate. ' +
+    'It links `passenger-sets-weapon` when riders set its weapon or fire their own from it (passenger-module or passenger-firing seats), and `carry-passengers` otherwise (passenger-cargo seats), never both; each passenger weapon links `passenger-sets-weapon` too. ' +
+    'The weapon used when nobody rides inside is a plain primary and links no passenger pattern. Load and unload buttons stay off (universal keys).',
+    "- **Shared mechanics and universal keys.** Some mechanics belong to the game, not the unit: every unit of its class has them, on its side or in the whole game, apart from a few named exceptions. " +
+    'Examples are basic orders (move, attack, stop, hold, patrol, stances), Company of Heroes infantry that retreat, reinforce, garrison, capture points, pick up dropped weapons and re-crew abandoned guns, and veterancy that every unit earns. ' +
+    "Leave them off the unit's weapons and abilities. " +
+    "Each game's list is written once, before any unit of that game is coded, in that batch's registry note (`research/registry-notes/games-r<batch>.md`, section Game-wide mechanics). " +
+    'It names each mechanic, the units that lack it, and the pattern it would link or the pattern wanted. Coders follow the list. ' +
+    'A coder who meets a mechanic that may be game-wide but is not listed codes it on the unit and adds a fit_note, and the merge pass decides. ' +
+    'If this unit does a listed mechanic better or worse than the rest (it captures faster), say so in its strengths or weaknesses. ' +
+    'Leave off actions that match one of our universal keys (enter or leave, pick up, shake off, bail out, switch seat, ping, evict passengers), even when the source gives the unit its own button for it, such as Evacuate. ' +
+    'But record what only some unit types gain from such an action (vehicles that turn salvage crates into weapons). Also record a button that does more than the key (troops that rappel onto a building and clear it). ' +
+    "A side-wide power (a protocol, doctrine or general's power) that changes every unit of a class is left off too. " +
+    'A power that gives named unit types a new button or a new effect is recorded on each of them, with source commander-power.',
+    "- **Pattern links.** Link a pattern when the ability or weapon gives the player the same interaction and the enemy the same counterplay as the pattern's summary. " +
+    "Fiction, delivery and size don't matter (see Granularity). " +
+    'Link a second pattern only when it passes the same test on its own: an ECM that hides you from radar and breaks locks links `jam-sensors` and `fire-countermeasures`. ' +
+    'Do not link a pattern for a part that only looks like it. `capture-structure` needs an enemy building, so taking over a neutral one is not it. ' +
+    'A thrown sticky bomb is `throw-explosive`, not `infest-vehicle`, because nobody latches on. ' +
+    'Ending your own burning or disabled state on a key links `heal-self`, unless the patterns group adds a pattern for it. ' +
+    'A retreat-to-base order is a game-wide mechanic in most games (see Shared mechanics); where a unit does record one, it links `retreat-to-base`, never `dash` or `brace`. ' +
+    "When `research/registry-notes/patterns.md` disagrees with a pattern's summary, the summary wins. " +
+    'If nothing fits, keep the ability, leave its patterns empty and add a fit_note (see `abilities[].patterns`). ' +
+    'Link any registered id, written or planned. Never edit pattern files: the merge pass fills their source_units with `npm run sync-patterns`.',
     '- **Granularity.** Same player-facing interaction and same counterplay = one pattern; differences in fiction, delivery or size are variants. Plain mechanics (sprint, healing yourself, stat buff) get generic patterns that stay out of the top-30 list. ' +
-    'A pattern that mirrors a word-list term (a weapon trait or family, an armour model, a sensor trait) is the home for the ability version only; a weapon or always-on effect uses the term.',
+    'A pattern that mirrors a word-list term (a weapon trait or family, an armour model, a sensor trait) is the home for the ability version only; a weapon or always-on effect uses the term. ' +
+    'A swapped-in weapon is still a weapon, so neither it nor its toggle links a pattern that mirrors its family or trait (a drain beam on a toggle links no `drain-health`). ' +
+    'The mirroring patterns are `mark-target`, `suppress-with-fire`, `leave-hazard-zone`, `drain-health`, `launch-drones`, `reveal-area` and `heal-self`.',
+    "- **Bands with numbers.** Ratio bands (speed, sight, range) compare a unit with its own game's reference unit, named in the games registry. A ratio exactly on an edge goes to the band nearer medium. " +
+    'Threshold bands (price, cooldown) give each band\'s lowest value, so a value exactly on an edge takes the higher band. Divide the figures as the sources give them and round only the result. ' +
+    'Only `cost_band.raw` and `mobility.speed_raw` hold stat figures. ' +
+    'Every text field of a unit (basis, notes, summaries, uncertain notes and source notes) gives prices, speeds, reaches, sight, cooldowns, damage and armour values as comparisons in words ("about twice the rifle\'s reach", "takes a few seconds", "a little more from behind"), never as figures. ' +
+    'Names, patch numbers, dates and counts (seats, missiles) are fine.',
+    '- **Stock values.** Every band describes the stock unit at the version researched: no researched or bought upgrades, no veterancy, no temporary buffs, in its default mode. ' +
+    'Put what upgrades change in notes, and what another mode changes in modes. ' +
+    'An ability or weapon that an upgrade unlocks is still recorded (ability source upgrade, weapon slot acquired); only its bands are taken as unlocked, before further upgrades. ' +
+    "A loadout pick is not an upgrade: each field's own rule says how picks are recorded.",
+    '- **Series games.** For a games.json entry of kind series, the counted titles are the lead titles named in `version_researched` and any title named there for the archetype being coded. ' +
+    "Only counted titles fill fields; facts from the series' other titles go in notes. " +
+    "When counted titles differ, on whether a mechanic exists or on a value, the newest counted title whose sources speak to it decides, at its final patch; give the other version in notes or in the weapon's summary. " +
+    'A figure that the source says a later patch of that title changed, without giving the new value, does not count for that title. ' +
+    'Where the registry entry says where a kind of fact comes from (MechWarrior speeds from the BattleTechWiki), follow the registry. ' +
+    "When one archetype mirrors several models, one per side, take figures from the model of the first faction in the registry's list that is not shared, and say which in notes. " +
+    'A matchup may rest on a source about any title, as long as the parts it names exist in a counted title.',
     '- **Copyright.** Paraphrase only, no quoted voice lines or flavour text, no images. Real names are reference only and never reach a generated card.\n']
   for (const [file, title, blurb, ptr] of SCHEMAS) {
     rows.length = 0
@@ -693,7 +772,7 @@ function samplesDocs() {
     const pas = given(cr, 'passengers')
       ? f`; ${pnSeats} ${SEAT_TXT[cr.passengers.kind].replaceAll('passenger seat', pnSeats > 1 ? 'passenger seats' : 'passenger seat')}` : ''
     out.push(f`| Crew | ${lab('crew-models', cr.model)} (${cr.basis})${pas}. ${esc(get(cr, 'notes', ''))} |`)
-    out.push(f`| On death | ${lab('on-death', u.on_death.outcomes)} (${u.on_death.basis}) |`)
+    out.push(f`| On death | ${lab('on-death', u.on_death.outcomes)} (${u.on_death.basis})${given(u.on_death, 'notes') ? '. ' + esc(u.on_death.notes) : ''} |`)
     out.push(f`| Confidence | ${u.confidence} (review: ${u.review.status}) |\n`)
     out.push('**Armament**\n')
     out.push('| Weapon | Slot | Family | Damage | Mount / delivery / range | Hits | Traits | What it does |')

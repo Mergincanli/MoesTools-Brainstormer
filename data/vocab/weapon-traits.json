@@ -5,12 +5,13 @@
   "description": "Combinable twists on a weapon. A card's weapon has up to three; a researched weapon up to four.",
   "group": "supporting",
   "status": "draft",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "splash",
       "label": "Splash",
-      "description": "Damages an area around the impact."
+      "description": "Damages an area around the impact.",
+      "source_rule": "Set it when the sources say the hit hurts everything in an area around the impact. Leave it off when they say it hits one target at a time, call the area tiny or very small, or disagree. An area effect that does no damage, such as an area stun, is not splash."
     },
     {
       "id": "pierce",
@@ -53,15 +54,17 @@
     {
       "id": "magazine",
       "label": "Magazine",
-      "description": "Fires a set number of shots, then reloads.",
+      "description": "Fires a set number of shots, then must reload, or wait for its ammo to come back on its own.",
       "excluded": {
         "weapon-traits": ["overheat"]
-      }
+      },
+      "source_rule": "Set it only when the sources show the reload as part of how this weapon fights: they describe it firing a burst or salvo and then stopping to reload, name its reload or clip as a strength or weakness of this weapon, or say its ammo runs out and comes back on its own. A reload time in a stats table, a passing mention, or a comparison of how often two guns reload does not count."
     },
     {
       "id": "homing",
       "label": "Homing",
-      "description": "Shots steer toward the target."
+      "description": "Shots steer toward the target.",
+      "source_rule": "Only for shots that steer themselves after firing with no lock step and no steering by the shooter, such as smart rockets. Never with lock-on or guided delivery, which already steer."
     },
     {
       "id": "knockback",
@@ -92,7 +95,8 @@
     {
       "id": "suppress",
       "label": "Suppress",
-      "description": "Sustained fire pins targets: slows them and spoils their aim while under fire."
+      "description": "Sustained fire pins targets: slows them and spoils their aim while under fire.",
+      "source_rule": "Set it only when the sources say this weapon's own fire, with no ability in use, pins or suppresses targets as one of its main jobs, as with a machine gun built for it. A weapon that pins only now and then, or only while an ability is active, does not get it; that ability links the suppress-with-fire pattern instead."
     },
     {
       "id": "mark",
@@ -112,7 +116,7 @@
     {
       "id": "finite-ammo",
       "label": "Limited ammo",
-      "description": "Carries a fixed stock that a teammate or station must refill (unlike a magazine, which only reloads)."
+      "description": "Carries a fixed stock that does not come back by itself; only a teammate, a station or a pickup refills it, if anything does. A stock that refills on its own over time is magazine."
     },
     {
       "id": "shield-breaker",
@@ -135,7 +139,8 @@
       "examples": [
         "Red Alert 3: the Multigunner IFV's default missiles and its Archer Maiden bow reach every aircraft",
         "PlanetSide 2: anti-aircraft machine guns, which the game gives a damage class of their own"
-      ]
+      ],
+      "source_rule": "On a researched weapon, set it exactly when its can_target includes high-air, whatever the family. On flak, guided missiles and autocannons it marks what the weapon is for; on other families it is also what lets the weapon reach high air."
     }
   ]
 }

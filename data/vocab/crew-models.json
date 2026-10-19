@@ -5,7 +5,7 @@
   "description": "Who operates the unit, and how many players that takes. Passenger seats are counted separately, so any crew model can also carry passengers. That covers the brief's 'transport with passengers' (shown on the card whenever there are passenger seats) and IFVs that have both a gunner and passengers.",
   "group": "core",
   "status": "draft",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "solo",
@@ -19,7 +19,8 @@
         "Titanfall: one pilot runs the Titan, which fights on its own when the pilot gets out",
         "MechWarrior: one pilot per mech",
         "PlanetSide 2: the Lightning light tank is built for one player"
-      ]
+      ],
+      "source_rule": "In-game for a unit with one player seat in the source (a MechWarrior mech, a PlanetSide 2 Lightning). The proposal for every unit without player seats unless driver-gunner, squad or remote applies. A crew named in lore or voice lines does not change it."
     },
     {
       "id": "driver-gunner",
@@ -44,7 +45,8 @@
         "C&C Renegade: the driver drives and the gunner fires; alone, the driver fires too",
         "Foxhole light tanks: the driver only drives, a separate seat fires the main gun",
         "Halo Warthog: driver, turret gunner and a passenger"
-      ]
+      ],
+      "source_rule": "In-game when the source has a driver seat and a separate gun seat. As a proposal, only for a vehicle, walker, hover or aircraft of medium size or bigger, never a power suit, that fires two weapons at the same time from separate mounts. A separate mount aims on its own: a roof gun, a gun on the front or side of the hull, a second turret. A gun that turns with the main gun is the same mount. These do not count: weapons swapped by a mode or toggle; weapons the source picks by target type (one for ground, one for air), which fire one at a time; weapons added by an upgrade, a passenger or a kill; and point defence that fires by itself. If the source doesn't say whether two weapons fire together, count them as one at a time. The driver keeps the main weapon and the gunner gets the others (decision 2A)."
     },
     {
       "id": "driver-gunner-commander",
@@ -61,8 +63,9 @@
       },
       "examples": [
         "Foxhole battle tanks: driver, gunners, a commander with a better view, and an engineer who reloads and repairs",
-        "Battlefield 3: an optional commander seat adds zoom, thermal vision and laser designation"
-      ]
+        "Battlefield 3 main battle tanks: the CITV Station unlock opens a third seat, a commander with zoom, thermal vision, laser designation and a motion sensor but no weapon"
+      ],
+      "source_rule": "In-game only, when the source has a separate seat that spots, marks or commands, or a crew seat that only loads, repairs or runs systems. A gunner seat whose loadout swaps its gun for spotting tools is still a gunner. Never proposed for a unit without player seats."
     },
     {
       "id": "squad",
@@ -76,7 +79,8 @@
       "allowed": {
         "sizes": ["tiny", "small"]
       },
-      "examples": ["Company of Heroes: infantry squads share one health bar but lose firepower as soldiers die"]
+      "examples": ["Company of Heroes: infantry squads share one health bar but lose firepower as soldiers die"],
+      "source_rule": "In-game when the source moves two or more soldiers or tiny drones as one unit for their whole life, with one order and a shared fate (Company of Heroes or Dawn of War squads). Units bought in pairs that then act alone are solo."
     },
     {
       "id": "remote",
@@ -96,7 +100,18 @@
       "excluded": {
         "on-death": ["pilot-eject", "bail-out"],
         "nature": ["organic", "crewed-machine"]
-      }
+      },
+      "source_rule": "Only when the source has a person who stays on the field, outside the machine, while steering it (a soldier who parks to fly a drone). A note in the lore that the machine was once remote-controlled does not count."
+    }
+  ],
+  "tie_breaks": [
+    {
+      "terms": ["solo", "driver-gunner"],
+      "rule": "A unit with player seats copies them, however many weapons its one pilot fires. For a unit without player seats, count what the source unit does, not what its text says: two weapons firing at the same time from separate mounts make driver-gunner (its coding rule says what doesn't count); anything else is solo. Faction flavours never decide a source unit's crew; they only weight generated cards."
+    },
+    {
+      "terms": ["solo", "remote"],
+      "rule": "Remote only when an operator stays on the field in the source. Otherwise an uncrewed machine is solo."
     }
   ]
 }

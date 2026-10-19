@@ -5,22 +5,24 @@
   "description": "What happens when the unit is destroyed. A card has one or two.",
   "group": "supporting",
   "status": "draft",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "respawn",
       "label": "Respawn",
-      "description": "The unit is lost and the player returns to the buy screen.",
-      "rarity": "common"
+      "description": "Nothing is left: the unit is simply gone. In a player version the player goes back to the buy screen (a remote operator goes back to their parked soldier).",
+      "rarity": "common",
+      "source_rule": "In-game for a unit players drive in a game where they come back after it dies, including a vehicle whose crew die inside it. For a unit that is simply gone in the source, it is the proposal for infantry, organic units and uncrewed machines."
     },
     {
       "id": "bail-out",
       "label": "Bail out",
-      "description": "The vehicle is destroyed and its crew eject as basic infantry with low health.",
+      "description": "The vehicle is destroyed and its crew eject as basic infantry with low health. Everyone inside gets out, passengers too.",
       "rarity": "common",
       "excluded": {
         "classes": ["infantry"]
-      }
+      },
+      "source_rule": "In-game when the crew or riders get out on their own as the vehicle dies, even when only one gets out or only by chance. Jumping out by hand before it dies does not count; in our game that is the hold-X key every vehicle has. It is the proposal for any crewed machine outside the infantry class that is simply gone in the source."
     },
     {
       "id": "wreck",
@@ -30,20 +32,33 @@
       "excluded": {
         "classes": ["infantry"],
         "nature": ["organic"]
-      }
+      },
+      "source_rule": "In-game only when the remains stay on the field and a unit can repair, recrew or salvage them in the same match. Remains that only block the way or give cover do not count, nor do crates, weapons or loot that drop for pickup or for crafting later; put those in on_death.notes."
     },
     {
       "id": "death-blast",
       "label": "Death blast",
       "description": "Explodes on death, damaging everything nearby.",
-      "rarity": "uncommon"
+      "rarity": "uncommon",
+      "source_rule": "In-game only when the source says the explosion hurts units nearby, for this unit in its own title (for a series, the titles its registry entry leads with). A blast that is only for show, or a wreck that only hurts what it falls on, does not count."
     },
     {
       "id": "pilot-eject",
       "label": "Pilot eject",
       "description": "The pilot pops out in a light suit and can reach a new unit or a pickup.",
       "rarity": "uncommon",
-      "classes": ["walker", "aircraft", "vehicle", "hover"]
+      "classes": ["walker", "aircraft", "vehicle", "hover"],
+      "source_rule": "In-game when the pilot leaves the wreck on their own as a unit that can keep fighting, such as walking to a new vehicle or a pickup. Ejecting by hand before the unit dies does not count."
+    }
+  ],
+  "tie_breaks": [
+    {
+      "terms": ["respawn", "bail-out"],
+      "rule": "A crewed vehicle that is simply gone in the source: bail-out, basis proposal. A vehicle players drive in a shooter whose crew die inside it: respawn, basis in-game, even when they could have jumped out by hand first."
+    },
+    {
+      "terms": ["respawn", "wreck", "death-blast", "pilot-eject"],
+      "rule": "Use two outcomes only when the source shows both, such as a husk that also explodes. Never pair a sourced outcome with the 3C default."
     }
   ]
 }

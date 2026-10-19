@@ -11,13 +11,18 @@
 // value } } }, "fields": { "<field>": { "list": "<word list>" } } }; a list value is compared as a set, a number as a
 // number, anything else as one value, and "fields" (optional) names the ranked word list a field's terms come from.
 //
-// How agreement is counted. For each field and each unit coded by two or more coders, every pair of coders counts
-// once. One-value fields: the pair agrees when both values are equal (two missing values agree). Fields on a ranked
-// word list (tier, price, speed, size, sight, range, cooldown, armour) and counts also report how many pairs are at
-// most one step apart. Set fields (lists, such as secondary roles or weapon traits): the pair scores the overlap of
-// its two sets, the size of the intersection over the size of the union (two empty sets score 1). A field's agreement
-// is the mean over all its pairs. Fields marked 'proposal' are our design suggestions, not sourced facts; matchup
-// lists (strengths, counters and so on) are open choices and are measured for information only, without the threshold.
+// How agreement is counted. Before a unit is read, the documented defaults are filled in (a weapon or ability with no
+// seat is the driver's, an ability with no source is innate, a weapon with no affects hits enemies, a body with no
+// count is one), so a coder who writes a default and one who leaves it out agree. For each field and each unit coded
+// by two or more coders, every pair of coders counts once. One-value fields: the pair agrees when both values are
+// equal (two missing values agree). Fields on a ranked word list (tier, price, speed, size, sight, range, cooldown,
+// armour) and counts also report how many pairs are at most one step apart. Set fields (lists, such as secondary
+// roles or weapon traits): the pair scores the overlap of its two sets, the size of the intersection over the size of
+// the union (two empty sets score 1). A field's agreement is the mean over all its pairs. Each weapon is also read as
+// seat/family/mount, so a split on one weapon shows even when the unit's sets of mounts or seats agree. Fields marked
+// 'proposal' are our design suggestions, not sourced facts ('partly' when the source decides for some units); matchup
+// lists (strengths, counters and so on) are open choices, and 'atypical rules' is derived (it follows from the other
+// fields), so these are measured for information only, without the threshold.
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -56,19 +61,22 @@ export const UNIT_FIELDS = [
   one('sensors.sight', u => u.sensors?.sight, { list: 'sight-bands', proposal: 'partly' }),
   set('sensors.traits', u => u.sensors?.traits, { proposal: 'partly' }),
   one('crew.model', u => u.crew?.model, { proposal: 'partly' }),
+  one('crew.basis', u => u.crew?.basis, { proposal: 'partly' }),
   one('crew.solo_fallback', u => u.crew?.solo_fallback, { proposal: 'partly' }),
   set('crew.seats', u => each(u.crew?.seats, s => s.role), { proposal: 'partly' }),
   count('crew.passengers.seats', u => u.crew?.passengers?.seats ?? 0),
   one('crew.passengers.kind', u => u.crew?.passengers?.kind),
   set('resources', u => u.resources),
   set('on_death.outcomes', u => u.on_death?.outcomes, { proposal: 'partly' }),
+  one('on_death.basis', u => u.on_death?.basis),
   set('flavour_affinity', u => u.flavour_affinity, { proposal: true }),
   count('armament (number of weapons)', u => weapons(u).length),
   set('armament.slot', u => each(u.armament, w => w.slot)),
   set('armament.family', u => each(u.armament, w => w.family)),
   set('armament.damage', u => each(u.armament, w => w.damage)),
   set('armament.mount', u => each(u.armament, w => w.mount), { proposal: true }),
-  set('armament.seat', u => each(u.armament, w => w.seat), { proposal: true }),
+  set('armament.seat', u => each(u.armament, w => w.seat), { proposal: 'partly' }),
+  set('armament (seat, family, mount)', u => each(u.armament, w => `${w.seat ?? 'driver'}/${w.family}/${w.mount ?? '-'}`), { proposal: true }),
   set('armament.delivery', u => each(u.armament, w => w.delivery)),
   set('armament.range', u => each(u.armament, w => w.range)),
   set('armament.can_target', u => each(u.armament, w => w.can_target)),
@@ -78,13 +86,18 @@ export const UNIT_FIELDS = [
   one('main weapon.delivery', u => mainWeapon(u)?.delivery),
   one('main weapon.range', u => mainWeapon(u)?.range, { list: 'range-bands' }),
   set('main weapon.can_target', u => mainWeapon(u)?.can_target),
+  one('main weapon.mount', u => mainWeapon(u)?.mount, { proposal: true }),
+  one('main weapon.seat', u => mainWeapon(u)?.seat ?? 'driver', { proposal: true }),
   count('abilities (number)', u => (u.abilities || []).length),
   set('abilities.kind', u => each(u.abilities, a => a.kind)),
   set('abilities.cooldown', u => each(u.abilities, a => a.cooldown)),
   set('abilities.source', u => each(u.abilities, a => a.source)),
   set('patterns (abilities and weapons)', u => flat([each(u.abilities, a => a.patterns), each(u.armament, w => w.patterns)])),
   count('modes (number)', u => (u.modes || []).length),
-  set('atypical rules', u => each(u.atypical, a => a.rule)),
+  set('atypical rules', u => each(u.atypical, a => a.rule), { derived: true, gate: false }),
+  one('confidence', u => u.confidence),
+  one('lineage', u => u.lineage ?? '(none)'),
+  set('sources.kind', u => each(u.sources, s => s.kind)),
   refs('strengths', 'strengths'),
   refs('weaknesses', 'weaknesses'),
   refs('counters', 'counters'),
@@ -92,9 +105,29 @@ export const UNIT_FIELDS = [
   refs('combos', 'combos'),
 ]
 
-/** { field path: value } for one unit, by UNIT_FIELDS. */
+/**
+ * A copy of a unit with the documented defaults filled in, so a value left out and the same value written read the
+ * same: a weapon's or ability's seat (driver), an ability's source (innate), a weapon's affects (enemies) and the
+ * body's count (1). The unit itself is not changed.
+ */
+export function withDefaults(u) {
+  const c = structuredClone(u)
+  for (const w of Array.isArray(c.armament) ? c.armament : []) {
+    w.seat ??= 'driver'
+    w.affects ??= 'enemies'
+  }
+  for (const a of Array.isArray(c.abilities) ? c.abilities : []) {
+    a.seat ??= 'driver'
+    a.source ??= 'innate'
+  }
+  if (c.body && typeof c.body === 'object') c.body.count ??= 1
+  return c
+}
+
+/** { field path: value } for one unit, by UNIT_FIELDS, read after the defaults are filled in. */
 export function unitCoding(u, fields = UNIT_FIELDS) {
-  return Object.fromEntries(fields.map(f => [f.path, f.get(u)]))
+  const filled = withDefaults(u)
+  return Object.fromEntries(fields.map(f => [f.path, f.get(filled)]))
 }
 
 /** Term id -> rank, per ranked word list in the vocab folder: { 'speed-bands': { slow: 2, ... } }. */
@@ -135,7 +168,7 @@ const hasSteps = f => Boolean(f.numeric || f.list)
 
 /**
  * Agreement per field. codings: { coder: { item: { field path: value } } }; fields: [{ path, kind: 'one'|'set',
- * numeric?, list?, proposal?, group?, gate? }]. Returns { coders, items, threshold, fields: [...] }, each field with
+ * numeric?, list?, proposal?, derived?, group?, gate? }]. Returns { coders, items, threshold, fields: [...] }, each field with
  * its pairs, agreement, within_one (ranked fields and counts), the items all coders agree on, whether it is below the
  * threshold, and per item the value each coder gave.
  */
@@ -169,6 +202,7 @@ export function measure(codings, { fields, ranks = {}, threshold = 0.8 }) {
       kind: f.numeric ? 'count' : f.kind,
       group: f.group || 'fields',
       proposal: f.proposal || false,
+      derived: f.derived || false,
       gated: f.gate !== false,
       items: measured,
       pairs,
@@ -264,13 +298,19 @@ export function renderMarkdown(result, { title = 'Agreement between coders', ref
     '',
     `**${gated.length - below.length} of ${gated.length} measured fields reach the threshold; ${below.length} fall below it.** ` +
       'Agreement is the mean over every pair of coders on every item (sets score their overlap). "Within one step" counts ' +
-      'pairs at most one rank apart, for ranked word lists and counts. Matchup lists are open choices, measured for information only.',
+      'pairs at most one rank apart, for ranked word lists and counts. Matchup lists are open choices, and derived fields ' +
+      'follow from the others; both are measured for information only.',
     '',
     '| Field | Kind | Items | Agreement | Within one step | Items all agree | Note |',
     '|---|---|---|---|---|---|---|',
   ]
   for (const f of fields) {
-    const note = [f.below ? '**below**' : '', f.proposal === true ? 'proposal' : f.proposal ? 'partly proposal' : '', f.gated ? '' : 'information only']
+    const note = [
+      f.below ? '**below**' : '',
+      f.proposal === true ? 'proposal' : f.proposal ? 'partly proposal' : '',
+      f.derived ? 'derived' : '',
+      f.gated ? '' : 'information only',
+    ]
       .filter(Boolean)
       .join(', ')
     lines.push(`| ${f.path} | ${f.kind} | ${f.items} | ${pct(f.agreement)} | ${f.within_one === null ? '' : pct(f.within_one)} | ${f.all_agree} of ${f.items} | ${note} |`)

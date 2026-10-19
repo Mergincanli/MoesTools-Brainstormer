@@ -18,7 +18,7 @@ A creativity tool for designing units for **Shamble Frontlines**, a browser team
 | `data/` | Games registry, pattern registry, word lists, researched units, mechanic patterns (JSON). |
 | `schemas/` | JSON Schemas for every record type. |
 | `docs/` | Proposal, generated reference pages and the example concept card (`docs/examples/`). |
-| `scripts/` | Validator, docs builder, JSON formatter, copy-check, checker sampler, agreement measure and word-list diff. |
+| `scripts/` | Validator, docs builder, JSON formatter, copy-check, checker sampler, agreement measure, word-list diff and pattern sync. |
 | `research/` | Research working notes; `research/registry-notes/` has the step-1 notes for each research batch. |
 | `tests/` | Tests for the scripts (`node:test`). |
 | `.github/workflows/` | CI, which runs `npm run check` on every push to `main` and every pull request. |
@@ -43,7 +43,9 @@ You need Node.js 22 or newer; `npm install` refuses older versions. Install once
 | `npm run sample -- --seed <text>` | Picks what the research checker re-checks: 1 in 5 units per game (at least 3) and every proposed pattern. The same seed always gives the same pick; add `--game <id>` for one game and `--json` for output a script can read. |
 | `npm run agreement -- <folder>` | Measures how often independent coders agree, field by field, on the same units: `<folder>` holds one folder of unit files per coder. Add `--reference <folder>` to compare each coder with other unit files (such as `data/units`), `--json` for output a script can read, or `--table <file>` for codings that are not units (see the script's header). Used by the calibration pilot. |
 | `npm run vocab-diff -- <old> [<new>]` | Lists what changed in the word lists between two versions: each version is a folder of word lists or a git commit (its `data/vocab/`); `<new>` defaults to `data/vocab`. |
-| `npm run check` | Format check, validator, docs check and tests, in that order. |
+| `npm run sync-patterns` | Fills in each pattern file's `source_units` from the units that link it (through abilities, weapons and modes). Research agents never run it and never edit pattern files: they run `npm run validate` only, which warns while a list is out of date. The merge pass runs it once, then `npm run docs`, then `npm run check`. |
+| `npm run sync-patterns:check` | Lists the pattern files whose `source_units` are out of date, without changing them, and fails if there is one. |
+| `npm run check` | Format check, validator, pattern sync check, docs check and tests, in that order. |
 
 Edit the JSON directly; the word lists in `data/vocab/*.json` are the source of truth. After any JSON edit run `npm run format`; after any change under `data/`, `schemas/` or `docs/examples/` run `npm run docs`, and commit the rebuilt pages with it.
 

@@ -2,20 +2,21 @@
   "$schema": "../../schemas/vocabulary.schema.json",
   "id": "armour-models",
   "label": "Armour models",
-  "description": "How the unit absorbs damage. A card has one or two; a researched unit up to three. Shields you switch on, barriers that protect allies, invulnerability and 'draw fire' are abilities, so they live in patterns instead.",
+  "description": "How the unit absorbs damage. A card has one or two; a researched unit up to three. If more apply, first keep the models the unit has without any loadout pick; then keep the rarest (rare, then uncommon, then common; on a tie, the one listed first here). Name the others in armour.notes. Shields you switch on, barriers that protect allies, invulnerability and 'draw fire' are abilities, so they live in patterns instead. Code what this unit has. Protection that comes from where it stands (cover), from rank (veterancy), from an order every unit of its kind has (the retreat bonus) or from game settings (difficulty) is not a model, even though the unit benefits; mention it in armour.notes. A model built into the unit's own armour counts even when every unit of its kind in the game shares it (Company of Heroes rear armour). For a squad, code what protects each member; losing members is part of the squad crew model. A model that only an optional loadout pick gives (reactive armour, an auto-repair module, a shield item) still counts; say in armour.notes that it is a pick. Sensor traits differ: a sensor pick goes to sensors.notes, because a pick that changes how a unit is hit changes what beats it, while a sensor pick rarely does.",
   "group": "supporting",
   "status": "draft",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "flat-pool",
       "label": "Single health bar",
-      "description": "One health bar; every hit subtracts. The easiest to read. Used only when no other model applies.",
+      "description": "One health bar and nothing more: every hit just subtracts. The easiest to read.",
       "rarity": "common",
       "examples": [
-        "Red Alert 3: one health value per unit, with damage first scaled by the unit's armour type",
+        "Red Alert 3: the Multigunner IFV has one health value; its armour type only scales the damage each kind of weapon does",
         "Iron Harvest: fixed damage per armour class comes straight off health"
-      ]
+      ],
+      "source_rule": "Code it only when no other model on this list applies, and never together with another model. Damage scaled by armour type or class, as in most strategy games, is the armour class's job: it does not rule out flat-pool, and it does not make the unit another model."
     },
     {
       "id": "directional",
@@ -26,8 +27,10 @@
         "Company of Heroes: rear hits multiply penetration",
         "Broken Arrow: separate front, side, rear and top armour; tanks have almost none at the rear",
         "PlanetSide 2: damage scales with the side the attacker stands on",
-        "Red Alert 3: mild; side and rear hits do slightly more"
-      ]
+        "Red Alert 3: mild; the tank armour sets take a little more damage on the sides and rear",
+        "Iron Harvest: many mechs take double damage from behind"
+      ],
+      "source_rule": "Code it when the unit's own data, or a rule its game applies to every unit of its kind, makes side or rear hits do more, however little; say in armour.notes, in words, how much more. Leave it out when neither gives this unit facing values, even if some other units of its game have them."
     },
     {
       "id": "penetration-check",
@@ -46,7 +49,7 @@
     {
       "id": "zonal",
       "label": "Zonal damage",
-      "description": "Hits land on parts such as tracks, turret, engine, legs or a weapon, which can break and switch off functions before the unit dies.",
+      "description": "Parts such as tracks, turret, engine, rotor, legs or a weapon can be knocked out by damage before the unit dies, switching that function off for a while or for good. The part may be chosen by where the hit lands, by a heavy hit or by chance.",
       "rarity": "uncommon",
       "excluded": {
         "sizes": ["tiny", "small"]
@@ -55,8 +58,10 @@
         "MechWarrior and BattleTech: head, arm, leg and torso locations with their own armour",
         "Foxhole: tracks, turret and fuel can be disabled by hits there",
         "Company of Heroes: critical hits damage engines or kill gunners",
-        "Battlefield 4: heavy hits cause mobility kills"
-      ]
+        "Battlefield 4: a heavy hit can knock out a vehicle's movement, or a helicopter's control, for a few seconds",
+        "Wargame: critical hits on the crew disable specific systems"
+      ],
+      "source_rule": "Code it when the sources say damage the unit takes can switch off one function (movement, steering, the turret or a weapon) while it lives on, however the part is chosen. A function lost because a crewman no player controls is hit (a gunner killed) counts too. A stun, root, slow or shutdown that comes from an enemy weapon's own effect is that weapon's trait or damage type, not zonal. Being disabled as a whole and burning at low health is critical-burn, not zonal."
     },
     {
       "id": "crew-casualties",
@@ -64,13 +69,11 @@
       "description": "Hits can knock out seats: in a multi-seat vehicle a player can be ejected or killed while the vehicle survives.",
       "rarity": "rare",
       "excluded": {
-        "crew-models": ["solo", "squad", "remote"]
+        "crew-models": ["squad", "remote"]
       },
-      "examples": [
-        "Company of Heroes: each soldier and gun crewman is tracked; a gun without crew can be captured",
-        "Foxhole: exposed seats leave their occupants open to fire",
-        "Wargame: crew critical hits disable specific systems"
-      ]
+      "requires": [["crew:driver-gunner", "crew:driver-gunner-commander", "passengers:>=1"]],
+      "examples": ["Foxhole: exposed seats leave their occupants open to fire"],
+      "source_rule": "Code it only when hits can kill or throw out a player inside while the vehicle survives (open seats, shots through the glass). It needs two or more player seats, passenger seats included. Never for a squad: losing members is part of the squad crew model. A hit that only switches off a function by hurting a crewman no player controls is zonal."
     },
     {
       "id": "regen-shield",
@@ -115,9 +118,9 @@
         "armour-classes": ["medium", "heavy", "super-heavy"]
       },
       "examples": [
-        "StarCraft II: armour takes a fixed amount off every hit, but every hit still does a little damage",
-        "PlanetSide 2: main battle tanks ignore small arms completely"
-      ]
+        "StarCraft II: each unit's armour value comes off every hit; on the most armoured units, such as the Ultralisk or the Battlecruiser, a Marine's rifle loses a large part of each hit"
+      ],
+      "source_rule": "Code it only when the game takes a fixed amount off each hit, and that amount changes which weapons work: the weapon of the game's basic rifle infantry loses a quarter or more of each hit to it. Judge the unit as bought, without upgrades. A smaller value only trims hits; mention it in armour.notes, in words. A cut by percentage or by damage type (guns doing half damage to tanks, small arms doing nothing to vehicles) belongs to the armour class and the damage map, not to this model."
     },
     {
       "id": "self-repair",
@@ -126,7 +129,6 @@
       "notes": "Passive. A heal on a key is the heal-self pattern; healing by dealing damage is the heal-on-hit weapon trait.",
       "rarity": "common",
       "examples": [
-        "Red Alert 3: top-rank and some heavy vehicles heal themselves",
         "PlanetSide 2: an auto-repair module heals vehicles out of combat",
         "Battlefield 3: vehicles slowly regain armour"
       ]
@@ -139,7 +141,8 @@
       "allowed": {
         "sizes": ["tiny", "small", "medium"],
         "armour-classes": ["unarmoured", "light", "medium"]
-      }
+      },
+      "source_rule": "Code it only when the unit itself has a way to dodge: a dodge roll, a stated chance to avoid hits, or a hard-to-hit value of its own that is better than the game's basic rifle infantry has. Hit chance from cover, rank or moving, which every soldier of the game gets, is not evasive."
     },
     {
       "id": "downed-revive",
@@ -151,12 +154,10 @@
     {
       "id": "weak-point",
       "label": "Weak point",
-      "description": "An exposed weak spot, such as a vent, reactor or rear hatch, takes extra damage.",
+      "description": "A small exposed spot, such as a vent, a joint or a fuel tank, takes extra damage when hit on purpose.",
       "rarity": "uncommon",
-      "examples": [
-        "ARC Raiders machines: shoot the joints and rear cylinders",
-        "Iron Harvest: many mechs take double damage at the back"
-      ]
+      "examples": ["ARC Raiders machines: shoot the joints and rear cylinders"],
+      "source_rule": "Code it only for a spot the shooter must aim at. Extra damage to a whole side, the rear or the top is directional, even when the game calls it a weak spot."
     },
     {
       "id": "interceptor",
@@ -172,8 +173,9 @@
       },
       "examples": [
         "Broken Arrow: active protection stops HEAT rounds fully, kinetic ones partly, then reloads",
-        "Battlefield 4: active protection detonates incoming missiles for a moment, then recharges"
-      ]
+        "Generals: the Paladin tank's point-defence laser shoots down incoming missiles"
+      ],
+      "source_rule": "Code it only when the protection fires by itself. One the player switches on with a key, even for a few seconds, is the fire-countermeasures pattern."
     },
     {
       "id": "critical-burn",

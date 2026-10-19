@@ -5,7 +5,7 @@
   "description": "How a shot reaches its target.",
   "group": "supporting",
   "status": "draft",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "hitscan",
@@ -25,7 +25,7 @@
     {
       "id": "lobbed",
       "label": "Lobbed",
-      "description": "Arcs over cover onto a ground point; travel time and a minimum range.",
+      "description": "Indirect fire: the shot arcs over cover onto a ground point, or lands on a target the shooter cannot see itself, which others must spot. Usually slow to land, often with a minimum range. It never hits fliers.",
       "allowed": {
         "target-types": ["infantry", "ground-vehicle", "structure", "naval"]
       }
@@ -33,13 +33,16 @@
     {
       "id": "lock-on",
       "label": "Lock-on",
-      "description": "Hold on a target to lock, then fire homing shots; the target gets a warning."
+      "description": "Hold on a target to lock, then fire homing shots; the target gets a warning.",
+      "excluded": {
+        "weapon-traits": ["homing"]
+      }
     },
     {
       "id": "guided",
       "label": "Guided",
       "description": "You steer the shot in flight by keeping your aim on it; it is lost if you stop aiming, so the shooter stays exposed until it lands. It reaches whatever its family reaches.",
-      "notes": "The player does the steering, so it needs a mount the player aims (not auto-target or radial) and no homing trait, and it is a medium-range or longer shot. A shot that homes by itself is lock-on or the homing trait.",
+      "notes": "The player does the steering, so it needs a mount the player aims (not auto-target or radial) and no homing trait, and it is a medium-range or longer shot. A shot that steers itself after a lock is lock-on; one that steers itself with no lock step is projectile with the homing trait.",
       "allowed": {
         "range-bands": ["medium", "long", "off-screen"]
       },
@@ -83,6 +86,12 @@
       "id": "ram",
       "label": "Ram / kamikaze",
       "description": "The unit itself is the weapon: it hits by colliding with or diving into the target, often destroying itself."
+    }
+  ],
+  "tie_breaks": [
+    {
+      "terms": ["lock-on", "guided"],
+      "rule": "Lock-on when the target is chosen before firing and the shot then finds it alone, so the shooter may look away; the target is usually warned. A missile that homes on a laser spot is lock-on when a teammate's designator also works. Guided when only the shooter steers it and must keep aiming until it lands: by wire, camera, crosshair or the shooter's own laser. When one entry stands for several titles of a series that differ, follow the Series games convention and give the other version in the summary."
     }
   ]
 }

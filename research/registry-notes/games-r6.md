@@ -43,7 +43,7 @@ Checks run:
   - Free infantry classes get raw 0, which gives very low.
 - **Damage map.**
   - The resist types are the game's damage categories.
-  - VS lasers use the Small Arms resist, so they map to kinetic. They behave like bullets apart from having no bullet drop; mention the energy look in the unit's notes.
+  - VS guns use the Small Arms category but fire like bullets: code their family by how they fire (small arms, machine gun, sniper), with kinetic damage, not as laser or plasma. Mention the energy look in the summary. Named exception (step 3 under armament[].damage).
   - "Gatling Guns" (Tank Buster, Shredder) is mapped to armour-piercing, because those guns are built to strip vehicles.
 - **Armour map.** None: vehicles each have their own resist profile. MBTs, the Lightning, the Colossus and the Valkyrie use directional armour.
 - **Flavour.**
@@ -109,7 +109,7 @@ Checks run:
 - **Damage map.**
   - The categories are the six ammo types, ranked by ARC armour penetration.
   - Heavy is mapped to armour-piercing, Launcher to explosive and Energy Clip to energy.
-  - ARC attacks (fire, shockwaves, mortars, lasers) have no ammo type: type each one by what it is.
+  - ARC attacks (fire, shockwaves, mortars, lasers) have no ammo type: use step 5 under armament[].damage.
 
 ### MechWarrior / BattleTech (`has_tiers` false, `has_costs` false, as the brief asks)
 - **Why no tiers or costs.** Tech eras (3025 Succession Wars, 3050 Clan Invasion, later) are times, not gates. C-bill prices and Battle Value exist, but the brief asks for weight classes.
@@ -119,9 +119,8 @@ Checks run:
   - Mapping: light and medium 'Mechs → medium ("light walkers"), heavy and assault → heavy (the class text names assault mechs), superheavy → super-heavy.
   - Drop the map if a proxy is not acceptable.
 - **Damage map.** It covers the three hardpoint types (Energy, Ballistic, Missile).
-  - Flamers are Energy in MWO but deal heat; type them as fire.
+  - Flamers are fire and Gauss rifles are armour-piercing. All other weapons, autocannons included, follow the map. Named exception (step 3 under armament[].damage).
   - Physical attacks (punches, kicks, hatchets, death from above) are melee.
-  - Gauss rifles and large autocannons can be armour-piercing per weapon.
 - **Control.** Set to `both`: MechWarrior is piloted, the 2018 BattleTech game and the tabletop are commanded.
 - **Factions.**
   - `inner-sphere` and `clan` are the main tech split.
@@ -144,12 +143,28 @@ Checks run:
 - **Foxhole:** `year` is 2017 (Early Access). Version 1.0 came in 2022.
 - **ARC Raiders:** the year is the 2025 launch. A PvE toggle is in beta (13-20 October 2026) and may change how ARC are met.
 
+## Game-wide mechanics
+
+Mechanics that belong to the game, not the unit (see Shared mechanics and universal keys in the Conventions). Leave them off every unit's weapons and abilities. A unit that does one of them better or worse than the rest says so in its strengths or weaknesses.
+
+### Battlefield (`battlefield`)
+
+Written for pilot round 1, from the Battlefield Wiki's Vehicle Boost, Spotting and Parachute pages.
+
+- **Entering, leaving and switching seats**: universal keys (enter or leave, bail out, switch seat) on every vehicle, ejecting from an aircraft included.
+- **Parachutes**: a soldier's own way down after bailing out of an aircraft or jumping from a height. Not a vehicle ability; leave it off.
+- **Spotting** (the universal ping key): any player, on foot or in a seat, can mark enemies for the team. Leave it off; a vehicle part that spots by itself (a radar, a spotter seat) is coded as a sensor.
+- **Vehicle boost**: from Battlefield 3 on, ground vehicles boost on the sprint key with no meter, and Battlefield 4 adds boats; helicopters do not boost. With no meter it counts in the unit's speed (see Speed bands), not as an ability or the boost trait. A jet's afterburner follows the jet's own page.
+
+PlanetSide 2, Foxhole, WARDOGS, ARC Raiders and MechWarrior / BattleTech have no list yet. Write one before any of their units is coded.
+
 ## Suggested research notes for the r6 agents
 
 - **Battlefield.**
   - Wiki: battlefield.fandom.com, through its API. Vehicle pages have one section per title. Infobox speeds are words before BF4.
   - Pick archetypes across titles: MBT, IFV, mobile AA, scout and attack helicopters, transport helicopter, jets, boats, behemoths, the BF2142 Titan and walker.
   - Record mirrored vehicles once, under `shared`.
+  - Official role lines for mirrored archetypes: no single side's text decides a role; use only text that every side's version shares. The class name the game shows for every side's version (for example Mobile Anti-Air, Scout Helicopter, Transport Helicopter) is such shared text.
   - Good patterns:
     - seat roles (driver fires the main gun, gunner on the top gun);
     - the BF3/4 vehicle upgrade picks (reactive armour, active protection, thermal optics);

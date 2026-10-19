@@ -32,7 +32,7 @@ Entries written: `ra1` (Red Alert with Counterstrike and The Aftermath) and `ra2
 - **RA1 damage:** EA's released source code lists the nine warheads (https://github.com/electronicarts/CnC_Remastered_Collection/blob/master/REDALERT/RULES.CPP), and DEFINES.H in the same folder says what each is for. SA (small arms) and HollowPoint (sniper bullets) map to kinetic, HE and Nuke to explosive, AP to armour-piercing, Fire to fire, Super (the Tesla warhead) to electric, Organic (the dog's bite) to melee, and Mechanical (the Field Mechanic's vehicle repair) to repair. The Medic's heal may also use Organic; record any healing weapon as repair, whatever its warhead.
 - **RA1 armour:** CONST.CPP in the same folder names five armour types: none, wood, light, heavy, concrete. Wood and concrete are building armour, so they are left out. RA1 puts every tank, from the Light Tank to the Mammoth, in "heavy". Treat the map as the default and place clearly lighter vehicles (Light Tank, APC) in our medium class, saying why.
 - **RA2 armour:** from the ModEnc page https://modenc.renegadeprojects.com/Armor_types (11 types). none and flak map to unarmoured: flak is a slightly tougher soldier type, and the wiki gives it to the Conscript. plate (armoured elite infantry) maps to light, as do light and special_1 (the Terror Drone). medium maps to heavy: ModEnc says only miners and the Kirov use it, and the Kirov should still be recorded as super-heavy (a T3 airship). heavy maps to heavy. Left out: wood, steel and concrete (buildings and defences) and special_2 (missiles in flight).
-- **No RA2 damage map.** Each RA2 weapon names its own warhead in the rules, dozens of them, not a short fixed list. Choose the damage type per weapon from what it does.
+- **No RA2 damage map.** Each RA2 weapon names its own warhead in the rules, dozens of them, not a short fixed list. Use step 5 under armament[].damage.
 - Wiki text sometimes disagrees with the infobox. The Grizzly's text says medium armour and the Lasher's says light, but both infoboxes say Heavy. Trust the infobox, which reflects the game data.
 
 ## Uncertain
@@ -46,8 +46,26 @@ Entries written: `ra1` (Red Alert with Counterstrike and The Aftermath) and `ra2
 
 - **Adds missing production and tech gates.** Soviet: Barracks t1, Naval Yard t1. Allied: Boot Camp t1, Seaport t1, Airbase t1, Defense Bureau t3 (Uprising FutureTech units such as the Cryo Legionnaire, Pacifier FAV, Future Tank X-1 and Harbinger Gunship). Empire: Instant Dojo t1, Dojo Upgrade t2, Dojo Breakthrough t3, Imperial Docks t1, Docks Upgrade t2, Docks Breakthrough t3. Without these, an agent researching a Conscript, Peacekeeper, Shinobi or any ship has no matching gate. Soviet aircraft use "Super Reactor", because the Airfield needs one, and the Kirov uses "Battle Lab". The Uprising Grinder needs a Super Reactor and a Crusher Crane (a tier 1 building), so its gate is "Super Reactor".
 - **Adds the wiki's Tier page as a fourth source.** The gate pages are Barracks (Red Alert 3), Boot camp (Red Alert 3), Instant dojo, Naval yard (Red Alert 3), Seaport, Imperial docks, Airbase and Defense bureau on cnc.fandom.com.
-- **No armour_map suggested.** RA3 has no short list of armour categories. Each unit has its own armour set (names such as BaseTankArmor or BaseAdvancedTankArmor, with a percentage against each of its damage types; some wiki infoboxes leave it blank), so mapping happens per unit, as the samples already do.
+- **No armour_map suggested.** RA3 has no short list of armour categories. Each unit has its own armour set (names such as BaseTankArmor or BaseAdvancedTankArmor, with a percentage against each of its damage types; some wiki infoboxes leave it blank), so mapping happens per unit, as the samples already do. Where an infobox gives a plain armour word (Light, Medium or Heavy), that word decides (step 2 of the armour-class order in the armour-classes list). Set names such as BaseTankArmor are not such words: go on to step 3. The three tanks averaged in the cost anchor are heavy.
+- **RA3 damage.** Magic (the Leech Beam's category, which hurts every armour type in full) and Spectrum are left out of the map on purpose: those weapons take step 5.
+- **Official role lines.** The C&C Wiki's <unit>/Profile pages copy the official RA3 site's unit profiles. Read the designation line before coding roles, and cite the page as kind wiki with a note. The role field in the main page's infobox (for example anti-surface robot scout) is the wiki's own words, not official text.
 - **Gap not fixed:** no `ra3` source backs the anchor price or the speed reference. The Hammer tank page gives 1,000 credits and land speed 75.
+
+## Game-wide mechanics
+
+Mechanics that belong to the game, not the unit (see Shared mechanics and universal keys in the Conventions). Leave them off every unit's weapons and abilities. A unit that does one of them better or worse than the rest says so in its strengths or weaknesses.
+
+### Red Alert 3 (`ra3`)
+
+Written for pilot round 1, from the Command & Conquer Wiki's Veterancy, Garrisoning and Top Secret Protocol pages.
+
+- **Basic orders** (move, attack, stop, stances): every unit. No pattern.
+- **Veterancy** (earn-veterancy): every unit climbs to Veteran, Elite and Heroic by fighting, by picking up veterancy crates, or by being built while its side holds Veteran Academies. The wiki names no unit that lacks it.
+- **Garrison** (carry-passengers, recorded on the building or bunker, not on the riders): infantry can enter garrisonable buildings and battle bunkers. Attack dogs and war bears cannot.
+- **Enter, leave and evict passengers**: universal keys, on every transport too. A transport keeps one passive for its passenger seats (see Paired entries).
+- **Top Secret Protocols** (side-wide powers bought with security points): a protocol that changes every unit of a class stays off, such as Terror Drone Surprise, which makes destroyed Soviet vehicles release Terror Drones. A protocol that gives named unit types a new button or effect, such as High Technology for Attack Dogs and Guardian Tanks, is recorded on each of them, with source commander-power.
+
+Red Alert 1 and Red Alert 2 have no list yet. Write one before any of their units is coded.
 
 ## Research notes for the r1 agents
 

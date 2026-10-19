@@ -5,7 +5,7 @@
   "description": "What a weapon can hit (on a weapon) or what kind of target a unit is (from its mobility; a tiny or small ground unit counts as infantry). Fliers are in one of two air layers: low air, which most direct-fire weapons can reach, and high air, which only anti-air weapons reach.",
   "group": "supporting",
   "status": "draft",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "infantry",
@@ -25,7 +25,8 @@
     {
       "id": "high-air",
       "label": "High air",
-      "description": "Jets and airships flying high above the fight. Only anti-air weapons reach them."
+      "description": "Jets and airships flying high above the fight. Only anti-air weapons reach them.",
+      "source_rule": "On a weapon: in a commanded game, list it for any weapon the sources say can attack air units, unless the game splits its fliers and this weapon cannot reach its jets or airships. In a piloted game (control piloted or both in data/games.json), list it only for a weapon built to bring down aircraft: the sources call it anti-air or anti-aircraft, it locks onto jets, or it is a flak gun. A weapon that could hit a passing jet by chance does not count."
     },
     {
       "id": "structure",
@@ -35,8 +36,9 @@
     {
       "id": "naval",
       "label": "Naval",
-      "description": "Ships and submarines. Research only.",
-      "source_only": true
+      "description": "Ships, boats and submarines. Research only.",
+      "source_only": true,
+      "source_rule": "On a weapon: in a game with ships or boats, list naval on every weapon that lists ground-vehicle, unless the sources say it cannot reach ships. In a game without ships or boats, never list it."
     }
   ]
 }

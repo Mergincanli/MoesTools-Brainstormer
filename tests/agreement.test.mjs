@@ -1,5 +1,6 @@
 // Tests for the agreement measure of the calibration pilot: the pair scores, ranked and count fields, sets, the unit
-// field extraction on the real sample units, the reference comparison, table files and the command line.
+// field extraction on the real sample units, the documented defaults and the readers added for word lists 1.0, the
+// reference comparison, table files and the command line.
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
@@ -8,6 +9,7 @@ import path from 'node:path'
 import { describe, it, after } from 'node:test'
 import {
   REPO_ROOT, UNIT_FIELDS, compareWithReference, jaccard, loadRanks, measure, readCoderFolders, readTable, renderMarkdown, unitCoding,
+  withDefaults,
 } from '../scripts/agreement.mjs'
 
 const AGREEMENT = path.join(REPO_ROOT, 'scripts/agreement.mjs')
@@ -111,6 +113,105 @@ describe('unit fields', () => {
   it('has unique field paths, and ranked fields name a ranked word list', () => {
     assert.equal(new Set(UNIT_FIELDS.map(f => f.path)).size, UNIT_FIELDS.length)
     for (const f of UNIT_FIELDS.filter(f => f.list)) assert.ok(ranks[f.list], `${f.path}: '${f.list}' is not ranked`)
+  })
+})
+
+// A small unit for the readers below: a pilot with rocket pods and a gunner with a chin cannon.
+const gunship = (over = {}) => ({
+  id: 'game.side.gunship', class: 'aircraft', body: { plan: 'rotorcraft', size: 'medium' },
+  crew: { model: 'driver-gunner', basis: 'in-game', solo_fallback: 'full-control' },
+  on_death: { outcomes: ['respawn'], basis: 'in-game' },
+  armament: [
+    { name: 'Rocket pods', slot: 'primary', family: 'rockets', mount: 'body-aim' },
+    { name: 'Chin cannon', slot: 'secondary', seat: 'gunner', family: 'autocannon', mount: 'free-aim' },
+  ],
+  abilities: [{ name: 'Flares', kind: 'active', patterns: ['fire-countermeasures'] }],
+  confidence: 'medium',
+  sources: [{ kind: 'wiki' }, { kind: 'wiki' }, { kind: 'official' }],
+  ...over,
+})
+
+describe('documented defaults', () => {
+  it('fills in seat, source, affects and body count before reading, without changing the unit', () => {
+    const u = gunship()
+    const before = structuredClone(u)
+    const filled = withDefaults(u)
+    assert.deepEqual(u, before)
+    assert.deepEqual(filled.armament.map(w => [w.seat, w.affects]), [['driver', 'enemies'], ['gunner', 'enemies']])
+    assert.deepEqual([filled.abilities[0].seat, filled.abilities[0].source], ['driver', 'innate'])
+    assert.equal(filled.body.count, 1)
+  })
+  it('keeps values that are written', () => {
+    const u = gunship({ body: { plan: 'rotorcraft', size: 'medium', count: 2 } })
+    u.armament[0].affects = 'both'
+    u.abilities[0].source = 'loadout'
+    const filled = withDefaults(u)
+    assert.equal(filled.armament[0].affects, 'both')
+    assert.equal(filled.abilities[0].source, 'loadout')
+    assert.equal(filled.body.count, 2)
+  })
+  it('lets a coder who writes a default agree with one who leaves it out', () => {
+    const a = gunship()
+    const b = gunship()
+    b.armament[0].seat = 'driver'
+    b.abilities[0].source = 'innate'
+    b.body.count = 1
+    const r = measure({ a: { u: unitCoding(a) }, b: { u: unitCoding(b) } }, { fields: UNIT_FIELDS, ranks })
+    for (const p of ['armament.seat', 'abilities.source', 'body.count', 'main weapon.seat', 'armament (seat, family, mount)']) {
+      assert.equal(field(r, p).agreement, 1, p)
+    }
+  })
+})
+
+describe('readers for word lists 1.0', () => {
+  const c = unitCoding(gunship())
+  it('reads both basis fields', () => {
+    assert.equal(c['crew.basis'], 'in-game')
+    assert.equal(c['on_death.basis'], 'in-game')
+    assert.equal(unitCoding(gunship({ crew: { model: 'solo' } }))['crew.basis'], undefined)
+  })
+  it('reads each weapon as seat/family/mount, so a split on one weapon shows', () => {
+    assert.deepEqual(c['armament (seat, family, mount)'], ['driver/rockets/body-aim', 'gunner/autocannon/free-aim'])
+    // The gunner's missile: free-aim for one coder, body-aim for the other. The mounts as one set are the same for
+    // both, so only the per-weapon reading shows the split.
+    const withMissile = mount => unitCoding(gunship({
+      armament: [...gunship().armament, { name: 'TV missile', slot: 'option', seat: 'gunner', family: 'guided-missiles', mount }],
+    }))
+    const [a, b] = [withMissile('free-aim'), withMissile('body-aim')]
+    assert.deepEqual(a['armament.mount'], b['armament.mount'])
+    assert.deepEqual(b['armament (seat, family, mount)'], ['driver/rockets/body-aim', 'gunner/autocannon/free-aim', 'gunner/guided-missiles/body-aim'])
+    assert.notDeepEqual(a['armament (seat, family, mount)'], b['armament (seat, family, mount)'])
+    const noMount = gunship()
+    delete noMount.armament[0].mount
+    assert.ok(unitCoding(noMount)['armament (seat, family, mount)'].includes('driver/rockets/-'))
+  })
+  it("reads the main weapon's mount and seat, with no seat read as driver", () => {
+    assert.equal(c['main weapon.mount'], 'body-aim')
+    assert.equal(c['main weapon.seat'], 'driver')
+    const tank = gunship()
+    tank.armament[0].seat = 'gunner'
+    assert.equal(unitCoding(tank)['main weapon.seat'], 'gunner')
+    assert.equal(unitCoding(gunship({ armament: [] }))['main weapon.seat'], 'driver')
+  })
+  it('reads confidence, lineage and the kinds of sources', () => {
+    assert.equal(c.confidence, 'medium')
+    assert.equal(c.lineage, '(none)')
+    assert.equal(unitCoding(gunship({ lineage: 'attack-helicopter' })).lineage, 'attack-helicopter')
+    assert.deepEqual(c['sources.kind'], ['official', 'wiki'])
+  })
+  it('marks seats as partly proposal and atypical rules as derived, for information only', () => {
+    const byPath = Object.fromEntries(UNIT_FIELDS.map(f => [f.path, f]))
+    assert.equal(byPath['armament.seat'].proposal, 'partly')
+    assert.equal(byPath['crew.basis'].proposal, 'partly')
+    assert.equal(byPath['armament (seat, family, mount)'].proposal, true)
+    const a = gunship({ atypical: [{ path: 'armament/0', rule: 'x:y classes z' }] })
+    const r = measure({ a: { u: unitCoding(a) }, b: { u: unitCoding(gunship()) } }, { fields: UNIT_FIELDS, ranks })
+    const atypical = field(r, 'atypical rules')
+    assert.equal(atypical.derived, true)
+    assert.equal(atypical.gated, false)
+    assert.equal(atypical.below, false)
+    assert.match(renderMarkdown(r), /\| atypical rules \| set \| 1 \| 0% \|  \| 0 of 1 \| derived, information only \|/)
+    assert.match(renderMarkdown(r), /\| armament\.seat \| set \| 1 \| 100% \|  \| 1 of 1 \| partly proposal \|/)
   })
 })
 

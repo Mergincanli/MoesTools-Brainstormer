@@ -5,7 +5,7 @@
   "description": "Where a source unit's ability comes from. Tier budgets count innate abilities only.",
   "group": "supporting",
   "status": "draft",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "innate",
@@ -31,6 +31,20 @@
       "id": "commander-power",
       "label": "Commander power",
       "description": "Granted by a faction-wide power or protocol, not by the unit itself."
+    }
+  ],
+  "tie_breaks": [
+    {
+      "terms": ["upgrade", "commander-power"],
+      "rule": "Pick commander-power when the unlock comes from the side's own power menu or tree, picked during the match outside any building: a doctrine, protocols, a general's promotions, battlegroups, leader powers. What it costs does not matter. Pick upgrade when it is bought or researched at a building or on the unit, even when it then reaches every unit of that type."
+    },
+    {
+      "terms": ["loadout", "upgrade"],
+      "rule": "Pick loadout when the player picks it from a set of choices when buying, spawning or fitting the unit. How a choice was first unlocked (score, rank, progression) does not matter. Pick upgrade when it is bought during the match and then stays."
+    },
+    {
+      "terms": ["innate", "veterancy"],
+      "rule": "Pick veterancy only when the ability itself first appears at a rank. An ability the unit has from the start is innate, even if ranks make it stronger. A cost per use, such as reinforcing or munitions, does not change the source."
     }
   ]
 }
