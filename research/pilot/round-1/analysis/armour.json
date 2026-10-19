@@ -1,0 +1,632 @@
+{
+  "key": "armour",
+  "analysis": {
+    "cluster": "Armour, matchups and the vocabulary gaps",
+    "summary": "Armour class and armour models agreed 100%, but the coders got there unsure. 8 of 12 reports hesitated on armour.class and all 12 on armour.models. The class list gives only example kinds, with no order for which source decides (the game's own word, the kind of unit, or toughness within the game). Three model descriptions contradict their own examples: flat-pool's RA3 example, zonal's Battlefield 4 example and crew-casualties' Company of Heroes example. Three set no threshold: directional, damage-reduction and evasive. I propose: an ordered coding rule for armour classes, anchored on each game's main battle tank; descriptions that name each kind of unit once; coding rules for six armour models; a rule that cover, veterancy and retreat bonuses are not models; and a rule on which titles of a series count. Matchup lists stay open choices. To make them more useful I propose a negated link (!hits:low-air), so a missing ability can be a weakness, and a short guide to choosing links. Of the 102 gaps, five are worth adding before the freeze (negated links, the retreat-to-base and fortify-point patterns, a pay-per-use resource, a thermal sensor trait). About twenty are covered by sharper wording or a field rule in other groups' lists. The rest should wait for the research run's gap report, which needs every gap written into fit_notes with '/' paths.",
+    "proposals": [
+      {
+        "id": "armour-class-order",
+        "fields": [
+          "armour.class",
+          "modes[].armour.class"
+        ],
+        "evidence": "Agreement 100% on all six units (Terror Drone light, Hammer heavy, Multigunner IFV light, Siege Tank heavy, Riflemen unarmoured, attack helicopter light; the RA3 samples agree), but 10 hesitations in 8 of 12 reports (A-ra3 x2, B-ra3, C-ra3 x2, A-sc2, B-sc2, C-sc2, B-coh1, C-battlefield) and 6 unclear-rule notes (A-ra3, A-sc2, B-sc2, C-battlefield, C-ra3, C-sc2). Drone light vs unarmoured (A, B, C: 'light lists drones, but it has half a Conscript's health and an infantry-like armour set'). IFV light vs medium (A, C: the game says Light, but the list names IFVs under medium). Siege Tank heavy vs medium (A, B, C: 'main battle tank' against middling health; no rule says whether the class is relative or absolute; the SC2 hint covers only Massive and Light Biological). Riflemen unarmoured vs light (B: does CoH's basic infantry type count as a 'tougher category'?). Helicopter light vs medium (C: no armour_map, and it is armoured against small arms).",
+        "root_cause": "armour-classes describes each class only by example kinds ('IFVs' under medium; 'drones' and 'helicopters' under light; 'main battle tanks' under heavy). The list says only 'how tough the unit is, as a band'. Nothing says whether the game's own label, the kind of unit or its toughness within its game decides, or which wins when they disagree. ra3, sc2, coh1 and battlefield have no armour_map, so the examples were all the coders had. Under light, 'unless their game gives them a tougher category' does not say what counts as a category.",
+        "kind": "tie-break",
+        "target": "data/vocab/armour-classes.json: list description and a new tie_breaks array (two entries)",
+        "change": "1) List description, old -> new: 'How tough the unit is, as a band. Combined with one or two armour models on the card.' -> 'How tough the unit is next to the other units of its own game, as a band. Where the game has no armour map, its main battle tank is the fixed point: it is heavy. Combined with one or two armour models on the card.'\n2) tie_breaks[0], terms [unarmoured, light, medium, heavy, super-heavy], rule: 'Go through these steps in order and stop at the first one that gives an answer. 1. The game's armour_map in data/games.json, with any step up or down its registry notes name. 2. The game's own armour word for this unit, when the word is light, medium or heavy. Skip this step for Tiberian Dawn, Tiberian Sun, Tiberium Wars, Company of Heroes 1 to 3 and StarCraft II, whose words cut across our classes. 3. The tank named in the game's cost anchor is heavy; in a game without costs, its standard main battle tank. 4. The kinds named in the class descriptions. 5. For a kind named nowhere, compare its health and the weapons that hurt it with that tank (heavy) and with the game's basic rifle infantry (unarmoured). Say in armour.notes which step decided.'\n3) tie_breaks[1], terms [unarmoured, light], rule: 'A machine is never unarmoured: a drone or robot with very little health is light. A soldier or animal is unarmoured unless step 1 or 2 lifts it. Protection every soldier of the game can get, such as cover, veterancy ranks or the retreat bonus, never lifts the class; mention it in armour.notes.'",
+        "expected": "Terror Drone: no map; its armour set has no class word; not a tank; step 4 'drones' -> light, and tie-break 2 rules out unarmoured (A, B, C and the sample: light). Hammer: step 3, ra3's cost anchor names it -> heavy. Multigunner IFV: step 2, the infobox word 'Light' -> light; the IFV example under medium no longer competes (A, B, C, sample: light). Siege Tank: step 2 skipped for StarCraft II; step 3, sc2's cost anchor is the Siege Tank -> heavy (A, B, C). Riflemen: step 2 skipped for Company of Heroes; step 4 soldiers -> unarmoured; cover and veterancy cannot lift it (A, B, C). Attack helicopter: no map; no word from a lead title (see series-titles); step 4 'helicopters (gunships included)' -> light (A, B, C). Toughness felt from play is not a step, so C's 'medium' doubt has nothing to rest on. Each unit is decided by exactly one step, so no two coders are left free to differ.",
+        "side_effects": "Run npm run docs. Goes with armour-class-descriptions (each kind named once) and armour-registry-notes. Validator: the tie_breaks name real terms; nothing else changes. Units in scope: Tiberian Dawn's Nod Light Tank becomes heavy, because the cost anchor names it. That matches Renegade's armour_map, which already counts it as a heavy vehicle. Tiberian Sun's Titan and Tick tank both become heavy (both in the anchor). StarCraft II Armored ground units weaker than the Siege Tank (Roach, Stalker) fall to step 4 or 5 and come out medium; Massive t3 units come out heavy or super-heavy. Games with a map (Foxhole, Iron Harvest, Tempest Rising, Generals and others) are decided at step 1. That is why the description says 'where the game has no armour map': a map that puts the anchor tank elsewhere must not clash with it.",
+        "priority": "should"
+      },
+      {
+        "id": "armour-class-descriptions",
+        "fields": [
+          "armour.class"
+        ],
+        "evidence": "Same 8 of 12 reports as armour-class-order. A-ra3 and C-ra3 unclear rules: the examples (IFVs medium, buggies and drones light) conflict with the game's own category. C-sc2: 'main battle tanks' as an example, but no statement that the class is relative to the game.",
+        "root_cause": "The descriptions are bare example lists. A kind can sit in two classes (a buggy-like IFV; 'armoured infantry' under light against 'power suits' under medium). No description says what toughness the band means within its game.",
+        "kind": "term-description",
+        "target": "data/vocab/armour-classes.json terms unarmoured, light, medium, heavy, super-heavy: description",
+        "change": "unarmoured: 'Flesh and cloth: soldiers and animals.' -> 'Flesh and cloth: soldiers, animals and creatures without armour plating. A game's basic rifle infantry is unarmoured. Never a machine.'\nlight: 'Buggies, drones, helicopters and armoured infantry. Soldiers are unarmoured unless their game gives them a tougher category.' -> 'Machines that light weapons still hurt, and soldiers in real armour: buggies, jeeps and trucks, drones, helicopters (gunships included), planes and boats, and soldiers whose game puts them a step above its basic rifle infantry (heavy infantry, power armour).'\nmedium: 'IFVs, light tanks, power suits, light walkers.' -> 'Shrugs off most light weapons but is clearly weaker than the game's main battle tank: IFVs and APCs, light tanks, exosuits bigger than a soldier, and light walkers.'\nheavy: 'Main battle tanks and assault mechs.' -> 'The game's main battle tank and units about as tough: other battle tanks and assault mechs.'\nsuper-heavy: 'Super-heavy tanks, giant mechs and airships.' -> 'Clearly tougher than the game's main battle tank: super-heavy tanks, giant mechs and airships.'",
+        "expected": "Step 4 of armour-class-order now gives one answer per kind. Drone -> light; attack helicopter -> light (gunships named); Riflemen -> unarmoured (basic rifle infantry). An IFV is medium only when its game gives no word of its own; RA3's IFV has the word Light, so it stays light. Hammer and Siege Tank -> heavy (the game's main battle tank). A, B and C code all six units as they did, and the hesitations lose their cause.",
+        "side_effects": "Run npm run docs. No change to allowed maps or ranks. 'Power armour' (a soldier in armour, light) and 'exosuits bigger than a soldier' (medium) are now told apart, which matches the bodies list (power-suit at small size is infantry, at medium a walker). Jets and bombers now have a home (planes, light), so a unit like a heavy bomber reaches medium or heavier only through a map, a game word or step 5.",
+        "priority": "should"
+      },
+      {
+        "id": "unarmoured-organic-only",
+        "fields": [
+          "armour.class"
+        ],
+        "evidence": "A-ra3, B-ra3 and C-ra3 all weighed unarmoured for the Terror Drone because its armour set is infantry-like (3 of 3 reports that coded it).",
+        "root_cause": "Nothing stops a machine from being coded or rolled as 'flesh and cloth'.",
+        "kind": "combination-rule",
+        "target": "data/vocab/armour-classes.json term unarmoured, allowed",
+        "change": "allowed: {\"sizes\": [\"tiny\", \"small\"]} -> {\"sizes\": [\"tiny\", \"small\"], \"nature\": [\"organic\"]}",
+        "expected": "No pilot unit changes: the drone is light, and the only unarmoured unit (Riflemen) is organic. If a coder ever codes a machine as unarmoured, the validator prints an ATYPICAL line, which shows the slip at once.",
+        "side_effects": "nature is a list the combination rules read (UNIT_PARTS), so the map is valid. The example card (an uncrewed-machine drone, light) and the samples still pass. The generator will never roll an unarmoured machine. No real unit in scope should break it: RA2's terror drone maps to light, and ARC Raiders machines start at light.",
+        "priority": "could"
+      },
+      {
+        "id": "armour-registry-notes",
+        "fields": [
+          "armour.class"
+        ],
+        "evidence": "A-sc2, B-sc2, C-sc2 and A-ra3, C-ra3 (5 reports) asked for an armour_map for sc2 or ra3, or said the registry hint does not decide. B-sc2: 'The registry hint covers Massive and Light Biological only, not plain Armored.'",
+        "root_cause": "games-r1.md says RA3 maps per unit but gives no rule. games-r5.md gives SC2 hints only for Massive and Light Biological units, and says nothing about plain Armored units or the anchor tank.",
+        "kind": "registry",
+        "target": "research/registry-notes/games-r1.md (RA3 'No armour_map suggested' bullet) and research/registry-notes/games-r5.md ('No maps for SupCom, PA, SC2 or HW2' bullet); data/games.json unchanged",
+        "change": "Keep ra3 and sc2 without an armour_map. RA3 gives each unit its own armour set with percentages (BaseTankArmor, BaseHarassmentVehicleArmor and so on), and only a few infoboxes carry a plain word. SC2's attributes cut across our classes: Armored covers both the Siege Tank and the Roach. A map with one class per key would code both wrongly.\ngames-r1.md, RA3 bullet, append: 'Where an infobox gives a plain armour word (Light, Medium or Heavy), that word decides (step 2 of the armour-class order in the armour-classes list). The three main battle tanks in the cost anchor are heavy. Everything else follows that order.'\ngames-r5.md, replace 'Use them as hints: Massive means heavy or super-heavy, and Light Biological infantry means unarmoured.' with 'Use them only as hints inside the armour-class order. The Siege Tank, the cost anchor, is heavy. Armored ground vehicles and walkers clearly weaker than it are medium, and armoured infantry such as the Marauder is light. Massive units are heavy, or super-heavy at t3 when clearly tougher than the Siege Tank. Light Biological infantry is unarmoured, and Light machines are light.'",
+        "expected": "Siege Tank heavy (A, B, C). Multigunner IFV light from its infobox word (A, B, C). Terror Drone light (its infobox gives an armour set with no word, so steps 4 and 5 decide). Hammer heavy (anchor).",
+        "side_effects": "Notes only; no validator change. Units in scope for the research run: SC2 Roach, Stalker and Cyclone come out medium; the Marauder light; the Thor, Ultralisk and Battlecruiser heavy or super-heavy.",
+        "priority": "should"
+      },
+      {
+        "id": "flat-pool-fallback",
+        "fields": [
+          "armour.models"
+        ],
+        "evidence": "8 reports quoted flat-pool's 'used only when no other model applies' against a case where it seemed to apply too: A-ra3, B-ra3 and C-ra3 on the Hammer (flat-pool + directional?); A-sc2, B-sc2 and C-sc2 on the Siege Tank; A-coh1 and B-coh1 on the Riflemen. B-ra3: 'its own example describes RA3's per-armour-type scaling', which every RA3 unit has, the directional Hammer included. B-ra3 unclear rule on flat-pool vs directional. All coders and the sample still agreed (Hammer directional alone; drone and IFV flat-pool alone).",
+        "root_cause": "flat-pool is both a fallback ('used only when no other model applies') and a definition ('one health bar'), which is true of nearly every unit. Its RA3 example (damage first scaled by the armour type) describes something every RA3 unit has, so the example contradicts the fallback rule. Nothing says whether it may sit next to another model.",
+        "kind": "source-rule",
+        "target": "data/vocab/armour-models.json term flat-pool: description, new source_rule, examples[0]",
+        "change": "description: 'One health bar; every hit subtracts. The easiest to read. Used only when no other model applies.' -> 'One health bar and nothing more: every hit just subtracts. The easiest to read.'\nsource_rule (new): 'Code it only when no other model on this list applies, and never together with another model. Damage scaled by armour type or class, as in most strategy games, is the armour class's job: it does not rule out flat-pool, and it does not make the unit another model.'\nexamples[0]: 'Red Alert 3: one health value per unit, with damage first scaled by the unit's armour type' -> 'Red Alert 3: the Multigunner IFV has one health value; its armour type only scales the damage each kind of weapon does'",
+        "expected": "Hammer: directional alone (A, B, C, sample). Terror Drone and IFV: flat-pool alone (A, B, C, sample). Riflemen: flat-pool alone (A, B, C; see shared-bonuses-not-models). Siege Tank: flat-pool alone (see damage-reduction-threshold). Attack helicopter: critical-burn, self-repair, zonal, no flat-pool. Nobody can add flat-pool next to another model.",
+        "side_effects": "Run npm run docs. Optional: add excluded.armour-models (every other id) to flat-pool, so a card never pairs it with a model. Not recommended: on a researched unit a break would be a coding slip, not an atypical unit. The generator should treat flat-pool as 'no special model' and roll it alone.",
+        "priority": "must"
+      },
+      {
+        "id": "directional-threshold",
+        "fields": [
+          "armour.models"
+        ],
+        "evidence": "B-ra3 hesitated on directional for the Terror Drone and the IFV ('only the tank armour sets show it'). A-ra3, B-ra3 and C-ra3 hesitated on how mild a bonus still counts for the Hammer ('side and rear hits add only 5 to 10 percent'). B-ra3 unclear rule: 'Nothing says how small a side or rear bonus still counts as directional.' 3 of 3 ra3 reports.",
+        "root_cause": "The directional term gives RA3 as a 'mild' example, but does not say whether the facing values must belong to the unit itself or to the game, or how small a bonus may be.",
+        "kind": "source-rule",
+        "target": "data/vocab/armour-models.json term directional: new source_rule; RA3 example",
+        "change": "source_rule (new): 'Code it when the unit's own data, or a rule its game applies to every unit of its kind, makes side or rear hits do more, however little; say how much in armour.notes. Leave it out when neither gives this unit facing values, even if some other units of its game have them.'\nexample: 'Red Alert 3: mild; side and rear hits do slightly more' -> 'Red Alert 3: mild; the tank armour sets take a little more damage on the sides and rear'",
+        "expected": "Hammer: its armour set gives side and rear values -> directional (A, B, C, sample). Terror Drone: its armour set has no facing values -> no directional, flat-pool (B's doubt settled). IFV: the infobox gives only 'Light' -> flat-pool. Company of Heroes vehicles: the game's rear-armour rule covers every vehicle -> directional.",
+        "side_effects": "Run npm run docs. No validator change. Consistent with shared-bonuses-not-models, which keeps game-wide armour mechanics (CoH rear armour) and drops only bonuses from position or rank.",
+        "priority": "should"
+      },
+      {
+        "id": "damage-reduction-threshold",
+        "fields": [
+          "armour.models"
+        ],
+        "evidence": "All three SC2 reports hesitated (A-sc2, B-sc2, C-sc2): 'every SC2 unit has flat armour, and the tank's is tiny (1 point)'; 'coded literally, every SC2 unit gets damage-reduction'. All three chose damage-reduction and named flat-pool as the alternative. A-sc2 unclear rule asks for a threshold. C-battlefield: 'if they ignore small arms, damage-reduction would fit, but it is barred on light'. B-ra3 (Hammer): '0 percent from sniper and melee and 50 percent from guns resembles damage reduction, but by percentage'.",
+        "root_cause": "The term's StarCraft II example covers any armour value however small, so the term no longer separates units. No rule says that a cut by percentage or by damage type (RA3 armour sets, Battlefield vehicles ignoring bullets) belongs to the armour class and damage map, not to this model. The PlanetSide 2 example ('tanks ignore small arms') is such a damage-type resist, which makes it worse.",
+        "kind": "source-rule",
+        "target": "data/vocab/armour-models.json term damage-reduction: new source_rule; examples",
+        "change": "source_rule (new): 'Code it only when the game takes a fixed amount off each hit, and the amount changes which weapons work: the game's basic rifle or light gun loses a large share of each hit to it, about a quarter or more. Judge the unit without faction-wide upgrades. A smaller value only trims hits; mention it in armour.notes. A cut by percentage or by damage type (guns doing half damage to tanks, small arms doing nothing to vehicles) is the armour class and the damage map, not this model.'\nexamples: replace 'StarCraft II: armour takes a fixed amount off every hit, but every hit still does a little damage' with 'StarCraft II: each unit's armour value comes off every hit; on the most armoured units, such as an Ultralisk with its plating upgrade, rapid light fire does much less'. Remove 'PlanetSide 2: main battle tanks ignore small arms completely' (a resist by damage type).",
+        "expected": "Siege Tank: a Marine shot loses well under a quarter to its small armour -> no damage-reduction -> flat-pool (A, B and C move together, to the alternative all three named). Attack helicopter: bullets do nothing because of the damage type, not a flat amount -> no damage-reduction (C's doubt settled). Hammer: percentage cuts -> not damage-reduction (B's doubt settled).",
+        "side_effects": "Run npm run docs. Armour model agreement on the Siege Tank stays 100% (all move). Also avoids ATYPICAL noise in the research run: SC2 Light units with a point of armour (Zealot, Mutalisk) would otherwise break damage-reduction's allowed.armour-classes. Units that keep it: SC2 Ultralisk, Battlecruiser and other high-armour units. PlanetSide 2 tanks get small-arms immunity from the damage map instead.",
+        "priority": "should"
+      },
+      {
+        "id": "zonal-any-trigger",
+        "fields": [
+          "armour.models"
+        ],
+        "evidence": "A-battlefield, B-battlefield and C-battlefield all coded zonal and all hesitated: 'Zonal's definition is about parts that break, but its seen-in list names Battlefield 4 mobility kills, which are triggered by heavy hits anywhere'. Gaps A-battlefield and B-battlefield wanted 'control loss on heavy hits'. A-battlefield unclear rule: 'Coders following the definition and coders following the examples will split.' 3 of 3 battlefield reports.",
+        "root_cause": "The description says hits 'land on parts', which reads as location-based. Two of its own examples are not location-based: Battlefield 4 mobility hits come from hit strength, and Company of Heroes criticals come by chance. Definition and examples contradict each other.",
+        "kind": "term-description",
+        "target": "data/vocab/armour-models.json term zonal: description, new source_rule, Battlefield 4 example",
+        "change": "description: 'Hits land on parts such as tracks, turret, engine, legs or a weapon, which can break and switch off functions before the unit dies.' -> 'Parts such as tracks, turret, engine, rotor, legs or a weapon can be knocked out before the unit dies, switching that function off for a while or for good. The part may be chosen by where the hit lands, by a heavy hit or by chance.'\nsource_rule (new): 'Code it when the sources say a hit can switch off one function (movement, steering, a weapon) while the unit lives on, however the part is chosen. Being disabled as a whole and burning at low health is critical-burn, not zonal.'\nexample: 'Battlefield 4: heavy hits cause mobility kills' -> 'Battlefield 4: a heavy hit can knock out a vehicle's movement, or a helicopter's control, for a few seconds'",
+        "expected": "Attack helicopter: zonal (A, B, C) with nothing left to doubt; the two gaps close. Critical-burn stays separate (A, B, C).",
+        "side_effects": "Run npm run docs. The label 'Zonal damage' can stay. On cards, zonal now also covers 'a big hit stalls you'. The excluded sizes (tiny, small) stay.",
+        "priority": "must"
+      },
+      {
+        "id": "crew-casualties-squad",
+        "fields": [
+          "armour.models"
+        ],
+        "evidence": "C-coh1 hesitation and unclear rule: 'crew-casualties cites Company of Heroes squads as its example, yet the term bans the squad crew model'. A-coh1: 'crew-casualties is banned for squads'. A-battlefield, B-battlefield and C-battlefield weighed it for the canopy-glass sniper hits, found only in Battlefield 2. All coders left it out.",
+        "root_cause": "The term's first example (CoH soldiers and gun crewmen tracked one by one) describes a squad or team weapon, which the term's excluded.crew-models [solo, squad, remote] rules out. The example and the rule contradict each other.",
+        "kind": "term-description",
+        "target": "data/vocab/armour-models.json term crew-casualties: examples[0] removed, new source_rule",
+        "change": "Remove examples[0] 'Company of Heroes: each soldier and gun crewman is tracked; a gun without crew can be captured'. Keep the Foxhole and Wargame examples.\nsource_rule (new): 'Code it only for a unit with two or more seats whose sources say hits can kill or throw out the people inside while it survives (open seats, shots through the glass). Never for a squad: losing members is part of the squad crew model.'",
+        "expected": "Riflemen: no crew-casualties (A, B, C), flat-pool. Attack helicopter: the glass shots are in Battlefield 2 only, which series-titles leaves out, so no crew-casualties (A, B, C as now), and the three-model cap no longer pinches.",
+        "side_effects": "Run npm run docs. No change to excluded.crew-models. How a CoH team weapon (MG team) is crewed is for the crew group to decide; this rule only bans squads.",
+        "priority": "must"
+      },
+      {
+        "id": "shared-bonuses-not-models",
+        "fields": [
+          "armour.models",
+          "armour.notes"
+        ],
+        "evidence": "Riflemen: A-coh1, B-coh1 and C-coh1 all hesitated between flat-pool and evasive ('CoH has an explicit hit-chance system: received accuracy, cover, veterancy harder to hit'). Gaps from all three: 'cover-based protection'; A-coh1 also 'per-member health within a squad'. A-coh1 unclear rule: 'It is unclear whether CoH's explicit hit-chance system qualifies as evasive'. C-coh1 unclear rule on game-wide mechanics (cover, veterancy, retreat). A-ra3 left out the Hammer's heroic-rank self-heal as a veterancy effect. 3 of 3 coh1 reports plus A-ra3.",
+        "root_cause": "evasive asks for 'an explicit evasion mechanic (a miss chance)' but does not say whose it must be; CoH has a miss chance, but it comes from position and rank. No rule says that protection from cover, veterancy or orders is not the unit's own armour. self-repair's RA3 example ('top-rank ... vehicles heal themselves') counts a veterancy effect as a model. Nothing says how to code a squad, whose members each have their own health.",
+        "kind": "source-rule",
+        "target": "data/vocab/armour-models.json: list description; term evasive new source_rule; term self-repair examples[0]",
+        "change": "List description, append: 'Code what this unit has. Protection that comes from where it stands or what it has earned, such as cover, veterancy ranks, the retreat bonus or difficulty settings, is not a model, even though the unit benefits; mention it in armour.notes. A model built into the unit's own armour counts even when every unit of its kind in the game shares it (Company of Heroes rear armour). For a squad, code what protects each member; losing members is part of the squad crew model.'\nevasive source_rule (new): 'Code it only when the unit itself has a way to dodge: a dodge roll, a stated chance to avoid hits, or a hard-to-hit trait of its own. Hit chance from cover, rank or moving, which every soldier of the game gets, is not evasive.'\nself-repair: remove examples[0] 'Red Alert 3: top-rank and some heavy vehicles heal themselves' (top-rank healing is veterancy, which the new rule leaves out).",
+        "expected": "Riflemen: flat-pool only (A, B, C), with cover, veterancy and retreat in armour.notes, as all three already wrote. The three cover gaps and the per-member gap close. Hammer: heroic self-heal not coded (A's reasoning confirmed; B and C did the same). CoH vehicles still get directional.",
+        "side_effects": "Run npm run docs. Cover stays a map and class matter (the infantry class says it uses cover). Pairs with the abilities group's answer to C-coh1's game-wide question; this rule settles only the armour side. Units in scope: CoH and DoW infantry (cover, veterancy) come out flat-pool unless they have their own model; units with a dodge of their own (a shooter dodge roll, a hard-to-hit commando) keep evasive.",
+        "priority": "should"
+      },
+      {
+        "id": "armour-model-cap-order",
+        "fields": [
+          "armour.models"
+        ],
+        "evidence": "A-battlefield ('With a cap of 3, adding one drops another') and C-battlefield ('With a three-model cap, I had to choose which title's mechanics win').",
+        "root_cause": "A researched unit may carry up to three models, but nothing says which to keep when more apply.",
+        "kind": "convention",
+        "target": "data/vocab/armour-models.json: list description, the sentence 'A card has one or two; a researched unit up to three.'",
+        "change": "'A card has one or two; a researched unit up to three.' -> 'A card has one or two; a researched unit up to three. If more apply, keep the rarest (rare, then uncommon, then common; on a tie, the one listed first here) and name the others in armour.notes.'",
+        "expected": "Attack helicopter: with series-titles only three models apply (critical-burn, self-repair, zonal), so nothing changes for A, B, C. If a coder still counted Battlefield 2's crew-casualties, the rule would keep crew-casualties, critical-burn and zonal and drop self-repair, so two coders could not differ.",
+        "side_effects": "Run npm run docs. Uses the existing rarity field; no validator change. Leans the data toward rarer mechanics, which suits a concept generator.",
+        "priority": "could"
+      },
+      {
+        "id": "series-titles",
+        "fields": [
+          "armour.models",
+          "countered_by",
+          "on_death.outcomes",
+          "abilities.cooldown"
+        ],
+        "evidence": "Armour models: A-battlefield, B-battlefield and C-battlefield all weighed crew-casualties, sourced only for Battlefield 2, and zonal, found only in Battlefield 4 ('No rule says which titles of a series entry count'). countered_by: B-battlefield ('the explicit statements come from the BF2 section'). Unclear rules: B-battlefield ('which titles count for a series entry') and C-battlefield ('no rule says which title wins ... or whether to take the union of mechanics'). 3 of 3 battlefield reports.",
+        "root_cause": "games.json battlefield.version_researched says Battlefield 3 and 4 lead, with other titles 'for archetypes they add'. Nothing says whether a fact from another title of the same archetype may fill a field, or what to do when the lead titles differ.",
+        "kind": "convention",
+        "target": "scripts/build-docs.mjs Conventions list (new 'Series' bullet, shown in docs/fields.md) and schemas/game.schema.json $defs.game.properties.version_researched description. Cross-group: also governs cooldown and on-death values, so the groups for those fields should agree.",
+        "change": "New Conventions bullet: '**Series.** For a games.json entry of kind series, a mechanic counts when a lead title named in version_researched has it, or a title named there for the archetype being coded. Facts from the series' other titles do not fill fields; mention them in notes. When the lead titles differ, code the mechanic and say in notes which title has it. Matchups follow from the coded parts.'\nversion_researched description: 'Patch, edition or date the research describes.' -> 'Patch, edition or date the research describes. For a series, name the lead titles and any title used for an archetype it adds; facts from its other titles do not fill fields.'",
+        "expected": "Attack helicopter: zonal (Battlefield 4, a lead title) coded by A, B, C. crew-casualties (Battlefield 2 only) left out by A, B, C, with the glass shots in armour.notes, as B already did. countered_by: B's entries stay, because jets with anti-air missiles and tank guns that reach low fliers are coded parts of BF3/4 units; A, B and C already share role:anti-air, weapon:guided-missiles, mobility:jet and weapon:cannon. The BF2 flare recharge no longer sets a cooldown band (abilities group).",
+        "side_effects": "Run npm run docs. Applies to battlefield, wargame and mechwarrior, the three series entries. No validator change.",
+        "priority": "should"
+      },
+      {
+        "id": "negated-links",
+        "fields": [
+          "weaknesses",
+          "counters",
+          "countered_by",
+          "strengths",
+          "combos"
+        ],
+        "evidence": "Gaps A-sc2, B-sc2 and C-sc2 (all three SC2 reports): 'a negative self-link such as cannot hit low-air or high-air'. The tank's best-known weakness, no anti-air at all, could only be written on the enemy side. Unclear rules A-ra3 ('Weaknesses that are absences ... a lacks or cannot-hit link kind would make these consistent'), B-sc2 and C-sc2. The RA3 sample shows the workaround: the Hammer's weakness weapon:cannon carries the reason 'can't hit aircraft'. Matchups as a whole: hesitations in 9 of 12 reports.",
+        "root_cause": "A weakness link must describe a part the unit has (the validator warns otherwise), so a missing ability, the most common RTS weakness, cannot be written. Coders hang it on an unrelated part or move it to countered_by, which hides it from the generator's strength-weakness pairing.",
+        "kind": "field-rule",
+        "target": "schemas/common.schema.json ($defs.relation.ref -> new $defs.relationRef); scripts/validate.mjs (parseRef, matches, checkRef); scripts/build-docs.mjs Conventions, 'Typed links' bullet",
+        "change": "1) common.schema.json: add $defs.relationRef = {\"description\": \"A typed link, optionally with ! in front, meaning the unit does not have that part (for example !hits:low-air: has no weapon that can hit low air). Not with unit links.\", \"type\": \"string\", \"pattern\": \"^!?(class|role|tier|damage|armour-class|armour-model|weapon|mobility|mobility-trait|handling|body|size|speed|crew|passengers|mount|delivery|range|weapon-trait|target|hits|sight|sensor|nature|category|resource|pattern|unit):(<=|>=)?[a-z0-9]+([.-][a-z0-9]+)*$\"}. Point relation.ref at it. requires, excludes, implies, when, strong_vs and the card strengths keep the plain ref.\n2) validate.mjs: parseRef strips a leading '!' and returns neg: true; matches() returns the opposite result when neg; checkRef reports an error for '!unit:' ('a unit link can't be negated').\n3) Typed links bullet, append: 'In matchups a link may start with !, meaning the unit lacks that part: !hits:low-air = has no weapon that can hit low air. Use it in weaknesses for something the unit lacks. For air, write the lowest layer it can't reach: !hits:low-air when it hits no flier, !hits:high-air when it reaches low fliers only. The enemy that exploits the gap goes in countered_by.'",
+        "expected": "Siege Tank: A, B and C each add !hits:low-air to weaknesses (both weapons reach only infantry, ground vehicles and structures), keep class:aircraft in countered_by, and the own-parts check passes. Terror Drone and Hammer can state the same (both have only ground weapons) instead of hanging it on range:melee or weapon:cannon.",
+        "side_effects": "Add tests: a negated link that matches, a negated link that fails, and an error for '!unit:'. agreement.mjs treats refs as strings, so nothing changes there. Card matchups.weaknesses, counters and countered_by use relation, so cards gain it too (useful: 'cannot shoot up' as the weakness paired with a strength). Pattern generator adds_weaknesses also accepts it. Rebuild docs. The sample can adopt it (sample-matchup-fixes).",
+        "priority": "should"
+      },
+      {
+        "id": "matchup-link-guidance",
+        "fields": [
+          "strengths",
+          "weaknesses",
+          "counters",
+          "countered_by",
+          "combos"
+        ],
+        "evidence": "Information-only overlap: strengths 52%, weaknesses 56.1%, counters 35.9%, countered_by 71.5%, combos 34.3%; against the samples 26-56%. 25 hesitations in 9 of 12 reports: counters (A-coh1, B-sc2, C-coh1, C-sc2), countered_by (B-battlefield, B-sc2 x3, C-sc2), countered_by.ref (A-sc2 x2, B-coh1), counters.ref (A-sc2 x2, B-coh1), combos.ref (B-battlefield, B-coh1, C-battlefield), link kinds (A-battlefield, C-battlefield), combos (A-coh1), weaknesses (A-coh1), strengths.ref (B-battlefield), countered_by-3 (C-sc2). 9 unclear-rule notes: A-battlefield 'Many link kinds can name the same enemy ... no preference order', C-sc2 'Nothing says when same-game unit links are preferred', B-battlefield and C-battlefield 'is a WARN on a planned-pattern link acceptable?'. Spread: C used unit links where others used typed ones (Hammer counters unit:ra3.allied.guardian-tank, unit:ra3.empire.tsunami-tank; drone combos unit:ra3.soviet.bullfrog, twinblade). Siege Tank air: A target:low-air vs B, C class:aircraft. Comparators: B range:long vs range:>=long; B armour-class:medium vs C >=medium. Same enemy on both lists: A-coh1 machine guns.",
+        "root_cause": "The Typed links convention lists the link kinds but gives no order of choice, no rule for unit links or for links to the unit itself, none for comparators on the unit's own values, none for the air layers in an RTS, none for an enemy that wins or loses depending on tactics, and none for planned-pattern links.",
+        "kind": "convention",
+        "target": "scripts/build-docs.mjs Conventions (new 'Matchups' bullet after Typed links, shown in docs/fields.md); schemas/source-unit.schema.json descriptions of strengths, weaknesses, counters, countered_by and combos: append 'See Matchups under Conventions.' Cross-group for item 8 (the Ids convention).",
+        "change": "New bullet: '**Matchups.** Write the reason first, then pick the link that names the part behind it. (1) Name the other unit the way the sources do: by its job (role:anti-armour, role:anti-air) when they name a job; by what it fires when they name a weapon (weapon:machine-gun) or a kind of harm (damage:electric); by what it is (class:aircraft, class:infantry, armour-class:heavy) when they name a kind of unit. (2) For fliers, use class:aircraft when the point holds for every flier; use target:low-air or target:high-air only when it holds for one layer. (3) Prefer word-list links. Add a unit: link only for a same-game partner or rival the sources name, next to a word-list link for the same reason. A link to the unit itself is fine in combos when the sources say it works best in numbers. (4) In strengths and weaknesses, give the unit's own value with no <= or >= (range:long, not range:>=long). Use comparators only in counters, countered by and combos, for a group of units. (5) Something the unit lacks is a weakness written with ! (see Typed links). (6) The same enemy may sit in counters and in countered by only when the two reasons name different situations. Otherwise put it where the head-on fight at equal cost ends, and give the tactic that turns it in the reason. (7) Most important first; keep each list short, about two to five. A link to a planned pattern is fine; its warning clears when the pattern is written. (8) A unit: link to a unit not yet researched uses the slug its entry would get: the in-game name, dropping a final Squad or Team (Riflemen Squad -> riflemen).'",
+        "expected": "The lists stay open choices; the guidance aims at usefulness, not at forcing agreement. Siege Tank countered_by: A's target:low-air becomes class:aircraft (all three now share it); C's unit:sc2.protoss.immortal and unit:sc2.terran.thor get role:anti-armour next to them, so all three share role:anti-armour; weaknesses gain !hits:low-air for all three. Hammer counters: C's unit links get class:vehicle beside them (shared with A, B and the sample). Terror Drone combos: C's unit:ra3.soviet.bullfrog and twinblade get role:transport (shared with A and the sample). Attack helicopter: B's range:long is the right form; pattern:mark-target in combos (B, C) is accepted without doubt. Riflemen: A's machine-gun entries on both lists stay, because the reasons name different situations (head-on vs grenades); A's slug becomes coh1.wehrmacht.volksgrenadier. Overlap should rise on the shared core (roles, weapons, classes), while extra entries remain each coder's choice.",
+        "side_effects": "Docs only; no validator change. Item (8) touches the Ids convention, which another group may own; say so when merging. Item (2) sidesteps the RTS air-layer question for matchups; the can_target group still has to settle it for weapons. The samples mostly follow it already; see sample-matchup-fixes for the one place they don't.",
+        "priority": "should"
+      },
+      {
+        "id": "sample-matchup-fixes",
+        "fields": [
+          "weaknesses",
+          "countered_by"
+        ],
+        "evidence": "Reference comparison: weaknesses 36.5% and countered_by 54.8% coder-to-sample. The sample hangs the Hammer's 'can't hit aircraft' on weapon:cannon (the workaround A-ra3 flagged), and links unit:ra3.soviet.terror-drone in countered_by with no word-list link for the same reason.",
+        "root_cause": "The samples predate negated links and the unit-link guidance.",
+        "kind": "sample-fix",
+        "target": "data/units/ra3.json ra3.soviet.hammer-tank weaknesses[0] and countered_by",
+        "change": "weaknesses[0]: {\"ref\": \"weapon:cannon\", \"why\": \"Its cannon can't hit aircraft and is poor against infantry; without a stolen weapon it has no answer to air.\"} -> {\"ref\": \"!hits:low-air\", \"why\": \"Without a stolen weapon nothing on it can hit aircraft, and its cannon is poor against infantry.\"}\ncountered_by: insert before the unit:ra3.soviet.terror-drone entry {\"ref\": \"pattern:infest-vehicle\", \"why\": \"Infesting drones ride inside it, where its weapons can't reach them, or pin it with a ray.\"} and keep the unit link.",
+        "expected": "The Hammer sample now shows the negated form and a unit link paired with a generic one. The Terror Drone and IFV samples already fit the guidance and stay.",
+        "side_effects": "Depends on negated-links being implemented. Run npm run validate and npm run docs (docs/samples.md). The round-2 reference comparison shifts slightly on these two lists.",
+        "priority": "could"
+      },
+      {
+        "id": "paths-and-fit-notes",
+        "fields": [
+          "fit_notes",
+          "uncertain"
+        ],
+        "evidence": "Path formats differ between coders: A and C wrote dot paths (sensors.sight, body.size, armour.models, roles.primary, on_death.outcomes; 11 such paths in C-battlefield alone), B wrote slash paths, and the validator's atypical paths use '/'. The hesitation index therefore splits one field across headings (armament.slot vs armament/2/slot). C-coh1 unclear rule: 'When an ability is left out because no pattern fits, there is no path to point at; I used abilities.' B-battlefield kept two gaps (fire extinguisher, self-refilling ammo) in the report only: 'Not added as a fit_note in the file; noted here only.'",
+        "root_cause": "fitNote.path and uncertain.path have no description and no check. Nothing says that every gap must be in the file. In the research run there are no separate reports, so the vocabulary-gaps report reads only fit_notes.",
+        "kind": "convention",
+        "target": "schemas/common.schema.json $defs.fitNote.properties.path and $defs.uncertain.properties.path descriptions; schemas/source-unit.schema.json unit.fit_notes description; scripts/validate.mjs (new warning)",
+        "change": "fitNote.path description (new): 'Where the term would go, as a path with / between field names and list positions (armour/models, armament/2/damage). For something left out entirely, the list it would have gone in (abilities, armament).'\nuncertain.path description (new): 'The field the doubt is about, as a path with / (sensors/sight, armament/0/range).'\nfit_notes description, append: 'Every gap goes here, in the unit file: the gap report for the next word-list version reads only the files.'\nvalidate.mjs: warn when a fit_notes, uncertain or sources[].supports path contains '.' or when its parent (the path minus its last part) does not exist on the unit.",
+        "expected": "Pilot files: A's and C's dot paths would warn and be rewritten (sensors/sight, armour/models, roles/primary). B's two report-only gaps would go into fit_notes. Every gap then groups under one heading in the gap report.",
+        "side_effects": "Run npm run docs and add a validator test. sources[].supports belongs to the sources group; include it only if that group agrees. The parent-exists test allows a path to an item left out (armament/0/traits when the weapon has no traits; resources when the unit has none).",
+        "priority": "should"
+      },
+      {
+        "id": "as-player-seats",
+        "fields": [
+          "as_player"
+        ],
+        "evidence": "No hesitations. The texts already describe two seats (A Hammer: 'A sturdy tank for two'; A, B, C attack helicopter: pilot plus gunner), while the field says 'if one player controlled it'.",
+        "root_cause": "The description predates decision 2A (the buyer of a multi-seat vehicle drives and fires the main weapon), so the field text and the coders' practice differ.",
+        "kind": "field-rule",
+        "target": "schemas/source-unit.schema.json $defs.unit.properties.as_player description",
+        "change": "'Two or three lines: how it would play if one player controlled it.' -> 'Two or three lines: how it plays for the player who buys it (who drives and fires the main weapon), and what each other seat adds if it has more than one.'",
+        "expected": "No pilot text needs rewriting: all six units already describe the buyer's play and, where there is one, the second seat.",
+        "side_effects": "Run npm run docs. It stays a proposal field.",
+        "priority": "could"
+      },
+      {
+        "id": "memorable-no-change",
+        "fields": [
+          "memorable"
+        ],
+        "evidence": "No hesitations, no gaps and no unclear rules. All 18 codings have a one-line memorable under 200 characters, and the three coders picked the same hook for each unit (inside-the-tank drone, weapon-stealing tank, rider-set weapon, siege mode, cheap refilled squad, two-seat gunship).",
+        "root_cause": "None found.",
+        "kind": "no-change",
+        "target": "schemas/source-unit.schema.json $defs.unit.properties.memorable",
+        "change": "No change.",
+        "expected": "As now.",
+        "side_effects": "None.",
+        "priority": "could"
+      },
+      {
+        "id": "uncertain-no-change",
+        "fields": [
+          "uncertain"
+        ],
+        "evidence": "No hesitation on the field itself. A-sc2 and C-battlefield used it for facts from pages read but not cited because of the three-source cap ('I named them in uncertain').",
+        "root_cause": "The cap belongs to the sources rules. uncertain is the right place for such a doubt, and its path format is handled by paths-and-fit-notes.",
+        "kind": "no-change",
+        "target": "schemas/common.schema.json $defs.uncertain",
+        "change": "No change in this group beyond the path description in paths-and-fit-notes. Whether the source cap should rise, or uncommitted pages be listed, is the sources group's call.",
+        "expected": "As now.",
+        "side_effects": "None.",
+        "priority": "could"
+      },
+      {
+        "id": "pattern-retreat-to-base",
+        "fields": [
+          "abilities",
+          "abilities.patterns"
+        ],
+        "evidence": "Gaps from all three coh1 reports: A-coh1 ('a retreat-to-base pattern'), B-coh1 abilities/0 (used brace, dash), C-coh1 abilities/4/patterns (used dash, brace). The coders split: A recorded nothing, B and C stitched two patterns together. research/registry-notes/games-r4.md lists retreat as worth recording. In scope: every infantry squad in Company of Heroes 1, 2 and 3 and in Dawn of War II. Reading the 'half or more' rule over the reports that met the case: 3 of 3.",
+        "root_cause": "No pattern id covers 'run home faster and tougher, unable to fire'. Coders either dropped the ability (abilities need at least one pattern) or stitched dash and brace together.",
+        "kind": "registry",
+        "target": "data/pattern-registry.json: new planned entry",
+        "change": "{\"id\": \"retreat-to-base\", \"name\": \"Retreat to base\", \"category\": \"mobility\", \"summary\": \"On a key, run for home faster and harder to hurt, but unable to fire or turn back until you get there.\"}",
+        "expected": "Riflemen: the retreat order is one innate active ability linking retreat-to-base, for A, B and C, instead of nothing (A) or dash plus brace (B, C).",
+        "side_effects": "Planned links only warn until a pattern file is written. Whether a mechanic every squad of a game has is recorded on each unit is the abilities group's game-wide question (C-coh1). Shooter fit is good: a buy-and-become game can use 'retreat to refit' as a lifeline.",
+        "priority": "should"
+      },
+      {
+        "id": "pattern-fortify-point",
+        "fields": [
+          "abilities",
+          "abilities.patterns"
+        ],
+        "evidence": "Gaps from all three coh1 reports (A-coh1, B-coh1, C-coh1): Observation Post, 'fortify a held capture point (harder to take, earns more)'. All three left the ability out. In scope: Company of Heroes observation posts; Dawn of War listening posts (to check).",
+        "root_cause": "build-cover, capture-structure and gather-resources each miss it, and the registry notes call point capture a game-mode rule, so no id exists.",
+        "kind": "registry",
+        "target": "data/pattern-registry.json: new planned entry",
+        "change": "{\"id\": \"fortify-point\", \"name\": \"Fortify a held point\", \"category\": \"area\", \"summary\": \"Build an outpost on a point your team holds, so enemies take longer to capture it and it earns more while the outpost stands.\"}",
+        "expected": "Riflemen: the Observation Post is recorded as an upgrade-sourced ability linking fortify-point (A, B, C) instead of being left out.",
+        "side_effects": "Only useful if Shamble Frontlines has capture points; the pattern stays planned until the research shows enough units. Faster point capture (the other coh1 gap) stays a game-mode stat and waits (see gap-triage).",
+        "priority": "could"
+      },
+      {
+        "id": "resource-pay-per-use",
+        "fields": [
+          "resources",
+          "abilities.cooldown"
+        ],
+        "evidence": "Gaps A-coh1 and C-coh1 (resources: 'a per-use cost paid from a team-wide resource') and B-coh1 (abilities/3/cooldown: 'Grenade, sticky bomb and Suppression Fire are limited mainly by team munitions, not cooldowns'). B-coh1 unclear rule: 'Abilities gated by a team resource rather than a cooldown have nowhere to record that.' 3 of 3 coh1 reports. In scope: almost every Company of Heroes 1-3 unit with abilities or weapon upgrades.",
+        "root_cause": "resources holds only gauges on the unit (heat, energy, fuel, limited-ammo, kill-charge). A per-use price from a purse outside the unit has no term, so all three coded none and lost the main limit on the squad's abilities.",
+        "kind": "new-term",
+        "target": "data/vocab/resources.json: list description and a new term",
+        "change": "List description: 'A unit-wide gauge that shapes how the unit plays. A card has at most one.' -> 'A gauge or a purse that limits how the unit acts: a gauge on the unit, or currency spent each time. A card has at most one.'\nNew term: {\"id\": \"pay-per-use\", \"label\": \"Pay per use\", \"description\": \"Its abilities or special shots cost currency each time, paid from the player's or the team's purse rather than a gauge on the unit, so using them competes with buying units and upgrades. Record the cooldown as well.\"}",
+        "expected": "Riflemen: resources [pay-per-use] for A, B and C (now none); grenade, sticky bomb and Suppression Fire keep their cooldown bands.",
+        "side_effects": "resources is read by the combination rules, but the new term has no rules, so the validator stays consistent. The generator may roll it: a buy-and-become shooter can price abilities per use from the purse. Run npm run docs and vocab-diff.",
+        "priority": "should"
+      },
+      {
+        "id": "sensor-thermal",
+        "fields": [
+          "sensors.traits"
+        ],
+        "evidence": "Gaps B-battlefield (sensors: 'a key-bound vision mode: zoom, thermal or night-vision optics ... thermal sees soldiers in foliage') and C-battlefield (abilities: 'a pattern for switching to thermal or night-vision optics'). 2 coders. In scope: Battlefield and PlanetSide 2 thermal optics; other modern shooters likely (to check).",
+        "root_cause": "sensor-traits has radar, detector, stealth, lingering-sight and jammer, but nothing that sees through smoke, foliage or darkness. reveal-area is a team scan on a key.",
+        "kind": "new-term",
+        "target": "data/vocab/sensor-traits.json: new term",
+        "change": "{\"id\": \"thermal\", \"label\": \"Thermal sight\", \"description\": \"Within its sight it sees enemies through smoke, foliage and darkness, though not through walls. A view the player can switch on at will counts as always-on.\", \"classes\": [\"infantry\", \"vehicle\", \"walker\", \"hover\", \"aircraft\", \"drone\"]}",
+        "expected": "Attack helicopter: thermal, if the sensors group keeps loadout picks in traits; otherwise it goes in sensors.notes (see covered-field-gaps). Either way B and C would code the same.",
+        "side_effects": "It counters lay-smoke and stealth, so it matters for matchups. Under decision 1A, what it sees the whole team sees. The sensors group decides together with its loadout rule. Run npm run docs.",
+        "priority": "could"
+      },
+      {
+        "id": "covered-weapon-gaps",
+        "fields": [
+          "armament.family",
+          "armament.damage",
+          "armament.traits",
+          "armament.delivery"
+        ],
+        "evidence": "Gaps covered by existing terms: stasis or pin beam family (A-ra3, B-ra3, C-ra3; B used magnetic, which is barred for drones); 'no damage' for a control-only weapon (A-ra3, B-ra3, C-ra3); bow (A-ra3, B-ra3, C-ra3) and thrown blades (A-ra3, B-ra3, C-ra3); telekinesis (B-ra3, C-ra3); an ammo reserve that refills itself (B-battlefield; unclear rules A-battlefield, B-battlefield); 'ignores countermeasures' for the TV missile (A-battlefield, B-battlefield, C-battlefield).",
+        "root_cause": "The terms exist but their wording is narrower than their use: emp says 'shuts down', not 'pins'; small arms names only guns; psionic only control, confusion and fear; magazine does not mention self-refilling reserves; guided does not say flares can't stop it; damage-types has no rule for weapons that only control.",
+        "kind": "term-description",
+        "target": "Owned by the weapons and damage groups; suggested wording: data/vocab/weapon-families.json emp, small-arms, psionic; data/vocab/weapon-traits.json magazine; data/vocab/weapon-delivery.json guided; data/vocab/damage-types.json list description",
+        "change": "emp: 'An electromagnetic pulse that shuts down machines and shields.' -> 'An electromagnetic pulse or ray that shuts down, slows or pins machines and shields, usually with little or no damage.'\nsmall-arms: 'Rifles, carbines, SMGs and pistols.' -> 'A soldier's own ranged weapon: rifles, carbines, SMGs and pistols, and also bows and thrown blades.'\npsionic: 'Mind attacks: control, confusion or fear. Machines without a crew are immune.' -> 'Mind attacks: control, confusion, fear, or lifting and crushing targets by thought. Machines without a crew are immune.'\nmagazine: append 'A reserve that refills by itself over time is still a magazine; finite-ammo is only for stock someone else must refill.'\nguided: append 'Flares and jammers break locks, so they do not stop a guided shot.'\ndamage-types list description, append: 'A weapon that only controls (pins, stuns, pulls) takes the damage type of its effect: emp for shutting down or pinning machines, psionic for minds, cryo for freezing. There is no none.'",
+        "expected": "Terror Drone stasis ray: emp family, emp damage, root trait for A, B and C (A and C already; B leaves magnetic and its atypical entry 'weapon-families:magnetic classes drone'). Archer Maiden and Shinobi results: small-arms (all three already). Yuriko: psionic (B, C already). BF4 reserve: magazine (all three already). TV missile: guided, no new trait wanted.",
+        "side_effects": "No allowed or excluded map changes, so the validator is unaffected. The owning groups may fold these into their own rule changes. Self-steering rockets (A, B, C battlefield) and the laser filed under Gun damage (A, B, C ra3) need rule changes in those groups (family vs delivery, game label vs behaviour), not new terms.",
+        "priority": "could"
+      },
+      {
+        "id": "covered-field-gaps",
+        "fields": [
+          "armament.slot",
+          "armament.when",
+          "armament.mode",
+          "modes[].mobility",
+          "sensors.traits",
+          "crew.solo_fallback",
+          "on_death.outcomes",
+          "abilities.patterns",
+          "roles.secondary"
+        ],
+        "evidence": "Gaps covered by a sharper field rule or existing term: weapon slot for a bought upgrade (A-coh1, C-coh1; B-coh1 unclear); when-link for acquired weapons with mixed donors (B-ra3, C-ra3); weapon for the base form only (B-sc2, C-sc2); stationary mode (A-sc2, B-sc2, C-sc2); sensor trait from a loadout pick (A-battlefield, B-battlefield, C-battlefield); partial solo control (A-battlefield, C-battlefield; C-battlefield unclear); bail-out by choice while burning (A-battlefield, B-battlefield, C-battlefield); forward base in a captured building (B-coh1, C-coh1); transport with one seat (A-ra3, B-ra3, C-ra3).",
+        "root_cause": "The field texts are narrower than the cases: 'acquired = salvaged from a kill'; 'when' examples cover only passengers; mode ids exist only for second forms; modes[].mobility says nothing about immobile modes; sensors.traits are 'always-on' with no loadout marker; needs-crew is worded per seat, so coders read the lone-pilot case as full-control; bail-out reads as automatic only; host-spawn-point names only the unit itself.",
+        "kind": "field-rule",
+        "target": "Owned by the armament, modes, sensors, crew, on-death, pattern and roles groups; suggested wording: schemas/source-unit.schema.json armament[].slot, armament[].when, armament[].mode, modes[].id, modes[].mobility, sensors.traits; data/vocab/solo-fallback.json; data/vocab/on-death.json bail-out; data/pattern-registry.json host-spawn-point; data/vocab/roles.json transport",
+        "change": "armament[].slot: 'acquired = gained during play, e.g. salvaged from a kill' -> 'acquired = gained during a life: salvaged from a kill, picked up, or bought as an upgrade'.\narmament[].when: append 'For an acquired weapon, the pattern that grants it (pattern:leech-weapon-on-kill, pattern:upgrade-in-field).'\narmament[].mode: append 'Use base for a weapon that works only in the unit's first form.' modes[].id: append 'base is reserved for the first form.'\nmodes[].mobility (new description): 'Leave it out when the mode cannot move at all; its deploy ability says so.'\nsensors.traits: 'Always-on sensor traits.' -> 'Always-on sensor traits of the standard fit. A trait that comes only from an optional loadout pick goes in sensors.notes.'\nneeds-crew: 'A seat's weapon or ability does nothing without a player in it.' -> 'Alone, the buyer drives and fires the driver's own weapons; the weapons and abilities of empty seats do nothing until a player takes them.' full-control: 'One player can drive and fire everything' -> 'One player can drive and fire every weapon at once'.\nbail-out: 'The vehicle is destroyed and its crew eject as basic infantry with low health.' -> 'The vehicle is destroyed and its crew get out as basic infantry with low health, thrown clear at once or jumping out while it burns.'\nhost-spawn-point summary: 'Let teammates respawn at or inside you, usually once you deploy somewhere safe.' -> 'Let teammates respawn at or inside you, or at a building you take over, usually once it is somewhere safe.'\ntransport: append 'A single seat that only changes the vehicle's weapon is not transport; that is passenger-sets-weapon.'",
+        "expected": "Riflemen BAR: slot acquired, when pattern:upgrade-in-field (A moves from secondary; C already acquired). Hammer stolen gun: when pattern:leech-weapon-on-kill (B and C drop target:ground-vehicle). Siege Tank: tank cannon gets mode base (B, C asked for it); siege mode without mobility (B, C already; A drops very-slow). Attack helicopter: radar moves to sensors.notes for A and B, as C coded, which also settles the 88.9% sensors.traits split. Its solo fallback becomes needs-crew for A, B and C. Its on-death outcome includes bail-out if the on-death group keeps per-unit outcomes (decision 3C). Riflemen forward base: host-spawn-point (B, C). IFV: no transport role (A, B, C as now).",
+        "side_effects": "The owning groups decide; several of these fields are theirs to settle (sensors.traits, crew.solo_fallback, on_death.outcomes). No validator change: armament[].mode is not checked against modes ids, so 'base' needs only the reserved-id note. Close air support for the helicopter (A-battlefield, C-battlefield) is for the roles group; my view is a sharper assault description rather than a new role.",
+        "priority": "could"
+      },
+      {
+        "id": "gap-triage",
+        "fields": [
+          "fit_notes"
+        ],
+        "evidence": "102 gaps from 12 reports (hesitation index, 'Gaps' section), grouped by what they point at.",
+        "root_cause": "Mixed. Some are real holes in the lists, some are wording narrower than the terms' use, and many are single sightings on one unit.",
+        "kind": "no-change",
+        "target": "research run gap report (no file change for the 'wait' group)",
+        "change": "ADD BEFORE THE FREEZE (proposals in this group): negated links for missing abilities (A, B, C sc2) -> negated-links; retreat-to-base (A, B, C coh1) -> pattern-retreat-to-base; pay-per-use resource (A, B, C coh1) -> resource-pay-per-use; fortify-point (A, B, C coh1) -> pattern-fortify-point; thermal sight (B, C battlefield) -> sensor-thermal.\nCOVERED BY SHARPER WORDING (armour): heavy-hit control loss (A, B battlefield) -> zonal-any-trigger; cover-based protection (A, B, C coh1) and per-member squad health (A coh1) -> shared-bonuses-not-models.\nCOVERED BY SHARPER WORDING (other groups' lists, suggested in covered-weapon-gaps and covered-field-gaps): stasis beam family, control-only damage, bow, thrown blades, telekinesis, self-refilling reserve, ignores countermeasures, upgrade weapon slot, when-link for acquired weapons, base-form weapon, stationary mode, sensor loadout picks, partial solo control, voluntary bail-out, forward base building, one-seat transport. Rule changes needed in those groups, not terms: self-steering rockets (A, B, C battlefield: family vs delivery), laser with Gun damage (A, B, C ra3: behaviour vs game label), close air support (A, C battlefield: roles).\nWAIT FOR THE RESEARCH RUN'S GAP REPORT: armour-ignoring 'true' damage (A, B, C, all on the Hammer's beam; Tempest Rising's Omni may be a second case); one weapon with two damage types by target (A, B, C drone claws; B, C siege shell), which needs a damage-group rule, not a term; spawn a minion on death (A, B, C: an RA3 commander power, not the unit; a strong candidate for an on-death term if more units show it) and heal-on-crush (C); faster point capture (A, B, C coh1: a game-mode stat); sonic bark delivery (A, C); SC2 indirect fire without an arc (B); range-dependent fire rate (B, C coh1); separate ranges against ground and air (A); lock-on resistance (A battlefield); armoured buggy body (B); tilt-to-move handling (C, part of the mobility group's handling split); cancel burning on a key (B, a heal-self variant); instant order with no cooldown (C); drops weapons on death (A coh1); passengers die with the vehicle (B); area denial by a siege line (A sc2); linking leech-weapon-on-kill for CoH pickups (A coh1, a pattern-file process issue); picking up dropped weapons and recrewing (B, C coh1, waiting on the game-wide rule); and from unclear rules anti-synergies (A sc2), a cost link kind and 'until upgraded' links (B coh1).\nNEVER: no-overkill fire (A, C sc2): RTS auto-fire with no meaning for a player-aimed weapon.",
+        "expected": "Every one of the 102 gaps falls in exactly one group above. After the round-1 changes, the round-2 pilot should report none of the covered or added ones again.",
+        "side_effects": "The wait group depends on paths-and-fit-notes: the gap report can count repeat sightings only if every gap is in fit_notes with a '/' path.",
+        "priority": "could"
+      }
+    ]
+  },
+  "review": {
+    "cluster": "Armour, matchups and the vocabulary gaps",
+    "speed_decision_review": "Outside this group. No armour, matchup or gap proposal here depends on which speed method is chosen. One small link: matchup guidance item (4) asks for the unit's own value in strengths and weaknesses (speed:fast, not speed:>=fast). That works with either method once the band itself is settled.",
+    "verdicts": [
+      {
+        "id": "armour-class-order",
+        "verdict": "revise",
+        "reason": "Pilot units, as written: Terror Drone step 4 (drones) gives light. Hammer: its infobox gives 'BaseTankArmor (...)', which is not a plain word, so step 3 (the anchor) gives heavy. IFV step 2 (armortype = Light) gives light. Siege Tank step 3 gives heavy. Riflemen step 4 gives unarmoured. Helicopter step 4 gives light. All six match A, B, C and the samples. The rule breaks on research-run units:\n(a) Tie-break 2 says a soldier is unarmoured 'unless step 1 or 2 lifts it'. But SC2 and CoH skip step 2 and have no map, while the new light description and the analyst's own SC2 note make the Marauder and armoured soldiers light. So the Marauder, CoH elite infantry, Halo Wars 2 Spartans and WARDOGS soldiers in level 3-4 armour (games-r6 says light) each get two answers.\n(b) 'Stop at the first step' lets a map put a robot soldier in unarmoured (any infantry armour type a map sends to unarmoured). Tie-break 2 says a machine never is, and no rule says which wins.\n(c) Steps 1 and 2 can never give super-heavy, yet the registry notes lift units 'by size': the Generals Overlord, the RA2 Kirov, the DoW1 Baneblade, Iron Harvest mega mechs and Foxhole super tanks. Meanwhile the new 'clearly tougher than the MBT' wording would make CoH's Tiger, King Tiger and Pershing (the anchor is the Sherman or Panzer IV), SC2's Thor and Colossus, and TD's Mammoth super-heavy. games-r4 still says 'super-heavy or heavy by size and health'. That is two readings.\n(d) The phrase 'The tank named in the cost anchor' also catches tanks the anchor text only mentions. The cnc3 text names the Scorpion, Seeker and Devourer, supcom names the Obsidian and wardogs names the L2A6, so step 3 could make the Scrin Devourer heavy.\n(e) The new descriptions mix kind with toughness ('units about as tough', 'clearly weaker'). So step 4 gives two answers for WiC's medium tank, the CnC3 Scorpion and the SC2 Stalker (80 health plus 80 shields against the Siege Tank's 175 is 'about as tough', but the SC2 note says medium). No class names armoured cars (CoH M8, Puma), and games-r4 says 'medium or light'.\n(f) Where the SC2 'hints' sit in the order is not said.\n(g) Upgrades (CoH armour skirts, SC2 vehicle plating) and shields in step 5 are not covered.\nThe fix below keeps all six pilot results.",
+        "revised_target": "data/vocab/armour-classes.json: list description and a new tie_breaks array (two entries)",
+        "revised_change": "1) List description, old -> new: 'How tough the unit is, as a band. Combined with one or two armour models on the card.' -> 'How tough the unit is next to the other units of its own game, as a band. Code it with the steps in the first tie-break below. Combined with one or two armour models on the card.'\n2) tie_breaks[0], terms [unarmoured, light, medium, heavy, super-heavy], rule: 'Judge the unit as bought, without upgrades or veterancy. Go through steps 1 to 5 in order and stop at the first one that gives an answer. Then apply checks A and B and the soldier rule below, which win over every step. 1. The game's armour_map in data/games.json, with any step up or down its registry notes name. 2. The game's own armour word for this unit, when the word is light, medium or heavy; for sc2, the class its registry note gives for the unit's attributes. Skip this step for cnc-td, cnc-ts, cnc3, coh1, coh2 and coh3, whose words cut across our classes, and for a word from a series title that version_researched does not name. 3. The tanks whose prices are averaged in the game's cost anchor are heavy. Other tanks the anchor text mentions are not decided here. In a game without costs, its standard main battle tank is heavy. 4. The kind of unit named in the class descriptions. The kind decides, however tough this unit is next to others of its kind. 5. For a kind named nowhere, compare its health (shields included) and the weapons that hurt it with the step 3 tank (heavy) and with the game's basic rifle infantry (unarmoured). Check A: super-heavy is only for a unit two tanks in size or more (body size huge) at t3, or in a game without tiers, and for a unit the game's armour_map or registry notes make super-heavy. Such a unit is super-heavy whatever the steps gave. Check B: a machine is never unarmoured; where a step gives unarmoured, code light. Say in armour.notes which step or check decided, and mention armour upgrades there.'\n3) tie_breaks[1], terms [unarmoured, light, medium], rule: 'A soldier or animal is unarmoured, unless step 1 or 2 gives more, or its game data gives it tougher armour than the game's basic rifle infantry: a tougher infantry armour type or attribute, or body armour its registry notes name. Then it is light. A power suit worn by one soldier (body size small) is light; a suit bigger than a soldier (body size medium or more) is medium. Protection every soldier of the game can get, such as cover, veterancy ranks or the retreat bonus, never lifts the class; mention it in armour.notes.'\nExpected: the six pilot units as before. Marauder, CoH elite infantry and Spartans: light. TD Nod Light Tank and TS Tick: heavy (anchor). Scrin Devourer: step 4, not step 3. CoH Tiger and King Tiger: heavy (not huge). Overlord, Kirov, Baneblade: super-heavy by check A. Run npm run docs."
+      },
+      {
+        "id": "armour-class-descriptions",
+        "verdict": "revise",
+        "reason": "The pilot units are unchanged (drone light, helicopter light, Riflemen unarmoured, Hammer and Siege Tank heavy, IFV light by its word). Problems for step 4:\n(1) super-heavy 'clearly tougher than the game's main battle tank' moves every heavy tank above a medium-tank anchor (CoH Tiger, Pershing, King Tiger) and SC2's Thor and Colossus into super-heavy. That clashes with the registry notes, which lift by size.\n(2) heavy 'units about as tough' and medium 'clearly weaker' bring toughness back into a step that should rest on kind. The Stalker (160 against 175), the CnC3 Scorpion and WiC's medium tank get two answers.\n(3) 'drones' and 'robots' under light against 'light walkers' under medium: a small walking robot (PA Dox, SupCom T1 assault bot) fits both.\n(4) 'power armour' (light) against 'exosuits bigger than a soldier' (medium) has no line, so PS2's MAX and HW2's Cyclops get two answers. Tie it to the body size coders already set.\n(5) Armoured cars and half-tracks are named nowhere.\n(6) 'whose game puts them a step above' is vague: it should say 'game data gives them tougher armour'.\n(7) 'gunships included' can be read as fixed-wing gunships (BF4 AC-130). That is harmless, but 'attack helicopters too' is clearer.",
+        "revised_target": "data/vocab/armour-classes.json terms unarmoured, light, medium, heavy, super-heavy: description",
+        "revised_change": "unarmoured: 'Flesh and cloth: soldiers and animals.' -> 'Flesh and cloth: soldiers and animals without armour plating. A game's basic rifle infantry is unarmoured. Never a machine.'\nlight: 'Buggies, drones, helicopters and armoured infantry. Soldiers are unarmoured unless their game gives them a tougher category.' -> 'Machines that light weapons still hurt, and soldiers in real armour: buggies, jeeps, motorbikes and trucks; drones and robots no bigger than a soldier; helicopters, attack helicopters too; planes and boats; and soldiers whose game data gives them tougher armour than its basic rifle infantry, power-suit troopers included.'\nmedium: 'IFVs, light tanks, power suits, light walkers.' -> 'Shrugs off most light weapons but is weaker than a battle tank: IFVs, APCs, half-tracks and armoured cars, light tanks, suits bigger than a soldier, and light walkers bigger than a soldier.'\nheavy: 'Main battle tanks and assault mechs.' -> 'The game's main battle tank and every other battle tank, whatever the game calls it (medium or heavy tank), and assault mechs.'\nsuper-heavy: 'Super-heavy tanks, giant mechs and airships.' -> 'The game's top heavyweights, set apart from its battle tanks: units two tanks in size or more at t3, or ones the game's armour map or registry notes make super-heavy. Super-heavy tanks, giant mechs, experimental units and big airships.'\nRun npm run docs. No change to allowed maps or ranks."
+      },
+      {
+        "id": "unarmoured-organic-only",
+        "verdict": "accept",
+        "reason": "nature is a part the combination rules read (UNIT_PARTS), so the map is checked. Checked every unit and card: the samples (drone light, Hammer heavy, IFV light), all 18 pilot codings (only the Riflemen are unarmoured, and they are organic) and the example card (a light drone) all pass. Organic's own classes (infantry, walker, aircraft) together with unarmoured's sizes (tiny, small) leave soldiers and small animals, which is the intent. It agrees with check B in the revised order, so a coder following the order never triggers it; it only catches slips. It is a combination rule for physical nonsense (a machine of flesh and cloth), so it does not go against decision 4B."
+      },
+      {
+        "id": "armour-registry-notes",
+        "verdict": "revise",
+        "reason": "The RA3 note is right, but it should say that set names such as BaseTankArmor (the Hammer's armortype) are not plain words. Otherwise a coder may read 'Tank' as a step-2 word.\nThe SC2 text contradicts armour-class-descriptions. The Stalker (160) is 'about as tough' as the Siege Tank (175), so heavy by the description, but medium by the note. 'Clearly tougher' for Massive units is a judgement. 'Armored ground vehicles and walkers' leaves the Roach (a creature) and the Armored fliers (Viking, Medivac, Liberator) open. Nothing says at which step the hints apply. An attribute rule with the anchor exception settles all of these without a map.\nTwo other notes stay as rival rules unless they are changed too. games-r2.md says 'Set the armour class per unit from size, role and health' for TD, TS and TW. games-r4.md says 'King Tiger and Tiger super-heavy or heavy by size and health' and 'armoured cars medium or light'.\nPilot: Siege Tank heavy, IFV light (word), drone light (step 4), Hammer heavy (anchor).",
+        "revised_target": "research/registry-notes/games-r1.md (RA3 'No armour_map suggested' bullet), games-r2.md (TD/TS/TW armour bullet), games-r4.md (CoH 'No armour maps' bullet), games-r5.md ('No maps for SupCom, PA, SC2 or HW2' bullet); data/games.json unchanged",
+        "revised_change": "Keep ra3 and sc2 without an armour_map: a map with one class per key cannot hold the anchor-tank exception. Notes only.\n- games-r1.md, RA3 bullet, append: 'Where an infobox gives a plain armour word (Light, Medium or Heavy), that word decides (step 2 of the armour-class order in the armour-classes list). Set names such as BaseTankArmor are not such words: go on to step 3. The three tanks averaged in the cost anchor are heavy.'\n- games-r5.md, replace 'Use them as hints: Massive means heavy or super-heavy, and Light Biological infantry means unarmoured.' with 'For sc2 they are step 2 of the armour-class order. The Siege Tank, the cost anchor, is heavy. Other Massive units are heavy; only check A makes one super-heavy. Other Armored units are medium, or light when they are infantry-sized (body size small, such as the Marauder). Light units are unarmoured when Biological and not Mechanical, otherwise light. A unit that is neither Light nor Armored goes on to step 4.'\n- games-r2.md, replace 'Set the armour class per unit from size, role and health.' with 'Set the armour class per unit with the armour-class order. The tanks averaged in each cost anchor are heavy, so the Nod Light Tank (TD) and the Tick tank (TS) are heavy, as Renegade's map already has it.'\n- games-r4.md, replace 'Set the armour class per unit. Medium tanks are heavy, light tanks and armoured cars medium or light, and the King Tiger and Tiger super-heavy or heavy by size and health.' with 'Set the armour class per unit with the armour-class order. Medium and heavy tanks, the Tiger and King Tiger included, are heavy; light tanks and armoured cars are medium. A tank is super-heavy only by check A.'\nExpected for SC2: Stalker, Roach (unless coded small), Cyclone, Immortal, Viking and Medivac medium; Marauder light; Zealot and Marine unarmoured; Hellion light; Thor and Ultralisk heavy; Battlecruiser super-heavy if huge."
+      },
+      {
+        "id": "flat-pool-fallback",
+        "verdict": "accept",
+        "reason": "Applied to every pilot unit: Hammer directional only (A, B, C, sample). Drone and IFV flat-pool only. Riflemen flat-pool only. Siege Tank flat-pool only after damage-reduction-threshold. Helicopter critical-burn, self-repair and zonal, with no flat-pool. The rule is a plain yes or no ('never together with another model'). The new example removes the contradiction B-ra3 named, because armour-type scaling is now the class's job. No allowed or excluded change, so the validator is unaffected. I agree with not adding excluded maps. The Iron Harvest example still fits its infantry."
+      },
+      {
+        "id": "directional-threshold",
+        "verdict": "accept",
+        "reason": "Hammer: its BaseTankArmor set lists 105% side and 110% rear (checked in the cached wiki infobox), so directional; 'however little' settles A, B and C's 'only 5-10 percent' doubt. Terror Drone: its armour set lists no facing values, so no directional (B's doubt). IFV: only 'Light', so no directional. CoH vehicles: the game-wide rear rule makes them directional. It fits PS2 and Broken Arrow. The leftover overlap with weak-point (Iron Harvest's double rear damage) is a separate problem; see missed item weak-point-vs-directional."
+      },
+      {
+        "id": "damage-reduction-threshold",
+        "verdict": "revise",
+        "reason": "Siege Tank: 1 armour against a Marine's 6 is under a quarter, so no damage-reduction, and A, B and C all move to flat-pool, the alternative each of them named. The helicopter (immune by damage type) and the Hammer (percentage cuts) are settled. The PS2 claim holds: ps2 has a damage_map, so the immunity comes from kinetic against the armour class.\nThree flaws. (1) 'Without faction-wide upgrades' leaves the unit's own upgrades open, and the proposed example says 'an Ultralisk with its plating upgrade', which reads as if the upgrade counts. The Ultralisk (2 armour) and Battlecruiser (3) already pass as bought, so the rule can say 'without upgrades'. (2) 'About a quarter' leaves a band, while 'a quarter or more' is exact. (3) 'The game's basic rifle or light gun' has no rifle for Zerg or Protoss. 'The weapon of the game's basic rifle infantry' names one weapon per game.",
+        "revised_target": "data/vocab/armour-models.json term damage-reduction: new source_rule; examples",
+        "revised_change": "source_rule (new): 'Code it only when the game takes a fixed amount off each hit, and that amount changes which weapons work: the weapon of the game's basic rifle infantry loses a quarter or more of each hit to it. Judge the unit as bought, without upgrades. A smaller value only trims hits; mention it in armour.notes. A cut by percentage or by damage type (guns doing half damage to tanks, small arms doing nothing to vehicles) belongs to the armour class and the damage map, not to this model.'\nexamples: replace 'StarCraft II: armour takes a fixed amount off every hit, but every hit still does a little damage' with 'StarCraft II: each unit's armour value comes off every hit; on the most armoured units, such as the Ultralisk or the Battlecruiser, a Marine's rifle loses a large part of each hit'. Remove 'PlanetSide 2: main battle tanks ignore small arms completely' (a resist by damage type).\nRun npm run docs. Coder A's siege-mode armour copy must change too (see missed item mode-armour-only-when-changed)."
+      },
+      {
+        "id": "zonal-any-trigger",
+        "verdict": "revise",
+        "reason": "Helicopter: zonal for A, B and C with nothing left to doubt, and the A and B gaps close. Critical-burn stays separate. Two holes are left.\n(1) 'A hit can switch off one function while the unit lives on' also covers every unit an enemy weapon stuns, roots, slows or shuts down: the RA3 stasis ray roots vehicles, and EMP stops them. A coder could then add zonal to every vehicle that such weapons can hit. The cause has to be damage, not another weapon's effect.\n(2) The CoH example ('kill gunners') and crew-casualties' Wargame example ('crew critical hits disable specific systems') both describe a function lost through a crewman no player controls. Unless that case is given to zonal, Wargame and CoH vehicles get zonal from one rule and crew-casualties from the other.",
+        "revised_target": "data/vocab/armour-models.json term zonal: description, new source_rule, examples",
+        "revised_change": "description: 'Hits land on parts such as tracks, turret, engine, legs or a weapon, which can break and switch off functions before the unit dies.' -> 'Parts such as tracks, turret, engine, rotor, legs or a weapon can be knocked out by damage before the unit dies, switching that function off for a while or for good. The part may be chosen by where the hit lands, by a heavy hit or by chance.'\nsource_rule (new): 'Code it when the sources say damage the unit takes can switch off one function (movement, steering, the turret or a weapon) while it lives on, however the part is chosen. A function lost because a crewman no player controls is hit (a gunner killed) counts too. A stun, root, slow or shutdown that comes from an enemy weapon's own effect is that weapon's trait or damage type, not zonal. Being disabled as a whole and burning at low health is critical-burn, not zonal.'\nexamples: 'Battlefield 4: heavy hits cause mobility kills' -> 'Battlefield 4: a heavy hit can knock out a vehicle's movement, or a helicopter's control, for a few seconds'. Add 'Wargame: critical hits on the crew disable specific systems' (moved from crew-casualties).\nRun npm run docs. The excluded sizes (tiny, small) stay."
+      },
+      {
+        "id": "crew-casualties-squad",
+        "verdict": "revise",
+        "reason": "Riflemen: no crew-casualties (A, B, C). Helicopter: left out by series-titles (BF2 only). Both work. Two problems are left.\n(1) The kept Wargame example ('crew critical hits disable specific systems') is a function loss, which is zonal. So it repeats the clash between example and rule that this proposal removes for CoH. Move it to zonal.\n(2) 'A unit with two or more seats': it is unclear whether passenger seats count. The term's own Foxhole example (exposed seats) and units like the Battlefield quad bike have one driver (crew model solo) carrying riders in open seats. excluded.crew-models [solo, ...] then forces an ATYPICAL line on these ordinary units. A requires group states the real condition (another player aboard), and the validator can check it: crew and passengers are both link kinds, and passengers:>=2 is already used in roles.",
+        "revised_target": "data/vocab/armour-models.json term crew-casualties: examples, new source_rule, excluded, requires",
+        "revised_change": "Remove examples[0] 'Company of Heroes: each soldier and gun crewman is tracked; a gun without crew can be captured' and 'Wargame: crew critical hits disable specific systems' (a function loss, moved to zonal). Keep the Foxhole example.\nsource_rule (new): 'Code it only when hits can kill or throw out a player inside while the vehicle survives (open seats, shots through the glass). It needs two or more player seats, passenger seats included. Never for a squad: losing members is part of the squad crew model. A hit that only switches off a function by hurting a crewman no player controls is zonal.'\nexcluded.crew-models: [solo, squad, remote] -> [squad, remote]. New requires: [[\"crew:driver-gunner\", \"crew:driver-gunner-commander\", \"passengers:>=1\"]].\nNo pilot unit carries the term, so nothing changes for them. A solo vehicle with no passengers is still flagged (requires), and squads and remotes stay excluded. Run npm run validate and npm run docs."
+      },
+      {
+        "id": "shared-bonuses-not-models",
+        "verdict": "revise",
+        "reason": "Riflemen: flat-pool only, with cover, veterancy and retreat in notes, as A, B and C already wrote. Hammer: heroic self-heal is not coded. CoH vehicles keep directional. The idea is right, but two wordings leave room.\n(1) 'Protection that comes from where it stands or what it has earned' does not cover the retreat bonus (an order) or difficulty, which the same sentence lists. A coder then cannot tell whether other orders' bonuses count.\n(2) Evasive's 'a hard-to-hit trait of its own' has no baseline. CoH gives every unit its own received-accuracy value, so a coder can read the Riflemen's own value as 'a trait of its own'. With 'better than the game's basic rifle infantry', the Riflemen sit at the baseline (no) and CoH snipers below it (yes).\nRemoving the self-repair example is fine, because top-rank healing is the earn-veterancy pattern.",
+        "revised_target": "data/vocab/armour-models.json: list description; term evasive new source_rule; term self-repair examples[0]",
+        "revised_change": "List description, append: 'Code what this unit has. Protection that comes from where it stands (cover), from rank (veterancy), from an order every unit of its kind has (the retreat bonus) or from game settings (difficulty) is not a model, even though the unit benefits; mention it in armour.notes. A model built into the unit's own armour counts even when every unit of its kind in the game shares it (Company of Heroes rear armour). For a squad, code what protects each member; losing members is part of the squad crew model.'\nevasive source_rule (new): 'Code it only when the unit itself has a way to dodge: a dodge roll, a stated chance to avoid hits, or a hard-to-hit value of its own that is better than the game's basic rifle infantry has. Hit chance from cover, rank or moving, which every soldier of the game gets, is not evasive.'\nself-repair: remove examples[0] 'Red Alert 3: top-rank and some heavy vehicles heal themselves' (top-rank healing is veterancy, the earn-veterancy pattern).\nRun npm run docs."
+      },
+      {
+        "id": "armour-model-cap-order",
+        "verdict": "revise",
+        "reason": "The rule always gives one answer and uses the existing rarity field. Helicopter: unchanged. But BF3 and BF4 tanks show what the research run will meet: four or five candidates, some of them optional picks (BF3 reactive armour as ablative-plates, BF4 active protection as interceptor, rare). Keeping 'the rarest' alone would let a pick push out built-in directional and self-repair, so the card would show an option instead of the vehicle. Keep built-in models first. This goes with missed item armour-models-from-picks.",
+        "revised_target": "data/vocab/armour-models.json: list description, the sentence 'A card has one or two; a researched unit up to three.'",
+        "revised_change": "'A card has one or two; a researched unit up to three.' -> 'A card has one or two; a researched unit up to three. If more apply, first keep the models the unit has without any loadout pick; then keep the rarest (rare, then uncommon, then common; on a tie, the one listed first here). Name the others in armour.notes.'\nExample: a BF4 tank with directional, critical-burn, self-repair, zonal and an active-protection pick keeps critical-burn, zonal and directional; the pick and self-repair go to notes. Run npm run docs."
+      },
+      {
+        "id": "series-titles",
+        "verdict": "revise",
+        "reason": "Helicopter: zonal counts (BF4 is a lead title). crew-casualties is out (BF2 only). The BF2 infobox word 'light' is also out, and step 4 gives light anyway. B's countered_by survives. The rule works for all three series entries: battlefield (BF3/4), wargame (Red Dragon) and mechwarrior (TROs, MWO, MW5 Clans). Two gaps are left.\n(1) 'Code the mechanic' answers 'does it exist', not 'which value'. C-battlefield asked which title wins for bands such as cooldown (the BF3 and BF4 extinguisher and flare recharge differ), and B-battlefield asked about speed_raw when only BF3 gives figures. The rule needs a choice for single values.\n(2) 'Matchups follow from the coded parts' can be read as 'only coded parts may be linked'. That would drop B's countered_by, which rests on BF2 statements about parts that BF3/4 still have.",
+        "revised_target": "scripts/build-docs.mjs Conventions list (new 'Series' bullet, shown in docs/fields.md) and schemas/game.schema.json $defs.game.properties.version_researched description. Cross-group: cooldown and on-death groups should adopt the same rule.",
+        "revised_change": "New Conventions bullet: '**Series.** For a games.json entry of kind series, a fact counts when a lead title named in version_researched has it, or a title named there for the archetype being coded. Facts from the series' other titles do not fill fields; mention them in notes. When the lead titles differ on whether a mechanic exists, code it and say in notes which title has it. When they give different values for one band (a cooldown, a speed), use the newest lead title that gives a value and mention the other in notes. A matchup may rest on a source about any title, as long as the parts it names exist in a counted title.'\nversion_researched description: 'Patch, edition or date the research describes.' -> 'Patch, edition or date the research describes. For a series, name the lead titles and any title used for an archetype it adds; facts from its other titles do not fill fields.'\nRun npm run docs."
+      },
+      {
+        "id": "negated-links",
+        "verdict": "revise",
+        "reason": "Checked against the validator. parseRef can strip '!' and matches() can invert the result. requires, excludes, implies, when and card strengths keep the plain ref, so the combination rules are unchanged. Unit strengths, pattern adds_* and vocabulary brings all use relation, so they gain '!' as well, which is harmless.\nPilot: the Siege Tank's weapons reach no flier, so !hits:low-air passes the own-parts check for A, B and C. The drone's weapons do not reach air either, so it passes. The Hammer's acquired adaptive weapon has no can_target in any coding, so it passes too.\nMissed: scripts/build-docs.mjs refText splits on ':' and would print the kind '!hits' as unknown ('low-air (!hits)') in docs/samples.md as soon as sample-matchup-fixes lands, so it needs the same handling. The convention also names only weaknesses. The most useful pairing for the generator is in counters (a gunship beats units with no anti-air), and without saying so coders will write that as class:vehicle and similar links.",
+        "revised_target": "schemas/common.schema.json ($defs.relation.ref -> new $defs.relationRef); scripts/validate.mjs (parseRef, matches, checkRef); scripts/build-docs.mjs (refText and the Conventions 'Typed links' bullet)",
+        "revised_change": "1) common.schema.json: add $defs.relationRef = {\"description\": \"A typed link, optionally with ! in front, meaning the unit does not have that part (for example !hits:low-air: has no weapon that can hit low air). Not with unit links.\", \"type\": \"string\", \"pattern\": \"^!?(class|role|tier|damage|armour-class|armour-model|weapon|mobility|mobility-trait|handling|body|size|speed|crew|passengers|mount|delivery|range|weapon-trait|target|hits|sight|sensor|nature|category|resource|pattern|unit):(<=|>=)?[a-z0-9]+([.-][a-z0-9]+)*$\"}. Point relation.ref at it. requires, excludes, implies, when, strong_vs and the card strengths keep the plain ref.\n2) validate.mjs: parseRef strips a leading '!' and returns neg: true; matches() returns the opposite result when neg; checkRef reports an error for '!unit:' ('a unit link can't be negated').\n3) build-docs.mjs refText: strip a leading '!' before splitting and render it in words: 'can't hit low air' for hits, 'is not a target of type ...' for target, and 'no <label> (<kind>)' for the other kinds.\n4) Typed links bullet, append: 'In matchups a link may start with !, meaning the unit lacks that part: !hits:low-air = has no weapon that can hit low air. In weaknesses it names something the unit lacks; in counters, the enemies it beats because they lack it (an attack helicopter counters !hits:low-air). For air, write the lowest layer it can't reach: !hits:low-air when it hits no flier, !hits:high-air when it reaches low fliers only. Unit links can't take !.'\nTests: a negated link that matches, one that fails, an error for '!unit:', and the docs check on a sample with a negated link. Run npm run docs."
+      },
+      {
+        "id": "matchup-link-guidance",
+        "verdict": "revise",
+        "reason": "These fields are information only, so the aim is usefulness. Checked against the pilot. Siege Tank air: class:aircraft is now shared by A, B and C. The Hammer's and drone's unit links gain list links. B's range:long is the right form.\nProblems: (2) says class:aircraft 'when the point holds for every flier', but class:aircraft leaves out flying drones and jetpack troops, so the rule and the link disagree. (3) Pattern links (pattern:infest-vehicle, pattern:mark-target) are not word-list links, so it is unclear whether one can stand beside a unit link. When the sources name only a unit (the Immortal), nothing says how to pick its partner link, which is B's role-or-damage doubt. (5) covers weaknesses only. The claim that 'the samples mostly follow it already' is wrong: the IFV sample writes passengers:>=1 in both strengths and weaknesses (against item 4; A and C wrote passengers:1) and has unit:ra3.soviet.terror-drone in countered_by with no list link for that reason. Item (6) is loose, but acceptable for an open list.",
+        "revised_target": "scripts/build-docs.mjs Conventions (new 'Matchups' bullet after Typed links, shown in docs/fields.md); schemas/source-unit.schema.json descriptions of strengths, weaknesses, counters, countered_by and combos. Cross-group for item 8 (the Ids convention).",
+        "revised_change": "New bullet: '**Matchups.** Write the reason first, then pick the link that names the part behind it. (1) Name the other unit the way the sources do: by its job (role:anti-armour, role:anti-air) when they name a job; by what it fires when they name a weapon (weapon:machine-gun) or a kind of harm (damage:electric); by what it is (class:aircraft, class:infantry, armour-class:heavy) when they name a kind of unit. When they name only a unit, use the same order for what makes that unit win. (2) For fliers, use class:aircraft when the sources mean air units in general; use target:low-air or target:high-air only when the point holds for one layer. (3) Prefer word-list and pattern links. Add a unit: link only for a same-game partner or rival the sources name, next to a word-list or pattern link for the same reason. A link to the unit itself is fine in combos when the sources say it works best in numbers. (4) In strengths and weaknesses, give the unit's own value with no <= or >= (range:long, not range:>=long; passengers:1, not passengers:>=1). Use comparators only in counters, countered by and combos, for a group of units. (5) Something the unit lacks is written with ! (see Typed links): in weaknesses for its own gap, in counters for enemies with that gap. (6) The same enemy may sit in counters and in countered by only when the two reasons name different situations. Otherwise put it where the head-on fight at equal cost ends, and give the tactic that turns it in the reason. (7) Most important first; keep each list short, about two to five. A link to a planned pattern is fine; its warning clears when the pattern is written. (8) A unit: link to a unit not yet researched uses the slug its entry would get: the in-game name, dropping a final Squad or Team (Riflemen Squad -> riflemen).'\nAppend 'See Matchups under Conventions.' to the five field descriptions. Docs only; no validator change. Say when merging that item (8) touches the Ids convention."
+      },
+      {
+        "id": "sample-matchup-fixes",
+        "verdict": "revise",
+        "reason": "The Hammer fix is right. Its acquired adaptive weapon has no can_target, so !hits:low-air passes the own-parts check, and pattern:infest-vehicle is a written pattern; matchup links do not change its source_units. But the IFV sample also breaks the new guidance: passengers:>=1 appears in strengths and weaknesses (item 4; coders A and C wrote passengers:1), and unit:ra3.soviet.terror-drone in countered_by has no list link for the same reason (item 3). The drone hangs 'can't reach aircraft' on range:melee, which is the same workaround the negation exists to fix. Leaving these would teach round-2 coders the old forms through the reference.",
+        "revised_target": "data/units/ra3.json: ra3.soviet.hammer-tank weaknesses[0] and countered_by; ra3.allied.multigunner-ifv strengths, weaknesses and countered_by; ra3.soviet.terror-drone weaknesses",
+        "revised_change": "Depends on negated-links being implemented.\nra3.soviet.hammer-tank: weaknesses[0] {\"ref\": \"weapon:cannon\", ...} -> {\"ref\": \"!hits:low-air\", \"why\": \"Without a stolen weapon nothing on it can hit aircraft, and its cannon is poor against infantry.\"}. countered_by: insert before the unit:ra3.soviet.terror-drone entry {\"ref\": \"pattern:infest-vehicle\", \"why\": \"Infesting drones ride inside it, where its weapons can't reach them, or pin it with a ray.\"}; keep the unit link.\nra3.allied.multigunner-ifv: in strengths and weaknesses, 'passengers:>=1' -> 'passengers:1' (reasons unchanged). countered_by: insert before the unit:ra3.soviet.terror-drone entry {\"ref\": \"pattern:infest-vehicle\", \"why\": \"An infesting drone kills it from inside unless an engineer passenger, repair drones or a repair station removes it.\"}.\nra3.soviet.terror-drone: weaknesses[1] (range:melee) why -> 'The claws need touching distance, so it is exposed on the approach.'; insert after it {\"ref\": \"!hits:low-air\", \"why\": \"Neither weapon can reach aircraft.\"}.\nRun npm run validate and npm run docs (docs/samples.md). The round-2 reference comparison shifts on weaknesses, strengths and countered_by."
+      },
+      {
+        "id": "paths-and-fit-notes",
+        "verdict": "accept",
+        "reason": "Checked the pilot files. A wrote dot paths in ra3 and coh1 (sensors.sight, body.size, armour.models and more), C-battlefield has 11, and B used slashes only, so the evidence holds. The validator already has pathExists for '/' paths (used by atypical entries), so the parent test is cheap. An omitted ability's path 'abilities' has the root as its parent and passes. armament/0/traits on a weapon without traits passes. The warning plus the description puts every gap under one heading in the gap report, and none of this touches combination rules. A small extra worth adding when implementing: warn on '*' wildcards as well, since some hesitation headings show 'armament.*.can_target' style paths."
+      },
+      {
+        "id": "as-player-seats",
+        "verdict": "revise",
+        "reason": "The intent matches decision 2A, and no pilot text needs rewriting: A's 'sturdy tank for two' and every helicopter text already describe the buyer plus the second seat. But 'if it has more than one' leaves 'it' unclear (the unit or the seat). 'Who drives and fires the main weapon' also reads oddly for a squad or a remote unit, where nobody drives. Put the vehicle condition in its own sentence.",
+        "revised_target": "schemas/source-unit.schema.json $defs.unit.properties.as_player description",
+        "revised_change": "'Two or three lines: how it would play if one player controlled it.' -> 'Two or three lines: how it plays for the player who buys it, and what each other seat adds, if there are any. In a vehicle with several seats the buyer drives and fires the main weapon.' Run npm run docs. It stays a proposal field."
+      },
+      {
+        "id": "memorable-no-change",
+        "verdict": "accept",
+        "reason": "There are no hesitations, gaps or unclear rules. All 18 codings stay under 200 characters, and the coders picked the same hook for each unit. Nothing to fix."
+      },
+      {
+        "id": "uncertain-no-change",
+        "verdict": "accept",
+        "reason": "The field worked as intended (A-sc2 and C-battlefield used it for pages they read but did not cite). The three-source cap belongs to the sources group, and the path format is handled by paths-and-fit-notes."
+      },
+      {
+        "id": "pattern-retreat-to-base",
+        "verdict": "revise",
+        "reason": "This ends the three-way split on the Riflemen: A recorded nothing, while B and C stitched dash and brace together. The mobility category exists, the registry entry shape (id, name, category, summary) matches, and a planned link only warns. Under 1B it is a button, and whether every CoH squad records it is the abilities group's game-wide question, as the analyst notes. The summary wording is the problem: 'unable to fire or turn back until you get there' is unclear ('turn back' can mean turn to face, or call it off) and states as universal a limit that games may relax. Keep the summary to what all versions share.",
+        "revised_target": "data/pattern-registry.json: new planned entry",
+        "revised_change": "{\"id\": \"retreat-to-base\", \"name\": \"Retreat to base\", \"category\": \"mobility\", \"summary\": \"On a key, run back toward base faster and harder to hurt, unable to fire on the way.\"}"
+      },
+      {
+        "id": "pattern-fortify-point",
+        "verdict": "accept",
+        "reason": "All three coh1 reports hit this gap and all three dropped the ability. build-cover, capture-structure and gather-resources each miss it. The area category exists and the entry shape matches the registry. It stays planned and costs nothing if Shamble Frontlines has no capture points. Optional wording: 'a capture point your team holds' rather than 'a point'."
+      },
+      {
+        "id": "resource-pay-per-use",
+        "verdict": "revise",
+        "reason": "Riflemen: all three would code [pay-per-use], where the field is empty now. The new term has no rules, so the validator stays consistent, and resources allows two terms on a researched unit. Two readings remain for units in scope. WARDOGS soldiers buy their loadout item by item once per life, and PS2 soldiers pay nanites for grenades and C4 per item. 'Cost currency each time' could include the per-life loadout, which is really the unit's price. Also, 'Record the cooldown as well' is unclear for an ability that has none.",
+        "revised_target": "data/vocab/resources.json: list description and a new term",
+        "revised_change": "List description: 'A unit-wide gauge that shapes how the unit plays. A card has at most one.' -> 'A gauge or a purse that limits how the unit acts: a gauge on the unit, or currency spent each time it acts. A card has at most one.'\nNew term: {\"id\": \"pay-per-use\", \"label\": \"Pay per use\", \"description\": \"Its abilities or special shots cost currency each time they are used, paid from the player's or the team's purse rather than a gauge on the unit, so using them competes with buying units and upgrades. The unit's price and gear bought once per life do not count. Abilities still record their cooldown band as usual.\"}\nRun npm run docs and vocab-diff."
+      },
+      {
+        "id": "sensor-thermal",
+        "verdict": "revise",
+        "reason": "Only one unit (B and C, battlefield) showed this, and there it is a loadout pick. Under covered-field-gaps' sensors rule it would go to sensors.notes, so no pilot coding changes. Two conflicts in the wording. (1) 'A view the player can switch on at will counts as always-on' contradicts the list's own rule that key-bound effects are patterns. Either the list says so too, or the term cannot hold switchable optics. (2) The side effects say it 'counters stealth', but the description does not say so, and the detector already 'reveals stealthy, cloaked, burrowed' enemies. A coder with a thermal unit would not know whether to code detector as well. Draw the line.",
+        "revised_target": "data/vocab/sensor-traits.json: new term and list description",
+        "revised_change": "New term: {\"id\": \"thermal\", \"label\": \"Thermal sight\", \"description\": \"Within its sight it sees enemies through smoke, foliage and darkness, though not through walls. It does not reveal cloaked, stealthy or burrowed enemies; that is the detector.\", \"classes\": [\"infantry\", \"vehicle\", \"walker\", \"hover\", \"aircraft\", \"drone\"]}\nList description, append: 'A view the player can switch to at any time, with no cooldown or cost, counts as always-on.'\nThe sensors group decides together with its loadout rule. Under decision 1A what it sees the whole team sees, so it counters lay-smoke, not cloak. Run npm run docs."
+      },
+      {
+        "id": "covered-weapon-gaps",
+        "verdict": "revise",
+        "reason": "These are suggestions to the weapons and damage groups. Two errors to fix before handing them over. (1) emp would now 'pin' machines, while magnetic still says 'pull, lift or pin vehicles' and the disable-machine pattern says 'pin or shut down'. A pinning beam on a vehicle (magnetic is allowed for vehicles) would then have two families. Taking 'pin' out of magnetic settles it: magnetic moves the target, emp holds it. (2) The expected outcome 'Shinobi: small-arms (all three already)' is wrong. A and B coded the shuriken as small-arms, but C and the reference sample coded it as sniper. So the small-arms wording would flip the sample, and the weapons group has to settle sniper against small arms for thrown blades first. The rest (psionic, magazine, guided, control-only damage) checks out against the lists.",
+        "revised_target": "Owned by the weapons and damage groups; suggested wording: data/vocab/weapon-families.json emp, magnetic, small-arms, psionic; data/vocab/weapon-traits.json magazine; data/vocab/weapon-delivery.json guided; data/vocab/damage-types.json list description",
+        "revised_change": "emp: 'An electromagnetic pulse that shuts down machines and shields.' -> 'An electromagnetic pulse or ray that shuts down machines and shields, or holds a machine in place, with little or no damage.'\nmagnetic: 'Magnetic beams or harpoons that pull, lift or pin vehicles.' -> 'Magnetic beams or harpoons that pull or lift vehicles. A ray that only holds a machine in place is emp.'\nsmall-arms: 'Rifles, carbines, SMGs and pistols.' -> 'A soldier's own ranged weapon: rifles, carbines, SMGs and pistols, and also bows and thrown blades.' Only after the weapons group rules on sniper against small arms (C and the sample code the Shinobi shuriken as sniper).\npsionic: 'Mind attacks: control, confusion or fear. Machines without a crew are immune.' -> 'Mind attacks: control, confusion, fear, or lifting and crushing targets by thought. Machines without a crew are immune.'\nmagazine: append 'A reserve that refills by itself over time is still a magazine; finite-ammo is only for stock someone else must refill.'\nguided: append 'Flares and jammers break locks, so they do not stop a guided shot.'\ndamage-types list description, append: 'A weapon that only controls (pins, stuns, pulls) takes the damage type of its effect: emp for shutting down or holding machines, psionic for minds, cryo for freezing. There is no none.'\nNo allowed or excluded map changes."
+      },
+      {
+        "id": "covered-field-gaps",
+        "verdict": "accept",
+        "reason": "These are hand-off suggestions to the armament, modes, sensors, crew, on-death, pattern and roles groups. I checked them against the pilot: the BAR as acquired with a pattern 'when', the Hammer's 'when' as a pattern link, 'base' for the tank-mode cannon (the validator does not check armament[].mode against mode ids, confirmed), siege mode without mobility, needs-crew for the helicopter under decision 2A, and the IFV staying out of transport. The wording is plain. One point for the merger: the sensors line sends optional picks to notes, while missed item armour-models-from-picks codes armour picks as models. One rule should cover both, or the difference should be stated."
+      },
+      {
+        "id": "gap-triage",
+        "verdict": "accept",
+        "reason": "The hesitation index has exactly 102 gaps. I spot-checked about 25 of them (terror-drone damage, transport role, area denial, buggy body, rider dying with the car, siege shell, no-overkill, recrewing, capture speed, lock-on resistance, tilt handling and others), and each falls in one group. The 'wait' list correctly depends on paths-and-fit-notes. Thermal in the 'add' group still hangs on the sensors loadout rule (see sensor-thermal)."
+      }
+    ],
+    "missing": [
+      {
+        "id": "weak-point-vs-directional",
+        "fields": [
+          "armour.models"
+        ],
+        "evidence": "Not met in the pilot (no Iron Harvest unit), but the list contradicts itself. weak-point's example is 'Iron Harvest: many mechs take double damage at the back', while directional-threshold's new rule codes any extra rear damage as directional ('however little'). research/registry-notes/games-r3.md lists Iron Harvest 'rear-armour weak spots (double damage)'. Every IH mech would get two readings.",
+        "root_cause": "weak-point's description names a 'rear hatch' and its IH example is a facing rule, while directional covers 'sides and rear'. Nothing says whether a weak point is a spot you aim at or a side you reach.",
+        "kind": "source-rule",
+        "target": "data/vocab/armour-models.json terms weak-point (description, new source_rule, examples) and directional (examples)",
+        "change": "weak-point description: 'An exposed weak spot, such as a vent, reactor or rear hatch, takes extra damage.' -> 'A small exposed spot, such as a vent, a joint or a fuel tank, takes extra damage when hit on purpose.'\nweak-point source_rule (new): 'Code it only for a spot the shooter must aim at. Extra damage to a whole side, the rear or the top is directional, even when the game calls it a weak spot.'\nMove 'Iron Harvest: many mechs take double damage at the back' from weak-point's examples to directional's, reworded 'Iron Harvest: many mechs take double damage from behind'.",
+        "expected": "Iron Harvest mechs: directional for every coder. ARC Raiders machines (joints, rear cylinders): weak-point. Pilot units unchanged (none has weak-point).",
+        "side_effects": "Run npm run docs. No validator change. Reads well from above: directional rewards flanking, weak-point rewards aim.",
+        "priority": "should"
+      },
+      {
+        "id": "interceptor-automatic",
+        "fields": [
+          "armour.models"
+        ],
+        "evidence": "interceptor's note says 'Automatic. Flares, chaff or smoke fired on a key to shake off missiles are the fire-countermeasures pattern', but its example 'Battlefield 4: active protection detonates incoming missiles for a moment, then recharges' is a countermeasure the BF4 player fires with a key. Any BF4 tank coder must choose between the term and the pattern. It was not met in the pilot (the helicopter carries flares and ECM).",
+        "root_cause": "The example contradicts the term's own note.",
+        "kind": "term-description",
+        "target": "data/vocab/armour-models.json term interceptor: examples, new source_rule",
+        "change": "Replace 'Battlefield 4: active protection detonates incoming missiles for a moment, then recharges' with 'Generals: the Paladin tank's point-defence laser shoots down incoming missiles'.\nsource_rule (new): 'Code it only when the protection fires by itself. One the player switches on with a key, even for a few seconds, is the fire-countermeasures pattern.'",
+        "expected": "BF4 tank active protection: a fire-countermeasures ability for every coder. Broken Arrow active protection and the Paladin laser: interceptor.",
+        "side_effects": "Run npm run docs. The BF4 tank loses one candidate model, which eases the three-model cap.",
+        "priority": "could"
+      },
+      {
+        "id": "armour-models-from-picks",
+        "fields": [
+          "armour.models",
+          "armour.notes"
+        ],
+        "evidence": "Four armour-model examples are optional loadout picks: PlanetSide 2's auto-repair module (self-repair), Battlefield 3 reactive armour (ablative-plates), BF4 active protection (interceptor) and ARC Raiders shields (charge-shield). WARDOGS armour levels come from the loadout (games-r6.md). The sensor-trait split on the helicopter (A and B radar, C none; the gaps from A, B and C all ask for a loadout marker) shows that coders split when a list says nothing about picks. covered-field-gaps gives sensors a rule, but armour has none.",
+        "root_cause": "The armour-models list does not say whether a model that only an optional pick gives counts.",
+        "kind": "convention",
+        "target": "data/vocab/armour-models.json list description (append)",
+        "change": "Append: 'A model that only an optional loadout pick gives (reactive armour, an auto-repair module, a shield item) still counts; say in armour.notes that it is a pick. Under the three-model cap, keep built-in models first (see the cap rule above).'",
+        "expected": "BF3 tank: ablative-plates coded and marked as a pick by everyone. PS2 vehicles with the module: self-repair. ARC Raiders raider: charge-shield. Helicopter unchanged (its self-repair is built in).",
+        "side_effects": "Run npm run docs. This differs from the sensors suggestion in covered-field-gaps (picks go to sensors.notes). The merger should use one rule for both lists or say why they differ: an armour pick changes how the unit is fought, while a radar pick rarely does. Goes with the revised armour-model-cap-order.",
+        "priority": "should"
+      },
+      {
+        "id": "mode-armour-only-when-changed",
+        "fields": [
+          "modes[].armour.class",
+          "modes[].armour.models"
+        ],
+        "evidence": "A-sc2, B-sc2 and C-sc2 all hesitated on whether a mode repeats unchanged parts. A repeated 'heavy, damage-reduction' in siege mode, while B and C left armour out. Once damage-reduction-threshold moves the Siege Tank to flat-pool, A's copied mode armour goes stale unless it is edited separately, and the reference comparison would count the stale copy.",
+        "root_cause": "modes[].armour has no description, so nothing says when to fill it.",
+        "kind": "field-rule",
+        "target": "schemas/source-unit.schema.json $defs.mode.properties.armour description (cross-group: the modes group owns the rest of modes)",
+        "change": "New description: 'Only when the mode's armour class or models differ from the unit's. Leave it out when they stay the same; the unit's armour then holds for every mode.'",
+        "expected": "Siege Tank: no armour block in siege mode for A, B and C. A unit whose armour really changes in a mode (an RA3 ore collector with its armour raised) records it.",
+        "side_effects": "Run npm run docs. The modes group should use the same wording for class, body and mobility.",
+        "priority": "should"
+      }
+    ]
+  }
+}

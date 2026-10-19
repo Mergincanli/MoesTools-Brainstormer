@@ -1,0 +1,532 @@
+{
+  "key": "identity",
+  "analysis": {
+    "cluster": "Identity, roles and body",
+    "summary": "Roles caused the trouble. roles.secondary agreed only 79.6% because nothing ranks the candidates when more than two qualify, and every one of the 12 reports hesitated on both roles fields. The causes are an unclear \"the game calls it that\" (wiki infoboxes, internal names, one side's label), a fallback to assault that suits gunships badly, and an infiltrator role written as a mechanic, which is why the Terror Drone sample says infiltrator while all three coders say anti-armour. Two more fields fail in practice even though the agreement script does not measure them: confidence agrees in only 10 of 18 coder pairs (55.6%), because a wiki copy of an official profile was coded as official by one coder and as wiki by another, and it was never said whether pages of one wiki count as independent. Size (Terror Drone tiny or small; SC2 tank measured medium but named large by example), lineage, flavour affinity and availability all agreed but were hesitated on, each in 5 to 9 reports. I propose: rewrite infiltrator as a job; a five-step primary procedure with a strict meaning of official text; a five-step ranking for secondaries; size bands chosen by example; plain confidence and source-kind rules; mechanical rules for lineage and flavour; and four sample fixes (Terror Drone primary and size, IFV secondaries, Hammer lineage).",
+    "proposals": [
+      {
+        "id": "infiltrator-is-a-job",
+        "fields": [
+          "roles.primary",
+          "roles.secondary"
+        ],
+        "evidence": "Terror Drone primary: coders A, B and C all chose anti-armour; the sample says infiltrator (roles.primary 66.7% against the reference). All three RA3 reports hesitated here: 'infiltrator (acts inside enemy units) describes the infest literally, but roles must not be mechanics' (A-ra3, B-ra3, C-ra3). Unclear-rule reports A-ra3 and B-ra3 name the same clash. A and C say the anti-armour requires list naming pattern:infest-vehicle tipped them to anti-armour.",
+        "root_cause": "data/vocab/roles.json says roles are 'never its mechanic', but the infiltrator description ('Acts inside enemy units, lines or buildings: sabotage, steal, capture') is a mechanic. It copies the pattern category 'infiltration' (infest, hijack, capture, steal). Meanwhile anti-armour's requires names pattern:infest-vehicle, so the list points both ways.",
+        "kind": "term-description",
+        "target": "data/vocab/roles.json term infiltrator (description), plus a new entry in roles.tie_breaks",
+        "change": "Infiltrator description, old -> new: 'Acts inside enemy units, lines or buildings: sabotage, steal, capture.' -> 'Spies, steals or sabotages inside or behind enemy lines: steals vehicles or money, shuts down or spies on buildings, plants charges on structures.'\nAdd tie-break {terms: [infiltrator, anti-armour, anti-infantry, engineer], rule: 'Ask what the unit does once it gets in. If it destroys what it gets into or onto (an infesting drone, a crew killer), use the anti role for that target. If it takes over enemy buildings, it is an engineer. Infiltrator is left for spying, theft and sabotage.'}",
+        "expected": "Terror Drone primary: anti-armour for A, B and C (unchanged); the sample changes from infiltrator to anti-armour (see sample-td-primary). Infiltrator is no longer a candidate secondary for the drone, which removes one of the four options the coders weighed (A-ra3, B-ra3). No other pilot unit used infiltrator.",
+        "side_effects": "Rebuild docs/vocabularies.md. data/vocab/faction-flavours.json lists infiltrator among soviet's favoured roles, probably because of the drone. Keep it, or move it to allied (its 'stealth and disguise' theme fits spies); that is a generator choice for Mustafa, not a coding rule. Effect on the 28-game scope: the RA2 and RA3 Terror Drones become anti-armour; GLA hijackers, the RA2 Spy and Black Lotus stay infiltrator; RA engineers who capture buildings are engineer.",
+        "priority": "must"
+      },
+      {
+        "id": "roles-primary-procedure",
+        "fields": [
+          "roles.primary"
+        ],
+        "evidence": "Coders agree on the primary 100%, but 16 hesitations came from all 12 reports. Hammer: the wiki infobox says 'Main battle tank', while the official profile says 'Anti-Armor Tank', StrategyWiki says 'Anti Tank' and the internal name is AntiVehicle (A, B and C ra3). Riflemen: in-game 'Core Infantry' against the wiki's 'an anti-infantry unit' (A, B and C coh1). Battlefield attack helicopter: the Mi-28's Battlelog line says anti-armour but the AH-1Z's does not, and assault's text ('soaks damage, brawls') fits a fragile flier badly; gaps from A-bf and C-bf asked for close air support. SC2 tank: siege and anti-armour both qualify (A, B and C sc2). Unclear-rule reports: A-bf (is it 'only if' or 'if'?), A-coh1, B-bf, B-coh1, B-ra3, C-bf, C-coh1, C-ra3 (which labels count), A-ra3 (label ranking).",
+        "root_cause": "The roles list says 'use anti-X as the primary only if the game gives a bonus against X or calls the unit that; generalists are assault'. It never says which text is 'the game' (wiki infobox, official profile copied on a wiki, StrategyWiki, internal file names, one side's model of a mirrored archetype), whether 'only if' is a gate or a trigger, what wins when siege and anti-X both qualify, or what a fast, fragile generalist is.",
+        "kind": "field-rule",
+        "target": "schemas/source-unit.schema.json unit.roles.primary description (rebuilds docs/fields.md); data/vocab/roles.json list description; source_rule on roles terms assault and raider; the old tie-break sentences move into roles.tie_breaks",
+        "change": "1) roles.json list description -> 'What the unit is for: its job or the targets it is best against, never how it does it (mechanics are patterns). A card has one primary role and up to two secondary roles. Requires says what a unit needs before it can claim a role. A source unit never claims a role whose requires it fails, and meeting them is not enough on its own: the role's description must fit too. Official text means words the game or its makers wrote: the in-game role line, tooltip or production text, the manual, the official site's unit profile and patch notes. It still counts when read through a wiki page that copies it. A wiki's own infobox, prose or tables, strategy guides and internal file names are not official text. For a unit recorded once for several sides, official text counts only when every side's version carries it. How to pick the primary and secondary roles is under roles in docs/fields.md; the tie-breaks settle close calls.'\n2) unit.roles.primary description: 'The unit's main job. Go through these steps and stop at the first one that gives a role. Use only the default kit and sourced facts: never passengers, upgrades, loadout picks or proposal fields. 1. Official role line. If the unit's role line in official text (its designation or one-line description) names one of our roles, use it: anti-tank or anti-vehicle means anti-armour, anti-aircraft means anti-air, artillery means siege, sniper means marksman, recon means scout. Main battle tank, core infantry, multipurpose, general-purpose and combat support name no role. A line that names two roles counts only if the main weapon has a bonus against one of them. Skip a named role whose requires the unit fails. 2. No fighting job. If the unit is unarmed or its only weapon is a tool, use the job of its main button: support, transport, engineer, logistics or infiltrator. 3. Reach. Siege if the main weapon is lobbed or the unit deploys into a mode with a long-range gun. Marksman if the main weapon is a sniper weapon that reaches long or further. 4. Bonus. Anti-armour, anti-air or anti-infantry if the game's own data gives the main weapon extra damage against that target, or the main weapon can hit nothing else. Doing little damage to other targets is not a bonus. 5. Generalist. Raider if the unit is fast or very fast with light or no armour. Otherwise assault.'\n3) assault source_rule: 'Primary for generalists that are not fast and lightly armoured (step 5 of roles.primary).' Raider description -> 'Hits and runs, picking off isolated targets: fast flankers, gunships that make attack runs.' Raider source_rule: 'Primary for fast or very fast generalists with light or no armour (step 5 of roles.primary).'\n4) tie_breaks: {terms: [disabler, area-denial], rule: 'A disabler acts on units; area denial acts on ground.'} and {terms: [buffer, scout], rule: 'Finding and marking enemies is scout; buffer is for boosting allies.'}",
+        "expected": "Hammer: step 1, from the official designation 'Anti-Armor Tank' -> anti-armour (A, B, C and the sample all agree). Terror Drone: step 1, designation 'anti-vehicle drone' -> anti-armour (all, and the fixed sample). IFV: designation 'Multipurpose Combat Support' names no role; steps 2 and 3 do not apply; step 4, the default missiles do about three times the damage to aircraft -> anti-air (all, sample). SC2 tank: in-game description 'artillery' -> siege, and step 3 (deploy mode with a long gun) gives the same (all). Riflemen: 'Core Infantry' names no role; the production text names two roles with no bonus; no bonus data; medium speed -> assault (all). Battlefield helicopter: the Mi-28 line alone does not count for a mirrored archetype; no reach and no bonus data; very fast with light armour -> raider for A, B and C (each changes from assault, settling their shared doubt). Primary agreement stays at 100%.",
+        "side_effects": "Depends on the armament group's 'main weapon' rule (decision 2A: the buyer fires it); the helicopter's result does not depend on which weapon that is. Rebuild docs/fields.md and docs/vocabularies.md. Effect on the 28-game scope: games whose data has no bonus lines (CoH1 per-armour tables, DoW1, Battlefield) send unlabelled line units to assault and fast, light ones to raider, which is intended. Games with official role lines (the RA3 profiles, SC2 in-game text, CoH role fields) decide at step 1, so see the registry proposal, which says where each game's role line lives. Mirrored archetypes in Battlefield, Wargame and WiC never decide from one side's text.",
+        "priority": "should"
+      },
+      {
+        "id": "roles-secondary-ranking",
+        "fields": [
+          "roles.secondary"
+        ],
+        "evidence": "roles.secondary agreement is 79.6%, below the threshold. IFV: A [support, raider], B [raider, scout], C [anti-infantry, support]; the sample has [support, anti-infantry]. Terror Drone: A [scout, disabler], B [anti-infantry, scout], C [disabler, scout]; the sample has [disabler, scout]. 15 hesitations from all 12 reports, nearly all 'only two slots, nothing ranks them' (A-bf, B-bf, C-bf, A-ra3, B-ra3, C-ra3 twice each, A, B and C sc2, A, B and C coh1). Also: 'nothing says how strong a capability must be' (A-bf, B-bf: anti-air called limited), 'may an upgrade-only or doctrine-only capability justify a role' (C-coh1), and 'a requirement only says when a role is possible, not when it should be claimed' (A-sc2).",
+        "root_cause": "unit.roles.secondary has no description; the schema only caps it at two. When three or four roles meet their requires, nothing orders them, and nothing says whether passenger, upgrade or loadout capabilities, or proposal fields such as a proposed radar, count.",
+        "kind": "field-rule",
+        "target": "schemas/source-unit.schema.json unit.roles.secondary description (rebuilds docs/fields.md)",
+        "change": "Add this description: 'Up to two more jobs. A candidate is any role, other than the primary, whose requires the unit meets and whose description fits a sourced part of the unit. Proposal fields never count (a proposed sensor, mount or seat). Drop any role whose target the official text calls a weak or limited point of the unit. Rank the candidates by what they rest on, and keep the first two: 1. Official text calls the unit by the role's word (a scout, hit-and-run, anti-tank). 2. A button, mode or alternate weapon that every copy has. 3. Its weapons in the primary, secondary and alternate slots. Anti-armour and anti-air need a bonus against that target. Anti-infantry also fits a splash weapon, or small arms that do little to vehicles. Any other role needs one of these weapons to meet its requires. 4. Speed, armour or senses alone. Raider: fast or very fast. Assault: medium or heavier armour and a short- or medium-range main weapon. Scout: long sight, a sensor trait or stealth. 5. Passengers, upgrades, loadout picks (option weapons, the default pick included), doctrines or acquired weapons. Rank these by how many of the options give the role. Ties inside a step follow the order of the roles list. Leave a slot empty rather than fill it with a role that rests on none of these.'",
+        "expected": "Terror Drone: step 1, the official profile calls it a scout ('a scout first', 'fast scout') -> scout; step 2, the stasis ray is an alternate weapon on an innate toggle with the root trait -> disabler. That gives [scout, disabler] for A and C; B changes from anti-infantry to disabler; it matches the sample. IFV: step 1, the official 'hit-and-run' -> raider (step 4 gives the same from fast speed); anti-armour is dropped because the official text calls its missiles weak against armour; scout has no official 'recon' and no sourced sensor (the sample's radar is a proposal); step 5, most riders give anti-infantry (Peacekeeper, Tanya, Conscript, Desolator, Imperial Warrior, Shinobi, the snipers) against 3 for anti-armour and 1 for support -> [raider, anti-infantry] for A, B and C; the sample changes (see sample-ifv-secondary). SC2 tank: step 3, the bonus against Armored -> anti-armour, and splash -> anti-infantry -> [anti-armour, anti-infantry] (all). Hammer: step 4, heavy armour and a medium-range cannon -> [assault] (all, sample). Riflemen: step 2, the innate Upgrade to Barracks button builds a structure -> engineer; step 3, rifles -> anti-infantry -> [anti-infantry, engineer] (all). Helicopter: step 3, the splash rockets and cannon -> anti-infantry; radar has a proposal basis and does not count; step 5, the TOW, Hellfire and TV picks give anti-armour (3) against the heat seekers' anti-air (1) -> [anti-infantry, anti-armour] (all). Agreement 100%.",
+        "side_effects": "Uses the armament default flag and slot names as they stand. The scout step reads sensors only when their basis is sourced, which the sensors group should keep. Rebuild docs. The agreement script needs no change. Effect on the 28-game scope: passenger-set carriers (RA2 IFV, Battlefield transports) and upgrade-heavy squads (CoH, DoW) rank their conditional roles last; that is intended, because the patterns passenger-sets-weapon and upgrade-in-field carry that variety.",
+        "priority": "must"
+      },
+      {
+        "id": "scout-needs-information",
+        "fields": [
+          "roles.secondary",
+          "roles.primary"
+        ],
+        "evidence": "B coded the IFV [raider, scout], resting scout on the wiki infobox's 'recon' and on its speed. A-bf and C-bf considered scout because of optional radar picks. The existing sentence 'Damage first is a raider, information first is a scout' did not stop speed alone from counting, because scout's requires accepts speed:>=fast.",
+        "root_cause": "Scout's requires list lets any fast unit claim scout, so for a fast unit the raider/scout line rests on judgement alone.",
+        "kind": "tie-break",
+        "target": "data/vocab/roles.json tie_breaks (replaces the sentence in the list description)",
+        "change": "Add tie-break {terms: [raider, scout], rule: 'Damage first is a raider, information first is a scout. Speed alone makes a scout only when official text calls the unit a scout or recon unit. Otherwise scout needs a sourced information part: long sight, a sensor trait, stealth, a mark or a reveal.'} The scout requires list stays as it is (cards still need it).",
+        "expected": "IFV: no official 'recon' (only the wiki infobox) and no sourced sensor -> no scout for A, B or C. Terror Drone: the official text calls it a scout -> scout stays (all). Helicopter: radar has a proposal basis -> no scout.",
+        "side_effects": "None for the validator. Effect on the 28-game scope: fast units with no sensors become raiders unless their official text calls them scouts.",
+        "priority": "must"
+      },
+      {
+        "id": "role-boundaries",
+        "fields": [
+          "roles.primary",
+          "roles.secondary"
+        ],
+        "evidence": "Transport: the IFV is called the main Allied troop carrier but has one seat (gaps A-ra3, B-ra3, C-ra3; unclear B-ra3 'is claiming it anyway as atypical acceptable?', C-ra3). Area denial: a sieged tank holds ground by threat but fails the requires (gap A-sc2; hesitations A, B and C sc2). Marksman: the requires is met by any siege gun though the description does not fit (A-sc2 unclear). Point capture: A-coh1, B-coh1 and C-coh1 asked whether 150% capture supports engineer, infiltrator or logistics (unclear A-coh1, B-coh1). Upgrade-only abilities: the sticky bomb is an ability, so the anti-armour requires fails (A, B and C coh1; unclear B-coh1, C-coh1).",
+        "root_cause": "The requires lists say when a role is possible, not when it applies. There is no rule for a carrier with fewer seats than a transport, a gun line that denies ground, long-reach guns that are not snipers, or map-point capture.",
+        "kind": "tie-break",
+        "target": "data/vocab/roles.json: tie_breaks, and source_rule on the terms transport, siege and marksman",
+        "change": "tie_breaks: {terms: [area-denial, siege], rule: 'A gun line that holds ground only by the threat of its fire (a sieged tank) is siege or an anti role. Area denial needs something that stays on the ground: mines, a lingering zone, turrets or fortifications.'}; {terms: [engineer, infiltrator, logistics], rule: 'Capturing map control points is a game-mode rule that all infantry share, so a faster capture rate supports no role. Engineer needs structures or gadgets the unit builds or deploys, or enemy buildings it takes over. Logistics needs resources the unit gathers, carries or earns by its own action. Infiltrator needs spying, theft or sabotage.'}. source_rule transport: 'Needs two or more passenger seats. A carrier with one seat is not a transport, whatever the source calls it; its seat shows in crew.passengers and its carry-passengers or passenger-sets-weapon pattern.' source_rule siege: 'A lobbed weapon, a deploy or siege mode with a long-range gun, or a long-range weapon built to break structures. A long-range missile or cannon alone is not siege.' source_rule marksman: 'Only a precise, mostly single-target weapon, such as a sniper, that reaches long or further. A long-range splash or lobbed gun is siege.' No change to anti-armour's requires: an anti-tank tool fired by an ability button does not earn the role, and an upgrade ranks at step 5 anyway.",
+        "expected": "IFV: no transport for anyone (as now; this stops future 'atypical' claims). SC2 tank: no area denial and no marksman; secondaries [anti-armour, anti-infantry] (all). Riflemen: engineer rests on the built barracks, not on capture speed; no infiltrator or logistics; anti-armour from sticky bombs is not claimed (all three already left it out).",
+        "side_effects": "Rebuild docs/vocabularies.md. The validator is unchanged (source_rule is text only). Effect on the 28-game scope: CoH units that carry their anti-tank charges as abilities lose anti-armour unless they also have an anti-tank weapon. That is consistent with the cards, whose anti-armour requires also wants a weapon.",
+        "priority": "should"
+      },
+      {
+        "id": "sample-td-primary",
+        "fields": [
+          "roles.primary",
+          "roles.secondary"
+        ],
+        "evidence": "A, B and C all coded anti-armour; the sample has infiltrator (66.7% against the reference). Under infiltrator-is-a-job and roles-primary-procedure, the official designation 'anti-vehicle drone' decides.",
+        "root_cause": "The sample followed the mechanic-shaped infiltrator description, which the coders rejected under 'never its mechanic'.",
+        "kind": "sample-fix",
+        "target": "data/units/ra3.json ra3.soviet.terror-drone roles",
+        "change": "roles.primary: 'infiltrator' -> 'anti-armour'. roles.secondary: [disabler, scout] -> [scout, disabler] (same set, now in ranking order).",
+        "expected": "The sample matches all three coders on the primary, and matches A and C (and B after the ranking rule) on the secondaries. The validator stays OK: anti-armour's requires is met by pattern:infest-vehicle and damage:emp.",
+        "side_effects": "Rebuild docs/samples.md if it lists roles. Nothing links role:infiltrator. Flavour scoring for the drone then gives [soviet] alone (see flavour-affinity-rule).",
+        "priority": "must"
+      },
+      {
+        "id": "sample-ifv-secondary",
+        "fields": [
+          "roles.secondary"
+        ],
+        "evidence": "The sample's [support, anti-infantry] rests only on passenger weapons; the coders split three ways (A [support, raider], B [raider, scout], C [anti-infantry, support]).",
+        "root_cause": "The sample was written before any ranking existed; both of its roles come from riders.",
+        "kind": "sample-fix",
+        "target": "data/units/ra3.json ra3.allied.multigunner-ifv roles.secondary",
+        "change": "[support, anti-infantry] -> [raider, anti-infantry].",
+        "expected": "Matches what A, B and C produce under roles-secondary-ranking. The validator stays OK: raider's requires (speed:>=fast) is met by speed fast.",
+        "side_effects": "The memorable line and as_player text can stay as they are (they already describe a fast car whose rider sets the gun).",
+        "priority": "must"
+      },
+      {
+        "id": "sizes-by-example",
+        "fields": [
+          "body.size"
+        ],
+        "evidence": "Coders agree 100%, but the Terror Drone differs from the sample (all small against tiny: 66.7% against the reference). 9 hesitations in 9 of 12 reports: the drone (A, B and C ra3: tiny's 'small drones' against small's 'one soldier', and it fills an infantry seat); the SC2 tank (A, B and C sc2: 2.3 Marine widths reads medium, but large's example is tanks); the helicopter (A, B and C bf: does the rotor disc count). Unclear rules: A-bf, C-bf, A-ra3, B-ra3, A-sc2, B-sc2, C-sc2.",
+        "root_cause": "data/vocab/sizes.json defines small and medium by soldier widths but large and huge only by examples, and has no aircraft examples. Tiny names both 'dogs' and 'small drones', with no rule for units the game handles like soldiers. Strategy games draw soldiers oversized, so measurements and examples disagree.",
+        "kind": "term-description",
+        "target": "data/vocab/sizes.json list description and terms tiny, small, medium, large",
+        "change": "List description -> 'Footprint seen from above, which sets the hitbox. Pick the band whose examples name what the unit is; examples win over measurements, because strategy games draw soldiers oversized. Only for a unit no example covers, compare it with the same game's foot soldier. Count the hull, fuselage and wings, not a rotor disc or a gun barrel.' tiny -> 'Clearly smaller than one soldier in its own game: hand-sized or knee-high drones and bots, small animals. Hard to hit, easy to lose sight of. A unit the game handles like a soldier (it fills an infantry seat in a transport, or counts as infantry) is small, however small it looks.' small -> 'One soldier: infantry, power-suit troopers, war dogs, and robots or drones the game handles like a soldier.' medium -> 'About two to three soldier-widths: buggies, cars, light walkers, IFVs, light scout helicopters.' large -> 'Main battle tanks, APCs, assault mechs, attack and transport helicopters, fighter jets.' huge unchanged.",
+        "expected": "Terror Drone: it fills an infantry seat in transports -> small for A, B and C; the sample changes (see sample-td-size). SC2 tank: the main battle tank example -> large (all). Attack helicopter: the attack helicopter example, rotor disc not counted -> large (all). Hammer large, IFV medium, Riflemen small: unchanged.",
+        "side_effects": "No validator effect: tiny and small are both allowed for drones, unarmoured, micro-bot and rotorcraft, and both count as infantry targets. docs/examples/concept-card.example.json (a tiny hover micro-bot) stays valid. Effect on the 28-game scope: RA2 and RA3 attack dogs become small (they fill transport seats), so 'dogs' leaves tiny's examples. Generals battle drones, SC2 interceptors and Battlefield MAV or EOD bots stay tiny.",
+        "priority": "should"
+      },
+      {
+        "id": "sample-td-size",
+        "fields": [
+          "body.size"
+        ],
+        "evidence": "All three coders chose small; the sample has tiny. The sample's own text says the player version 'gives it a soldier-sized hitbox', and size 'sets the hitbox'.",
+        "root_cause": "The sample coded the look, not the footprint the game uses.",
+        "kind": "sample-fix",
+        "target": "data/units/ra3.json ra3.soviet.terror-drone body.size, body.notes, uncertain[body/size], memorable, as_player",
+        "change": "body.size 'tiny' -> 'small'. body.notes -> 'A spider-like robot that looks smaller than a soldier. Although it comes from the vehicle factory, the game handles it like infantry: it fills an infantry seat in troop transports, so it is coded small. It heals only at a captured hospital or dry dock or at top veterancy, not from an engineer's medical tent or from repair drones.' uncertain body/size note -> 'Sources call it small or diminutive and no source compares it with a soldier; it is coded small because it fills a soldier's seat in transports.' memorable: 'A tiny, disposable robot' -> 'A small, disposable robot'. as_player: 'drawn tiny, but its hitbox is soldier-sized and outlined' -> 'drawn small and low, with a soldier-sized hitbox outlined'.",
+        "expected": "The sample matches A, B and C; body.size agreement against the reference reaches 100%.",
+        "side_effects": "Nothing links size:tiny. infest-vehicle's requires (size:<=small) and the drone class's allowed sizes still pass.",
+        "priority": "must"
+      },
+      {
+        "id": "confidence-rule",
+        "fields": [
+          "confidence"
+        ],
+        "evidence": "The agreement script does not measure this field; from the unit files: IFV A high, B medium, C high; Hammer A high, B medium, C high; Terror Drone A high, B medium, C high; SC2 A high, B high, C medium; Battlefield and CoH1 all medium. That is 10 of 18 pairs, or 55.6%. 8 hesitations in 8 of 12 reports (A-bf, A-coh1, B-bf, B-ra3, B-sc2, C-bf, C-coh1, C-sc2). Unclear rules: A-coh1, B-bf, C-coh1 (are pages of one wiki independent?), A-ra3, B-ra3 (does a wiki copy of official text count?).",
+        "root_cause": "data/vocab/confidence.json term high ('an official source, or two independent established sources') does not say whether a wiki's copy of an official profile counts as official, whether pages of one site are independent, or whether an official source that backs one side point lifts the whole entry.",
+        "kind": "term-description",
+        "target": "data/vocab/confidence.json terms high and medium",
+        "change": "high -> 'The facts the entry rests on (tier, cost, speed, armour, main weapon and main mechanic) are stated by official text, or by two independent established sources that agree. Official text read through a faithful copy (a wiki page that reproduces an official profile or manual page and says so) counts as official. Pages of one site count as one source. Two different established wikis are independent unless one gives the other as its source.' medium -> 'Those facts come from one established wiki or database (any number of its pages), not contradicted. An official or second source that backs only a side point, such as one patch-note line, does not raise it to high.' Add to the sources[] guidance (schemas/common.schema.json source description): 'With only three slots, cite an independent second site before a second page of the same site.'",
+        "expected": "RA3, all three units: A high (the official copy plus two sites), B high (the official copy), C high (C&C Wiki plus StrategyWiki); the sample is high. SC2: A and B high (Liquipedia plus StarCraft Wiki); C medium (one wiki; its patch-note citation covers only a side point; Liquipedia was blocked). That is correct for C's evidence. Battlefield and CoH1: all medium (one wiki). Agreement goes to 16 of 18 pairs (88.9%); the one remaining difference is source access, not the rule.",
+        "side_effects": "scripts/agreement.mjs should measure confidence (ranked), lineage and sources.kind from round 2 on. The SC2 registry note already names Liquipedia's rate limit; round 2 should respect it so that every coder can cite both wikis.",
+        "priority": "must"
+      },
+      {
+        "id": "source-kind-copies",
+        "fields": [
+          "sources[].kind"
+        ],
+        "evidence": "A coded the C&C Wiki '/Profile' pages (wiki copies of the official RA3 profiles) as official for all three RA3 units; B coded the same pages as wiki; C did not cite them; the sample uses wiki with the note 'Transcribes EA's official unit profile'. Hesitations: A-ra3 sources[1].kind and B-ra3 sources.kind; unclear rules A-ra3 and B-ra3.",
+        "root_cause": "data/vocab/source-kinds.json has no rule for a page that lives on a wiki but reproduces official text. The kind matters because it was the only route to high confidence.",
+        "kind": "tie-break",
+        "target": "data/vocab/source-kinds.json: tie_breaks, and the descriptions of terms official and wiki",
+        "change": "official -> 'Publisher or developer, read on their own site or in the game: manual, official site, patch notes, developer posts, in-game text.' wiki -> 'A large, maintained community wiki for the series. A wiki page that copies official text is still a wiki source; say in its note that it copies official text and where the original was.' Add tie-break {terms: [official, wiki], rule: 'Code the site you actually read. A wiki copy of an official profile or manual page is wiki, with a note naming the original; confidence still counts its text as official.'}",
+        "expected": "A's three /Profile citations become wiki with a note, matching B and the sample. Blizzard patch notes stay official (all SC2 coders). Confidence no longer depends on this choice (see confidence-rule).",
+        "side_effects": "The copy-check is unaffected (it reads the cited page either way). None for the validator.",
+        "priority": "must"
+      },
+      {
+        "id": "lineage-rule",
+        "fields": [
+          "lineage"
+        ],
+        "evidence": "Coders agree with each other (terror-drone, ifv, riflemen, siege-tank; none for the helicopter and the Hammer), but the sample gives the Hammer 'hammer-tank'. 7 hesitations in 7 of 12 reports (A-bf, A-coh1, A-ra3, A-sc2, B-coh1, B-sc2, C-coh1). Unclear rules: A-coh1 and A-ra3 (no naming rule), C-sc2 (only registry games?).",
+        "root_cause": "The lineage description ('Shared id for the same design across games, e.g. terror-drone') does not say which games count, how to name the id, or whether one real-world airframe in two series is a lineage.",
+        "kind": "field-rule",
+        "target": "schemas/source-unit.schema.json unit.lineage description",
+        "change": "-> 'Shared id for the same design in two or more games of data/games.json: a unit with the same name, or one its source calls a direct successor, doing the same job. Use the unit's slug in the earliest such game, for example terror-drone (Red Alert 2 and 3), ifv (Red Alert 2's IFV and Red Alert 3's Multigunner IFV) or riflemen (Company of Heroes 1 to 3). Leave it out when no other registry game has the design. A game outside the registry, or the same real-world vehicle in an unrelated series, does not count.'",
+        "expected": "Terror Drone terror-drone, IFV ifv and Riflemen riflemen (all, unchanged). SC2 tank: StarCraft 1 is not in the registry -> left out (A, B and C each drop siege-tank). Helicopter: left out (all). Hammer: RA3 only -> left out (all coders; the sample changes, see sample-hammer-lineage).",
+        "side_effects": "The validator could warn when a lineage id appears on only one unit after the run (a warning, because research is incremental). Effect on the 28-game scope: C&C families (RA1-3, TD/TS/TW), CoH 1-3 and DoW 1-2 link up; real tanks shared by WiC, Wargame and Broken Arrow do not.",
+        "priority": "should"
+      },
+      {
+        "id": "sample-hammer-lineage",
+        "fields": [
+          "lineage"
+        ],
+        "evidence": "The sample sets lineage 'hammer-tank'; A, B and C left it out; the Hammer exists only in RA3 (Uprising is an expansion, not a game).",
+        "root_cause": "The sample used lineage as a plain name, which the lineage rule does not allow.",
+        "kind": "sample-fix",
+        "target": "data/units/ra3.json ra3.soviet.hammer-tank lineage",
+        "change": "Remove 'lineage': 'hammer-tank'.",
+        "expected": "The sample matches all three coders.",
+        "side_effects": "None.",
+        "priority": "should"
+      },
+      {
+        "id": "flavour-affinity-rule",
+        "fields": [
+          "flavour_affinity"
+        ],
+        "evidence": "Agreement is 100% (Battlefield [allied], SC2 [soviet], Riflemen [soviet, allied], RA3 matching the faction), but 9 hesitations in 9 of 12 reports (A, B and C on bf, coh1 and sc2): should a unit inherit its faction's flavour, should units of factions with none (mixed Terran, mirrored Battlefield) get one, and when to add a second. Unclear rules: A-coh1, C-bf.",
+        "root_cause": "The flavour_affinity description says only 'Which of our faction flavours this design fits, if any', with no starting point and no test.",
+        "kind": "field-rule",
+        "target": "schemas/source-unit.schema.json unit.flavour_affinity description",
+        "change": "-> 'Proposal, not a sourced fact. Which of our flavours this design would sit in. 1. Take the faction's flavour from data/games.json, unless the unit's main weapon family or body is on that flavour's avoided list. 2. Score each other flavour: one point for each of these four that its favoured lists hold: the primary role, the main weapon's family, the mobility and the body plan. 3. Add the top-scoring other flavour if it scores 2 or more and at least as much as the faction's flavour scores; if two tie, add both. For a faction with no flavour, step 1 gives nothing and step 3 uses the scores alone. At most two; an empty list is fine.'",
+        "expected": "Terror Drone [soviet] (soviet scores 3, empire 2). Hammer [soviet]. IFV [allied]. SC2 tank (Terran has no flavour): soviet scores 4 -> [soviet]. All of these are unchanged. Riflemen: allied from the faction; soviet scores only 1 -> [allied], so A, B and C each drop soviet. Helicopter (no flavour; primary raider): with rockets as the main weapon, allied 2 and empire 2 -> [allied, empire]; with the autocannon as the main weapon, allied 3 -> [allied]. So it follows the armament group's main-weapon fix, and the coders agree once that is settled.",
+        "side_effects": "Cross-group dependency: the main-weapon rule (armament) and the primary role (roles-primary-procedure). Because the rule is mechanical, scripts/validate.mjs could print the computed value as a hint. Effect on the 28-game scope: GLA, Scrin and other unflavoured factions get a flavour only where their parts clearly match one.",
+        "priority": "should"
+      },
+      {
+        "id": "official-role-lines-registry",
+        "fields": [
+          "roles.primary",
+          "roles.secondary"
+        ],
+        "evidence": "C-ra3 cited neither /Profile page, so it never saw the designation 'anti-vehicle drone' or 'a scout first' and leaned on StrategyWiki's 'Scout'. B-coh1 and C-coh1 could not tell the in-game role field from wiki prose. A-bf, B-bf and C-bf could not tell whose text counts for a mirrored archetype.",
+        "root_cause": "The research notes do not say where each game's official role line lives, so the roles procedure's step 1 depends on what a coder happened to read.",
+        "kind": "registry",
+        "target": "research/registry-notes/games-r1.md (RA3), games-r4.md (CoH1-3), games-r5.md (SC2), games-r6.md (Battlefield), and the README line 'read the note for your batch first'",
+        "change": "RA3: 'Official role lines: the C&C Wiki's <unit>/Profile pages copy the official RA3 site's unit profiles. Read the designation line before coding roles, and cite the page as kind wiki with a note.' CoH1: 'The role line shown in the CoH wiki infobox (for example Core Infantry) is in-game text; the wiki's own prose is not.' SC2: 'The in-game unit description in the Liquipedia and StarCraft Wiki infoboxes is official text.' Battlefield: 'Mirrored archetypes: no single side's text decides a role; use only text that every side's version shares.' README: add 'Read the official role line first; roles depend on it.'",
+        "expected": "With the RA3 note, all three coders read 'anti-vehicle drone' and 'a scout first', so the drone's primary (anti-armour) and secondaries ([scout, disabler]) no longer depend on which pages a coder chose.",
+        "side_effects": "Research notes only; no schema change. The other games' notes need the same line as they are researched.",
+        "priority": "should"
+      },
+      {
+        "id": "availability-cap-rule",
+        "fields": [
+          "availability"
+        ],
+        "evidence": "Agreement is 100% (helicopter limited; everything else open). 5 hesitations in 5 of 12 reports: A-bf, B-bf and C-bf (one gunship per team per map fits unique's count but not its 'heroes and commandos'; 'open: anyone can buy it' when nothing is bought) and A-coh1, B-coh1 (does a population cap count?). Unclear rules: A-bf, B-bf, C-bf.",
+        "root_cause": "data/vocab/availability.json defines unique by a count and a kind at once, and assumes a purchase model; nothing says that only caps on this unit count.",
+        "kind": "term-description",
+        "target": "data/vocab/availability.json: list description and terms open, limited and unique",
+        "change": "List description -> 'How many of the unit a side may field at once. Count only a cap the game puts on this unit; a general population or army cap does not count.' open -> 'No cap of its own: anyone on the team can field it, held back only by price, the population cap or respawn rules.' limited -> 'The game caps this unit at a few per side at a time: a unit cap, a slot limit or a set number of map spawns.' unique -> 'One per side at a time, and a named hero or commando: the hero flag (decision 7B). A vehicle held to one per side by map spawns is limited, not unique.'",
+        "expected": "Helicopter limited (all); Riflemen open (all); RA3 and SC2 units open (all). Agreement stays at 100% and the doubt is gone.",
+        "side_effects": "Matches decision 7B. Effect on the 28-game scope: RA3 and Generals commandos and heroes are unique; CoH2/CoH3 heavy tanks capped at one per army are limited.",
+        "priority": "could"
+      },
+      {
+        "id": "body-plan-carrier-tie-break",
+        "fields": [
+          "body.plan"
+        ],
+        "evidence": "Agreement is 100% (IFV box-carrier, SC2 hull-turret). 4 hesitations in 4 of 12 reports: A, B and C ra3 (the IFV as an armoured dune buggy: box-carrier, open-mount or launcher-rack) and C-sc2 (does siege mode change the body?). Gap B-ra3; unclear A-ra3.",
+        "root_cause": "data/vocab/bodies.json names IFVs under box-carrier, buggies under open-mount and mobile anti-air under launcher-rack, with no tie-break, and does not say when a mode changes the body.",
+        "kind": "tie-break",
+        "target": "data/vocab/bodies.json: tie_breaks and list description",
+        "change": "Add tie-break {terms: [box-carrier, open-mount, launcher-rack], rule: 'An enclosed passenger compartment makes it box-carrier, whatever it looks like. Open-mount needs crew or riders who sit exposed. Launcher-rack is for a vehicle built around an exposed rack, mast or mortar with no passenger compartment.'} Append to the list description: 'A mode records a second body only when the upper body changes shape (a mech folding into a jet); bracing, deploying or raising a gun in place keeps the body.'",
+        "expected": "IFV box-carrier (all, sample). SC2 tank hull-turret with no body in its mode (all).",
+        "side_effects": "None for the validator. Effect on the 28-game scope: the Generals Humvee and Battlefield light vehicles with an open gunner are open-mount; the RA2 IFV is box-carrier.",
+        "priority": "could"
+      },
+      {
+        "id": "nature-crew-evidence",
+        "fields": [
+          "nature"
+        ],
+        "evidence": "Agreement is 100% (SC2 tank crewed-machine). 2 hesitations (A-sc2, C-sc2): SC2 tags it only Mechanical, and a crew is implied by voice lines.",
+        "root_cause": "data/vocab/nature.json gives no evidence rule for crewed versus uncrewed.",
+        "kind": "source-rule",
+        "target": "data/vocab/nature.json terms crewed-machine and uncrewed-machine (source_rule)",
+        "change": "crewed-machine source_rule: 'Code it when the source shows or implies people inside: a cockpit, a pilot or crew in the fiction or the voice lines, crew who bail out.' uncrewed-machine source_rule: 'Only when the source says it is a robot, drone or remote machine.'",
+        "expected": "SC2 tank crewed-machine (all); Terror Drone uncrewed-machine (all).",
+        "side_effects": "The crew group's crew.basis question about voice lines (A-sc2, B-sc2) should use the same evidence line.",
+        "priority": "could"
+      },
+      {
+        "id": "drone-class-on-legs",
+        "fields": [
+          "class"
+        ],
+        "evidence": "1 hesitation (C-ra3): the Terror Drone walks on spider legs, so drone or walker?",
+        "root_cause": "classes.json's drone notes say 'bigger robots are classed by how they move' but not that small ones are drones whatever moves them.",
+        "kind": "term-description",
+        "target": "data/vocab/classes.json term drone (notes)",
+        "change": "notes -> 'Only for uncrewed units of tiny or small size (the size rule is checked), however they move: a small spider robot on legs is a drone, not a walker. Bigger robots are classed by how they move. Support is a role, not a class: a repair truck is a vehicle with the support role.'",
+        "expected": "Terror Drone drone (all, sample).",
+        "side_effects": "None.",
+        "priority": "could"
+      },
+      {
+        "id": "body-count-default",
+        "fields": [
+          "body.count"
+        ],
+        "evidence": "Agreement is 100% (missing is read as 1). 1 hesitation (A-sc2: write out the default or not); A wrote 1 on four units, B and C mostly left it out.",
+        "root_cause": "The field says 'Default 1' but not whether to write it.",
+        "kind": "field-rule",
+        "target": "schemas/source-unit.schema.json unit.body.count description",
+        "change": "-> 'Bodies per purchase in the source, e.g. 5 for a squad. Leave it out when it is 1.'",
+        "expected": "No agreement change; A drops the explicit 1s.",
+        "side_effects": "The abilities group has the same default question (abilities.source innate: B left it out, and abilities.source scored 63%). A single convention, 'leave optional fields out at their default; the tools read a missing value as the default', would settle both. I am naming it, not proposing it, because it crosses into that group.",
+        "priority": "could"
+      },
+      {
+        "id": "infiltrator-requires",
+        "fields": [
+          "roles.primary",
+          "roles.secondary"
+        ],
+        "evidence": "B-coh1 weighed infiltrator for the Riflemen because they 'capture' points; the old description allowed any unit that goes behind lines.",
+        "root_cause": "Infiltrator has no requires, so nothing stops a unit with no infiltration or stealth mechanic from claiming it.",
+        "kind": "combination-rule",
+        "target": "data/vocab/roles.json term infiltrator (requires)",
+        "change": "Add requires: [[\"category:infiltration\", \"category:stealth-deception\"]].",
+        "expected": "No pilot unit is affected (none is infiltrator after the fixes). A generated card with the infiltrator role needs an infiltration or stealth signature (hijack, capture, disguise, cloak), which the registry already has for infantry, vehicles, aircraft and drones.",
+        "side_effects": "Both category ids exist in pattern-categories, so the validator accepts the links. The Terror Drone still meets this requires through infest-vehicle, so its role is settled by the tie-break, not by this. Check after the generator lands that no class and infiltrator combination is left empty; if one is, it should be greyed out.",
+        "priority": "could"
+      },
+      {
+        "id": "keep-anti-armour-infest",
+        "fields": [
+          "roles.primary"
+        ],
+        "evidence": "A-ra3 and C-ra3 said that pattern:infest-vehicle in anti-armour's requires tipped them to anti-armour, against the infiltrator reading.",
+        "root_cause": "There is no fault in the list itself. The requires list was right; the infiltrator description contradicted it.",
+        "kind": "no-change",
+        "target": "data/vocab/roles.json term anti-armour (requires)",
+        "change": "No change. Keep pattern:infest-vehicle in anti-armour's requires: under infiltrator-is-a-job, an infester that destroys vehicles is anti-armour, and the link lets a generated card with an infest signature and no armour-piercing weapon claim anti-armour.",
+        "expected": "Terror Drone anti-armour (all, fixed sample).",
+        "side_effects": "None.",
+        "priority": "could"
+      },
+      {
+        "id": "keep-two-secondaries",
+        "fields": [
+          "roles.secondary"
+        ],
+        "evidence": "Every roles.secondary hesitation (12 reports) blamed the two-slot cap.",
+        "root_cause": "The cap was not the cause; the missing ranking was.",
+        "kind": "no-change",
+        "target": "schemas/source-unit.schema.json unit.roles.secondary (maxItems 2)",
+        "change": "No change to the cap. Cards also allow two (concept-card parts.roles.secondary), and a higher cap would only move the cut. roles-secondary-ranking settles which two.",
+        "expected": "See roles-secondary-ranking: all six units settle at two or fewer.",
+        "side_effects": "None.",
+        "priority": "could"
+      }
+    ]
+  },
+  "review": {
+    "cluster": "Identity, roles and body",
+    "verdicts": [
+      {
+        "id": "infiltrator-is-a-job",
+        "verdict": "revise",
+        "reason": "Pilot: the Terror Drone stays anti-armour for A, B and C and loses infiltrator as a candidate. No other pilot unit used it. The direction is right, but the wording leaves four readings open. (1) The new description lists 'plants charges on structures', while the tie-break sends anything that 'destroys what it gets into or onto' to 'the anti role for that target'. There is no anti-structure role, so demolition commandos (Tanya in RA1-3, Generals' Burton, the GLA Saboteur) can be read two ways. (2) 'Behind enemy lines' lets a harvester hunter read as infiltrator. The drone itself is sourced as 'deadly to ore collectors' (C-ra3), so raider against infiltrator comes back. (3) A charge planted from outside fails the proposed infiltrator requires (throw-explosive is weapon-behaviour), so the description promises what the requires forbids. (4) 'Takes over enemy buildings' misses neutral buildings, which matters for the Riflemen (see role-boundaries). Scope check with the fix: the GLA Hijacker, the RA2 and RA3 Spy and the Generals Saboteur stay infiltrator; the RA2 and RA3 Terror Drones are anti-armour; the C&C engineers are engineer.",
+        "revised_target": "data/vocab/roles.json term infiltrator (description), plus a new entry in roles.tie_breaks",
+        "revised_change": "Infiltrator description, old -> new: 'Acts inside enemy units, lines or buildings: sabotage, steal, capture.' -> 'Gets inside enemy units or buildings, or passes as one of them, to spy, steal or sabotage: steals vehicles or money, spies on or shuts down buildings.'\nAdd tie-break {terms: [infiltrator, anti-armour, anti-infantry, engineer, raider], rule: 'Ask what the unit does once it gets in or onto its target. If it destroys a unit (an infesting drone, a charge stuck to a tank), use the anti role for that unit: anti-armour for vehicles, anti-infantry for soldiers. If it takes over a building and keeps it, it is an engineer. Infiltrator is for spying, theft and sabotage from inside, or for passing as the enemy. A fast unit that hunts workers or harvesters from outside is a raider.'}\nfaction-flavours: no change (moving infiltrator from soviet to allied is Mustafa's generator choice)."
+      },
+      {
+        "id": "roles-primary-procedure",
+        "verdict": "revise",
+        "reason": "Pilot: as written, all six units come out as the analyst says. But several readings remain, and some scope units break. (a) Step 1 says 'designation or one-line description' with no order. The drone's profile has the designation 'anti-vehicle drone' and also a 'Fast scout' heading (A-ra3), so it could have two role lines. The two-role clause ('a bonus against one of them') means nothing for roles with no target (siege, scout, support). (b) The list of lines that name no role sits only in primary step 1. Secondary step 1 then reads the IFV's 'Multipurpose Combat Support' as support, whose requires the engineer rider's repair tool meets. That gives [raider, support], which is how A, C and the sample got support. The two steps need one shared word table (missing item role-aliases). (c) Step 3 sends short-range lobbed grenadiers (Tiberian Dawn and Tiberium Wars Grenadiers) to siege. 'Deploys into a mode with a long-range gun' also catches CoH and DoW machine-gun teams that set up, and the SC2 Thor's long-range anti-air mode. Bombers (RA2 and RA3 Kirov, Century Bomber, BF1 bombers, SupCom bombers) drop bombs at short range and fall to assault. Under the new hard gate they can never be siege, because siege's requires has no delivery:drop (missing item). (d) Step 2, 'unarmed or only a tool', sends armed transports with no official line to step 5 and makes them raiders. Example: the Battlefield transport helicopter, whose pilot fires nothing and whose door guns are fired by passengers. Harvesters have no 'main button'. (e) 'Use only the default kit' contradicts 'never loadout picks' for default option weapons: A coded the helicopter's rockets only as a default option. (f) Step 4 ignores the 'strong against' tooltip lines that C&C games show. (g) The hard gate silently drops the evidence the atypical list was built to collect (transport for the IFV, area denial for the SC2 tank). Send that evidence to fit_notes instead. (h) The raider source_rule 'Primary for ...' suggests raider can only be primary. Re-checked with the revised text for A, B and C: the Hammer is anti-armour (designation 'Anti-Armor'). The drone is anti-armour (designation, alias anti-vehicle). The IFV is anti-air ('Multipurpose Combat Support' names no role; step 4, three times the damage to aircraft). The SC2 tank is siege (step 1 'artillery'; step 3 gives the same through the splash siege mode). The Riflemen are assault ('Core Infantry' names no role; step 5). The helicopter is raider (the shared class name 'Attack Helicopter' names no role; step 5). With these fixes the helicopter result no longer depends on which weapon is the main one.",
+        "revised_target": "schemas/source-unit.schema.json unit.roles.primary description (rebuilds docs/fields.md); data/vocab/roles.json list description; source_rule on roles terms assault and raider; raider description; roles.tie_breaks (the old tie-break sentences move there); needs the aliases in missing item role-aliases",
+        "revised_change": "1) roles.json list description -> 'What the unit is for: its job or the targets it is best against, never how it does it (mechanics are patterns). A card has one primary role and up to two secondary roles. Requires says what a unit needs before it can claim a role. A source unit never claims a role whose requires it fails. If such a role still fits, leave it out and record it in fit_notes (path roles, wanted: that role). Meeting the requires is not enough: the role description must fit too. Official text means words the game or its makers wrote: the in-game role line, tooltip or production text, the manual, the official unit profile and patch notes. It still counts when read through a page that copies it. A wiki's own words (its infobox labels, prose and tables), strategy guides and internal file names are not official text; the registry notes say which infobox fields copy in-game text. For a unit recorded once for several sides, official text counts only when every side's version carries it. Official words name a role only through the role's label or one of its aliases. These words name no role: main battle tank; light, medium or heavy tank; core or line infantry; multipurpose; general-purpose; attack (as in attack helicopter); and support when it means firepower (combat support, fire support, artillery support, close air support). How to pick the primary and secondary roles is under roles in docs/fields.md. The tie-breaks settle close calls.'\n2) unit.roles.primary description: 'The unit's main job. Go through the steps in order and stop at the first one that gives a role. Use only what every copy has: weapons in the primary, secondary and alternate slots, and innate buttons. Passengers, upgrades, doctrines, option weapons (even the default pick) and proposal fields never count. 1. Official role line. Read the unit's designation (its type line). If it has none, read its official one-line description. If that line names one of our roles, use it. If it names two, use the one whose target the main weapon has a bonus against. If neither has a bonus, go on. Skip a role whose requires the unit fails. 2. Not a fighter. If the driver or pilot fires nothing (the unit is unarmed, its only weapon is a tool, or its guns are fired only from gunner or passenger seats), use the job of its main button or main action: transport, support, engineer, logistics or infiltrator. 3. Reach. Siege if the main weapon is lobbed and reaches long or further, if it is bombs dropped from the air, or if the unit deploys into a mode whose gun reaches long or further and hits an area. Marksman if the main weapon is a sniper weapon that reaches long or further. 4. Bonus. Anti-armour, anti-air or anti-infantry if the game data gives the main weapon extra damage against that target, if official text says the unit is strong against it, or if the main weapon can hit nothing else. Doing little damage to other targets is not a bonus. 5. Generalist. Raider if the unit is fast or very fast with light or no armour. Otherwise assault.'\n3) assault source_rule: 'As primary: any generalist that is not fast with light or no armour (step 5 of roles.primary).' Raider description -> 'Hits and runs, picking off isolated targets: fast flankers, gunships that make attack runs.' Raider source_rule: 'As primary: a fast or very fast generalist with light or no armour (step 5 of roles.primary). As secondary: see roles.secondary.'\n4) tie_breaks: {terms: [disabler, area-denial], rule: 'A disabler acts on units; area denial acts on ground.'} and {terms: [buffer, scout], rule: 'Finding and marking enemies is scout; buffer is for making allies stronger.'}"
+      },
+      {
+        "id": "roles-secondary-ranking",
+        "verdict": "revise",
+        "reason": "The ranking is the right fix, but it still leaves two readings in several places. (a) The alternate weapon appears in both step 2 and step 3. If the stasis ray ranks at step 3, it ties with the claws' anti-infantry, and the role-list order then gives [scout, anti-infantry], which is B's original answer. Fix: a role ranks at the first step that supports it, and the alternate weapon belongs to step 2 only. (b) The bonus test is written for step 3 only. A strict coder carries it to step 5 for the helicopter's TOW, Hellfire and TV picks. Battlefield has no bonus data, so anti-armour disappears and the result is [anti-infantry] alone, while the analyst expects [anti-infantry, anti-armour]. The same happens for every Battlefield, PlanetSide or Wargame tank. (c) 'The role's word' has no table, so 'Combat Support' on the IFV puts support at step 1 (its requires is met by the engineer rider). A liberal reader may also read the Hammer profile's 'crushing infantry' as anti-infantry. (d) Step 4 gives raider on speed alone. Under speed method A every BF4 and PS2 tank is fast, so main battle tanks would gain raider. Add 'with light or no armour', as primary step 5 does. (e) 'Small arms' clashes with the family id small-arms, because shotguns, machine guns and snipers are other families. Under a strict reading the IFV's rider count then changes (anti-infantry still wins, but only by list order). (f) The proposal does not say to write the roles in rank order. Re-run with the revision for A, B and C: drone [scout (step 1, 'Fast scout'), disabler (step 2, ray)]. IFV [raider (step 1, 'hit-and-run'; step 4 gives the same), anti-infantry (step 5, most riders)]; anti-armour is dropped by the weak-point rule or loses on count. SC2 [anti-armour, anti-infantry] (step 2, siege-mode gun with a bonus against Armored and splash). Hammer [assault] (step 4). Riflemen [anti-infantry (step 1, official production text; anti-tank fails its requires), engineer (step 2, Upgrade to Barracks)]. That result needs role-boundaries' neutral-building clause: without it, B and C, who did not code the Observation Post, fall to step 5, where build-cover and lay-mines give area denial a 2:1 lead. Helicopter [anti-infantry (step 3, splash cannon), anti-armour (step 5, three anti-tank picks against one heat-seeker pick)]; anti-air is dropped by the official 'limited'. Agreement is 100%.",
+        "revised_target": "schemas/source-unit.schema.json unit.roles.secondary description (rebuilds docs/fields.md); uses the aliases in missing item role-aliases",
+        "revised_change": "Add this description: 'Up to two more jobs, written in rank order. A candidate is any role, other than the primary, whose requires the unit meets and whose description fits a sourced part of the unit. Proposal fields never count (a proposed sensor, mount or seat). Drop any role whose target official text calls a weak or limited point of the unit. How a weapon gives a role: anti-armour or anti-air if it has a bonus against that target, official text says it is strong against it, a source calls it an anti-tank or anti-aircraft weapon, or it can hit nothing else. Anti-infantry for any of those, for a splash weapon, or for small arms (rifles, pistols, machine guns, shotguns) that do little to vehicles. Any other role if the weapon meets the role requires. Each candidate ranks at the first of these steps that supports it. Keep the first two. Inside a step, follow the order of the roles list. 1. Official text calls the unit by the role label or one of its aliases. 2. A button or mode that every copy has, and the alternate weapon it switches to. 3. Its weapons in the primary and secondary slots. 4. Speed, armour or senses alone. Raider: fast or very fast with light or no armour. Assault: medium or heavier armour and a short- or medium-range main weapon. Scout: long sight, a sensor trait or stealth, with an in-game basis. 5. Passengers, upgrades, doctrines, loadout picks (option weapons, the default pick included) and acquired weapons. Rank these roles by how many of the options give them. Leave a slot empty rather than fill it with a role that rests on none of these.'"
+      },
+      {
+        "id": "scout-needs-information",
+        "verdict": "revise",
+        "reason": "Pilot: the IFV gets no scout (only the wiki infobox says 'recon'; the radar is a proposal). The drone keeps scout (the official 'Fast scout'). The helicopter gets no scout (its sensors have a proposal basis). The rule works, but two terms need pinning down to keep it from reopening. 'Calls the unit a scout or recon unit' should use the shared aliases, so a coder does not argue 'spotter' or 'observation'. 'Sourced information part' should say in-game basis, because the IFV sample's radar sits in a sensors block whose basis is proposal. This also matches secondary step 4. Validator: no change; scout's requires stays as it is for cards.",
+        "revised_target": "data/vocab/roles.json tie_breaks (replaces the sentence in the list description)",
+        "revised_change": "Add tie-break {terms: [raider, scout], rule: 'Damage first is a raider, information first is a scout. Speed alone makes a scout only when official text calls the unit a scout (by the label or an alias, such as recon). Otherwise scout needs an information part with an in-game basis: long sight, a sensor trait, stealth, or a mark or reveal ability.'} The scout requires list stays as it is (cards still need it)."
+      },
+      {
+        "id": "role-boundaries",
+        "verdict": "revise",
+        "reason": "The area-denial/siege tie-break and the transport source_rule hold for the SC2 tank and the IFV. Remaining faults: (a) The engineer test ('structures it builds or deploys, or enemy buildings it takes over') misses the Riflemen's key fact: Upgrade to Barracks turns a neutral building into a barracks (wiki infobox line). A strict coder denies engineer here (C-coh1 already doubted it: 'the Riflemen are not engineers'), and the secondary ranking then falls to step 5. (b) Build-cover is in category area and lay-mines is a mine, so engineer and area denial overlap on cover, wire, mines and turrets. C-coh1 weighed area denial for exactly these. A tie-break is needed. (c) The siege source_rule leaves out bombers and still lets machine-gun teams that set up count as 'a deploy mode with a long-range gun'. (d) The marksman source_rule ('precise, mostly single-target ... long') fits ATGM carriers in Wargame, Broken Arrow and WiC, and the Battlefield TOW. Marksman would then compete with anti-armour. Limit it to the sniper family. (e) The closing claim 'an anti-tank tool fired by an ability button does not earn the role' depends on the patterns group. patterns.md calls a charge stuck to a vehicle infest-vehicle's ticking-charge variant (hesitations A-coh1, B-coh1, C-coh1), and pattern:infest-vehicle satisfies anti-armour's requires. Drop the promise; the ranking already places upgrade-sourced charges last. (f) The Battlefield Engineer kit (anti-tank launcher plus repair tool) matches our engineer by its label at primary step 1, because 'deploys gadgets' fits loosely. Tighten engineer to building and taking over structures. Pilot after the fix, for A, B and C: SC2 has no area denial and no marksman. The Riflemen's engineer rests on the barracks conversion (step 2), and the commander-power cover and mines go to area denial at step 5. The Riflemen get no infiltrator or logistics.",
+        "revised_target": "data/vocab/roles.json: tie_breaks; source_rule on transport, siege and marksman; description of engineer",
+        "revised_change": "tie_breaks: {terms: [area-denial, siege], rule: 'A gun line that holds ground only by the threat of its fire (a sieged tank) is siege or an anti role. Area denial needs something that stays on the ground: mines, a lingering zone, turrets or fortifications.'}; {terms: [engineer, infiltrator, logistics], rule: 'Capturing map control points is a game-mode rule, so a faster capture rate supports no role. Engineer needs structures the unit builds, neutral buildings it converts, or enemy buildings it takes over and keeps. Logistics needs resources the unit gathers, carries or earns by its own action. Infiltrator needs spying, theft or sabotage from inside.'}; {terms: [engineer, area-denial, support], rule: 'Mines, wire, walls, tank traps and turrets that block or guard ground are area denial. Engineer is for buildings that serve the team (barracks, outposts, spawn or supply points, bridges) and for taking buildings over. Repairing or healing is support.'}. Engineer description -> 'Builds, converts or takes over structures that serve the team: barracks, outposts, spawn or supply points, bridges.' source_rule transport: 'Needs two or more passenger seats. A carrier with one seat is not a transport, whatever the source calls it; its seat shows in crew.passengers and its carry-passengers or passenger-sets-weapon pattern.' source_rule siege: 'A lobbed weapon that reaches long or further, bombs dropped from the air, a deploy mode whose gun reaches long or further and hits an area, or a long-range weapon the source says is built to break structures. A long-range missile or cannon alone is not siege, and a team that sets up its gun before firing is not deploying.' source_rule marksman: 'Only a sniper weapon (the sniper family) that reaches long or further. A long-range missile gives the anti role for its target; a long-range splash or lobbed gun is siege.' No change to anti-armour's requires."
+      },
+      {
+        "id": "sample-td-primary",
+        "verdict": "accept",
+        "reason": "Under the revised primary procedure, the designation 'Anti-Vehicle Drone' matches the anti-armour alias at step 1. The secondaries [scout, disabler] match the revised ranking: 'Fast scout' at step 1, the ray at step 2. Validator: anti-armour's requires is met by damage:emp on the ray and by pattern:infest-vehicle on the triggered ability. Nothing links role:infiltrator. Flavour scoring gives soviet 3 (anti-armour, legs-multi, spider-frame) against empire 2, so [soviet] stays. docs/samples.md shows the old role row ('Infiltrator / saboteur') and must be rebuilt."
+      },
+      {
+        "id": "sample-ifv-secondary",
+        "verdict": "accept",
+        "reason": "Re-checked under the revised ranking. Raider ranks at step 1 (the official profile's 'hit-and-run', B's source note) or at step 4 (fast, light). 'Multipurpose Combat Support' no longer gives support, because 'combat support' names no role. Anti-infantry comes from the riders at step 5 and beats anti-armour (Javelin, Tankbuster), disabler (bark, cryo) and support (engineer) on count under any reading of the weapon tests. Validator: raider's requires (speed:>=fast) is met by the sample's speed 'fast'. The memorable line and as_player text can stay as they are."
+      },
+      {
+        "id": "sizes-by-example",
+        "verdict": "revise",
+        "reason": "Examples winning over measurements is the right fix for the SC2 tank and the drone, but the new example lists open new gaps. (a) Large's example narrows from 'Tanks' to 'Main battle tanks'. SC2's own text calls the siege tank a 'Heavy tank'; the CoH Sherman and Panzer IV are medium tanks; WWII has no main battle tanks; and Generals, TD and RA have light tanks. With no example covering them, those units go to measurement, and the SC2 tank at 2.3 Marine widths reads medium. That is the very split the proposal claims to settle: the analyst's 'large' result relies on the coder calling it a main battle tank. 'Medium tank' and MechWarrior's 'medium mech' also invite reading the weight word as the size. (b) APCs in large and IFVs in medium become binding once examples are decisive. The M113 APC (Wargame, WiC, Broken Arrow) would be large while the bigger Bradley IFV is medium. (c) There is no fallback for games without foot soldiers (SupCom, PA, MechWarrior/BattleTech), where 'compare with the same game's foot soldier' cannot be done. (d) 'Small animals' in tiny against 'war dogs' in small can read both ways for a dog. Pilot after the fix, for A, B and C: drone small (fills an infantry seat), SC2 tank large (tanks of every weight), helicopter large (attack helicopters; rotor disc not counted), Hammer large, IFV medium, Riflemen small. Validator: drone class sizes tiny/small, box-carrier medium/large, rotorcraft up to large; nothing else reads these examples.",
+        "revised_target": "data/vocab/sizes.json list description and terms tiny, small, medium, large",
+        "revised_change": "List description -> 'Footprint seen from above, which sets the hitbox. Pick the band whose examples name what the unit is. Examples win over measurements, because strategy games draw soldiers oversized. A weight word in the unit's type (light, medium or heavy tank or mech) is not a size. Count the hull, fuselage and wings, not a rotor disc or a gun barrel. Only for a unit that no example covers, measure. Compare it with the same game's foot soldier: one soldier is small, two to three soldier-widths is medium. In a game with no foot soldiers, compare it with its main battle tank: clearly smaller is medium, about the same is large, twice or more is huge.' tiny -> 'Clearly smaller than one soldier of its own game: hand-sized or knee-high drones and bots, animals smaller than a dog. Hard to hit, easy to lose sight of. A unit the game handles like a soldier (it fills an infantry seat in a transport, or the game counts it as infantry) is small, however small it looks.' small -> 'One soldier: infantry, power-suit troopers, war dogs, and robots or drones the game handles like a soldier.' medium -> 'About two to three soldier-widths: buggies, cars, armoured cars, APCs and IFVs, light mechs and light walkers, light scout helicopters.' large -> 'Tanks of every weight (light, medium and heavy tanks, tank destroyers, self-propelled guns), carriers built on a tank hull, medium to assault mechs, attack and transport helicopters, jets.' huge unchanged."
+      },
+      {
+        "id": "sample-td-size",
+        "verdict": "accept",
+        "reason": "Under the revised size rule the drone is small because it fills an infantry seat (five to a Bullfrog or Twinblade, cited by A, B and C), which matches all three coders. The validator still passes: infest-vehicle needs size:<=small, and the drone class allows tiny and small. The memorable line stays under 200 characters. The as_player edit is a proposal change that does not alter the design. docs/samples.md lists 'Spider frame, tiny' and must be rebuilt."
+      },
+      {
+        "id": "confidence-rule",
+        "verdict": "revise",
+        "reason": "The aim is right, but the per-fact clause '(tier, cost, speed, armour, main weapon and main mechanic) are stated by official text' gives two readings for every RA3 unit. The RA3 profiles carry the designation, armament, tactics and background, but not tier, cost or speed. B's three sources are all C&C Wiki pages (main page, /Profile, Conscript page), so a strict reader keeps B at medium, while the analyst counts B as high. A strict reader must also check whether StrategyWiki gives the speed and armour for A and C, which it may not; the RA3 sample's high would then fail too. A source-level test removes that audit. Result with the revision: RA3 A, B and C high (A and B: the official profile through its copy; C: StrategyWiki's entry for each unit is a second site); sample high. SC2: A and B high (Liquipedia plus StarCraft Wiki); C medium (StarCraft Wiki; a second page of the same site about the Marine; a patch note). Battlefield and CoH1: all medium. That is 16 of 18 pairs, and the one remaining difference is source access.",
+        "revised_target": "data/vocab/confidence.json terms high and medium; schemas/common.schema.json source description",
+        "revised_change": "high -> 'The sources include official text about the unit, read directly or through a faithful copy that says what it copies, or pages from two different established sites that each describe the unit and agree. A page counts only if it is about the unit itself: its own page, or its own entry in a unit list. Patch notes and pages about other units do not count toward high. Pages of one site count as one site. Two wikis count as independent unless one names the other as its source.' medium -> 'Everything rests on one established site (any number of its pages) or one database, and nothing contradicts it.' low unchanged. Add to the source description in schemas/common.schema.json: 'When another established site covers the unit, cite it rather than a third page of the same site.'"
+      },
+      {
+        "id": "source-kind-copies",
+        "verdict": "revise",
+        "reason": "The rule settles the A-ra3 and B-ra3 split: A's three /Profile citations become wiki with a note, matching B and the sample, and the Blizzard patch notes stay official. Two cases from the registry notes would still read two ways. games-r6 calls foxhole.wiki.gg 'the official, current wiki', and a coder can read 'official' literally. The RA3 originals are offline, so a coder may read them on web.archive.org; is that the site actually read? The revision settles both. Validator: no effect. The url field already says 'the page actually read'.",
+        "revised_target": "data/vocab/source-kinds.json: tie_breaks, and the descriptions of terms official and wiki",
+        "revised_change": "official -> 'Publisher or developer, read on their own site (or an archived copy of it, such as the Wayback Machine) or in the game: manual, official site, patch notes, developer posts, in-game text.' wiki -> 'A large, maintained community wiki for the series, including one the developer endorses as its official wiki. A wiki page that copies official text is still a wiki source: say in its note that it copies official text and where the original is.' Add tie-break {terms: [official, wiki], rule: 'Code the site you actually read. A wiki page that copies an official profile, manual page or in-game text is wiki, with a note naming the original; confidence still counts the copied text as official. A wiki the developer calls official is still a wiki, because players write it.'}"
+      },
+      {
+        "id": "lineage-rule",
+        "verdict": "revise",
+        "reason": "Pilot: drone terror-drone, IFV ifv and Riflemen riflemen for all three coders; the SC2 tank, Hammer and helicopter get none. That part is deterministic. Two readings remain. (a) Naming: 'the unit's slug in the earliest such game' does not say what to use when that unit has no id yet. A-coh1 and C-coh1 both weighed riflemen against riflemen-squad ('Riflemen Squad' is the CoH1 name). (b) Matching: 'the same name, or one its source calls a direct successor' fails the analyst's own example, because RA2's 'IFV' and RA3's 'Multigunner IFV' do not share a name and wikis rarely say 'direct successor'. DoW1's Space Marine Squad and DoW2's Tactical Marine Squad have the same problem. Scope check: Renegade's Mammoth Tank, Medium Tank and Orca link to Tiberian Dawn, which is the earliest; real tanks shared by WiC, Wargame and Broken Arrow stay unlinked.",
+        "revised_target": "schemas/source-unit.schema.json unit.lineage description",
+        "revised_change": "-> 'Shared id for the same design in two or more games of data/games.json. Link units doing the same job that have the same or nearly the same name (ignore words such as Squad, Team or Mk II), or that a source presents as the same unit in another game. The id is the slug of that unit's id in the earliest such game. If it has no id yet, make one from its name by the id rules, leaving out words such as Squad or Team. Examples: terror-drone (Red Alert 2 and 3), ifv (Red Alert 2's IFV and Red Alert 3's Multigunner IFV), riflemen (Company of Heroes 1 to 3). Leave it out when no other registry game has the design. An expansion is part of its game. A game outside the registry, or the same real-world vehicle in an unrelated series, does not count.'"
+      },
+      {
+        "id": "sample-hammer-lineage",
+        "verdict": "accept",
+        "reason": "The Hammer exists only in RA3 (Uprising is an expansion), so under the lineage rule it has none. That matches A, B and C. Nothing links lineage:hammer-tank."
+      },
+      {
+        "id": "flavour-affinity-rule",
+        "verdict": "revise",
+        "reason": "The scores are deterministic, but scoring 'the main weapon's family' turns a field that agreed 100% into one that depends on the main-weapon field, which agreed 77.8%. On the current files, A has no primary weapon on the helicopter, B's main weapon is the rockets and C's is the cannon, so the result splits between [allied, empire] and [allied]. Scoring any weapon in the primary, secondary or alternate slot removes that dependency. The helicopter then scores allied 3 (autocannon, rotor, rotorcraft) against empire 2 (raider, rotor), giving [allied] for all three. Re-checked: drone soviet 3 or 4 against empire 2, giving [soviet]. Hammer [soviet]. IFV [allied]. SC2 soviet 4 with no faction flavour, giving [soviet]. Riflemen allied from the faction with soviet at 1, giving [allied]. A, B and C each drop soviet here, against their unanimous theme call ('cheap numbers'). That is a Mustafa-level choice to flag. The rule also misses: PS2 VS has two faction flavours ['allied', 'empire']; subfactions with none (cnc3 zocom) have no rule for their parent's flavour; a tie at the top when only one place is left. A design note for the reason: once the field is computed from the favoured lists, it repeats what the generator already knows, so the validator could compute it and coders could skip it.",
+        "revised_target": "schemas/source-unit.schema.json unit.flavour_affinity description",
+        "revised_change": "-> 'Proposal, not a sourced fact. Which of our flavours this design would sit in. 1. Start from the faction's flavours in data/games.json; a subfaction with none takes its parent's. Drop one if any weapon in the primary, secondary or alternate slot, or the body plan, is on that flavour's avoided list. 2. Score each other flavour: one point for each of these four that its favoured lists hold: the primary role; the family of any weapon in the primary, secondary or alternate slot; the mobility; the body plan. 3. Add the top-scoring other flavour if it scores 2 or more and at least as much as each flavour from step 1. If two tie at the top, add both, but only if there is room for both. A faction with no flavour starts empty, so step 3 uses the scores alone. At most two flavours in all; an empty list is fine.'"
+      },
+      {
+        "id": "official-role-lines-registry",
+        "verdict": "revise",
+        "reason": "This is needed, because roles step 1 now depends on reading the right line. C-ra3 never opened the /Profile pages. C also took the C&C Wiki infobox 'role' field ('multipurpose anti-armor/anti-air recon') as 'the game's role text' (C-ra3 hesitation), which is exactly the misreading the RA3 note must prevent, and the analyst's note does not mention the infobox field. For Battlefield, the note only says what does not count. The class name the game shows for every side (Mobile Anti-Air, Scout Helicopter, Transport Helicopter) is the shared official line that lets step 1 settle those archetypes. Without it, the Battlefield transport helicopter falls to step 5. Games that show 'strong against' tooltip lines should say so in their notes, because step 4 now reads them.",
+        "revised_target": "research/registry-notes/games-r1.md (RA3), games-r4.md (CoH1-3), games-r5.md (SC2), games-r6.md (Battlefield), and the README line 'read the note for your batch first'",
+        "revised_change": "RA3: 'Official role lines: the C&C Wiki's <unit>/Profile pages copy the official RA3 site's unit profiles. Read the designation line before coding roles, and cite the page as kind wiki with a note. The role field in the main page's infobox (for example anti-surface robot scout) is the wiki's own words, not official text.' CoH1: 'The role field in the CoH wiki infobox (for example Core Infantry) and the production text quoted on building pages are in-game text; the wiki's own prose is not.' SC2: 'The in-game unit description in the Liquipedia and StarCraft Wiki infoboxes is official text.' Battlefield: 'Mirrored archetypes: no single side's text decides a role; use only text that every side's version shares. The class name the game shows for every side's version (for example Mobile Anti-Air, Scout Helicopter, Transport Helicopter) is such shared text.' README: add 'Read the official role line first; roles depend on it. Where a game's tooltips have strong-against or weak-against lines, the note for that game says so, because roles step 4 reads them.'"
+      },
+      {
+        "id": "availability-cap-rule",
+        "verdict": "revise",
+        "reason": "This settles the pilot doubts: the helicopter is limited (map spawns), the Riflemen open (population cap only), and the RA3 and SC2 units open, with 100% agreement for A, B and C. But 'a named hero or commando' fails in scope. DoW1 and DoW2 Force Commanders, the Farseer and the Warboss are one-per-army heroes with titles, not names, and the SupCom and PA commander units are one per player and not named. A coder can read those either way. 'One per side' also clashes with RTS team games, where every player may field one. Decision 7B makes unique the hero flag, so define it by kind (a one-of-a-kind character), not by name. It keeps min_tier t2; a SupCom commander at the start is then atypical, which is allowed on source units.",
+        "revised_target": "data/vocab/availability.json: list description and terms open, limited and unique",
+        "revised_change": "List description -> 'How many of the unit a side may field at once. Count only a cap the game puts on this unit itself; a population or army cap shared by all units does not count.' open -> 'No cap of its own: held back only by price, tech, the population cap or respawn rules.' limited -> 'The game caps this unit at a few at a time per player or side: a unit cap, a slot limit or a set number of spawns on the map.' unique -> 'A one-of-a-kind character the game allows once per player or side: a named hero, a commando or the army's commander unit. This is the hero flag (decision 7B). An ordinary vehicle capped at one, by a unit cap or by map spawns, is limited.'"
+      },
+      {
+        "id": "body-plan-carrier-tie-break",
+        "verdict": "revise",
+        "reason": "Pilot: the IFV stays box-carrier and the SC2 siege mode keeps the hull-turret body for A, B and C. The mode sentence is good. But 'an enclosed passenger compartment makes it box-carrier, whatever it looks like' contradicts box-carrier's own description ('an enclosed, turretless hull'), and hull-turret is not among the tie-break's terms. Turreted IFVs (Bradley, BMP and LAV-25 in Wargame, WiC, Broken Arrow and Battlefield, and the analyst's own RA2 IFV example) can therefore be read as box-carrier or hull-turret. 'Enclosed' is also unsettled for the RA3 IFV: the sample's uncertain list says the sources describe it as an enclosed carrier or as an open buggy. A mechanical test (are the riders hidden and protected?) settles it. In RA3 the rider is not visible. Validator: box-carrier allows medium and large and binds no mount, so nothing breaks.",
+        "revised_target": "data/vocab/bodies.json: tie_breaks, list description and term box-carrier (description)",
+        "revised_change": "box-carrier description -> 'An enclosed hull with a passenger compartment, with at most a small turret or a remote weapon mount: APC or IFV.' Add tie-break {terms: [box-carrier, hull-turret, open-mount, launcher-rack], rule: 'A hull whose riders sit hidden and protected inside is box-carrier, even with a small turret or a roof launcher (most APCs and IFVs). Hull-turret is for tanks, whose turret and gun are the main body. Open-mount needs crew or riders who sit exposed. Launcher-rack is for a vehicle built around an exposed rack, mast or mortar, with no passenger compartment.'} Append to the list description: 'A mode records a second body only when the upper body changes shape (a mech folding into a jet); bracing, deploying or raising a gun in place keeps the body.'"
+      },
+      {
+        "id": "nature-crew-evidence",
+        "verdict": "revise",
+        "reason": "Pilot: SC2 tank crewed-machine and drone uncrewed-machine for A, B and C. The A-sc2 and C-sc2 doubt came from a source that says nothing either way: SC2 tags the tank only as Mechanical, and C did not cite the voice lines. As written, crewed needs the source to 'show or imply' people, and uncrewed needs the source to say robot. A silent source fits neither, so the coder still has to judge. A default closes it. Scope: SupCom and PA units, whose lore says they are robots, stay uncrewed. Voice lines may be cited only in paraphrase, under the copyright convention.",
+        "revised_target": "data/vocab/nature.json terms crewed-machine and uncrewed-machine (source_rule)",
+        "revised_change": "crewed-machine source_rule: 'Code it when the source shows or implies people inside: a cockpit, a pilot or crew in the fiction or the voice lines (paraphrased), crew who bail out. When the source says nothing either way, a vehicle, walker or aircraft is crewed.' uncrewed-machine source_rule: 'Only when the source says it is a robot, drone or remote-controlled machine.'"
+      },
+      {
+        "id": "drone-class-on-legs",
+        "verdict": "accept",
+        "reason": "C-ra3 was the only report to hesitate on the class. The note matches the drone class's allowed sizes (tiny and small), spider-frame's classes (walker and drone), and the revised size rule, which keeps the Terror Drone small. A, B, C and the sample all keep drone."
+      },
+      {
+        "id": "body-count-default",
+        "verdict": "accept",
+        "reason": "No change in agreement: the script reads a missing count as 1. It answers A-sc2's question about writing out defaults and is consistent with decision 7B (squads keep their count). The wider 'leave defaults out' convention belongs to the abilities group, as the analyst says."
+      },
+      {
+        "id": "infiltrator-requires",
+        "verdict": "accept",
+        "reason": "Both category ids exist. The infiltration category (infest-vehicle, hijack-vehicle, capture-structure) and the stealth-deception category (disguise, cloak, lay-smoke, spawn-decoy, jam-sensors) cover the revised description (getting inside, or passing as the enemy). No pilot unit claims infiltrator after the fixes. The drone meets the requires but is settled by the tie-break. The gate is loose (smoke or a jammer meets it), but the description must still fit, so it does no harm."
+      },
+      {
+        "id": "keep-anti-armour-infest",
+        "verdict": "accept",
+        "reason": "Consistent with the revised infiltrator tie-break: an infester that destroys a vehicle is anti-armour. The link also lets a generated card with an infest signature and no armour-piercing weapon claim the role. One cross-group note: if the patterns group moves sticky charges to infest-vehicle's ticking-charge variant, CoH squads with such charges will meet anti-armour's requires through this link. That is fine, because the secondary ranking places upgrade-sourced charges last."
+      },
+      {
+        "id": "keep-two-secondaries",
+        "verdict": "accept",
+        "reason": "Cards also allow two secondaries. With the revised ranking every pilot unit settles at two or fewer, the same for A, B and C."
+      }
+    ],
+    "missing": [
+      {
+        "id": "siege-requires-drop",
+        "fields": [
+          "roles.primary",
+          "roles.secondary"
+        ],
+        "evidence": "Created by roles-primary-procedure's new gate ('a source unit never claims a role whose requires it fails'). Siege's requires is [delivery:lobbed | range:>=long]. Bombers drop bombs (delivery 'drop') at short range, so the RA2 and RA3 Kirov, the RA3 Century Bomber, the BF1 bomber planes and SupCom's strategic bombers can never be siege. They fall to assault at primary step 5. No pilot unit is affected.",
+        "root_cause": "The requires list was written for ground artillery. Before the gate, a bomber could at least claim siege as atypical; under the gate, it cannot claim it at all.",
+        "kind": "combination-rule",
+        "target": "data/vocab/roles.json term siege (requires and description)",
+        "change": "requires -> [[\"delivery:lobbed\", \"delivery:drop\", \"range:>=long\"]]. Description -> 'Hits from very far, from above or over cover; breaks defences and structures.'",
+        "expected": "No pilot unit changes. Bombers can be siege at primary step 3 (the revised 'bombs dropped from the air').",
+        "side_effects": "Validator: delivery:drop already requires a flier (target:low-air or high-air), so the new route opens only for aircraft. Generated aircraft cards with a drop weapon may roll siege. Rebuild docs/vocabularies.md.",
+        "priority": "must"
+      },
+      {
+        "id": "role-aliases",
+        "fields": [
+          "roles.primary",
+          "roles.secondary"
+        ],
+        "evidence": "Both step 1s match 'the role's word' with no table. Without a shared table, secondary step 1 reads the IFV's official 'Multipurpose Combat Support' as support, whose requires is met by the engineer rider's repair tool. That gives [raider, support], which is how A, C and the sample reached support (A-ra3, C-ra3). Other lines would also read two ways: SC2 'artillery support', the CoH production text 'anti-tank', Battlefield's 'close air support', the RA3 'Anti-Armor' designation against the 'anti-vehicle' designation (A-ra3, B-ra3, C-ra3 unclear rules), and StrategyWiki's 'Anti Tank'.",
+        "root_cause": "Roles carry no aliases, and the words that name no role are listed only inside primary step 1.",
+        "kind": "term-description",
+        "target": "data/vocab/roles.json terms (aliases); the no-role word list lives in the list description (see roles-primary-procedure)",
+        "change": "Add aliases: anti-armour [anti-tank, anti-vehicle, anti-armor, tank hunter, tank destroyer]; anti-infantry [anti-personnel]; anti-air [anti-aircraft, air defence, AA]; siege [artillery, bombardment, bomber]; marksman [sniper, sharpshooter]; scout [recon, reconnaissance, spotter]; support [medic, healer, repair, resupply]; transport [troop transport, troop carrier, personnel carrier]; infiltrator [spy, saboteur, hijacker, thief]; raider [hit-and-run, flanker, harasser]; area-denial [minelayer]; engineer [builder, sapper, pioneer]; logistics [harvester, collector, miner, supply]. Both step 1s match official words only against a role label or these aliases.",
+        "expected": "Hammer: 'Anti-Armor' gives anti-armour. Drone: 'anti-vehicle' gives anti-armour. IFV: 'combat support' names no role and 'hit-and-run' gives raider. SC2: 'artillery' gives siege; 'support' names no role. Riflemen: the production text gives anti-infantry, and anti-tank fails its requires. Results are as in the revised ranking, the same for A, B and C.",
+        "side_effects": "build-docs prints aliases as 'Also called'; copy-check treats them as names; the validator does not read them. A label still needs its description to fit. With the tightened engineer description (role-boundaries), Battlefield's Engineer kit, an anti-tank and repair class, does not become our builder.",
+        "priority": "must"
+      },
+      {
+        "id": "buffer-description",
+        "fields": [
+          "roles.secondary"
+        ],
+        "evidence": "A-coh1 listed buffer as an alternative for the Riflemen. Buffer's description includes 'call-ins or team abilities', and the Riflemen's innate Upgrade to Barracks (a forward spawn and reinforcement point) can be read as a team ability. Under the new ranking such a reading puts buffer at step 2 beside engineer. Buffer comes before engineer in the roles list, so this would fill a slot and push out anti-infantry or engineer.",
+        "root_cause": "The buffer description is broad and has no requires, so any team-wide button can claim it.",
+        "kind": "term-description",
+        "target": "data/vocab/roles.json term buffer (description)",
+        "change": "Description -> 'Makes nearby allies stronger for a time (more damage, armour, speed or accuracy) with an aura or a timed call. Spotting is scout; healing and resupply are support; spawn points and buildings are engineer.'",
+        "expected": "Riflemen: no buffer for A, B or C; the secondaries stay [anti-infantry, engineer]. No other pilot unit is affected.",
+        "side_effects": "None for the validator. Scope: CoH officers and DoW commanders with auras, and rally-allies users, stay buffer.",
+        "priority": "should"
+      }
+    ],
+    "speed_decision_review": "Roles read the speed band in four places: the requires of raider and scout (speed:>=fast), roles.primary step 5 and roles.secondary step 4. In the pilot speed test, method A (ratio to the soldier) makes every Battlefield and PlanetSide ground vehicle fast or very fast: the BF4 M1 Abrams is 1.71 (fast), and the PS2 Prowler and Lightning are very fast. Method B (ratio to the main battle tank) keeps them medium. Under method A every shooter vehicle meets the requires of raider and scout on speed alone. The roles rules only stay sound if the revised primary step 5 and secondary step 4 also ask for light or no armour (an Abrams is then assault, never raider), and the scout tie-break asks for an information part or an official 'scout' label. Keep those clauses whichever method is chosen. If method B is chosen for vehicles, the RA3 pilot values are unaffected: they use the Conscript ratio (Terror Drone 3.0, IFV 2.4, Hammer 1.5). The Hammer sits exactly on the medium/fast edge, and with heavy armour it still gets no raider under the revised rules."
+  }
+}
