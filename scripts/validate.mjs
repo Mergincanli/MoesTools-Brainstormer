@@ -41,9 +41,10 @@
 //      a proposal death outcome is the 3C default (bail-out for a crewed machine that is not infantry, respawn for
 //      the rest); solo_fallback only on multi-seat crew models; a squad has body.count 2 or more;
 //    - an ability with no pattern has a fit_note at abilities/<i>/patterns that says what is wanted;
+//    - a unit with the transform mobility trait records its second form in modes;
 //    - warnings: handling other than the mobility default with nothing in mobility.notes (a tiny or small unit on
-//      legs may strafe), and fit_notes, uncertain and sources[].supports paths that use '.' or '*', have an empty
-//      part, or whose parent does not exist on the unit.
+//      legs may strafe with no note, since its size and mobility show why), and fit_notes, uncertain and
+//      sources[].supports paths that use '.' or '*', have an empty part, or whose parent does not exist on the unit.
 //
 // Rule strings. Each broken combination rule has exactly one string, '<list>:<term> <field> <value>':
 //   <list>:<term> classes <class>            the term's classes leave out the unit's class
@@ -622,8 +623,9 @@ export function validate(root = REPO_ROOT) {
       const pr = parseRef(r.ref)
       if (pr.kind === 'unit' && !pr.id.startsWith(`${u.game}.`)) warn(`${w}: unit link ${r.ref} crosses games; prefer class, role, weapon or damage links`)
     }
+    // The transform trait's own definition says the unit records its second form in modes.
     if ((u.mobility.traits || []).includes('transform') && !(u.modes || []).length) {
-      atypical.push(`${w}: transform trait without a recorded second form (modes)`)
+      err(`${w}: mobility trait transform with no modes: a unit that transforms records its second form in modes`)
     }
     for (const r of [...u.strengths, ...u.weaknesses, ...u.countered_by, ...u.counters, ...(u.combos || [])]) checkRef(w, r.ref)
     for (const wp of u.armament) if (wp.when) checkRef(`${w} weapon '${wp.name}'`, wp.when)

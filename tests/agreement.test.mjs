@@ -1,6 +1,7 @@
 // Tests for the agreement measure of the calibration pilot: the pair scores, ranked and count fields, sets, the unit
 // field extraction on the real sample units, the documented defaults and the readers added for word lists 1.0, the
-// reference comparison, table files and the command line.
+// reference comparison, coder folders (and folders that are not coders), table files with counts and decimal numbers,
+// the report's wording and the command line.
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
@@ -202,6 +203,8 @@ describe('readers for word lists 1.0', () => {
   it('marks seats as partly proposal and atypical rules as derived, for information only', () => {
     const byPath = Object.fromEntries(UNIT_FIELDS.map(f => [f.path, f]))
     assert.equal(byPath['armament.seat'].proposal, 'partly')
+    // A seat is copied from the source when crew.basis is in-game, so the main weapon's seat is partly proposal too.
+    assert.equal(byPath['main weapon.seat'].proposal, 'partly')
     assert.equal(byPath['crew.basis'].proposal, 'partly')
     assert.equal(byPath['armament (seat, family, mount)'].proposal, true)
     const a = gunship({ atypical: [{ path: 'armament/0', rule: 'x:y classes z' }] })
@@ -250,6 +253,39 @@ describe('coder folders, the reference and the command line', () => {
     fs.mkdirSync(path.join(lone, 'coder-a'))
     assert.throws(() => readCoderFolders(lone), /at least two/)
   })
+  it('skips folders with no unit files, such as notes, and names them', () => {
+    const mixed = tmp()
+    fs.cpSync(root, mixed, { recursive: true })
+    for (const [d, f, data] of [['analysis', 'weapons.json', { key: 'weapons', analysis: {} }], ['speed', 'coder-a.json', { vehicles: [] }], ['empty', null, null]]) {
+      fs.mkdirSync(path.join(mixed, d))
+      if (f) fs.writeFileSync(path.join(mixed, d, f), JSON.stringify(data))
+    }
+    const skipped = []
+    const codings = readCoderFolders(mixed, UNIT_FIELDS, { skipped })
+    assert.deepEqual(Object.keys(codings), ['coder-a', 'coder-b', 'coder-c'])
+    assert.deepEqual(skipped, ['analysis', 'empty', 'speed'])
+    const r = spawnSync(process.execPath, [AGREEMENT, mixed], { encoding: 'utf8' })
+    assert.equal(r.status, 0, r.stderr)
+    assert.match(r.stdout, /^Coders: coder-a, coder-b, coder-c\. /m)
+    assert.match(r.stderr, /skipped: analysis, empty, speed/)
+  })
+  it('does not count folders without unit files towards the two coders', () => {
+    const notes = tmp()
+    fs.cpSync(path.join(root, 'coder-a'), path.join(notes, 'coder-a'), { recursive: true })
+    for (const d of ['analysis', 'speed']) {
+      fs.mkdirSync(path.join(notes, d))
+      fs.writeFileSync(path.join(notes, d, 'x.json'), JSON.stringify({ vehicles: [] }))
+    }
+    assert.throws(() => readCoderFolders(notes), /at least two \(skipped, no unit files: analysis, speed\)/)
+    const r = spawnSync(process.execPath, [AGREEMENT, notes], { encoding: 'utf8' })
+    assert.equal(r.status, 2)
+  })
+  it('fails on a coder folder that mixes unit files with other files', () => {
+    const mixed = tmp()
+    fs.cpSync(root, mixed, { recursive: true })
+    fs.writeFileSync(path.join(mixed, 'coder-b', 'notes.json'), JSON.stringify({ notes: [] }))
+    assert.throws(() => readCoderFolders(mixed), /coder-b[\\/]notes\.json has no 'units' list/)
+  })
   it('prints a Markdown report with the disagreements and the reference', () => {
     const r = spawnSync(process.execPath, [AGREEMENT, root, '--reference', path.join(REPO_ROOT, 'data/units')], { encoding: 'utf8' })
     assert.equal(r.status, 0, r.stderr)
@@ -276,28 +312,77 @@ describe('coder folders, the reference and the command line', () => {
 })
 
 describe('table files', () => {
+  const tableFile = table => {
+    const file = path.join(tmp(), 'table.json')
+    fs.writeFileSync(file, JSON.stringify(table))
+    return file
+  }
   it('reads plain codings and infers each field kind', () => {
-    const file = path.join(tmp(), 'speed.json')
-    fs.writeFileSync(file, JSON.stringify({
+    const file = tableFile({
       fields: { band_a: { list: 'speed-bands' } },
       coders: {
-        A: { tank: { band_a: 'fast', raw: 7.5, tags: ['x'] }, quad: { band_a: 'very-fast', raw: null, tags: [] } },
-        B: { tank: { band_a: 'medium', raw: 7.5, tags: ['x'] }, quad: { band_a: 'very-fast', raw: 20, tags: [] } },
+        A: { tank: { band_a: 'fast', raw: 7.5, seats: 2, tags: ['x'] }, quad: { band_a: 'very-fast', raw: null, seats: 1, tags: [] } },
+        B: { tank: { band_a: 'medium', raw: 7.5, seats: 3, tags: ['x'] }, quad: { band_a: 'very-fast', raw: 20, seats: null, tags: [] } },
       },
-    }))
+    })
     const { codings, fields } = readTable(file)
-    assert.deepEqual(fields.map(f => [f.path, f.kind, f.numeric, f.list]), [
-      ['band_a', 'one', false, 'speed-bands'],
-      ['raw', 'one', true, undefined],
-      ['tags', 'set', false, undefined],
+    assert.deepEqual(fields.map(f => [f.path, f.kind, f.numeric, f.number, f.list]), [
+      ['band_a', 'one', false, false, 'speed-bands'],
+      ['raw', 'one', false, true, undefined], // a decimal number, not a count
+      ['seats', 'one', true, false, undefined], // whole numbers only: a count
+      ['tags', 'set', false, false, undefined],
     ])
     const r = measure(codings, { fields, ranks })
     assert.equal(field(r, 'band_a').agreement, 0.5)
     assert.equal(field(r, 'band_a').within_one, 1)
     assert.equal(field(r, 'tags').agreement, 1)
+    assert.equal(field(r, 'seats').kind, 'count')
+    assert.equal(field(r, 'seats').within_one, 0.5) // 2-3 one apart; 1 and nothing are not
     const md = renderMarkdown(r, { title: 'Speed' })
     assert.match(md, /^# Speed/)
     assert.match(md, /### band_a \(50%, below the threshold\)/)
     assert.match(md, /\| band_a \| one \| 2 \| 50% \| 100% \|/)
+    assert.match(md, /\| raw \| number \| 2 \| 50% \|  \|/) // no "within one step" for a decimal without a step
+  })
+  it('compares decimal numbers exactly unless the field gives a tolerance, and reports steps only when given one', () => {
+    // The same speed, rounded to two or three decimals by different coders.
+    const coders = { a: { lav: { mps: 11.667 } }, b: { lav: { mps: 11.67 } }, c: { lav: { mps: 11.667 } } }
+    const exact = readTable(tableFile({ coders }))
+    const r = measure(exact.codings, { fields: exact.fields, ranks })
+    assert.equal(field(r, 'mps').kind, 'number')
+    assert.equal(field(r, 'mps').agreement, 0.333)
+    assert.equal(field(r, 'mps').within_one, null)
+    assert.equal(field(r, 'mps').below, true)
+
+    const loose = readTable(tableFile({ coders, fields: { mps: { tolerance: 0.01 } } }))
+    const r2 = measure(loose.codings, { fields: loose.fields, ranks })
+    assert.equal(field(r2, 'mps').agreement, 1)
+    assert.equal(field(r2, 'mps').tolerance, 0.01)
+    assert.match(renderMarkdown(r2), /mps: two values at most 0\.01 apart count as equal\./)
+
+    // Exactly the tolerance apart agrees, despite decimal noise (18.34 - 18.33 is a little over 0.01).
+    const edge = readTable(tableFile({ coders: { a: { x: { v: 18.34 } }, b: { x: { v: 18.33 } } }, fields: { v: { tolerance: 0.01 } } }))
+    assert.equal(field(measure(edge.codings, { fields: edge.fields }), 'v').agreement, 1)
+
+    const stepped = readTable(tableFile({ coders: { a: { x: { v: 1.5 } }, b: { x: { v: 2.4 } }, c: { x: { v: 3.1 } } }, fields: { v: { step: 1 } } }))
+    const r3 = measure(stepped.codings, { fields: stepped.fields })
+    assert.equal(field(r3, 'v').agreement, 0)
+    assert.equal(field(r3, 'v').within_one, 0.667) // 1.5-2.4 and 2.4-3.1 one step apart, 1.5-3.1 not
+  })
+  it('refuses a tolerance or step that cannot apply', () => {
+    const coders = { a: { x: { n: 1, v: 1.5 } }, b: { x: { n: 2, v: 2.5 } } }
+    assert.throws(() => readTable(tableFile({ coders, fields: { n: { tolerance: 1 } } })), /only a field with decimal numbers takes one/)
+    assert.throws(() => readTable(tableFile({ coders, fields: { v: { tolerance: -1 } } })), /tolerance that is a number of 0 or more/)
+    assert.throws(() => readTable(tableFile({ coders, fields: { v: { step: 0 } } })), /step that is a number above 0/)
+  })
+})
+
+describe('report wording', () => {
+  it('says "falls" for one field below the threshold and "fall" for more', () => {
+    const fields = [{ path: 'x', kind: 'one' }, { path: 'y', kind: 'one' }]
+    const one = measure({ a: { u: { x: 1, y: 1 } }, b: { u: { x: 2, y: 1 } } }, { fields })
+    assert.match(renderMarkdown(one), /1 of 2 measured fields reach the threshold; 1 falls below it\./)
+    const two = measure({ a: { u: { x: 1, y: 1 } }, b: { u: { x: 2, y: 2 } } }, { fields })
+    assert.match(renderMarkdown(two), /0 of 2 measured fields reach the threshold; 2 fall below it\./)
   })
 })

@@ -328,7 +328,7 @@ function rulesText(t) {
   }
   if (given(t, 'seats')) parts.push(f`seats: ${lab('seat-roles', t.seats)}; players ${t.min_players}-${t.max_players}`)
   if (has(t, 'max_keys')) {
-    parts.push(f`max ${t.max_keys} keys, ${t.max_passive} passive, ${t.max_keys_per_seat} keys per seat; source rule: ${t.source_rule}`)
+    parts.push(f`max ${t.max_keys} keys, ${t.max_passive} passive, ${t.max_keys_per_seat} keys per seat`)
   }
   if (given(t, 'severity')) parts.push(f`severity: ${t.severity}`)
   if (given(t, 'weights')) {
@@ -376,6 +376,7 @@ function vocabDocs() {
           }
           out.push(f`- **Name style:** ${t.name_style}\n`)
         }
+        out.push(...tieBreakLines(v))
         continue
       }
       const hasRules = v.terms.some(t => rulesText(t))
@@ -387,7 +388,7 @@ function vocabDocs() {
         let meaning = t.description
         if (given(t, 'aliases')) meaning += f` Also called: ${join(', ', t.aliases)}.`
         if (given(t, 'notes')) meaning += f` *Note:* ${t.notes}`
-        if (given(t, 'source_rule') && !has(t, 'max_keys')) meaning += f` *Coding rule:* ${t.source_rule}`
+        if (given(t, 'source_rule')) meaning += f` *Coding rule:* ${t.source_rule}`
         if (given(t, 'replaces')) meaning += f` *Replaces:* ${join(', ', t.replaces.map(r => f`\`${r}\``))}.`
         if (given(t, 'examples')) meaning += ' *Seen in:* ' + join('; ', t.examples) + '.'
         if (given(t, 'source_only')) meaning += ' *(research only)*'
@@ -397,14 +398,17 @@ function vocabDocs() {
         out.push('| ' + join(' | ', row) + ' |')
       }
       out.push('')
-      if (given(v, 'tie_breaks')) {
-        out.push('**Tie-breaks** (when two terms seem to fit a source unit):\n')
-        for (const tb of v.tie_breaks) out.push(f`- ${join(' or ', tb.terms.map(x => tieTermText(v.id, x)))}: ${tb.rule}`)
-        out.push('')
-      }
+      out.push(...tieBreakLines(v))
     }
   }
   return join('\n', out) + '\n'
+}
+
+// A word list's tie-break rules as Markdown lines, or no lines when it has none.
+function tieBreakLines(v) {
+  if (!given(v, 'tie_breaks')) return []
+  return ['**Tie-breaks** (when two terms seem to fit a source unit):\n',
+    ...v.tie_breaks.map(tb => f`- ${join(' or ', tb.terms.map(x => tieTermText(v.id, x)))}: ${tb.rule}`), '']
 }
 
 // A term named in a tie-break rule: its label, with its list's name when it is from another list.
@@ -546,8 +550,9 @@ function fieldsDocs() {
     'Every field of every record type, generated from the JSON schemas in `schemas/`. ' +
     '**Vocabulary** names the fixed word list a field draws from (see [vocabularies](vocabularies.md)).\n',
     '## Conventions\n',
-    '- **Ids.** Lower-case, ASCII, words joined by dashes; apostrophes and full stops dropped, `&` becomes `and`, numbers and roman numerals kept (`mammoth-mk-ii`, `v4-rocket-launcher`). Unit ids are `<game>.<faction>.<slug>`; pattern ids are generic English, verb first (`infest-vehicle`). Expansions are never game ids. The faction id `shared` is reserved for units every side can field. ' +
-    'A link to a unit not yet researched (a rider, a rival in matchups, a lineage) uses the slug its entry would get: its in-game name by these rules, dropping a final word such as Squad or Team (Riflemen Squad -> `riflemen`).',
+    '- **Ids.** Lower-case, ASCII, words joined by dashes; apostrophes and full stops dropped, `&` becomes `and`, numbers and roman numerals kept (`mammoth-mk-ii`, `v4-rocket-launcher`). Unit ids are `<game>.<faction>.<slug>`. The slug is the in-game name by these rules, with a final word such as Squad or Team dropped (Riflemen Squad -> `riflemen`). ' +
+    'Pattern ids are generic English, verb first (`infest-vehicle`). Expansions are never game ids. The faction id `shared` is reserved for units every side can field. ' +
+    'A link to a unit not yet researched (a rider, a rival in matchups) uses the id its entry would get, and a lineage uses that slug.',
     '- **Typed links** are written `kind:id`, such as `role:anti-air`, `size:<=small` or `hits:high-air`. A link always describes a unit: in strengths, weaknesses and pattern requirements it describes the unit itself; in *counters* the unit it beats; in *countered by* the unit that beats it; in combos the teammate. Ranked kinds accept `<=` and `>=`. ' +
     f`Kinds: ${kinds}.`,
     '- **Matchups.** Write the reason first, then pick the link that names the part behind it. ' +
@@ -558,7 +563,7 @@ function fieldsDocs() {
     '(5) Something the unit lacks (no weapon reaches aircraft) is not a link of its own: put the enemy that exploits it in countered by (`class:aircraft`), and if you also list it as a weakness, hang it on the part that causes it and name the gap in the reason. ' +
     '(6) The same enemy may sit in counters and in countered by only when the two reasons name different situations. Otherwise put it where the head-on fight at equal cost ends, and give the tactic that turns it in the reason. ' +
     '(7) Most important first; keep each list short, about two to five. A link to a planned pattern is fine; its warning clears when the pattern is written. ' +
-    '(8) A `unit:` link to a unit not yet researched uses the slug its entry would get (see Ids).',
+    '(8) A `unit:` link to a unit not yet researched uses the id its entry would get (see Ids).',
     "- **Proposals vs facts.** Fields marked *proposal* (handling, weapon mount, flavour affinity and 'as a player'), weapon and ability seats unless crew.basis is in-game, crew and on-death wherever their basis says 'proposal', and the sight band where sensors.basis says 'proposal', are our design suggestions for a player version. The checker skips them and confidence covers only sourced facts.",
     '- **Weapons vs abilities.** Anything fired with an attack button is a weapon. A shot fired from its own ability button (a grenade, a rocket volley on a cooldown) is an ability, not a weapon. Abilities are counted by the rule under `abilities[]` below. ' +
     'A passive or triggered effect is its own ability only when that rule asks for one: Paired entries asks for it, or the source names the effect and it adds a mechanic. ' +
@@ -578,7 +583,8 @@ function fieldsDocs() {
     '(5) Loadout choices for one place are one entry when they would get the same family, damage, delivery, target list and traits. Name them all; range and other numbers may differ. Otherwise each choice is its own entry (Smart Rockets home in, so they are apart). ' +
     '(6) A weapon whose kind depends on the donor is one adaptive acquired entry. Do not list the donors. Weapons gained in fixed steps (salvage crates) get one acquired entry per step that changes the family. ' +
     '(7) Passenger weapons follow the passenger slot rule. Riders who fire their own guns from ports give no entries. ' +
-    '(8) Never record an upgrade that only changes numbers, or a weapon the unit gets through a shared mechanic or a universal key (see Shared mechanics).',
+    '(8) Never record an upgrade that only changes numbers, or a weapon the unit gets through a shared mechanic or a universal key (see Shared mechanics). ' +
+    'Protection that only shoots down incoming missiles, rockets or shells by itself is not a weapon either: it is the interceptor armour model.',
     "- **Main weapon.** A unit's main weapon is its one primary entry (see `armament[].slot`). Every other weapon the base form always has is secondary, including a second seat's main gun. " +
     "The roles rules read the main weapon from this entry, so it is chosen without looking at the unit's roles.",
     '- **Paired entries.** Some weapons always come with an ability, and both entries of the pair link the same patterns. ' +
@@ -615,7 +621,7 @@ function fieldsDocs() {
     'A retreat-to-base order is a game-wide mechanic in most games (see Shared mechanics); where a unit does record one, it links `retreat-to-base`, never `dash` or `brace`. ' +
     "When `research/registry-notes/patterns.md` disagrees with a pattern's summary, the summary wins. " +
     'If nothing fits, keep the ability, leave its patterns empty and add a fit_note (see `abilities[].patterns`). ' +
-    'Link any registered id, written or planned. Never edit pattern files: the merge pass fills their source_units with `npm run sync-patterns`.',
+    'Link any registered id, written or planned. Never edit an existing pattern file: the merge pass keeps its source_units up to date with `npm run sync-patterns`.',
     '- **Granularity.** Same player-facing interaction and same counterplay = one pattern; differences in fiction, delivery or size are variants. Plain mechanics (sprint, healing yourself, stat buff) get generic patterns that stay out of the top-30 list. ' +
     'A pattern that mirrors a word-list term (a weapon trait or family, an armour model, a sensor trait) is the home for the ability version only; a weapon or always-on effect uses the term. ' +
     'A swapped-in weapon is still a weapon, so neither it nor its toggle links a pattern that mirrors its family or trait (a drain beam on a toggle links no `drain-health`). ' +

@@ -78,6 +78,27 @@ describe('docs builder', () => {
     assert.ok(readDocs(dir)['docs/vocabularies.md'].includes(`| \`${t.id}\` | Testing Label Zq |`))
   })
 
+  it('renders tie-break rules on every list, faction flavours included', () => {
+    const dir = copyRepo()
+    const file = path.join(dir, 'data/vocab/faction-flavours.json')
+    const v = JSON.parse(fs.readFileSync(file, 'utf8'))
+    const [a, b] = v.terms
+    v.tie_breaks = [{ terms: [a.id, b.id], rule: 'A test rule Zq for two flavours.' }]
+    fs.writeFileSync(file, JSON.stringify(v, null, 2))
+    assert.equal(run('--root', dir).status, 0)
+    const page = readDocs(dir)['docs/vocabularies.md']
+    assert.ok(page.includes(`- *${a.label}* or *${b.label}*: A test rule Zq for two flavours.`))
+    const section = page.slice(page.indexOf('<a id="faction-flavours">'), page.indexOf('<a id="roles">'))
+    assert.ok(section.includes('A test rule Zq'), 'the rule sits under the faction flavours list')
+  })
+
+  it("labels every term's coding rule the same way, tiers included", () => {
+    const page = readDocs(REPO_ROOT)['docs/vocabularies.md']
+    assert.doesNotMatch(page, /source rule:/)
+    const t1 = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'data/vocab/tiers.json'), 'utf8')).terms[0]
+    assert.ok(page.includes(`*Coding rule:* ${t1.source_rule}`))
+  })
+
   it("says 'classes: all' only while a term has every generator class in the word list", () => {
     const dir = copyRepo()
     assert.equal(run('--root', dir).status, 0)

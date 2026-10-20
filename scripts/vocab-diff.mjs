@@ -9,7 +9,7 @@
 // Reported: lists added and removed; per list, its version and any changed label, description, group or status; terms
 // added, removed or merged into another (a new term's 'replaces' names the old ids it takes over); per changed term,
 // each field that changed, with list values shown as added (+) and removed (-) items. Tie-break rules are compared
-// as a set.
+// as a set, so a reworded rule shows as one removed and one added.
 import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -121,7 +121,7 @@ export function renderMarkdown(d, { oldName = 'old', newName = 'new' } = {}) {
     '',
     `From \`${oldName}\` to \`${newName}\`. ${d.added.length} list(s) added, ${d.removed.length} removed, ${d.changed.length} changed; ` +
       `${count(d.changed, 'termsAdded')} term(s) added, ${count(d.changed, 'termsRemoved')} removed, ${count(d.changed, 'termsChanged')} changed, ` +
-      `${count(d.changed, 'tieBreaksAdded')} tie-break rule(s) added.`,
+      `${count(d.changed, 'tieBreaksAdded')} tie-break rule(s) added, ${count(d.changed, 'tieBreaksRemoved')} removed.`,
   ]
   if (d.added.length) {
     lines.push('', '## New lists')

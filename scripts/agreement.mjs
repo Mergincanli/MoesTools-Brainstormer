@@ -6,23 +6,33 @@
 //        node scripts/agreement.mjs --table <file> [--threshold 0.8] [--json] [--vocab <dir>]
 //
 // <dir> holds one folder per coder (for example coder-a/, coder-b/, coder-c/), each with unit files in the format of
-// data/units/. Units are matched by id. --reference <dir> is a folder of unit files to compare each coder with, such as
-// data/units. --table <file> reads codings that are not units: { "coders": { "<coder>": { "<item>": { "<field>":
-// value } } }, "fields": { "<field>": { "list": "<word list>" } } }; a list value is compared as a set, a number as a
-// number, anything else as one value, and "fields" (optional) names the ranked word list a field's terms come from.
+// data/units/. Units are matched by id. A sub-folder whose .json files hold no 'units' list (notes, analyses) is not a
+// coder: it is skipped and named on stderr. A coder folder may not mix unit files with other .json files, and at
+// least two coder folders are needed. --reference <dir> is a folder of unit files to compare each coder with, such as
+// data/units.
+//
+// --table <file> reads codings that are not units: { "coders": { "<coder>": { "<item>": { "<field>": value } } },
+// "fields": { "<field>": { ... } } }. A list value is compared as a set and anything else as one value. A field whose
+// values are all whole numbers is a count: equal or not, and also how many pairs are at most 1 apart. A field with
+// other numbers (decimals) is a number: by default two values agree only when they are equal; give it a "tolerance"
+// in "fields" (for example { "tolerance": 0.01 }) to let values that far apart agree, and a "step" to report how many
+// pairs are at most one step apart. "fields" (optional) can also name the ranked word list a field's terms come from
+// ({ "list": "speed-bands" }).
 //
 // How agreement is counted. Before a unit is read, the documented defaults are filled in (a weapon or ability with no
-// seat is the driver's, an ability with no source is innate, a weapon with no affects hits enemies, a body with no
-// count is one), so a coder who writes a default and one who leaves it out agree. For each field and each unit coded
-// by two or more coders, every pair of coders counts once. One-value fields: the pair agrees when both values are
-// equal (two missing values agree). Fields on a ranked word list (tier, price, speed, size, sight, range, cooldown,
-// armour) and counts also report how many pairs are at most one step apart. Set fields (lists, such as secondary
-// roles or weapon traits): the pair scores the overlap of its two sets, the size of the intersection over the size of
-// the union (two empty sets score 1). A field's agreement is the mean over all its pairs. Each weapon is also read as
-// seat/family/mount, so a split on one weapon shows even when the unit's sets of mounts or seats agree. Fields marked
-// 'proposal' are our design suggestions, not sourced facts ('partly' when the source decides for some units); matchup
-// lists (strengths, counters and so on) are open choices, and 'atypical rules' is derived (it follows from the other
-// fields), so these are measured for information only, without the threshold.
+// seat is the driver's, a weapon with no affects hits enemies, a body with no count is one, and an ability with no
+// source is innate: word lists 0.4, which round 1 of the pilot used, left the source optional), so a coder who writes
+// a default and one who leaves it out agree. For each field and each unit coded by two or more coders, every pair of
+// coders counts once. One-value fields: the pair agrees when both values are equal (two missing values agree). Fields
+// on a ranked word list (tier, price, speed, size, sight, range, armour) and counts also report how many pairs are at
+// most one step apart. Set fields (lists, such as secondary roles or weapon traits): the pair scores the overlap of
+// its two sets, the size of the intersection over the size of the union (two empty sets score 1). A field's
+// agreement is the mean over all its pairs. Each weapon is also read as seat/family/mount, so a split on one weapon
+// shows even when the unit's sets of mounts or seats agree. Fields marked 'proposal' are our design suggestions, not
+// sourced facts ('partly' when the source decides for some units); they are measured against the threshold like the
+// rest, and the report marks them. Matchup lists (strengths, counters and so on) are open choices, and 'atypical
+// rules' is derived (it follows from the other fields), so those two are measured for information only, without the
+// threshold.
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -87,7 +97,7 @@ export const UNIT_FIELDS = [
   one('main weapon.range', u => mainWeapon(u)?.range, { list: 'range-bands' }),
   set('main weapon.can_target', u => mainWeapon(u)?.can_target),
   one('main weapon.mount', u => mainWeapon(u)?.mount, { proposal: true }),
-  one('main weapon.seat', u => mainWeapon(u)?.seat ?? 'driver', { proposal: true }),
+  one('main weapon.seat', u => mainWeapon(u)?.seat ?? 'driver', { proposal: 'partly' }),
   count('abilities (number)', u => (u.abilities || []).length),
   set('abilities.kind', u => each(u.abilities, a => a.kind)),
   set('abilities.cooldown', u => each(u.abilities, a => a.cooldown)),
@@ -154,23 +164,30 @@ export function jaccard(a, b) {
   return both / (A.size + B.size - both)
 }
 
+// Two numbers at most `gap` apart. The small margin keeps decimal noise (18.34 - 18.33 is 0.010000000000001563) from
+// splitting values that are exactly the gap apart.
+const closeTo = (a, b, gap) => typeof a === 'number' && typeof b === 'number' && Math.abs(a - b) <= gap + 1e-9
+// Two values agree: equal, or two numbers within the field's tolerance.
+const agree = (f, a, b) => canon(a) === canon(b) || (f.tolerance > 0 && closeTo(a, b, f.tolerance))
+
 function withinOne(f, a, b, ranks) {
-  if (canon(a) === canon(b)) return true
-  if (f.numeric) return typeof a === 'number' && typeof b === 'number' && Math.abs(a - b) <= 1
+  if (agree(f, a, b)) return true
+  if (f.numeric || f.step) return closeTo(a, b, f.numeric ? 1 : f.step)
   const r = f.list && ranks[f.list]
   return Boolean(r && Number.isInteger(r[a]) && Number.isInteger(r[b]) && Math.abs(r[a] - r[b]) <= 1)
 }
 
 const pairsOf = xs => xs.flatMap((x, i) => xs.slice(i + 1).map(y => [x, y]))
-const score = (f, a, b) => (f.kind === 'set' ? jaccard(a, b) : canon(a) === canon(b) ? 1 : 0)
+const score = (f, a, b) => (f.kind === 'set' ? jaccard(a, b) : agree(f, a, b) ? 1 : 0)
 const round = x => Math.round(x * 1000) / 1000
-const hasSteps = f => Boolean(f.numeric || f.list)
+const hasSteps = f => Boolean(f.numeric || f.step || f.list)
 
 /**
  * Agreement per field. codings: { coder: { item: { field path: value } } }; fields: [{ path, kind: 'one'|'set',
- * numeric?, list?, proposal?, derived?, group?, gate? }]. Returns { coders, items, threshold, fields: [...] }, each field with
- * its pairs, agreement, within_one (ranked fields and counts), the items all coders agree on, whether it is below the
- * threshold, and per item the value each coder gave.
+ * numeric? (a count), number? (a decimal number), tolerance?, step?, list?, proposal?, derived?, group?, gate? }].
+ * Returns { coders, items, threshold, fields: [...] }, each field with its pairs, agreement, within_one (ranked
+ * fields, counts and numbers with a step), the items all coders agree on, whether it is below the threshold, and per
+ * item the value each coder gave.
  */
 export function measure(codings, { fields, ranks = {}, threshold = 0.8 }) {
   const coders = Object.keys(codings).sort()
@@ -199,7 +216,9 @@ export function measure(codings, { fields, ranks = {}, threshold = 0.8 }) {
     const agreement = pairs ? round(sum / pairs) : null
     return {
       path: f.path,
-      kind: f.numeric ? 'count' : f.kind,
+      kind: f.numeric ? 'count' : f.number ? 'number' : f.kind,
+      ...(f.tolerance ? { tolerance: f.tolerance } : {}),
+      ...(f.step ? { step: f.step } : {}),
       group: f.group || 'fields',
       proposal: f.proposal || false,
       derived: f.derived || false,
@@ -242,19 +261,36 @@ export function compareWithReference(codings, reference, { fields }) {
 
 const readJson = f => JSON.parse(fs.readFileSync(f, 'utf8'))
 const jsonFiles = d => fs.readdirSync(d).filter(f => f.endsWith('.json')).sort().map(f => path.join(d, f))
+const isUnitFile = d => Array.isArray(d?.units)
 
-/** { item: coding } for every unit in the unit files of one folder. */
+/** { item: coding } for every unit in the unit files of one folder. A .json file there with no 'units' list fails. */
 export function readUnitCodings(dir, fields = UNIT_FIELDS) {
   const out = {}
-  for (const f of jsonFiles(dir)) for (const u of readJson(f).units || []) out[u.id] = unitCoding(u, fields)
+  for (const f of jsonFiles(dir)) {
+    const d = readJson(f)
+    if (!isUnitFile(d)) throw new Error(`${f} has no 'units' list, so it is not a unit file`)
+    for (const u of d.units) out[u.id] = unitCoding(u, fields)
+  }
   return out
 }
 
-/** { coder: { item: coding } } from a folder with one sub-folder of unit files per coder. */
-export function readCoderFolders(dir, fields = UNIT_FIELDS) {
+/**
+ * { coder: { item: coding } } from a folder with one sub-folder of unit files per coder. A sub-folder with no unit
+ * file (notes, analyses) is not a coder: it is left out and its name added to `skipped`, if given.
+ */
+export function readCoderFolders(dir, fields = UNIT_FIELDS, { skipped = [] } = {}) {
   const subs = fs.readdirSync(dir, { withFileTypes: true }).filter(d => d.isDirectory()).map(d => d.name).sort()
-  if (subs.length < 2) throw new Error(`${dir} needs a folder per coder, at least two`)
-  return Object.fromEntries(subs.map(s => [s, readUnitCodings(path.join(dir, s), fields)]))
+  const coders = {}
+  for (const s of subs) {
+    const sub = path.join(dir, s)
+    if (!jsonFiles(sub).some(f => isUnitFile(readJson(f)))) { skipped.push(s); continue }
+    coders[s] = readUnitCodings(sub, fields)
+  }
+  if (Object.keys(coders).length < 2) {
+    const why = skipped.length ? ` (skipped, no unit files: ${skipped.join(', ')})` : ''
+    throw new Error(`${dir} needs a folder of unit files per coder, at least two${why}`)
+  }
+  return coders
 }
 
 /** Codings and field list from a table file (see the usage note at the top). */
@@ -266,16 +302,34 @@ export function readTable(file) {
     for (const coding of Object.values(items)) {
       for (const [p, v] of Object.entries(coding)) {
         const prev = paths.get(p) || {}
-        paths.set(p, { set: prev.set || Array.isArray(v), numeric: (prev.numeric ?? true) && (v === null || typeof v === 'number') })
+        const missing = v === null || v === undefined
+        paths.set(p, {
+          set: prev.set || Array.isArray(v),
+          number: (prev.number ?? true) && (missing || typeof v === 'number'),
+          whole: (prev.whole ?? true) && (missing || Number.isInteger(v)),
+        })
       }
     }
   }
-  const fields = [...paths].map(([p, k]) => ({
-    path: p,
-    kind: k.set ? 'set' : 'one',
-    numeric: !k.set && k.numeric,
-    list: t.fields?.[p]?.list,
-  }))
+  const fields = [...paths].map(([p, k]) => {
+    const spec = t.fields?.[p] || {}
+    const number = !k.set && k.number && !k.whole
+    const wants = { tolerance: ['a number of 0 or more', v => v >= 0], step: ['a number above 0', v => v > 0] }
+    for (const [key, [what, fits]] of Object.entries(wants)) {
+      if (spec[key] === undefined) continue
+      if (!number) throw new Error(`${file}: field '${p}' has a ${key}, but only a field with decimal numbers takes one`)
+      if (typeof spec[key] !== 'number' || !fits(spec[key])) throw new Error(`${file}: field '${p}' needs a ${key} that is ${what}`)
+    }
+    return {
+      path: p,
+      kind: k.set ? 'set' : 'one',
+      numeric: !k.set && k.number && k.whole,
+      number,
+      tolerance: number ? spec.tolerance : undefined,
+      step: number ? spec.step : undefined,
+      list: spec.list,
+    }
+  })
   return { codings: t.coders, fields }
 }
 
@@ -291,15 +345,20 @@ export function renderMarkdown(result, { title = 'Agreement between coders', ref
   const { coders, items, threshold, fields } = result
   const gated = fields.filter(f => f.gated && f.agreement !== null)
   const below = gated.filter(f => f.below)
+  const numbers = fields.filter(f => f.tolerance || f.step)
   const lines = [
     `# ${title}`,
     '',
     `Coders: ${coders.join(', ')}. Items: ${items.length} (${items.join(', ')}). Threshold: ${pct(threshold)}.`,
     '',
-    `**${gated.length - below.length} of ${gated.length} measured fields reach the threshold; ${below.length} fall below it.** ` +
+    `**${gated.length - below.length} of ${gated.length} measured fields reach the threshold; ${below.length} ${below.length === 1 ? 'falls' : 'fall'} below it.** ` +
       'Agreement is the mean over every pair of coders on every item (sets score their overlap). "Within one step" counts ' +
       'pairs at most one rank apart, for ranked word lists and counts. Matchup lists are open choices, and derived fields ' +
-      'follow from the others; both are measured for information only.',
+      'follow from the others; both are measured for information only.' +
+      numbers.map(f => ` ${f.path}: ${[
+        f.tolerance ? `two values at most ${f.tolerance} apart count as equal` : '',
+        f.step ? `one step is ${f.step}` : '',
+      ].filter(Boolean).join('; ')}.`).join(''),
     '',
     '| Field | Kind | Items | Agreement | Within one step | Items all agree | Note |',
     '|---|---|---|---|---|---|---|',
@@ -361,7 +420,9 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   try {
     opts = parseArgs(process.argv.slice(2))
     const ranks = loadRanks(opts.vocab)
-    const { codings, fields } = opts.table ? readTable(opts.table) : { codings: readCoderFolders(opts.dir), fields: UNIT_FIELDS }
+    const skipped = []
+    const { codings, fields } = opts.table ? readTable(opts.table) : { codings: readCoderFolders(opts.dir, UNIT_FIELDS, { skipped }), fields: UNIT_FIELDS }
+    if (skipped.length) console.error(`not coder folders (no unit files), skipped: ${skipped.join(', ')}`)
     result = measure(codings, { fields, ranks, threshold: opts.threshold })
     if (opts.reference) reference = compareWithReference(codings, readUnitCodings(opts.reference), { fields })
   } catch (e) {

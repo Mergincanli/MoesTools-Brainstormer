@@ -8,8 +8,9 @@
 // A pattern that no unit links keeps its list as it is: the validator reports a live pattern that nothing links, and
 // a merged or rejected pattern keeps the units it had.
 //
-// Who runs it. Research agents never do: they run npm run validate only, which warns while a list is out of date.
-// The merge pass runs it once, then npm run docs, then npm run check, which runs it again with --check.
+// Who runs it. Research agents never do: they run npm run validate only, which warns while a list is out of date, and
+// npm run check (what CI runs) leaves the lists alone, so a research pull request passes while they lag. The merge
+// pass runs it once, then npm run docs, then npm run check:merge, which runs it again with --check before npm run check.
 //
 // --check writes nothing. It lists each pattern file whose source_units are out of date and exits 1 if there is one.
 // Exit codes: 0 done (or nothing out of date), 1 out of date (--check) or a file that can't be read (then nothing is

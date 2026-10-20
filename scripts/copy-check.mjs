@@ -7,6 +7,13 @@
 // American spellings count as the same word ('armour' = 'armor'). Runs that are only a title or name
 // (a game, unit or page title found in the data) are ignored.
 //
+// --also <folder> (repeatable) also checks notes that cite no page, such as research notes: every string in
+// the .json files (outside keys such as url, title and name) and every paragraph, list item, table row and
+// heading in the .md files under that folder, against every page in the cache, every page the data cites
+// and every page those notes link to. A run that also appears in our own wording (any string in data/ or
+// schemas/, or any text in research/registry-notes/, leaving out files under an --also folder) is ignored:
+// that is our own text quoted back, not a copy.
+//
 // Pages come from MediaWiki sites (Fandom, wiki.gg, StrategyWiki, Halopedia, Wikipedia and others) as
 // wikitext through the site's api.php (action=parse), and from other sites as HTML turned into text.
 // Every page is cached under .cache/sources/ (git-ignored), so later runs work offline. Requests go one
@@ -26,11 +33,12 @@
 //   --max-fetch N      fetch at most N pages from the network in this run; the rest count as not checked
 //   --refresh          fetch again even when a page is cached
 //   --delay MS         pause between network requests (default 1500)
+//   --also FOLDER      also check the .json and .md files under FOLDER against every page (repeatable)
 //
 // Exit codes:
 //   0  every cited page in scope was checked and none shares a run with the records that cite it
 //   1  shared runs were found (FOUND lines; pages that were not checked are listed as well)
-//   2  bad arguments
+//   2  bad arguments, an --also folder that does not exist, or a file under it that is not valid JSON
 //   3  no shared runs were found, but some pages were not checked (offline and not cached, over
 //      --max-fetch, an HTTP or network error, or the network unavailable), so the check is incomplete
 import crypto from 'node:crypto'
@@ -95,20 +103,24 @@ export function grams(ws, n) {
  * Returns the runs as strings of words.
  */
 export function sharedRuns(ws, pageGrams, n, ignore = new Set()) {
-  const hit = i => {
-    const g = ws.slice(i, i + n).join(' ')
-    return pageGrams.has(g) && !ignore.has(g)
-  }
-  const runs = []
-  let i = 0
-  while (i + n <= ws.length) {
-    if (!hit(i)) { i++; continue }
+  return runSpans(gramList(ws, n), g => pageGrams.has(g) && !ignore.has(g)).map(([i, j]) => ws.slice(i, j + n).join(' '))
+}
+
+// The n-word run starting at each position of ws, in order.
+const gramList = (ws, n) => Array.from({ length: Math.max(0, ws.length - n + 1) }, (_, i) => ws.slice(i, i + n).join(' '))
+
+// Each stretch of positions whose n-gram is a hit, as [first, last]. A position that is not a hit ends the
+// stretch; a later, overlapping run is reported on its own.
+function runSpans(gs, hit) {
+  const spans = []
+  for (let i = 0; i < gs.length;) {
+    if (!hit(gs[i])) { i++; continue }
     let j = i + 1
-    while (j + n <= ws.length && hit(j)) j++
-    runs.push(ws.slice(i, j - 1 + n).join(' '))
-    i = j // position j is not a hit; a later, overlapping run is reported on its own
+    while (j < gs.length && hit(gs[j])) j++
+    spans.push([i, j - 1])
+    i = j
   }
-  return runs
+  return spans
 }
 
 // ---------------------------------------------------------------- page text
@@ -325,17 +337,131 @@ function nameStrings(x, key = null, out = []) {
   return out
 }
 
+// ---------------------------------------------------------------- notes (--also)
+
+/** A note file that can't be read; the command line exits 2 on it, as on a bad option. */
+export class BadNoteError extends Error {}
+
+/** The .json and .md files under a folder, at any depth, sorted; folders starting with '.' and node_modules are skipped. */
+export function noteFiles(dir) {
+  const out = []
+  const walk = d => {
+    const entries = fs.readdirSync(d, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
+    for (const e of entries) {
+      if (e.name.startsWith('.') || e.name === 'node_modules') continue
+      const p = path.join(d, e.name)
+      if (e.isDirectory()) walk(p)
+      else if (e.isFile() && /\.(json|md)$/i.test(e.name)) out.push(p)
+    }
+  }
+  walk(dir)
+  return out
+}
+
+// A web address in running text; one level of brackets is kept, as in wiki titles such as Terror_drone_(Red_Alert_3).
+const URL_RE = /https?:\/\/(?:[^\s<>()[\]"'`|]|\([^\s<>()]*\))+/g
+/** The web addresses in a text, without trailing punctuation. */
+export function urlsIn(text) {
+  return [...String(text).matchAll(URL_RE)].map(m => m[0].replace(/[.,;:!?*_]+$/, ''))
+}
+
+// A Markdown line that starts a new block: a heading, a list item or a table row.
+const BLOCK_START = /^\s{0,3}(#{1,6}\s|[-*+]\s|\d+[.)]\s|\|)/
+
+/**
+ * The text blocks of a Markdown file (paragraphs, list items, table rows, headings), each as its lines:
+ * [[line number, text], ...]. Link targets and bare web addresses are dropped from the text.
+ */
+export function markdownBlocks(md) {
+  const blocks = []
+  let cur = null
+  md.split(/\r?\n/).forEach((line, i) => {
+    if (!line.trim()) { cur = null; return }
+    const text = line.replace(/\]\((?:[^()\s]|\([^()\s]*\))*\)/g, ']').replace(URL_RE, ' ')
+    if (!cur || BLOCK_START.test(line)) { cur = []; blocks.push(cur) }
+    cur.push([i + 1, text])
+    if (/^\s{0,3}#{1,6}\s/.test(line)) cur = null // a heading is one line
+  })
+  return blocks
+}
+
+/**
+ * The texts of one note file to check: { at(i), ws, names, urls }, where ws are the words of one string or
+ * block and at(i) says where its word i is (a JSON path, or a line of a Markdown file). names are the file's
+ * name and title strings, and urls the pages it links to. A .json file that does not parse throws.
+ */
+export function noteTexts(file) {
+  const raw = fs.readFileSync(file, 'utf8')
+  if (/\.md$/i.test(file)) {
+    const texts = markdownBlocks(raw).map(lines => {
+      const ws = []
+      const lineOf = []
+      for (const [n, text] of lines) for (const w of words(text)) { ws.push(w); lineOf.push(n) }
+      return { ws, at: i => `line ${lineOf[i]}` }
+    })
+    return { texts, names: [], urls: urlsIn(raw) }
+  }
+  let value
+  try { value = JSON.parse(raw) } catch (e) { throw new BadNoteError(`--also: ${file} is not valid JSON (${e.message})`) }
+  const texts = proseStrings(value).map(([p, s]) => ({ ws: words(s), at: () => p }))
+  const urls = [...citedUrls(value), ...allStrings(value).flatMap(urlsIn)].filter(u => /^https?:\/\//.test(u)) // not a file path
+  return { texts, names: nameStrings(value), urls: [...new Set(urls)] }
+}
+
+function allStrings(x, out = []) {
+  if (typeof x === 'string') out.push(x)
+  else if (Array.isArray(x)) for (const v of x) allStrings(v, out)
+  else if (x && typeof x === 'object') for (const v of Object.values(x)) allStrings(v, out)
+  return out
+}
+
+const inside = (file, dir) => { const r = path.relative(dir, file); return r && !r.startsWith('..') && !path.isAbsolute(r) }
+
+/**
+ * The n-word runs of our own wording: every string in the .json files under data/ and schemas/, and every
+ * text block under research/registry-notes/, leaving out files under the `skip` folders.
+ */
+export function ownWordingGrams(root, n, skip = []) {
+  const out = new Set()
+  for (const dir of ['data', 'schemas', 'research/registry-notes']) {
+    const abs = path.join(root, dir)
+    if (!fs.existsSync(abs)) continue
+    for (const f of noteFiles(abs)) {
+      if (skip.some(s => inside(f, s))) continue
+      const raw = fs.readFileSync(f, 'utf8')
+      let strings
+      if (/\.md$/i.test(f)) strings = markdownBlocks(raw).map(lines => lines.map(([, t]) => t).join(' '))
+      else { try { strings = allStrings(JSON.parse(raw)) } catch { continue } }
+      for (const s of strings) for (const g of grams(words(s), n)) out.add(g)
+    }
+  }
+  return out
+}
+
+// Every page in the cache, as [url, page], for --also.
+function cachedPages(cacheDir) {
+  const out = []
+  if (!fs.existsSync(cacheDir)) return out
+  for (const f of fs.readdirSync(cacheDir, { recursive: true }).map(String).filter(f => f.endsWith('.json')).sort()) {
+    try {
+      const page = JSON.parse(fs.readFileSync(path.join(cacheDir, f), 'utf8'))
+      if (typeof page?.url === 'string' && typeof page.raw === 'string') out.push([page.url, page])
+    } catch { /* a broken cache file is fetched again when the data cites it */ }
+  }
+  return out
+}
+
 // ---------------------------------------------------------------- the check
 
 // retryWait (the first wait before a retry, doubling each time) and log (where progress lines go) have no
 // command-line option; tests set them.
 export const DEFAULT_OPTIONS = Object.freeze({
-  root: REPO_ROOT, offline: false, minWords: 6, only: Object.freeze([]), maxFetch: Infinity, refresh: false, delay: 1500,
-  retryWait: 2000, log: msg => console.error(msg),
+  root: REPO_ROOT, offline: false, minWords: 6, only: Object.freeze([]), also: Object.freeze([]), maxFetch: Infinity,
+  refresh: false, delay: 1500, retryWait: 2000, log: msg => console.error(msg),
 })
 
 function parseArgs(argv) {
-  const opts = { ...DEFAULT_OPTIONS, only: [] }
+  const opts = { ...DEFAULT_OPTIONS, only: [], also: [] }
   const num = (a, v) => { const n = Number(v); if (!Number.isInteger(n) || n < 0) throw new Error(`${a} needs a whole number`); return n }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
@@ -345,6 +471,12 @@ function parseArgs(argv) {
     else if (a === '--max-fetch') opts.maxFetch = num(a, argv[++i])
     else if (a === '--delay') opts.delay = num(a, argv[++i])
     else if (a === '--only') { if (!argv[i + 1]) throw new Error('--only needs a text'); opts.only.push(argv[++i]) }
+    else if (a === '--also') {
+      const dir = argv[++i]
+      if (!dir) throw new Error('--also needs a folder')
+      if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) throw new Error(`--also: '${dir}' is not a folder`)
+      opts.also.push(path.resolve(dir))
+    }
     else if (a.startsWith('--')) throw new Error(`unknown option '${a}'`)
     else opts.root = path.resolve(a)
   }
@@ -359,8 +491,11 @@ export async function copyCheck(options = {}) {
   const ignore = new Set()
   for (const r of records) for (const s of nameStrings(r.value)) for (const g of grams(words(s), n)) ignore.add(g)
 
-  const allUrls = [...new Set(records.flatMap(r => citedUrls(r.value)))].sort()
-  const urls = opts.only.length ? allUrls.filter(u => opts.only.some(t => u.includes(t))) : allUrls
+  // Notes under the --also folders: read first, so a file that does not parse stops the check before any fetch.
+  const notes = opts.also.flatMap(dir => noteFiles(dir)).map(file => ({ file, ...noteTexts(file) }))
+  const inScope = u => !opts.only.length || opts.only.some(t => u.includes(t))
+  const allUrls = [...new Set([...records.flatMap(r => citedUrls(r.value)), ...notes.flatMap(x => x.urls)])].sort()
+  const urls = allUrls.filter(inScope)
   const state = { delay: opts.delay, retryWait: opts.retryWait, log: opts.log, lastRequest: 0, requests: 0 }
   const pages = new Map() // url -> gram set
   const notChecked = [] // [url, reason]
@@ -410,10 +545,46 @@ export async function copyCheck(options = {}) {
       for (const [run, us] of byRun) findings.push({ file: r.file, id: r.id, path: p, run, urls: us })
     }
   }
+
+  // Notes cite no page of their own, so each of their texts is checked against every page: the cache and
+  // every page fetched above. Runs in our own wording (or names in the data or the notes) never count.
+  let notePages = 0
+  if (notes.length) {
+    const all = new Map(pages)
+    for (const [url, page] of cachedPages(cacheDir)) {
+      if (all.has(url) || !inScope(url)) continue
+      all.set(url, grams(words(page.format === 'wikitext' ? wikitextToText(page.raw) : htmlToText(page.raw)), n))
+    }
+    notePages = all.size
+    const own = ownWordingGrams(opts.root, n, opts.also)
+    for (const x of notes) for (const s of x.names) for (const g of grams(words(s), n)) own.add(g)
+    const counts = g => ignore.has(g) || own.has(g)
+    for (const note of notes) {
+      const file = shownPath(opts.root, note.file)
+      for (const t of note.texts) {
+        if (t.ws.length < n) continue
+        const gs = gramList(t.ws, n)
+        const byRun = new Map() // run -> { at, urls }
+        for (const [url, pg] of all) {
+          for (const [i, j] of runSpans(gs, g => pg.has(g) && !counts(g))) {
+            const run = t.ws.slice(i, j + n).join(' ')
+            if (!byRun.has(run)) byRun.set(run, { at: t.at(i), urls: [] })
+            byRun.get(run).urls.push(url)
+          }
+        }
+        for (const [run, { at, urls: us }] of byRun) findings.push({ file, id: null, path: at, run, urls: us })
+      }
+    }
+  }
   return {
     urls, allUrls, pagesChecked: pages.size, fromCache, fetched, requests: state.requests, notChecked, findings,
-    records: records.length,
+    records: records.length, notes: notes.length, notePages,
   }
+}
+
+// A file as the report shows it: relative to the repository when it is inside it, with '/' between parts.
+function shownPath(root, file) {
+  return (inside(file, root) ? path.relative(root, file) : file).split(path.sep).join('/')
 }
 
 /** 1 when shared runs were found, else 3 when some pages were not checked, else 0. */
@@ -425,11 +596,12 @@ export function formatCopyReport(res, options = {}) {
   const opts = { ...DEFAULT_OPTIONS, ...options }
   const lines = []
   const scope = opts.only.length ? `${res.urls.length} of ${res.allUrls.length} cited page(s) (--only)` : `${res.urls.length} cited page(s)`
-  lines.push(`copy-check: ${scope} in ${res.records} record(s); reporting shared runs of ${opts.minWords}+ words`)
+  lines.push(`copy-check: ${scope} in ${res.records} record(s)${res.notes ? ` and ${res.notes} note file(s)` : ''}; reporting shared runs of ${opts.minWords}+ words`)
   lines.push(`pages checked: ${res.pagesChecked} (${res.fromCache} from cache, ${res.fetched} fetched); not checked: ${res.notChecked.length}`)
+  if (res.notes) lines.push(`notes (--also): ${res.notes} file(s) checked against ${res.notePages} page(s), the cache and every page fetched`)
   for (const f of res.findings) {
     lines.push('')
-    lines.push(`FOUND    ${f.file} ${f.id} ${f.path}`)
+    lines.push(`FOUND    ${f.file}${f.id ? ` ${f.id}` : ''} ${f.path}`)
     lines.push(`         "${f.run}" (${f.run.split(' ').length} words)`)
     for (const u of f.urls) lines.push(`         shared with ${u}`)
   }
@@ -466,16 +638,24 @@ function rerunWithProxy() {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const usage = 'usage: node scripts/copy-check.mjs [root] [--offline] [--min-words N] [--only TEXT] [--max-fetch N] [--refresh] [--delay MS] [--also FOLDER]'
   let opts
   try {
     opts = parseArgs(process.argv.slice(2))
   } catch (e) {
-    console.error(`${e.message}\nusage: node scripts/copy-check.mjs [root] [--offline] [--min-words N] [--only TEXT] [--max-fetch N] [--refresh] [--delay MS]`)
+    console.error(`${e.message}\n${usage}`)
     process.exit(2)
   }
   const status = opts.offline ? null : rerunWithProxy()
   if (status !== null) process.exit(status)
-  const res = await copyCheck(opts)
+  let res
+  try {
+    res = await copyCheck(opts)
+  } catch (e) {
+    if (!(e instanceof BadNoteError)) throw e
+    console.error(e.message) // read before any page is fetched, so nothing was checked
+    process.exit(2)
+  }
   console.log(formatCopyReport(res, opts))
   process.exitCode = exitCode(res)
 }

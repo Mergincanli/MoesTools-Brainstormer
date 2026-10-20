@@ -1,7 +1,7 @@
 // Tests for the word-list diff: field changes, added, removed and merged terms, tie-break rules, reading folders and
 // git commits, and the command line.
 import assert from 'node:assert/strict'
-import { spawnSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -70,21 +70,38 @@ describe('diffLists', () => {
   it('renders Markdown, with version-only lists on one line', () => {
     const md = renderMarkdown(d, { oldName: 'v0.4', newName: 'v1' })
     assert.match(md, /^# Word-list changes: 0\.4\.0 to 1\.0\.0/)
-    assert.match(md, /1 list\(s\) added, 1 removed, 2 changed; 1 term\(s\) added, 1 removed, 1 changed, 1 tie-break rule\(s\) added/)
+    assert.match(md, /1 list\(s\) added, 1 removed, 2 changed; 1 term\(s\) added, 1 removed, 1 changed, 1 tie-break rule\(s\) added, 0 removed\./)
     assert.match(md, /- \*\*Added `both`\*\* \(both\), replacing `two`: about both/)
     assert.match(md, /- \*\*Removed `two`\*\* \(two\), merged into `both`\./)
     assert.match(md, /- \*\*Tie-break added\*\* \(`one` \/ `both`\): pick one when unsure/)
     assert.match(md, /## Lists with a new version number only\n\n`b`\./)
     assert.match(md, /## Removed lists\n\n- `gone`/)
   })
+  it('counts a reworded tie-break as one removed and one added, in the summary too', () => {
+    const rule = (text) => ({ tie_breaks: [{ terms: ['x', 'y'], rule: text }] })
+    const was = { b: list('b', '1.0.0', [term('x'), term('y')], rule('pick x when unsure')) }
+    const now = { b: list('b', '1.0.0', [term('x'), term('y')], rule('pick x when the sources are unsure')) }
+    const md = renderMarkdown(diffLists(was, now))
+    assert.match(md, /1 tie-break rule\(s\) added, 1 removed\./)
+    assert.match(md, /- \*\*Tie-break added\*\* \(`x` \/ `y`\): pick x when the sources are unsure/)
+    assert.match(md, /- \*\*Tie-break removed\*\* \(`x` \/ `y`\): pick x when unsure/)
+  })
 })
 
 describe('reading lists and the command line', () => {
   it('reads a folder and a git commit alike', () => {
     const fromFolder = readLists('data/vocab')
-    const fromGit = readLists('HEAD')
     assert.ok(Object.keys(fromFolder).length > 30)
-    assert.deepEqual(Object.keys(fromGit).sort(), Object.keys(readLists(path.join(REPO_ROOT, 'data/vocab'))).sort().filter(id => fromGit[id]))
+    assert.deepEqual(Object.keys(readLists(path.join(REPO_ROOT, 'data/vocab'))).sort(), Object.keys(fromFolder).sort())
+    // The git side is checked against git itself, not the working tree, so uncommitted edits don't matter. HEAD only:
+    // CI checks out a single commit.
+    const fromGit = readLists('HEAD')
+    const git = args => execFileSync('git', args, { cwd: REPO_ROOT, encoding: 'utf8' })
+    const committed = git(['ls-tree', '--name-only', 'HEAD:data/vocab']).split('\n').filter(f => f.endsWith('.json')).map(f => f.slice(0, -5))
+    assert.ok(Object.keys(fromGit).length > 30)
+    assert.deepEqual(Object.keys(fromGit).sort(), committed.sort()) // every list file is named after its id
+    assert.ok(fromGit.sizes.terms.length > 0)
+    assert.deepEqual(fromGit.sizes, JSON.parse(git(['show', 'HEAD:data/vocab/sizes.json'])))
   })
   it('prints nothing changed for a folder against itself', () => {
     const r = spawnSync(process.execPath, [DIFF, 'data/vocab', 'data/vocab'], { encoding: 'utf8', cwd: REPO_ROOT })

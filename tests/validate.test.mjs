@@ -617,6 +617,11 @@ const cases = [
     edit(dir, PATTERN('infest-vehicle'), p => { p.source_units.push('ra3.soviet.hammer-tank') })
   }],
 
+  // The transform trait says the unit records its second form in modes.
+  ['unit: the transform trait with no modes', 'mobility trait transform with no modes: a unit that transforms records its second form in modes', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { assert.ok(!(u.modes || []).length); u.mobility.traits = [...(u.mobility.traits || []), 'transform'] })
+  }],
+
   // An ability with no pattern stays, and a fit_note at its patterns says which mechanic is wanted.
   ['unit: an ability with no pattern and no fit_note', 'an ability with no pattern needs a fit_note naming the mechanic wanted', 'error', dir => {
     editUnit(dir, 'hammer-tank', u => { u.abilities[0].patterns = [] })
