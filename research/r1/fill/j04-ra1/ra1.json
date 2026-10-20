@@ -1,0 +1,571 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra1",
+  "units": [
+    {
+      "id": "ra1.soviet.yak",
+      "game": "ra1",
+      "faction": "soviet",
+      "name": "Yak",
+      "flavour_affinity": ["soviet", "allied"],
+      "class": "aircraft",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["raider"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Radar Dome",
+        "basis": "Built only at the Airfield, and the Airfield itself needs a Radar Dome (Airfield infobox); the Yak's infobox gives tier 2. As the registry notes ask for planes, the gate recorded is the Radar Dome, the tech step behind the Airfield. Its Allied version is campaign-only."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 800,
+        "basis": "The list price sits exactly on the medium threshold, which takes the higher band: the same price as the Allied Medium Tank and a little under the main-battle-tank anchor."
+      },
+      "mobility": {
+        "base": "jet",
+        "handling": "forward-only",
+        "traits": [],
+        "speed": "very-fast",
+        "speed_raw": 4,
+        "notes": "Its air speed is four times the Rifle Infantry's land speed. Among the game's aircraft it matches the Longbow, is a third quicker than the Hind and reaches four fifths of the MiG's speed; the manual still calls it not that fast. A fixed-wing plane that cannot hover or set down on open ground, only on its Airfield, and that must swing round to face its target before it fires, so it attacks in passes; its handling is the jet default."
+      },
+      "body": {
+        "plan": "fixed-wing",
+        "size": "large",
+        "notes": "A single attack plane; its sprite and cameo follow the Second World War Yak-3 or Yak-9 fighter. Planes are large by the size examples (jets)."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the infobox armour type Light maps to light. Its health is a little above the MiG's and about a quarter of the Hind's or the Longbow's. Like every aircraft it takes half damage while it is in the air (game-wide). Side-wide powers stay off: the Iron Curtain can make it immune for a while."
+      },
+      "sensors": {
+        "sight": "short",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox gives it no sight range at all, as for every RA1 aircraft: in flight it clears no shroud and works from what its team already sees, and once landed it reveals only its own cell (game-wide). Planes in flight never show on the enemy's radar map (the Airfield's production list); that is game-wide and not the stealth trait."
+      },
+      "armament": [
+        {
+          "name": "Twin machine guns",
+          "slot": "primary",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "body-aim",
+          "delivery": "hitscan",
+          "range": "off-screen",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "summary": "Two guns fire together in strafing passes. It fires only when its nose points almost straight at the target, and each burst is aimed at a point straight ahead along its heading, well inside its full reach, so the fire follows the plane's line of flight. The manual says one pass can wipe out a group of soldiers on the march. Small-arms warhead; ground and sea targets only, and the wiki has Yaks raiding outlying buildings too. Force-firing a patch of ground sets off the mines there. It carries 15 bursts, then flies home to reload. Reach is a bit over one and a half times the rifle's; it bands off-screen only because aircraft have no sight range of their own."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One pilot flies and fires. The source has no seats and names no crew."
+      },
+      "abilities": [],
+      "resources": ["limited-ammo"],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No page read shows a survivor, so the 3C default applies. The game code drops a rifleman by parachute from a crewed aircraft nine times in ten when it goes down over ground a soldier can stand on, if the rules mark it as crewed, which no page read shows for the Yak. If its Airfield is destroyed while it is airborne, the plane crashes (manual)."
+      },
+      "strengths": [
+        {
+          "ref": "weapon:machine-gun",
+          "why": "The manual nicknames it the infantry eraser: a single strafing pass can kill a whole group of marching soldiers."
+        },
+        {
+          "ref": "target:high-air",
+          "why": "It flies high, so only anti-air weapons such as Rocket Soldiers, AA guns and SAM sites can shoot at it."
+        },
+        {
+          "ref": "mobility:jet",
+          "why": "Flying above minefields, it can force-fire on mined ground and clear the mines from the air, which the wiki rates it very good at."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "resource:limited-ammo",
+          "why": "After 15 bursts it must fly back to its Airfield, and a plane with that many rounds reloads far more slowly than the MiG or the Longbow."
+        },
+        {
+          "ref": "mobility:jet",
+          "why": "It can land only on its own Airfield, one plane per Airfield, and it crashes if that Airfield is destroyed while it is in the air (manual)."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Light armour and little health: the wiki warns it will not last long against an AA gun that is still firing."
+        },
+        {
+          "ref": "speed:very-fast",
+          "why": "Quick next to ground units but slower than the MiG; the manual says that makes it easy prey for Rocket Soldiers who live through its first pass."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-air",
+          "why": "The wiki says to knock out SAM sites, AA guns and Rocket Soldiers before Yaks go in; the manual says AA guns badly damage any plane that flies over them."
+        },
+        {
+          "ref": "unit:ra1.shared.rocket-soldier",
+          "why": "The manual names Rocket Soldiers who survive the first strafing run as the Yak's natural killers."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Its strafing passes cut down whole groups of soldiers (manual); StrategyWiki also rates it strong against infantry."
+        },
+        {
+          "ref": "pattern:lay-mines",
+          "why": "Minefields do not stop it: a force-fire order on the mined ground destroys the mines from the air (wiki)."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "armour-class:heavy",
+          "why": "The wiki suggests heavy tanks as a distraction: they keep the defenders busy while Yaks hit the outlying buildings, once the AA guns are gone."
+        },
+        {
+          "ref": "unit:ra1.soviet.heavy-tank",
+          "why": "The Heavy Tank is the decoy the wiki names for Yak raids on a base."
+        }
+      ],
+      "memorable": "The manual's infantry eraser: a Soviet attack plane that mows down marching soldiers in strafing passes, then must fly home to reload its many bursts.",
+      "as_player": "A plane that never stops: you fly wide loops and line up passes, aiming the twin guns by pointing the nose down a line of soldiers. After 15 bursts you head back to your airfield pad for a slow reload. Only anti-air can touch you, so find the rocket troops and AA guns first, and force-fire into a minefield to open it for your tanks.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/7b/Red_Alert_1_Manual.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert Field Manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "1996 manual",
+          "note": "Westwood's printed manual, read in the PDF behind the wiki's File:Red_Alert_1_Manual.pdf page. Yak entry on PDF page 70, Airfield on page 60, AA Gun on page 42, the Guard and Force Fire orders on page 25.",
+          "supports": [
+            "roles/primary",
+            "tier",
+            "armament/0",
+            "mobility/notes",
+            "availability",
+            "on_death",
+            "strengths/0",
+            "weaknesses/1",
+            "weaknesses/3",
+            "countered_by/0",
+            "countered_by/1",
+            "counters/0",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Yak",
+          "title": "Yak, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "Infobox for faction, tier, price, health, armour type, air speed, sight, reach, warhead and ammunition; its quote box copies the manual paragraph. The prose covers clearing minefields by force-fire, rearming at the Airfield, the anti-air threats and the heavy-tank decoy.",
+          "supports": [
+            "faction",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "resources",
+            "strengths/2",
+            "weaknesses/2",
+            "countered_by/0",
+            "counters/1",
+            "combos/0",
+            "combos/1"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Airfield_(Red_Alert_1)",
+          "title": "Airfield (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "Infobox: needs a Radar Dome, tier 2. The text says rearming takes longer the more rounds a plane carries and names the Yak's 15 bursts; the production list says its planes stay off radar unless grounded. Its quote box copies the manual's Airfield entry.",
+          "supports": ["tier", "resources", "weaknesses/0", "weaknesses/1", "sensors/notes", "on_death"]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Soviet_units",
+          "title": "Command & Conquer: Red Alert/Soviet units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "version": "Build times from the Remastered Collection; other figures match the original",
+          "note": "Yak entry: price, health, sight and speed, and a weapon table giving ground targets only, two shots per attack and the small-arms type; its Strong vs. line names infantry and it notes reloading at the Airfield. A guide's words, not official text.",
+          "supports": ["armament/0", "counters/0", "mobility/speed", "sensors/sight"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/AIRCRAFT.CPP",
+          "title": "REDALERT/AIRCRAFT.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The fixed-wing attack routine: a plane fires only when nearly facing its target, aims each burst at a point ahead along its heading and fires twice when it has two guns; an idle plane heads back to its landing building; airborne aircraft take half damage.",
+          "supports": ["armament/0", "armament/0/mount", "mobility/handling", "armour/notes", "on_death"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "mobility/notes",
+          "note": "The comparisons with other aircraft (speed here, health in armour.notes) come from the infoboxes of MiG (Red Alert 1), Hind and Longbow (Red Alert 1) on the Command & Conquer Wiki, read but not cited. REDALERT/AADATA.CPP of the same source release (read, not cited) marks the Yak as fixed-wing, unable to land on clear ground and hidden on radar."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Structures rest on the Yak page's tip that Yaks can hit a base's outlying buildings, read with StrategyWiki's target line Ground; no page says how much its small-arms warhead does to buildings. Air is left out: the infobox's air attack line is empty, StrategyWiki says ground, and no page says it attacks aircraft."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "Off-screen follows from aircraft having no sight range at all, as the registry notes expect; by reach alone the gun is long, and the manual grades its Range as Short, a grade the bands do not read."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Raider rests on the very fast band (four times the rifleman's speed) with light armour. The manual calls the Yak not that fast, which is about it among aircraft; speed names no target, so the drop rule does not remove raider."
+        },
+        {
+          "path": "armour/notes",
+          "note": "The Yak page's prose calls it less armoured than the MiG, but both infoboxes give armour type Light and the Yak slightly more health. The class is light either way; the infobox is followed.",
+          "sources_disagree": true
+        },
+        {
+          "path": "availability",
+          "note": "Each Airfield holds one plane (manual), so the number of Yaks and MiGs together is tied to the number of Airfields built. That is a slot rule shared by both plane types and lifted by building more Airfields, not a fixed cap on the Yak, so it is coded open."
+        },
+        {
+          "path": "on_death",
+          "note": "Whether the rules file marks the Yak as crewed, which decides the chance of a parachuting survivor, could not be read; the registry notes say the rules.ini downloads would not load."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armament/0/range",
+          "used": "off-screen",
+          "wanted": "long (the band its reach alone gives)",
+          "note": "Every RA1 aircraft has a nil sight range in the game data, so any gun an aircraft carries reaches past its sight and bands off-screen. In play this is a short strafing gun, not a weapon that fires beyond its view; a rule for units whose sight is nil would help."
+        }
+      ],
+      "researched_by": "batch r1, agent J04-RA1",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra1.soviet.submarine",
+      "game": "ra1",
+      "faction": "soviet",
+      "name": "Submarine",
+      "flavour_affinity": ["soviet"],
+      "class": "naval",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["scout"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Submarine Pen",
+        "basis": "Built at the Soviet Submarine Pen with no other tech building (infobox; StrategyWiki); the infobox gives tier 1, and the manual's Sub Pen entry names it among what the Pen builds."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 950,
+        "basis": "The list price equals the Soviet Heavy Tank's, a little above the main-battle-tank anchor, so medium."
+      },
+      "mobility": {
+        "base": "naval-submerged",
+        "handling": "steer",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1.5,
+        "notes": "Its water speed is one and a half times the Rifle Infantry's land speed, exactly on the edge, which goes to medium. Among ships it keeps pace with the Destroyer, is slower than the Gunboat, and it is faster than the Missile Submarine and the Cruiser. It travels under water and comes up only to fire. The word list gives the naval mobility types no default handling, so steer is proposed: a submarine turns in arcs while under way. The sprite turning on the spot, as RTS models do, does not decide it."
+      },
+      "body": {
+        "plan": "ship",
+        "size": "large",
+        "notes": "A teardrop-hulled attack submarine. No page gives its footprint; it is coded large, about one tank in size, by the size rule's comparison with the main battle tank."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the infobox armour type Light maps to light; the manual's Armor word Medium is a grade, not the game's type. Its health is under a third of the Destroyer's. Like every ship it slows down at half health or less and is repaired by docking at a Sub Pen (game-wide)."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": ["detector"],
+        "basis": "in-game",
+        "notes": "The infobox sight is one and a half times the Rifle Infantry's, on the edge, so medium. It finds other submerged submarines (Stealth page; the Submarine Pen's production list says so too). Like every ship it also makes a cloaked enemy right beside it shimmer into view, which is game-wide and gives no trait."
+      },
+      "armament": [
+        {
+          "name": "Torpedoes",
+          "slot": "primary",
+          "family": "torpedoes",
+          "damage": "armour-piercing",
+          "mount": "body-aim",
+          "delivery": "projectile",
+          "range": "off-screen",
+          "can_target": ["naval", "structure"],
+          "traits": [],
+          "summary": "Torpedoes with an armour-piercing warhead, fired only after the sub surfaces and only while it is stopped. They run through water alone: the code allows them against ships, buildings that sit in the water (the Naval Yard and the Sub Pen) and bridges, and only when open water lies all the way to the target with no friendly boat in between. Land targets and aircraft are out of reach. A long pause separates shots. Reach is three times the rifle's, past its own sight."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player steers and fires. The source has no seats and names no crew."
+      },
+      "abilities": [
+        {
+          "name": "Cloaked when not attacking (submerged)",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "It stays under water, unseen by the enemy, whenever it is not attacking, and moves freely while under. It comes up to fire and is then open to anything nearby that can hit it; it dives again only once its torpedoes have reloaded and no target is in reach. Taking damage also brings it up, and at low health it often fails to dive. While it is under, no enemy can target it, but detectors (the Destroyer, the Gunboat and other subs) and the Allied Sonar Pulse bring it into view.",
+          "patterns": ["burrow"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No page read shows survivors, and the game code gives ships no survivor logic, so the 3C default for a crewed machine applies."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:burrow",
+          "why": "Silent and unseen while under water, and no enemy can fire on it there, so it chooses when to surface and strike."
+        },
+        {
+          "ref": "range:off-screen",
+          "why": "Its torpedoes reach three times the rifle's range, past its own sight, so it attacks ships from afar (manual)."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Its armour-piercing torpedoes hit ships hard: StrategyWiki rates it strong against ships, and the wiki calls them deadly to most vessels."
+        },
+        {
+          "ref": "sensor:detector",
+          "why": "It spots other hidden submarines near it (Stealth page)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:torpedoes",
+          "why": "Torpedoes run only through water: it cannot attack anything on land or in the air, so it needs other units to defend it from those."
+        },
+        {
+          "ref": "pattern:burrow",
+          "why": "It must surface to fire, which gives away where it is (manual), and it stays up until its tubes reload."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Light armour and modest health: once depth charges find it, it is out of the fight quickly (manual)."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "sensor:detector",
+          "why": "Destroyers and Gunboats find submerged subs, and their depth charges fire at any sub they detect (manual)."
+        },
+        {
+          "ref": "unit:ra1.allied.destroyer",
+          "why": "The manual says a Destroyer that detects a sub takes it out of the fight rapidly with its twin depth-charge launchers."
+        },
+        {
+          "ref": "role:infiltrator",
+          "why": "A Spy that gets into a Sub Pen earns the one-shot Sonar Pulse, which shows every enemy sub on the map for a short while (manual)."
+        },
+        {
+          "ref": "unit:ra1.allied.spy",
+          "why": "The Allied Spy is the unit that wins the Sonar Pulse by entering a Soviet Sub Pen."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:naval",
+          "why": "It strikes ships from hiding and from afar; ships without depth charges have no way to answer it (manual, StrategyWiki)."
+        },
+        {
+          "ref": "unit:ra1.allied.cruiser",
+          "why": "The manual calls the Cruiser a favourite target of submarines: it has no sea-based defence and relies on Destroyers and Gunboats."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:aircraft",
+          "why": "With nothing that reaches land, subs need aircraft to support them, the wiki says."
+        }
+      ],
+      "memorable": "Red Alert's Soviet attack sub: invisible under the waves until it surfaces to torpedo a ship, then exposed until it can dive again.",
+      "as_player": "Research only (naval). As a player unit you would cruise unseen and pick your moment: every shot brings you up, and you stay visible until the tubes reload, so each attack is a commitment. You can hit only ships and targets on the water, and detector ships with depth charges are your hard counter.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/7b/Red_Alert_1_Manual.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert Field Manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "1996 manual",
+          "note": "Westwood's printed manual, read in the PDF behind the wiki's File:Red_Alert_1_Manual.pdf page. Submarine entry on PDF page 70, Sub Pen on page 59, Sonar Pulse on page 54, Gunboat on page 52, Destroyer and Cruiser on page 53.",
+          "supports": [
+            "roles/primary",
+            "tier",
+            "armament/0",
+            "abilities/0",
+            "strengths/1",
+            "weaknesses/1",
+            "weaknesses/2",
+            "countered_by/0",
+            "countered_by/1",
+            "countered_by/2",
+            "countered_by/3",
+            "counters/0",
+            "counters/1"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Submarine_(Red_Alert_1)",
+          "title": "Submarine (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "Infobox for faction, tier, price, health, armour type, sea speed, sight, reach, warhead and its cloak when not attacking; its quote box copies the manual paragraph. The prose says it stays submerged except to fire, cannot hit air or land targets, is deadly to ships and naval yards and needs air support.",
+          "supports": [
+            "faction",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors/sight",
+            "armament/0",
+            "abilities/0",
+            "strengths/2",
+            "weaknesses/0",
+            "combos/0"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Stealth",
+          "title": "Stealth, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Red Alert tab: the Submarine hides by submerging and also detects other submarines; the Destroyer and the Sonar Pulse detect submarines.",
+          "supports": ["sensors/traits", "abilities/0", "strengths/3", "countered_by/0", "countered_by/2"]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Soviet_units",
+          "title": "Command & Conquer: Red Alert/Soviet units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "version": "Build times from the Remastered Collection; other figures match the original",
+          "note": "Submarine entry: price, armour, health, sight and speed, and a torpedo table giving naval targets only and the armour-piercing type; its lines say strong against ships and invisible when not firing. A guide's words, not official text.",
+          "supports": ["armament/0", "abilities/0", "strengths/2", "counters/0", "mobility/speed", "sensors/sight"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/VESSEL.CPP",
+          "title": "REDALERT/VESSEL.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The ship firing checks: torpedoes only at ships, floating buildings and bridges, with open water to the target and no friendly boat in the way; a ship without a turret cannot fire while moving; depth charges serve only against submarines, and other ship weapons cannot target them; a sub surfaces before it fires and cannot dive again while a sonar pulse holds it.",
+          "supports": [
+            "armament/0",
+            "armament/0/can_target",
+            "armament/0/mount",
+            "abilities/0",
+            "countered_by/0",
+            "countered_by/1",
+            "weaknesses/0"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "abilities/0",
+          "note": "Several details come from REDALERT/TECHNO.CPP of the same source release (read, not cited): an enemy that is fully hidden cannot be fired on; any damage brings a hidden unit up; at low health it starts and finishes diving only by chance; it will not dive while reloading or while a target is in reach. The Missile submarine page (Command & Conquer Wiki, read, not cited) agrees that subs come up when attacked."
+        },
+        {
+          "path": "strengths/0",
+          "note": "That no enemy can fire on it while it is under rests on REDALERT/TECHNO.CPP (read, not cited); the cited pages say only that it is hidden and silent until it surfaces."
+        },
+        {
+          "path": "weaknesses/1",
+          "note": "That it stays up until its tubes reload rests on REDALERT/TECHNO.CPP (read, not cited), which holds back the dive while the weapon reloads or a target is in reach."
+        },
+        {
+          "path": "countered_by/2",
+          "note": "REDALERT/HOUSE.CPP (read, not cited) shows the Sonar Pulse bringing up every Submarine and Missile Submarine at once and keeping them from diving for a fixed time; the manual says it lasts a few seconds. The Sonar pulse page of the Command & Conquer Wiki (read, not cited) repeats the manual."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Structures rest on VESSEL.CPP letting torpedoes be fired at buildings that float (the Naval Yard and Sub Pen) and at bridges, and on the Submarine page's line that the torpedoes are very effective against naval yards; no page gives the damage. Whether the torpedoes may target another submarine depends on a projectile flag in the rules file, which could not be read."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "REDALERT/BULLET.CPP (read, not cited) moves a torpedo cell by cell through water and sets it off on the first unit in its path or where the water ends; projectile is also the family default."
+        },
+        {
+          "path": "sensors/traits",
+          "note": "The Submarine Pen (Red Alert 1) page (Command & Conquer Wiki, read, not cited) also lists the Submarine as detecting submerged units; the cited Stealth page says the same."
+        },
+        {
+          "path": "body/size",
+          "note": "No page gives the hull's footprint. Large is a judgement against the main battle tank; medium would hold if the hull is clearly smaller than a tank."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparisons with other ships (speed here, health in armour.notes) come from the infoboxes of the Destroyer (Red Alert 1), Gunboat (Red Alert 1), Cruiser and Missile submarine pages on the Command & Conquer Wiki, read but not cited."
+        },
+        {
+          "path": "roles/primary",
+          "note": "The manual's paragraph names ships, which match none of the three anti roles (registry notes), and the torpedoes hit nothing an anti role covers, so step 4 gives nothing and step 5 gives assault: medium speed, not fast."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "assault",
+          "wanted": "an anti-ship role",
+          "note": "A hidden torpedo boat that hunts ships comes out as frontline assault by step 5, because ships are no anti role's target. The role does not describe it."
+        },
+        {
+          "path": "mobility/handling",
+          "used": "steer",
+          "wanted": "a default handling for naval-submerged",
+          "note": "The naval mobility types have no default handling, and the Handling tie-break starts from the default, so the proposal has no rule to follow."
+        },
+        {
+          "path": "mobility/traits",
+          "used": "none",
+          "wanted": "burrow, as an automatic dive",
+          "note": "The sub dives and surfaces by itself, with no key, and naval-submerged already says it moves under water and surfaces to act. The burrow trait is a key, and its class list leaves out naval, so it is not coded; the passive ability carries the burrow pattern."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "sensors/traits",
+          "rule": "sensor-traits:detector classes naval",
+          "note": "The detector trait's classes are the generator's six, which leave out the research-only naval class, but the sources say this sub finds other submerged submarines."
+        }
+      ],
+      "researched_by": "batch r1, agent J04-RA1",
+      "review": {
+        "status": "unchecked"
+      }
+    }
+  ]
+}

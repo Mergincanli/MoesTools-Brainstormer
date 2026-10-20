@@ -1,0 +1,503 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra1",
+  "units": [
+    {
+      "id": "ra1.allied.spy",
+      "game": "ra1",
+      "faction": "allied",
+      "name": "Spy",
+      "lineage": "spy",
+      "flavour_affinity": ["allied"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "infiltrator",
+        "secondary": ["scout"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Radar Dome",
+        "basis": "Trained at the Allied barracks only once the side has a Radar Dome; the wiki infobox gives tier 2 and StrategyWiki the same two buildings. A Soviet side can train it in skirmish only from a captured Allied barracks, and the Soviet-owned Spy of the campaign is campaign-only, so the entry is recorded under the Allies."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 500,
+        "basis": "Five times a Rifle Infantry's price and a little over half the main-battle-tank anchor, so low."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "Both wikis give it the same land speed as the Rifle Infantry, the speed reference."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "notes": "One soldier. Every player but its owner sees it drawn as a Rifle Infantry in that player's own colours (see abilities/0)."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Half the Rifle Infantry's health. Step 1 of the armour-class order decided: the wiki infobox leaves the armour type as N/A and StrategyWiki gives none, which the armour map makes unarmoured; the manual's own Armor grade is None as well."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Sees a quarter further than the Rifle Infantry, so medium. The disguise is a pattern, not the stealth trait: the spy is in plain view, only mistaken for a friendly rifleman. Inside an enemy Radar Dome it shares that enemy's view with its own side (abilities/1)."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One soldier, one player."
+      },
+      "abilities": [
+        {
+          "name": "Disguise",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Always on. To every player but its owner the spy looks like one of that viewer's own Rifle Infantry, in the viewer's colours and under the rifleman's name, and this fools players allied with its owner too. Enemy units and base defences never pick it as a target by themselves, so it can stroll through a base unless a watchful human notices the stray rifleman and orders an attack, or an attack dog sees through it. Vehicles can still run it over.",
+          "patterns": ["disguise"]
+        },
+        {
+          "name": "Infiltrate",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "per-life",
+          "summary": "Sent into an enemy building, the spy slips inside and is used up; the building keeps working. What its side learns depends on the building. Construction Yard, barracks, War Factory or Naval Yard: selecting it shows what it is building. Helipad and Airfield: that, plus the ammunition left in aircraft parked there. Power plants: a gauge of the enemy's power. Ore Refinery or Silo: how full it is (exact figures in the Remastered Collection). Radar Dome: the spy's side sees whatever that enemy sees. A fake building is shown up as a fake. A Sub Pen also earns a Sonar Pulse and an Airfield a parabomb strike (abilities/2 and abilities/3). Spies trained by a Soviet player show exact power and ore figures.",
+          "patterns": ["capture-structure"]
+        },
+        {
+          "name": "Sonar Pulse (earned in a Sub Pen)",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "per-life",
+          "summary": "A spy that gets into an enemy Sub Pen puts a Sonar Pulse button on its side's sidebar. Used once, it briefly exposes every enemy submarine anywhere on the battlefield, so ships can find and hit them; then it is gone. In multiplayer the code grants it only when superweapons are switched on. In the Remastered Collection it keeps recharging while the infiltrated Sub Pen stands (patch 740600).",
+          "patterns": ["reveal-area"]
+        },
+        {
+          "name": "Parabombs (earned in an Airfield)",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "per-life",
+          "summary": "A spy that gets into an enemy Airfield gives its side one parabomb strike. The player picks a spot; a Badger bomber flies over and lets a row of bombs on parachutes drift down, wrecking the target and what stands near it, while soldiers who see them falling try to run clear. It works once. In multiplayer the code grants it only when superweapons are switched on; otherwise parabombs are a Soviet power of the campaign only.",
+          "patterns": ["bombard-area"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal"
+      },
+      "strengths": [
+        {
+          "ref": "pattern:disguise",
+          "why": "Enemy units and base defences never choose it as a target on their own, so it can walk through a base that keeps no dogs."
+        },
+        {
+          "ref": "pattern:capture-structure",
+          "why": "One spy in an enemy Radar Dome gives its side the enemy's view; others expose production, power, stored ore or fake buildings."
+        },
+        {
+          "ref": "pattern:bombard-area",
+          "why": "Inside an enemy Airfield it earns a free parabomb strike that wrecks a target and its surroundings."
+        },
+        {
+          "ref": "pattern:reveal-area",
+          "why": "Inside an enemy Sub Pen it earns a pulse that shows every enemy submarine for a few seconds."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "Half a rifleman's health and no weapon of any kind, so it dies at once to whoever does decide to shoot it."
+        },
+        {
+          "ref": "pattern:disguise",
+          "why": "It fools the game's targeting, not people: a careful human player spots a rifleman where none should be and has it shot."
+        },
+        {
+          "ref": "pattern:capture-structure",
+          "why": "Each spy is spent on a single building, and most buildings give only information."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "sensor:detector",
+          "why": "Attack dogs see through the disguise and hunt spies down by themselves; computer opponents rely on them to stop spies."
+        },
+        {
+          "ref": "unit:ra1.soviet.attack-dog",
+          "why": "Attack dogs see through the disguise and hunt spies down by themselves; computer opponents rely on them to stop spies."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "Like any soldier it can be run over, and computer-driven vehicles sometimes flatten an enemy spy without meaning to."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "mobility:naval-submerged",
+          "why": "The Sonar Pulse it earns briefly exposes every enemy submarine, wherever it lurks, so ships can hunt them."
+        },
+        {
+          "ref": "unit:ra1.soviet.submarine",
+          "why": "The Sonar Pulse it earns briefly exposes every enemy submarine, wherever it lurks, so ships can hunt them."
+        }
+      ],
+      "combos": [],
+      "memorable": "Everyone who looks at it sees one of their own riflemen; only a dog can tell, and one spy in the right building hands over the enemy's view, sonar or a bomber strike.",
+      "as_player": "You look like a rifleman of whoever is watching, so bots and turrets ignore you, but sharp players notice a soldier in the wrong place. Walk into an enemy building to spend your life on its secret: share their view, learn what they build, or earn a one-time sonar ping or bomber strike for your team. Unarmed and fragile: one dog, or one player who calls you out, ends the run.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Spy_(Red_Alert_1)",
+          "title": "Spy (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert with Counterstrike and The Aftermath; notes the Remastered Collection",
+          "note": "Its quote box copies the Spy paragraph of the Red Alert manual (Westwood, 1996). Infobox: Allied barracks plus Radar Dome, tier 2, armour type N/A; the Soviet version is marked campaign only.",
+          "supports": [
+            "faction",
+            "lineage",
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament",
+            "abilities/0",
+            "abilities/1",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Allied_units",
+          "title": "Command & Conquer: Red Alert/Allied units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "note": "Stat table: barracks plus Radar Dome, price, armour none, health, sight and speed; short lines on infiltration, sabotage and disguise.",
+          "supports": ["tier", "cost_band", "mobility", "armour", "sensors", "abilities/0", "abilities/1"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Sonar_pulse",
+          "title": "Sonar pulse, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Its quote box copies the Sonar Pulse paragraph of the Red Alert manual, which says a Spy in an enemy Sub Pen earns it.",
+          "supports": ["abilities/2", "strengths/3", "counters", "roles/secondary"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Parabombs",
+          "title": "Parabombs, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Its quote box copies the Parachute Bombs paragraph of the Red Alert manual; the page says a spy in an Airfield earns them once.",
+          "supports": ["abilities/3", "strengths/2"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/INFANTRY.CPP",
+          "title": "REDALERT/INFANTRY.CPP, EA's Command & Conquer Remastered Collection source release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release, master branch",
+          "note": "EA's released game code: a spy that enters a building is removed; entering a Radar Dome shares the radar view; a Sub Pen enables the Sonar Pulse and an Airfield a one-time parabomb strike, in multiplayer only with superweapons on; spies are drawn with the Rifle Infantry's images to non-owners.",
+          "supports": ["abilities/0", "abilities/1", "abilities/2", "abilities/3", "body"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "abilities/2/cooldown",
+          "note": "The Sonar pulse page calls it single-use, but EA's code enables the spy's pulse as a recharging power (INFANTRY.CPP), removed only when no infiltrated Sub Pen remains (HOUSE.CPP, https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/HOUSE.CPP), and the Command & Conquer Wiki page Remastered Collection patch 740600 (https://cnc.fandom.com/wiki/Remastered_Collection_patch_740600) fixed the pulse being usable only once. The code is the Remastered release, so it may not show 3.03; the band follows the wiki page. If the pulse recharges in 3.03 too, the band would be long.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0",
+          "note": "That enemy units and defences never choose a spy as a target unless they are dogs, and that a spy is recoloured in the viewer's colours, rests on EA's code, TECHNO.CPP (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP). The Spy page confirms the look and that a careful human can still spot it."
+        },
+        {
+          "path": "strengths/0",
+          "note": "Rests on TECHNO.CPP (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP), which skips spies when any non-dog unit picks a target."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Scout rests on the infiltrate button (the Radar Dome's shared view) and on the earned Sonar Pulse. The wiki's own prose calls spies great scouts, but no official text uses the scout label or an alias, so it ranks at step 2."
+        },
+        {
+          "path": "abilities/1",
+          "note": "The building-by-building effects come from the Spy page's table. The manual also says a spy can show how many units the enemy has, which the table does not list, and a Supply depot is listed with no effect. The code (INFANTRY.CPP) does not say how long the shared Radar Dome view lasts."
+        },
+        {
+          "path": "abilities/3",
+          "note": "The Parabombs page's infobox describes the campaign power (Soviet, with a long recharge); the one-time strike a spy earns comes from that page's prose and from INFANTRY.CPP, which enables it as a one-time power."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J01-RA1"
+    },
+    {
+      "id": "ra1.soviet.attack-dog",
+      "game": "ra1",
+      "faction": "soviet",
+      "name": "Attack Dog",
+      "lineage": "attack-dog",
+      "flavour_affinity": ["soviet"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["scout"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Kennel",
+        "basis": "Trained only at the Kennel, a Soviet building that needs nothing but the barracks; the wiki lists both the dog and the Kennel at tier 1."
+      },
+      "cost_band": {
+        "band": "very-low",
+        "raw": 200,
+        "basis": "Twice a Rifle Infantry's price and under a quarter of the main-battle-tank anchor: among the cheapest units."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "Both wikis give it the Rifle Infantry's land speed. EA's code doubles its pace whenever it has a target, so it closes on a victim at twice its walking speed; the band uses the plain figure."
+      },
+      "body": {
+        "plan": "beast",
+        "size": "small",
+        "notes": "A German shepherd; the size list names war dogs as small."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "About a quarter of the Rifle Infantry's health. Step 1 of the armour-class order decided: the wiki infobox gives N/A and StrategyWiki none, which the armour map makes unarmoured; the manual also calls dogs unarmoured. Unlike other soldiers, dogs never drop prone, so they never get the prone soldier's halved damage."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": ["detector"],
+        "basis": "in-game",
+        "notes": "Sees a quarter further than the Rifle Infantry. Detector: the manual makes it the only unit that can see through the Spy's disguise, and it attacks spies in reach on its own. No source says it unmasks a spy for teammates."
+      },
+      "armament": [
+        {
+          "name": "Dog bite (the manual's Sharp teeth)",
+          "slot": "primary",
+          "family": "blades",
+          "damage": "melee",
+          "mount": "free-aim",
+          "delivery": "melee",
+          "range": "melee",
+          "can_target": ["infantry"],
+          "traits": [],
+          "summary": "Runs at a soldier, springs at him from about three quarters of a rifle's reach and mauls him. The bite kills any soldier outright, whatever his health, and hurts nobody else nearby. It can be aimed only at infantry: never at a vehicle, building, aircraft, ship or patch of ground. Only one dog may go for a given soldier at a time, so any other dog must pick another victim. Victims never shoot back at a dog by reflex; it must be picked as an ordinary target.",
+          "patterns": []
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One dog, one player."
+      },
+      "abilities": [],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal"
+      },
+      "strengths": [
+        {
+          "ref": "hits:infantry",
+          "why": "One bite kills any soldier outright, whatever his health, so even the toughest infantry fall to it."
+        },
+        {
+          "ref": "sensor:detector",
+          "why": "The only unit that sees through spies, and it goes after them on its own."
+        },
+        {
+          "ref": "tier:t1",
+          "why": "Cheap and early: twice a rifleman's price, from a Kennel that needs only the barracks."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "About a quarter of a rifleman's health, so a single rifle burst kills it."
+        },
+        {
+          "ref": "weapon:blades",
+          "why": "The bite works only on soldiers: no vehicle, building, aircraft, ship or patch of ground, and only one dog may take a given soldier at a time."
+        },
+        {
+          "ref": "range:melee",
+          "why": "It must run up and spring, so it is under fire all the way in."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "weapon:small-arms",
+          "why": "Rifle infantry kill a dog with one burst, and a group of them standing still is the worst thing to send dogs at."
+        },
+        {
+          "ref": "unit:ra1.shared.rifle-infantry",
+          "why": "Rifle infantry kill a dog with one burst, and a group of them standing still is the worst thing to send dogs at."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Nothing it does can harm a vehicle, so armour ignores it."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "role:infiltrator",
+          "why": "A base guard that sees through spies and catches thieves, killing either with one bite."
+        },
+        {
+          "ref": "unit:ra1.allied.spy",
+          "why": "The only unit that can find a spy, and it kills one with one bite."
+        },
+        {
+          "ref": "role:engineer",
+          "why": "A cheap base guard against engineers slipping in to take buildings."
+        },
+        {
+          "ref": "weapon:flamethrower",
+          "why": "Flamethrower troops struggle to hit a charging dog with their slow shots."
+        },
+        {
+          "ref": "weapon:explosives",
+          "why": "Grenadiers' slow grenades struggle to catch a charging dog."
+        }
+      ],
+      "combos": [],
+      "memorable": "A cheap, frail dog that kills any soldier in one leap, can't touch a tank, and no other unit in the game can sniff out a spy.",
+      "as_player": "Cheap and quick to buy: sprint at a soldier and spring on him to kill him outright, however tough he is, but you can't bite vehicles or buildings, and only one dog may maul a target at a time. You sniff out disguised spies for your side. A single rifle burst ends you, so strike the isolated and the slow.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Attack_dog_(Red_Alert_1)",
+          "title": "Attack dog (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert with Counterstrike and The Aftermath",
+          "note": "Its quote box copies the Attack Dog paragraph of the Red Alert manual (Westwood, 1996). Infobox: Kennel, tier 1, armour type N/A, Organic bite, spy detection.",
+          "supports": [
+            "faction",
+            "lineage",
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Soviet_units",
+          "title": "Command & Conquer: Red Alert/Soviet units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "note": "Stat table: Kennel, price, armour none, health, sight, speed, and the bite's target (infantry only), reach and Organic type.",
+          "supports": ["tier", "cost_band", "mobility", "armour", "sensors", "armament/0", "roles/primary"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/INFANTRY.CPP",
+          "title": "REDALERT/INFANTRY.CPP, EA's Command & Conquer Remastered Collection source release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release, master branch",
+          "note": "EA's released game code: a dog may target only infantry and never a cell; its bite deals the target's full health to the target alone; only one dog may attack a given soldier; the dog leaves the map while it leaps and reappears on the hit; it runs at double pace while it has a target and never goes prone.",
+          "supports": ["armament/0", "mobility", "armour", "weaknesses/1", "roles/primary"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP",
+          "title": "REDALERT/TECHNO.CPP, EA's Command & Conquer Remastered Collection source release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release, master branch",
+          "note": "EA's released game code: only dogs treat a spy as a valid target, and units never retaliate against a dog by reflex.",
+          "supports": ["sensors", "armament/0", "strengths/1", "counters/1"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Kennel",
+          "title": "Kennel, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Infobox: tier 1, needs the Soviet barracks; trains only attack dogs, and more Kennels train them faster.",
+          "supports": ["tier"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "armament/0/range",
+          "note": "The infobox reach is about three quarters of the Rifle Infantry's rifle, which would be medium by the figure. The band is melee because the dog covers that gap by its own leap and bites on contact (INFANTRY.CPP takes it off the map during the leap and puts it back on the hit), and the melee band counts a unit's own leap."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Melee, as a lunge that lands at touching distance. Ram was the other reading, since the dog itself flies at the target, but it survives the hit and mauls rather than collides."
+        },
+        {
+          "path": "sensors/traits",
+          "note": "The detector term reveals disguised enemies for the whole team; the sources only say the dog itself sees through spies and attacks them, and the code still draws a spy as a friendly rifleman to everyone else. The Kennel page's production list also says dogs detect Thieves; no other page read says so."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The code doubles the dog's pace while it has a target, which would make it fast while chasing; the band uses the plain land speed."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Scout rests only on the detector trait (step 4). The Kennel page's production list calls the dog scout infantry, but that line is the wiki's own words, not official text."
+        },
+        {
+          "path": "counters/3",
+          "note": "Rests on the dog page's own prose, which says grenadiers and flamethrowers defend poorly against dogs because their shots travel slowly."
+        },
+        {
+          "path": "counters/4",
+          "note": "Rests on the same prose as counters/3."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armament/0/patterns",
+          "used": "none",
+          "wanted": "execute-target",
+          "note": "No registered pattern covers an attack that kills one kind of target outright whatever its health, while it cannot touch any other kind; proposed as execute-target."
+        },
+        {
+          "path": "sensors/traits",
+          "used": "detector",
+          "wanted": "a detector that sees through disguises for itself and attacks, without unmasking them for the team",
+          "note": "The dog sees through the Spy's disguise and attacks it, but nothing shows teammates seeing the spy for what it is."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J01-RA1"
+    }
+  ]
+}

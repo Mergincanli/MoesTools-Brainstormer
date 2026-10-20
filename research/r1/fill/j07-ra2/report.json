@@ -1,0 +1,470 @@
+{
+ "label": "j07-ra2",
+ "game": "ra2",
+ "file_written": "data/units/ra2.json",
+ "units": [
+  "ra2.yuri.mastermind",
+  "ra2.yuri.chaos-drone"
+ ],
+ "validator_result": "OK (node scripts/validate.mjs . exits 0). No errors and no ATYPICAL lines for either unit. The only warnings are the expected ones: planned patterns (mind-control, pull-target, confuse-enemies) and unit links to units not researched yet (ra2.allied.battle-fortress, ra2.allied.robot-tank, ra2.soviet.terror-drone, ra2.yuri.magnetron). format-json reported the file as already formatted on the last run.",
+ "copy_check_result": "Exit 0, \"OK: no shared runs\". All 9 cited pages were checked, all from the .cache/sources cache (0 fetched): newunits-yuri3, newunits-yuri2, the YR manual PDF, Mastermind_(Yuri's_Revenge), Chaos_drone, ModEnc InfiniteMindControl, MindControl and Psychedelic, and the CNCNZ Yuri's units page. The first run found one shared run, the official Application line copied into the Mastermind's sources/0 note (the seven-word Application line). I rewrote it and the rerun passed.",
+ "hesitations": [
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "roles/primary",
+   "chosen": "anti-infantry",
+   "alternatives": [
+    "assault"
+   ],
+   "reason": "The Application line names anti-vehicle and anti-infantry. roles.primary step 1 says to skip a role whose requires fail (anti-armour fails, since the weapon's damage is psionic), and also that a line naming two roles goes to the bonus test, then on to the next step if neither has a bonus. I applied the skip first, which leaves one named role. Running the two-role bonus test first finds no bonus, and step 5 then gives assault. The rule does not say which comes first."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "roles/secondary",
+   "chosen": "[assault] (step 4: heavy armour and a medium-range main weapon)",
+   "alternatives": [
+    "anti-armour (requires fail, so recorded as a fit_note)",
+    "disabler (requires fail: mind-control is in the conversion category, not control)"
+   ],
+   "reason": "The rule was clear. I hesitated only over whether to record anti-armour as a fit_note, and I did."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "abilities/0",
+   "chosen": "Overload as its own passive ability (Brainwave overload) with empty patterns and a fit_note proposing overload-past-cap",
+   "alternatives": [
+    "keep the overload inside the mind-control weapon's summary, with a fit_note at armament/0/patterns"
+   ],
+   "reason": "The Weapons vs abilities convention allows a passive when the source names the effect and it adds a mechanic. The wiki gives the Overloaded state its own section and the game announces it, but no source lists it as an ability, perk, upgrade or loadout pick (the abilities rule's parenthesis). The convention also says an effect that is part of how a weapon works stays in that weapon."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "abilities/0/kind",
+   "chosen": "passive",
+   "alternatives": [
+    "triggered"
+   ],
+   "reason": "The passive/triggered tie-break: the overload is a lasting state while the captive count is over the limit, not a one-off effect per event."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "armament/0/delivery",
+   "chosen": "hitscan",
+   "alternatives": [
+    "beam (psionic family default)"
+   ],
+   "reason": "ModEnc MindControl says the effect lands at once whether or not the shot hits, so I read it as hitscan. But the control link stays on each captive, which could be read as a held beam. The delivery rule does not cover an instant hit that leaves a lasting link."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "armament/0/mount",
+   "chosen": "free-aim (family default)",
+   "alternatives": [
+    "slow-turret (if the brain dome is its main turret on a large tracked unit)",
+    "body-aim (if fixed)"
+   ],
+   "reason": "No source says whether the dome turns. The aim tie-break falls back to the family default when the source says nothing, but that sits awkwardly with the hull-turret body plan."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "body/plan",
+   "chosen": "hull-turret",
+   "alternatives": [
+    "casemate",
+    "launcher-rack"
+   ],
+   "reason": "No body plan fits a gunless tank hull topped by a psychic emitter dome. I chose hull-turret for the classic tank silhouette and added a fit_note."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "body/size",
+   "chosen": "large",
+   "alternatives": [
+    "huge"
+   ],
+   "reason": "The rule was clear (tanks are large, and the in-game picture is tank-sized). The source was not: the wiki trivia says the concept art drew the brain at twice a tank's size."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "mobility/base",
+   "chosen": "tracks",
+   "alternatives": [
+    "wheels"
+   ],
+   "reason": "No text names its running gear. Tracks come from the voxel render and in-game picture on its wiki page. A caption on the wiki's Yuri (faction) page says it runs on wheels, which looks like a figure of speech. Recorded in uncertain with sources_disagree."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "mobility/traits",
+   "chosen": "[crush]",
+   "alternatives": [
+    "[] (no trait)"
+   ],
+   "reason": "The game-wide note asks for sources that show crushing. The wiki only says it can attempt to crush infantry, which is weak wording, and no ModEnc crush page was read."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "nature",
+   "chosen": "crewed-machine",
+   "alternatives": [
+    "uncrewed-machine"
+   ],
+   "reason": "The profile calls it a cloned brain in a tank, with no crew and no robot. The nature rule's default for the vehicle class gives crewed-machine. That also drives on_death bail-out (basis proposal), which is odd for a brain tank."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "armament/0/can_target",
+   "chosen": "[infantry, ground-vehicle, naval]",
+   "alternatives": [
+    "[infantry, ground-vehicle] (only kinds the sources name)"
+   ],
+   "reason": "can_target step 1 lists only the kinds the sources name for a mind-control weapon. The naval coding rule (which can_target says high air and naval follow) adds naval to any weapon that lists ground-vehicle. The manual's Yuri Clone entry says every non-immune unit can be taken, which supports ships."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "armament/0/patterns",
+   "chosen": "[mind-control]",
+   "alternatives": [
+    "[] with a fit_note"
+   ],
+   "reason": "The mind-control summary says control lasts a short time, but here it lasts until the controller dies, and many targets are held at once. The games-r1 Game-wide mechanics note puts mind-control on the Mastermind, so I linked it and added a fit_note."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "armament/0/range",
+   "chosen": "medium",
+   "alternatives": [
+    "long"
+   ],
+   "reason": "The rule was clear. The ratio is exactly 1.5 times the Conscript's rifle, which is the medium edge (up to and including 1.5)."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "flavour_affinity",
+   "chosen": "[soviet] (tracks and hull-turret score 2)",
+   "alternatives": [
+    "[] if the body were not hull-turret"
+   ],
+   "reason": "The score depends on the uncertain body plan. Yuri has no flavours, so step 3 uses scores alone."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "lineage",
+   "chosen": "mastermind (with the Scrin Mastermind of Tiberium Wars, cnc3)",
+   "alternatives": [
+    "no lineage"
+   ],
+   "reason": "The lineage rule links units with the same name that do the same job (mind control), but the designs differ a lot: that one is a commando on foot. The rule says 'the same design', yet its test is only name plus job."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "confidence",
+   "chosen": "high",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "The safe captive count is three (wiki, CNCNZ) against five (official profile). The confidence tie-break drops to medium only when a contradicted point decides a coded term, and this one decides none."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "countered_by/4",
+   "chosen": "tier:t1 (a swarm of cheap expendable units)",
+   "alternatives": [
+    "unit:ra2.soviet.conscript",
+    "class:infantry"
+   ],
+   "reason": "There is no typed-link kind for cheap units or price. The tier is the nearest proxy, but the IFV and Flak Track the wiki names are not necessarily t1 by the gate (both come from the War Factory, so t1 holds)."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "sensors/traits",
+   "chosen": "[] with an uncertain entry citing YR Gameplay Changes item 20",
+   "alternatives": [
+    "[detector]"
+   ],
+   "reason": "The registry note explicitly says to give no trait. The rule was clear."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "armament",
+   "chosen": "[] (unarmed); the gas is an ability",
+   "alternatives": [
+    "a psionic weapon entry for PsychGasCreate (the infobox gives a ground attack, a rate of fire and a reach)"
+   ],
+   "reason": "The manual and CNCNZ say the gas is released when deployed, and the registry treats deploy-key actions as abilities. No source says whether the drone also vents gas on an attack order."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "abilities/0/kind",
+   "chosen": "active",
+   "alternatives": [
+    "toggle",
+    "deploy"
+   ],
+   "reason": "The wiki's Yuri (faction) page says it can stay deployed for a long time or deploy again at will, which hints at a lasting deployed state. No source says whether it can move while deployed (the toggle/deploy tie-break)."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "abilities/0/cooldown",
+   "chosen": "spam",
+   "alternatives": [
+    "no cooldown band (leave out)"
+   ],
+   "reason": "The only figure is the gas weapon's rate of fire in game frames. The cooldown rule needs real seconds at normal multiplayer speed, and the wiki converts frames at different rates on different pages (60 per second on the Chaos drone page, 15 per second on the Mastermind page). Both conversions come out under 5 seconds."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "roles/secondary",
+   "chosen": "[raider]",
+   "alternatives": [
+    "[] (leave empty)",
+    "scout"
+   ],
+   "reason": "roles.secondary step 4 gives raider to any fast unit with light armour, and the wiki advises hit-and-run use. But the raider/scout tie-break says damage first is a raider, and this drone deals no damage. Scout is ruled out: speed alone needs official text calling it a scout."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "roles/primary",
+   "chosen": "disabler (step 2, unarmed: the gas links confuse-enemies, a control-category pattern)",
+   "alternatives": [
+    "area-denial (requires fail)"
+   ],
+   "reason": "The rule was clear once the gas is treated as the main button. Step 1 gives nothing: the Application line names no role (registry note)."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "mobility/base",
+   "chosen": "wheels",
+   "alternatives": [
+    "hover"
+   ],
+   "reason": "No text names its running gear. Wheels come from the render and voxel images on its wiki page."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "body/plan",
+   "chosen": "micro-bot",
+   "alternatives": [
+    "open-mount"
+   ],
+   "reason": "It is a compact robot buggy on wheels (fits micro-bot), and open-mount needs crew or riders. The rule was clear enough."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "body/size",
+   "chosen": "small",
+   "alternatives": [
+    "tiny",
+    "medium"
+   ],
+   "reason": "The sizes rule says a unit the game handles like a soldier is small. That rests on the wiki's remark that it fits inside a Battle Fortress, which takes infantry; no source compares it with a soldier."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "tier",
+   "chosen": "t1, gate War Factory",
+   "alternatives": [
+    "t2, gate Psychic Radar"
+   ],
+   "reason": "The official profile and the wiki's Psychic radar page require a Psychic Radar. The manual's tech table, the infobox and the Yuri war factory page do not. The registry note picks t1 and asks for an uncertain entry with sources_disagree. I kept confidence high because official text (the tech table) settles the point."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "cost_band",
+   "chosen": "medium (raw 1000, the patch 1.001 price)",
+   "alternatives": [
+    "low (CNCNZ's lower price)"
+   ],
+   "reason": "The rule was clear (use the 1.001 infobox price). CNCNZ disagrees and is recorded in uncertain."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "flavour_affinity",
+   "chosen": "[allied] (disabler and wheels score 2)",
+   "alternatives": [
+    "[]"
+   ],
+   "reason": "The rule was clear. Allied is a surprising result for a Yuri unit, and it rests on the image-derived wheels."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "countered_by/1",
+   "chosen": "target:structure (base defences)",
+   "alternatives": [
+    "role:area-denial",
+    "leave out"
+   ],
+   "reason": "The wiki names base defences. The matchup rules name enemies by job, weapon or kind, and a defence building is best named by target type, which reads oddly as a counter."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "sources/4/kind",
+   "chosen": "guide",
+   "alternatives": [
+    "community",
+    "wiki"
+   ],
+   "reason": "CNCNZ is a long-standing fan site with edited unit pages, not a wiki or a forum. Source kinds has no exact term for it."
+  },
+  {
+   "unit": "ra2.yuri.chaos-drone",
+   "path": "abilities/0 (duration wording)",
+   "chosen": "'for several seconds' in the summary",
+   "alternatives": [
+    "'about ten seconds' (the wiki's figure, as the task text gives it)"
+   ],
+   "reason": "Bands with numbers forbids figures for cooldowns, damage and the like in text fields. It does not say whether an effect duration counts, so I wrote it in words."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "abilities/0/patterns",
+   "used": "none (empty list)",
+   "wanted": "overload-past-cap",
+   "note": "A capture or summon with a safe limit but no hard cap and no off switch. Past the limit the user takes damage that grows with each extra captive, and recovers only by losing captives."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "armament/0/patterns",
+   "used": "mind-control",
+   "wanted": "a lasting, many-target variant of mind-control",
+   "note": "The pattern summary says control lasts a short time; the Mastermind's control lasts until it or the captive dies."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "roles",
+   "used": "anti-infantry, assault",
+   "wanted": "anti-armour",
+   "note": "The official Application line names anti-vehicle, but anti-armour's requires do not accept psionic damage. Mind-control units that take tanks can never be anti-armour."
+  },
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "body/plan",
+   "used": "hull-turret",
+   "wanted": "a tracked hull carrying an emitter dome and no gun",
+   "note": "No body plan fits a gunless vehicle whose top is a psychic emitter."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "roles.primary step 1: skip versus the two-role bonus test",
+   "note": "When an official line names two roles and one fails its requires, the rule does not say whether to skip that role first (leaving one named role, used directly) or to run the bonus test on both and go on when neither has a bonus. Here that is the difference between anti-infantry and assault for the Mastermind, and the same question will come up for the Yuri Clone and the Brute."
+  },
+  {
+   "topic": "Passive effects that a source names only as a state",
+   "note": "The Weapons vs abilities convention says a passive is its own ability when the source names the effect and it adds a mechanic. The abilities rule narrows that to naming 'as an ability, perk, upgrade or loadout pick'. A state with its own wiki section and voice line (the Mastermind's overload) fits the first wording but not clearly the second."
+  },
+  {
+   "topic": "Delivery of an instant hit that leaves a lasting link",
+   "note": "Mind control takes effect at once (hitscan by the delivery rule), but the link then stays on the target the way a held beam would. The delivery list does not cover this."
+  },
+  {
+   "topic": "Frames to seconds for RA2 cooldown bands",
+   "note": "The registry gives no game frame rate for RA2. The wiki converts frames to seconds at 60 per second on the Chaos drone page and at 15 per second on the Mastermind page. A registry note giving the conversion at normal multiplayer speed would settle every RA2 cooldown band."
+  },
+  {
+   "topic": "mind-control pattern summary against the registry note",
+   "note": "The registry pattern summary says 'for a short time', but RA2 control lasts until the controller dies. The Game-wide mechanics note still assigns mind-control to the Mastermind, Yuri Clone, Yuri Prime and Psi Commando. The Pattern links convention says the summary wins over patterns.md, but it does not cover a summary that conflicts with a games-r1 note."
+  },
+  {
+   "topic": "Mount when the body has a turret-like part the source does not describe",
+   "note": "The aim tie-break falls back to the family default when the source says nothing. With body plan hull-turret, step 5 would give slow-turret for a large ground unit's main turret, and the rule does not say which wins."
+  },
+  {
+   "topic": "Effect durations in text fields",
+   "note": "Bands with numbers forbids figures for prices, speeds, reaches, sight, cooldowns, damage and armour. It does not say whether an effect's duration (berserk for about ten seconds) is allowed as a figure."
+  },
+  {
+   "topic": "Lineage across universes",
+   "note": "The lineage rule's test (same or nearly the same name, same job) links RA2's Mastermind with the Scrin Mastermind of Tiberium Wars, although the designs differ a lot. It is unclear whether the 'same design' wording should block that."
+  },
+  {
+   "topic": "Pages read only through the copy-check cache",
+   "note": "web.archive.org was unreachable from this session, so the archived Mastermind profile was read from the copy-check cache (fetched the same day by the tool). The research rules do not say whether that counts as a page actually read."
+  },
+  {
+   "topic": "Source kind for fan sites such as CNCNZ",
+   "note": "CNCNZ is neither a wiki nor a forum; guide is the closest kind, but its unit pages mostly reword the manual."
+  }
+ ],
+ "new_mechanics": [
+  {
+   "unit": "ra2.yuri.mastermind",
+   "path": "abilities/0",
+   "proposed_id": "overload-past-cap",
+   "summary": "The unit captures or controls enemies with a safe limit but no hard cap and no way to stop. Past the limit it takes damage at intervals, faster with each extra captive, and recovers only by losing captives (spending them in battle or getting rid of them). Counterplay: rush it with many cheap, expendable units so it grabs more than it can hold and burns itself out, and use immune units and aircraft it cannot take.",
+   "pages": [
+    {
+     "url": "https://cnc.fandom.com/wiki/Mastermind_(Yuri%27s_Revenge)"
+    },
+    {
+     "url": "https://modenc.renegadeprojects.com/InfiniteMindControl"
+    },
+    {
+     "url": "https://web.archive.org/web/20071214172119/http://www.ea.com/official/cc/redalert2/english/newunits-yuri3.jsp"
+    },
+    {
+     "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest"
+    }
+   ]
+  }
+ ],
+ "pages_read_not_cited": [
+  {
+   "url": "https://cnc.fandom.com/wiki/Mind_control (named in Mastermind uncertain entries)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Yuri_war_factory (named in uncertain for both units)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Yuri_battle_lab"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Psychic_radar (named in Chaos Drone tier uncertain)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Yuri_(faction) (named in uncertain for both units)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Iron_Curtain_(Red_Alert_2) (named in uncertain for both units)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Robotics_(Red_Alert)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Veterancy"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Gattling_cannon_(Yuri%27s_Revenge)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_2_-_Yuri%27s_Revenge_manual (transcript; I cited the PDF instead)"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/BerserkFriendly (named in Chaos Drone uncertain)"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/AffectsAllies (named in Chaos Drone uncertain)"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/ImmuneToPsionics"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/DeployFire"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/OverloadCount"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/OverloadDamage"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/OverloadFrames"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/BerserkROFMultiplier (Ares-only, not used)"
+  }
+ ],
+ "source_problems": "The Wayback Machine (web.archive.org) reset every connection from this session, and WebFetch refused the domain too. I had downloaded the Chaos Drone's profile page (newunits-yuri2.jsp) earlier in the session. I could not re-fetch the Mastermind's profile (newunits-yuri3.jsp), so I read it from the copy-check cache file in .cache/sources/web.archive.org, fetched by the tool on 2026-10-20; the source note says so.\n\nProblems in the sources themselves:\n- The official profiles are out of date in places. The Mastermind's says five captives are safe, against three on the wiki and CNCNZ. The Chaos Drone's gives the launch price and a Psychic Radar requirement.\n- CNCNZ's price for the Chaos Drone matches neither the wiki infobox nor the profile.\n- The wiki converts game frames to seconds at different rates on the Chaos drone and Mastermind pages, and the Mastermind page's overload heading and first bullet disagree on the damage interval.\n- The wiki's Yuri (faction) page says the gas affects only infantry and speaks of the Mastermind as being on wheels; both contradict the unit pages and pictures.\n- Neither unit's running gear (tracks, wheels) is named in any text; both come from the wiki pages' render and voxel images, which I viewed but did not copy.\n- The wiki page \"Berserk\" does not exist, ModEnc's Berserk page is empty, and https://cncnz.com/games/yuris-revenge/yuri/ returned \"Page not found\".\n- The copy-check cannot normally read PDFs, but the YR manual PDF was already in its cache and was checked.\n- Early in the session I briefly wrote two scratch text files one level above the workspace (<job folder>/j07-cncnz_*.txt); I deleted them at once, and no other workspace was opened."
+}

@@ -1,0 +1,442 @@
+{
+ "label": "j09-ra3",
+ "game": "ra3",
+ "file_written": "data/units/ra3.json",
+ "units": [
+  "ra3.empire.mecha-tengu",
+  "ra3.empire.sudden-transport"
+ ],
+ "validator_result": "OK (exit 0). Only WARN lines (planned patterns transform, disguise, carry-passengers, and unit links to units not researched yet) and ATYPICAL lines. The two ATYPICAL lines about my units are both recorded in the Mecha Tengu's atypical list under their exact rule strings, with notes: 'bodies:humanoid-mech classes hover' and 'bodies:humanoid-mech allowed.mobility hover'. The Sudden Transport has no ATYPICAL lines. format-json --check: all files formatted. The three samples are byte-identical to the original file, and my units come after them.",
+ "copy_check_result": "exit 0. `node scripts/copy-check.mjs . --only Mecha_Tengu --only wiki/Transformation --only CCRA3UP_pcMAN --only Empire_of_the_Rising_Sun_units --only RA3_Manual_-_PC --only wiki/Sudden_transport --only wiki/Stealth --only wiki/Mecha_bay` checked 9 of 9 pages in scope (all from cache, none failed) and found no shared runs. I also ran a local 6-word overlap check against every page I read, cited or not, including the text of both manual PDFs: 0 hits.",
+ "hesitations": [
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "class",
+   "chosen": "hover",
+   "alternatives": [
+    "walker"
+   ],
+   "reason": "The wiki calls it a hover walker and puts it in its Walkers navbox, but it never walks: it hovers a few metres up on boosters, and its arms and legs only steady it. The only written hint is the drone-class note that bigger robots are classed by how they move. The hover mobility term (a ground-level skimmer that ground weapons hit) fits. Either class breaks a combination rule: the walker class does not allow hover mobility, and the humanoid-mech body allows only the walker class."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "body/plan",
+   "chosen": "humanoid-mech (recorded as atypical twice)",
+   "alternatives": [
+    "disc",
+    "hull-turret",
+    "a body the hover class allows"
+   ],
+   "reason": "None of the bodies the hover class allows (hull-turret, casemate, open-mount, box-carrier, disc, launcher-rack) describes a robot with a torso, arms and legs. Humanoid mech describes the shape, but its rules allow only the walker class and two-legged mobility."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "body/size",
+   "chosen": "medium",
+   "alternatives": [
+    "large"
+   ],
+   "reason": "The rule is clear but the source is not: no page gives dimensions. Sizes puts light mechs and light walkers at medium and medium-to-assault mechs at large. I read it as a light mech from its T1 harasser job and the profile's line that current models are lighter."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "modes/0/body/size",
+   "chosen": "left out (the jet keeps the base form's medium)",
+   "alternatives": [
+    "large (the sizes list names jets as large)"
+   ],
+   "reason": "The modes rule says to write only what changes. Nothing says whether a unit that folds into a jet changes its footprint."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "armour/class",
+   "chosen": "medium (step 4: a light walker bigger than a soldier)",
+   "alternatives": [
+    "light"
+   ],
+   "reason": "There is no armour map, and its armour-set name is not an armour word, so step 4 applies. But a hovering robot is not exactly any kind the class descriptions name ('drones and robots no bigger than a soldier' is light, 'light walkers bigger than a soldier' is medium). Its health is close to the light Multigunner IFV's, StrategyWiki calls its armour poor, and the Riptide page calls the Riptide lightly armoured even though it uses the same armour set. This choice also decides whether directional applies."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "armour/models",
+   "chosen": "directional (by the registry's armour-facing rule for medium or heavier vehicles whose page gives no figures)",
+   "alternatives": [
+    "flat-pool (the outcome if the class were light)"
+   ],
+   "reason": "It depends on the armour class above. As support, the Sickle has the same BaseHarassmentVehicleArmor and its page gives side and rear figures."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "roles/primary",
+   "chosen": "anti-infantry",
+   "alternatives": [
+    "anti-air"
+   ],
+   "reason": "The rule is clear. The designation names both roles, and step 1 takes the one whose target the main weapon (the hover form's primary guns) has a bonus against. The Conscript's armour set takes 150% Auto Cannon damage, and the profile says the guns cut through infantry. The hover guns cannot hit aircraft at all."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "roles/secondary",
+   "chosen": "[anti-air, raider]",
+   "alternatives": [
+    "[anti-air, assault]",
+    "[anti-air]"
+   ],
+   "reason": "Anti-air ranks at step 1 (the designation). I ranked raider at step 2 through the transform mode, since the very fast, light jet form is how it hits and escapes. Step 4's raider test (fast with light armour) fails on the medium-armoured hover form. Assault qualifies at step 4 (medium armour and a medium-range main weapon), but no source describes it leading pushes. The rule does not say whether a mode's own speed and armour can support raider at step 2."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "armament (entry count)",
+   "chosen": "two entries: the hover guns as primary, and the jet guns as alternate with mode jet linking transform",
+   "alternatives": [
+    "one entry for both forms, with can_target covering ground and air"
+   ],
+   "reason": "Weapon entries rule 1 says one in-game weapon is one entry even when it acts differently against different targets, and the infobox names one weapon (Kinetic burst-shot x2) for both forms. Paired entries and the mode rules say a weapon swapped in by a mode is an alternate. A single entry without a mode would claim the hover form can hit aircraft."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "armament/0/family",
+   "chosen": "autocannon",
+   "alternatives": [
+    "machine-gun",
+    "small-arms"
+   ],
+   "reason": "The manual calls it a 20mm autocannon, its damage category is Auto Cannon, and it fires rapid shells, so the tie-break points to autocannon. The profile likens it to a heavier-calibre take on the Imperial rifle, but that is not the 'copies a soldier's own gun' clause, so the soldier's family does not carry over."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "armament/0/mount and armament/1/mount",
+   "chosen": "body-aim",
+   "alternatives": [
+    "free-aim"
+   ],
+   "reason": "The source is unclear: the guns sit on either side of the air intake, and no page says whether they swivel. The aim tie-break's step 6 (fixed and firing where the unit faces) is the closest fit, and a fighter's guns are fixed forward."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "armament/0/can_target",
+   "chosen": "infantry, ground-vehicle, structure, naval",
+   "alternatives": [
+    "infantry, ground-vehicle, naval (no structures)"
+   ],
+   "reason": "The Mecha Mode button text names grounded and waterborne opponents, which reads as can_target step 3. Under step 3, structures need a source saying the weapon damages buildings. I took that from the profile's super-reactor account and the wiki's remark that it can pester refineries on the water. No infobox line names buildings."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "armament/1/damage",
+   "chosen": "kinetic (damage step 4: Auto Cannon maps to kinetic)",
+   "alternatives": [
+    "explosive (step 5: built mainly to bring down aircraft)"
+   ],
+   "reason": "The rule is clear: step 4 comes before step 5 whenever the map lists the category, so the anti-air exception cannot apply."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "abilities/0/cooldown",
+   "chosen": "medium",
+   "alternatives": [
+    "short"
+   ],
+   "reason": "The infobox gives a 15-second transform cooldown. That is exactly on the edge, and an edge takes the higher band, so medium. The Transformation page only says the unit waits a few seconds."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "modes/0/mobility/base",
+   "chosen": "jet",
+   "alternatives": [
+    "rotor (hovering flight)"
+   ],
+   "reason": "It is a fighter that flies high, and only anti-air reaches it. But the wiki calls it a VTOL fighter, the profile says its wings let it hover in place while it attacks, and the hovering-flight term names VTOL. I added a fit_note."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "modes/0/mobility/handling",
+   "chosen": "forward-only (the jet default)",
+   "alternatives": [
+    "strafe",
+    "drift"
+   ],
+   "reason": "The handling tie-break gives no reason to change it in a commanded game, although the profile says the jet can hover in place while attacking."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "countered_by/0",
+   "chosen": "armour-class:heavy",
+   "alternatives": [
+    "class:vehicle (the IFV sample's link for 'tanks')",
+    "role:anti-armour"
+   ],
+   "reason": "The sources say it is no match for tanks. Matchup rule 1 lists armour-class:heavy as an example of naming a kind of unit, but the Multigunner IFV sample used class:vehicle for the same wording."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "countered_by/4",
+   "chosen": "kept unit:ra3.allied.multigunner-ifv",
+   "alternatives": [
+    "drop it"
+   ],
+   "reason": "It rests on the wiki page's Background section, which is loose prose. Rule 3 wants a unit: link next to a word-list link for the same reason. role:anti-air is the nearest, since the IFV is an anti-air unit whose missiles also hit the ground."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "counters/1",
+   "chosen": "armour-class:light",
+   "alternatives": [
+    "class:vehicle"
+   ],
+   "reason": "The sources say light vehicles. Rule 1's 'what it is' fits armour-class:light better than the whole vehicle class, which would include the tanks it loses to."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "combos/1",
+   "chosen": "role:anti-armour",
+   "alternatives": [
+    "unit:ra3.empire.tankbuster",
+    "both"
+   ],
+   "reason": "The wiki says it goes with units that are weak against aircraft or infantry, and names Tankbusters. The unit: link is optional, and I left it out to keep the list short."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "sources (order)",
+   "chosen": "Uprising manual first, then the Mecha Tengu page, the Profile, Transformation and StrategyWiki",
+   "alternatives": [
+    "the Profile first (it copies the official profile)"
+   ],
+   "reason": "The rule says to fill the slots starting with an official page about the unit. The profile copy is kind wiki, so the manual is the official page. The samples put a wiki page first, so I am not sure the slot order also means array order."
+  },
+  {
+   "unit": "ra3.empire.sudden-transport",
+   "path": "armour/class",
+   "chosen": "medium (step 4: an APC)",
+   "alternatives": [
+    "light"
+   ],
+   "reason": "Its armour-set name, JapanLightTransportVehicleArmor, contains the word Light. The registry note says set names are never armour words, so I went on to step 4. Its health is only a little above the light Multigunner IFV's."
+  },
+  {
+   "unit": "ra3.empire.sudden-transport",
+   "path": "roles/secondary",
+   "chosen": "[infiltrator] (step 2: the disguise button)",
+   "alternatives": [
+    "[]",
+    "[infiltrator, scout]"
+   ],
+   "reason": "The infiltrator description says passing as the enemy is done to spy, steal or sabotage, while the tie-break accepts passing as the enemy on its own. The transport only delivers troops. Scout's requires are met (fast speed, a stealth-deception pattern), but nothing sourced has it find or spot enemies. Raider and assault fail step 4 (medium armour, no weapon). I left the second slot empty."
+  },
+  {
+   "unit": "ra3.empire.sudden-transport",
+   "path": "abilities/1/kind",
+   "chosen": "active",
+   "alternatives": [
+    "passive",
+    "toggle",
+    "a weapon (applied through the attack order)"
+   ],
+   "reason": "No source names a disguise button: the wiki speaks of copying the vehicle it targets, and the Stealth page calls it an active disguise (the Mirage's is passive). The Conventions say anything fired with an attack button is a weapon, but the disguise does nothing to its target, so I coded it as an ability."
+  },
+  {
+   "unit": "ra3.empire.sudden-transport",
+   "path": "abilities (Evacuate)",
+   "chosen": "left off as the evict key",
+   "alternatives": [
+    "record it because it also breaks the disguise ('a button that does more than the key')"
+   ],
+   "reason": "The disguise ends whenever riders get out, so Evacuate adds nothing beyond unloading. The registry treats the Riptide's and Twinblade's Evacuate as the evict key."
+  },
+  {
+   "unit": "ra3.empire.sudden-transport",
+   "path": "on_death",
+   "chosen": "death-blast, basis in-game; the blast is not a weapon",
+   "alternatives": [
+    "a triggered ability for the blast",
+    "an armament entry for the 'On Destruction' attack line"
+   ],
+   "reason": "The registry note names this unit for death-blast. The on-death term covers the blast, so no ability is needed ('if a word-list term says the same, use the term'). It is not fired with an attack button, so it is not a weapon."
+  },
+  {
+   "unit": "ra3.empire.sudden-transport",
+   "path": "counters/0",
+   "chosen": "target:structure (base defences it slips past)",
+   "alternatives": [
+    "none fits; an unarmed transport beats nothing head-on"
+   ],
+   "reason": "Counters needs at least one link. The only sourced point is that its disguise fools most base defences."
+  },
+  {
+   "unit": "ra3.empire.sudden-transport",
+   "path": "countered_by/4",
+   "chosen": "damage:armour-piercing",
+   "alternatives": [
+    "role:anti-armour",
+    "separate links for flak, prism and tesla, which also do half again normal damage to it"
+   ],
+   "reason": "Its armour set takes 150% from Cannon and Rocket, which both map to armour-piercing, and also from Flak, Prism and Tesla. I named the kind of harm that covers the most common anti-vehicle weapons and kept the list short."
+  },
+  {
+   "unit": "ra3.empire.sudden-transport",
+   "path": "strengths/4",
+   "chosen": "tier:t1 (cheap, available from the start)",
+   "alternatives": [
+    "drop it"
+   ],
+   "reason": "There is no link kind for price, so the decoy-group strength hangs on the tier."
+  },
+  {
+   "unit": "ra3.empire.sudden-transport",
+   "path": "combos/1",
+   "chosen": "class:infantry",
+   "alternatives": [
+    "unit:ra3.empire.imperial-warrior, unit:ra3.empire.tankbuster, unit:ra3.empire.shinobi next to it"
+   ],
+   "reason": "The optional unit: links were left out to keep the list short."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "body/size",
+   "used": "medium",
+   "note": "No page gives its dimensions; the size is inferred from it being a light T1 mech."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "armour/models",
+   "used": "directional",
+   "wanted": "side and rear damage figures for its armour set",
+   "note": "The page gives none, although the Sickle, which has the same armour set, lists them. Directional rests on the manual's rule alone."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "armament/0/summary",
+   "used": "says it must steady itself to fire",
+   "wanted": "a second source on whether it can fire while moving",
+   "note": "Only the 2008 profile says this."
+  },
+  {
+   "unit": "ra3.empire.mecha-tengu",
+   "path": "armament/1/summary",
+   "used": "a quarter damage against Apollo, MiG and Jet Tengu (Mecha Tengu page)",
+   "note": "The Apollo fighter page says the Apollo takes a little under a third of normal damage from Jet Tengus. Recorded in uncertain with sources_disagree. No term depends on it."
+  },
+  {
+   "unit": "ra3.empire.sudden-transport",
+   "path": "abilities/1/cooldown",
+   "used": "left out",
+   "wanted": "the wait between disguises",
+   "note": "No source gives a cooldown or names the disguise button."
+  },
+  {
+   "unit": "ra3.empire.sudden-transport",
+   "path": "on_death/notes",
+   "used": "riders die with it (StrategyWiki only)",
+   "wanted": "the blast radius, and confirmation of the riders' fate from the C&C Wiki",
+   "note": "The infobox gives only the damage figure and its category."
+  },
+  {
+   "unit": "ra3.empire.sudden-transport",
+   "path": "body/size",
+   "used": "medium",
+   "note": "No page gives its dimensions; the size is taken from it being an APC."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Weapon entries rule 1 vs Paired entries for transforming units",
+   "note": "When one infobox weapon serves both forms of a transforming unit and the form decides what it can hit (Mecha Tengu), rule 1 says to make one entry, but Paired entries and the alternate-with-mode rules say to make two. I made two. A sentence saying which rule wins for modes would settle it, and the Striker-VX and Sea-Wing will raise the same question."
+  },
+  {
+   "topic": "roles.secondary step 2 and modes",
+   "note": "Can a mode support raider (or assault) through the mode's own speed and armour, or does step 4 read only the base form? The answer decides between [anti-air, raider] and [anti-air, assault] for the Mecha Tengu."
+  },
+  {
+   "topic": "Class and body of a hovering humanoid robot",
+   "note": "No body allowed for the hover class describes a mech, and humanoid-mech allows only walkers on two legs. The only class hint is the drone-class note that bigger robots are classed by how they move. Whatever is chosen, the validator flags it as atypical."
+  },
+  {
+   "topic": "Body size of a mode with a new body",
+   "note": "The sizes list puts jets at large, but the modes rule says to write only what changes. It is unclear whether a mech that folds into a jet should restate its size."
+  },
+  {
+   "topic": "Armour-class step 4 for robots bigger than a soldier that do not walk",
+   "note": "The class descriptions name 'drones and robots no bigger than a soldier' (light) and 'light walkers bigger than a soldier' (medium). A hovering combat robot falls between the two, and the choice also decides whether the directional rule applies."
+  },
+  {
+   "topic": "Order of sources",
+   "note": "'Fill the slots in this order' could govern the array order or only which pages to keep when there are more than five. The samples list a wiki page first even where a profile copy exists."
+  },
+  {
+   "topic": "Infiltrator for a disguised transport",
+   "note": "The role description wants passing as the enemy done to spy, steal or sabotage, while the tie-break accepts passing as the enemy on its own. A carrier that disguises itself only to deliver troops fits the tie-break but not clearly the description."
+  },
+  {
+   "topic": "Disguise applied through the attack order",
+   "note": "The Conventions say anything fired with an attack button is a weapon. The Sudden Transport disguises itself by targeting a vehicle, with no button of its own named. I treated it as an active ability because it does nothing to its target, but no rule says so."
+  },
+  {
+   "topic": "Counters for an unarmed unit",
+   "note": "Counters requires at least one link, but an unarmed transport beats nothing head-on. A note on what to put there (what it slips past, or what it enables) would help."
+  }
+ ],
+ "new_mechanics": [],
+ "pages_read_not_cited": [
+  {
+   "url": "https://cnc.fandom.com/wiki/Conscript_(Red_Alert_3) (named in Mecha Tengu uncertain roles/primary)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Hammer_tank (named in both units' uncertain mobility/notes)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Riptide_ACV (named in Mecha Tengu uncertain armour/class)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Multigunner_IFV (named in both units' uncertain armour/class)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Apollo_fighter (named in Mecha Tengu uncertain modes/0/mobility/base and armament/1/summary)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/MiG_fighter_(Red_Alert_3) (resolves to MiG fighter; named in Mecha Tengu uncertain modes/0/mobility/base)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Burst_Drone (named in Sudden Transport uncertain countered_by)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Attack_dog_(Red_Alert_3) (named in Sudden Transport uncertain countered_by)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/War_bear_(Red_Alert_3) (named in Sudden Transport uncertain countered_by)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Sickle (checked its armour set and facing figures; no code rests on it)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Bullfrog (background for the Tengu profile's Bullfrog story; no code rests on it)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Honorable_discharge (protocol effect, mentioned only in both units' on_death notes, as the registry note says)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Top_Secret_Protocols (resolves to Top Secret Protocol; read to check no protocol gives either unit a button)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Spy_(Red_Alert_3) (disguise comparison only)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Template:Red_Alert_3_unit_profiles (confirms the Tengu has a profile and the Sudden Transport has none)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Mecha_bay (cited for the Sudden Transport, read but not cited for the Mecha Tengu)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Stealth (cited for the Sudden Transport only)"
+  },
+  {
+   "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/a/af/RA3_Manual_-_PC.pdf/revision/latest?cb=20220605033630 (RA3 manual; cited for the Sudden Transport, read but not cited for the Mecha Tengu, whose paragraph matches the Uprising one)"
+  },
+  {
+   "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/7c/CCRA3UP_pcMAN%28EN_US%29.pdf/revision/latest?cb=20180801163717 (Uprising manual; cited for the Mecha Tengu, read but not cited for the Sudden Transport)"
+  }
+ ],
+ "source_problems": "The API title 'Mecha tengu' (lower-case t) returns missingtitle; 'Mecha Tengu' works. The Sudden Transport has no /Profile page, as the registry says, so its roles step 1 reads the manual paragraph (RA3 manual printed page 22; the Uprising manual reprints it on page 20). Some wiki figures disagree: the Mecha Tengu page gives the Jet Tengu a 25% damage scalar against Apollo fighters, while the Apollo fighter page says the Apollo takes 30% from Jet Tengus. This is recorded in uncertain with sources_disagree. The Mecha Tengu page's armour set has no side or rear figures, although the Sickle, with the same set, has them. The Mecha Tengu page's Background section is loose, fan-written prose (the IFV and Apollo story), so only its point that Multigunner IFVs threaten both forms is used. The copy-check needed no network: all 9 cited pages were already cached and none failed. This session resumed after a usage-limit stop. The two entries had already been written and validated, so on resuming I re-read the rules and sources and made four small fixes: I put the Mecha Tengu's sources in the rule's order (official page first), added the uncertain entry on the Apollo damage disagreement, reworded the Sudden Transport's sensors note so it no longer claims radar facts no page gives, and reworded the disguise summary's AI-match remark neutrally. Then I re-ran the formatter, validator and copy-check."
+}

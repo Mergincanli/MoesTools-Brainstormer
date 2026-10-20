@@ -1,0 +1,453 @@
+{
+ "label": "j04-ra1",
+ "game": "ra1",
+ "file_written": "data/units/ra1.json",
+ "units": [
+  "ra1.soviet.yak",
+  "ra1.soviet.submarine"
+ ],
+ "validator_result": "OK. node scripts/validate.mjs . exits 0 with no errors. The only warnings about my units are the expected ones: planned patterns lay-mines and burrow, and unit links to units not yet researched (ra1.allied.cruiser, ra1.allied.destroyer, ra1.allied.spy, ra1.shared.rocket-soldier, ra1.soviet.heavy-tank). One ATYPICAL line is recorded in the submarine's atypical list at path sensors/traits under its exact rule string: \"sensor-traits:detector classes naval\".",
+ "copy_check_result": "Exit 0. Command: node scripts/copy-check.mjs . --only wiki/Yak --only 'Airfield_(Red_Alert_1)' --only 'Submarine_(Red_Alert_1)' --only wiki/Stealth --only strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Soviet_units --only REDALERT/AIRCRAFT.CPP --only REDALERT/VESSEL.CPP. Result: 7 pages checked, no shared runs.\n\nThe first run, which also included the manual PDF, found one 7-word run in yak countered_by/0 shared with the Yak wiki page (its list of the Yak's anti-air enemies). I rewrote it and the rerun passed with all 8 pages.\n\nThe script cannot read PDFs: it stores the manual scan as raw bytes in an \"html\" cache entry, so a pass on that URL proves nothing. I deleted that junk 9.6 MB cache file and checked the manual by hand instead: pdftotext of the scan, plus a 6-word-run script over every prose string in both units. It found 0 shared runs. The same script against the read-but-uncited pages and code files found only title runs, and I reworded the one non-title run.",
+ "hesitations": [
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "flavour_affinity",
+   "chosen": "[\"soviet\", \"allied\"]",
+   "alternatives": [
+    "[\"soviet\"]"
+   ],
+   "reason": "The rule was clear and the scoring decided it. Allied scores 2 (mobility jet and body fixed-wing are on its favoured lists) against Soviet's 1 (machine gun), so step 3 adds allied. Noted because a Soviet plane ends up with the Allied flavour only through generic jet and fixed-wing terms."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "availability",
+   "chosen": "open",
+   "alternatives": [
+    "limited"
+   ],
+   "reason": "The manual allows one plane per Airfield. Limited covers 'a slot limit', but this slot is shared by Yaks and MiGs and grows with every Airfield built, so it is not a fixed cap on this unit. The availability rule does not say how to treat slot limits tied to buildings. Recorded in uncertain."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "roles/primary",
+   "chosen": "anti-infantry",
+   "alternatives": [
+    "raider"
+   ],
+   "reason": "Step 4 reads the manual's words line that one pass may wipe out a whole column about marching infantry as 'destroys' under the registry's strong-against verbs. 'Potentially' hedges it. Without step 4, step 5 would give raider (very fast, light armour)."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "roles/secondary",
+   "chosen": "[\"raider\"]",
+   "alternatives": [
+    "[]",
+    "[\"raider\", \"siege\"]"
+   ],
+   "reason": "Raider enters at step 4 (very fast with light armour), but the manual calls the Yak 'not that fast'. Speed names no target, so the drop rule does not apply. Siege's requires are met by the off-screen range, but its coding rule (lobbed, bombs or a structure-killing missile) excludes it. Scout fails the raider/scout tie-break: sight is nil and it has no sensor trait."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "mobility/speed",
+   "chosen": "very-fast (speed_raw 4)",
+   "alternatives": [
+    "fast"
+   ],
+   "reason": "The ratio rule is clear (air speed 16 over the Rifle Infantry's 4). The source and band disagree in tone: the manual calls the Yak only moderately quick, which is about it among aircraft (the MiG is faster). That remark is in notes."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "armament/0/range",
+   "chosen": "off-screen",
+   "alternatives": [
+    "long"
+   ],
+   "reason": "The rule is clear: long by reach (a bit over 1.5 times the rifle) and past its own sight, which is nil for every RA1 aircraft. The registry notes expect this. A fit_note records that the result is an artefact of nil sight."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "armament/0/can_target",
+   "chosen": "infantry, ground-vehicle, structure, naval",
+   "alternatives": [
+    "infantry, ground-vehicle, naval (no structure)"
+   ],
+   "reason": "Step 3 applies through StrategyWiki's 'Target: Ground'. Its structures clause needs a source saying the weapon damages buildings. The Yak page only says Yaks attack a base's outlying buildings while tanks distract the defences, which I read as enough. Naval is added by the naval rule. Air is left out because no page says it attacks aircraft."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "armament/0/delivery",
+   "chosen": "hitscan",
+   "alternatives": [
+    "projectile"
+   ],
+   "reason": "No source says how the bullets travel, so the family default applies. The code shows where each burst is aimed (a point ahead along the heading) but not that it travels."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "armament/0/mount",
+   "chosen": "body-aim",
+   "alternatives": [
+    "auto-target",
+    "free-aim"
+   ],
+   "reason": "Proposal by Aim tie-break step 6. AIRCRAFT.CPP shows the plane firing only when nearly facing its target, at a point straight ahead. Fixed-wing allows only body-aim or auto-target, and step 2 (auto-target) does not apply in a commanded game."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "armament/0/traits",
+   "chosen": "[]",
+   "alternatives": [
+    "[\"splash\"]",
+    "[\"finite-ammo\"]"
+   ],
+   "reason": "The manual's 'whole group in one pass' comes from strafing along a line, not a blast, and no source gives the hit an area. Finite-ammo is excluded because the limited-ammo resource covers the unit's only weapon (finite-ammo coding rule)."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "abilities",
+   "chosen": "[] (trip home and force-fire mine clearing left off)",
+   "alternatives": [
+    "a mine-clearing entry",
+    "a rearm or return-to-base entry"
+   ],
+   "reason": "The game-wide list makes rearming the limited-ammo resource and force fire a basic order. The rules say to put a mechanic a unit does better than others in strengths, which I did (strengths/2, counters/1)."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "on_death",
+   "chosen": "bail-out, basis proposal",
+   "alternatives": [
+    "bail-out, basis in-game"
+   ],
+   "reason": "The code may parachute a rifleman from a crewed aircraft, but the Crewed flag is set in rules.ini, which nobody could read. No cited page shows a survivor, so the registry note gives the 3C default."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "counters/1",
+   "chosen": "pattern:lay-mines only",
+   "alternatives": [
+    "pattern:lay-mines plus unit:ra1.shared.minelayer"
+   ],
+   "reason": "Matchups rule 3 allows a unit link only for a rival the sources name. The Yak page names minefields, not the Minelayer, so I left the unit link out, although the trim's note says the Yak counters the kept Minelayer."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "strengths/2",
+   "chosen": "mobility:jet (clearing mines from the air)",
+   "alternatives": [
+    "weapon:machine-gun",
+    "target:high-air"
+   ],
+   "reason": "The rules do not say which part owns 'clears minefields by force-fire'. I picked flying over the mines, since that is what makes the job safe, and avoided repeating the weapon link from strengths/0."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "weaknesses/3",
+   "chosen": "speed:very-fast",
+   "alternatives": [
+    "armour-class:light",
+    "target:high-air"
+   ],
+   "reason": "The manual blames its lack of speed for Rocket Soldier kills. Rule 4 wants the unit's own value, so the weakness hangs on its speed band, which reads oddly as very fast."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "countered_by/0",
+   "chosen": "role:anti-air",
+   "alternatives": [
+    "weapon:rockets",
+    "hits:high-air"
+   ],
+   "reason": "The wiki names anti-aircraft guns, missile sites and rocket infantry, which are units and buildings. Rule 1's order (job first) gives role:anti-air. The rocket soldier gets its own unit link."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "combos/0",
+   "chosen": "armour-class:heavy",
+   "alternatives": [
+    "class:vehicle",
+    "weapon:cannon"
+   ],
+   "reason": "The wiki names only the unit (heavy tanks as a decoy). What makes it work is being a tough tank that draws fire. I took armour-class:heavy over class:vehicle, and no role fits 'decoy'."
+  },
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "sources/0/url",
+   "chosen": "the PDF's own URL (static.wikia.nocookie.net .../Red_Alert_1_Manual.pdf/revision/latest)",
+   "alternatives": [
+    "https://cnc.fandom.com/wiki/File:Red_Alert_1_Manual.pdf"
+   ],
+   "reason": "The RA1 registry note gives the File page as the scan to cite. The sources rule says to cite the page actually read, and the RA2 and RA3 notes say to cite the PDF's own URL. I read the PDF itself."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "roles/primary",
+   "chosen": "assault",
+   "alternatives": [
+    "anti-armour"
+   ],
+   "reason": "Step 4 gives nothing: ships are no anti role's target (registry notes), and the armour-piercing torpedo cannot hit vehicles, so anti-armour's description does not fit. Step 5 gives assault because it is not fast. Recorded as a fit_note."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "roles/secondary",
+   "chosen": "[\"scout\"]",
+   "alternatives": [
+    "[]"
+   ],
+   "reason": "Scout enters at roles.secondary step 4 through the detector trait, which has an in-game basis. That trait only finds other submarines, so 'finds and spots enemies' fits narrowly."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "mobility/handling",
+   "chosen": "steer",
+   "alternatives": [
+    "pivot",
+    "drift"
+   ],
+   "reason": "The rules leave this open. naval-submerged has no default handling, and the Handling tie-break starts from the default. I chose steer because a submarine turns in arcs; the RTS sprite turning on the spot may not decide it. Recorded as a fit_note."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "mobility/traits",
+   "chosen": "[]",
+   "alternatives": [
+    "[\"burrow\"]"
+   ],
+   "reason": "The burrow trait means exactly 'goes underwater, must surface to act'. But it is a key-bound trait, its class list leaves out naval (so it would be atypical), and naval-submerged already says the same. In the source the dive is automatic. Recorded as a fit_note."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "abilities/0/patterns",
+   "chosen": "[\"burrow\"]",
+   "alternatives": [
+    "[\"cloak\"]",
+    "[\"burrow\", \"cloak\"]"
+   ],
+   "reason": "Both pass the pattern test, and the Sensor traits note says full invisibility 'on a key or not' is the cloak pattern. The RA2 note codes RA2 subs as cloak. Granularity says one interaction gets one pattern. I chose burrow because the RA1 sub must surface to act, which is burrow's defining point, and the brief names burrow."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "abilities/0/kind",
+   "chosen": "passive",
+   "alternatives": [
+    "triggered"
+   ],
+   "reason": "It is hidden whenever not attacking and surfaces on events (firing, damage, sonar). The passive/triggered tie-break reads the always-on hiding as passive."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "body/size",
+   "chosen": "large",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "No size example covers submarines and no page gives a footprint. I judged it about one tank in size against the main battle tank. Recorded in uncertain."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "armament/0/can_target",
+   "chosen": "naval, structure",
+   "alternatives": [
+    "naval only"
+   ],
+   "reason": "StrategyWiki's 'Target: Naval' puts this under step 3. Structures need a source saying it damages buildings: VESSEL.CPP lets torpedoes be fired at floating buildings (Naval Yard, Sub Pen) and bridges, and the wiki calls them effective against naval yards. Whether the torpedoes can target other subs depends on an unread rules flag."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "armament/0/delivery",
+   "chosen": "projectile",
+   "alternatives": [
+    "hitscan"
+   ],
+   "reason": "projectile is the torpedoes family default, and BULLET.CPP (uncited) shows the torpedo moving cell by cell through water."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "armament/0/mount",
+   "chosen": "body-aim",
+   "alternatives": [
+    "free-aim",
+    "limited-arc"
+   ],
+   "reason": "Proposal by Aim tie-break step 6. The sub has no turret (VDATA.CPP) and turns its hull to face the target before firing (VESSEL.CPP)."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "sensors/traits",
+   "chosen": "[\"detector\"]",
+   "alternatives": [
+    "[]",
+    "[\"detector\", \"stealth\"]"
+   ],
+   "reason": "The detector trait is sourced (Stealth page; the Sub Pen list) but is atypical for the naval class. I did not add stealth, because the Sensor traits note gives full invisibility to the cloak pattern and burrow covers it."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "countered_by/2",
+   "chosen": "role:infiltrator (plus unit:ra1.allied.spy)",
+   "alternatives": [
+    "pattern:capture-structure",
+    "pattern:reveal-area"
+   ],
+   "reason": "Rule 1's order (job first) gives role:infiltrator. The Spy's sabotage will link capture-structure, per the trim brief, and the Sonar Pulse itself is a side-wide reveal-area power, so either pattern link could also stand."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "counters",
+   "chosen": "class:naval and unit:ra1.allied.cruiser (Gunboat left out)",
+   "alternatives": [
+    "also unit:ra1.allied.gunboat in counters or in countered_by"
+   ],
+   "reason": "The Gunboat page says a lone gunboat loses to a sub but numbers win, and the Destroyer page says one destroyer does the work of two or three gunboats. At equal cost (about two gunboats per sub), rule 6 does not settle which side wins, so I left it out."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "on_death",
+   "chosen": "bail-out, basis proposal",
+   "alternatives": [
+    "respawn, basis proposal"
+   ],
+   "reason": "The rule is clear: the 3C default for a crewed machine that is not infantry is bail-out. The code gives ships no survivors, which only means the source shows nothing special."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "ra1.soviet.yak",
+   "path": "armament/0/range",
+   "used": "off-screen",
+   "wanted": "long (the band its reach alone gives)",
+   "note": "Every RA1 aircraft has nil sight, so any aircraft gun bands off-screen. In play it is a short strafing gun."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "roles/primary",
+   "used": "assault",
+   "wanted": "an anti-ship role",
+   "note": "Ships are no anti role's target, so a hidden ship hunter falls to step 5's assault."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "mobility/handling",
+   "used": "steer",
+   "wanted": "a default handling for naval-submerged (and naval-surface)",
+   "note": "The naval mobility types have no default_handling, but handling is required on every unit."
+  },
+  {
+   "unit": "ra1.soviet.submarine",
+   "path": "mobility/traits",
+   "used": "none",
+   "wanted": "burrow as an automatic dive, allowed on naval",
+   "note": "The burrow trait is key-bound and excludes the naval class; the sub dives by itself."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Default handling for naval mobility",
+   "note": "mobility.handling is required and the Handling tie-break starts from the mobility type's default, but naval-surface and naval-submerged have no default_handling. The rules give a coder nothing to start from."
+  },
+  {
+   "topic": "Detector classes",
+   "note": "docs/vocabularies.md lists sensor trait detector as 'classes: all', but the validator treats 'all' as the six generator classes and flags naval as atypical. The docs could say that 'all' leaves out naval."
+  },
+  {
+   "topic": "Off-screen range with a nil sight figure",
+   "note": "RA1 aircraft have sight 0, so off-screen's first reason makes every aircraft gun off-screen. The registry notes expect this, but the rule was not written for a unit that sees nothing in flight."
+  },
+  {
+   "topic": "Writing a nil figure in words",
+   "note": "Text fields must give sight values as comparisons in words, never as figures. A sight of 0 has no comparison, so I wrote 'no sight range at all' and 'nil sight'. The rules say nothing about zero values."
+  },
+  {
+   "topic": "Availability with per-building slots",
+   "note": "One plane per Airfield is a slot limit (limited's wording), but it is shared by two plane types and lifted by building more Airfields. The availability rule does not say whether such building-tied slots count."
+  },
+  {
+   "topic": "Burrow vs cloak for automatic submerging",
+   "note": "The brief and RA1's surface-to-fire behaviour point to burrow. The Sensor traits note says full invisibility 'on a key or not' is the cloak pattern, and the RA2 note codes submerged units as cloak. Granularity forbids linking both for one interaction. A boundary line between the two patterns would settle it."
+  },
+  {
+   "topic": "Citing the RA1 manual scan",
+   "note": "The RA1 registry note gives the File page URL. The sources rule says to cite the page actually read, and the RA2 and RA3 notes say to cite the PDF's own URL. I cited the PDF URL I read."
+  },
+  {
+   "topic": "Unit links for rivals the sources name only indirectly",
+   "note": "Matchups rule 3 needs the sources to name the rival. The Yak page names minefields, not the Minelayer (the trim's 'why' says the Yak counters the kept Minelayer). It is unclear whether naming a unit's product counts as naming the unit."
+  },
+  {
+   "topic": "Strong-against verbs with a hedge",
+   "note": "The registry's roles step 4 list counts 'destroys'. The manual says the Yak is 'potentially destroying' infantry groups, and the list does not say whether a hedged verb counts."
+  },
+  {
+   "topic": "Copy-check and PDF sources",
+   "note": "copy-check.mjs fetches a PDF as 'html' and compares against raw bytes, so a PDF source always passes. The registry tells RA1 coders to cite the manual scan, so the script cannot actually check official manual paraphrases."
+  }
+ ],
+ "new_mechanics": [],
+ "pages_read_not_cited": [
+  {
+   "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_manual (wiki transcript; its Yak, Submarine, Airfield, Sub Pen and Sonar Pulse text is also in the cited scan)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Rifle_infantry (reference figures; the registry holds them)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Tier"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/MiG_(Red_Alert_1) (named in uncertain)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Hind (named in uncertain)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Longbow_(Red_Alert_1) (named in uncertain)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Helipad_(Red_Alert)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Submarine_Pen_(Red_Alert_1) (named in uncertain)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Sonar_pulse (named in uncertain)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Destroyer_(Red_Alert_1) (named in uncertain)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Gunboat_(Red_Alert_1) (named in uncertain)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Cruiser (named in uncertain)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Missile_submarine (named in uncertain)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Anti-personnel_minelayer"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Anti-tank_minelayer"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/AADATA.CPP (named in uncertain)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/VDATA.CPP"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP (named in uncertain)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/HOUSE.CPP (named in uncertain)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/BULLET.CPP (named in uncertain)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/BDATA.CPP (searched for torpedo flags; it holds no bullet data, so nothing rests on it)"
+  }
+ ],
+ "source_problems": "1. Copy-check cannot read the manual PDF. It stores the PDF as raw bytes labelled html, so a pass on that URL proves nothing. I removed the 9.6 MB junk cache entry from the workspace's .cache and checked the extracted PDF text by hand: no shared runs.\n\n2. rules.ini still could not be read, as the registry warned. Three values are therefore unknown:\n- whether the Yak carries the Crewed flag (decides the parachute survivor);\n- whether the submarine's torpedo projectile is flagged anti-sub (decides whether subs can target subs);\n- the warheads' damage table.\n\n3. The Yak page's prose calls it less armoured than the MiG, but both infoboxes give armour type Light and the Yak slightly more health. Recorded with sources_disagree.\n\n4. The wiki pages were checked from copies already in the workspace cache, not refetched.\n\n5. This was a resumed run. The wiki pages had been downloaded earlier today into <job folder>/j04-dl, my own job's download folder beside the workspace, and I reused them. New downloads (StrategyWiki, the EA source files, the Hind and Longbow pages, the manual PDF) went to <job folder>/j04-dl2 and <job folder>/j04-dl3. The hand copy-check script is <job folder>/j04-tools/runs.py. No other workspace or the main repository was opened."
+}

@@ -1,0 +1,524 @@
+{
+ "label": "j03-ra1",
+ "game": "ra1",
+ "file_written": "data/units/ra1.json",
+ "units": [
+  "ra1.soviet.mad-tank",
+  "ra1.allied.mobile-gap-generator"
+ ],
+ "validator_result": "OK. No errors. The only warnings are the expected ones: patterns still planned (self-destruct, become-invulnerable and others) and unit links to units not researched yet (ra1.shared.rocket-soldier and the ra3 ones). No ATYPICAL line names either of these units, so neither has an atypical list.",
+ "copy_check_result": "Exit 0. All 10 cited pages were checked from the cache and none shares a run of 6 or more words with the entries. Caveat: the two manual citations are File: pages on the Command & Conquer Wiki, and the cache holds only the licence stub of each file page, not the manual text. So copy-check itself never compared the entries with the manuals. I compared them separately, using copy-check's own words/grams/sharedRuns functions, against the extracted text of both PDF scans (Aftermath and Red Alert 1 manuals), the wiki's manual transcript and the uncited pages I read. The only runs found were page titles (\"the Mammoth tank (Red Alert 1)\", \"the Gap generator (Red Alert 1)\"), which copy-check itself does not report.",
+ "hesitations": [
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "roles/primary",
+   "chosen": "assault",
+   "alternatives": [
+    "anti-armour",
+    "siege"
+   ],
+   "reason": "The pulse is an ability, not a weapon. Roles step 2 (unarmed) has no listed role whose description fits, steps 3 and 4 read only the main weapon, and anti-armour's and siege's requires read weapons, so both fail. Step 5 then gives assault for a slow unit with medium armour. Recorded as a fit_note."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "fit_notes/0/path",
+   "chosen": "roles/primary",
+   "alternatives": [
+    "roles"
+   ],
+   "reason": "The roles list says to record a role whose requires fail at 'path roles'. I kept the more specific roles/primary, as earlier coders did; either reads correctly."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "abilities/0/kind",
+   "chosen": "active",
+   "alternatives": [
+    "deploy",
+    "ultimate"
+   ],
+   "reason": "Deploy needs a stronger stationary mode, and the tank only counts down to its own death. Ultimate needs a charge before each use, but this charge comes after the press. The Remastered Deploy key is only a key binding (registry notes). The ability-kinds tie-breaks don't cover a press-to-start countdown that pins the unit in place."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "abilities/0/cooldown",
+   "chosen": "per-life",
+   "alternatives": [
+    "left out"
+   ],
+   "reason": "No source gives a figure, but the cooldown rule says a per-life ability is per-life without one. The tank dies in its own pulse."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "abilities/0/patterns",
+   "chosen": "self-destruct",
+   "alternatives": [
+    "empty list with proposed deal-percent-damage only"
+   ],
+   "reason": "Self-destruct passes the pattern-link test (blow yourself up to hurt everything nearby; the counterplay is to kill it first). It misses the damage by share of maximum health and the immunity of infantry, so deal-percent-damage is proposed in a fit_note."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "on_death",
+   "chosen": "bail-out, basis in-game",
+   "alternatives": [
+    "bail-out, basis proposal",
+    "death-blast"
+   ],
+   "reason": "The bail-out rule speaks of crew getting out as the vehicle dies, but here the crewman leaves when the countdown starts (UNIT.CPP, wiki). The registry notes ask for in-game when a cited page shows the crew getting out, and the wiki does. Death-blast was rejected: the pulse is the ability, and a tank destroyed by enemies does not explode (manual). Fit_note added."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "body/plan",
+   "chosen": "launcher-rack",
+   "alternatives": [
+    "hull-turret",
+    "casemate"
+   ],
+   "reason": "The code gives it no combat turret and it has no gun, so neither hull-turret nor casemate fits. Launcher-rack's text speaks of a light chassis, while this is a Mammoth chassis carrying a piston device. No body term fits well; fit_note added."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "armour/class",
+   "chosen": "medium",
+   "alternatives": [
+    "heavy"
+   ],
+   "reason": "Step 1 gives heavy from the infobox through the armour_map, and the manual's grade also says heavy. The registry notes' closed step-down list names the M.A.D. Tank as medium, and step 1 includes those step-downs."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "mobility/base",
+   "chosen": "tracks",
+   "alternatives": [
+    "wheels"
+   ],
+   "reason": "The rule is clear, but the source is not: no page names its drive, so tracks is inferred from the wiki's statement that it uses the Mammoth's chassis."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "sensors/sight",
+   "chosen": "medium",
+   "alternatives": [
+    "long"
+   ],
+   "reason": "Its sight is exactly 1.5 times the Rifle Infantry's, an edge. The edge rule sends it to the band nearer medium."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "countered_by/1",
+   "chosen": "weapon:rockets (with unit:ra1.shared.rocket-soldier beside it)",
+   "alternatives": [
+    "class:infantry only",
+    "unit:ra1.shared.rocket-soldier alone"
+   ],
+   "reason": "Matchups rule 1 says a phrase naming the enemy two ways at once (its own example is rocket-armed infantry) takes the first fitting link in the order job, weapon, kind, which gives weapon:rockets. Rule 3 wants a unit: link next to a word-list link for the same reason. This entry was changed in this session."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "countered_by/3",
+   "chosen": "pattern:become-invulnerable",
+   "alternatives": [
+    "leave the Iron Curtain only in the ability summary and armour.notes"
+   ],
+   "reason": "The Iron Curtain is a side-wide power that is left off every unit, so no RA1 unit carries this pattern. The wiki still names the stall as an enemy tactic, and the task asks for it to be covered. No link kind names a side-wide power."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "abilities/0 (pulse size)",
+   "chosen": "the wiki's figures (a little under half of each vehicle's maximum health, about two fifths of each building's, over roughly a nuclear blast's area), no sources_disagree",
+   "alternatives": [
+    "the RULES.CPP built-in defaults (half, a quarter, a much wider reach)",
+    "flag sources_disagree and drop confidence"
+   ],
+   "reason": "The code only gives defaults, which the Aftermath rules file (unreadable) can override, so I did not treat this as two sources disagreeing. Either way the point decides no term, so confidence stays high under the High or Medium tie-break."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "combos/1",
+   "chosen": "role:anti-infantry",
+   "alternatives": [
+    "no second combo"
+   ],
+   "reason": "Reasoned from the wiki's counters (infantry beat it), not stated by any source as a pairing."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "counters/1",
+   "chosen": "armour-class:heavy",
+   "alternatives": [
+    "class:vehicle only"
+   ],
+   "reason": "Reasoned from damage by share of maximum health (wiki, LOGIC.CPP). No source says heavy tanks in particular suffer."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "abilities/0/name",
+   "chosen": "Harmonic shock wave (activate)",
+   "alternatives": [
+    "Seismic wave generator (the UnitBox useguns field, which is the wiki's lore)"
+   ],
+   "reason": "The ability has no named button. The Aftermath manual's Weapon word is the official name."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "roles/primary",
+   "chosen": "assault",
+   "alternatives": [
+    "support",
+    "buffer",
+    "scout",
+    "area-denial",
+    "raider"
+   ],
+   "reason": "Its role line in the wiki's UnitBox ('Support unit') is not official text (registry notes), and support's requires fail anyway. In step 2 no listed role's description fits hiding allies: buffer makes allies stronger, scout finds enemies, and area denial needs a lingering-zone trait or an Area or Summon pattern. Step 5 then gives assault on the C&C Wiki's speed. On StrategyWiki's speed it would be raider."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "mobility/speed",
+   "chosen": "medium (speed_raw 1)",
+   "alternatives": [
+    "fast (StrategyWiki's figure, a little over twice the reference)"
+   ],
+   "reason": "The rule is clear but the sources are not: the C&C Wiki and StrategyWiki disagree. The registry notes say to band from the C&C Wiki infobox with an uncertain entry (sources_disagree). The C&C Wiki's own Radar jammer page gives the similar truck StrategyWiki's speed."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "confidence",
+   "chosen": "medium",
+   "alternatives": [
+    "high"
+   ],
+   "reason": "Official manual text is cited, which would allow high, but the High or Medium tie-break drops an entry to medium when a contradicted point decides a band. The disputed speed decides the speed band and, through roles step 5, the primary role."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "body/plan",
+   "chosen": "launcher-rack",
+   "alternatives": [
+    "hull-turret",
+    "open-mount"
+   ],
+   "reason": "The code gives it a rotating dish and no combat turret, which fits launcher-rack's 'radar mast or sensor carriers'. A dish is not a gun turret, and nothing shows exposed crew."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "body/size",
+   "chosen": "large",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "No size example names a truck, so it has to be measured against the main battle tank. No page gives its footprint, so I used the code's sprite-size flag (shared with the Medium and Heavy Tanks, not the APC or Light Tank). Medium would also break crush's size rule."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "mobility/base",
+   "chosen": "wheels",
+   "alternatives": [
+    "tracks"
+   ],
+   "reason": "The source is unclear: the wiki says 'truck-mounted' and 'on wheels', and the rules file that would settle it could not be read."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "sensors/traits",
+   "chosen": "none",
+   "alternatives": [
+    "jammer",
+    "stealth"
+   ],
+   "reason": "Jammer hides itself and nearby allies from radar and lock-ons but leaves them open to sight. The gap blacks out the ground (radar map included) and leaves only direct sight, which comes close to jammer, but it also hides from the view of explored ground. Stealth covers only the unit itself. The sources give neither term, and traits are never proposed. Fit_note added."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "abilities/0/patterns",
+   "chosen": "none (shroud-area proposed)",
+   "alternatives": [
+    "cloak",
+    "lay-smoke",
+    "jam-sensors"
+   ],
+   "reason": "Cloak's area variant breaks when the unit attacks or meets a detector, lay-smoke is short and blocks sight for both sides, and jam-sensors is a keyed bubble against radar and locks. None gives the same interaction and counterplay."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "abilities/0/name",
+   "chosen": "Shroud generator (gap field)",
+   "alternatives": [
+    "Gap field"
+   ],
+   "reason": "The field has no button or in-game name. The manual's Weapon word, 'Shroud generator', is the closest official name, and 'gap field' is the paragraph's term. Renamed in this session."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "armament",
+   "chosen": "empty",
+   "alternatives": [
+    "a shroud-generator weapon entry"
+   ],
+   "reason": "The manual's stat block names a weapon (Shroud generator), but the registry notes say the Weapon word is only a name. The unit has no attack."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "strengths/0 and weaknesses/1",
+   "chosen": "body:launcher-rack",
+   "alternatives": [
+    "category:stealth-deception",
+    "pattern:cloak"
+   ],
+   "reason": "No link kind names an ability that has no pattern: category needs a linked pattern, and cloak does not fit. Matchups rule 5 says to hang a gap on the part that causes it, so I used the body plan that carries the dish. In this session I merged the AI-ignores-shroud weakness into weaknesses/1 instead of repeating the same link."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "counters/0 and countered_by/0",
+   "chosen": "role:scout in both",
+   "alternatives": [
+    "scout only in countered_by",
+    "class:vehicle for the second"
+   ],
+   "reason": "Matchups rule 6 allows the same enemy in both lists only for different situations. Here they are a scout watching from outside, which sees only shroud (manual), and a scout that drives in and sees what is near it."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "counters/1",
+   "chosen": "role:siege",
+   "alternatives": [
+    "leave it out (counters would keep role:scout only)"
+   ],
+   "reason": "No page names artillery. The counter is reasoned from the Gap generator page and the Fog of war page (read, not cited), and an uncertain entry was added in this session."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "countered_by/1",
+   "chosen": "class:vehicle",
+   "alternatives": [
+    "role:raider",
+    "role:anti-armour"
+   ],
+   "reason": "No source names what kills it. Any armed vehicle can, because it has no gun and light armour."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "tier/basis (multiplayer-only mark)",
+   "chosen": "stated in tier.basis",
+   "alternatives": [
+    "mobility.notes or body.notes",
+    "crew.notes"
+   ],
+   "reason": "The research notes say to mark multiplayer-only units 'in their notes', but a source unit has no general notes field. tier.basis is where buildability is explained."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "on_death",
+   "chosen": "bail-out, basis proposal",
+   "alternatives": [
+    "respawn"
+   ],
+   "reason": "No page shows its crew getting out, so the decision-3C default applies to a crewed machine, as the registry notes say. The chance-based code survivor is noted."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "sources/3/supports",
+   "chosen": "mobility/notes",
+   "alternatives": [
+    "mobility/speed"
+   ],
+   "reason": "StrategyWiki contradicts the speed band instead of backing it, so in this session I moved its support to the notes that report its figure."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "roles/primary",
+   "used": "assault",
+   "wanted": "anti-armour or siege",
+   "note": "Its only job is a pulse that hurts vehicles, ships, aircraft and buildings. The pulse is an ability, and the roles rules read only weapons, so no anti or siege role can be claimed."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "abilities/0/patterns",
+   "used": "self-destruct",
+   "wanted": "deal-percent-damage",
+   "note": "Self-destruct misses that the pulse takes a fixed share of each target's maximum health (armour does not matter) and spares infantry."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "body/plan",
+   "used": "launcher-rack",
+   "wanted": "a heavy tank hull carrying a device instead of a gun, with no turret",
+   "note": "Hull-turret needs a turret and casemate a fixed gun, and launcher-rack speaks of a light chassis."
+  },
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "on_death/outcomes",
+   "used": "bail-out",
+   "wanted": "crew that leave when a self-destruct starts",
+   "note": "The crewman leaves at the start of the countdown, not as the tank dies."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "roles/primary",
+   "used": "assault",
+   "wanted": "support",
+   "note": "Hiding teammates is team support, but support's requires need a repair or resupply part. No role describes concealing allies."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "abilities/0/patterns",
+   "used": "none",
+   "wanted": "shroud-area",
+   "note": "No registry id covers an always-on field that blacks out the ground around the unit for enemies, closing again behind anyone who passes through."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "sensors/traits",
+   "used": "none",
+   "wanted": "an always-on area shroud for the enemy (a sensor-trait twin of shroud-area)",
+   "note": "Stealth hides only the unit, and jammer hides from radar and lock-ons but not from sight."
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "strengths/0",
+   "used": "body:launcher-rack",
+   "wanted": "pattern:shroud-area",
+   "note": "No link kind names the gap field, so a strength and a weakness hang on the body plan that carries the dish."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "fit_note path for a role whose requires fail",
+   "note": "The roles list says 'path roles', while earlier coders and the samples use roles/primary or roles/secondary. I used roles/primary."
+  },
+  {
+   "topic": "Bail-out timing",
+   "note": "The bail-out rule speaks of crew getting out 'as the vehicle dies'. It does not say whether crew who leave automatically when an unstoppable self-destruct begins count. The registry notes' rule (a cited page shows the crew getting out) decided it."
+  },
+  {
+   "topic": "Where to put the multiplayer-only mark",
+   "note": "The research notes say to mark multiplayer-only units 'in their notes', but a source unit has no general notes field. I used tier.basis."
+  },
+  {
+   "topic": "Matchups that name a side-wide power",
+   "note": "Shared mechanics leaves powers such as the Iron Curtain off every unit, so no unit carries become-invulnerable. A pattern: link in countered_by then describes an enemy that does not exist in the source game. There is no link kind for a power."
+  },
+  {
+   "topic": "Matchups rule 1 order for 'rocket infantry'",
+   "note": "The rule gives weapon:rockets. For the M.A.D. Tank that link also matches rocket vehicles (the V2), which the pulse does hurt, so the infantry half of the reason is carried only in the why text and the unit: link."
+  },
+  {
+   "topic": "Unarmed units whose job no step-2 role describes",
+   "note": "Roles step 2 falls through to step 5, which gives assault (a frontline brawler) to an unarmed truck that never fights. Perhaps step 2 should allow leaving the primary as the closest role, or add a concealment role."
+  },
+  {
+   "topic": "Roles from damaging abilities",
+   "note": "The roles steps read only weapons, so a unit whose damage comes from an ability (a self-destruct pulse) can never claim anti-armour or siege, even when official text describes that job."
+  },
+  {
+   "topic": "Size of trucks",
+   "note": "No size example names a truck, and the measuring rule needs a footprint that wiki pages rarely give. I used the code's sprite-size flag, which no rule mentions."
+  },
+  {
+   "topic": "Ability kind for a press-to-start countdown",
+   "note": "The ability-kinds tie-breaks don't cover an ability that pins the unit in place with no mode and ends in its death (active, deploy or ultimate)."
+  },
+  {
+   "topic": "Copy-check and PDF scans cited through File: pages",
+   "note": "copy-check fetches the file page's wikitext (a licence stub), not the PDF, so an official manual citation is never really checked. I checked it with a separate script."
+  }
+ ],
+ "new_mechanics": [
+  {
+   "unit": "ra1.soviet.mad-tank",
+   "path": "abilities/0",
+   "proposed_id": "deal-percent-damage",
+   "summary": "A blast or hit removes a fixed share of each target's maximum health instead of a set amount, so armour and size make no difference and a few hits finish anything; the M.A.D. Tank's version also leaves infantry untouched and hurts both sides. Counterplay: kill the carrier before it goes off, spread out or stay out of reach, repair between hits, and hunt it with the unit kinds it ignores.",
+   "pages": [
+    {
+     "url": "https://cnc.fandom.com/wiki/M.A.D._tank"
+    },
+    {
+     "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/LOGIC.CPP"
+    },
+    {
+     "url": "https://cnc.fandom.com/wiki/File:Red_Alert_-_The_Aftermath_-_English.pdf"
+    }
+   ]
+  },
+  {
+   "unit": "ra1.allied.mobile-gap-generator",
+   "path": "abilities/0",
+   "proposed_id": "shroud-area",
+   "summary": "An always-on field around the unit keeps the nearby ground blacked out for enemies, hiding the unit and its escorts from their view and minimap; an enemy that enters sees only what lies within its own sight, and the darkness closes again behind it. Counterplay: send a scout or any unit into the field to see what hides there, or find and kill the fragile, unarmed carrier; it does nothing to opponents that ignore shroud.",
+   "pages": [
+    {
+     "url": "https://cnc.fandom.com/wiki/Mobile_gap_generator"
+    },
+    {
+     "url": "https://cnc.fandom.com/wiki/Gap_generator_(Red_Alert_1)"
+    },
+    {
+     "url": "https://cnc.fandom.com/wiki/File:Red_Alert_1_Manual.pdf"
+    }
+   ]
+  }
+ ],
+ "pages_read_not_cited": [
+  {
+   "url": "https://cnc.fandom.com/wiki/Iron_Curtain_(Red_Alert_1)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Mammoth_tank_(Red_Alert_1) (named in an uncertain entry)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Radar_jammer (named in an uncertain entry)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Fog_of_war (requested as Shroud; named in an uncertain entry)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Remastered_Collection_patch_735514 (named in an uncertain entry)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Remastered_Collection_patch_744746"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_manual (the wiki's manual transcript)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Template:Red_Alert_1_Allied_Arsenal"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Template:Red_Alert_1_Soviet_Arsenal"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Allied_tech_center_(Red_Alert_1)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Soviet_tech_center_(Red_Alert_1)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/RULES.CPP (named in an uncertain entry)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/HOUSE.CPP (named in an uncertain entry)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP (named in an uncertain entry)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TYPE.H (named in uncertain entries)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UNIT.CPP (cited for the M.A.D. Tank only; named in an uncertain entry for the Mobile Gap Generator)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UDATA.CPP (cited for the Mobile Gap Generator only; named in an uncertain entry for the M.A.D. Tank)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/MAP.CPP"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/CONQUER.CPP"
+  }
+ ],
+ "source_problems": "This session continued an interrupted run. The entries were already written, so I re-read the rules and the cached sources, checked every claim and made these fixes: a weapon:rockets link plus its unit link in the M.A.D. Tank's countered_by, a rename of the Gap Generator ability, a merge of its two weaknesses that shared one link, corrected StrategyWiki supports, and a new uncertain entry for counters/1.\n\nSource problems:\n(1) The two sources disagree on the Mobile Gap Generator's speed: Rifle Infantry pace on the C&C Wiki, a little over twice that on StrategyWiki. The C&C Wiki's Radar jammer page gives the similar truck StrategyWiki's speed.\n(2) The rules.ini values (the Aftermath quake figures, the Crewed flag, drive type) could not be read, so the pulse sizes rest on the wiki's prose. The code defaults in RULES.CPP differ.\n(3) The Iron Curtain page says the curtain cannot cover structures and kills riders in transports, while the code shows neither. Neither point decides anything in these entries.\n(4) The manual scans are cited as File: pages, whose wikitext the copy check reads instead of the PDF (see copy_check_result).\n(5) How a human player's truck renews the gap field while driving is unclear from the code, whose multiplayer path was rewritten for the Remastered Collection."
+}

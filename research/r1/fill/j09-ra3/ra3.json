@@ -1,0 +1,617 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra3",
+  "units": [
+    {
+      "id": "ra3.empire.mecha-tengu",
+      "game": "ra3",
+      "faction": "empire",
+      "name": "Mecha Tengu",
+      "flavour_affinity": ["empire", "allied"],
+      "class": "hover",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["anti-air", "raider"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Mecha Bay",
+        "basis": "Built at the Mecha Bay with no further tech: its infobox gives tier 1, and the Mecha bay page lists it with the basic units."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 800,
+        "basis": "Its price is a little under the registry's medium threshold, about four fifths of a main battle tank's, so low."
+      },
+      "mobility": {
+        "base": "hover",
+        "handling": "drift",
+        "traits": ["transform"],
+        "speed": "fast",
+        "speed_raw": 2,
+        "notes": "The infobox land speed is twice the Conscript's; over water it is somewhat slower, and hover units are banded by land speed. That is about a third faster than the Hammer tank, the Soviet main battle tank, and the profile says it outruns most vehicles. It floats a few metres up on its boosters and skims over ground that would slow infantry or simpler vehicles, so it crosses water on its own (the infobox marks it amphibious). Two beta patches raised its speeds and then put them back. In jet form it is much faster (see modes). Drift is the hover default."
+      },
+      "body": {
+        "plan": "humanoid-mech",
+        "size": "medium",
+        "notes": "An anthropomorphic robot whose arms and legs act as stabilizers rather than for walking; the wiki calls it a hover walker and the profile a dual-form combat robot. Humanoid mech is the shape; it breaks that body's class and mobility rules (see atypical). Medium as a light mech; no source gives its dimensions. In jet form it folds into a fighter airframe (see modes)."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["directional"],
+        "notes": "Step 4 of the armour-class order decided: RA3 has no armour map, its armour set's name is not a plain armour word, and a light walker bigger than a soldier is medium. Its alloy shrugs off small arms: rifle-type gun damage does a quarter of normal since patch 1.11 (half before that, and still half in Uprising), and sniper and melee hits do nothing; cannon, prism and tesla hits do well over normal. Directional by the Uprising manual's armour-facing rule for armoured vehicles; its page gives no side or rear figures. The profile says current models are lighter and less sturdy than older ones. The jet form uses an aircraft armour set (see modes)."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox gives a shroud-clearing figure equal to the Conscript's, so medium. Its vision figure in hover form also equals the Conscript's; the jet's vision is a little longer since patch 1.11."
+      },
+      "armament": [
+        {
+          "name": "Kinetic burst-shot autocannons (Mecha Tengu)",
+          "slot": "primary",
+          "family": "autocannon",
+          "damage": "kinetic",
+          "mount": "body-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "summary": "Twin autocannons, one each side of the air intake, fire quick accurate bursts; the manual calls the gun a 20mm autocannon. They shred soldiers and light vehicles, yet tanks shrug them off. In this form the unit attacks only targets on the ground or on the water, never aircraft; that includes buildings such as refineries on the water. The profile says it has to steady itself before it fires."
+        },
+        {
+          "name": "Kinetic burst-shot autocannons (Jet Tengu)",
+          "slot": "alternate",
+          "family": "autocannon",
+          "damage": "kinetic",
+          "mount": "body-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["low-air", "high-air"],
+          "traits": ["anti-air"],
+          "condition": "In jet form, after transforming.",
+          "summary": "The same guns once the unit is a jet: they now hit only aircraft, reach a little further and hit much harder than in hover form. They do only a quarter of their damage to Apollo fighters, MiG fighters and other Jet Tengus, and double damage to the Harbinger gunship. Patch 1.05 raised their damage and patch 1.11 made Jet Tengus much weaker against each other. There is no ammunition to reload at an airfield.",
+          "patterns": ["transform"],
+          "mode": "jet"
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "The background text gives it a pilot in a full-body cockpit; as an RTS unit it has no player seats, so solo is our proposal. One player flies both forms."
+      },
+      "abilities": [
+        {
+          "name": "Mecha Mode / Jet Mode",
+          "kind": "toggle",
+          "cooldown": "medium",
+          "source": "innate",
+          "summary": "Switches between the hover robot and the jet fighter. The change itself takes under a second, but the unit must then wait a medium cooldown before it can switch again, so it should avoid fights while the cooldown runs. Being infested by a Terror Drone, lifted by Yuriko Omega, or hit by a stasis ray or an EMP weapon stops it switching.",
+          "patterns": ["transform"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "jet",
+          "name": "Jet Tengu",
+          "via": "transform",
+          "class": "aircraft",
+          "mobility": {
+            "base": "jet",
+            "handling": "forward-only",
+            "speed": "very-fast"
+          },
+          "body": {
+            "plan": "fixed-wing"
+          },
+          "armour": {
+            "class": "light",
+            "models": ["flat-pool"]
+          },
+          "summary": "Folds into a conventional fighter shape and flies high, at about twice its hover speed and four times the Conscript's (a little slower than the Apollo and MiG fighters). Its guns switch to the jet weapon, which can hit only aircraft, so only anti-air weapons reach it and it cannot hurt ground targets. Its armour becomes an aircraft set that takes normal damage from autocannon, flak and rocket fire (light, as planes are). The profile says its wings let it hover in place while it attacks, which forward-only handling does not show. It is the Empire's main air-superiority fighter and needs no airfield. If destroyed in this form it crashes and hurts what is near."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["death-blast"],
+        "basis": "in-game",
+        "notes": "Only in jet form: the crashing jet deals explosive damage in a small area (infobox notes). Destroyed in hover form, it is simply gone. Honorable Discharge, an Imperial protocol bought for the whole side, makes destroyed Imperial vehicles explode and makes this crash about three times as strong; that is a side-wide power, not the unit's own outcome."
+      },
+      "strengths": [
+        {
+          "ref": "hits:infantry",
+          "why": "Its burst-fire autocannons cut through soldiers and light vehicles, and its alloy shrugs off their rifles."
+        },
+        {
+          "ref": "mobility-trait:transform",
+          "why": "Changes form in under a second: it can flee a losing ground fight into the air, or drop down on ground units that were chasing a fighter."
+        },
+        {
+          "ref": "hits:high-air",
+          "why": "As a jet it is the Empire's early air-superiority fighter, with no ammunition limit and no airfield to return to, so numbers can swarm enemy fighters."
+        },
+        {
+          "ref": "speed:fast",
+          "why": "Outruns most vehicles on the ground, and the jet form is faster still, which suits early raids on refineries and derricks."
+        },
+        {
+          "ref": "mobility:hover",
+          "why": "Moves and fights over water nearly as well as on land, so it can harass refineries out at sea."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "pattern:transform",
+          "why": "Each form hits only its own layer: the robot cannot shoot aircraft, and the jet cannot shoot ground targets, so ground anti-air kills it freely. After a switch it must wait out a cooldown, and infestation, psychic lifting, stasis rays and EMP stop it switching, so it can be caught in the wrong form."
+        },
+        {
+          "ref": "weapon:autocannon",
+          "why": "In hover form its guns are no match for tanks, and in jet form they do only a quarter of their damage to Apollo and MiG fighters, so it loses to them one on one."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "armour-class:heavy",
+          "why": "Tanks shrug off its autocannons, and their cannons do well over normal damage to it, so they destroy it easily."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "In jet form it cannot fire at the ground, so ground anti-air shoots it down freely, and dedicated fighters beat it one on one."
+        },
+        {
+          "ref": "unit:ra3.allied.apollo-fighter",
+          "why": "Its jet guns do only a quarter of their damage to the Apollo, so a lone Jet Tengu loses; only numbers win."
+        },
+        {
+          "ref": "unit:ra3.soviet.mig-fighter",
+          "why": "Its jet guns do only a quarter of their damage to the MiG, so a lone Jet Tengu loses; only numbers win."
+        },
+        {
+          "ref": "unit:ra3.allied.multigunner-ifv",
+          "why": "Its missiles hit both ground and air targets, so it threatens the Tengu in either form."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Shreds soldiers with its autocannons while their rifles barely scratch its alloy."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Light vehicles fall to its autocannons too, so it can stand up to most early units."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "As a jet it hunts aircraft that cannot shoot back at other aircraft, and Harbinger gunships take double damage from it."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:ra3.empire.mecha-tengu",
+          "why": "Works best in numbers: flocks of Jet Tengus overwhelm better enemy fighters, and groups raid economies."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Tags along with tank hunters such as Tankbusters, which cannot shoot aircraft and do poorly against infantry, covering both gaps by switching form."
+        }
+      ],
+      "memorable": "A hover mech that folds into a jet fighter in an instant: one moment it shreds infantry, the next it is hunting aircraft, but each form can only hit its own layer.",
+      "as_player": "A quick T1 hover mech. Left mouse fires twin nose autocannons, aimed by turning, that tear up infantry and light vehicles but lose to tanks and cannot touch aircraft. Press Q to snap into a jet: much faster, up where only anti-air reaches you, guns now hitting only aircraft. The switch is instant but locks for a medium cooldown, so the wrong form can get you killed. Go down as a jet and your crash hurts whatever is below.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/7c/CCRA3UP_pcMAN%28EN_US%29.pdf/revision/latest?cb=20180801163717",
+          "title": "Command & Conquer: Red Alert 3 Uprising manual (PDF), EA",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "note": "EA's printed manual, hosted as a scan by the Command & Conquer Wiki (File:CCRA3UP pcMAN(EN US).pdf). Page 20 has the Mecha Tengu paragraph (a dual-purpose interceptor that turns into a jet and back, so it can take on air or ground targets with its 20mm autocannon); the Armor Facing section says armoured vehicles take more damage from the side and more still from behind.",
+          "supports": ["armour/models", "armament/0", "abilities/0"],
+          "version": "Uprising (2009)"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Mecha_Tengu",
+          "title": "Mecha Tengu, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament",
+            "abilities/0",
+            "modes/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos/1",
+            "memorable"
+          ],
+          "version": "Patch 1.12, with Uprising notes"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Mecha_Tengu/Profile",
+          "title": "Mecha Tengu/Profile, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Copies EA's official Red Alert 3 unit profile from the launch site, now offline (the page links an archived copy). Its designation line gives the robot form an anti-infantry role and the jet form an anti-air role; its Notes from the Field are official text.",
+          "supports": [
+            "roles",
+            "body",
+            "armour/notes",
+            "armament/0",
+            "armament/1",
+            "crew",
+            "modes/0",
+            "strengths/0",
+            "strengths/1",
+            "strengths/3",
+            "strengths/4",
+            "counters/0",
+            "combos/0",
+            "memorable"
+          ],
+          "version": "2008 launch profile"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Transformation",
+          "title": "Transformation, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["abilities/0", "weaknesses/0", "modes/0"]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Empire_of_the_Rising_Sun_units",
+          "title": "Red Alert 3: Empire of the Rising Sun units, StrategyWiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["armament/1", "strengths/2", "countered_by/0", "countered_by/1", "combos/0"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "The one designation for both forms names two roles. Step 1 takes anti-infantry because the main weapon, the hover form's guns, has the bonus: the profile says they cut through infantry, and basic infantry armour (Conscript (Red Alert 3) page, Command & Conquer Wiki) takes half again normal Auto Cannon damage. The anti-air bonus belongs to the jet's alternate weapon, not to the main weapon."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Anti-air ranks at step 1 (the designation). Raider is supported only at step 2, through the transform mode: the very fast, light jet form is how it hits and then escapes (the wiki says it can flee a losing fight by transforming and that it excels at early harassment). Step 4 cannot give raider, since the hover form's armour is medium. If a mode's speed and armour do not count for raider, the second slot would be assault (step 4: medium armour and a medium-range main weapon), although the sources describe a harasser rather than a unit that leads pushes."
+        },
+        {
+          "path": "armour/class",
+          "note": "Medium by step 4 as a light walker bigger than a soldier. Light is arguable: as a hovercraft its kind is named in no class description; its health is close to that of the light Multigunner IFV (Multigunner IFV page); and StrategyWiki calls its armour poor. But small arms hurt it less than they hurt the Hammer tank (Hammer tank page), and the Riptide ACV, an APC and so medium by kind, uses the same armour set (Riptide ACV page, Command & Conquer Wiki)."
+        },
+        {
+          "path": "armour/models",
+          "note": "Directional only by the Uprising manual's rule for armoured vehicles: the Mecha Tengu page gives no side or rear figures, and the manual makes the rear sound much weaker than any infobox figure in the game does."
+        },
+        {
+          "path": "armament/1",
+          "note": "The infobox names one weapon for both forms, with separate ground and air attack lines and a range for each form, and the profile calls them the very same guns. The form decides what they can hit, so the jet version is coded as an alternate weapon with the jet mode (Paired entries) rather than one entry for both."
+        },
+        {
+          "path": "armament/1/summary",
+          "note": "The Mecha Tengu page says the jet guns do a quarter of their damage to Apollo fighters, while the Apollo fighter page (Command & Conquer Wiki) says the Apollo takes a little under a third of normal damage from Jet Tengus. Either way a lone Jet Tengu loses to an Apollo.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Structures rest on the wiki's remark that it can pester refineries on the water and on the profile's account of Tengus wrecking a super-reactor; no infobox line names buildings. The Mecha Mode button text names ground and water targets only."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "Only the 2008 profile says it must steady itself to fire; no other source read confirms whether it can fire on the move."
+        },
+        {
+          "path": "modes/0/mobility/base",
+          "note": "Jet, from its name, its fighter shape, its high flight and its role as a fighter. Hovering flight is arguable: the wiki calls it a VTOL fighter, the profile says its wings let it hover in place to attack, and the hovering-flight term names VTOL. The Apollo fighter and MiG fighter pages (Command & Conquer Wiki) describe the other sides' fighters as VTOL too, and give their air speeds, which the mode summary compares."
+        },
+        {
+          "path": "modes/0/mobility/handling",
+          "note": "Forward-only is the jet default and the handling tie-break gives no reason to change it in a commanded game, although the profile says the jet can hover in place while it attacks."
+        },
+        {
+          "path": "modes/0/body",
+          "note": "Size is left at the base form's medium. The sizes list names jets as large, but the same unit only folds into its other shape."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparison with the Hammer tank uses that tank's land speed from the Hammer tank page (Command & Conquer Wiki)."
+        },
+        {
+          "path": "on_death",
+          "note": "The infobox's crash damage is over a small radius; the registry note for ra3 counts it as a death blast. It applies only when the unit dies as a jet."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "modes/0/mobility/base",
+          "used": "jet",
+          "wanted": "a fixed-wing flight type that can also hover in place (a VTOL fighter)",
+          "note": "Jet means it must keep moving and attacks in passes; hovering flight means a rotor or VTOL craft flying low. Red Alert 3's fighters, the Jet Tengu among them, are VTOL jets that fly high and still hover to attack."
+        },
+        {
+          "path": "armament/0/traits",
+          "used": "none",
+          "wanted": "a trait for a weapon the unit must stop to fire",
+          "note": "The profile says the hover form has to steady itself before it fires; no weapon trait says the unit cannot fire while moving."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "body/plan",
+          "rule": "bodies:humanoid-mech classes hover",
+          "note": "Its shape is a humanoid robot with arms and legs, but they only steady it while it hovers; the class follows how it moves (an air cushion over land and water), and our humanoid mech body is listed for walkers only."
+        },
+        {
+          "path": "body/plan",
+          "rule": "bodies:humanoid-mech allowed.mobility hover",
+          "note": "The humanoid mech body is listed only for two legs, but this robot never walks: it hovers a few metres up on its boosters."
+        }
+      ],
+      "researched_by": "batch r1, agent J09-RA3",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra3.empire.sudden-transport",
+      "game": "ra3",
+      "faction": "empire",
+      "name": "Sudden Transport",
+      "flavour_affinity": ["empire", "allied"],
+      "class": "hover",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "transport",
+        "secondary": ["infiltrator"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Mecha Bay",
+        "basis": "Built at the Mecha Bay with no further tech: its infobox gives tier 1, and the Mecha bay page lists it with the basic units."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 500,
+        "basis": "Its price sits exactly on the registry's low threshold, about half a main battle tank's, and a price on an edge takes the higher band, so low."
+      },
+      "mobility": {
+        "base": "hover",
+        "handling": "drift",
+        "traits": [],
+        "speed": "fast",
+        "speed_raw": 2,
+        "notes": "The infobox gives one speed for both land and water, twice the Conscript's. That is about a third faster than the Hammer tank, the Soviet main battle tank. As a hovercraft it crosses water by itself (the infobox and the manual call it amphibious). Drift is the hover default."
+      },
+      "body": {
+        "plan": "box-carrier",
+        "size": "medium",
+        "notes": "An enclosed hover hull with its riders hidden inside; the wiki calls it a hover armoured personnel carrier. It carries no weapon or turret. Medium as an APC; no source gives its dimensions."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["directional"],
+        "notes": "Step 4 of the armour-class order decided: RA3 has no armour map, its armour set's name is not a plain armour word (the registry note says set names never are), and an APC is medium. Melee and sniper hits do nothing to it, gun and autocannon fire does half damage, radiation almost nothing; flak, rocket, cannon, prism and tesla fire does half again normal damage. Its infobox gives slightly more damage from the side and a little more again from the rear, so directional, though the difference is small."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox gives a shroud-reveal figure equal to the Conscript's shroud-clearing figure, so medium. Its disguise is an ability (disguise pattern), not the stealth trait: it stays in view and only looks like another vehicle."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "passengers": {
+          "seats": 5,
+          "kind": "passenger-cargo"
+        },
+        "notes": "Five infantry seats, copied from the source; no page shows riders firing out, so they are cargo. No crew is named in the sources; as an RTS unit it has no player seats, so solo is our proposal: the buyer drives."
+      },
+      "abilities": [
+        {
+          "name": "Passenger seats",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Carries up to five infantry over land and water; they cannot act until they get out. Letting them out (its Evacuate button, our evict key) ends the disguise.",
+          "patterns": ["carry-passengers"]
+        },
+        {
+          "name": "Disguise",
+          "kind": "active",
+          "source": "innate",
+          "summary": "Targeting a vehicle of either side makes the transport take on that vehicle's look; the manual adds other objects, and the wiki notes that in a match against the AI, with no vehicle at hand to copy, it can even look like an aircraft at ground level. Most base defences and units are fooled. Detector units (the Allied attack dog, the Soviet war bear and the Imperial Burst Drone) see through it, and alert players can too, because it keeps its own speed rather than its model's and may copy a vehicle that cannot go on water. The disguise ends when the riders get out.",
+          "patterns": ["disguise"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["death-blast"],
+        "basis": "in-game",
+        "notes": "The infobox gives explosive damage when it is destroyed, and StrategyWiki says the explosion kills what is close by and the infantry still inside. Honorable Discharge, an Imperial protocol bought for the whole side, makes every destroyed Imperial vehicle explode; that is a side-wide power, not this unit's own outcome."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:disguise",
+          "why": "Passes as any vehicle, so most base defences and units let it through and its riders can unload in the middle of an enemy base."
+        },
+        {
+          "ref": "passengers:5",
+          "why": "Five seats are enough for an ambush party of Imperial Warriors, Tankbusters or Shinobi, or a team of engineers."
+        },
+        {
+          "ref": "mobility:hover",
+          "why": "Crosses land and water at the same speed, so it can come in from the sea."
+        },
+        {
+          "ref": "speed:fast",
+          "why": "Outpaces main battle tanks, so it puts troops in place quickly."
+        },
+        {
+          "ref": "tier:t1",
+          "why": "Cheap and available from the start, so a few of them dressed as stronger vehicles make a convincing decoy group."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "pattern:disguise",
+          "why": "Not foolproof: detector animals and drones see through it, and watchful players notice a speed that does not match its model or a land vehicle out on the water."
+        },
+        {
+          "ref": "passengers:5",
+          "why": "Letting the riders out ends the disguise, which usually gets it destroyed, and when it dies the riders still inside die with it."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "sensor:detector",
+          "why": "Detectors see through its disguise, and once it is found the unarmed transport cannot fight back."
+        },
+        {
+          "ref": "unit:ra3.allied.attack-dog",
+          "why": "Allied attack dogs see through the disguise."
+        },
+        {
+          "ref": "unit:ra3.soviet.war-bear",
+          "why": "Soviet war bears see through the disguise."
+        },
+        {
+          "ref": "unit:ra3.empire.burst-drone",
+          "why": "Burst Drones, the Empire's own flying scouts, see through the disguise."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Cannon and rocket fire does half again normal damage to it, and it has no weapon to answer with once it is found."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "target:structure",
+          "why": "Most base defences cannot see through the disguise, so it slips past them and drops troops inside the base."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:engineer",
+          "why": "A load of engineers can sneak deep into a base and capture key buildings such as the construction yard."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Imperial Warriors, Tankbusters or Shinobi spilling out inside a base wreak havoc and distract the enemy from an attack elsewhere."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Dressed as stronger vehicles, cheap transports pad out an armoured group and draw the enemy's eye away from the real attack force."
+        }
+      ],
+      "memorable": "A cheap hover carrier that takes the look of any vehicle it points at, so five soldiers can drive into an enemy base dressed as one of its own tanks.",
+      "as_player": "An unarmed T1 hover carrier with five seats for teammates. Point at any vehicle (Q) to look like it to the enemy, then slip past defences and drop your riders (G) where they hurt most; unloading ends the disguise. Detector scouts see through it, and so does a speed that does not match your disguise or a land tank driving on water. If you die you blow up, taking your riders and anything close with you.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/a/af/RA3_Manual_-_PC.pdf/revision/latest?cb=20220605033630",
+          "title": "Command & Conquer: Red Alert 3 manual (PDF), EA",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "note": "EA's printed manual, hosted as a scan by the Command & Conquer Wiki (File:RA3 Manual - PC.pdf). The unit has no official profile, so roles step 1 reads its paragraph on page 22: an amphibious transport that Imperial scientists built to move troops quickly and safely, which can pose as enemy vehicles or other objects. The Uprising manual reprints the same paragraph.",
+          "supports": ["roles", "mobility", "abilities/1"],
+          "version": "Base game (2008)"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Sudden_transport",
+          "title": "Sudden transport, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "crew",
+            "abilities",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ],
+          "version": "Patch 1.12"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Stealth",
+          "title": "Stealth, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Red Alert 3 tab: lists it among units that hide by active disguise, and names the attack dog, Burst Drone and war bear as the detectors that unmask such disguised units, this one included.",
+          "supports": ["sensors/traits", "abilities/1", "weaknesses/0", "countered_by"]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Empire_of_the_Rising_Sun_units",
+          "title": "Red Alert 3: Empire of the Rising Sun units, StrategyWiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["crew", "abilities/0", "abilities/1", "on_death", "weaknesses/1"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Mecha_bay",
+          "title": "Mecha bay, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["tier", "crew"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "abilities/1",
+          "note": "No source names a disguise button: the wiki speaks of the vehicle it targets, and the Stealth page calls it an active disguise, so it is coded as an active ability used by targeting a vehicle. The manual says it can copy other objects as well as enemy vehicles; the wiki speaks only of vehicles, friendly or not."
+        },
+        {
+          "path": "abilities/1/cooldown",
+          "note": "No source gives a wait between disguises, so no band is set."
+        },
+        {
+          "path": "abilities",
+          "note": "The wiki's ability box lists Evacuate, which drops the disguise and unloads everyone at once. It is left off as the evict key (registry note for ra3); the disguise ends whenever riders get out anyway."
+        },
+        {
+          "path": "armour/class",
+          "note": "Medium by step 4 as an APC. Its armour set's name contains the word Light, but the registry note treats set names as no armour word, and its health is only a little above that of the light Multigunner IFV (Multigunner IFV page, Command & Conquer Wiki)."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Infiltrator rests on step 2: the disguise, a button every copy has, lets it pass as an enemy vehicle, which the role's description and tie-break name. No official text calls it an infiltrator or a spy."
+        },
+        {
+          "path": "on_death/notes",
+          "note": "Only StrategyWiki says the riders die with it; the Command & Conquer Wiki page says nothing about riders when it is destroyed. No page gives the blast's radius."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparison with the Hammer tank uses that tank's land speed from the Hammer tank page (Command & Conquer Wiki)."
+        },
+        {
+          "path": "countered_by",
+          "note": "The Burst Drone, War bear (Red Alert 3) and Attack dog (Red Alert 3) pages on the Command & Conquer Wiki agree with the Stealth page that these units find disguised enemies; the Burst Drone page names Sudden Transports outright."
+        }
+      ],
+      "researched_by": "batch r1, agent J09-RA3",
+      "review": {
+        "status": "unchecked"
+      }
+    }
+  ]
+}
