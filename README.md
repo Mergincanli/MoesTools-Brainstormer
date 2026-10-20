@@ -14,6 +14,7 @@ Next: step 3, the research run, starting with batch R1. The generator and the ap
 - [Samples](docs/samples.md): three researched units (RA3 Terror Drone, Hammer Tank, Multigunner IFV), three mechanic patterns and an example concept card.
 - [Vocabularies](docs/vocabularies.md): the fixed word lists every record uses (version 1.0.0, approved), with each term's coding rule and each list's tie-breaks.
 - [Fields](docs/fields.md): every field of every record type.
+- [Research runbook](docs/research-runbook.md): how a research batch runs step by step, its quality checks, and the night shift.
 
 ## Layout
 
@@ -23,7 +24,7 @@ Next: step 3, the research run, starting with batch R1. The generator and the ap
 | `schemas/` | JSON Schemas for every record type. |
 | `docs/` | Proposal, generated reference pages and the example concept card (`docs/examples/`). |
 | `scripts/` | Validator, docs builder, JSON formatter, copy-check, checker sampler, agreement measure, word-list diff and pattern sync. |
-| `research/` | Research working notes: `research/registry-notes/` has the notes for each research batch (games registry and patterns), `research/pilot/` the calibration pilot's record and report. |
+| `research/` | Research working notes: `research/registry-notes/` has the notes for each research batch (games registry and patterns), `research/pilot/` the calibration pilot's record and report, `research/r<N>/` each batch's record, `research/workflows/` the batch's workflow scripts. |
 | `tests/` | Tests for the scripts (`node:test`). |
 | `.github/workflows/` | CI, which runs `npm run check` on every push to `main` and every pull request. |
 
