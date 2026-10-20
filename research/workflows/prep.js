@@ -57,7 +57,8 @@ const CANDIDATES = {
 }
 
 const VERDICTS = { type: 'object', required: ['verdicts', 'missing'], properties: {
-  verdicts: { type: 'array', items: { type: 'object', required: ['claim', 'real', 'reason'], properties: {
+  verdicts: { type: 'array', items: { type: 'object', required: ['claim', 'real', 'reason', 'evidence'], properties: {
+    evidence: { type: 'string', description: 'the page URL fetched or the command run, and what it showed, paraphrased' },
     claim: { type: 'string', description: 'the claim or finding checked, short' }, real: { type: 'boolean', description: 'true when the sources confirm it' },
     reason: { type: 'string' }, correction: { type: 'string', description: 'the corrected text or value, if the claim is wrong or incomplete' } } } },
   missing: { type: 'array', items: { type: 'string' }, description: 'game-wide mechanics or registry problems the notes missed, each with its evidence' },

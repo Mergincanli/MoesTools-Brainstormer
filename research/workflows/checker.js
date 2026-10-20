@@ -21,7 +21,8 @@ const CHECK = { type: 'object', required: ['records'], properties: { records: { 
     verdict: { enum: ['ok', 'wrong', 'unsupported'], description: 'wrong: the sources show another value; unsupported: no page read backs it' },
     evidence: { type: 'string', description: 'the page URL and what it shows, paraphrased' }, fix: { type: 'string' } } } },
   pages_opened: { type: 'array', items: { type: 'string' } } } } } } }
-const VERDICTS = { type: 'object', required: ['verdicts'], properties: { verdicts: { type: 'array', items: { type: 'object', required: ['id', 'path', 'confirmed', 'reason'], properties: {
+const VERDICTS = { type: 'object', required: ['verdicts'], properties: { verdicts: { type: 'array', items: { type: 'object', required: ['id', 'path', 'confirmed', 'reason', 'evidence'], properties: {
+  evidence: { type: 'string', description: 'the page URL fetched or the command run, and what it showed, paraphrased' },
   id: { type: 'string' }, path: { type: 'string' }, confirmed: { type: 'boolean', description: 'true when the field really is wrong or unsupported' }, reason: { type: 'string' }, fix: { type: 'string' } } } } } }
 
 const COMMON = `Unit Forge (repository or copy at ${ROOT}; read only for you, never edit a file) is a research database of real RTS and shooter units and mechanic patterns, coded with fixed word lists (version 1.0.0, approved) and field rules (docs/fields.md, docs/vocabularies.md), that feeds a generator of original unit concepts for a top-down team shooter. You are the separate checker of research batch ${B.id.toUpperCase()} (docs/proposal.md, section 2.2, step 3; docs/research-runbook.md, section 6); sample seed "${args.seed}". You wrote none of these records. Read the batch's notes (research/registry-notes/games-${B.id}.md) and the registry entries (data/games.json) the records rely on. Wikis read through their API (https://cnc.fandom.com/api.php?action=parse&page=<Title>&prop=wikitext&format=json for the Command & Conquer Wiki), two seconds apart, retry after a 429.`
@@ -40,7 +41,7 @@ function verifyPrompt(g, c) {
   return `${COMMON}
 
 ## Your job: try to refute the checker's findings
-The checker marked these fields wrong or unsupported. For each, fetch the pages and apply the written rules yourself. confirmed=true only when the field really is wrong or unsupported; give the right value. Default to confirmed=false when you cannot confirm it.
+The checker marked these fields wrong or unsupported. For each, fetch the pages and apply the written rules yourself. confirmed=true when the field really is wrong or unsupported; give the right value. When you cannot open the page or cannot tell, set confirmed=true and say so in the reason: a field nobody could check counts as unsupported. Give the evidence for every verdict.
 
 ${JSON.stringify(bad, null, 1)}`
 }
@@ -49,7 +50,13 @@ const out = await pipeline(
   args.groups,
   g => agent(checkPrompt(g), { label: `check:${g.label}`, phase: 'Check', schema: CHECK }),
   (c, g) => c && (c.records.some(r => r.fields.some(f => f.verdict !== 'ok'))
-    ? agent(verifyPrompt(g, c), { label: `verify:${g.label}`, phase: 'Verify', schema: VERDICTS }).then(v => ({ group: g.label, check: c, verdicts: v }))
+    ? agent(verifyPrompt(g, c), { label: `verify:${g.label}`, phase: 'Verify', schema: VERDICTS }).then(v => ({ group: g.label, check: c, verdicts: v || null, unverified: !v }))
     : { group: g.label, check: c, verdicts: { verdicts: [] } }),
 )
-return out.filter(Boolean)
+// A group with no result, or whose skeptic returned nothing, is not done: run it again on its own.
+// A field the skeptic could not check counts as unsupported (runbook section 6).
+return {
+  results: out.filter(Boolean),
+  failed: args.groups.filter((g, i) => !out[i]).map(g => g.label),
+  unverified: out.filter(r => r && r.unverified).map(r => r.group),
+}

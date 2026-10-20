@@ -11,7 +11,11 @@ These are the multi-agent workflow scripts a research batch runs, in the order o
 | `reconcile.js` | 2 | Merges the two codings of an opening-check unit into the final entry. |
 | `patterns.js` | 5 | Writes proposed pattern files for new and planned pattern ids: writer, then skeptic, then the writer applies the confirmed corrections. |
 | `checker.js` | 6 | The separate checker re-opens the sources of the sampled units and every proposed pattern (`npm run sample -- --seed <seed> --json`); a skeptic re-checks each field marked wrong. |
-| `final-review.js` | 7 | One reviewer per dimension (data, consistency, patterns, record), then a skeptic per dimension. |
+| `final-review.js` | 7 | One reviewer per dimension (data, consistency, patterns, record, and tooling when the batch changed any), then a skeptic per dimension. |
 | `verify-fixes.js` | 7 | After the fixes: closure of each finding, new problems the fixes made, and the truth of every claim in the report and the pull-request description. |
+
+**What comes back.** `code-units.js` and `reconcile.js` return `{ results, failed }`; `patterns.js`, `checker.js`, `final-review.js` and `verify-fixes.js` return `{ results, failed, unverified }`. `failed` lists the jobs or groups whose agent returned nothing, and `unverified` those whose skeptic returned nothing. Both must be empty before a phase counts as done; run anything listed again on its own. Every verdict carries its evidence (the page or command and what it showed); a verdict without it counts as not checked.
+
+**First runs.** `patterns.js`, `checker.js`, `final-review.js` and `verify-fixes.js` had not run before batch R1's later phases. After their first run, check that the result has the shape above and that every item sent came back, before using it.
 
 Batch R1 ran the first versions of `prep.js`, `notes-and-trim.js`, `code-units.js` and `reconcile.js`. They were written for its three games; these copies take the batch as an argument. The agents' results stay in the scratchpad until the integrator copies the units, notes and records into the repository.

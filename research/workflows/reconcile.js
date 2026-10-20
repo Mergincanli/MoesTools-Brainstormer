@@ -40,4 +40,4 @@ Report the file, your decisions, any rule problems, and the check results.`
 }
 
 const out = await parallel(args.units.map(u => () => agent(prompt(u), { label: `reconcile:${u.id}`, phase: 'Reconcile', schema: REPORT }).then(r => r && ({ id: u.id, ...r }))))
-return out.filter(Boolean)
+return { results: out.filter(Boolean), failed: args.units.filter((u, i) => !out[i]).map(u => u.id) }

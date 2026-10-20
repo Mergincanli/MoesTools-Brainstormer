@@ -3,6 +3,7 @@
 set -e
 REPO=/home/user/MoesTools-Brainstormer
 WS="$1"
+case "$WS" in /*/ws-*) ;; *) echo "usage: mkws.sh <absolute path ending in ws-<job>>" >&2; exit 2;; esac
 rm -rf "$WS"
 mkdir -p "$WS"
 cd "$REPO"

@@ -27,7 +27,8 @@ const WRITE = { type: 'object', required: ['files', 'registry_entries', 'unit_li
   open_points: { type: 'array', items: { type: 'string' } },
   checks: { type: 'string', description: 'format, validate and copy-check results' },
 } }
-const VERDICTS = { type: 'object', required: ['verdicts'], properties: { verdicts: { type: 'array', items: { type: 'object', required: ['pattern', 'path', 'real', 'reason'], properties: {
+const VERDICTS = { type: 'object', required: ['verdicts'], properties: { verdicts: { type: 'array', items: { type: 'object', required: ['pattern', 'path', 'real', 'reason', 'evidence'], properties: {
+  evidence: { type: 'string', description: 'the page URL fetched or the command run, and what it showed, paraphrased' },
   pattern: { type: 'string' }, path: { type: 'string', description: 'the field in the pattern file' }, real: { type: 'boolean', description: 'true when this is a confirmed problem' },
   reason: { type: 'string' }, correction: { type: 'string' } } } } } }
 const FIXED = { type: 'object', required: ['applied', 'not_applied', 'checks'], properties: {
@@ -73,9 +74,16 @@ ${JSON.stringify(v.verdicts.filter(x => x.real), null, 1)}`
 const out = await pipeline(
   args.groups,
   g => agent(writePrompt(g), { label: `write:${g.label}`, phase: 'Write', schema: WRITE }),
-  (w, g) => w && agent(verifyPrompt(g, w), { label: `verify:${g.label}`, phase: 'Verify', schema: VERDICTS }).then(v => ({ w, v })),
-  (r, g) => r && (r.v && r.v.verdicts.some(x => x.real)
+  (w, g) => w && agent(verifyPrompt(g, w), { label: `verify:${g.label}`, phase: 'Verify', schema: VERDICTS }).then(v => ({ w, v: v || null })),
+  (r, g) => r && (!r.v
+    ? { group: g.label, ws: g.ws, write: r.w, verdicts: null, fixed: null, unverified: true }
+    : r.v.verdicts.some(x => x.real)
     ? agent(fixPrompt(g, r.v), { label: `fix:${g.label}`, phase: 'Fix', schema: FIXED }).then(f => ({ group: g.label, ws: g.ws, write: r.w, verdicts: r.v, fixed: f }))
     : { group: g.label, ws: g.ws, write: r.w, verdicts: r.v, fixed: null }),
 )
-return out.filter(Boolean)
+// A group with no result, or whose skeptic returned nothing, is not done: run it again on its own.
+return {
+  results: out.filter(Boolean),
+  failed: args.groups.filter((g, i) => !out[i]).map(g => g.label),
+  unverified: out.filter(r => r && r.unverified).map(r => r.group),
+}
