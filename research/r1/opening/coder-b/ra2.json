@@ -1,0 +1,347 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra2",
+  "units": [
+    {
+      "id": "ra2.soviet.siege-chopper",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "soviet",
+      "name": "Siege Chopper",
+      "flavour_affinity": ["soviet", "allied"],
+      "class": "aircraft",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["siege", "anti-air"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Battle Lab",
+        "basis": "Comes out of the Soviet War Factory once a Battle Lab stands: the Yuri's Revenge manual's tech table puts it in the War Factory and Battle Lab row, the wiki's infobox gives tier 3, and the Soviet war factory page lists it under tier 3."
+      },
+      "cost_band": {
+        "band": "high",
+        "raw": 1100,
+        "basis": "The infobox price at Yuri's Revenge patch 1.001 sits exactly on our high threshold for RA2, and an edge takes the higher band. Patch 1.001 cut it from the launch price, which was in the high band too; the official profile still shows the launch price."
+      },
+      "mobility": {
+        "base": "rotor",
+        "handling": "strafe",
+        "traits": ["deploy-anchor"],
+        "speed": "very-fast",
+        "speed_raw": 3,
+        "notes": "Flies, and hovers in place when it stops: it touches down only when ordered to deploy (ModEnc DeployToLand). Among the game's aircraft it is a little slower than the NightHawk transport and the Harrier and faster than the Rocketeer and the Kirov (their wiki infoboxes). It cannot move while deployed."
+      },
+      "body": {
+        "plan": "rotorcraft",
+        "size": "large",
+        "notes": "A heavy gunship airframe with its machine gun on a side mount; on landing it unfolds a big howitzer. The wiki's trivia ties its look to real Soviet and Russian attack helicopters. Large, as the size examples put attack helicopters."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class steps decided: the infobox armour type Light maps to light. One health bar. Elite rank adds self-healing, which is veterancy. A Service Depot cannot repair it; an Allied IFV carrying an Engineer, or a captured Tech Machine Shop, can (its page)."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Red Alert 2 skirmish has no fog of war, so the band is the medium proposal (registry sight_reference). Its Sight, how far it lifts the shroud, is a little under one and a half times the Conscript's."
+      },
+      "armament": [
+        {
+          "name": "Machine gun",
+          "slot": "primary",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "limited-arc",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "high-air", "structure", "naval"],
+          "traits": ["anti-air"],
+          "summary": "Its only weapon in the air, the same kind of gun the NightHawk transport carries. The manual rates it effective against infantry; it also harasses vehicles, tears up thinly armoured ones such as the Prism Tank and can take on Rocketeers, but it lacks the punch for Floating Discs, Kirovs or Harriers. It reaches exactly half again as far as the Conscript's rifle. At elite rank it hits a little harder. Silent while the chopper is deployed."
+        },
+        {
+          "name": "160 mm cannon",
+          "slot": "alternate",
+          "family": "artillery",
+          "damage": "explosive",
+          "mount": "free-aim",
+          "delivery": "lobbed",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "condition": "Only in deployed mode, after the chopper has landed; it takes the machine gun's place until the chopper lifts off again.",
+          "mode": "deployed",
+          "summary": "A big howitzer that comes out when the chopper lands. It reaches about three times as far as the Conscript's rifle, beyond its own sight and beyond most base defences, the French Grand Cannon aside, and brings buildings down fast. It hits anything standing still hard but is poor at hitting fast movers. At elite rank it fires its shots in pairs. The official profile calls it a 155 mm gun.",
+          "patterns": ["deploy-siege-mode"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "No player seats in the source; its voice lines speak as a helicopter crew, which changes nothing here. One player flies it, fires the machine gun and works the howitzer once landed."
+      },
+      "abilities": [
+        {
+          "name": "Deploy (land) / take off",
+          "kind": "deploy",
+          "source": "innate",
+          "summary": "On the deploy order the chopper sets down and unfolds its howitzer; a second order folds the gun away and lifts off. Landed, it cannot move. Neither change is instant: packing up and taking off take a short while, which leaves it exposed. Without the order it never lands, it just hovers where it stops.",
+          "patterns": ["deploy-siege-mode"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "deployed",
+          "name": "Deployed",
+          "via": "deploy-siege-mode",
+          "summary": "Sitting on the ground with the howitzer out. It cannot move, its machine gun is silent and the howitzer takes its place. On the ground it is a ground target that ordinary ground weapons reach, and it can be mind-controlled, which fliers cannot."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "The source shows nothing special: it goes down with the crew calling out that they are crashing (voice lines) and is gone. No source says the crash hurts anything underneath."
+      },
+      "strengths": [
+        {
+          "ref": "range:long",
+          "why": "Once landed its howitzer outranges most base defences, the French Grand Cannon being the main exception, and the official texts rate it highly against buildings and fortified positions."
+        },
+        {
+          "ref": "mobility:rotor",
+          "why": "It flies, so it carries heavy firepower across the map quickly and can strike from the air wherever it is needed."
+        },
+        {
+          "ref": "hits:infantry",
+          "why": "In the air its machine gun works well against infantry, as the manual says."
+        },
+        {
+          "ref": "hits:low-air",
+          "why": "Unlike other artillery it can fight light fliers: its machine gun can take on Rocketeers."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "Like every flier it cannot be mind-controlled while airborne (Yuri's Revenge manual)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "mobility-trait:deploy-anchor",
+          "why": "It cannot move while the howitzer is out, and packing up takes a while, so quick attackers catch it on the ground."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Thin armour: anti-air vehicles in the air and fast armour-piercing units on the ground bring it down quickly."
+        },
+        {
+          "ref": "weapon:machine-gun",
+          "why": "In the air the machine gun is all it has, too weak to beat even lightly armoured anti-air vehicles or big aircraft such as Kirovs, Floating Discs and Harriers."
+        },
+        {
+          "ref": "delivery:lobbed",
+          "why": "The howitzer is best against targets that stand still and struggles to hit ones that move fast."
+        },
+        {
+          "ref": "mobility:rotor",
+          "why": "A Service Depot cannot fix it, so field repair needs an Allied IFV with an Engineer inside or a captured Machine Shop."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-air",
+          "why": "Even lightly armoured anti-air vehicles beat it in the air, where its machine gun is its only weapon."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Fast armour-piercing units reach a landed chopper before it can pack up, and its howitzer struggles to hit them."
+        },
+        {
+          "ref": "unit:ra2.allied.robot-tank",
+          "why": "The wiki names the Robot Tank as a fast armour-piercing unit that catches deployed choppers; the IFV does the same."
+        },
+        {
+          "ref": "pattern:mind-control",
+          "why": "Once it has landed it loses the fliers' immunity, so a mind-control unit that gets past its escort can take it over."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "target:structure",
+          "why": "Landed, it shells bases and defences from beyond the reach of most of them and knocks buildings down fast."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Its machine gun works well on infantry from the air, and the howitzer can pound troop columns on the move."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "The machine gun tears up thinly armoured vehicles; the wiki calls it an effective answer to the Prism Tank."
+        },
+        {
+          "ref": "unit:ra2.allied.prism-tank",
+          "why": "The wiki names the Prism Tank's weak armour as the reason the chopper's machine gun beats it."
+        },
+        {
+          "ref": "mobility:jetpack",
+          "why": "Its machine gun can take on Rocketeers in the air."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:ra2.soviet.siege-chopper",
+          "why": "The wiki says it is at its best massed, at least four landed together, on offence or on defence."
+        },
+        {
+          "ref": "role:assault",
+          "why": "It needs guarding while landed: the official profile makes it a staple of an attack force that escorts it well."
+        },
+        {
+          "ref": "unit:ra2.soviet.rhino-tank",
+          "why": "The wiki suggests a few Rhinos, or garrisoned Conscripts, to watch over deployed choppers."
+        }
+      ],
+      "memorable": "A helicopter that lands to become a long-range howitzer: it flies the artillery to wherever it is wanted, then sits rooted and fragile while it shells the enemy base.",
+      "as_player": "A T3 flying gun platform. In the air you strafe with a side-mounted machine gun that shreds infantry and light vehicles. Press deploy to land and unfold a long-range howitzer that outranges base turrets; you cannot move until you pack up and lift off again, which takes a moment. Thin armour: anti-air in the air and fast tank hunters on the ground are your worst enemies, so bring an escort.",
+      "sources": [
+        {
+          "url": "https://web.archive.org/web/20071214201459id_/http://www.ea.com/official/cc/redalert2/english/newsovietinfo2.jsp",
+          "title": "New Soviet Units (Boris, Siege Chopper, Spy Plane), official Red Alert 2 website on EA.com, archived by the Wayback Machine",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "note": "The registry's snapshot of 14 December 2007, read in its raw form (id_) because the normal Wayback page reset the connection from this session. Its Application line names anti-infantry and artillery. Its price, building and gun calibre lines are out of date (registry note), so no band rests on them.",
+          "supports": ["roles", "armament/0", "armament/1", "strengths/0", "counters/0", "combos/1"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Siege_chopper",
+          "title": "Siege chopper, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Its quote box copies the Yuri's Revenge manual entry (PDF page 18). Infobox: internal names for the airborne and deployed forms, armour type, tier, both prices, air speed, weapon damage, warheads and reach, sight and elite abilities.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "armament/1",
+            "abilities/0",
+            "modes/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable",
+            "nature",
+            "on_death"
+          ]
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF scan hosted by the Command & Conquer Wiki)",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "note": "PDF page 17: the Soviet tech table puts the Siege Chopper at the War Factory with a Battle Lab. Page 18: the unit's entry (effective against infantry in the air; landed, a long-range gun for buildings and stationary targets). Page 20: the Yuri Clone entry, which makes every flying unit immune to its mind control.",
+          "supports": [
+            "tier",
+            "roles",
+            "armament/0",
+            "armament/1",
+            "strengths/2",
+            "strengths/4",
+            "weaknesses/3",
+            "countered_by/3",
+            "counters/1"
+          ]
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/DeployToLand",
+          "title": "DeployToLand, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Names the Siege Chopper as the example of a flier that lands only on a deploy order and otherwise stays in the air when it stops.",
+          "supports": ["mobility", "abilities/0", "modes/0"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Soviet_war_factory_(Red_Alert_2)",
+          "title": "Soviet war factory (Red Alert 2), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Production list: the Siege Chopper under tier 3, needing a Soviet Battle Lab, Yuri's Revenge only.",
+          "supports": ["tier"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "mobility/speed",
+          "note": "speed_raw divides the wiki infobox's air speed by the Conscript's land speed. ModEnc's JumpjetSpeed and Speed pages say fliers on the jumpjet locomotor move at their JumpjetSpeed value, not their Speed value, and the wiki does not say which key its air speed copies; the chopper is very fast either way only if the two keys share a scale, which no page read confirms. The aircraft comparisons in mobility.notes come from the Rocketeer, NightHawk transport, Harrier and Kirov airship (Red Alert 2) pages of the Command & Conquer Wiki."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Air targets rest on the wiki's prose, which says the gun shreds aircraft, can fight Rocketeers and is too weak for Floating Discs, Kirovs and Harriers; the infobox's air attack line is blank."
+        },
+        {
+          "path": "armament/1/family",
+          "note": "Artillery because the sources call the gun a howitzer and the unit an artillery helicopter, and it reaches well past its own sight figure. No source says outright that the shell arcs."
+        },
+        {
+          "path": "armament/1/traits",
+          "note": "No source says whether a shell hurts an area or whether the gun has a minimum range, so neither splash nor min-range is coded; the wiki's talk of laying waste to bases and troop columns does not state an area."
+        },
+        {
+          "path": "armament/1/range",
+          "note": "Long rather than off-screen: it reaches past its own Sight figure, but the sight band is a proposal with no figure, and no source says it needs spotters (registry note on shroud and sight)."
+        },
+        {
+          "path": "armament/1/name",
+          "note": "The wiki calls the gun a 160 mm cannon or howitzer; the official profile calls it a 155 mm cannon.",
+          "sources_disagree": true
+        },
+        {
+          "path": "roles/primary",
+          "note": "The Application line names anti-infantry and artillery. Step 1 takes anti-infantry because the main weapon, the machine gun, has official strong-against text for infantry (the manual says the chopper is effective against infantry while flying); no text gives the machine gun a bonus against structures."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Anti-air rests on the wiki saying the gun can serve as an anti-aircraft weapon against Rocketeers, while it also says the gun lacks the firepower for Floating Discs, Kirovs and Harriers. Without it the second slot would be raider (very fast with light armour)."
+        },
+        {
+          "path": "armour/models",
+          "note": "The infobox gives one armour type for both the airborne and the deployed internal units; no source says whether the landed form is tougher or weaker."
+        },
+        {
+          "path": "on_death",
+          "note": "No source says what the crash does; its crash voice lines are the only sign of how it dies."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "modes/0/mobility",
+          "used": "left out (the landed form cannot move)",
+          "wanted": "a way to say the mode is a ground target",
+          "note": "Landed, the chopper is hit by ground weapons like any ground unit, but a mode that cannot move records no mobility, so nothing in the coded fields says its target layer changes from low air to the ground; the mode's summary says it instead."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "armament/1/family",
+          "rule": "weapon-families:artillery classes aircraft",
+          "note": "A helicopter that lands to fire a howitzer: our artillery family leaves out aircraft, but the gun works only once the flier is on the ground, so it is a real cross-over rather than a gun fired in flight."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent B"
+    }
+  ]
+}
