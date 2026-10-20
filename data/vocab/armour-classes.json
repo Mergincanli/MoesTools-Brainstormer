@@ -2,15 +2,15 @@
   "$schema": "../../schemas/vocabulary.schema.json",
   "id": "armour-classes",
   "label": "Armour classes",
-  "description": "How tough the unit is, as a band. Combined with one or two armour models on the card.",
+  "description": "How tough the unit is next to the other units of its own game, as a band. Code it with the steps in the first tie-break below. Combined with one or two armour models on the card.",
   "group": "core",
-  "status": "draft",
-  "version": "0.4.0",
+  "status": "approved",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "unarmoured",
       "label": "Unarmoured",
-      "description": "Flesh and cloth: soldiers and animals.",
+      "description": "Flesh and cloth: soldiers and animals without armour plating. A game's basic rifle infantry is unarmoured, unless step 1 or 2 of the armour-class steps (the first tie-break) gives more. Never a machine.",
       "rank": 1,
       "allowed": {
         "sizes": ["tiny", "small"]
@@ -19,13 +19,13 @@
     {
       "id": "light",
       "label": "Light",
-      "description": "Buggies, drones, helicopters and armoured infantry. Soldiers are unarmoured unless their game gives them a tougher category.",
+      "description": "Machines that light weapons still hurt, and soldiers in real armour: buggies, jeeps, motorbikes and trucks; drones and robots no bigger than a soldier; helicopters, attack helicopters too; planes and boats; and soldiers whose game data gives them tougher armour than its basic rifle infantry, power-suit troopers included.",
       "rank": 2
     },
     {
       "id": "medium",
       "label": "Medium",
-      "description": "IFVs, light tanks, power suits, light walkers.",
+      "description": "Shrugs off most light weapons but is weaker than a battle tank: IFVs, APCs, half-tracks and armoured cars, light tanks, suits bigger than a soldier, and light walkers bigger than a soldier.",
       "rank": 3,
       "allowed": {
         "sizes": ["small", "medium", "large"]
@@ -34,7 +34,7 @@
     {
       "id": "heavy",
       "label": "Heavy",
-      "description": "Main battle tanks and assault mechs.",
+      "description": "The game's main battle tank and every other battle tank, whatever the game calls it (medium or heavy tank), and assault mechs.",
       "rank": 4,
       "allowed": {
         "sizes": ["medium", "large", "huge"]
@@ -43,12 +43,22 @@
     {
       "id": "super-heavy",
       "label": "Super-heavy",
-      "description": "Super-heavy tanks, giant mechs and airships.",
+      "description": "The game's top heavyweights, set apart from its battle tanks: units two tanks in size or more at t3, or ones the game's armour map or registry notes make super-heavy. Super-heavy tanks, giant mechs, experimental units and big airships.",
       "rank": 5,
       "min_tier": "t3",
       "allowed": {
         "sizes": ["large", "huge"]
       }
+    }
+  ],
+  "tie_breaks": [
+    {
+      "terms": ["unarmoured", "light", "medium", "heavy", "super-heavy"],
+      "rule": "Judge the unit as bought, without upgrades or veterancy. Go through steps 1 to 5 in order and stop at the first one that gives an answer. Then apply checks A and B and the soldier rule below, which win over every step. 1. The game's armour_map in data/games.json, with any step up or down its registry notes name. 2. The game's own armour word for this unit, when the word is light, medium or heavy; for sc2, the class its registry note gives for the unit's attributes. Skip this step for cnc-td, cnc-ts, cnc3, coh1, coh2 and coh3, whose words cut across our classes, and for a word from a series title that version_researched does not name. 3. The tanks whose prices are averaged in the game's cost anchor are heavy. Other tanks the anchor text mentions are not decided here. In a game without costs, its standard main battle tank is heavy. 4. The kind of unit named in the class descriptions. The kind decides, however tough this unit is next to others of its kind. 5. For a kind named nowhere, compare its health (shields included) and the weapons that hurt it with the step 3 tank (heavy) and with the game's basic rifle infantry (as these steps class it). Check A: super-heavy is only for a unit two tanks in size or more (body size huge) at t3, or in a game without tiers, and for a unit the game's armour_map or registry notes make super-heavy. Such a unit is super-heavy whatever the steps gave. Check B: a machine is never unarmoured; where a step gives unarmoured, code light. Say in armour.notes which step or check decided, and mention armour upgrades there."
+    },
+    {
+      "terms": ["unarmoured", "light", "medium"],
+      "rule": "A soldier or animal is unarmoured, unless step 1 or 2 gives more, or its game data gives it tougher armour than the game's basic rifle infantry: a tougher infantry armour type or attribute, or body armour its registry notes name. Then it is light. A power suit worn by one soldier (body size small) is light, unless step 1 or 2 gives another class (by the dow1 armour map the Space Marine Squad is light and Terminators are medium). Where neither step decides, the game's basic rifle infantry (the speed reference in data/games.json) stays unarmoured whatever it wears (the StarCraft II Marine). A suit bigger than a soldier (body size medium or more) is medium. Protection every soldier of the game can get, such as cover, veterancy ranks or the retreat bonus, never lifts the class; mention it in armour.notes."
     }
   ]
 }

@@ -4,8 +4,8 @@
   "label": "Aim / mount",
   "description": "How a weapon's mount relates to movement. The biggest change from an RTS, where the game aims for you.",
   "group": "supporting",
-  "status": "draft",
-  "version": "0.4.0",
+  "status": "approved",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "free-aim",
@@ -17,19 +17,22 @@
       "id": "slow-turret",
       "label": "Slow turret",
       "description": "Free aim, but the turret turns slowly behind the cursor, so close flankers can out-turn it.",
-      "rarity": "common"
+      "rarity": "common",
+      "source_rule": "The main turret of a large or huge unit that moves on the ground, and any gun that turns with it."
     },
     {
       "id": "body-aim",
       "label": "Body aim",
       "description": "The weapon points where the unit faces; you aim by turning the whole unit.",
-      "rarity": "common"
+      "rarity": "common",
+      "source_rule": "A fixed weapon fired from the driver seat. Never on a gunner, commander or passenger seat."
     },
     {
       "id": "limited-arc",
       "label": "Limited arc",
       "description": "The mount covers only part of the circle, for example the front quarter.",
-      "rarity": "uncommon"
+      "rarity": "uncommon",
+      "source_rule": "A mount the source shows covering only part of the circle, including a set-up heavy weapon carried by soldiers. A gun that turns only a little off the nose is body-aim."
     },
     {
       "id": "auto-target",
@@ -42,6 +45,12 @@
       "label": "Radial",
       "description": "Hits all around the unit at once (pulse, aura); you aim by where you stand.",
       "rarity": "uncommon"
+    }
+  ],
+  "tie_breaks": [
+    {
+      "terms": ["radial", "auto-target", "limited-arc", "free-aim", "slow-turret", "body-aim"],
+      "rule": "Go down this list and take the first that fits. (1) It hits all around the unit at once, like an aura or a pulse: radial. (2) It fires by itself while the unit's player does something else (point-defence guns that fire at units, a deployed sentry gun, or launched drones that act on their own): auto-target. In a commanded game every weapon picks targets for itself, so there (2) needs one of those kinds; a turret carried on the unit (an add-on or a roof gun) goes on to the later steps, even when it picks its own targets while the unit is idle. (3) The source shows it covering only part of the circle: a gun on the side or front of a hull, a door gun, a tail gun, a mech torso that twists only partway, or a soldiers' heavy weapon that must be set up and then covers only an arc (a machine-gun team, a field gun): limited-arc. A gun that turns only a little either side of the nose (a tank destroyer) counts as fixed; see (6). If the source doesn't say how far a turret turns, treat it as a full turret. (4) A soldier or creature carries it, or it is built into a tiny or small body: free-aim. A squad's weapons all take the leader's mount. (5) It sits on a full turret, or on a torso that turns all the way round: slow-turret for the main turret (the one holding the main weapon) of a large or huge unit that moves on the ground (tracks, wheels, legs or hover), free-aim for any other turret (on a medium vehicle, a roof gun, a chin gun, a turret holding only another seat's weapon, any aircraft turret). A gun that turns with the main gun takes the same mount. (6) It is fixed and fires where the unit faces (no turret, wing pods, forward launchers, bombs): body-aim. If a seat other than the driver fires it, use free-aim instead, because that seat cannot turn the unit. The family's default mount only fills in when the source says nothing about how the weapon is mounted."
     }
   ]
 }

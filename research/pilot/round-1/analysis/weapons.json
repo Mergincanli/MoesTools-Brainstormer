@@ -1,0 +1,679 @@
+{
+  "key": "weapons",
+  "analysis": {
+    "cluster": "Weapon terms: family, damage, delivery, targets, traits",
+    "summary": "Coders split on weapon coding mostly because rules were missing or contradicted each other. Nothing said whether a game's damage_map decides the damage field. The rockets / guided-missiles tie-break pushed self-homing rockets into a family whose allowed deliveries forbid them. can_target had no stated meaning: any hit or only useful hits, plus open questions on naval, structures, lock-on weapons and high air in shooters. The helicopter's main-weapon family gap is a slot problem from another group: under decision 2A the pilot's default rockets must be the primary weapon. I propose: one ordered damage rule (repair; no-damage weapons take the family default; registry exceptions; a single mapped game category wins even against the family, recorded as atypical; otherwise the family default, with armour-piercing and explosive exceptions); a source-based rockets / guided tie-break; sharper family tie-breaks (EMP vs magnetic, small arms vs machine gun judged by how it fires, sniper, artillery vs cannon); a delivery fallback to the family default plus a one-attack-one-entry order; a can_target rule split by commanded and piloted games, with naval following ground vehicles; and coding rules for anti-air, suppress, magazine, homing and splash. Under these rules every pilot disagreement in this group resolves to one value, main weapon family and damage rise to 100%, and the RA3 samples need a few fixes (Tanya's guns become small arms, plus naval and structure targets).",
+    "proposals": [
+      {
+        "id": "damage-decision-order",
+        "fields": [
+          "armament[].damage"
+        ],
+        "evidence": "main weapon.damage 77.8% (below 80%): Terror Drone claws A melee, B explosive (plus a second claws entry with kinetic), C explosive; IFV launcher A explosive, B armour-piercing, C explosive. armament.damage set 87%: Terror Drone A {emp, melee}, B {explosive, kinetic}, C {emp, explosive}. Inside the IFV set: Imperial Warrior laser A energy, B and C kinetic (B and C record weapon-families:laser allowed.damage-types kinetic). Reference: claws melee, launcher explosive, IW laser kinetic (atypical). Part of atypical rules at 68.5% (B and C: blades allowed.damage-types explosive; B: kinetic). 9 of 12 reports hesitated on damage (24 hesitations): damage_map vs family (A-ra3, B-ra3, C-ra3); the stasis ray does no damage (A, B, C ra3); RA3 Magic is missing from the map (A-ra3, C-ra3); splash plus an anti-armour bonus in one term, with no SC2 map (A, B, C sc2); damage of an air-to-air missile (A, B, C battlefield). Gaps in 5 reports (none, true damage, two damage types). Unclear-rule notes in 7 reports.",
+        "root_cause": "No rule says how to choose damage. damage-types says only 'what a hit does'. schemas/game.schema.json damage_map says only 'mapped to our damage types', not whether it binds. A family's allowed.damage-types binds cards but only flags atypicals on researched units. So B and C followed the map (claws explosive or kinetic, atypical), A followed the family and the fiction (melee), and B guessed a category no source gives (IFV 'Rocket' to armour-piercing). The samples contradict each other: the IW laser follows the map against its family (kinetic, atypical), while the drone claws ignore the map (melee). Registry notes pull both ways (Tempest Rising lasers: energy despite Cannon; PS2 VS lasers: kinetic from the map; MechWarrior flamers: fire despite Energy). No rule covers a weapon with different categories by target, a category missing from the map, a weapon that does no damage (x-required-unless still forces a value), or a game with no map where damage shows only as a bonus against armour (SC2).",
+        "kind": "field-rule",
+        "target": "schemas/source-unit.schema.json $defs.weapon.properties.damage.description (generated into docs/fields.md as armament[].damage); plus one sentence appended to the description of data/vocab/damage-types.json",
+        "change": "New description for armament[].damage: 'What a hit does to the target. Decide in this order and stop at the first step that fits. 1. It heals or repairs: repair. 2. It does no damage at all (it only stuns, pins, slows or marks): its family's default damage. Put the effect in traits and say in the summary that it does no damage. 3. The game's registry note names this kind of weapon and a damage type: that type. 4. The game has a damage_map in data/games.json, and the sources cited for this unit give this weapon one game damage category that the map lists: the mapped type. Use it even when the family's list leaves it out, and record that break in atypical. Never change the family to make the damage fit. 5. Anything else (no map, no category given for this weapon on this unit, a category the map leaves out, or different categories against different targets): the family's default damage, with two exceptions, checked in this order and used only when the family allows the type. Armour-piercing when the sources say the weapon is built to kill vehicles or armour, or give it a bonus against armoured targets. Explosive when it is built mainly to bring down aircraft, or its hit is a blast that hurts an area. Area damage is also the splash trait, so a shell can be armour-piercing and splash at once.' Append to the damage-types list description: 'On a researched unit, pick a weapon's type with the steps under armament[].damage in docs/fields.md.'",
+        "expected": "Terror Drone claws: the infobox gives two categories (Explosive against vehicles, Sniper against infantry), so step 5 gives the blades default, melee, for A, B (one entry, see delivery-field-rule) and C. B's and C's blades atypicals disappear. Stasis ray: step 2 gives emp for all three, once the family is emp (see emp-vs-magnetic). IFV launcher: no source gives its category, so step 5 applies; built mainly against aircraft gives explosive for A, B and C. B may not assume 'Rocket', because the category must be given for this weapon. IW laser: the IFV table gives Gun, so step 4 gives kinetic for A, B and C. All three record weapon-families:laser allowed.damage-types kinetic (A changes). Tankbuster laser: no category is given for this result, so step 5 gives the laser default, energy (all). Hammer cannon: Cannon gives armour-piercing (all). Leech beam: Magic is not in the map, so it takes the drain default, energy (all). SC2 tank-mode guns: no map; a bonus against Armored gives armour-piercing (all). Siege shell: artillery does not allow armour-piercing; it is an area blast, so explosive with splash (all). Battlefield: Hydra and smart rockets explosive, chin cannon explosive, heat seekers explosive (built against aircraft); TOW, laser-guided and TV missiles armour-piercing (built to kill vehicles). All as coded. CoH rifles kinetic. Main weapon.damage reaches 100%.",
+        "side_effects": "Rebuild docs/fields.md and docs/vocabularies.md. Registry notes that name an exception (RA1: heals are repair; Tempest Rising: lasers are energy; MechWarrior: flamers are fire; PS2: VS lasers are kinetic) become step 3 and stay valid. Risk in scope: step 4 will produce predictable atypicals where a map gives a type the family does not allow. Foxhole 'Anti-Tank Explosive' and DoW2 'explosive_pvp' both map to armour-piercing, so anti-tank grenades, sticky bombs and mines (explosives family: explosive, emp, fire) would each record an atypical. Review those two map entries, or decide whether explosives may take armour-piercing, before the research run. The step-5 exceptions apply only when the family allows the type, so a laser built to kill tanks stays energy, which is the intended near match.",
+        "priority": "must"
+      },
+      {
+        "id": "damage-map-binding-registry",
+        "fields": [
+          "armament[].damage"
+        ],
+        "evidence": "Unclear-rule notes from A-ra3, B-ra3 (twice) and C-ra3 say nothing tells whether the ra3 damage_map binds the damage field or only hints. B and C followed it (claws explosive, IW laser kinetic); A did not (claws melee, IW laser energy). A-ra3, B-ra3 and C-ra3 flag the Leech Beam's Magic category as missing from the map. C-battlefield notes that Battlefield has no map at all.",
+        "root_cause": "The registry side of the damage rule is silent. The damage_map description gives no precedence, unmapped categories have no instruction, and per-game exception notes (Tempest Rising, MechWarrior) are not marked as exceptions, so they read like competing general rules.",
+        "kind": "registry",
+        "target": "schemas/game.schema.json $defs.game.properties.damage_map.description; research/registry-notes/games-r1.md (RA3 section); research/registry-notes/games-r3.md (Tempest Rising damage bullet); research/registry-notes/games-r6.md (MechWarrior damage bullet)",
+        "change": "damage_map description: 'The game's own damage categories mapped to our damage types. When the sources cited for a unit give one of its weapons a single category from this map, the mapped type is that weapon's damage, even if the weapon's family does not allow it; record the break as atypical (step 4 under armament[].damage). A category left out of the map, or a weapon with different categories against different targets, is decided by step 5.' games-r1.md, RA3: add the bullet 'Magic (the Leech Beam's category, which hurts every armour type in full) is left out of the map on purpose: weapons with it take their family's default damage.' games-r3.md, Tempest Rising lasers, and games-r6.md, MechWarrior flamers: add 'This is a named exception to the map (step 3 under armament[].damage).'",
+        "expected": "All coders read one meaning from the registry: the map binds a weapon that has one stated category, and Magic falls to the family default. The Hammer leech beam stays energy for A, B and C. The claws and the IW laser resolve as in damage-decision-order.",
+        "side_effects": "Rebuild docs (Game section of fields.md). The registry notes are research guidance, so the round-2 coder brief must point to them. No data in data/games.json changes.",
+        "priority": "must"
+      },
+      {
+        "id": "rockets-vs-guided-missiles",
+        "fields": [
+          "armament[].family",
+          "armament[].delivery",
+          "armament[].traits"
+        ],
+        "evidence": "main weapon.family 77.8% (below 80%): IFV launcher A rockets, B guided-missiles, C rockets (reference rockets). Helicopter smart/guided rockets: A and C coded guided-missiles + projectile + homing and recorded weapon-families:guided-missiles allowed.weapon-delivery projectile; B left them out. Javelin result: A rockets, B and C guided-missiles with lock-on (reference rockets). armament.delivery: B and C add lock-on on the IFV. Part of atypical rules at 68.5%. Hesitations or gaps in 6 of 12 reports (A-battlefield, A-ra3, B-battlefield gap, B-ra3, C-battlefield, C-ra3). Unclear-rule notes from A-, B- and C-battlefield and C-ra3.",
+        "root_cause": "Contradiction. The weapon-families description sends any missile 'that steers, by itself or by the player's hand' to guided-missiles, but that family allows only lock-on or guided delivery, and the guided note says a shot that homes by itself is 'lock-on or the homing trait'. A self-homing rocket with no lock step therefore breaks a rule whichever way it is coded. The tie-break also turns on whether a missile steers, which RTS sources rarely say: B inferred homing from 'a dedicated anti-air launcher', A and C did not. The anti-air trait's own example (the IFV's default missiles) quietly implies rockets.",
+        "kind": "tie-break",
+        "target": "data/vocab/weapon-families.json: new tie_breaks entry; term descriptions of rockets and guided-missiles; list description (delete the old tie-break sentence). data/vocab/weapon-delivery.json term guided, notes (last sentence)",
+        "change": "Add to tie_breaks: terms [rockets, guided-missiles]; rule: 'Guided missiles only when the sources cited for the unit say the missile steers to its target: it locks on before it is fired, the shooter steers it (by wire, laser, camera or crosshair), or, in a commanded game, it homes in on or tracks its target. If they do not say it steers, it is rockets, whatever the game calls it. In a piloted game, a rocket that corrects its own course with no lock step and no warning stays rockets and takes the homing trait.' rockets description: 'Rockets or rocket pods with no lock and no steering by the shooter. Some correct their own course on the way (homing trait).' guided-missiles description: 'Missiles the sources say steer to the target: locked on before firing, steered by the shooter, or, in a commanded game, homing in on the target.' List description: delete the whole sentence that starts 'Tie-breaks:' and ends 'out-of-sight fire.' (the other tie-breaks move to tie_breaks, see family-tie-breaks-carry-over). guided notes, last sentence becomes: 'A shot that steers itself after a lock is lock-on; one that steers itself with no lock step is projectile with the homing trait.'",
+        "expected": "IFV launcher: the sources do not say it steers, so rockets, projectile, explosive (B changes; A, C and the reference already agree). Main weapon family for the IFV goes to 100%. Javelin result: rockets, projectile, armour-piercing, unless the IFV's cited sources say its missiles are guided (A and the reference agree; B and C change when the sources are silent). Helicopter smart/guided rockets: piloted, self-correcting, no lock, so rockets + homing + projectile with no atypical (A and C change family; the atypical leaves both). Heat seekers (lock), TOW and TV (shooter-steered) and laser-guided missiles stay guided-missiles (all).",
+        "side_effects": "In RTS games, anti-air or anti-tank missiles whose pages never say they home will be coded rockets, with the anti-air trait where they reach jets. That is acceptable: rockets and guided missiles give near-identical counter hints there. Shooter lock-on launchers (Battlefield, PS2, Foxhole) stay guided-missiles. The anti-air trait example stays true. No validator change.",
+        "priority": "must"
+      },
+      {
+        "id": "main-weapon-slot-crossgroup",
+        "fields": [
+          "armament[].family",
+          "armament[].slot"
+        ],
+        "evidence": "main weapon.family 77.8%: helicopter A rockets (no primary; the first weapon is the Hydra pod, coded option), B rockets (primary), C autocannon (chin cannon coded primary). The family terms agree weapon by weapon; only the slot differs. armament.slot hesitations in A-, B- and C-battlefield; unclear rules on slots in multi-seat vehicles from A-, B- and C-battlefield.",
+        "root_cause": "Cross-group conflict. The slot field is owned by the slots and seats group. 'primary / secondary' is unit-wide, 'option' marks loadout picks, and decision 2A (the buyer drives and fires the main weapon) is not written into the slot rule. So coders picked the gunner's gun, the pilot's pod, or no primary at all.",
+        "kind": "field-rule",
+        "target": "schemas/source-unit.schema.json $defs.weapon.properties.slot.description and option_group.description (owned by the slots/seats group; raised here because it decides this group's main-weapon fields)",
+        "change": "Add to the slot description: 'On a vehicle with several seats, the weapon the driver or pilot fires by default is primary (decision 2A). If that weapon is the default pick of a loadout group, it is still primary and carries the option_group and default: true; the other picks of that group are option. The main weapon of any other seat is secondary at most.' option_group description: 'For option weapons, and for the primary that is the default pick of a loadout group: weapons in the same group exclude each other.'",
+        "expected": "Helicopter: the Hydra / S-8 rocket pods become primary for A (was option), B and C (was option). The chin cannon becomes secondary with seat gunner for C (A and B already). Main weapon family is rockets for all three, with main delivery projectile and main damage explosive.",
+        "side_effects": "This must be merged with the slots group's own proposal so there is one rule. scripts/validate.mjs has no option_group checks, so no code change. The agreement script picks the first primary weapon, so it reads the new data correctly.",
+        "priority": "must"
+      },
+      {
+        "id": "sample-fixes-ra3",
+        "fields": [
+          "armament[].family",
+          "armament[].can_target",
+          "armament[].traits"
+        ],
+        "evidence": "Where the new rules and the reference disagree. Tanya result: reference machine-gun, all three coders differ (A small-arms, B autocannon, C small-arms). IFV launcher can_target: reference lacks structure and naval (A and B list both). Hammer cannon: reference lacks naval (all three coders list it). Main weapon.can_target agrees with the reference only 78.3% of the time. Within the reference itself, the IW laser follows the damage map but the claws do not (resolved by damage-decision-order, which keeps both values).",
+        "root_cause": "The samples were written before these rules existed. They took 'mounted gun = machine gun', and they listed naval and structure without one consistent test.",
+        "kind": "sample-fix",
+        "target": "data/units/ra3.json: ra3.allied.multigunner-ifv armament/7, armament/0, armament/1, 4, 8, 9, 11, 12, 14, 15, 18 and armament/5; ra3.soviet.hammer-tank armament/0; then rebuild docs/samples.md",
+        "change": "ra3.allied.multigunner-ifv armament/7 (Tanya): family machine-gun -> small-arms; delivery stays hitscan. Rewrite its uncertain note to: 'The wiki calls the mounted guns autocannons, but they copy Tanya's own pistols, so they keep her small-arms family.' armament/0 (launcher): can_target add structure and naval. armament/1, 4, 8, 9, 11, 12, 14, 15, 18 (every passenger weapon that lists ground-vehicle): add naval. armament/5 (Javelin): check the cited sources; if they say the result can attack aircraft, add low-air, high-air and the anti-air trait, otherwise leave it as it is. ra3.soviet.hammer-tank armament/0 (cannon): add naval. Keep unchanged: claws blades/melee/attach, stasis ray emp/emp/beam/root, IW laser kinetic with its atypical, bark and laser deliveries beam, shuriken sniper, flak anti-air, Yuriko structure with its atypical.",
+        "expected": "After the fixes, the reference agrees with all three coders, once they apply the new rules, on main weapon family, damage, delivery and can_target for all six units. Only the Javelin's air targets still depend on what its sources say. Round 2 can again use the samples as the reference.",
+        "side_effects": "Rebuild docs/samples.md. Run the validator: no new atypicals, since every family allows naval and the IFV launcher's structure is allowed by rockets. The pilot coders' files under research/pilot are not touched.",
+        "priority": "must"
+      },
+      {
+        "id": "emp-vs-magnetic",
+        "fields": [
+          "armament[].family",
+          "armament[].damage"
+        ],
+        "evidence": "Terror Drone stasis ray: A emp, B magnetic (kinetic damage, atypical weapon-families:magnetic classes drone), C emp; reference emp. Part of the drone's armament.family set gap and of its three-way damage split (B's kinetic came from magnetic). Hesitations in A-ra3, B-ra3 and C-ra3 on family and damage; gaps in all three ('a stasis or pinning beam family').",
+        "root_cause": "magnetic's description 'pull, lift or pin vehicles' matches the ray's effect word for word, while emp's 'shuts down machines' overstates a ray that leaves the target's guns working. The rule 'judged by how it behaves' then points to magnetic, which bans drones and allows only kinetic. Meanwhile the disable-machine pattern ('pin or shut down ... with an electric or EMP effect') points to emp.",
+        "kind": "tie-break",
+        "target": "data/vocab/weapon-families.json: new tie_breaks entry; descriptions of terms emp and magnetic. data/vocab/damage-types.json: description of term emp",
+        "change": "Add to tie_breaks: terms [emp, magnetic, tesla]; rule: 'EMP for any electric or electromagnetic pulse or ray whose main effect is to stop machines for a time (they can't move, can't fire, or both) while doing little or no damage; code what it stops with the root, silence or stun trait. Magnetic only for a weapon that physically pulls, lifts or drags its target. Tesla for electric arcs that do real damage.' emp (family) description: 'An electric or electromagnetic pulse or ray that stops machines and shields for a time: they can't move, can't fire, or both. Little or no damage.' magnetic description: 'Magnetic beams or harpoons that physically pull, lift or drag vehicles.' emp (damage type) description: 'Little or no damage: it stops vehicles and drones from moving, firing or both, and knocks out energy shields, for a time.'",
+        "expected": "Stasis ray: family emp, damage emp (damage step 2), beam, root trait for A, B and C. B changes, and B's magnetic classes-drone atypical disappears. The drone's family set becomes {blades, emp} for all three, matching the reference.",
+        "side_effects": "RA2's Magnetron and similar lift-and-drag weapons stay magnetic. Generals EMP and SupCom stun weapons stay emp. The disabler role already accepts damage:emp and weapon-trait:root. No allowed, excluded or class map changes.",
+        "priority": "should"
+      },
+      {
+        "id": "small-arms-vs-machine-gun",
+        "fields": [
+          "armament[].family"
+        ],
+        "evidence": "CoH BAR: all three coded small-arms, but A-coh1, B-coh1 and C-coh1 hesitated (the wiki calls the BAR an LMG). IFV Tanya result: A small-arms, B autocannon, C small-arms, reference machine-gun; A-ra3, B-ra3 and C-ra3 hesitated. That makes 6 of 12 reports, and the family set disagrees on the IFV.",
+        "root_cause": "The tie-break 'a soldier's personal gun is small arms, a belt-fed or mounted gun is a machine gun' sorts by where the gun sits, while the list says families are 'judged by how it behaves, not by its name'. A soldier's pistols mounted on a car are both at once: the sample took 'mounted', A and C took 'behaves', B took the name.",
+        "kind": "tie-break",
+        "target": "data/vocab/weapon-families.json tie_breaks (replaces the old small-arms / machine-gun clause)",
+        "change": "Add to tie_breaks: terms [small-arms, machine-gun]; rule: 'Judge by how it fires, not where it sits. Single shots, or short bursts from a magazine, are small arms: rifles, carbines, pistols, SMGs and automatic rifles such as the BAR. Long sustained bursts, usually belt-fed or from a rotary gun firing bullets, are a machine gun, whether a soldier carries it or it sits on a mount. A mounted weapon that the sources say copies a soldier's own gun keeps that soldier's family.'",
+        "expected": "BAR: small-arms (all three, now without doubt). Tanya result: small-arms, hitscan, kinetic for A, B (changes from autocannon and projectile) and C; the sample changes from machine-gun (see sample-fixes-ra3). Conscript gatling stays machine-gun (all).",
+        "side_effects": "In CoH, DoW and Battlefield, belt-fed squad weapons become machine guns and magazine-fed automatic rifles stay small arms. No validator change.",
+        "priority": "should"
+      },
+      {
+        "id": "sniper-vs-small-arms-and-bows",
+        "fields": [
+          "armament[].family"
+        ],
+        "evidence": "Shinobi shuriken result: A small-arms, B small-arms, C sniper; reference sniper. Gaps or hesitations in A-ra3, B-ra3 and C-ra3 (no family for thrown blades or bows). Archer Maiden bow: all three small-arms, but all three flagged that no bow family exists.",
+        "root_cause": "No family names thrown blades or bows; small-arms lists only guns. sniper says 'precision shots at long range, slow to fire', and nothing says whether a one-hit infantry kill or the game's Sniper category makes a weapon a sniper.",
+        "kind": "tie-break",
+        "target": "data/vocab/weapon-families.json: new tie_breaks entry; description of term small-arms",
+        "change": "Add to tie_breaks: terms [small-arms, sniper]; rule: 'Sniper when the sources say it kills a soldier in one hit, give it the game's sniper damage category, or call it a slow, precise long-range weapon. Any other hand-held weapon is small arms.' small-arms description: 'Hand-held weapons that fire single shots or short bursts: rifles, carbines, pistols, SMGs and automatic rifles, and also bows, crossbows and thrown blades.'",
+        "expected": "Shuriken: the IFV table gives Sniper damage and the sources say it kills in a hit, so sniper, projectile (thrown counts as travelling), kinetic for A and B (both change) and C; the sample is unchanged. Bow: small-arms, projectile, anti-air (all; sample unchanged). Spy and Natasha results: sniper (all).",
+        "side_effects": "small-arms and sniper both allow projectile delivery, so no new atypicals. Bow and thrown-weapon units elsewhere in scope fall into these two families; no new family is needed.",
+        "priority": "should"
+      },
+      {
+        "id": "artillery-vs-cannon-and-lobbed",
+        "fields": [
+          "armament[].family",
+          "armament[].delivery",
+          "armament[].damage"
+        ],
+        "evidence": "SC2 siege shot: all three coded artillery, lobbed, explosive, but A-sc2, B-sc2 and C-sc2 each hesitated on family, delivery and damage (9 hesitations in 3 reports). B-sc2 gap: indirect fire with no arc. Unclear-rule notes from A-, B- and C-sc2: one judgement fixes three fields.",
+        "root_cause": "'Artillery only for arcing or out-of-sight fire' does not say whether 'out of sight' means beyond the shooter's own sight with a spotter. lobbed's description promises an arc and travel time, which the sources do not show for this shot. So the only delivery artillery allows seemed not to fit.",
+        "kind": "tie-break",
+        "target": "data/vocab/weapon-families.json tie_breaks (replaces the old artillery clause); data/vocab/weapon-delivery.json description of term lobbed",
+        "change": "Add to tie_breaks: terms [artillery, cannon]; rule: 'Artillery when the shot arcs over cover onto a ground point, or when the sources call the weapon artillery or indirect fire and it reaches further than the unit itself can see, so others must spot for it. A gun aimed straight at targets in view is a cannon, even when it reaches far.' lobbed description: 'Indirect fire: the shot arcs over cover onto a ground point, or lands on a target the shooter cannot see itself, which others must spot. Usually slow to land, often with a minimum range. It never hits fliers.'",
+        "expected": "Siege shot: the wiki calls it mobile artillery and it reaches past its own sight, so artillery. lobbed now fits as written; damage is explosive by damage step 5, with splash, min-range and friendly-fire (A, B and C, now without doubt). Tank-mode guns: cannon, projectile (all).",
+        "side_effects": "Long tank guns in Wargame, Broken Arrow and World in Conflict that can fire on spotted targets stay cannons, because their sources do not call them artillery. The siege role's requirement (lobbed, or range of long or more) is unaffected. lobbed keeps its allowed target types.",
+        "priority": "should"
+      },
+      {
+        "id": "machine-gun-autocannon-cannon",
+        "fields": [
+          "armament[].family"
+        ],
+        "evidence": "Helicopter chin gun: all three coded autocannon, but A-battlefield and C-battlefield hesitated (a 20 mm gatling firing exploding rounds could be autocannon, machine gun or cannon; 'no tie-break sets a calibre line'). 2 reports, no disagreement.",
+        "root_cause": "The descriptions overlap: machine gun 'sustained automatic fire', autocannon 'rapid medium-calibre shells', cannon 'heavy shells'. A rotary gun firing shells matches the first two.",
+        "kind": "tie-break",
+        "target": "data/vocab/weapon-families.json tie_breaks",
+        "change": "Add to tie_breaks: terms [machine-gun, autocannon, cannon]; rule: 'Machine guns fire bullets. Autocannons fire rapid shells, often exploding ones; a rotary gun firing shells is an autocannon. A cannon fires one heavy shell at a time, with a pause between shots. If the sources call the rounds shells or say they explode, it is not a machine gun. A gun copied from a soldier is settled by the small-arms rule first.'",
+        "expected": "Chin gun: autocannon for A, B and C (unchanged, doubt removed). Tanya's 'autocannons' stay small-arms through the small-arms rule.",
+        "side_effects": "RA3's 'Auto Cannon' damage category is a damage label, not a family test, so it is unaffected. No validator change.",
+        "priority": "could"
+      },
+      {
+        "id": "psionic-telekinesis",
+        "fields": [
+          "armament[].family"
+        ],
+        "evidence": "Yuriko Omega result: all three coded psionic, but B-ra3 and C-ra3 flagged a gap (telekinesis, lifting and crushing, is not 'mind attacks'), and C-ra3 hesitated between psionic, emp and blades.",
+        "root_cause": "psionic's description names only control, confusion and fear, while magnetic's 'lift' covers only vehicles. Nothing names telekinesis.",
+        "kind": "term-description",
+        "target": "data/vocab/weapon-families.json term psionic, description",
+        "change": "psionic description: 'Powers of the mind: control, confusion, fear, or telekinesis that lifts and crushes. Machines without a crew are immune to mind control.'",
+        "expected": "Yuriko result: psionic for A, B and C (unchanged, gap closed). Structure follows the can_target rule: StrategyWiki says it can wreck a base, so it is listed with the existing psionic allowed.target-types structure atypical, as in the sample.",
+        "side_effects": "psionic damage stays immune for uncrewed machines, which is slightly wrong for telekinesis; accepted rather than splitting the family. No map changes.",
+        "priority": "could"
+      },
+      {
+        "id": "family-tie-breaks-carry-over",
+        "fields": [
+          "armament[].family"
+        ],
+        "evidence": "No disagreement. These three tie-breaks sat inside the list description next to the contradictory missile clause; moving all tie-breaks into one place avoids two sources of rules.",
+        "root_cause": "Housekeeping for 1.0: the list now supports tie_breaks, but the old tie-breaks are prose in the description.",
+        "kind": "convention",
+        "target": "data/vocab/weapon-families.json tie_breaks",
+        "change": "Add to tie_breaks: terms [prism, laser]; rule: 'Prism only if the beam splits or bounces to hit several targets; otherwise laser.' Terms [plasma, laser]; rule: 'Bolts that travel are plasma; light that hits at once or is held on the target is laser.' Terms [explosives, bombs]; rule: 'Charges that are placed or thrown are explosives; ordnance dropped from a flier is bombs.' (The old description sentence is deleted under rockets-vs-guided-missiles.)",
+        "expected": "No pilot unit changes.",
+        "side_effects": "The validator already checks that tie-break terms exist. Rebuild docs/vocabularies.md.",
+        "priority": "could"
+      },
+      {
+        "id": "delivery-field-rule",
+        "fields": [
+          "armament[].delivery"
+        ],
+        "evidence": "Delivery hesitations in 11 of 12 reports. Source silent: A-, B- and C-coh1 (rifle hits) and A-, B- and C-sc2 (tank-mode shot) all used the family default, but no rule says to. Bark: A projectile, B projectile, C beam (reference beam); B-ra3 and C-ra3 hesitated, A-ra3 gap. IW and Tankbuster lasers: A and B hitscan, C beam (reference beam). Yuriko: A hitscan, B and C beam. Terror Drone claws: A and C one entry with attach; B split it into attach and melee entries (A-, B- and C-ra3 hesitated; B unclear rule). armament.delivery set 93.5%; the split also lowers the weapon count (61.1%).",
+        "root_cause": "The delivery terms describe behaviour (travel, instant, held), but RTS sources rarely say which. There is no fallback, so 'judged by behaviour' invites guesses from fire rate or names. No rule covers one weapon that works differently on different targets.",
+        "kind": "field-rule",
+        "target": "schemas/source-unit.schema.json $defs.weapon.properties.delivery.description (docs/fields.md armament[].delivery)",
+        "change": "New description for armament[].delivery: 'How the shot reaches the target, as the cited sources describe it. A shot seen travelling is projectile; a thrown or launched object counts. A hit that lands the moment it is fired is hitscan. A beam kept on the target, whose effect lasts or builds while it stays on, is beam. When the sources do not say which, use the family's default delivery. A rate of fire, the weapon's name or a hidden hit roll does not count as saying. One attack button is one weapon entry, even when it works differently on different targets. Code the delivery that comes first in this order: attach, ram, guided, lock-on, lobbed, drop, place, beam, projectile, hitscan, melee. Say what it does to the other targets in the summary, and list every target it can hit in can_target.'",
+        "expected": "CoH rifles hitscan and SC2 tank-mode guns projectile (all three, now by rule). Bark: the sources do not say, so the sonic default, beam, for A and B (both change) and C. IW and Tankbuster lasers: 'fires faster' is a rate, so the laser default, beam, for A and B (both change) and C. Yuriko: the psionic default, beam, for A (changes), B and C. Shuriken and bow: thrown or launched, so projectile (all). Terror Drone claws: one entry; attach comes first in the order, so attach, with the infantry strike in the summary (B merges its two entries; A and C unchanged). The reference already matches all of these.",
+        "side_effects": "The 'one attack, one entry' sentence also belongs to the weapon-count group's rules and must match theirs. With this fallback, the coders' requests for a hitscan or cone bark are not needed (see no-change-sonic-bark).",
+        "priority": "should"
+      },
+      {
+        "id": "lock-on-vs-guided",
+        "fields": [
+          "armament[].delivery"
+        ],
+        "evidence": "Battlefield laser-guided missile: all three coded lock-on, but A-battlefield and B-battlefield hesitated (a laser-riding missile sits between lock-on and guided). B-battlefield also hesitated on guided vs lock-on for the TOW. 2 reports, no disagreement.",
+        "root_cause": "lock-on ('hold to lock, then homing shots') and guided ('you steer the shot by keeping your aim on it') leave out the shooter-held laser spot. Nothing says which version decides when one entry merges several titles.",
+        "kind": "tie-break",
+        "target": "data/vocab/weapon-delivery.json tie_breaks",
+        "change": "Add to tie_breaks: terms [lock-on, guided]; rule: 'Lock-on when the target is chosen before firing and the shot then finds it alone, so the shooter may look away; the target is usually warned. Guided when the shooter must keep aiming at the target until the shot lands: wire, camera or crosshair steering, or a laser spot the shooter holds. When one entry covers versions from several titles that differ, code the version named first and give the other in the summary.'",
+        "expected": "Heat seekers: lock-on. TOW and TV missile: guided. The laser-guided entry, named after Battlefield 3's lock-and-fire Guided Missile first, stays lock-on for A, B and C. If the weapon-count group splits it, the Battlefield 4 Laser Guided version is guided.",
+        "side_effects": "No validator change. The 'version named first' clause should match the series-granularity rule of the weapon-count group.",
+        "priority": "could"
+      },
+      {
+        "id": "can-target-field-rule",
+        "fields": [
+          "armament[].can_target"
+        ],
+        "evidence": "can_target hesitations in 10 of 12 reports. Meaning ('can be ordered to fire at' or 'does real damage'): A-, B- and C-coh1 (rifles against vehicles and buildings), A-ra3 (Hammer cannon against infantry), B-battlefield (chin gun against jets; lock-on missile against infantry). Structure: B-sc2, C-ra3, A-battlefield. Landed aircraft: A-ra3, B-ra3. Naval: A-, B- and C-battlefield and B-ra3. Disagreements: main weapon.can_target 92.2% (helicopter: C adds naval; IFV: C leaves out naval; drone: B drops infantry by splitting); armament.can_target 96.3%; Hellfire structure A and C yes, B no; TOW infantry C no. The reference lacks structure and naval on the IFV launcher and naval on the Hammer cannon.",
+        "root_cause": "The field has no description. target-types says only 'what a weapon can hit'. Nothing covers target types the source game lacks, a source that says only 'ground', what a lock-on weapon lists, or a flier that can be hit only while landed.",
+        "kind": "field-rule",
+        "target": "schemas/source-unit.schema.json $defs.weapon.properties.can_target.description (docs/fields.md armament[].can_target)",
+        "change": "New description for armament[].can_target: 'Every kind of target the weapon can be fired at and hurt in the source, even a little: weak, poor or not effective still count. Leave a type out when the sources say the weapon cannot attack it or does no damage to it, or when the source game has no such targets. A flier that can be hit only while it stands on the ground is not an air target. Piloted games (control piloted or both in data/games.json): a weapon the player aims lists every type its family allows that the game has, except high air. A lock-on weapon lists only what it can lock onto, unless the sources say it can also be fired without a lock. Commanded games: list what the sources say or show the weapon attacking. A target list that says ground means infantry, ground vehicles and structures; one that says air means low air and high air, unless the game splits its fliers and the weapon reaches only some. A weapon that latches on, drains, controls minds or disables machines lists structure only when the sources say it can attack buildings. High air and naval follow their coding rules in Target types.'",
+        "expected": "Helicopter (piloted; Battlefield has boats and emplacements): rockets, smart rockets, chin cannon, TOW and TV missile list infantry, ground-vehicle, low-air, structure and naval (A and B add naval; C adds infantry to the TOW). Laser-guided missile locks onto vehicles, so ground-vehicle, low-air, naval (A and C drop structure; B adds naval). Heat seekers: low-air, high-air (all). CoH Riflemen (no fliers, no ships, no target list): infantry and ground-vehicle (all); structure stays out because the sources say rifles hit the occupants. SC2 (Targets: Ground): infantry, ground-vehicle, structure on both weapons (all). Hammer: cannon infantry, ground-vehicle, structure, naval (all; the sample adds naval); leech beam ground-vehicle, structure, naval (sources say it works on buildings; all). Terror Drone: claws infantry, ground-vehicle, naval (B's merged entry now matches); ray ground-vehicle, naval (the remark about crippling production does not say it attacks buildings; all). IFV launcher: infantry, ground-vehicle, low-air, high-air, structure, naval (A and B; C adds naval; the sample adds structure and naval). Main weapon.can_target reaches 100%.",
+        "side_effects": "Piloted games in scope (PS2, Foxhole, ARC Raiders, WARDOGS, Renegade, MechWarrior) get full family target lists on aimed weapons, minus what the sources rule out. Rebuild docs/fields.md.",
+        "priority": "should"
+      },
+      {
+        "id": "naval-and-high-air-rules",
+        "fields": [
+          "armament[].can_target"
+        ],
+        "evidence": "Naval: helicopter weapons A and B none, C all anti-surface weapons; IFV launcher A and B naval, C none; Hammer cannon: all coders naval, reference none (C-ra3 notes 'no source says outright whether the cannon can fire on ships'). Hesitations in A-, B- and C-battlefield and B-ra3. High air: B-battlefield (chin gun can hit jets), A-battlefield (TV missile 'sky' in BF4 text), A-sc2 unclear rule (in RTS every flier is out of reach of ground-only weapons).",
+        "root_cause": "naval says only 'Ships and submarines. Research only.' high-air says 'Only anti-air weapons reach them', but nothing says how to apply that in a shooter where any gun can physically hit a jet, or in an RTS that says only 'air'.",
+        "kind": "source-rule",
+        "target": "data/vocab/target-types.json: source_rule on terms naval and high-air",
+        "change": "naval source_rule: 'On a weapon: in a game with ships or boats, list naval on every weapon that lists ground-vehicle, unless the sources say it cannot attack ships. In a game without ships or boats, never list it.' high-air source_rule: 'On a weapon: in a commanded game, list it for any weapon the sources say can attack air units, unless the game splits its fliers and this weapon cannot reach its jets or airships. In a piloted game, list it only for a weapon built to bring down aircraft: the sources call it anti-air or anti-aircraft, it locks onto jets, or it is a flak gun. A gun that could hit a passing jet by chance does not count.'",
+        "expected": "Naval: helicopter anti-surface weapons, IFV launcher and Hammer cannon all get naval for every coder; SC2 and CoH1 get none (no ships). High air: chin gun none, TV missile none, heat seekers yes (all); the IFV launcher yes, because the RA3 sources say it attacks air (all).",
+        "side_effects": "RA2, RA3, SupCom, PA, Foxhole and Battlefield weapons that hit ground vehicles all list naval. It is research-only and never rolled, so a few rough cases cost little. The sample gains naval on ten weapons (sample-fixes-ra3).",
+        "priority": "should"
+      },
+      {
+        "id": "anti-air-trait-rule",
+        "fields": [
+          "armament[].traits"
+        ],
+        "evidence": "IFV flak result: A none, B none, C anti-air (reference anti-air). Javelin result: A anti-air, B none, C anti-air (reference none). Hesitations in A-, B- and C-battlefield (anti-air on heat seekers, which already reach high air) and B-ra3 (anti-air on a guided IFV launcher); unclear rules in A-, B- and C-battlefield and C-ra3.",
+        "root_cause": "The trait's description mixes purpose ('built to bring down aircraft') with mechanism ('a weapon whose family reaches low air can, with this trait, reach high air'). On families that already reach high air (flak, guided missiles, autocannons), coders split on whether to add it.",
+        "kind": "source-rule",
+        "target": "data/vocab/weapon-traits.json term anti-air, source_rule",
+        "change": "anti-air source_rule: 'On a researched weapon, set it exactly when its can_target includes high-air, whatever the family. On flak, guided missiles and autocannons it marks what the weapon is for; on other families it is also what lets the weapon reach high air.'",
+        "expected": "IFV flak result: anti-air for A and B (both add), C and the reference. Javelin result: anti-air exactly when its can_target gets high-air from the sources (A and C read that it hits aircraft), so it is settled with can_target. Heat seekers, IFV launcher, cryo beam and bow: anti-air (all). Chin gun: none (all).",
+        "side_effects": "In SC2 and RA3, every weapon that can attack air gets the trait (Marines, Vikings, Javelin soldiers), so on researched units weapon-trait:anti-air means the same as hits:high-air. A researched weapon allows four traits, which leaves room. Optional: a validator WARN when a weapon has high-air without the trait, or the reverse (scripts/validate.mjs).",
+        "priority": "should"
+      },
+      {
+        "id": "suppress-trait-rule",
+        "fields": [
+          "armament[].traits"
+        ],
+        "evidence": "CoH BAR traits: A {suppress, magazine}, B {magazine}, C {magazine, suppress}; Riflemen traits differ in the armament.traits set (88%). Hesitations in A-, B- and C-coh1; unclear rule in A-coh1 (how strong must the always-on effect be).",
+        "root_cause": "suppress says 'sustained fire pins targets'. The Granularity convention sends always-on effects to the term and key versions to the suppress-with-fire pattern, but says nothing about how strong the always-on part must be. The BAR 'occasionally' pins, and every CoH small-arms shot suppresses a little.",
+        "kind": "source-rule",
+        "target": "data/vocab/weapon-traits.json term suppress, source_rule",
+        "change": "suppress source_rule: 'Set it only when the sources say this weapon's own fire, with no ability in use, pins or suppresses targets as one of its main jobs, as with a machine gun built for it. A weapon that pins only now and then, or only while an ability is active, does not get it; that ability links the suppress-with-fire pattern instead.'",
+        "expected": "BAR: {magazine} for A (drops suppress), B and C (drops suppress). The Suppression Fire ability keeps suppress-with-fire (all).",
+        "side_effects": "CoH machine-gun teams get suppress; rifle squads do not. Battlefield LMGs get it only where the sources call them suppression weapons.",
+        "priority": "should"
+      },
+      {
+        "id": "magazine-and-self-refilling-ammo",
+        "fields": [
+          "armament[].traits"
+        ],
+        "evidence": "CoH: magazine on the BAR only (all three), but A-, B- and C-coh1 hesitated over whether every gun that reloads gets it (B-coh1 unclear rule). Battlefield: all three put magazine on rockets and cannon, but A, B and C battlefield hesitated or flagged a gap, because BF4 reserves refill by themselves, which neither magazine (reload) nor finite-ammo (teammate or station) covers. 6 of 12 reports.",
+        "root_cause": "magazine says only 'fires a set number of shots, then reloads', which fits nearly every gun. finite-ammo requires a teammate or station refill, so a reserve that comes back on its own has no home.",
+        "kind": "source-rule",
+        "target": "data/vocab/weapon-traits.json: term magazine (description and source_rule) and term finite-ammo (description)",
+        "change": "magazine description: 'Fires a set number of shots, then must reload, or wait for its ammo to come back on its own.' magazine source_rule: 'Set it only when the sources point to the reload as part of how the weapon fights: they name the reload or clip as a strength or weakness, or describe a burst or salvo followed by a pause. An ordinary reload mentioned only in passing, or only when comparing fire rates, does not count.' finite-ammo description: 'Carries a fixed stock that does not come back by itself: a teammate, a station or a pickup must refill it. A stock that refills on its own over time is magazine.'",
+        "expected": "CoH: BAR magazine; Garand and Carbine none (all three, now by rule). Battlefield rockets and chin cannon: magazine, not finite-ammo (all three, gap closed). IFV Javelin result: magazine (all; sample).",
+        "side_effects": "Matches the resources list's limited-ammo (refilled by a supporter, a pickup or the base). Few routine RTS guns will carry magazine, which keeps the trait meaningful.",
+        "priority": "should"
+      },
+      {
+        "id": "homing-trait-rule",
+        "fields": [
+          "armament[].traits",
+          "armament[].delivery"
+        ],
+        "evidence": "Battlefield: A and C put homing on the smart rockets; B left homing off lock-on missiles because 'homing is implied by lock-on delivery'; unclear rules in A-, B- and C-battlefield on self-homing shots.",
+        "root_cause": "guided already excludes the homing trait, but lock-on does not. Nothing says homing is only for self-steering shots without a lock.",
+        "kind": "combination-rule",
+        "target": "data/vocab/weapon-traits.json term homing, source_rule; data/vocab/weapon-delivery.json term lock-on, new excluded map",
+        "change": "homing source_rule: 'Only for shots that steer themselves after firing with no lock step and no steering by the shooter, such as smart rockets. Never with lock-on or guided delivery, which already steer.' lock-on: add excluded weapon-traits [homing] (the same as guided already has).",
+        "expected": "Smart rockets: rockets + homing for A and C. Heat seekers and laser-guided missiles: no homing (all).",
+        "side_effects": "The validator reads the new excluded map with no code change. No existing data uses lock-on with homing. Cards can no longer roll lock-on with homing, which was redundant anyway.",
+        "priority": "could"
+      },
+      {
+        "id": "splash-trait-rule",
+        "fields": [
+          "armament[].traits"
+        ],
+        "evidence": "IFV bark: B adds splash; A, C and the reference do not (the sample notes say one source calls the stunned area tiny and the other says it stuns one enemy at a time). Battlefield laser-guided and TV missiles: C splash, A and B none.",
+        "root_cause": "splash says 'damages an area around the impact', with no test for a tiny or disputed area, or for an area effect that does no damage.",
+        "kind": "source-rule",
+        "target": "data/vocab/weapon-traits.json term splash, source_rule",
+        "change": "splash source_rule: 'Set it when the sources say the hit hurts or affects everything in an area around the impact. Leave it off when they say it hits one target at a time, call the area tiny, or disagree.'",
+        "expected": "Bark: no splash for A, B (drops it) and C. Battlefield missiles: splash only where the cited source says they do area damage; without such text, none (C drops it).",
+        "side_effects": "None for the validator.",
+        "priority": "could"
+      },
+      {
+        "id": "new-trait-ignores-countermeasures",
+        "fields": [
+          "armament[].traits"
+        ],
+        "evidence": "Gaps in A-, B- and C-battlefield: the TV missile cannot be stopped by flares, ECM or active protection, which decides its matchups, and no trait says so. 3 reports, all three Battlefield coders.",
+        "root_cause": "The registry has counterplay patterns against missiles (fire-countermeasures, jam-sensors) but no weapon trait for a shot that beats them.",
+        "kind": "new-term",
+        "target": "data/vocab/weapon-traits.json, new term",
+        "change": "New term: id ignores-countermeasures; label 'Ignores countermeasures'; description 'Flares, jammers and active protection do not stop it, so the target must dodge or kill the shooter.' No allowed, excluded, requires or min_tier.",
+        "expected": "TV missile: gets ignores-countermeasures for A, B and C.",
+        "side_effects": "Matchups can link weapon-trait:ignores-countermeasures against units with the fire-countermeasures or jam-sensors patterns. Code it only when the sources say so (some wire-guided missiles in Wargame or Broken Arrow may qualify). Run the word-list diff for 1.0.",
+        "priority": "could"
+      },
+      {
+        "id": "no-change-none-and-true-damage",
+        "fields": [
+          "armament[].damage"
+        ],
+        "evidence": "Gaps in A-, B- and C-ra3: a 'none' damage type for the stasis ray, and a 'true damage that ignores armour' type for the Leech Beam's Magic category.",
+        "root_cause": "The damage field is required, and no type means 'no damage' or 'ignores armour'.",
+        "kind": "no-change",
+        "target": "data/vocab/damage-types.json",
+        "change": "No new terms. Step 2 of damage-decision-order covers no-damage weapons (family default, effect in traits). Step 5 covers categories missing from the map. A 'none' type would need adding to every family's allowed list and would let cards roll harmless weapons. A 'true damage' type would cut across the strong-versus-weak matchups the generator relies on.",
+        "expected": "Stasis ray emp, leech beam energy for all three.",
+        "side_effects": "None.",
+        "priority": "could"
+      },
+      {
+        "id": "no-change-sonic-bark",
+        "fields": [
+          "armament[].delivery",
+          "armament[].family"
+        ],
+        "evidence": "A-ra3 gap: wanted hitscan for an instant bark (sonic allows only beam or projectile). B-ra3: a stun bark has no family. C-ra3 gap: wanted a shout or cone delivery.",
+        "root_cause": "No delivery describes a one-off sound blast, and the sources do not say how the stun travels.",
+        "kind": "no-change",
+        "target": "data/vocab/weapon-families.json term sonic; data/vocab/weapon-delivery.json",
+        "change": "No new delivery and no change to sonic's allowed list. Under delivery-field-rule the sources say nothing about travel, so the bark takes the sonic default, beam, as the sample already does.",
+        "expected": "Bark: sonic, sonic, beam, stun for A, B and C.",
+        "side_effects": "None.",
+        "priority": "could"
+      },
+      {
+        "id": "no-change-stun-tier",
+        "fields": [
+          "armament[].traits"
+        ],
+        "evidence": "C-ra3 unclear rule: real T1 units stun (the IFV with a dog or bear). All three coders and the sample record weapon-traits:stun min_tier t2 as atypical.",
+        "root_cause": "The rule is clear; the source simply breaks it.",
+        "kind": "no-change",
+        "target": "data/vocab/weapon-traits.json term stun",
+        "change": "Keep min_tier t2 (decision 5B). The atypical record is the correct way to note that the source breaks it.",
+        "expected": "All three keep the atypical (already agree).",
+        "side_effects": "None.",
+        "priority": "could"
+      },
+      {
+        "id": "no-change-rts-automation-and-stat-quirks",
+        "fields": [
+          "armament[].traits"
+        ],
+        "evidence": "Gaps in A-sc2 and C-sc2: no-overkill (grouped siege tanks split their shots) and slow fire. B-coh1 and C-coh1: range-dependent fire rate (the Garand fires faster up close). C-battlefield: spin-up is sourced for Battlefield 2 only.",
+        "root_cause": "These are RTS fire automation, plain stats or a title-version question, not combinable twists.",
+        "kind": "no-change",
+        "target": "data/vocab/weapon-traits.json",
+        "change": "No new traits. Put such quirks in the weapon summary. A trait that exists in only one title of a series follows the version rule of the series (code the version named first; see lock-on-vs-guided).",
+        "expected": "SC2 siege traits stay splash, min-range, friendly-fire; Garand none; Battlefield cannon magazine (all three already agree).",
+        "side_effects": "None.",
+        "priority": "could"
+      },
+      {
+        "id": "no-change-affects",
+        "fields": [
+          "armament[].affects"
+        ],
+        "evidence": "No hesitations, gaps or disagreements. All three coders set allies on the IFV repair tool and left every other weapon at the default (enemies). The Hammer's leech beam working on friendly vehicles when force-fired was noted in summaries only.",
+        "root_cause": "None.",
+        "kind": "no-change",
+        "target": "schemas/source-unit.schema.json $defs.weapon.properties.affects",
+        "change": "No change. Force-fire on friends (a general RTS order) does not make a weapon 'both'.",
+        "expected": "Unchanged for all units.",
+        "side_effects": "None.",
+        "priority": "could"
+      },
+      {
+        "id": "no-change-picked-up-weapons-family",
+        "fields": [
+          "armament[].family"
+        ],
+        "evidence": "Riflemen family set: A and C add an acquired adaptive weapon for picked-up weapons, B does not (armament.family 84.8%; also the weapon count). A-coh1, B-coh1 and C-coh1 flagged this in hesitations and unclear rules.",
+        "root_cause": "Whether to record a game-wide infantry order (picking up dropped weapons) is decided by the abilities and weapon-count groups, not by the family list.",
+        "kind": "no-change",
+        "target": "data/vocab/weapon-families.json term adaptive",
+        "change": "No family change. If the other groups decide to record pickups, adaptive is the right family. Cross-group note only.",
+        "expected": "Settled when the count rule is: either all three record an adaptive acquired weapon, or none does.",
+        "side_effects": "None in this group.",
+        "priority": "could"
+      },
+      {
+        "id": "no-change-knockback-reading",
+        "fields": [
+          "armament[].traits"
+        ],
+        "evidence": "IFV Peacekeeper result: A, C and the reference set knockback; B set no traits.",
+        "root_cause": "A difference in reading the source, not an unclear rule: knockback's description is plain, and the sources say the shotgun knocks infantry back.",
+        "kind": "no-change",
+        "target": "data/vocab/weapon-traits.json term knockback",
+        "change": "No change. Round-2 brief: record every trait the cited sources state for the weapon.",
+        "expected": "Knockback for all three when the source line is read.",
+        "side_effects": "None.",
+        "priority": "could"
+      }
+    ]
+  },
+  "review": {
+    "cluster": "Weapon terms: family, damage, delivery, targets, traits",
+    "speed_decision_review": "Outside this group. The speed methods (decision 2C) were not reviewed here.",
+    "verdicts": [
+      {
+        "id": "damage-decision-order",
+        "verdict": "revise",
+        "reason": "I applied the five steps to every pilot weapon. Claws give melee (two categories, so step 5). The stasis ray gives emp (step 2). The IFV launcher gives explosive (no category on the wiki table or infobox; the text says it works well against aircraft and light vehicles). The IW laser gives kinetic ('40 gun damage'). The Javelin gives armour-piercing ('Rocket'). The Peacekeeper, Spy and Shinobi give kinetic. The leech beam gives energy (Magic is not mapped). SC2 gives armour-piercing, then explosive. Battlefield comes out as coded. Five holes remain. (1) Step 1 'it heals or repairs' also catches the Hammer's leech beam: the infobox says it heals 20 HP a second while it attacks. A coder can pick repair, which drain does not allow. The step must say the weapon heals its target. (2) Step 3 'a note names this kind of weapon and a damage type' fires on notes that are hints, not rules. MechWarrior says 'Gauss rifles and large autocannons can be armour-piercing per weapon' (which autocannons?). Tempest Rising says 'the Comms Officer's laser deals Explosive damage' (energy or explosive?). TW says 'the map gives the defaults; type each weapon by what it is'. RA2 says 'choose per weapon from what it does'. Each gives two readings. Step 3 must need a firm instruction, and the notes must be rewritten (see damage-map-binding-registry). (3) The step-5 test 'built to kill vehicles' left the Battlefield Hydra open. C hesitated on 'a salvo can disable a main battle tank', and the cited Viper page says it can do devastating harm to enemy armour. Concrete words settle it as explosive: called anti-tank or anti-armour, or given a bonus against armour. (4) Generals infoboxes write INI names in words ('Armor Piercing'), so step 4 should say this counts. (5) Scope: step 4 plus families that refuse the mapped type gives predictable atypicals on ordinary units. These are explosives under Foxhole 'Anti-Tank Explosive' and DoW2 'explosive_pvp', and DoW2 lascannons and meltas (laser family, armour-piercing categories). These are fixed by explosives-allow-armour-piercing (missing) and a DoW2 note (registry revision), not here. Decisions: no conflict. The validator is unaffected: every family default sits inside its allowed list, so steps 2 and 5 never force a break.",
+        "revised_target": "schemas/source-unit.schema.json $defs.weapon.properties.damage.description (docs/fields.md armament[].damage); one sentence appended to the description of data/vocab/damage-types.json",
+        "revised_change": "New description for armament[].damage: 'What a hit does to the target. Decide in this order and stop at the first step that fits. 1. It restores health to its target: repair. A weapon that hurts its target and heals its user, such as a drain beam, is not this step. 2. It does no damage at all (it only stuns, pins, slows or marks): its family's default damage. Put the effect in traits and say in the summary that it does no damage. 3. The game's registry note tells you to record this kind of weapon as a damage type: that type. 4. The game has a damage_map in data/games.json, and the sources cited for this unit give this weapon one game damage category that the map lists: the mapped type. The same name written out in words counts. Use it even when the family's list leaves it out, and record that break in atypical. Never change the family to make the damage fit. 5. Anything else (no map, no category given for this weapon on this unit, a category the map leaves out, or different categories against different targets): the family's default damage, with two exceptions. Check them in this order, and use one only when the family allows the type. Armour-piercing when the sources call the weapon anti-tank or anti-armour, say it is built to kill vehicles, or give it a bonus against armoured targets. Explosive when it is built mainly to bring down aircraft, or its hit is a blast that hurts an area. Area damage is also the splash trait, so a shell can be armour-piercing and splash at once.' Append to the damage-types list description: 'On a researched unit, pick a weapon's type with the steps under armament[].damage in docs/fields.md.'"
+      },
+      {
+        "id": "damage-map-binding-registry",
+        "verdict": "revise",
+        "reason": "The new damage_map sentence and the RA3 Magic bullet settle A vs B/C on the claws, the IW laser and the leech beam. But only Tempest Rising and MechWarrior are marked, while four other notes still read as competing general rules or give two readings. games-r2.md TW says 'The map gives the defaults; type each weapon by what it is'. Taken as a general rule, that cancels step 4 for the whole game. games-r1.md RA2 says 'Choose the damage type per weapon from what it does', which is not step 5's family default. games-r3.md Tempest Rising says 'record a laser weapon as energy' but then 'The Comms Officer's laser deals Explosive damage': energy or explosive? games-r6.md MechWarrior says 'Gauss rifles and large autocannons can be armour-piercing per weapon': 'can be' is no rule, and 'large' is undefined. games-r6.md PS2 says 'VS lasers ... map to kinetic' but leaves the family open. The laser and plasma families both refuse kinetic, so every VS gun becomes atypical under step 4 ('never change the family'), or a coder picks small arms by behaviour: three readings on a third of PS2's units. Also, RA3's Spectrum category (Mirage tank) is missing from the ra3 map like Magic. DoW2 lascannons and meltas get armour-piercing categories on a laser or heat family, which makes them atypical on ordinary Space Marine and Guard units unless a note names them.",
+        "revised_target": "schemas/game.schema.json $defs.game.properties.damage_map.description; research/registry-notes/games-r1.md (RA2 and RA3), games-r2.md (TW), games-r3.md (Tempest Rising), games-r5.md (DoW2), games-r6.md (PS2, MechWarrior)",
+        "revised_change": "damage_map description: 'The game's own damage categories mapped to our damage types. When the sources cited for a unit give one of its weapons a single category from this map, the mapped type is that weapon's damage, even if the weapon's family does not allow it; record the break as atypical (step 4 under armament[].damage). A registry note that tells you to record a kind of weapon as another type comes first (step 3). A category left out of the map, or a weapon with different categories against different targets, is decided by step 5.' Each note below is written as a firm instruction and ends with 'Named exception (step 3 under armament[].damage).' games-r1.md RA3, new bullet: 'Magic (the Leech Beam's category, which hurts every armour type in full) and Spectrum are left out of the map on purpose: those weapons take step 5.' games-r1.md RA2: replace 'Choose the damage type per weapon from what it does.' with 'Use step 5 under armament[].damage.' games-r2.md TW: 'Lasers (Avatar, Obelisk, Tripod) are energy, the Shatterer's beam is sonic and flamethrowers are fire, whatever their category.' games-r3.md Tempest Rising: 'Every laser weapon is energy, whatever its category (Cannon for most, Explosive for the Comms Officer's).' games-r5.md DoW2, new bullet: 'Lascannons, meltas and other laser or heat weapons are energy, whatever their category.' games-r6.md PS2: 'VS guns use the Small Arms category but fire like bullets: code their family by how they fire (small arms, machine gun, sniper), with kinetic damage, not as laser or plasma. Mention the energy look in the summary.' games-r6.md MechWarrior: 'Flamers are fire and Gauss rifles are armour-piercing. All other weapons, autocannons included, follow the map.'"
+      },
+      {
+        "id": "rockets-vs-guided-missiles",
+        "verdict": "revise",
+        "reason": "Pilot check. IFV launcher: the wiki says 'fires rockets', with no steering, so rockets for all (B changes). Javelin result: the table says 'Burst-firing missile launcher' and StrategyWiki says 'larger salvo', with no steering, so rockets (B and C change, as in the reference). Smart Rockets: the cited text says 'Direct-attack self-guided', so rockets with homing and no atypical (A and C change). Heat seekers lock on, TOW and TV are steered, the laser-guided missile locks on: all stay guided missiles. The anti-air trait then lets rockets reach high air, and the anti-air rule sets the trait whenever high air is listed, so there are no new atypicals. Two holes. (1) The rule splits commanded and piloted games, but MechWarrior's control is 'both' in data/games.json, so LRMs and SRMs have no branch. (2) The BF3 version of the same entry is described as 'semi-active guidance systems', which a coder can read as 'the shooter steers it (crosshair)' and so guided missiles. The rule should say that rockets the sources call smart, seeking or self-guided, with no lock step, count as correcting their own course. Scope: RA2, RA3 and Generals SAM and anti-tank pages rarely say the missile homes, so those become rockets with the anti-air trait. The counter hints are nearly the same, so that is acceptable.",
+        "revised_target": "data/vocab/weapon-families.json: new tie_breaks entry; term descriptions of rockets and guided-missiles; list description (delete the old tie-break sentence). data/vocab/weapon-delivery.json term guided, notes (last sentence)",
+        "revised_change": "Add to tie_breaks: terms [rockets, guided-missiles]; rule: 'Guided missiles only when the sources cited for the unit say the missile steers to its target: it locks on before it is fired, the shooter steers it (by wire, laser, camera or crosshair), or, in a commanded game, it homes in on or tracks its target. If they do not say it steers, it is rockets, whatever the game calls it. In a piloted game (control piloted or both in data/games.json), a rocket that corrects its own course with no lock step and no warning stays rockets and takes the homing trait. Rockets the sources call smart, seeking or self-guided, with no lock step, count as this.' rockets description: 'Rockets or rocket pods with no lock and no steering by the shooter. Some correct their own course on the way (homing trait).' guided-missiles description: 'Missiles the sources say steer to the target: locked on before firing, steered by the shooter, or, in a commanded game, homing in on the target.' List description: delete the whole sentence that starts 'Tie-breaks:' and ends 'out-of-sight fire.' (the other tie-breaks move to tie_breaks). guided notes, last sentence becomes: 'A shot that steers itself after a lock is lock-on; one that steers itself with no lock step is projectile with the homing trait.'"
+      },
+      {
+        "id": "main-weapon-slot-crossgroup",
+        "verdict": "revise",
+        "reason": "Right diagnosis, and the helicopter resolves: the Hydra pod becomes primary for all three, so the main weapon is rockets, projectile, explosive. Three holes. (1) The BF pilot fires two weapons by default: the rocket pod, and the heat seekers, which are the default of their own group in A's and C's files and in the BF4 infobox ('Heat Seekers (Default)'). 'The weapon the driver or pilot fires by default is primary' then gives two primaries, and only one of the two default picks is told to leave 'option'. (2) A vehicle whose driver fires nothing gets no primary at all: in Battlefield and Foxhole, the Humvee, transport helicopters and trucks with a gunner seat. Under 2A the buyer drives and fires the main weapon, so the gunner's main weapon must be the fallback. (3) The 'default' description still says 'For option weapons'. Validator: no option_group or default checks, so no code change. agreement.mjs picks the first primary, so it reads the result. This must be merged with the slots and seats group's proposal.",
+        "revised_target": "schemas/source-unit.schema.json $defs.weapon.properties.slot.description, option_group.description and default.description (owned by the slots and seats group; raised here because it decides this group's main-weapon fields)",
+        "revised_change": "Add to the slot description: 'On a vehicle with several seats, the weapon the driver or pilot fires with their first fire button by default is primary (decision 2A). If the driver or pilot fires nothing, the main weapon of the first gunner seat is primary. The default pick of a loadout group keeps the slot it would have without the group (primary or secondary) and carries option_group and default: true; the other picks of that group are option. The main weapon of any other seat is secondary at most.' option_group description: 'For option weapons, and for the primary or secondary weapon that is the default pick of a loadout group: weapons in the same group exclude each other.' default description: 'In a loadout group: the pick fitted by default.'"
+      },
+      {
+        "id": "sample-fixes-ra3",
+        "verdict": "revise",
+        "reason": "I checked the reference against the rules as revised here, reading the cached fandom table and StrategyWiki effects page. (1) The Tanya fix holds only if the sniper rule drops 'kills a soldier in one hit', since Tanya one-shots infantry in RA1 to RA3 (see sniper-vs-small-arms-and-bows). (2) The Javelin fix is left open, but the cited sources decide it. The table calls it a burst-firing missile launcher that does half damage to the Assault Destroyer, King Oni, tanks and ore collectors, and StrategyWiki says it can fight heavier units. Neither names aircraft, so there is no air and no anti-air, and A and C drop them. (3) The fixes cover only main weapons. Under the can_target rule, passenger lists in the reference still differ from what the rule gives, for example the Conscript (StrategyWiki: weak against anything but its intended target), the Peacekeeper ('Anti-surface'), the Desolator, and the cryo beam (only aircraft named, family list for the ground). (4) Yuriko: StrategyWiki warns that she could soon leave you with no base, which is a warning, not a statement that her attack damages buildings. All three coders left structure out, and the revised can_target rule needs buildings named, so the reference drops structure and its atypical. Validator: every family touched allows structure and naval (shotgun, rockets, cryo, machine-gun, chemical, tesla, laser, repair-tool, psionic, cannon), and the psionic structure atypical goes, so no new atypicals and one fewer.",
+        "revised_target": "data/units/ra3.json: ra3.allied.multigunner-ifv armament/0, 1, 4, 5, 7, 8, 9, 11, 12, 14, 15, 18, its atypical list and uncertain notes; ra3.soviet.hammer-tank armament/0; then rebuild docs/samples.md",
+        "revised_change": "ra3.allied.multigunner-ifv: armament/7 (Tanya): family machine-gun -> small-arms; delivery stays hitscan; rewrite its uncertain note to 'The wiki calls the mounted guns autocannons, but they copy Tanya's own pistols, so they keep her small-arms family.' can_target, under the revised can_target and naval rules: armament/0 (launcher) add structure and naval; armament/1 (repair tool) add naval; armament/4 (Peacekeeper, 'anti-surface') add structure and naval; armament/5 (Javelin) add infantry and structure, keep naval, no air layer, traits stay [magazine], and replace the uncertain note on armament/5/can_target with 'No cited source says the Javelin version attacks aircraft, so no air layer is listed.'; armament/8 (cryo beam) add structure and naval; armament/9 (Conscript) add structure and naval; armament/11 (Tesla) add naval; armament/12 (Desolator) add structure and naval; armament/14 (Imperial Warrior) add naval; armament/15 (Tankbuster) add naval; armament/18 (Yuriko) remove structure, add naval, and delete the atypical entry 'weapon-families:psionic allowed.target-types structure' at armament/18/can_target. Unchanged: armament/2 and 3 (barks: infantry), 6 (Spy: infantry only), 10 (flak: air only), 13 (Natasha) and 16 (Shinobi): anti-infantry, 17 (bow). ra3.soviet.hammer-tank armament/0 (cannon): add naval. Keep unchanged: claws blades/melee/attach, stasis ray emp/emp/beam/root, IW laser kinetic with its atypical, bark and laser deliveries beam, shuriken sniper, flak anti-air. Run the validator (expect no new atypicals) and rebuild docs/samples.md. The pilot coders' files under research/pilot are not touched."
+      },
+      {
+        "id": "emp-vs-magnetic",
+        "verdict": "revise",
+        "reason": "The stasis ray settles. The cited wiki says the ray stops a target from moving, transforming or deploying, a stop with little damage, so emp, emp, beam and root for all three. B changes, and B's magnetic classes-drone atypical goes. Magnetron-style lifters stay magnetic. One hole: 'code what it stops with the root, silence or stun trait' leaves two readings for a weapon that stops both moving and firing (Generals EMP Patriot and EMP missiles, SupCom stun weapons): root plus silence, or stun? Stun is 'can't do anything for a very short time', with min_tier t2 and decision 5B (short, medium or longer cooldown). A long full shutdown read as stun would break min_tier on T1 units and blur the 5B line. Rule: root and silence for a stop that lasts, stun only for a very short one. Validator: no map changes, and the disabler role accepts root, silence, stun and damage:emp.",
+        "revised_target": "data/vocab/weapon-families.json: new tie_breaks entry; descriptions of terms emp and magnetic. data/vocab/damage-types.json: description of term emp",
+        "revised_change": "Add to tie_breaks: terms [emp, magnetic, tesla]; rule: 'EMP for an electric or electromagnetic pulse or ray whose main effect is to stop machines for a time while doing little or no damage. Code what it stops with traits: root when they can't move, silence when they can't fire, root and silence when they can do neither. Use stun only for a very short stop. Magnetic only for a weapon that physically pulls, lifts or drags its target. Tesla for electric arcs that do real damage.' emp (family) description: 'An electric or electromagnetic pulse or ray that stops machines and shields for a time: they can't move, can't fire, or both. Little or no damage.' magnetic description: 'Magnetic beams or harpoons that physically pull, lift or drag vehicles.' emp (damage type) description: 'Little or no damage: it stops vehicles and drones from moving, firing or both, and knocks out energy shields, for a time.'"
+      },
+      {
+        "id": "small-arms-vs-machine-gun",
+        "verdict": "revise",
+        "reason": "The BAR settles: the cited CoH text says it needs a reload after a few bursts. So does Tanya, through the copy clause, since the wiki says they match her own weapons. The Conscript gatling stays a machine gun. Two cases still read two ways. (1) SMGs: the rule lists them as small arms, but drum-fed SMGs in CoH2 and CoH3 (PPSh, Thompson) also fit 'long sustained bursts'. (2) Magazine-fed LMGs (Bren, DP-28, drum-fed MG34): 'short bursts from a magazine' or 'long bursts'? The CoH source says the Bren is as deadly as an MG42. The test should be the reload behaviour, with a default when the source is silent.",
+        "revised_target": "data/vocab/weapon-families.json tie_breaks (replaces the old small-arms / machine-gun clause)",
+        "revised_change": "Add to tie_breaks: terms [small-arms, machine-gun]; rule: 'Judge by how it fires, not where it sits. Pistols, rifles, carbines and SMGs are always small arms. An automatic rifle or light machine gun is small arms when the sources say it must reload every few bursts (such as the BAR), and a machine gun when it fires long, sustained bursts from a belt, drum or large box. If the sources say neither, a light machine gun is a machine gun. Any belt-fed gun, and any rotary gun firing bullets, is a machine gun, whether a soldier carries it or it sits on a mount. A mounted weapon that the sources say copies a soldier's own gun keeps that soldier's family.'"
+      },
+      {
+        "id": "sniper-vs-small-arms-and-bows",
+        "verdict": "revise",
+        "reason": "The shuriken settles by its category ('250 Sniper Damage'), as do the Spy ('30 Sniper Damage') and Natasha (named a sniper rifle). The bow stays small arms. But two clauses break other units. (1) 'Kills a soldier in one hit' sends Tanya's pistols to sniper in RA1, RA2 and RA3, where she one-shoots infantry. That contradicts this group's own Tanya fix (small arms) and codes a short-range, fast-firing hero as a slow long-range sniper. No pilot weapon needs the clause, because the category and name tests already cover them. (2) 'Any other hand-held weapon is small arms' sweeps bazookas, flamethrowers and thrown grenades into small arms. It must be limited to guns, bows and thrown blades. Also, the IFV's shuriken launcher is mounted, not hand-held, so the rule should not depend on 'hand-held'.",
+        "revised_target": "data/vocab/weapon-families.json: new tie_breaks entry; description of term small-arms",
+        "revised_change": "Add to tie_breaks: terms [small-arms, sniper]; rule: 'Sniper when the sources call it a sniper weapon, give it the game's sniper damage category, or describe slow, precise shots that reach further than ordinary rifles. Killing a soldier in one hit is not enough by itself: commandos' pistols often do. Otherwise a gun, bow, crossbow or thrown blade is small arms.' small-arms description: 'Hand-held weapons that fire single shots or short bursts: rifles, carbines, pistols, SMGs and automatic rifles, and also bows, crossbows and thrown blades.'"
+      },
+      {
+        "id": "artillery-vs-cannon-and-lobbed",
+        "verdict": "revise",
+        "reason": "The SC2 siege shot settles. The wiki calls it mobile artillery, its range (13) is past its sight (11), and decision 1A (shared team sight) makes spotting a real mechanic. So artillery, lobbed, explosive and splash for all, and the tank-mode guns are a cannon. One new hole: 'the sources call the weapon artillery' also catches rocket artillery (Katyusha in CoH2 and CoH3, RA3 V4, Generals Tomahawk and Inferno, Wargame MLRS), which the word lists mean as rockets with lobbed delivery (rockets allow lobbed, artillery says 'shells'). Coders reading 'rocket artillery' will split. The lobbed description change is fine, and lobbed keeps its target list.",
+        "revised_target": "data/vocab/weapon-families.json tie_breaks (replaces the old artillery clause); data/vocab/weapon-delivery.json description of term lobbed",
+        "revised_change": "Add to tie_breaks: terms [artillery, cannon, rockets]; rule: 'Artillery when a gun or mortar lobs shells over cover onto a ground point, or when the sources call the gun artillery or indirect fire and it reaches further than the unit itself can see, so others must spot for it. A gun aimed straight at targets in view is a cannon, even when it reaches far. Rockets fired in an arc stay rockets with lobbed delivery, even when the sources call them rocket artillery.' lobbed description: 'Indirect fire: the shot arcs over cover onto a ground point, or lands on a target the shooter cannot see itself, which others must spot. Usually slow to land, often with a minimum range. It never hits fliers.'"
+      },
+      {
+        "id": "machine-gun-autocannon-cannon",
+        "verdict": "revise",
+        "reason": "The chin gun settles: the cited page calls it the 'M197 20mm gatling cannon' and says it 'fires high-explosive rounds', so it is an autocannon. But 'If the sources call the rounds shells or say they explode, it is not a machine gun' codes Dawn of War badly. Heavy bolters fire sustained, belt-fed bursts of exploding bolts, and DoW2 even gives them the suppression_pvp category. They would leave machine gun for autocannon, and boltguns would sit between small arms and autocannon. The test should be what the sources call the gun (cannon or autocannon) and its rate, not whether the rounds explode.",
+        "revised_target": "data/vocab/weapon-families.json tie_breaks",
+        "revised_change": "Add to tie_breaks: terms [machine-gun, autocannon, cannon]; rule: 'Machine guns fire bullets in long bursts. An autocannon is a gun the sources call a cannon or autocannon that fires shells rapidly; a rotary cannon counts. A cannon fires one heavy shell at a time, with a pause between shots. Exploding rounds alone, such as bolts, do not make a gun an autocannon: it stays small arms or a machine gun by how it fires. A gun copied from a soldier is settled by the small-arms rule first.'"
+      },
+      {
+        "id": "psionic-telekinesis",
+        "verdict": "accept",
+        "reason": "This is a description change only, with no allowed, excluded or damage map changes. It closes B's and C's gap, and Yuriko stays psionic for all three. The damage type keeps 'immune: uncrewed-machine', and the new text limits immunity to mind control, which is a known near-match the analyst accepts. One correction to the expected outcome: under the revised can_target rule, a warning that you could lose your base does not name buildings. So Yuriko gets no structure and loses the reference's atypical (see sample-fixes-ra3), which matches all three coders."
+      },
+      {
+        "id": "family-tie-breaks-carry-over",
+        "verdict": "accept",
+        "reason": "This is housekeeping only. The terms exist ([prism, laser], [plasma, laser], [explosives, bombs]), and the validator checks that tie-break terms are real and not repeated. No pilot unit changes. It must be done together with deleting the old sentence (rockets-vs-guided-missiles) and adding the revised [small-arms, machine-gun] and [artillery, cannon, rockets] entries."
+      },
+      {
+        "id": "delivery-field-rule",
+        "verdict": "revise",
+        "reason": "The silent-source fallback is right, and the pilot settles. CoH rifles take hitscan and SC2 tank guns projectile. The bark takes beam (the sources never describe travel). The IW laser, Tankbuster laser and Yuriko take beam ('faster rate of fire' is a rate). The shuriken and bow take projectile. The claws become one entry with attach (B merges). One clash: 'a thrown or launched object counts' as projectile reads onto launched lock-on and guided missiles and thrown grenades (lobbed). The order that puts the specific terms first is stated only for weapons that work differently on different targets. So a coder can code a heat seeker or a TOW as projectile. The specific deliveries must come first for every weapon, with projectile, hitscan and beam as the last choice. The 'one attack button, one entry' sentence must match the weapon-count group.",
+        "revised_target": "schemas/source-unit.schema.json $defs.weapon.properties.delivery.description (docs/fields.md armament[].delivery)",
+        "revised_change": "New description for armament[].delivery: 'How the shot reaches the target, as the cited sources describe it. Use attach, ram, guided, lock-on, lobbed, drop, place or melee when the sources describe that way of hitting. Otherwise pick one of three. A shot seen travelling is projectile; a thrown or launched object such as a shuriken, an arrow or a rocket counts. A hit that lands the moment it is fired is hitscan. A beam kept on the target, whose effect lasts or builds while it stays on, is beam. When the sources do not say how it travels, use the family's default delivery. A rate of fire, the weapon's name or a hidden hit roll does not count as saying. One attack button is one weapon entry, even when it works differently on different targets: code the delivery that comes first in this order: attach, ram, guided, lock-on, lobbed, drop, place, beam, projectile, hitscan, melee. Say what it does to the other targets in the summary, and list every target it can hit in can_target.'"
+      },
+      {
+        "id": "lock-on-vs-guided",
+        "verdict": "revise",
+        "reason": "Heat seekers lock on, and the TOW and TV missile are guided, for all. Two holes remain. (1) BF4's Laser Guided page says the missile 'tracks a target marked with laser designation either from the launch platform itself or external sources'. That is both 'chosen before firing and finds it alone' (a teammate's designator) and 'a laser spot the shooter holds' (own designator). The deciding fact is whether a teammate's spot also works. (2) 'Code the version named first' depends on how a coder words the entry's name, and gives no answer when the name lists no title. The chin cannon and TV missile entries name none, yet BF2 and BF4 differ on spin-up, ammo and air targets. A fixed series rule is needed, merged with the weapon-count group (see series-version-rule).",
+        "revised_target": "data/vocab/weapon-delivery.json tie_breaks",
+        "revised_change": "Add to tie_breaks: terms [lock-on, guided]; rule: 'Lock-on when the target is chosen before firing and the shot then finds it alone, so the shooter may look away; the target is usually warned. A missile that homes on a laser spot is lock-on when a teammate's designator also works. Guided when only the shooter steers it and must keep aiming until it lands: by wire, camera, crosshair or the shooter's own laser. When one entry stands for several titles that differ, code the newest title's version and give the older one in the summary.' (Merge the last sentence with the weapon-count group's series rule.)"
+      },
+      {
+        "id": "can-target-field-rule",
+        "verdict": "revise",
+        "reason": "Defining the field is right. But the text holds two readings exactly where RA3 coders split. The first sentence says list 'every kind ... it can be fired at and hurt, even a little', while the commanded clause says 'list what the sources say or show'. On the IFV passengers, A and C filled in game behaviour and B listed only what the text names: Conscript (A, C structure; B infantry only), Desolator (A infantry; B, C, reference plus vehicles), Tankbuster (B vehicles only), Javelin (four different lists). Under 'what the sources say', the cryo beam (said to hit aircraft and destroy them at once) would list only air, which every coder rejected. The analyst's own expected structure and naval for the launcher do not follow from the line that it works well against aircraft and light vehicles. 'Show' has no meaning for text sources. Also, (a) the laser-guided missile: no cited source says whether it locks onto helicopters, so 'low-air' in the expected is a guess. (b) 'Says it can attack buildings' meets a warning that you could lose your base (Yuriko) and 'hit-and-run ... against entire bases' (Natasha): two readings each. (c) An infobox role such as 'Multipurpose anti-armor/anti-air' can be read as a weapon label. The revision keeps the analyst's piloted and lock-on parts. For the ground in commanded games it adds a default: the family list, cut by labels and 'only'. Pilot check: launcher infantry, ground vehicle, structure, naval and both air layers; claws infantry, vehicle, naval; ray vehicle, naval; leech beam vehicle, structure, naval ('attacks ground vehicles and buildings'); Hammer cannon all ground kinds and naval; SC2 'Ground' gives infantry, vehicle, structure; Battlefield as the analyst expects, except laser-guided ground vehicle and naval; Natasha, Spy, Shinobi and Tanya infantry; flak air only. Known risk: CoH rifles get structure unless a cited source says small arms do not hurt buildings, or calls them anti-infantry (A's Infantry Weapons page does). No family list or validator change.",
+        "revised_target": "schemas/source-unit.schema.json $defs.weapon.properties.can_target.description (docs/fields.md armament[].can_target)",
+        "revised_change": "New description for armament[].can_target: 'Every kind of target the weapon can be fired at and hurt in the source, even a little: weak, poor or not effective still count. Leave a kind out when the sources say the weapon cannot attack it or does no damage to it, or when the game has no such targets. Then, in this order: 1. A weapon that does no damage (it repairs, stuns, pins or marks), or that latches on, drains or takes over minds, lists only the kinds the sources name. 2. A lock-on weapon lists only what it can lock onto, unless the sources say it can also fire without a lock. If they do not say what it locks onto, an anti-tank one lists ground vehicles and an anti-air one low air and high air. 3. Commanded games only: a weapon the sources label by its targets (anti-infantry, anti-vehicle, anti-air) or say hits only some kinds lists those kinds, plus any kind another cited source says it hurts. Words such as anything else name every kind. A label on the unit, such as its role, does not count. 4. Any other weapon lists every ground kind its family allows: infantry, ground vehicles and structures. A source that says ground or surface means these. Structures: under steps 1 and 3, and for a family that leaves them out, list them only when the sources say the weapon damages buildings; a mention of a base is not enough. Air: in a commanded game, list low air and high air only when the sources say the weapon attacks air units, unless the game splits its fliers and the weapon reaches only some. In a piloted game (control piloted or both in data/games.json), a weapon the player aims also lists low air when its family allows it. High air and naval follow their coding rules in Target types. A flier that can be hit only while it stands on the ground is not an air target.'"
+      },
+      {
+        "id": "naval-and-high-air-rules",
+        "verdict": "revise",
+        "reason": "Both rules are deterministic on the pilot. Naval goes on every surface weapon for Battlefield and RA3, and never for SC2 and CoH1. High air: chin gun and TV missile no (the BF4 'sky' line is not 'built to bring down aircraft'), heat seekers yes, IFV launcher yes. Three gaps. (1) The rule counts boats, but the naval term still reads 'Ships and submarines', so C's question (do Battlefield attack boats and RHIBs count?) stays open on the term itself. (2) The naval rule says 'cannot attack ships', but it also applies to the repair tool (the reference adds naval there), which never attacks: 'reach' fits both. (3) 'In a piloted game' leaves MechWarrior (control 'both') without a branch. The commanded split for games that divide their fliers (Wargame, Broken Arrow, World in Conflict: helicopters and planes) is handled.",
+        "revised_target": "data/vocab/target-types.json: source_rule on terms naval and high-air; description of term naval",
+        "revised_change": "naval description: 'Ships, boats and submarines. Research only.' naval source_rule: 'On a weapon: in a game with ships or boats, list naval on every weapon that lists ground-vehicle, unless the sources say it cannot reach ships. In a game without ships or boats, never list it.' high-air source_rule: 'On a weapon: in a commanded game, list it for any weapon the sources say can attack air units, unless the game splits its fliers and this weapon cannot reach its jets or airships. In a piloted game (control piloted or both in data/games.json), list it only for a weapon built to bring down aircraft: the sources call it anti-air or anti-aircraft, it locks onto jets, or it is a flak gun. A weapon that could hit a passing jet by chance does not count.'"
+      },
+      {
+        "id": "anti-air-trait-rule",
+        "verdict": "accept",
+        "reason": "Deterministic: the trait follows can_target. IFV flak: A and B add it. Heat seekers, IFV launcher, cryo beam and bow get it (all already do). Chin gun none. The Javelin gets no high air from its cited sources, so no trait (A and C drop it, as in B and the reference). It agrees with the validator's exemption: a family that reaches low air plus the trait may list high air, so listing high air never creates a new atypical, and the trait's excluded deliveries (lobbed, drop, place, melee) cannot list air anyway. The four-trait cap leaves room. The optional WARN is worth adding."
+      },
+      {
+        "id": "suppress-trait-rule",
+        "verdict": "accept",
+        "reason": "I checked the cited Riflemen text. It says that, rarely, the squad can pin an enemy squad without the Suppression Fire ability: that is now-and-then, so no trait. The line about letting the unit suppress enemy troops refers to unlocking the ability, which falls under 'only while an ability is active'. A and C drop suppress, so the BAR is {magazine} for all. CoH machine-gun teams ('excellent for suppression fire') and DoW2 weapons with the suppression_pvp category get it. No validator effect."
+      },
+      {
+        "id": "magazine-and-self-refilling-ammo",
+        "verdict": "revise",
+        "reason": "The aim is right, but the wording fails the pilot it claims to settle. The cited Riflemen text says the M1 Carbine's plus is that it needs reloading less often. That names its reload as a strength, so the analyst's rule gives the Carbine magazine, not the expected 'none', and leaves the Garand as its implied weak side. Two readings. Battlefield: the cited Viper text says the rockets and cannon draw on a small reserve that refills by itself over time. That supports magazine only if the source rule names self-refill, but the proposed source_rule mentions only reloads, bursts and salvos. finite-ammo's 'a teammate, a station or a pickup must refill it' misses ammo that never refills (MechWarrior Online), and 'refilled by' in resources.json limited-ammo has the same gap. The fix: comparisons and stats tables do not count, self-refill does, and a stock that never refills is finite-ammo.",
+        "revised_target": "data/vocab/weapon-traits.json: term magazine (description and source_rule) and term finite-ammo (description)",
+        "revised_change": "magazine description: 'Fires a set number of shots, then must reload, or wait for its ammo to come back on its own.' magazine source_rule: 'Set it only when the sources show the reload as part of how this weapon fights: they describe it firing a burst or salvo and then stopping to reload, name its reload or clip as a strength or weakness of this weapon, or say its ammo runs out and comes back on its own. A reload time in a stats table, a passing mention, or a comparison of how often two guns reload does not count.' finite-ammo description: 'Carries a fixed stock that does not come back by itself; only a teammate, a station or a pickup refills it, if anything does. A stock that refills on its own over time is magazine.'"
+      },
+      {
+        "id": "homing-trait-rule",
+        "verdict": "accept",
+        "reason": "Adding excluded weapon-traits [homing] to lock-on mirrors guided. weapon-delivery and weapon-traits are both lists the validator reads, so no code change. A grep of data/units, data/patterns and docs/examples finds no weapon with lock-on and homing. Smart rockets keep homing (A, C, B under the rockets rule); heat seekers and the laser-guided missile have none (all). Cards lose only a redundant pair."
+      },
+      {
+        "id": "splash-trait-rule",
+        "verdict": "revise",
+        "reason": "'Hurts or affects everything in an area' widens splash to area effects that do no damage, while the trait's description is 'Damages an area around the impact'. The rule and the term would then disagree. Example: the IFV dog bark, which stuns enemy infantry for five seconds over a very small area, could become splash. It ends up off here only because StrategyWiki disagrees, which is luck, not the rule. Also, the table says 'very small' while the rule says 'tiny', so the wording should cover both. Battlefield: the cited Viper text gives the cannon a 3 m blast radius (splash) but no area for the TV or laser-guided missiles, so C drops it.",
+        "revised_target": "data/vocab/weapon-traits.json term splash, source_rule",
+        "revised_change": "splash source_rule: 'Set it when the sources say the hit hurts everything in an area around the impact. Leave it off when they say it hits one target at a time, call the area tiny or very small, or disagree. An area effect that does no damage, such as an area stun, is not splash.'"
+      },
+      {
+        "id": "new-trait-ignores-countermeasures",
+        "verdict": "revise",
+        "reason": "All three Battlefield coders hit the same gap, and the term links to the fire-countermeasures and jam-sensors patterns, so a term is fair. But with no allowed map, cards can roll it on a shotgun, flamethrower, blade or hitscan rifle, where flares and jammers mean nothing: physical nonsense on generated cards. Flares, jammers and active protection act against rockets and missiles, so it should be limited to those families. The validator reads weapon-families on weapon-trait terms, so no code change. Code it only when the sources say so.",
+        "revised_target": "data/vocab/weapon-traits.json, new term",
+        "revised_change": "New term: id ignores-countermeasures; label 'Ignores countermeasures'; description 'Flares, jammers and active protection do not stop it, so the target must dodge or kill the shooter.'; allowed: {\"weapon-families\": [\"rockets\", \"guided-missiles\"]}; source_rule: 'Set it only when the sources say flares, jammers or active protection do not stop this weapon.' No excluded, requires or min_tier. Run the word-list diff for 1.0."
+      },
+      {
+        "id": "no-change-none-and-true-damage",
+        "verdict": "accept",
+        "reason": "Damage steps 2 and 5 cover both gaps: stasis ray emp, leech beam energy. A 'none' type would have to join every family's allowed list and would let cards roll harmless weapons. A 'true damage' type would cut across the strong and weak links in damage-types that drive counter hints."
+      },
+      {
+        "id": "no-change-sonic-bark",
+        "verdict": "accept",
+        "reason": "Under the revised delivery rule, the sources never say how the bark travels, so it takes the sonic default, beam. That is the same for A, B and C and matches the reference. A one-off hitscan or cone delivery would add a term for one passenger result."
+      },
+      {
+        "id": "no-change-stun-tier",
+        "verdict": "accept",
+        "reason": "Decision 5B is explicit, and the atypical record is the designed way to note a source that breaks it. All three coders and the reference already agree."
+      },
+      {
+        "id": "no-change-rts-automation-and-stat-quirks",
+        "verdict": "revise",
+        "reason": "No new traits is right (no-overkill is RTS automation, slow fire and range-dependent rate are stats). But it points to 'the version named first' (lock-on-vs-guided), which is undefined for the chin cannon: the entry's name lists no title, yet the cited Viper page gives a half-second spin-up for BF2/BF3 only. The reference must follow the fixed series rule.",
+        "revised_target": "data/vocab/weapon-traits.json (no term change); round-2 coder brief",
+        "revised_change": "No new traits. Put such quirks in the weapon summary. When one unit stands for several titles of a series, a trait follows the series rule (until the weapon-count group sets one: the newest title the unit's cited sources cover). So the Battlefield chin cannon has no spin-up, and the BF2 spin-up goes in its summary."
+      },
+      {
+        "id": "no-change-affects",
+        "verdict": "accept",
+        "reason": "No disagreement or hesitation. A general RTS force-fire order on friends does not make a weapon 'both'."
+      },
+      {
+        "id": "no-change-picked-up-weapons-family",
+        "verdict": "accept",
+        "reason": "Whether to record weapon pickups is a weapon-count and abilities question. If they are recorded, adaptive is the family, and adaptive is already exempt from family bans in the validator."
+      },
+      {
+        "id": "no-change-knockback-reading",
+        "verdict": "revise",
+        "reason": "The root cause is wrong. B did not misread a source: B cited only the IFV wiki page and its Profile. Neither mentions knockback (the table only calls it an anti-surface auto shotgun, with a 36-damage autocannon for close range). The knockback line is on the StrategyWiki effects page that A, C and the reference cite (it says infantry hit at point-blank range are knocked back). A brief telling coders to 'record every trait the cited sources state' changes nothing for B. The fix is source coverage, which is cross-group (see weapon-source-coverage).",
+        "revised_target": "Cross-group: the sources rule (owned by the sources group); no word-list change",
+        "revised_change": "No change to knockback. Cause recorded as source coverage: B's IFV sources lack the StrategyWiki infantry-effects page. Settle it with weapon-source-coverage: when one page lists a unit's passenger, mode or loadout weapons one by one, it must be among the cited sources."
+      }
+    ],
+    "missing": [
+      {
+        "id": "explosives-allow-armour-piercing",
+        "fields": [
+          "armament[].damage",
+          "armament[].family"
+        ],
+        "evidence": "The analyst's own side effects: Foxhole 'Anti-Tank Explosive' and DoW2 'explosive_pvp' both map to armour-piercing, so under damage step 4 every anti-tank grenade, sticky bomb, satchel and mine in those games is atypical. Where there is no map (CoH1, CoH2, Battlefield, Generals by category), step 5 can never give an explosives weapon armour-piercing. So CoH sticky bombs and Tellermines, Battlefield C4 and AT mines get 'explosive' (strong against unarmoured and light, weak against super-heavy), the reverse of their job. B-coh1 unclear rule: the anti-armour role needs a damage type that infantry anti-tank tools cannot supply.",
+        "root_cause": "explosives.allowed.damage-types is [explosive, emp, fire]. Shaped charges and anti-tank mines are common across the 28 games, not physical nonsense, so the ban only produces atypicals and wrong counter hints.",
+        "kind": "allowed-map",
+        "target": "data/vocab/weapon-families.json term explosives: allowed.damage-types and description",
+        "change": "allowed.damage-types becomes [explosive, emp, fire, armour-piercing]. Description: 'Grenades, satchel charges, mines, sticky bombs and bomb trucks. Anti-tank charges and mines are armour-piercing.'",
+        "expected": "No pilot unit changes (the Riflemen's grenades and sticky bombs are abilities). Foxhole and DoW2 anti-tank explosives map with no atypical. CoH and Battlefield anti-tank charges get armour-piercing by damage step 5 (called anti-tank).",
+        "side_effects": "Cards can roll an anti-tank charge, which is a plain idea. The anti-armour role's requirement (damage:armour-piercing among others) is now met by charge carriers. No validator code change; rebuild docs/vocabularies.md and run the word-list diff.",
+        "priority": "should"
+      },
+      {
+        "id": "grenade-launcher-family",
+        "fields": [
+          "armament[].family",
+          "armament[].delivery"
+        ],
+        "evidence": "Not in the pilot, but common in scope: the SC2 Marauder (grenades flying straight at a target, with a bonus against Armored), Battlefield underslung and M320 launchers, DoW2 grenade launchers (category grenade_launcher), CnC3 and Halo Wars 2 grenadiers. Explosives allows place, lobbed, attach and ram but no straight shot, artillery is 'shells' and lobbed only, and rockets and cannon do not fit a grenade. Coders will split three ways, and the family choice fixes delivery and allowed damage.",
+        "root_cause": "No family term or tie-break names grenade launchers, and explosives has no delivery for a grenade fired straight.",
+        "kind": "tie-break",
+        "target": "data/vocab/weapon-families.json: new tie_breaks entry; term explosives allowed.weapon-delivery",
+        "change": "Add to tie_breaks: terms [explosives, artillery, rockets, cannon]; rule: 'A grenade launcher, hand-held or mounted, is explosives: lobbed when its grenades arc onto a point, projectile when they fly straight at a target. Artillery is for guns and mortars firing shells; rockets carry their own motor.' Add projectile to explosives.allowed.weapon-delivery.",
+        "expected": "SC2 Marauder: explosives, projectile, armour-piercing (bonus against Armored, with explosives-allow-armour-piercing). Battlefield M320: explosives, lobbed, explosive, splash.",
+        "side_effects": "Cards can roll explosives with projectile delivery (a grenade launcher), which is plausible; no class bans change. No validator code change.",
+        "priority": "could"
+      },
+      {
+        "id": "weapon-source-coverage",
+        "fields": [
+          "armament[].traits",
+          "armament[].can_target",
+          "armament[].damage",
+          "armament[].family"
+        ],
+        "evidence": "IFV: B cited only the wiki page and its Profile, not the StrategyWiki infantry-effects page that A, C and the reference cite. That page alone states the Peacekeeper's knockback, the Imperial Warrior's reach to light vehicles, the Tankbuster's damage to infantry and buildings, and the Conscript's poor damage to everything else. These are exactly B's outlying IFV values: no knockback, IW infantry only, Tankbuster vehicles only, Conscript infantry only. C-battlefield read the Smart Rockets, TV Missile and Heat Seekers pages but could cite only three sources (unclear rule 'three-source cap vs mechanic pages'). Damage step 4, the rockets / guided tie-break, can_target, splash and suppress all read 'the sources cited for this unit', so different source sets give different codes.",
+        "root_cause": "Source choice and the source cap belong to the sources group, but this group's 1.0 rules now depend on them.",
+        "kind": "convention",
+        "target": "docs/fields.md Conventions or sources[] description (owned by the sources group; raised here as a cross-group conflict)",
+        "change": "'The weapon rules read every source cited for the unit together. When a unit's weapons change by passenger, mode or loadout and one page lists those weapons one by one, that page must be among the cited sources.'",
+        "expected": "B's IFV gains the StrategyWiki effects page, which settles knockback, the IW, Tankbuster and Conscript targets, and Yuriko's text with A and C.",
+        "side_effects": "Must be merged with the sources group's cap rule. No word-list or validator change.",
+        "priority": "should"
+      },
+      {
+        "id": "series-version-rule",
+        "fields": [
+          "armament[].delivery",
+          "armament[].traits",
+          "armament[].can_target"
+        ],
+        "evidence": "battlefield.shared.attack-helicopter stands for BF2, BF3 and BF4, and the cited Viper page differs by title. The BF2 TV missile has 8 missiles with no refill and is of little use against aircraft already in the air, while the BF4 text says it strikes 'land, sea or sky'. The cannon's 0.5-second spin-up appears for the older titles only (C-battlefield hesitation). The laser-guided entry is BF3's lock-and-fire Guided Missile or BF4's Laser Guided. Zuni and Smart Rockets are BF4 only. C-battlefield unclear rule: nothing says which title wins. lock-on-vs-guided and no-change-rts-automation lean on 'the version named first', which is undefined when an entry's name lists no title.",
+        "root_cause": "There is no series rule. It belongs with the weapon-count group's series granularity, but it decides this group's delivery, trait and target fields.",
+        "kind": "convention",
+        "target": "docs/fields.md Conventions (weapon-count group; raised here as a cross-group conflict)",
+        "change": "'When one unit stands for several titles of a series, each weapon fact (delivery, traits, targets, ammo) follows the newest title its cited sources cover. Give older behaviour in the summary.'",
+        "expected": "Chin cannon: no spin-up (all). TV missile: no finite-ammo and no high air (all). Laser-guided: lock-on (BF4, where a teammate's designator works).",
+        "side_effects": "Must be merged with the weapon-count group's series-granularity rule. No word-list or validator change.",
+        "priority": "should"
+      }
+    ]
+  }
+}

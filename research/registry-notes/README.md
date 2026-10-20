@@ -2,6 +2,10 @@
 
 Working notes written while filling the games registry and growing the pattern registry in step 1. The research agents of step 3 should read the note for their batch first: it says which wiki works best, how tiers and prices were mapped, and what to watch out for.
 
+Read the official role line first; roles depend on it. Where a game's tooltips have strong-against or weak-against lines, the note for that game says so, because roles step 4 reads them.
+
+Each game's note has a section Game-wide mechanics, written before any unit of that game is coded. Coders follow it; a mechanic that may be game-wide but is not listed is coded on the unit with a fit_note, and the merge pass decides.
+
 | File | Covers |
 |---|---|
 | [games-r1.md](games-r1.md) | Red Alert 1, 2 and 3 |

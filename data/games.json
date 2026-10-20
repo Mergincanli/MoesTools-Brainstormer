@@ -1,6 +1,6 @@
 {
   "$schema": "../schemas/game.schema.json",
-  "schema_version": "0.4.0",
+  "schema_version": "1.0.0",
   "games": [
     {
       "id": "ra1",
@@ -95,6 +95,8 @@
         "very-high": 1800
       },
       "speed_reference": "Rifle Infantry (basic infantry of both sides, land speed 4 in the wiki's game data)",
+      "sight_reference": "Rifle Infantry: sight 4 in the wiki's game data",
+      "range_reference": "Rifle Infantry's rifle: range 3 in the wiki's game data",
       "damage_map": {
         "SA": "kinetic",
         "HollowPoint": "kinetic",
@@ -143,8 +145,8 @@
           "title": "Rifle infantry, Command & Conquer Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "Infobox: land speed 4, costs $100, trained at both sides' barracks."
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "Infobox: land speed 4, costs $100, trained at both sides' barracks. Sight 4; rifle range 3."
         }
       ]
     },
@@ -304,6 +306,8 @@
         "very-high": 1500
       },
       "speed_reference": "Conscript (Soviet basic infantry, land speed 4 in the wiki's game data; the Allied GI and Yuri's Initiate also have land speed 4)",
+      "sight_reference": "Conscript: sight 5 in the wiki's game data",
+      "range_reference": "Conscript's rifle: range 4 in the wiki's game data (5 once elite; the stock 4 counts)",
       "armour_map": {
         "none": "unarmoured",
         "flak": "unarmoured",
@@ -353,8 +357,8 @@
           "title": "Conscript (Red Alert 2), Command & Conquer Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "Infobox: land speed 4, costs $100, armour type flak. The armour_map keys are the 11 armour types that ModEnc's Armor types page lists for Red Alert 2."
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "Infobox: land speed 4, costs $100, armour type flak. The armour_map keys are the 11 armour types that ModEnc's Armor types page lists for Red Alert 2. Sight 5; rifle range 4, or 5 when elite."
         }
       ]
     },
@@ -510,6 +514,8 @@
         "very-high": 2000
       },
       "speed_reference": "Conscript (Soviet basic infantry, ground speed 50 in the wiki's game data)",
+      "sight_reference": "Conscript: vision 200, shroud clearing 500 (Command & Conquer Wiki infobox). Use the shroud-clearing figure when the unit lists one; compare a unit that lists a single sight figure with the vision figure (200).",
+      "range_reference": "Conscript rifle: 150.",
       "damage_map": {
         "Gun": "kinetic",
         "Sniper": "kinetic",
@@ -569,7 +575,8 @@
           "title": "Conscript (Red Alert 3), Command & Conquer Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"]
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "Infobox: ground speed 50; vision 200 and shroud clearing 500; rifle range 150."
         }
       ]
     },
@@ -653,6 +660,8 @@
         "very-high": 1400
       },
       "speed_reference": "Minigunner (both sides' basic rifle infantry): speed 8 on the game's internal speed scale (MPH_SLOW in the released source code), against 18 for the Medium Tank",
+      "sight_reference": "Minigunner: sight range 1 in the released source code (IDATA.CPP). Vehicles' sight ranges are in UDATA.CPP, on the same scale",
+      "range_reference": "Minigunner's M16: range 0x0200 in the weapon table of the released source code (CONST.CPP). Compare every weapon's range from that table. Weapon ranges are in leptons, 256 (0x0100) to a cell, while sight ranges are in cells (FUNCTION.H, Cell_To_Lepton), so convert before the off-screen test compares a reach with a sight figure: 0x0200 is two cells",
       "damage_map": {
         "Small Arms": "kinetic",
         "Hollow Point": "kinetic",
@@ -685,8 +694,8 @@
           "title": "UDATA.CPP (Tiberian Dawn vehicle data), Command & Conquer Remastered Collection source code, Electronic Arts on GitHub",
           "kind": "official",
           "accessed": "2026-10-18",
-          "supports": ["tier_map", "cost_thresholds"],
-          "note": "Vehicle prices, speeds and building prerequisites, such as the Repair Facility for the Mammoth tank and the Communications Center for the flame and stealth tanks.",
+          "supports": ["tier_map", "cost_thresholds", "sight_reference"],
+          "note": "Vehicle prices, speeds and building prerequisites, such as the Repair Facility for the Mammoth tank and the Communications Center for the flame and stealth tanks. Each vehicle's sight range is listed there too, on the infantry's scale.",
           "version": "2020 source release, before the Remastered balance patch that added the Repair Facility to the APC"
         },
         {
@@ -696,6 +705,24 @@
           "accessed": "2026-10-18",
           "supports": ["speed_reference"],
           "note": "Infobox: damage type SA. The damage_map keys are the damage type names in the wiki's Damage Calculation (Tiberian Dawn) table."
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/IDATA.CPP",
+          "title": "IDATA.CPP (Tiberian Dawn infantry data), Command & Conquer Remastered Collection source code, Electronic Arts on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-19",
+          "supports": ["sight_reference"],
+          "note": "The minigunner's entry: sight range 1, armed with the M16.",
+          "version": "2020 source release"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/CONST.CPP",
+          "title": "CONST.CPP (Tiberian Dawn constants), Command & Conquer Remastered Collection source code, Electronic Arts on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-19",
+          "supports": ["range_reference"],
+          "note": "Weapon table: the M16's range is 0x0200; the chain gun and the Dragon rocket reach 0x0400.",
+          "version": "2020 source release"
         }
       ]
     },
@@ -787,6 +814,8 @@
         "very-high": 1600
       },
       "speed_reference": "Light infantry (both sides' basic rifle infantry): speed 5 in the game's rules as the wiki lists them, against 4 for the Titan and 6 for the Tick tank",
+      "sight_reference": "Light infantry: sight 5 in the wiki's game data",
+      "range_reference": "Light infantry's rifle: range 4 in the wiki's game data",
       "damage_map": {
         "SA": "kinetic",
         "HollowPoint": "kinetic",
@@ -832,7 +861,8 @@
           "title": "Light infantry (Tiberian Sun), Command & Conquer Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"]
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "Infobox: land speed 5, sight 5, rifle range 4."
         }
       ]
     },
@@ -1003,6 +1033,8 @@
         "very-high": 2200
       },
       "speed_reference": "Rifleman squad (GDI basic infantry): speed 57 in the wiki's unit data, against 60 for the Predator tank; compare only speeds from the same patch, since patch 1.05 made all infantry about 20% faster",
+      "sight_reference": "Rifleman squad: vision 350, shroud clearing 400 (Command & Conquer Wiki infobox). Use the shroud-clearing figure when the unit lists one; compare a unit that lists a single sight figure with the vision figure (350).",
+      "range_reference": "Rifleman squad's rifles: 260.",
       "damage_map": {
         "Gun": "kinetic",
         "Sniper": "kinetic",
@@ -1039,7 +1071,8 @@
           "title": "Rifleman squad (Tiberium Wars), Command & Conquer Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"]
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "Infobox: land speed 57; vision 350 and shroud clearing 400; rifle range 260."
         }
       ]
     },
@@ -1078,6 +1111,8 @@
         "very-high": 1400
       },
       "speed_reference": "GDI soldier and Nod soldier (each side's free default rifle class). No source found gives speeds as numbers, so speed bands are judged against them from descriptions and play footage",
+      "sight_reference": "None: in this shooter each player sees the battlefield directly and there is no fog of war, so every sight band is a medium proposal",
+      "range_reference": "The GDI and Nod soldiers' Automatic Rifle: range 100 in the wiki's Renegade weapons table (taken from the official strategy guide)",
       "damage_map": {
         "Shrapnel": "kinetic",
         "Flame": "fire",
@@ -1124,7 +1159,8 @@
           "title": "Renegade weapons, Command & Conquer Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["damage_map", "armour_map"]
+          "supports": ["damage_map", "armour_map", "sight_reference", "range_reference"],
+          "note": "Weapons table from Prima's official guide: the Automatic Rifle, the free soldiers' gun, reaches 100. No page gives sight distances."
         }
       ]
     },
@@ -1294,6 +1330,8 @@
         "very-high": 1500
       },
       "speed_reference": "Ranger (USA basic rifle infantry, land speed 20 in the wiki's game data; the GLA Rebel is also 20 and the Chinese Red Guard 25)",
+      "sight_reference": "Ranger: sight 100-400 in the wiki infobox. Most units list two figures this way; read them as Red Alert 3's vision and shroud-clearing pair and use the second (400). Compare a unit that lists one figure with 100",
+      "range_reference": "Ranger's M16 rifle: range 100 (its flash-bang grenades reach 175, but only after an upgrade)",
       "damage_map": {
         "SMALL_ARMS": "kinetic",
         "GATTLING": "kinetic",
@@ -1361,8 +1399,8 @@
           "title": "Ranger (Generals), Command & Conquer Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "Infobox: land speed 20 (10 when badly wounded), costs $225."
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "Infobox: land speed 20 (10 when badly wounded), costs $225. Sight 100-400; M16 range 100, flash-bangs 175."
         }
       ]
     },
@@ -1552,6 +1590,8 @@
         "very-high": 2000
       },
       "speed_reference": "Field Scout (GDF basic infantry, movement speed 550 in the wiki's stat boxes; the Veti Enlightened is also 550 and the Dynasty Guard 625)",
+      "sight_reference": "Field Scout: sight 3500 in the wiki's stat box",
+      "range_reference": "Field Scout's PG92 Assault Rifle: 2500, the multiplayer value. Ignore the campaign figures, and the Networked PG92's 3000, which applies only against marked targets",
       "damage_map": {
         "Rifle": "kinetic",
         "Sniper": "kinetic",
@@ -1600,8 +1640,8 @@
           "title": "Field Scout, Tempest Rising Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "Infobox: GDF basic infantry, tier 1, movement speed 550, 200 credits."
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "Infobox: GDF basic infantry, tier 1, movement speed 550, 200 credits. Sight 3500; PG92 rifle range 2500 in multiplayer (2400 in the campaign). The page was last checked against patch 1.8.0."
         }
       ]
     },
@@ -1697,6 +1737,8 @@
         "very-high": 1800
       },
       "speed_reference": "Rifle squads (Polanian Riflemen, Saxon Stormtroopers, Rusviet Vanguards, Usonian Volunteers; movement speed 5 in the wiki's stat boxes)",
+      "sight_reference": "None: the wiki's stat boxes give no sight figures, so every sight band is a medium proposal",
+      "range_reference": "Polanian Riflemen's rifle: maximum range 26 in the wiki's stat box. The other rifle squads reach less (Usonian Volunteers 23, Saxon Stormtroopers 20, Rusviet Vanguards 16), but every weapon is compared with the 26",
       "armour_map": {
         "Unarmored": "unarmoured",
         "Light": "medium",
@@ -1743,8 +1785,16 @@
           "title": "Saxon Stormtrooper, Iron Harvest Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "Infobox: movement speed 5, unarmoured. The Polanian Rifleman, Rusviet Vanguards and Usonian Volunteer pages give the same speed. The armour_map keys are the four unit armour classes on the wiki's Armor page."
+          "supports": ["speed_reference", "sight_reference"],
+          "note": "Infobox: movement speed 5, unarmoured. The Polanian Rifleman, Rusviet Vanguards and Usonian Volunteer pages give the same speed. The armour_map keys are the four unit armour classes on the wiki's Armor page. It gives no sight figure; its submachine gun reaches 20."
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Polanian_Rifleman",
+          "title": "Polanian Rifleman, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["range_reference"],
+          "note": "Infobox: movement speed 5; rifle maximum range 26. The Usonian Volunteer and Rusviet Vanguards pages give 23 (bolt rifle) and 16 (shotgun)."
         }
       ]
     },
@@ -1923,6 +1973,8 @@
         "very-high": 1300
       },
       "speed_reference": "Riflemen Squad (US basic rifle infantry): 3 m/s in the wiki's infobox, against 5.5 m/s for the M4 Sherman",
+      "sight_reference": "About 35 m: the wiki says most units see 35 m (the Jeep, a scout car, sees 55 m), and it gives the Riflemen no other figure",
+      "range_reference": "None: the wiki gives best distances for rifles (about 20 m), not their maximum reach",
       "scope": "starting",
       "status": "planned",
       "sources": [
@@ -1955,8 +2007,16 @@
           "title": "Riflemen Squad, Company of Heroes Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "Infobox: speed 3 m/s, 270 manpower, built at the Barracks."
+          "supports": ["speed_reference", "range_reference"],
+          "note": "Infobox: speed 3 m/s, 270 manpower, built at the Barracks. It gives the M1 Garand's best engagement distances, not its maximum reach."
+        },
+        {
+          "url": "https://companyofheroes.fandom.com/wiki/Jeep",
+          "title": "Jeep, Company of Heroes Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["sight_reference"],
+          "note": "Most units see 35 m; the Jeep sees 55 m, the longest sight in the game."
         }
       ]
     },
@@ -2146,6 +2206,8 @@
         "very-high": 1320
       },
       "speed_reference": "Conscripts (Soviet basic rifle infantry): 3 m/s in the wiki's infobox, the same as Ostheer Grenadiers, against 6.5 m/s for the T-34/76",
+      "sight_reference": "Conscript Infantry Squad: sight range 35 m in the wiki's infobox",
+      "range_reference": "Conscript Infantry Squad's Mosin-Nagant rifles: firing range 35 m in the wiki's infobox",
       "scope": "starting",
       "status": "planned",
       "sources": [
@@ -2180,6 +2242,14 @@
           "accessed": "2026-10-18",
           "supports": ["speed_reference"],
           "note": "Infobox: speed 3, built at the Soviet headquarters."
+        },
+        {
+          "url": "https://companyofheroes.fandom.com/wiki/Conscript_Infantry_Squad",
+          "title": "Conscript Infantry Squad, Company of Heroes Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["sight_reference", "range_reference"],
+          "note": "Infobox: Soviet core infantry, speed 3 m/s, firing range 35 m, sight range 35 m."
         }
       ]
     },
@@ -2350,6 +2420,8 @@
         "very-high": 1170
       },
       "speed_reference": "Riflemen Squad (US basic rifle infantry): speed 3.6 in the game data that coh3stats.com shows, the same as Grenadiers, Infantry Sections and DAK Panzergrenadiers, against 5.5 for the M4A1 Sherman",
+      "sight_reference": "Riflemen Squad: sight range 35 in the game data that coh3stats.com shows",
+      "range_reference": "Riflemen Squad's M1 Garand: maximum range 35",
       "damage_map": {
         "small arms": "kinetic",
         "ballistic weapon": "armour-piercing",
@@ -2382,8 +2454,8 @@
           "title": "Riflemen Squad - US Forces infantry, COH3 Stats",
           "kind": "database",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "Speed 3.6, 270 manpower.",
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "Speed 3.6, 270 manpower. Sight range 35; the M1 Garand's maximum range is 35.",
           "version": "2.5.6"
         },
         {
@@ -2446,6 +2518,8 @@
         "very-high": 2400
       },
       "speed_reference": "Infantry squad (every side's basic infantry): 'Slow', 20 on the wiki's 100-point speed scale, against 40 for the M60A3 medium tank; the heavy tanks are listed as 'Slow' without a number",
+      "sight_reference": "Infantry squad: sight Short. WICapedia grades sight only in words: Low, Short, Medium, Long and Far. Read Low as short; Short and Medium as medium; Long and Far as long (scout helicopters have these)",
+      "range_reference": "Infantry squad: range Short, also a word grade (None, Short, Medium, Long, Far, and High for one mortar carrier). Read Short and Medium as medium; Long, Far and High as long. A weapon that fires beyond its own unit's sight, such as artillery, still follows the off-screen rule",
       "scope": "starting",
       "status": "planned",
       "sources": [
@@ -2462,8 +2536,8 @@
           "title": "Infantry squad, WICapedia",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference", "cost_thresholds"],
-          "note": "Infobox: speed Slow (20/100); 650 in the infantry role, 850 in support, 1,000 in armor and air."
+          "supports": ["speed_reference", "cost_thresholds", "sight_reference", "range_reference"],
+          "note": "Infobox: speed Slow (20/100); 650 in the infantry role, 850 in support, 1,000 in armor and air. Sight Short, range Short. The other unit pages use the same words: tanks see Short or Medium and reach Long or Far; scout helicopters see Long or Far."
         },
         {
           "url": "https://worldinconflict.fandom.com/wiki/World_in_Conflict_Guide",
@@ -2557,6 +2631,8 @@
         "very-high": 240
       },
       "speed_reference": "Motostrelki (Soviet rifle squad): 20 km/h on foot in Red Dragon, against 65 to 75 km/h off road for main battle tanks; compare off-road speeds, since vehicles also list a road speed (about 110 km/h for tanks)",
+      "sight_reference": "Motostrelki: optics Medium in Red Dragon (Wargame Wiki). Ground optics grades run Bad, Poor, Medium, Good, Very Good, Exceptional. Read Bad as short; Poor and Medium as medium; Good, Very Good and Exceptional as long, the grades of recon units",
+      "range_reference": "Motostrelki's AK-74: 525 m against ground targets in Red Dragon",
       "damage_map": {
         "KE": "armour-piercing",
         "HEAT": "armour-piercing",
@@ -2580,8 +2656,8 @@
           "title": "T-80B, Wargame Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["cost_thresholds"],
-          "note": "Red Dragon unit box: 80 points (100 in AirLand Battle).",
+          "supports": ["cost_thresholds", "sight_reference"],
+          "note": "Red Dragon unit box: 80 points (100 in AirLand Battle). Its Red Dragon optics are Poor, as for many tanks.",
           "version": "Red Dragon"
         },
         {
@@ -2589,8 +2665,8 @@
           "title": "Motostrelki, Wargame Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "Red Dragon unit box: rifle squad, 10 points, speed 20.",
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "Red Dragon unit box: rifle squad, 10 points, speed 20. Optics Medium; the AK-74 reaches 525 m against ground targets and helicopters.",
           "version": "Red Dragon"
         },
         {
@@ -2600,6 +2676,14 @@
           "accessed": "2026-10-18",
           "supports": ["damage_map"],
           "note": "Explains the weapon traits KE, HEAT, AoE (HE damage over an area) and NPLM."
+        },
+        {
+          "url": "https://wargame.fandom.com/wiki/Razvedka",
+          "title": "Razvedka, Wargame Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["sight_reference"],
+          "note": "Red Dragon unit box: Soviet recon squad with Very Good optics. Recon units in the wiki have Good, Very Good or Exceptional optics, line infantry Medium."
         }
       ]
     },
@@ -2648,6 +2732,8 @@
         "very-high": 450
       },
       "speed_reference": "Mech. Riflemen (USA) and Motostrelki (Russia), the basic rifle squads: 18 km/h, against 70 km/h for the M1A2 SEP v2 and T-90M",
+      "sight_reference": "Mech. Riflemen: optics 1400 on BattleGroup, a detection distance (how near an enemy must come also depends on its stealth). Compare ground optics, not the separate air optics",
+      "range_reference": "Mech. Riflemen: 400 m for each of its weapons in BattleGroup's weapons table. Use that table's range column, not the per-ammunition figures in the detailed stats",
       "scope": "starting",
       "status": "planned",
       "sources": [
@@ -2680,8 +2766,16 @@
           "title": "Mech. Riflemen — Infantry in Broken Arrow, 60 pts, BattleGroup",
           "kind": "database",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "60 points, 18 km/h; the Motostrelki page (/en/units/290/) gives the same speed."
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "60 points, 18 km/h; the Motostrelki page (/en/units/290/) gives the same speed. Optics 1400 (1600 against aircraft); each weapon 400 m in the weapons table."
+        },
+        {
+          "url": "https://battlegroup.website/en/glossary/",
+          "title": "Glossary, BattleGroup",
+          "kind": "guide",
+          "accessed": "2026-10-19",
+          "supports": ["sight_reference"],
+          "note": "Optics is a unit's detection range; whether it spots a target also depends on the target's stealth, and forests and buildings cut it."
         }
       ]
     },
@@ -2758,6 +2852,8 @@
         "very-high": 410
       },
       "speed_reference": "T1 light assault bot (UEF Mech Marine, Cybran Hunter, Aeon Flare): the game has no infantry, so the most basic direct-fire ground unit is used; speed 4 in the wiki's unit data (the game's MaxSpeed value). The Seraphim Selen combat scout is also 4.",
+      "sight_reference": "T1 light assault bots: vision 18 in the wiki's unit data. Radar, sonar and omni ranges are sensors, not sight",
+      "range_reference": "Their guns: range 14",
       "scope": "starting",
       "status": "planned",
       "sources": [
@@ -2790,8 +2886,8 @@
           "title": "T1 light assault bot, Supreme Commander Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "Describes the light assault bots as every faction's lightest and simplest direct-fire unit; the stat boxes give speed 4 for all four (Mech Marine, Hunter, Flare and the Seraphim Selen scout)."
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "Describes the light assault bots as every faction's lightest and simplest direct-fire unit; the stat boxes give speed 4 for all four (Mech Marine, Hunter, Flare and the Seraphim Selen scout). Its summary table gives range 14 and vision 18 for the UEF, Cybran and Aeon bots (16 and 24 for the Seraphim Selen)."
         }
       ]
     },
@@ -2879,6 +2975,8 @@
         "very-high": 1600
       },
       "speed_reference": "Dox (the bot factory's basic infantry bot; the game has no infantry): max speed 20 in the PA Lobby units database (the game's distance units per second). Most tanks are 10, so they come out very slow.",
+      "sight_reference": "Dox: vision radius 105 in the PA Lobby database. Radar is a sensor, not sight",
+      "range_reference": "Dox's gun: range 75",
       "scope": "starting",
       "status": "planned",
       "sources": [
@@ -2911,8 +3009,8 @@
           "title": "Dox - Planetary Annihilation: TITANS & Legion Expansion Units Database, PA Lobby",
           "kind": "database",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "Described as basic infantry: fast, expendable and amphibious. Build cost 45 metal, max speed 20, built at the bot factory (T1)."
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "Described as basic infantry: fast, expendable and amphibious. Build cost 45 metal, max speed 20, built at the bot factory (T1). Vision radius 105; weapon range 75."
         }
       ]
     },
@@ -3115,7 +3213,9 @@
         "high": 740,
         "very-high": 1050
       },
-      "speed_reference": "Marine (Terran basic infantry): movement speed 3.15 as the wikis give it for versus mode (Faster game-speed values); keep every speed at the same game speed.",
+      "speed_reference": "Marine (Terran basic infantry): movement speed 3.15 as the wikis give it for versus mode (Faster game-speed values); keep every speed at the same game speed. Speeds and cooldowns are in Faster seconds, as Liquipedia gives them; divide Normal values by 1.4.",
+      "sight_reference": "Marine: sight 9.",
+      "range_reference": "Marine: range 5.",
       "scope": "starting",
       "status": "planned",
       "sources": [
@@ -3148,8 +3248,8 @@
           "title": "Marine (StarCraft II), StarCraft Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "Versus mode: 50 minerals, built at the Barracks with no other requirement; speed 3.15 (2.25 in Co-op Missions)."
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "Versus mode: 50 minerals, built at the Barracks with no other requirement; speed 3.15 (2.25 in Co-op Missions). Sight 9; rifle range 5 (one more in a bunker)."
         }
       ]
     },
@@ -3215,6 +3315,8 @@
         "very-high": 1260
       },
       "speed_reference": "Marines (the UNSC core infantry squad trained at the Firebase). No source found gives movement speeds as numbers, so speed bands come from the in-game descriptions ('very fast moving', 'slow moving') and patch notes, at lower confidence.",
+      "sight_reference": "None: no source found gives sight figures (the patch notes give only some changes in per cent), so every sight band is a medium proposal",
+      "range_reference": "None: no source found gives weapon reach as a number",
       "scope": "starting",
       "status": "planned",
       "sources": [
@@ -3223,8 +3325,8 @@
           "title": "Firebase, Halopedia",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["tier_map", "speed_reference"],
-          "note": "Halo Wars 2 section: the base upgrades Combat Station, Command Center and Headquarters (400, 1,000 and 1,500 power) unlock HQ tech 1, 2 and 3. It does not say whether a match starts with the Combat Station already built, so the UNSC start at tech 1 is an assumption (see version_researched). Marines are the core infantry trained at the base for 150 supplies at tech 0."
+          "supports": ["tier_map", "speed_reference", "sight_reference", "range_reference"],
+          "note": "Halo Wars 2 section: the base upgrades Combat Station, Command Center and Headquarters (400, 1,000 and 1,500 power) unlock HQ tech 1, 2 and 3. It does not say whether a match starts with the Combat Station already built, so the UNSC start at tech 1 is an assumption (see version_researched). Marines are the core infantry trained at the base for 150 supplies at tech 0. Its unit tables give no sight or weapon range."
         },
         {
           "url": "https://www.halopedia.org/Banished_outpost",
@@ -3358,6 +3460,8 @@
         "very-high": 920
       },
       "speed_reference": "Space Marine Squad (Space Marine basic infantry): speed 16 in the wiki's unit data. Guardsmen, Chaos Space Marines, Fire Warriors and Battle Sisters are also 16.",
+      "sight_reference": "Space Marine Squad: sight 25/0 in the wiki's stat box. The first figure is the sight radius; the second is how far it detects hidden units (a detector such as the Skull Probe shows 30/30). Use the first",
+      "range_reference": "Space Marine Squad's bolter: range 0-25, so 25",
       "armour_map": {
         "Infantry Low": "unarmoured",
         "Infantry Medium": "unarmoured",
@@ -3401,8 +3505,8 @@
           "title": "Soulstorm/Space Marine Squad, Dawn of War Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "The Space Marines' basic infantry squad from the Chapel-Barracks with no prerequisite: 200 requisition, speed 16, armour type Infantry Heavy Medium."
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "The Space Marines' basic infantry squad from the Chapel-Barracks with no prerequisite: 200 requisition, speed 16, armour type Infantry Heavy Medium. Sight 25/0; bolter range 0-25."
         }
       ]
     },
@@ -3483,6 +3587,8 @@
         "very-high": 1140
       },
       "speed_reference": "Guardsman Infantry Squad (Imperial Guard basic ranged infantry): speed 5 in the wiki's Retribution unit data. Tactical Marines and Shoota Boyz are also 5.",
+      "sight_reference": "Guardsman Infantry Squad: sight 40 in the wiki's unit data. Use it, not the separate keen figure (5)",
+      "range_reference": "Guardsman lasgun: maximum range 38",
       "damage_map": {
         "piercing_pvp": "kinetic",
         "suppression_pvp": "kinetic",
@@ -3542,8 +3648,8 @@
           "title": "Retribution/Guardsman Infantry Squad, Dawn of War Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "Imperial Guard basic ranged infantry: tier 1, 230 requisition, armour type infantry, speed 5."
+          "supports": ["speed_reference", "sight_reference"],
+          "note": "Imperial Guard basic ranged infantry: tier 1, 230 requisition, armour type infantry, speed 5. Its sight is 40, and its keen figure 5."
         },
         {
           "url": "https://dow.fandom.com/wiki/Retribution/Damage_types",
@@ -3552,6 +3658,15 @@
           "accessed": "2026-10-18",
           "supports": ["damage_map", "armour_map"],
           "note": "Lists the multiplayer (pvp) damage types, each set by a weapon family, and how much each does against infantry, heavy infantry, vehicles, buildings and cover; campaign and Last Stand types are separate. It describes explosive damage as mostly anti-vehicle missiles at full damage against vehicles, so explosive_pvp maps to armour-piercing like rocket_pvp. Its armour rows give the armour types: commander and vehicle are not mapped and are set per unit (a vehicle by what it is), and the building types are left out."
+        },
+        {
+          "url": "https://dow.fandom.com/wiki/Retribution/IG_Guardsmen_Lasgun",
+          "title": "Retribution/IG Guardsmen Lasgun, Dawn of War Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["range_reference"],
+          "note": "Weapon data for the Guardsmen's default lasgun: maximum range 38, minimum 0.",
+          "version": "3.18"
         }
       ]
     },
@@ -3577,7 +3692,7 @@
       "franchise": "Battlefield",
       "control": "piloted",
       "research_bucket": "r6",
-      "version_researched": "Vehicle archetypes as each title's final patch has them, led by Battlefield 3 and 4 (the fullest modern vehicle rosters), with Battlefield 1942, 2142, 1, V, 2042 and 6 for archetypes they add; as described by the Battlefield Wiki in October 2026",
+      "version_researched": "Vehicle archetypes as each title's final patch has them, led by Battlefield 4 and Battlefield 3 (newest first; the fullest modern vehicle rosters), with Battlefield 1942, 2142, 1, V, 2042 and 6 for archetypes they add; as described by the Battlefield Wiki in October 2026",
       "factions": [
         {
           "id": "shared",
@@ -3602,7 +3717,9 @@
       ],
       "has_tiers": false,
       "has_costs": false,
-      "speed_reference": "A soldier sprinting: 6.5 m/s in Battlefield 3, 4 and 2042, as a DICE gameplay designer gave it (sprint has no stamina limit from Bad Company onwards, so it is how soldiers normally cross ground; no source gives the walking speed). Vehicle infoboxes give top speeds for some titles, e.g. the Battlefield 4 M1 Abrams at 40 km/h, 56 km/h with its speed boost",
+      "speed_reference": "A soldier sprinting: 6.5 m/s in Battlefield 3, 4 and 2042, as a DICE gameplay designer gave it (sprint has no stamina limit from Bad Company onwards, so it is how soldiers normally cross ground; no source gives the walking speed). Vehicle infoboxes give top speeds for some titles, e.g. the Battlefield 4 M1 Abrams at 40 km/h, 56 km/h with its speed boost. Vehicle boost has no meter from Battlefield 3 on, so compare boosted top speeds (Battlefield 4 M1 Abrams 56 km/h).",
+      "sight_reference": "None: no fog of war, so every sight band is a medium proposal.",
+      "range_reference": "None: a soldier has no single main weapon, since each kit carries its own. Gun pages give a maximum range (the Battlefield 4 M16A4: 975 m), but no gun is the reference",
       "scope": "starting",
       "status": "planned",
       "sources": [
@@ -3637,6 +3754,30 @@
           "accessed": "2026-10-18",
           "supports": ["speed_reference"],
           "note": "Relays posts by a DICE core gameplay designer: default sprint 6.5 m/s in Battlefield 3, 4 and 2042 (7.15 m/s with the sprint perk, 7.25 m/s traversal sprint in 2042)."
+        },
+        {
+          "url": "https://battlefield.fandom.com/wiki/Vehicle_Boost",
+          "title": "Vehicle Boost, Battlefield Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["speed_reference"],
+          "note": "From Battlefield 3 on, ground vehicles boost on the sprint key with no meter to limit it; Battlefield 4 keeps this and adds boats."
+        },
+        {
+          "url": "https://battlefield.fandom.com/wiki/Spotting",
+          "title": "Spotting, Battlefield Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["sight_reference"],
+          "note": "Players see enemies directly and spot them onto their team's HUD and minimap; the page gives no sight distance."
+        },
+        {
+          "url": "https://battlefield.fandom.com/wiki/M16/Battlefield_4",
+          "title": "M16A4 (Battlefield 4), Battlefield Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["range_reference"],
+          "note": "Infobox: maximum range 975 m."
         }
       ]
     },
@@ -3685,6 +3826,8 @@
         "very-high": 900
       },
       "speed_reference": "Infantry sprinting (every class except the MAX, which speeds up and slows down like a vehicle): 6.5 m/s, the standard 4 m/s movement speed times the 1.625 sprint multiplier, per the wiki. The wiki gives no vehicle top speeds, so judge vehicles from the in-game speedometer (km/h) or descriptions",
+      "sight_reference": "None: no fog of war (players see enemies directly and can spot them onto the minimap), so every sight band is a medium proposal",
+      "range_reference": "None: each infantry class has its own default weapons, and weapon pages give a range word and the distances where damage falls off (the NC1 Gauss Rifle: Long), not a maximum reach",
       "damage_map": {
         "Melee": "melee",
         "Melee: Armor Piercing": "melee",
@@ -3742,6 +3885,22 @@
           "accessed": "2026-10-18",
           "supports": ["damage_map"],
           "note": "Every weapon deals one resist type; vehicles and MAXes take more or less of each, infantry take all of it. Lists which tanks use directional armour. Three damage_map keys (Melee: Armor Piercing, Core Explosion, Burning) are not on this page; the wiki's Template:Resist, which names every resist type by number, has them."
+        },
+        {
+          "url": "https://planetside.fandom.com/wiki/Spotting",
+          "title": "Spotting, PlanetSide 2 Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["sight_reference"],
+          "note": "Spotting marks an enemy under the crosshair for the team; the page gives no sight distance."
+        },
+        {
+          "url": "https://planetside.fandom.com/wiki/NC1_Gauss_Rifle",
+          "title": "NC1 Gauss Rifle, PlanetSide 2 Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["range_reference"],
+          "note": "Infobox range: Long. Damage falls from 167 to 125 between 10 and 90 m; no maximum reach is given."
         }
       ]
     },
@@ -3806,6 +3965,8 @@
         "very-high": 300
       },
       "speed_reference": "Soldier on foot: walking 5 m/s by default (sprint reaches about 7.2 m/s with full stamina and fades as stamina drains). Vehicle pages give road and off-road top speeds in m/s, e.g. the Silverhand Mk. IV assault tank 7.75 on road and 5.42 off road; compare off-road speeds",
+      "sight_reference": "A soldier sees up to 50 m in daylight (the Vision page). Night and snow storms shrink it, and binoculars and observation bunkers extend it. Use the daylight figure",
+      "range_reference": "Each side's standard rifle (No.2 Loughcaster, Argenti r.II): 40 m maximum",
       "damage_map": {
         "Light Kinetic": "kinetic",
         "Heavy Kinetic": "kinetic",
@@ -3863,6 +4024,22 @@
           "accessed": "2026-10-18",
           "supports": ["speed_reference"],
           "note": "Soldier walking speed 5 m/s; sprint adds up to 50% with full stamina, about 7.2 m/s in practice."
+        },
+        {
+          "url": "https://foxhole.wiki.gg/wiki/Vision",
+          "title": "Vision, Foxhole Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["sight_reference"],
+          "note": "A soldier looking around sees at most 50 m; binoculars 125 m, sniper rifles 72 m, an observation bunker 230 m. Night and snow storms shrink the view."
+        },
+        {
+          "url": "https://foxhole.wiki.gg/wiki/No.2_Loughcaster",
+          "title": "No.2 Loughcaster, Foxhole Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["range_reference"],
+          "note": "The Warden standard rifle: effective range 27 m, maximum 40 m. The Argenti r.II Rifle page gives the Colonial rifle 25 m and 40 m."
         }
       ]
     },
@@ -3905,6 +4082,8 @@
         "very-high": 32000
       },
       "speed_reference": "A soldier on foot (any loadout; there are no classes). No source gives a number. The vendor lists vehicle speeds on the game's internal scale (tanks 65, Humvee 113.2, Kodiak 154, helicopters 350 to 445), which rank vehicles against each other but cannot be compared with infantry, so set bands from footage at lower confidence",
+      "sight_reference": "None: a shooter, and no source gives sight figures, so every sight band is a medium proposal",
+      "range_reference": "None: soldiers have no fixed weapon (each life's loadout is bought), and no source gives weapon reach",
       "scope": "starting",
       "status": "planned",
       "sources": [
@@ -3937,8 +4116,8 @@
           "title": "Game Mechanics, WARDOGS Wiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["has_costs"],
-          "note": "Each account begins with $10,000 and buys a loadout (weapons, gear, vehicles) before each life; cash carries over between matches; roles come from the loadout, not classes."
+          "supports": ["has_costs", "sight_reference", "range_reference"],
+          "note": "Each account begins with $10,000 and buys a loadout (weapons, gear, vehicles) before each life; cash carries over between matches; roles come from the loadout, not classes. It gives no sight or weapon reach figures."
         },
         {
           "url": "https://wardogs.fandom.com/wiki/Gameplay",
@@ -3973,6 +4152,8 @@
       "has_tiers": false,
       "has_costs": false,
       "speed_reference": "A raider (the only playable unit) running with a Light Shield, which carries no movement penalty; Medium and Heavy Shields slow the wearer by 5% and 15%. No source gives speeds as numbers, so set ARC speed bands from descriptions and footage, at lower confidence",
+      "sight_reference": "None: a shooter without fog of war, so every sight band is a medium proposal",
+      "range_reference": "None: a raider has no fixed weapon (a free loadout hands out one at random), so there is no reference reach",
       "damage_map": {
         "Light Ammo": "kinetic",
         "Medium Ammo": "kinetic",
@@ -4020,6 +4201,14 @@
           "accessed": "2026-10-18",
           "supports": ["damage_map"],
           "note": "The six ammo types and their weapons; the linked ammo pages rank penetration: Light lowest, then Shotgun, Medium, Heavy, Launcher; Energy Clip never below Heavy."
+        },
+        {
+          "url": "https://arcraiders.wiki/wiki/Loadout",
+          "title": "Loadout, ARC Raiders Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["sight_reference", "range_reference"],
+          "note": "A free loadout gives a random basic kit: one weapon such as a Kettle, Stitcher or Ferro, its ammo, a Light Shield and a few items. No page gives sight figures."
         }
       ]
     },
@@ -4087,6 +4276,8 @@
       "has_tiers": false,
       "has_costs": false,
       "speed_reference": "Centurion CN9-A, a standard 50-ton medium BattleMech (the games have no playable infantry, and mediums are the workhorse class): top speed 64.8 km/h, cruising 43.2 km/h in the BattleTechWiki. Compare top speeds; MechWarrior Online and MechWarrior 5 speeds differ slightly with engine rating",
+      "sight_reference": "None: in the MechWarrior games the pilot sees the battlefield directly, and the BattleTechWiki gives no sight distances, so every sight band is a medium proposal",
+      "range_reference": "Centurion CN9-A's Autocannon/10: long range 15 hexes on the tabletop (BattleTechWiki). Compare other weapons' tabletop long range, as the speeds also come from the BattleTechWiki",
       "damage_map": {
         "Energy": "energy",
         "Ballistic": "kinetic",
@@ -4115,8 +4306,8 @@
           "title": "Centurion (BattleMech), BattleTechWiki",
           "kind": "wiki",
           "accessed": "2026-10-18",
-          "supports": ["speed_reference"],
-          "note": "CN9-A: 50 tons, top speed 64.8 km/h, cruising 43.2 km/h."
+          "supports": ["speed_reference", "sight_reference"],
+          "note": "CN9-A: 50 tons, top speed 64.8 km/h, cruising 43.2 km/h. It gives no sight distance; the main weapon is an Autocannon/10."
         },
         {
           "url": "https://mwo.fandom.com/wiki/Weapons",
@@ -4133,6 +4324,14 @@
           "accessed": "2026-10-18",
           "supports": ["has_costs"],
           "note": "BattleTech balances opposing forces with this points value, not with purchases during play; the research uses weight classes instead of prices or Battle Value."
+        },
+        {
+          "url": "https://www.sarna.net/wiki/Autocannon%E2%88%9510",
+          "title": "Autocannon/10, BattleTechWiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "supports": ["range_reference"],
+          "note": "Tabletop ranges in hexes: short 1-5, medium 6-10, long 11-15, with no minimum range."
         }
       ]
     }

@@ -1,10 +1,10 @@
-> **Working notes from step 1** (growing the pattern registry). Example units are from memory and only point research at where to look; none is sourced yet. `data/pattern-registry.json` is the reference.
+> **Working notes from step 1** (growing the pattern registry). Example units are from memory and only point research at where to look; none is sourced yet. `data/pattern-registry.json` is the reference. These notes are context. Where they disagree with a pattern's summary in data/, the summary wins.
 >
 > **Corrections from the review, which win over the text below:**
 > - Patterns that mirror a word-list term (mark-target, suppress-with-fire, leave-hazard-zone, drain-health, launch-drones, reveal-area, heal-self) cover only the version on a key; a weapon or an always-on effect uses the term. So the weapon-effect examples given for suppress-with-fire (machine-gun teams) belong to the weapon trait `suppress`, and the Carrier-style examples for launch-drones belong to the weapon family `drone-launcher`; look for ability examples instead (for launch-drones: StarCraft II Swarm Host, Generals USA vehicle drones bought as add-ons).
 > - lock-in-stasis: the Chrono Legionnaire is a Red Alert 2 / Yuri's Revenge unit, not Red Alert 3; Red Alert 3's Chrono Rift is an area support power.
 > - Capturing a control point is a game-mode rule, not a pattern; capture-structure is taking over or sabotaging a building.
-> - A remote-piloted drone is the crew model `remote`, not launch-drones. Firing from inside a vehicle goes to carry-passengers with the seat role `passenger-firing`.
+> - A remote-piloted drone is the crew model `remote`, not launch-drones. Firing from inside a vehicle (ports or an open top) goes to passenger-sets-weapon's fire-ports variant, with the seat role `passenger-firing`; for a vehicle, carry-passengers is for riders who cannot act until they get out. A building or bunker garrison stays carry-passengers even when its riders fire from it.
 > - invulnerability-window was renamed become-invulnerable; the tunnel network has its own id, build-linked-exits; new ids fire-countermeasures and confuse-enemies were added.
 
 # Pattern registry additions (step 1)
@@ -27,7 +27,7 @@
 
 ### Mode change
 
-- **overclock-self** (Overclock yourself). StarCraft II Marine and Marauder (Stimpack, costs health); MechWarrior Online MASC (speed burst that can damage the legs). *Boundary:* dash is a free speed burst and brace trades speed for armour; this trades health or heat for offence and speed. It is the generic "stat buff" pattern, so it stays out of the top-30.
+- **overclock-self** (Overclock yourself). StarCraft II Marine and Marauder (Stimpack, costs health); MechWarrior Online MASC (speed burst that can damage the legs). *Boundary:* dash is a free speed burst and brace trades speed for armour; this boosts offence or speed for a time, often at a cost in health or heat; a free speed burst alone stays dash. It is the generic "stat buff" pattern, so it stays out of the top-30.
 
 ### Summon
 
@@ -87,7 +87,7 @@ Folded into an existing id:
 | Garrison a building | Red Alert 2, Company of Heroes | carry-passengers |
 | Airlift a vehicle or squad | StarCraft II Medivac, Generals Chinook | carry-passengers |
 | Tow a gun or vehicle | Company of Heroes 2, Foxhole | carry-passengers (cargo variant) |
-| Fire from inside (firing ports, open top) | Red Alert 2 Battle Fortress, Company of Heroes half-tracks | carry-passengers, with seat role `passenger-firing` |
+| Fire from inside (firing ports, open top) | Red Alert 2 Battle Fortress, Company of Heroes half-tracks | passenger-sets-weapon (fire-ports variant), with seat role `passenger-firing` |
 | Tunnel network | Generals GLA tunnels, StarCraft II Nydus | teleport (network variant) |
 | Grapple hook or zipline | Battlefield 2042 | leap |
 | Jump jets, jump packs | MechWarrior, Dawn of War Assault Marines | leap (or the `jetpack` mobility) |
@@ -117,7 +117,7 @@ Folded into one of the new ids:
 
 | Candidate | Seen in | Folds into |
 |---|---|---|
-| Plant a timed charge | Red Alert Tanya, Renegade C4 | throw-explosive (planted variant); on a vehicle, infest-vehicle's ticking-charge variant |
+| Plant a timed charge | Red Alert Tanya, Renegade C4 | throw-explosive (planted variant), on a vehicle too; infest-vehicle only when the attacker itself latches on |
 | Pilot a remote drone | Battlefield 4 MAV and EOD bot | launch-drones (piloted variant), with crew model `remote` |
 | Morph into a higher form | StarCraft II morphs | upgrade-in-field |
 | Motion sensor, sensor tower | Battlefield T-UGS, PlanetSide 2 motion spotter | reveal-area (placed variant) |
@@ -127,7 +127,7 @@ Folded into one of the new ids:
 | Indirect fire that needs a spotter | Foxhole, World in Conflict artillery | weapon delivery `lobbed`, family `artillery` and team-play hook `spotter`; one-off barrages are bombard-area |
 | Superweapon beacon | Renegade | bombard-area |
 | Steal money or tech | Red Alert 2 Spy, Generals Black Lotus | capture-structure (sabotage variant) |
-| Capture a control point | Company of Heroes, Battlefield conquest | capture-structure |
+| Capture a control point | Company of Heroes, Battlefield conquest | no pattern: a game-mode rule; list it under Game-wide mechanics |
 | Reclaim wrecks for resources | Supreme Commander, Planetary Annihilation | gather-resources |
 | Stronger in a group (horde bonus) | Generals China | rally-allies (passive variant), team-play hook `swarm` |
 | Slowing field | StarCraft II Time Warp | leave-hazard-zone |

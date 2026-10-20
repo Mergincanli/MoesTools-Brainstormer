@@ -2,28 +2,31 @@
   "$schema": "../../schemas/vocabulary.schema.json",
   "id": "sight-bands",
   "label": "Sight bands",
-  "description": "How far a unit sees through the fog of war, measured against the top-down screen. Walls and buildings block sight, and what one unit sees its whole team sees. For source units the band is judged against the game's other units, as speed and cost are.",
+  "description": "How far a unit sees through the fog of war, measured against the top-down screen. Walls and buildings block sight, and what one unit sees its whole team sees. For source units, compare the unit's sight with the sight of the game's reference unit (registry sight_reference, usually its basic rifle infantry). Use the stock unit in its default mode, and put a mode or upgrade that sees further in notes. Use the figure for how far it clears the fog; the registry says which one where a game lists two. A grade on the game's own word scale (Wargame optics) counts as a figure; the registry says which grades are short, medium and long. A statement about a group the unit belongs to (\"all infantry see 35 m\", \"most units see 35 m\") counts as its figure, unless the source names an exception that covers it. With no figure, or in a game with no fog of war, the band is medium and a proposal. A scout or recon label, other words (\"sees far\"), height, and zoom or thermal sights do not change it; the scout role carries scouting.",
   "group": "supporting",
-  "status": "draft",
-  "version": "0.4.0",
+  "status": "approved",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "short",
       "label": "Short",
       "description": "Clears the fog only well inside the screen, so the edges of the player's own view stay dark until a teammate sees them.",
-      "rank": 1
+      "rank": 1,
+      "source_rule": "Sight under 0.7 times the reference unit's, or a grade the registry calls short."
     },
     {
       "id": "medium",
       "label": "Medium",
       "description": "Clears the fog to about the edges of the screen: the player sees what the camera shows. The usual sight.",
-      "rank": 2
+      "rank": 2,
+      "source_rule": "Sight from 0.7 up to and including 1.5 times the reference unit's; the reference itself is medium. Also a grade the registry calls medium, and the band for a unit with no sight figure or in a game with no fog of war."
     },
     {
       "id": "long",
       "label": "Long",
       "description": "Sees past the edge of the screen. The player can't look that far, so the extra reach serves the team: enemies out there show on the minimap and on the screens of teammates nearer to them.",
-      "rank": 3
+      "rank": 3,
+      "source_rule": "Sight over 1.5 times the reference unit's, or a grade the registry calls long."
     }
   ]
 }

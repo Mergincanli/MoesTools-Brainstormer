@@ -1,0 +1,387 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "0.4.0",
+  "vocab_version": "0.4.0",
+  "game": "battlefield",
+  "units": [
+    {
+      "id": "battlefield.shared.attack-helicopter",
+      "game": "battlefield",
+      "faction": "shared",
+      "name": "Attack helicopter (AH-1Z Viper / Mi-28 Havoc / Z-10W)",
+      "flavour_affinity": ["allied"],
+      "class": "aircraft",
+      "nature": "crewed-machine",
+      "availability": "limited",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["anti-armour", "anti-infantry"]
+      },
+      "tier": {
+        "band": null,
+        "basis": "Battlefield has no tech gating: each team's attack helicopter appears at a map spawn point on a respawn timer, so there is no tier band (has_tiers is false for the series)."
+      },
+      "cost_band": {
+        "band": null,
+        "basis": "Nothing is bought: the helicopter is taken from a map spawn for free, so there is no cost band (has_costs is false for the series)."
+      },
+      "mobility": {
+        "base": "rotor",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "very-fast",
+        "speed_raw": 14.1,
+        "notes": "Can hover in one spot, slide sideways and back up as well as fly forward. The Battlefield 3 infobox top speed for the Viper works out at roughly fourteen times a sprinting soldier; the Havoc's listed figure is a little lower. In Battlefield 4 the Chinese Z-10W is the slowest of the three; the Viper and Havoc otherwise share the same performance figures."
+      },
+      "body": {
+        "plan": "rotorcraft",
+        "size": "large",
+        "notes": "A two-seat gunship with a nose cannon and stub wings carrying rocket pods and missiles. The three sides' models differ only in silhouette: the Mi-28 is the bulkiest target, while the Viper and the Z-10W are narrower."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["critical-burn", "self-repair", "zonal"],
+        "notes": "The Battlefield 2 infobox rates it as light armour. In Battlefield 3 an aircraft is disabled and starts burning at roughly a third of its health, and in Battlefield 4 only near the end of its health; it then loses health until it explodes unless repaired or extinguished. Out of combat, and while not disabled, it slowly regains health. In Battlefield 4 heavy hits can also briefly knock out its control (a mobility kill). In Battlefield 2 a heavy sniper rifle could hit the crew through the canopy; that is not recorded as a model because the research leads with Battlefield 3 and 4."
+      },
+      "sensors": {
+        "sight": "long",
+        "traits": ["radar"],
+        "basis": "proposal",
+        "notes": "Battlefield has no fog of war or sight radius, so the sight band is our proposal: from the air, with the gunner's zoom (default in Battlefield 4) and optional thermal or night-vision optics, it watches a wide area for the team. The radar trait is in-game but optional: the Air Radar upgrade shows enemy aircraft on the minimap, and the Proximity Scan upgrade shows enemy soldiers and vehicles near the helicopter on the minimap."
+      },
+      "armament": [
+        {
+          "name": "Hydra 70 / S-8 rocket pods",
+          "slot": "primary",
+          "seat": "driver",
+          "family": "rockets",
+          "damage": "explosive",
+          "mount": "body-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+          "traits": ["splash", "magazine"],
+          "summary": "The pilot looses salvos of unguided rockets along the helicopter's heading. The blasts hurt soldiers, light vehicles and aircraft, and a well-aimed salvo leaves a battle tank badly damaged or disabled. Accuracy is best up close, which exposes the helicopter to ground fire. After a salvo the pods reload, and in Battlefield 4 the reserve refills on its own over time. Unlockable variants trade salvo size for heavier rockets (Zuni) or add self-steering near the target (Smart Rockets, Guided Rockets in Battlefield 3)."
+        },
+        {
+          "name": "M197 20mm / 2A42 30mm nose cannon",
+          "slot": "secondary",
+          "seat": "gunner",
+          "family": "autocannon",
+          "damage": "explosive",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+          "traits": ["splash", "magazine"],
+          "summary": "The gunner's turreted cannon fires explosive shells in belts with a reload between them. Its splash shreds soldiers and groups of soldiers, but it does little to armour. All three sides' cannons perform the same."
+        },
+        {
+          "name": "Heat Seekers (AIM-9 Sidewinder / R-73)",
+          "slot": "option",
+          "seat": "driver",
+          "family": "guided-missiles",
+          "damage": "explosive",
+          "mount": "body-aim",
+          "delivery": "lock-on",
+          "range": "long",
+          "can_target": ["low-air", "high-air"],
+          "traits": ["anti-air"],
+          "summary": "Air-to-air missiles for the pilot: lock onto an enemy helicopter, jet or drone and fire. They give the helicopter its only real answer to other aircraft. The default pilot secondary in Battlefield 4; an early unlock in Battlefield 3.",
+          "option_group": "pilot-secondary",
+          "default": true
+        },
+        {
+          "name": "TOW missile",
+          "slot": "option",
+          "seat": "driver",
+          "family": "guided-missiles",
+          "damage": "armour-piercing",
+          "mount": "body-aim",
+          "delivery": "guided",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+          "traits": [],
+          "summary": "A Battlefield 4 unlock that replaces the heat seekers with an anti-tank missile for the pilot. Paired with a rocket salvo before or after it, it usually destroys a tank in a single attack run.",
+          "option_group": "pilot-secondary",
+          "default": false
+        },
+        {
+          "name": "Guided Missile / Laser Guided (AGM-114 Hellfire / 9M120 Ataka-V)",
+          "slot": "option",
+          "seat": "gunner",
+          "family": "guided-missiles",
+          "damage": "armour-piercing",
+          "mount": "free-aim",
+          "delivery": "lock-on",
+          "range": "long",
+          "can_target": ["ground-vehicle", "low-air"],
+          "traits": [],
+          "summary": "The gunner locks onto a vehicle and fires a missile that tracks it from far away; in Battlefield 3 it can also lock onto drones, and in Battlefield 4 the laser that guides it can reveal where the helicopter is. Crews often open with it on armour and then finish the target with the cannon and the pilot's rockets.",
+          "option_group": "gunner-secondary",
+          "default": false
+        },
+        {
+          "name": "TV Missile",
+          "slot": "option",
+          "seat": "gunner",
+          "family": "guided-missiles",
+          "damage": "armour-piercing",
+          "mount": "free-aim",
+          "delivery": "guided",
+          "range": "off-screen",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+          "traits": [],
+          "summary": "The gunner flies the missile by hand through its own camera, anywhere across the map, onto land, sea or air targets. It hits armour very hard, flares do not stop it, and in Battlefield 4 it slips past active protection, but it is slow and hard to steer and cannot be pointed before launch, so the pilot often lines the helicopter up over the target first.",
+          "option_group": "gunner-secondary",
+          "default": false
+        }
+      ],
+      "crew": {
+        "model": "driver-gunner",
+        "basis": "in-game",
+        "solo_fallback": "full-control",
+        "notes": "Two seats in every title: the pilot flies and fires the rocket pods, the pilot's secondary missile and the countermeasure; the gunner aims the nose cannon, the gunner's missile and the optics. A lone pilot keeps the rockets and the pilot's missile, while the cannon and gunner's missile wait for a second player. No passenger seats."
+      },
+      "abilities": [
+        {
+          "name": "IR Flares",
+          "kind": "active",
+          "seat": "driver",
+          "cooldown": "short",
+          "summary": "Fires a burst of flares that break enemy locks and pull incoming missiles away; the helicopter is open to heat-seeking missiles until the dispenser recharges. The default countermeasure in Battlefield 4.",
+          "patterns": ["fire-countermeasures"],
+          "source": "loadout",
+          "exclusive_group": "countermeasure"
+        },
+        {
+          "name": "ECM Jammer",
+          "kind": "active",
+          "seat": "driver",
+          "summary": "An unlockable alternative to flares that lasts longer: it breaks locks and decoys missiles, drops the helicopter off enemy minimaps for a short time, and blinds thermal and night-vision optics with glare and smoke.",
+          "patterns": ["fire-countermeasures", "jam-sensors"],
+          "source": "loadout",
+          "exclusive_group": "countermeasure"
+        },
+        {
+          "name": "Fire Extinguisher",
+          "kind": "active",
+          "seat": "driver",
+          "summary": "An unlockable countermeasure-slot choice: puts out the fire on a disabled helicopter so it stops burning down, and in Battlefield 4 also restores lost control after a mobility kill.",
+          "patterns": ["heal-self"],
+          "source": "loadout",
+          "exclusive_group": "countermeasure"
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "in-game"
+      },
+      "strengths": [
+        {
+          "ref": "speed:very-fast",
+          "why": "Crosses the map many times faster than soldiers or tanks, so it picks where and when to strike."
+        },
+        {
+          "ref": "mobility:rotor",
+          "why": "Can hang over a spot and slide sideways, turning itself into a steady firing platform over a fight."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Missiles plus a rocket salvo can destroy a battle tank in one pass."
+        },
+        {
+          "ref": "weapon:autocannon",
+          "why": "The gunner's explosive cannon tears through soldiers in the open."
+        },
+        {
+          "ref": "range:long",
+          "why": "With guided missiles and zoom optics the crew can hit from beyond the reach of shoulder-fired anti-air missiles."
+        },
+        {
+          "ref": "armour-model:self-repair",
+          "why": "After breaking off an attack it slowly recovers health, so it can return to the fight without a repair."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:light",
+          "why": "Anti-aircraft guns and missiles wreck it quickly; it thrives only where the enemy lacks mobile anti-air."
+        },
+        {
+          "ref": "target:low-air",
+          "why": "Flying low or hovering, it can be hit by tank guns and infantry missiles as well as by anti-air."
+        },
+        {
+          "ref": "armour-model:critical-burn",
+          "why": "Once disabled it burns down and may crash unless it is repaired or extinguished in time."
+        },
+        {
+          "ref": "crew:driver-gunner",
+          "why": "Full firepower needs two players; alone the pilot loses the cannon and the gunner's missiles."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-air",
+          "why": "Mobile anti-air vehicles are the main threat; maps without them leave the helicopter almost unopposed."
+        },
+        {
+          "ref": "weapon:guided-missiles",
+          "why": "Lock-on launchers carried by soldiers (Stinger, Igla) and heat seekers on other aircraft force it to spend flares or retreat."
+        },
+        {
+          "ref": "mobility:jet",
+          "why": "Jets are faster and the helicopter has only limited air-to-air tools, so pilots are told to avoid them."
+        },
+        {
+          "ref": "weapon:cannon",
+          "why": "A tank shell does heavy damage to a helicopter that hovers low and stays put too long."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "armour-class:heavy",
+          "why": "Rocket salvos, TOW and guided missiles let it destroy main battle tanks in a single run."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "The nose cannon and rockets clear soldiers, and thermal optics find them in foliage."
+        },
+        {
+          "ref": "mobility:rotor",
+          "why": "It can duel other helicopters with heat seekers and the cannon, since they move at similar speeds."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "weapon:repair-tool",
+          "why": "An engineer's repair tool can fix it, including saving it once it is disabled and burning."
+        },
+        {
+          "ref": "pattern:mark-target",
+          "why": "A teammate's laser designation gives the gunner's guided missile a target to lock onto."
+        }
+      ],
+      "memorable": "The two-seat gunship every ground player watches for: pilot rocket runs plus a gunner who flies TV missiles by camera into tanks.",
+      "as_player": "The pilot strafes and hovers at high speed, aiming rocket salvos by pointing the nose and locking a missile onto aircraft or tanks. A second player in the gunner seat aims the nose cannon freely and steers a guided missile through its own view. Alone you keep the rockets and pilot missile. Flares on a key shake off lock-ons; when badly hit it burns and must break off to be extinguished or repaired.",
+      "sources": [
+        {
+          "url": "https://battlefield.fandom.com/wiki/AH-1Z_Viper",
+          "title": "AH-1Z Viper, Battlefield Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-18",
+          "version": "Battlefield 2, 3 and 4 sections",
+          "note": "Names the Mi-28 Havoc as the Russian equivalent and the Z-10W as the Chinese counterpart in Battlefield 4, and says the Viper and Havoc share the same performance figures.",
+          "supports": [
+            "name",
+            "class",
+            "availability",
+            "roles",
+            "mobility",
+            "body",
+            "armour/class",
+            "sensors/traits",
+            "armament",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "abilities/2",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos"
+          ]
+        },
+        {
+          "url": "https://battlefield.fandom.com/wiki/Vehicle_disable",
+          "title": "Vehicle disable, Battlefield Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-18",
+          "version": "Battlefield 3 and 4 sections",
+          "note": "Disabled vehicles burn until destroyed unless repaired or extinguished; air vehicles catch fire later than ground vehicles in Battlefield 3; Battlefield 4 adds mobility kills, which also hit aircraft.",
+          "supports": ["armour/models", "abilities/2", "weaknesses/2", "combos/0"]
+        },
+        {
+          "url": "https://battlefield.fandom.com/wiki/Regeneration",
+          "title": "Regeneration, Battlefield Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-18",
+          "version": "Battlefield 3 and 4 sections",
+          "note": "Vehicles that are not burning or disabled regain health on their own in Battlefield 3 and 4.",
+          "supports": ["armour/models", "strengths/5"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "abilities/0/cooldown",
+          "note": "The only recharge time the wiki gives for the flares is from the Battlefield 2 section (a few seconds); the Battlefield 3 and 4 sections give none."
+        },
+        {
+          "path": "armament/3/delivery",
+          "note": "The page names the pilot's TOW missile and links the ATGM launcher but does not describe how it is steered; recorded as guided (the series' TOW follows the shooter's aim), not checked on a page."
+        },
+        {
+          "path": "sensors/traits",
+          "note": "Radar comes only from optional upgrades (Air Radar, Proximity Scan). The page does not say whether their minimap contacts are shared with the whole team or only the crew."
+        },
+        {
+          "path": "armour/models",
+          "note": "The mobility-kill behaviour (recorded as zonal) is described for vehicles in general, with a gyro stabilizer upgrade for aircraft; the helicopter page itself does not mention it."
+        },
+        {
+          "path": "availability",
+          "note": "The page implies one attack helicopter per team on a map (stealing the enemy's leaves a team with two), but the cap depends on the map and mode."
+        },
+        {
+          "path": "combos/1",
+          "note": "Inferred from the Battlefield 3 remark that the guided missile can lock onto drones even without laser designation; the page does not describe the designation combo directly."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "pilot round 1, coder B",
+      "fit_notes": [
+        {
+          "path": "sensors/traits",
+          "used": "radar",
+          "wanted": "a way to mark a sensor trait as a loadout option",
+          "note": "Air Radar and Proximity Scan are optional unlocks; abilities have a source field (loadout), but sensor traits do not, so the trait reads as always present."
+        },
+        {
+          "path": "sensors",
+          "used": "sight long (proposal)",
+          "wanted": "a key-bound vision mode (zoom, thermal or night vision optics)",
+          "note": "The gunner's optics are a real, switchable feature, but no ability pattern or sensor trait covers seeing through foliage or smoke with thermal vision, so they only inform the sight band."
+        },
+        {
+          "path": "armour/models",
+          "used": "zonal",
+          "wanted": "a temporary loss of control from heavy hits",
+          "note": "Battlefield 4's mobility kill is not tied to a hit location; zonal names Battlefield 4 as an example, but its description is about parts breaking."
+        },
+        {
+          "path": "armament/0",
+          "used": "rockets with splash and magazine",
+          "wanted": "a way to record the Smart Rockets variant (rockets that steer themselves)",
+          "note": "The family tie-break makes any self-steering missile a guided missile, but guided missiles allow only lock-on or guided delivery, while the Smart Rockets are fired like rockets and home on their own; they are left in the summary of the default pods."
+        },
+        {
+          "path": "armament/5/traits",
+          "used": "none",
+          "wanted": "a trait for shots that ignore countermeasures and active protection",
+          "note": "The TV missile's key counterplay twist (flares and active protection do not stop it) has no weapon trait."
+        },
+        {
+          "path": "on_death/outcomes",
+          "used": "respawn",
+          "wanted": "a crew that can jump out by choice while the vehicle burns",
+          "note": "Occupants die with the helicopter, but the burning phase gives them time to bail out by hand; bail-out describes an automatic ejection on death, so it was not used."
+        }
+      ]
+    }
+  ]
+}

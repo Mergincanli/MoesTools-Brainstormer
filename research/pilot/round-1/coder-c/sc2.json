@@ -1,0 +1,321 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "0.4.0",
+  "vocab_version": "0.4.0",
+  "game": "sc2",
+  "units": [
+    {
+      "id": "sc2.terran.siege-tank",
+      "game": "sc2",
+      "faction": "terran",
+      "name": "Siege Tank",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "siege",
+        "secondary": ["anti-armour", "anti-infantry"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Factory",
+        "basis": "Produced at the Factory, which itself needs a Barracks; the tech lab add-on it also needs is not a tier step under the sc2 tier map, so the Factory gate gives t2."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 525,
+        "basis": "150 minerals plus 3 x 125 gas = 525, which is the registry's anchor price itself, so medium (470 up to 739). As the anchor it stays medium whatever weight gas gets."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": ["deploy-anchor"],
+        "speed": "medium",
+        "speed_raw": 1.0,
+        "notes": "In tank mode it moves exactly as fast as the Marine (ratio 1.0, on the slow/medium boundary; the band rule puts 1.0 in medium). Sieged it cannot move at all until it packs up again, which takes a few seconds. Under the 5.0.17 notes a Viper's Abduct can no longer be used on it, so it cannot be pulled out of position that way."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "large",
+        "count": 1,
+        "notes": "A tracked hull with a turret. Sieged, it plants itself in place and fires a much heavier gun. Its footprint is a little over twice a Marine's width, slightly bigger than a Thor's."
+      },
+      "armour": {
+        "class": "heavy",
+        "models": ["damage-reduction"],
+        "notes": "Armored and Mechanical attributes, 1 point of armour (more with the Armory's vehicle plating upgrades) and a health pool that is middling for an armoured unit of its price; it is fragile once enemies reach it."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Sight 11: above the Marine's 9 and the Marauder's and Stalker's 10, level with the Thor and Cyclone, so good but not exceptional for the game. Its sieged gun reaches further than it can see, so it relies on other units to reveal targets at full range."
+      },
+      "armament": [
+        {
+          "name": "90 mm Twin Cannon (tank mode)",
+          "slot": "primary",
+          "seat": "driver",
+          "family": "cannon",
+          "damage": "armour-piercing",
+          "mount": "slow-turret",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "summary": "The tank-mode gun: a fairly quick direct shot at ground targets, with bonus damage against armoured units. Its reach is a little longer than a Marine's rifle. It cannot aim at aircraft."
+        },
+        {
+          "name": "180 mm Shock Cannon (siege mode)",
+          "slot": "alternate",
+          "seat": "driver",
+          "family": "artillery",
+          "damage": "explosive",
+          "mount": "slow-turret",
+          "delivery": "lobbed",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["splash", "min-range", "friendly-fire"],
+          "summary": "The siege-mode gun: a slow, very heavy shell at almost twice the tank-mode reach, past the tank's own sight. It hurts everything around the impact, more at the centre, and deals extra damage to armoured targets. It has a dead zone right around the tank, and its blast also hurts friendly units next to the target. Several sieged tanks do not waste shells on a target that is already doomed.",
+          "when": "mobility-trait:deploy-anchor",
+          "condition": "Only while the tank is deployed in Siege Mode.",
+          "patterns": ["deploy-siege-mode"],
+          "mode": "siege"
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "The wiki page describes no crew. Proposed as one player who drives, deploys and fires; spotting comes from teammates rather than a commander seat."
+      },
+      "abilities": [
+        {
+          "name": "Siege Mode / Tank Mode",
+          "kind": "deploy",
+          "seat": "driver",
+          "summary": "Plants the tank in place and swaps its cannon for the long-range splash gun; a second command packs it up into a mobile tank again. Each switch takes a few seconds, during which it fires neither gun. Since Heart of the Swarm it needs no research.",
+          "patterns": ["deploy-siege-mode"],
+          "source": "innate"
+        }
+      ],
+      "modes": [
+        {
+          "id": "siege",
+          "name": "Siege Mode",
+          "via": "deploy-siege-mode",
+          "class": "vehicle",
+          "summary": "Stationary: it cannot move, swaps the twin cannon for the shock cannon with roughly double the reach, area damage and a minimum range, and needs a few seconds to switch back."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "in-game"
+      },
+      "strengths": [
+        {
+          "ref": "range:long",
+          "why": "Sieged, it shells ground targets from almost twice its tank-mode reach, before most of them can reply."
+        },
+        {
+          "ref": "weapon-trait:splash",
+          "why": "Each sieged shell hurts a whole clump, so bunched infantry like Marines and Hydralisks drop fast."
+        },
+        {
+          "ref": "mobility-trait:deploy-anchor",
+          "why": "One command turns it into fixed artillery that locks down a choke or a base entrance."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Both guns deal extra damage to armoured targets, so it hurts tanks, Stalkers and Roaches too."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon-trait:min-range",
+          "why": "Sieged, it cannot touch anything right next to it, so melee units that reach it are safe from its gun."
+        },
+        {
+          "ref": "weapon-trait:friendly-fire",
+          "why": "When enemies mix into its own screen, its shells hit the friendly units around them."
+        },
+        {
+          "ref": "sight:medium",
+          "why": "It sees less far than its sieged gun reaches, so without spotters part of its range is wasted."
+        },
+        {
+          "ref": "mobility-trait:deploy-anchor",
+          "why": "Sieged it is rooted, and packing up takes seconds, so a flank or a drop behind it catches it unable to escape."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Neither gun can aim at fliers, so any attacking aircraft hits it without reply."
+        },
+        {
+          "ref": "weapon:blades",
+          "why": "Zealots and Zerglings dash inside its dead zone, where sieged tanks can only hit them by splashing each other."
+        },
+        {
+          "ref": "unit:sc2.protoss.immortal",
+          "why": "The wiki lists Immortals among its counters: tough armoured walkers that survive the opening volleys and then kill tanks quickly."
+        },
+        {
+          "ref": "unit:sc2.terran.thor",
+          "why": "The wiki also names the Thor, a heavy walker that can soak sieged shells while closing in."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Splash from a sieged tank shreds clumped infantry such as Marines and Hydralisks before they reach it."
+        },
+        {
+          "ref": "armour-class:>=medium",
+          "why": "With an infantry screen in front, its anti-armour bonus punishes Roaches, Stalkers and even Ultralisks."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Its sieged reach lets it break static defences from beyond their own range."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:infantry",
+          "why": "Marines and Marauders stand in front as a screen, keeping enemies out of the dead zone while the tank gives them artillery cover."
+        },
+        {
+          "ref": "role:scout",
+          "why": "A spotter reveals targets beyond the tank's own sight, letting it fire at full sieged range."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "Anti-air teammates cover the threat it cannot answer at all: aircraft."
+        },
+        {
+          "ref": "role:transport",
+          "why": "It fits in a transport (four cargo slots), so it can be carried to high ground or around a defence and sieged there."
+        }
+      ],
+      "memorable": "One command turns a modest tank into planted long-range artillery whose splash shells lock down ground, paid for with a blind dead zone and no movement at all.",
+      "as_player": "Drive in as a mid-weight tank with a quick anti-armour cannon, then deploy into a planted artillery piece whose splash shells cover ground past your own sight. Teammates spot for you and keep rushers out of your dead zone; packing up takes seconds, so a flank or an air strike punishes a careless deploy.",
+      "sources": [
+        {
+          "url": "https://starcraft.fandom.com/wiki/Siege_tank_(StarCraft_II)",
+          "title": "Siege tank (StarCraft II), StarCraft Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-18",
+          "version": "Legacy of the Void versus values as the page showed them in October 2026",
+          "note": "Infobox: 150 minerals and 125 gas, Factory with tech lab, speed 3.15, sight 11, 175 health and 1 armour, Armored and Mechanical; tank-mode gun 7 range with a bonus vs armoured, siege-mode gun 2 to 13 range with splash and a bigger bonus vs armoured; four transport slots. The Siege Tech box (a template on the same wiki) says the switch takes about 3.5 seconds and needs no research since Heart of the Swarm. The strategy text covers the dead zone, air weakness, screening, friendly splash, spotting and the no-overkill behaviour.",
+          "supports": [
+            "class",
+            "nature",
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "armament/1",
+            "abilities/0",
+            "modes/0",
+            "strengths",
+            "weaknesses",
+            "counters",
+            "countered_by",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://starcraft.fandom.com/wiki/Marine_(StarCraft_II)",
+          "title": "Marine (StarCraft II), StarCraft Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-18",
+          "note": "Speed 3.15 and sight 9 in versus mode: the speed reference and a sight comparison. The same wiki gives sight 11 for the Thor and the Cyclone and 10 for the Marauder and Stalker.",
+          "supports": ["mobility/speed", "mobility/speed_raw", "sensors/sight"]
+        },
+        {
+          "url": "https://news.blizzard.com/en-us/article/24301513/starcraft-ii-5-0-17-ptr-patch-notes",
+          "title": "StarCraft II 5.0.17 PTR Patch Notes, Blizzard News",
+          "kind": "official",
+          "accessed": "2026-10-18",
+          "version": "5.0.17 PTR",
+          "note": "Rolls most 5.0.16 balance changes back to 5.0.15 and lists no Siege Tank stat change; the Viper section makes Siege Tanks invalid targets for Abduct in either mode (Blizzard's 5.0.15 notes, which I read but do not cite here, had blocked it only in siege mode).",
+          "supports": ["mobility/notes"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "mobility/notes",
+          "note": "The Abduct immunity is from the 5.0.17 PTR notes; I could not read the live 5.0.17 notes (Liquipedia, which mirrors them, blocked this session), so the live patch may differ."
+        },
+        {
+          "path": "armament/1/delivery",
+          "note": "No source I read says whether the sieged shell has travel time or lands at once; lobbed follows from the artillery family (fire beyond its own sight), not from a stated arc."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Projectile is the cannon family's default; the wiki does not say whether the tank-mode shot travels or hits at once."
+        },
+        {
+          "path": "abilities/0",
+          "note": "The switch time comes from the wiki's Siege Tech box, which may carry an older value; the exact figure is not stored."
+        },
+        {
+          "path": "combos/3",
+          "note": "The wiki gives the tank four transport slots but its versus text does not name the Medivac; a LotV-era option to lift a sieged tank was later removed (the page's wording on which feature was removed is ambiguous), so I record only tank-mode transport."
+        },
+        {
+          "path": "counters/2",
+          "note": "That its sieged reach beats static defences is from general game knowledge (their ranges are shorter); the cited wiki page only calls it mobile artillery."
+        },
+        {
+          "path": "countered_by/2",
+          "note": "The wiki's counter list (Thors, Immortals, Zealots, Zerglings) is old strategy text without a patch date."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "pilot round 1, coder C",
+      "lineage": "siege-tank",
+      "fit_notes": [
+        {
+          "path": "modes/0",
+          "used": "no mobility block in the mode",
+          "wanted": "a speed band (or mobility value) for 'immobile'",
+          "note": "Siege mode cannot move at all; the speed bands start at very slow (under 0.7), so the mode's mobility was left out and the summary says it is stationary."
+        },
+        {
+          "path": "armament/1/damage",
+          "used": "explosive",
+          "wanted": "a way to record a splash shell that also has a bonus against armour (two damage types, or a bonus-vs link)",
+          "note": "SC2 weapons have base damage plus a bonus against an attribute. The sieged shell is both an area weapon and an anti-armour weapon; one damage term keeps only one side. The artillery family also allows only explosive, fire, toxic or cryo."
+        },
+        {
+          "path": "armament/0",
+          "used": "no mode on the tank-mode cannon",
+          "wanted": "a way to tie a weapon to the base form (for example a mode id for the unit's first form)",
+          "note": "The twin cannon works only while unsieged, but 'mode' takes only ids from modes, which hold second forms, so the restriction lives in the summary."
+        },
+        {
+          "path": "weaknesses",
+          "used": "no link for it; the air weakness is under countered_by as class:aircraft",
+          "wanted": "a negated link such as 'no weapon hits low-air'",
+          "note": "Weakness links must describe parts the unit has, so 'cannot shoot at aircraft' cannot be written as a weakness."
+        },
+        {
+          "path": "armament/1/traits",
+          "used": "none for it",
+          "wanted": "a trait for coordinated or no-overkill fire",
+          "note": "Groups of sieged tanks split their shots so they do not overkill one target. This is RTS targeting automation and probably does not carry over to a player-aimed version."
+        }
+      ]
+    }
+  ]
+}

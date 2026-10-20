@@ -35,6 +35,8 @@
         "has_costs",
         "factions",
         "speed_reference",
+        "sight_reference",
+        "range_reference",
         "scope",
         "status"
       ],
@@ -76,7 +78,7 @@
           "$ref": "common.schema.json#/$defs/slug"
         },
         "version_researched": {
-          "description": "Patch, edition or date the research describes.",
+          "description": "Patch, edition or date the research describes. For a series, name the lead titles newest first, any title used for an archetype it adds, and any title that is the source for one kind of fact; facts from its other titles do not fill fields.",
           "type": "string"
         },
         "expansions": {
@@ -195,8 +197,16 @@
           "description": "The unit whose speed counts as 1.0 for speed bands, usually the basic rifle infantry.",
           "type": "string"
         },
+        "sight_reference": {
+          "description": "How far the speed reference unit sees, as the sources give it, and which figure to use where the game lists more than one. Where the game grades sight on a word scale (Wargame optics), which grades count as short, medium and long, with the reference's grade medium. \"None\" and the reason when the game has no fog of war or no sight figures.",
+          "type": "string"
+        },
+        "range_reference": {
+          "description": "The maximum reach of the speed reference unit's main weapon, as the sources give it (not where it works best). \"None\" and the reason when no source gives weapon reach.",
+          "type": "string"
+        },
         "damage_map": {
-          "description": "The game's own damage categories mapped to our damage types.",
+          "description": "The game's own damage categories mapped to our damage types. When the sources for a unit (as sources[] defines them: its cited pages and the pages its uncertain entries name) give one of its weapons a single category from this map, the mapped type is that weapon's damage, even if the weapon's family does not allow it; record the break as atypical (step 4 under armament[].damage). A registry note that tells you to record a kind of weapon as another type comes first (step 3). A category left out of the map, or a weapon with different categories against different targets, is decided by step 5.",
           "type": "object",
           "additionalProperties": {
             "type": "string",

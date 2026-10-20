@@ -1,0 +1,426 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "dow2",
+  "units": [
+    {
+      "id": "dow2.space-marines.tactical-marine-squad",
+      "game": "dow2",
+      "faction": "space-marines",
+      "name": "Tactical Marine Squad",
+      "lineage": "space-marine",
+      "flavour_affinity": ["empire"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["anti-infantry", "anti-armour"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Tier 1",
+        "basis": "The wiki's Retribution unit box gives tier 1, so it needs no HQ upgrade."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 450,
+        "basis": "Paid in requisition alone, with no power: a bit under four-fifths of the price of the game's main battle tanks, just below the medium threshold. Reinforcing lost marines, upkeep and weapon upgrades are left out."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "Its data speed equals the Guardsmen's, the game's speed reference, although the wiki's prose calls the squad slow. Falling back (a game-wide order) speeds it up after a moment; And They Shall Know No Fear slows it down a lot while active. Handling is the on-foot default."
+      },
+      "body": {
+        "plan": "power-suit",
+        "size": "small",
+        "count": 3,
+        "notes": "Three power-armoured Space Marines; the box gives size small and type infantry. The Sergeant upgrade adds a fourth body, the squad leader."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class order decided: the unit box gives the armour type heavy_infantry, which the dow2 armour map makes light; the official line says it ignores most small-arms fire. Unlike most ranged squads it has the melee resistance aura, which cuts the melee damage it takes by a little under half; that is a cut by kind of damage, not an armour model. Cover, the fall-back bonus and veterancy protect it as they do every squad. No source gives it facing values."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The unit box gives the same sight radius as the Guardsmen, the reference, and the usual small detect radius, so it notices infiltrated enemies only up close; it is not a detector."
+      },
+      "armament": [
+        {
+          "name": "SM Bolter",
+          "slot": "primary",
+          "family": "small-arms",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "summary": "Every marine carries one: short bursts at the same reach as the Guardsman lasgun. Its game family deals the piercing damage type, which does full damage to plain infantry, less to heavy infantry and next to nothing to vehicles. About half as accurate on the move."
+        },
+        {
+          "name": "SM Fist Tactical",
+          "slot": "secondary",
+          "family": "blades",
+          "damage": "melee",
+          "mount": "free-aim",
+          "delivery": "melee",
+          "range": "melee",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "summary": "Each marine's close-combat blows, used when the squad is locked in melee, where it fights back hand to hand and cannot shoot. Special melee attacks come from comparing melee skill. The squad easily wins melee against most ranged units."
+        },
+        {
+          "name": "SM Flamer",
+          "slot": "acquired",
+          "family": "flamethrower",
+          "damage": "fire",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "short",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["splash"],
+          "condition": "Bought on the squad as an upgrade, available from tier 1; one marine takes it. Only one special weapon at a time: the squad can buy a different one later, which replaces it.",
+          "summary": "A short jet, a little over half the bolter's reach, that hurts everything in a small circle at full damage. Good against crowded squads of weak infantry, infantry in cover or in buildings, and light structures such as power generators.",
+          "patterns": ["upgrade-in-field"],
+          "option_group": "special-weapon"
+        },
+        {
+          "name": "SM Plasma Gun",
+          "slot": "acquired",
+          "family": "plasma",
+          "damage": "energy",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "condition": "Bought on the squad as an upgrade once the player reaches tier 2; one marine takes it. Excludes the other special weapons, which can be bought later to replace it.",
+          "summary": "Single heavy shots at bolter reach. Far stronger than a bolter against heavy infantry, only a little better against ordinary infantry, and weak against vehicles and buildings.",
+          "patterns": ["upgrade-in-field"],
+          "option_group": "special-weapon"
+        },
+        {
+          "name": "SM Missile Launcher",
+          "slot": "acquired",
+          "family": "rockets",
+          "damage": "armour-piercing",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["magazine"],
+          "condition": "Bought on the squad as an upgrade once the player reaches tier 2; one marine takes it. Excludes the other special weapons, which can be bought later to replace it.",
+          "summary": "Fires one missile per short burst, then waits through a long reload; reaches a little further than the bolters. Meant for vehicles and large heavy infantry. It needs no set-up, so the squad can move between shots, but it hits far less hard than a dedicated lascannon team. The wiki says its real damage rate is well above the one the data suggests.",
+          "patterns": ["upgrade-in-field"],
+          "option_group": "special-weapon"
+        },
+        {
+          "name": "SM Chain Sword Tactical Sergeant",
+          "slot": "acquired",
+          "family": "blades",
+          "damage": "melee",
+          "mount": "free-aim",
+          "delivery": "melee",
+          "range": "melee",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "condition": "Comes with the Sergeant, a fourth squad member bought as an upgrade once the player reaches tier 2.",
+          "summary": "The Sergeant's chainsword, which hits harder in melee than the marines' fists.",
+          "patterns": ["upgrade-in-field"]
+        },
+        {
+          "name": "SM Bolt Pistol",
+          "slot": "acquired",
+          "family": "small-arms",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "condition": "Comes with the Sergeant, a fourth squad member bought as an upgrade once the player reaches tier 2.",
+          "summary": "The Sergeant's sidearm: single shots at the bolters' reach, with the same damage type and no accuracy loss on the move.",
+          "patterns": ["upgrade-in-field"]
+        }
+      ],
+      "crew": {
+        "model": "squad",
+        "basis": "in-game",
+        "notes": "Three marines move and fight as one squad under one order and share its fate; the bought Sergeant joins as a fourth. In a player version one player leads and the others follow as AI."
+      },
+      "abilities": [
+        {
+          "name": "Kraken Bolts",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "long",
+          "summary": "For a few seconds the squad's ranged and melee attacks hit heavy infantry a fifth harder. It costs nothing to use, then needs a wait of nearly a minute.",
+          "patterns": ["overclock-self"]
+        },
+        {
+          "name": "And They Shall Know No Fear",
+          "kind": "ultimate",
+          "source": "upgrade",
+          "cooldown": "long",
+          "summary": "Comes with the Sergeant upgrade. It is charged by the damage the squad soaks, and then has a long cooldown. While active the squad takes a good deal less damage, cannot be suppressed and its melee blows may knock enemies down, but it moves much more slowly.",
+          "patterns": ["brace"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "The squad dies when its last marine falls; while any survive, lost marines can be bought back near a reinforcement point (a game-wide rule)."
+      },
+      "strengths": [
+        {
+          "ref": "armour-class:light",
+          "why": "Heavy-infantry armour lets it ignore most small-arms fire, so it outlasts most infantry squads in a shoot-out."
+        },
+        {
+          "ref": "weapon:blades",
+          "why": "Unlike most ranged squads it has the melee resistance aura, so it can charge shooters and win the melee easily."
+        },
+        {
+          "ref": "pattern:upgrade-in-field",
+          "why": "Buys a flamer, plasma gun or missile launcher in the field and can later buy a different one, so one squad can be refitted for what it faces."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Captures points half again as fast as other units."
+        },
+        {
+          "ref": "pattern:brace",
+          "why": "With a Sergeant, its charged brace cuts the damage it takes and makes it immune to suppression for a while."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:small-arms",
+          "why": "Its bolters do next to nothing to vehicles, so without a missile launcher it has no real answer to armour."
+        },
+        {
+          "ref": "weapon:rockets",
+          "why": "The missile launcher is a stopgap: it hits far less hard than a dedicated lascannon team, has less reach and reloads slowly."
+        },
+        {
+          "ref": "pattern:upgrade-in-field",
+          "why": "Every special weapon costs extra on top of a pricey squad, and swapping to another means paying again with no refund."
+        },
+        {
+          "ref": "speed:medium",
+          "why": "The wiki calls the squad slow and expensive; it is no faster than basic infantry, and its brace slows it down further."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:vehicle",
+          "why": "Vehicles shrug off its bolters; unless it has bought a missile launcher it can only fall back."
+        },
+        {
+          "ref": "weapon:plasma",
+          "why": "Plasma weapons do much more damage to heavy infantry than to other soldiers."
+        },
+        {
+          "ref": "weapon-trait:suppress",
+          "why": "Suppressing fire pins the squad so it can hardly fight, unless the Sergeant's And They Shall Know No Fear is running."
+        },
+        {
+          "ref": "weapon:blades",
+          "why": "Dedicated melee squads still beat it hand to hand, so it should not pick fights with them."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Ranged squads that it reaches lose the melee to it, since its aura blunts their blows and it hits harder up close than most shooters."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Kraken Bolts, and a plasma gun if bought, give it extra damage against other heavy infantry."
+        },
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "Bolters do full damage to plain infantry, and a flamer's splash hurts every member of a crowded squad of weak troops."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:anti-armour",
+          "why": "Its missile launcher is only an emergency answer to vehicles, so it works best next to a dedicated anti-vehicle squad."
+        }
+      ],
+      "memorable": "The Space Marines' adaptable line squad: tough power-armoured troopers who can buy a flamer, plasma gun or missile launcher in the field and later trade it for another.",
+      "as_player": "A T1 squad: you lead two AI battle-brothers. Bolters on left mouse, fists when enemies close in; you shrug off rifle fire and win brawls with other shooters. Q fires Kraken Bolts for a short boost against heavy infantry. Mid-match, buy one special weapon for a squadmate (flamer, plasma gun or missile launcher) and swap it later at full price; a bought Sergeant adds a chainsword, a pistol and a charged brace that ignores suppression but slows you.",
+      "sources": [
+        {
+          "url": "https://dow.fandom.com/wiki/Retribution/Tactical_Marine_Squad",
+          "title": "Retribution/Tactical Marine Squad, Dawn of War Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "version": "3.18 (unit data)",
+          "note": "Read through the MediaWiki API. The box's description line is the one the registry note treats as the in-game help text; the page does not say that it copies the game.",
+          "supports": [
+            "class",
+            "availability",
+            "roles/primary",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "crew",
+            "armament/1/summary",
+            "armament/4/summary",
+            "strengths/0",
+            "strengths/1",
+            "strengths/2",
+            "strengths/3",
+            "weaknesses/2",
+            "weaknesses/3",
+            "counters/0",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://dow.fandom.com/wiki/Retribution/Tactical_Marine_Squad/Weapons",
+          "title": "Retribution/Tactical Marine Squad/Weapons, Dawn of War Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "version": "3.18 (weapon data)",
+          "note": "Read rendered and through the MediaWiki API; it lists the default, special and Sergeant weapons one by one with their game weapon family, reach, damage type and accuracy on the move, transcluded from each weapon's own page.",
+          "supports": ["armament", "roles/secondary", "weaknesses/0", "countered_by/0", "counters/2"]
+        },
+        {
+          "url": "https://dow.fandom.com/wiki/Retribution/Tactical_Marine_Squad/Abilities",
+          "title": "Retribution/Tactical Marine Squad/Abilities, Dawn of War Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "version": "3.10 to 3.19 (ability data)",
+          "note": "Read rendered and through the MediaWiki API; it shows the Melee Resistance Aura, Kraken Bolts and And They Shall Know No Fear with their effects, requirements and cooldowns, transcluded from each ability's own page.",
+          "supports": [
+            "abilities",
+            "armour/notes",
+            "roles/secondary/0",
+            "strengths/1",
+            "strengths/4",
+            "countered_by/2",
+            "counters/1"
+          ]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "roles/secondary",
+          "note": "Anti-armour rests on the missile launcher alone. The wiki's Missile Launcher (Tactical Squad) upgrade page calls it effective against vehicles and large heavy infantry, and the unit's Strategy page calls it emergency anti-vehicle firepower; both were read but left out for lack of room."
+        },
+        {
+          "path": "armament/4/traits",
+          "note": "Magazine rests on the unit's Strategy page (read, not cited), which names the long reload between missiles, during which the squad can move, as this weapon's advantage over set-up weapons. The cited pages give the reload only in the weapon data."
+        },
+        {
+          "path": "armament",
+          "note": "That the special weapons and the Sergeant are upgrades, their tier requirements and their target notes come from the unit's Upgrades page (read, not cited): the flamer from tier 1, the plasma gun, missile launcher and Sergeant from tier 2. The cited main page says only that the squad can rebuy weapon upgrades to switch its special weapon. The flamer's use against crowded squads of weak troops and against power generators, and the lack of a refund when swapping, come from the Strategy page (read, not cited)."
+        },
+        {
+          "path": "armament/4/family",
+          "note": "No source says the missile steers, so it is coded as rockets with the family's default projectile delivery."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No source describes how bolter shots travel; hitscan is the small-arms default. The same holds for the bolt pistol, and projectile is the family default for the flamer and plasma gun."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "How much the piercing type does to heavy infantry and vehicles, the plasma type's bonus against heavy infantry and its weakness against vehicles and buildings come from the wiki's Retribution Damage types page (read, not cited; the games registry cites it). The cited Weapons page gives only each weapon's damage type."
+        },
+        {
+          "path": "roles/primary",
+          "note": "The official Retribution manual (read, not cited for lack of room) gives an older line for the squad, calling it tactically adaptable infantry that takes several weapon upgrades; like the box's line, it names no role. With it cited, confidence would be high."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The main page's prose calls the squad slow, while its data speed equals the reference Guardsmen's; the band follows the data.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/1/kind",
+          "note": "The ability page says it is charged by damage taken and also gives a cooldown; it does not say whether the charge resets after each use."
+        },
+        {
+          "path": "countered_by/1",
+          "note": "Rests on the Plasma Gun upgrade page, the Strategy page and the Damage types page, all read but not cited."
+        },
+        {
+          "path": "countered_by/3",
+          "note": "Rests on the Strategy page (read, not cited), which advises against brawling enemy melee specialists."
+        },
+        {
+          "path": "combos/0",
+          "note": "Rests on the Strategy page (read, not cited), which compares the missile launcher with a Devastator lascannon."
+        },
+        {
+          "path": "lineage",
+          "note": "The wiki's Dawn of War Space Marine Squad page (read, not cited) says that squad is the tabletop Tactical Squad, the design this unit carries the name of; the two games name it differently."
+        },
+        {
+          "path": "body/plan",
+          "note": "Power suit rather than humanoid: the sources describe power-armoured heavy infantry of one soldier's size; no source gives its build."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "abilities/0/patterns",
+          "used": "overclock-self",
+          "wanted": "a free, timed damage boost against one armour type (special ammunition)",
+          "note": "Kraken Bolts gives a short damage boost, but only against heavy infantry, and it is paid for by nothing except its cooldown, while overclock-self is paid for in health, heat or a slump."
+        },
+        {
+          "path": "abilities/1/kind",
+          "used": "ultimate",
+          "wanted": "an active ability unlocked by a charge, then on a cooldown",
+          "note": "It charges through play (damage soaked) like an ultimate, but it also has a cooldown, and the unit is tier 1 while ultimate is a tier-3 kind."
+        },
+        {
+          "path": "armour/models",
+          "used": "flat-pool",
+          "wanted": "resistance to one kind of damage (melee)",
+          "note": "The melee resistance aura takes a fixed share off melee damage only. The registry note keeps it out of armour models and abilities, so it lives in armour.notes and the strengths."
+        },
+        {
+          "path": "strengths/3",
+          "used": "class:infantry",
+          "wanted": "a typed link for capturing points",
+          "note": "Its faster capture rate is a game-mode strength that no link kind names, so it hangs on its class, which is what lets it capture."
+        },
+        {
+          "path": "weaknesses",
+          "used": "speed:medium",
+          "wanted": "a typed link for price",
+          "note": "The wiki calls the squad expensive, but no link kind names cost, so the point is folded into the speed weakness and the upgrade weakness."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "abilities/1/kind",
+          "rule": "ability-kinds:ultimate min_tier t3",
+          "note": "A tier-1 squad gets a charged ability once its Sergeant (a tier-2 upgrade) joins; our word list keeps ultimates for tier 3."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "pilot round 2, coder A"
+    }
+  ]
+}

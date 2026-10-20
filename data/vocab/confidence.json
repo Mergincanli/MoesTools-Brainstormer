@@ -4,23 +4,29 @@
   "label": "Confidence levels",
   "description": "How sure we are that a research entry's factual claims are correct. Our own design proposals (aim, crew, how it plays) are marked as proposals and not rated.",
   "group": "supporting",
-  "status": "draft",
-  "version": "0.4.0",
+  "status": "approved",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "high",
       "label": "High",
-      "description": "Stated by an official source, or by two independent established sources that agree."
+      "description": "The cited sources include official text about the unit, read directly or through a faithful copy: a page that says what it copies, or an infobox description or tooltip field that the game's registry note names as a copy of in-game text and does not mark as still to be checked (the PlanetSide 2 Wiki's Description field; the StarCraft II wikis' unit description). Or they include pages from two different established sites that each describe the unit and agree. A page counts only if it is about the unit itself: its own page, or its own entry in a unit list. Patch notes and pages about other units do not count toward high. Pages of one site count as one site. Two wikis count as independent unless one names the other as its source."
     },
     {
       "id": "medium",
       "label": "Medium",
-      "description": "Stated by one established wiki or database, not contradicted."
+      "description": "Everything rests on one established site (any number of its pages) or one database, and no other site contradicts it; or the High or Medium tie-break drops the entry here. Pages that contradict each other, of one site or of several, follow that tie-break."
     },
     {
       "id": "low",
       "label": "Low",
       "description": "From a forum, a guide, a search snippet or a single unclear source. Needs a check before use."
+    }
+  ],
+  "tie_breaks": [
+    {
+      "terms": ["high", "medium"],
+      "rule": "When established sites, or pages of one site, contradict each other on a point the entry uses and no official text settles it, record each such point in uncertain with sources_disagree. Then judge the level on what the pages agree on. Drop to medium only when a contradicted point decides a term the entry codes, such as a weapon's family or damage, a band, a role or the tier."
     }
   ]
 }

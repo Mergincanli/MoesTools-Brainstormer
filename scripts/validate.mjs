@@ -9,10 +9,13 @@
 // Pass 2, rules.
 // 1) Word-list integrity: unique term ids; ranks (on a ranked list every term has one and no two share one);
 //    allowed/excluded/favoured/avoided maps; typed links; key-bound patterns; class rarities (every class_rarity key
-//    must be in the term's classes); one version shared by all word lists; and every term with combination rules
-//    sits in a list the rules read, with maps keyed only by lists the rules read, so no rule is skipped unseen.
+//    must be in the term's classes); tie-break rules name real terms; ids a term 'replaces' are no longer terms; one
+//    version shared by all word lists; and every term with combination rules sits in a list the rules read, with maps
+//    keyed only by lists the rules read, so no rule is skipped unseen.
 // 2) Cross-references: unique game, faction and unit ids; patterns <-> units, the pattern registry, games and
-//    factions, typed links.
+//    factions, typed links. A pattern's source_units that differ from the units linking it only warn: research
+//    agents never edit an existing pattern file (a new pattern gets its first list by hand), and the merge pass keeps
+//    source_units up to date with npm run sync-patterns.
 // 3) Combination rules: every term's classes, min_tier, allowed, excluded and requires. A unit or card is read as
 //    unit-wide parts (UNIT_PARTS) and, per weapon, weapon parts (WEAPON_PARTS). A weapon term's maps are compared
 //    with that weapon's own parts and with the unit-wide parts; a unit-wide term's maps with the unit-wide parts and
@@ -25,8 +28,24 @@
 //    must match a rule the unit breaks, and its path must exist on the unit.
 // 4) Card rules: key and passive budgets per tier and cooldowns; each ability's pattern must be written, with a
 //    generator, and the card must meet its rules (or its variant's): kinds, slot, min_tier, classes, requires,
-//    excludes, implies, conflicts_with; strength/weakness pairing, matchups that describe the card's own parts, and
-//    no real unit names or unit links on a card.
+//    excludes, implies, conflicts_with; strength/weakness pairing, matchups that describe the card's own parts, no
+//    real unit names or unit links on a card, and body-aim only on the driver's weapons.
+// 5) Field rules on researched units (the coding rules in the field descriptions):
+//    - seats: 'driver' is never written (a weapon or ability with no seat is the driver's), and any other seat must
+//      be one the unit has: its crew model's seats, crew.seats or crew.passengers.kind;
+//    - the main weapon: at most one primary, listed first; it has no seat when the driver has a weapon of its own
+//      (another primary or secondary entry with no seat); body-aim only from the driver seat;
+//    - option groups: a loadout group is option entries plus at most one primary or secondary entry, its default
+//      (default: true); an upgrade group is acquired entries only, with no default; every option entry has a group;
+//    - 'when' on passenger weapons only, and on every one of them;
+//    - crew and death: no in-game crew (except a squad) and no in-game respawn in a game where players command units;
+//      a proposal death outcome is the 3C default (bail-out for a crewed machine that is not infantry, respawn for
+//      the rest); solo_fallback only on multi-seat crew models; a squad has body.count 2 or more;
+//    - an ability with no pattern has a fit_note at abilities/<i>/patterns that says what is wanted;
+//    - a unit with the transform mobility trait records its second form in modes;
+//    - warnings: handling other than the mobility default with nothing in mobility.notes (a tiny or small unit on
+//      legs may strafe with no note, since its size and mobility show why), and fit_notes, uncertain and
+//      sources[].supports paths that use '.' or '*', have an empty part, or whose parent does not exist on the unit.
 //
 // Rule strings. Each broken combination rule has exactly one string, '<list>:<term> <field> <value>':
 //   <list>:<term> classes <class>            the term's classes leave out the unit's class
@@ -210,6 +229,22 @@ export function validate(root = REPO_ROOT) {
     if (!rankedLists.has(v.id) && !v.terms.some(t => t.rank !== undefined)) continue
     for (const t of v.terms) if (!Number.isInteger(t.rank)) err(`${f} ${t.id}: no rank, but every term of a ranked list needs a whole-number rank`)
     for (const r of repeated(v.terms.map(t => t.rank).filter(Number.isInteger))) err(`${f}: rank ${r} is used by more than one term`)
+  }
+
+  // A tie-break rule names two or more different terms, of its own list ('id') or of another ('<list>:id'). A term's
+  // 'replaces' names ids of earlier versions, which are no longer terms of the list, each taken over by one term only.
+  for (const { f, v } of vocabDocs) {
+    for (const [i, tb] of (v.tie_breaks || []).entries()) {
+      for (const x of tb.terms) {
+        const [lid, id] = x.includes(':') ? x.split(':') : [v.id, x]
+        if (!vocab[lid]) err(`${f} tie_breaks/${i}: unknown word list '${lid}' in '${x}'`)
+        else if (!vocab[lid].has(id)) err(`${f} tie_breaks/${i}: '${x}' is not a term of '${lid}'`)
+      }
+      for (const x of repeated(tb.terms)) err(`${f} tie_breaks/${i}: '${x}' is named twice`)
+    }
+    const replaced = v.terms.flatMap(t => (t.replaces || []).map(r => ({ r, by: t.id })))
+    for (const { r, by } of replaced) if (vocab[v.id]?.has(r)) err(`${f} ${by}: replaces '${r}', which is still a term of this list`)
+    for (const r of repeated(replaced.map(x => x.r))) err(`${f}: '${r}' is replaced by more than one term`)
   }
 
   // class_rarity keys must be classes the term or pattern allows at all (values are checked by the schema).
@@ -442,6 +477,113 @@ export function validate(root = REPO_ROOT) {
     return true
   }
 
+  // Field rules on one researched unit (header, part 5). w names the unit in messages; g is its game, if known.
+  const LOADOUT_SLOTS = ['primary', 'secondary']
+  function unitFieldRules(u, w, g) {
+    const weaponName = x => `weapon '${x.name}' (${x.slot})`
+    const commanded = g?.control === 'commanded'
+
+    // Seats. Leaving a seat out means the driver; any other seat must be one the unit has.
+    const seats = new Set([
+      ...(terms['crew-models']?.[u.crew.model]?.seats || []),
+      ...(u.crew.seats || []).map(s => s.role),
+      ...(u.crew.passengers?.kind ? [u.crew.passengers.kind] : []),
+    ])
+    for (const [what, x] of [...u.armament.map(x => [weaponName(x), x]), ...u.abilities.map(x => [`ability '${x.name}'`, x])]) {
+      if (x.seat === undefined) continue
+      if (x.seat === 'driver') err(`${w}: ${what}: seat 'driver' is the default; leave it out`)
+      else if (!seats.has(x.seat)) err(`${w}: ${what}: seat '${x.seat}' is not a seat of this unit`)
+    }
+
+    // The main weapon: one primary at most, first in the list. The driver's own weapon is the primary whenever the
+    // driver has one at spawn, that is another primary or secondary entry with no seat.
+    const primaries = u.armament.flatMap((x, i) => (x.slot === 'primary' ? [i] : []))
+    if (primaries.length > 1 || primaries[0] > 0) {
+      err(`${w}: primary at ${primaries.map(i => `armament/${i}`).join(', ')}: a unit has at most one primary weapon, listed first`)
+    }
+    const main = u.armament.find(x => x.slot === 'primary')
+    if (main?.seat !== undefined && main.seat !== 'driver'
+      && u.armament.some(x => x !== main && LOADOUT_SLOTS.includes(x.slot) && (x.seat ?? 'driver') === 'driver')) {
+      err(`${w}: ${weaponName(main)} has seat '${main.seat}': the driver has a weapon, so the primary is the driver's: leave its seat out`)
+    }
+    for (const x of u.armament) {
+      if (x.mount === 'body-aim' && (x.seat ?? 'driver') !== 'driver') err(`${w}: ${weaponName(x)} has seat '${x.seat}': body-aim is fired from the driver seat`)
+      // 'when' names the rider, so it belongs on passenger weapons and nowhere else.
+      if (x.slot === 'passenger' && x.when === undefined) err(`${w}: ${weaponName(x)} has no 'when': 'when' is for passenger weapons only, and every passenger weapon needs one`)
+      if (x.slot !== 'passenger' && x.when !== undefined) err(`${w}: ${weaponName(x)} has 'when': 'when' is for passenger weapons only, and every passenger weapon needs one`)
+    }
+
+    // Option groups. A loadout group: option entries plus at most one primary or secondary entry, its default. An
+    // upgrade group: acquired entries only, with no default.
+    for (const x of u.armament) {
+      if (x.slot === 'option' && x.option_group === undefined) err(`${w}: ${weaponName(x)} needs an option_group: every option entry belongs to a loadout group`)
+      if (x.default === true && (x.option_group === undefined || !LOADOUT_SLOTS.includes(x.slot))) {
+        err(`${w}: ${weaponName(x)} has default: true, which belongs only on the primary or secondary entry of a loadout group`)
+      }
+    }
+    const groups = new Map()
+    for (const x of u.armament) if (x.option_group !== undefined) groups.set(x.option_group, [...(groups.get(x.option_group) || []), x])
+    for (const [id, xs] of groups) {
+      if (xs.every(x => x.slot === 'acquired')) continue // an upgrade group
+      const fitted = xs.filter(x => LOADOUT_SLOTS.includes(x.slot))
+      if (fitted.length > 1 || xs.some(x => x.slot !== 'option' && !LOADOUT_SLOTS.includes(x.slot))) {
+        err(`${w}: option_group '${id}' holds ${xs.map(x => x.slot).join(', ')}: it is neither a loadout group (option entries plus at most one primary or secondary entry, the default) nor an upgrade group (acquired entries only)`)
+      } else if (fitted.length === 1 && fitted[0].default !== true) {
+        err(`${w}: ${weaponName(fitted[0])} is the fitted choice of loadout group '${id}', so it needs default: true`)
+      }
+    }
+
+    // Crew and death. In a game where players command units, nobody sits in a unit and a unit that dies is simply
+    // gone; a proposal death outcome is decision 3C's default.
+    if (commanded && u.crew.basis === 'in-game' && u.crew.model !== 'squad') {
+      err(`${w}: crew basis in-game in ${g.id}, where players command units: an RTS unit has no player seats; use basis proposal`)
+    }
+    const outcomes = u.on_death?.outcomes || []
+    if (u.on_death?.basis === 'proposal') {
+      const want = u.nature === 'crewed-machine' && u.class !== 'infantry' ? 'bail-out' : 'respawn'
+      if (outcomes.length !== 1 || outcomes[0] !== want) {
+        err(`${w}: on_death [${outcomes.join(', ')}] with basis proposal should be [${want}]: a proposal death outcome is the 3C default; if the source shows another outcome, set basis in-game`)
+      }
+    }
+    if (commanded && u.on_death?.basis === 'in-game' && outcomes.includes('respawn')) {
+      err(`${w}: on_death respawn with basis in-game in ${g.id}, where players command units: an RTS unit that is simply gone is a proposal`)
+    }
+
+    // Handling: the mobility type's default, or strafe for a tiny or small unit on legs; anything else needs a reason.
+    const def = terms.mobility?.[u.mobility.base]?.default_handling
+    const smallOnLegs = ['tiny', 'small'].includes(u.body.size) && String(u.mobility.base).startsWith('legs')
+    if (def && u.mobility.handling !== def && !(smallOnLegs && u.mobility.handling === 'strafe') && !u.mobility.notes?.trim()) {
+      warn(`${w}: handling '${u.mobility.handling}' is not the '${u.mobility.base}' default '${def}': say why the handling differs in mobility.notes`)
+    }
+
+    // An ability with no pattern keeps its place, and a fit_note says which mechanic is wanted.
+    u.abilities.forEach((a, i) => {
+      if ((a.patterns || []).length) return
+      const at = `abilities/${i}/patterns`
+      if (!(u.fit_notes || []).some(n => n.path === at && typeof n.wanted === 'string' && n.wanted.trim())) {
+        err(`${w}: ability '${a.name}' links no pattern and no fit_note at ${at} has a wanted text: an ability with no pattern needs a fit_note naming the mechanic wanted`)
+      }
+    })
+
+    // Paths in fit_notes, uncertain and sources[].supports: '/' between parts and real positions. The last part may
+    // be something left out (armament/0/traits on a weapon without traits), but what holds it must exist.
+    const paths = [
+      ...(u.fit_notes || []).map((n, i) => [`fit_notes/${i}`, n.path]),
+      ...(u.uncertain || []).map((n, i) => [`uncertain/${i}`, n.path]),
+      ...(u.sources || []).flatMap((s, i) => (s.supports || []).map((p, j) => [`sources/${i}/supports/${j}`, p])),
+    ]
+    for (const [at, p] of paths) {
+      if (typeof p !== 'string') continue
+      const parts = p.split('/')
+      const parent = parts.slice(0, -1).join('/')
+      const why = /[.*]/.test(p) ? "uses '.' or '*'"
+        : parts.includes('') ? 'has an empty part'
+        : parent && !pathExists(u, parent) ? `points into '${parent}', which does not exist on this unit`
+        : null
+      if (why) warn(`${w}: ${at} path '${p}' ${why}: write paths with / and real positions`)
+    }
+  }
+
   // ---------------------------------------------------------------- units
   for (const u of units) {
     const w = `${u._file} ${u.id}`
@@ -482,15 +624,18 @@ export function validate(root = REPO_ROOT) {
       const pr = parseRef(r.ref)
       if (pr.kind === 'unit' && !pr.id.startsWith(`${u.game}.`)) warn(`${w}: unit link ${r.ref} crosses games; prefer class, role, weapon or damage links`)
     }
+    // The transform trait's own definition says the unit records its second form in modes.
     if ((u.mobility.traits || []).includes('transform') && !(u.modes || []).length) {
-      atypical.push(`${w}: transform trait without a recorded second form (modes)`)
+      err(`${w}: mobility trait transform with no modes: a unit that transforms records its second form in modes`)
     }
     for (const r of [...u.strengths, ...u.weaknesses, ...u.countered_by, ...u.counters, ...(u.combos || [])]) checkRef(w, r.ref)
     for (const wp of u.armament) if (wp.when) checkRef(`${w} weapon '${wp.name}'`, wp.when)
     for (const a of [...u.abilities, ...u.armament]) {
       for (const p of a.patterns || []) {
         if (!patternKnown(w, p, `pattern linked by '${a.name}'`)) continue
-        if (!patternById[p].source_units.includes(u.id)) err(`${w}: links pattern '${p}' but the pattern does not list this unit`)
+        if (!patternById[p].source_units.includes(u.id)) {
+          warn(`${w}: links pattern '${p}', which does not list this unit: source_units out of date; the merge pass runs npm run sync-patterns`)
+        }
       }
     }
     for (const m of u.modes || []) patternKnown(w, m.via, `pattern behind mode '${m.id}'`)
@@ -498,9 +643,14 @@ export function validate(root = REPO_ROOT) {
     if (u.crew.passengers && !String(u.crew.passengers.kind).startsWith('passenger')) err(`${w}: passengers.kind must be a passenger seat role`)
     const multiSeat = (terms['crew-models']?.[u.crew.model]?.max_players || 1) > 1
     if (multiSeat && !u.crew.solo_fallback) err(`${w}: multi-seat crew model needs solo_fallback`)
+    if (!multiSeat && u.crew.solo_fallback) err(`${w}: crew model '${u.crew.model}' has one player: solo_fallback is only for multi-seat crew models`)
+    if (u.crew.model === 'squad' && !(u.body.count >= 2)) {
+      err(`${w}: crew model squad with body.count ${u.body.count ?? 'left out'}: a squad needs body.count 2 or more`)
+    }
     for (const wp of u.armament) {
       if (['passenger', 'acquired', 'alternate'].includes(wp.slot) && !wp.condition) err(`${w}: weapon '${wp.name}' (${wp.slot}) needs a condition`)
     }
+    unitFieldRules(u, w, g)
     const P = unitProfile(u)
     for (const r of [...u.strengths, ...u.weaknesses]) {
       if (!['unit', 'pattern'].includes(parseRef(r.ref).kind) && !matches(r.ref, P)) {
@@ -530,8 +680,9 @@ export function validate(root = REPO_ROOT) {
       .filter(u => unitProfile(u).patterns.includes(p.id) || (u.modes || []).some(m => m.via === p.id))
       .map(u => u.id)
       .sort()
-    if (p.source_units && JSON.stringify([...p.source_units].sort()) !== JSON.stringify(computed)) {
-      err(`${w}: source_units [${p.source_units}] differ from the units that link it [${computed}]`)
+    // Only a list sync-patterns can write is out of date: with no unit linking the pattern it leaves the list as it is.
+    if (computed.length && p.source_units && JSON.stringify([...p.source_units].sort()) !== JSON.stringify(computed)) {
+      warn(`${w}: source_units [${p.source_units}] differ from the units that link it [${computed}]: source_units out of date; the merge pass runs npm run sync-patterns`)
     }
     if (!computed.length && p.status !== 'merged' && p.status !== 'rejected') err(`${w}: no unit links this pattern`)
     for (const r of p.related || []) patternKnown(w, r.id, 'related pattern')
@@ -566,6 +717,10 @@ export function validate(root = REPO_ROOT) {
   for (const { f, c } of cardDocs) {
     const P = cardProfile(c)
     for (const pr of combinationProblems(P)) err(`${f}: ${pr.msg}`)
+    const A = c.parts.armament
+    for (const [at, x] of [['primary', A.primary], ['secondary', A.secondary], ...(A.conditional || []).map((x, i) => [`conditional/${i}`, x.weapon])]) {
+      if (x?.mount === 'body-aim' && (x.seat ?? 'driver') !== 'driver') err(`${f}: armament ${at} has seat '${x.seat}': body-aim is fired from the driver seat`)
+    }
     const tier = terms.tiers?.[c.parts.tier] || {}
     const abil = [c.parts.signature, ...c.parts.abilities]
     const keys = abil.filter(a => isKey(a.kind)).length

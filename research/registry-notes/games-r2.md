@@ -17,7 +17,7 @@ Entries: `cnc-td`, `cnc-ts`, `cnc3`, `renegade` in `games_r2.json`. `check_games
   - In multiplayer, the build level comes from the game setup (the Remastered client passes it in). Every unit that can be built in multiplayer has level 7 or lower, so at full tech the level never gates a unit and only the buildings do. I did not check what the original DOS lobby defaulted to.
   - In the 2020 source, the Temple of Nod counts as the Advanced Communications Center. So the MRLS, the Commando and the MCV are both sides' units ("shared") at t3.
   - The Remastered balance patch made the APC need the Repair Facility. Under the original rules the APC is t1 (Barracks); under the Remastered rules it would be t2. The entry describes the original rules.
-- **Tiberian Sun.** The wiki's war factory pages list production by tier, together with each requirement. Besides Radar (t2), the two Tech Centers and the Upgrade Center or Temple of Nod (t3), there are special gates:
+- **Tiberian Sun.** The wiki's war factory pages list production by tier, together with each requirement. Besides Radar (t2), the two Tech Centers and the Upgrade Center or the Temple of Nod (t3), there are special gates:
   - Electromagnetic Pulse Cannon (t2, for the Mobile EMP)
   - Stealth Generator (t3, for the Mobile Stealth Generator)
   - Tiberium Waste Facility (t3, for the Weed Eater)
@@ -47,7 +47,7 @@ Entries: `cnc-td`, `cnc-ts`, `cnc3`, `renegade` in `games_r2.json`. `check_games
 
 ## Damage and armour maps
 
-- **TW:** lasers (Avatar, Obelisk, Tripod), the Shatterer's sonic beam and the Devourer's shot are all of type "Cannon", and flamethrowers are "Grenade". The map gives the defaults; type each weapon by what it is (energy, sonic, fire).
+- **TW:** lasers (Avatar, Obelisk, Tripod), the Shatterer's sonic beam and the Devourer's shot are all of type "Cannon", and flamethrowers are "Grenade". Lasers (Avatar, Obelisk, Tripod) are energy, the Shatterer's beam is sonic and flamethrowers are fire, whatever their category. Named exception (step 3 under armament[].damage).
 - **TS:** the warhead names are rules.ini names shown in the infoboxes. RailShot and RailShot2 are mapped to armour-piercing as a judgement call. Warheads I could not match to a clear meaning were left out: Super (the Obelisk), TankOGas, Organic, Shard, Slimer, RPG and Fire2.
 - **Renegade:** "Steel" is left out. It covers both bullets (chaingun, ramjet) and explosives (rockets, grenades), and the guide's multipliers make it look anti-infantry. The armour map uses the strategy guide's categories. Unit infoboxes show internal names instead (SkinFlesh, CNCVehicleHeavy), and the Light Tank counts as a heavy vehicle.
 - **No armour_map for TD, TS or TW.** Their categories cut across our classes:
@@ -55,7 +55,7 @@ Entries: `cnc-td`, `cnc-ts`, `cnc3`, `renegade` in `games_r2.json`. `check_games
   - TS's Light covers the Tick tank, Cyborgs and the Banshee.
   - TW gives each unit its own armour percentages.
 
-  Set the armour class per unit from size, role and health.
+  Set the armour class per unit with the armour-class order. The tanks averaged in each cost anchor are heavy, so the Nod Light Tank (TD) and the Tick tank (TS) are heavy, as Renegade's map already has it.
 
 ## Flavour affinity (a proposal, not a sourced fact)
 

@@ -2,15 +2,15 @@
   "$schema": "../../schemas/vocabulary.schema.json",
   "id": "ability-kinds",
   "label": "Ability kinds",
-  "description": "How an ability is triggered. 'Uses a key' kinds count toward the tier's key budget. Tie-break: deploy when one of the modes is stationary, otherwise toggle.",
+  "description": "How an ability is triggered. 'Uses a key' kinds count toward the tier's key budget.",
   "group": "supporting",
-  "status": "draft",
-  "version": "0.4.0",
+  "status": "approved",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "active",
       "label": "Active",
-      "description": "Press to use, then a cooldown.",
+      "description": "Press to use. It may have a cooldown, a cost per use, or neither.",
       "uses_key": true
     },
     {
@@ -49,6 +49,24 @@
       "label": "Triggered",
       "description": "Happens on an event: on a kill, on death, when hit.",
       "uses_key": false
+    }
+  ],
+  "tie_breaks": [
+    {
+      "terms": ["toggle", "deploy"],
+      "rule": "Pick deploy when the unit cannot move at all in one of the two states: it has to stop and set up. Pick toggle when it can move in both, even if it is slow or cannot fire while moving in one of them."
+    },
+    {
+      "terms": ["active", "channel"],
+      "rule": "Pick channel when the source says you hold the key to keep the effect going (press and hold to burn a boost, to keep a beam or a shield up), or that it stops as soon as you let go, move or are interrupted. Holding a key to aim or charge and releasing it to act is not channel: the effect starts on release. A timed action that runs to its end on its own is active."
+    },
+    {
+      "terms": ["active", "ultimate"],
+      "rule": "Ultimate when the source says the button must be charged before each use, through play (kills, damage dealt or taken) or by a charge meter of its own, even when it also has a cooldown; band that cooldown as given. Active when only a cooldown or a stock holds it back."
+    },
+    {
+      "terms": ["passive", "triggered"],
+      "rule": "Pick triggered when each event causes a one-off effect, such as taking a weapon on a kill or exploding on death. Pick passive when the effect is always on, including bonuses that build up from events and then stay, such as ranks."
     }
   ]
 }

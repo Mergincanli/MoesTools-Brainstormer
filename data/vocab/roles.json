@@ -2,49 +2,58 @@
   "$schema": "../../schemas/vocabulary.schema.json",
   "id": "roles",
   "label": "Roles",
-  "description": "What the unit is for: its job or target, never its mechanic (mechanics are patterns). A card has one primary role and up to two secondary roles. 'Requires' says what a unit needs before it can claim the role. Tie-breaks: use anti-X as the primary only if the game gives a bonus against X or calls the unit that; generalists are assault. Damage first is a raider, information first is a scout. A disabler acts on units, area denial acts on ground.",
+  "description": "What the unit is for: its job or the targets it is best against, never how it does it (mechanics are patterns). A card has one primary role and up to two secondary roles. Requires says what a unit needs before it can claim a role. A source unit never claims a role whose requires it fails. If such a role still fits, leave it out and record it in fit_notes (path roles, wanted: that role). Meeting the requires is not enough: the role description must fit too. Official text means words the game or its makers wrote: the in-game role line, tooltip or production text, the manual, the official unit profile and patch notes. It still counts when read through a page that copies it. A wiki's own words (its infobox labels, prose and tables), strategy guides and internal file names are not official text; the registry notes say which infobox fields copy in-game text. For a unit recorded once for several sides, official text counts only when every side's version carries it. Official words name a role only through the role's whole label or one of its aliases; each half of a slash label (Artillery / siege) counts as a label. One word of a longer label is not enough: 'Assault' alone does not name Frontline assault, so a Purpose such as 'Tank/Structure Assault' names no role. These words name no role: main battle tank; light, medium or heavy tank; core or line infantry; multipurpose; general-purpose; attack (as in attack helicopter); support when it means firepower (combat support, fire support, artillery support, close air support); control in mind control or a control point; and aura in a healing or repair aura (that job is support). How to pick the primary and secondary roles is under roles in docs/fields.md. The tie-breaks settle close calls.",
   "group": "core",
-  "status": "draft",
-  "version": "0.4.0",
+  "status": "approved",
+  "version": "1.0.0",
   "terms": [
     {
       "id": "assault",
       "label": "Frontline assault",
-      "description": "Leads pushes, soaks damage and brawls at short to medium range."
+      "description": "Leads pushes, soaks damage and brawls at short to medium range.",
+      "source_rule": "As primary: any generalist that is not fast with light or no armour (step 5 of roles.primary)."
     },
     {
       "id": "anti-armour",
       "label": "Anti-armour",
       "description": "Kills vehicles and mechs.",
+      "aliases": ["anti-tank", "anti-vehicle", "anti-armor", "tank hunter", "tank destroyer"],
       "requires": [["damage:armour-piercing", "damage:energy", "damage:electric", "damage:emp", "pattern:infest-vehicle"]]
     },
     {
       "id": "anti-infantry",
       "label": "Anti-infantry",
-      "description": "Clears soldiers and light targets."
+      "description": "Clears soldiers and light targets.",
+      "aliases": ["anti-personnel"]
     },
     {
       "id": "anti-air",
       "label": "Anti-air",
       "description": "Brings down aircraft, including jets and airships in high air.",
+      "aliases": ["anti-aircraft", "air defence", "AA"],
       "requires": [["hits:high-air"]]
     },
     {
       "id": "siege",
       "label": "Artillery / siege",
-      "description": "Hits from very far or over cover; breaks defences and structures.",
-      "requires": [["delivery:lobbed", "range:>=long"]]
+      "description": "Hits from very far, from above or over cover; breaks defences and structures.",
+      "aliases": ["artillery", "bombardment", "bomber"],
+      "requires": [["delivery:lobbed", "delivery:drop", "range:>=long"]],
+      "source_rule": "A lobbed weapon that reaches long or further, bombs dropped from the air, a deploy mode whose gun reaches long or further and hits an area, or a long-range missile or rocket that the sources say is built mainly to destroy structures (they name structures as its first or only target). A gun aimed straight at targets in view is never siege by that last clause, even when official text calls it strong against buildings; what else it is strong against may still give an anti role under roles.secondary. A long-range missile or cannon alone is not siege, and a team that sets up its gun before firing is not deploying."
     },
     {
       "id": "marksman",
       "label": "Marksman / overwatch",
       "description": "Holds long sightlines and picks off targets with precise shots.",
-      "requires": [["range:>=long"]]
+      "aliases": ["sniper", "sharpshooter"],
+      "requires": [["range:>=long"]],
+      "source_rule": "Only a sniper weapon (the sniper family) that reaches long or further. A long-range weapon of any other family never gives marksman; siege's coding rule and roles.secondary say what it gives."
     },
     {
       "id": "scout",
       "label": "Scout / recon",
       "description": "Finds, spots and marks enemies; usually fast and fragile.",
+      "aliases": ["recon", "reconnaissance", "spotter"],
       "requires": [
         [
           "speed:>=fast",
@@ -64,19 +73,23 @@
       "id": "support",
       "label": "Support",
       "description": "Heals, repairs or resupplies teammates.",
+      "aliases": ["medic", "healer", "repair", "resupply"],
       "requires": [["weapon:repair-tool", "pattern:repair-allies", "pattern:resupply-allies"]]
     },
     {
       "id": "transport",
       "label": "Transport",
       "description": "Carries teammates around the map.",
+      "aliases": ["troop transport", "troop carrier", "personnel carrier"],
       "requires": [["passengers:>=2"]],
-      "classes": ["vehicle", "walker", "hover", "aircraft"]
+      "classes": ["vehicle", "walker", "hover", "aircraft"],
+      "source_rule": "Needs two or more passenger seats. A carrier with one seat is not a transport, whatever the source calls it; its seat shows in crew.passengers and its carry-passengers or passenger-sets-weapon pattern."
     },
     {
       "id": "infiltrator",
       "label": "Infiltrator / saboteur",
-      "description": "Acts inside enemy units, lines or buildings: sabotage, steal, capture."
+      "description": "Gets inside enemy units or buildings, or passes as one of them, to spy, steal or sabotage: steals vehicles or money, spies on or shuts down buildings.",
+      "aliases": ["spy", "saboteur", "hijacker", "thief"]
     },
     {
       "id": "disabler",
@@ -97,29 +110,64 @@
     {
       "id": "raider",
       "label": "Raider / flanker",
-      "description": "Hits and runs, picking off isolated targets.",
-      "requires": [["speed:>=fast"]]
+      "description": "Hits and runs, picking off isolated targets: fast flankers, gunships that make attack runs.",
+      "aliases": ["hit-and-run", "flanker", "harasser"],
+      "requires": [["speed:>=fast"]],
+      "source_rule": "As primary: a fast or very fast generalist with light or no armour (step 5 of roles.primary). As secondary: see roles.secondary."
     },
     {
       "id": "area-denial",
       "label": "Area denial",
       "description": "Controls ground with mines, fire, turrets or fortifications.",
+      "aliases": ["minelayer"],
       "requires": [["weapon-trait:zone", "category:area", "category:summon"]]
     },
     {
       "id": "buffer",
       "label": "Buffer / aura",
-      "description": "Boosts nearby allies with auras, call-ins or team abilities (spotting belongs to scout)."
+      "description": "Makes nearby allies stronger for a time (more damage, armour, speed or accuracy) with an aura or a timed call. Spotting is scout; healing and resupply are support; spawn points and buildings are engineer."
     },
     {
       "id": "engineer",
       "label": "Engineer / builder",
-      "description": "Builds, captures or deploys structures and gadgets."
+      "description": "Builds, converts or takes over structures that serve the team: barracks, outposts, spawn or supply points, bridges.",
+      "aliases": ["builder", "sapper", "pioneer"]
     },
     {
       "id": "logistics",
       "label": "Logistics",
-      "description": "Earns, carries or delivers resources for the team: harvesting, salvage, supply runs."
+      "description": "Earns, carries or delivers resources for the team: harvesting, salvage, supply runs.",
+      "aliases": ["harvester", "collector", "miner", "supply"]
+    }
+  ],
+  "tie_breaks": [
+    {
+      "terms": ["raider", "scout"],
+      "rule": "Damage first is a raider, information first is a scout. Speed alone makes a scout only when official text calls the unit a scout (by the label or an alias, such as recon). Otherwise scout needs an information part with an in-game basis: long sight, a sensor trait, stealth, or a mark or reveal ability."
+    },
+    {
+      "terms": ["buffer", "scout"],
+      "rule": "Finding and marking enemies is scout; buffer is for making allies stronger."
+    },
+    {
+      "terms": ["disabler", "area-denial"],
+      "rule": "A disabler acts on units; area denial acts on ground."
+    },
+    {
+      "terms": ["area-denial", "siege"],
+      "rule": "A gun line that holds ground only by the threat of its fire (a sieged tank) is siege or an anti role. Area denial needs something that stays on the ground: mines, a lingering zone, turrets or fortifications."
+    },
+    {
+      "terms": ["engineer", "area-denial", "support"],
+      "rule": "Mines, wire, walls, tank traps and turrets that block or guard ground are area denial. Engineer is for buildings that serve the team (barracks, outposts, spawn or supply points, bridges) and for taking buildings over. Repairing or healing is support."
+    },
+    {
+      "terms": ["engineer", "infiltrator", "logistics"],
+      "rule": "Capturing map control points is a game-mode rule, so a faster capture rate supports no role. Engineer needs structures the unit builds, neutral buildings it converts, or enemy buildings it takes over and keeps. Logistics needs resources the unit gathers, carries or earns by its own action. Infiltrator needs spying, theft or sabotage from inside."
+    },
+    {
+      "terms": ["infiltrator", "anti-armour", "anti-infantry", "engineer", "raider"],
+      "rule": "Ask what the unit does once it gets in or onto its target. If it destroys a unit (an infesting drone, a charge stuck to a tank), use the anti role for that unit: anti-armour for vehicles, anti-infantry for soldiers. If it takes over a building and keeps it, it is an engineer. Infiltrator is for spying, theft and sabotage from inside, or for passing as the enemy. A fast unit that hunts workers or harvesters from outside is a raider."
     }
   ]
 }

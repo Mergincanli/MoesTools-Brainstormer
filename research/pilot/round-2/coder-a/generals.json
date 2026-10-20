@@ -1,0 +1,341 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "generals",
+  "units": [
+    {
+      "id": "generals.china.overlord-tank",
+      "game": "generals",
+      "faction": "china",
+      "name": "Overlord Tank",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-armour",
+        "secondary": ["siege", "support"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Propaganda Center",
+        "basis": "Built at the Chinese War Factory once the Propaganda Center, China's single tech building, stands; the tier map puts that gate at t3 and the wiki infobox also says tier 3. China and the Nuke General (Tsing Shi Tao) field it under the same gate. The Infantry General (Shin Fai) cannot build it, and the Tank General (Ta Hun Kwai) builds his Emperor Overlord instead."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 2000,
+        "basis": "China's list price is well above the very-high threshold, about two and a half times a Battlemaster's. Tao's version costs the same but takes a little longer to build."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": ["crush"],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "Rolls on four tracks at exactly a Ranger's land speed, about two-thirds as fast as the Crusader (the registry's anchor tank), which makes it slow and clumsy for a tank. It can run over enemy vehicles, tanks included; only it and the Emperor Overlord crush vehicles in the game. The side-wide Nuclear Tanks upgrade (China and Kwai) raises its speed by half; Tao's own version moves twice as fast as the stock tank. Handling is the tracks default; nothing in the sources changes it."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "huge",
+        "notes": "A wide hull on four tracks with one turret holding two cannons, and a deck at the rear that takes one add-on (bunker, Gattling Cannon or speaker). The registry notes make the Overlord super-heavy by size, so it is coded huge. The wiki adds that transports can still carry it."
+      },
+      "armour": {
+        "class": "super-heavy",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class order decided: its Tank Armor set maps to heavy, and the registry notes lift the Overlord to super-heavy by size; check A agrees (huge body at t3). One health bar; no cited source gives it facing values or any other armour model. It has no armour upgrade of its own."
+      },
+      "sensors": {
+        "sight": "short",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The wiki lists two sight figures. As the registry says, the second counts, and it is half the Ranger's second figure, so short. The Gattling Cannon add-on detects stealthed units; that comes from an upgrade, so it is not listed as a trait."
+      },
+      "armament": [
+        {
+          "name": "Twin cannons",
+          "slot": "primary",
+          "family": "cannon",
+          "damage": "armour-piercing",
+          "mount": "slow-turret",
+          "delivery": "projectile",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["splash"],
+          "summary": "Two heavy guns on the one turret fire a quick pair of armour-piercing shells, then pause to reload. Each shell also hurts a small area around the impact. Per barrel it hits as hard as a Laser Crusader's beam and harder than any other tank's gun, and it reaches a good deal further than a Ranger's rifle. It cannot fire at aircraft. Uranium Shells, a side-wide upgrade for China and Kwai, add a quarter to its damage; Tao's version leaves radiation where its shells land."
+        },
+        {
+          "name": "Gattling Cannon (add-on)",
+          "slot": "acquired",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "off-screen",
+          "can_target": ["infantry", "ground-vehicle", "structure", "low-air", "high-air"],
+          "traits": ["spin-up", "anti-air"],
+          "condition": "Added when the Gattling Cannon add-on is bought on this tank. It rules out the bunker and the speaker, and only one add-on is ever fitted.",
+          "summary": "A rotary gun on the rear deck that fires alongside the twin cannons, quicker the longer it keeps firing at one target. It works well against infantry and aircraft, and reaches nearly twice as far at aircraft as at ground targets. The game data gives it one damage name against ground targets and another against aircraft. Sitting at the back, it reaches less far ahead of the tank and further to the sides and rear. The side-wide Chain Guns upgrade adds a quarter to its damage.",
+          "option_group": "overlord-addon",
+          "patterns": ["upgrade-in-field"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "passengers": {
+          "seats": 5,
+          "kind": "passenger-firing"
+        },
+        "notes": "One player drives, fires the cannons and works any add-on. The stock tank has one weapon, so the proposal is solo. The five passenger seats exist only once the Battle Bunker add-on is bought; infantry inside fire their own weapons out of it, and they are not sealed against toxins or radiation. Unloading is the universal evict key."
+      },
+      "abilities": [
+        {
+          "name": "Battle Bunker (add-on)",
+          "kind": "passive",
+          "source": "upgrade",
+          "exclusive_group": "overlord-addon",
+          "summary": "Bought on the tank: a bunker on the rear deck that up to five soldiers can enter and shoot from, so the riders' own weapons decide what it adds. Filled with Tank Hunters it gains a partial answer to aircraft. It rules out the other two add-ons, and the riders get no protection from toxins or radiation.",
+          "patterns": ["passenger-sets-weapon", "upgrade-in-field"]
+        },
+        {
+          "name": "Propaganda Tower (add-on)",
+          "kind": "passive",
+          "source": "upgrade",
+          "exclusive_group": "overlord-addon",
+          "summary": "Bought on the tank: a speaker on the rear deck that slowly heals the Overlord and the friendly units near it and makes them fire faster. The side-wide Subliminal Messaging upgrade, bought at the Propaganda Center, strengthens both effects. It rules out the other two add-ons.",
+          "patterns": ["repair-allies", "rally-allies", "upgrade-in-field"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "The cited sources show nothing special when the stock tank dies, so the crewed-machine default applies. The Nuclear Tanks upgrade, bought once at the Nuclear Missile for every tank of China or Kwai, makes destroyed Overlords give off a damaging blast; that is a side-wide upgrade, not the unit's own outcome. Tao's version always explodes when destroyed, harder than the upgraded blast, unless his side buys Isotope Stability. As for every vehicle, a GLA attacker that destroys it can collect a salvage crate."
+      },
+      "strengths": [
+        {
+          "ref": "armour-class:super-heavy",
+          "why": "Thick armour on the biggest Chinese hull lets it soak fire and open the first gap in an enemy line for lighter units."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Official text rates it strong against vehicles; per barrel its cannons out-hit every other tank's gun, which makes it a fine tank destroyer."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "Heavy enough to drive over enemy vehicles, tanks too, so crowds of small vehicles in a narrow space simply get flattened."
+        },
+        {
+          "ref": "hits:structure",
+          "why": "Official text also rates it strong against buildings, and it can guard a base or a key spot until fixed defences are built."
+        },
+        {
+          "ref": "pattern:upgrade-in-field",
+          "why": "Each tank can buy one add-on to cover a gap: a Gattling Cannon against aircraft, infantry and stealth, a firing bunker, or a healing speaker."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:cannon",
+          "why": "The twin cannons cannot target aircraft, so the stock tank has no answer to air attack; the Gattling add-on only partly fixes this."
+        },
+        {
+          "ref": "mount:slow-turret",
+          "why": "Its turret swings round slowly, so many small, quick anti-tank units can overwhelm it before it brings the guns to bear."
+        },
+        {
+          "ref": "speed:medium",
+          "why": "No faster than a rifleman and well behind other tanks, so it takes long to arrive, gets worn down on the way and is hard to steer."
+        },
+        {
+          "ref": "tier:t3",
+          "why": "Needs the Propaganda Center and costs more than two Battlemasters; the sources warn against ever sending one alone."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Official text names aircraft as a weak point: the stock tank cannot fire back, so Raptors, MiGs and other anti-armour jets strip it with hit-and-run strikes."
+        },
+        {
+          "ref": "weapon:rockets",
+          "why": "Official text names rocket-armed infantry as a weak point, and the wiki calls rocket soldiers especially dangerous to it."
+        },
+        {
+          "ref": "weapon:explosives",
+          "why": "Terrorists and Bomb Trucks blow up when it tries to crush them, and a lone Overlord can neither destroy nor outrun them before they reach it."
+        },
+        {
+          "ref": "damage:emp",
+          "why": "EMP weapons and the ECM Tank's effect disable it and its add-on, though riders in a bunker can still shoot."
+        },
+        {
+          "ref": "role:siege",
+          "why": "Being slow, it spends long under artillery and even unguided bombs; Nuke Cannons with neutron shells hit it and its escort especially hard."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Official text rates it strong against vehicles: the twin cannons beat other tanks, and it crushes smaller vehicles caught in a tight space."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Official text rates it strong against buildings; the manual sums it up as an assault unit against tanks and structures."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:anti-air",
+          "why": "It needs cover from the air: an escort that can hit aircraft, or Tank Hunters riding in its bunker, covers its worst gap."
+        },
+        {
+          "ref": "speed:>=fast",
+          "why": "Once it breaks the enemy line, smaller, faster and lighter teammates can raid the rear and fight inside the base."
+        },
+        {
+          "ref": "pattern:repair-allies",
+          "why": "A wedge of Overlords formed around one fitted with the speaker add-on keeps healing as it pushes forward."
+        },
+        {
+          "ref": "unit:generals.china.overlord-tank",
+          "why": "Best in groups with mixed add-ons: three or more upgraded Overlords together force the enemy to mass dedicated anti-armour."
+        }
+      ],
+      "memorable": "China's four-tracked super-heavy that flattens enemy tanks under its treads and carries one add-on on its back: a bunker, a Gattling gun or a healing propaganda speaker.",
+      "as_player": "A slow, costly T3 breaching tank. Left mouse fires the twin cannons from a slowly turning turret; drive straight over enemy vehicles to crush them. Mid-life, pay for one rear add-on: a free-aiming Gattling (right mouse) that covers air and infantry and reveals stealth, a five-seat bunker teammates shoot out of, or a speaker that heals and speeds up everyone near you. Alone you are prey for aircraft, rocket infantry and suicide bombers.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Overlord_tank_(Generals_1)",
+          "title": "Overlord tank (Generals 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "version": "Generals and Zero Hour",
+          "supports": [
+            "faction",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament",
+            "crew",
+            "abilities",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ],
+          "note": "Infobox: tier 3, needs the Propaganda Center, Tank Armor, land speed and sight figures, the twin cannons' and Gattling Cannon's damage names, ranges and fire rates, and the three add-ons with their prices. The prose gives the counters and the advice on mixed groups."
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Generals_manual",
+          "title": "Command & Conquer: Generals manual (transcript), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "version": "Generals base-game manual",
+          "supports": [
+            "roles/primary",
+            "roles/secondary",
+            "mobility",
+            "mobility/traits",
+            "abilities",
+            "counters/1",
+            "weaknesses/2"
+          ],
+          "note": "Transcribes the official base-game manual's China unit table: the Overlord's Purpose entry (Tank/Structure Assault) and its short description. The manual predates the Zero Hour generals."
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/a65f341431e95e926fca3ad7bbdce32bc6912d6d/Patch104pZH/GameFilesEdited/Data/generals.str",
+          "title": "generals.str (first version), TheSuperHackers GeneralsGamePatch repository",
+          "kind": "database",
+          "accessed": "2026-10-19",
+          "version": "Zero Hour 1.04 string table",
+          "supports": [
+            "roles/primary",
+            "roles/secondary",
+            "strengths/1",
+            "strengths/3",
+            "countered_by/0",
+            "countered_by/1",
+            "counters/0",
+            "counters/1",
+            "abilities/0"
+          ],
+          "note": "Copies the in-game 1.04 string table, as the registry note says. The build tooltip label ToolTipChinaBuildOverlord, which the China and Nuke General build buttons both use (looked up in the repository's original CommandButton.ini), gives the Strong vs. and Weak vs. lines; the three add-on buttons have their own short tooltips."
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "The manual's Purpose entry, Tank/Structure Assault, is read as naming no role, because our assault label is Frontline assault and has no aliases. If the word Assault were taken to name the assault role, step 1 would make it the primary; as read, step 4 decides from the tooltip's Strong vs. vehicles line."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Siege rests on its coding rule for a long-range weapon the source says is built to break structures: the cannons are long by our band, and official text rates the tank strong against buildings. That text does not call it artillery. Support comes only from the speaker add-on (step 5), tied with transport (the bunker) and buffer (the speaker), and wins by list order."
+        },
+        {
+          "path": "sensors/sight",
+          "note": "The comparison uses the second figure of each pair as the registry says; the Overlord's first figure is larger than the Ranger's first while its second is half the Ranger's, so the band depends entirely on which figure counts."
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "Splash rests on the infobox giving the shells extra damage within a radius; the radius is small next to the gun's reach, and no source says how many units it catches."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Taken from the cannon family default; no cited source describes the shells' flight."
+        },
+        {
+          "path": "armament/1/family",
+          "note": "Named a cannon, but its damage names (Gattling and Small Arms) point to bullets, and the Gattling cannon (Generals 1) page, read but not cited for lack of room, calls the mounted version twin Gatling machine guns that fire bullets with no travel time; so machine gun, not autocannon."
+        },
+        {
+          "path": "armament/1/range",
+          "note": "Off-screen by the coding rule only: its reach against aircraft is long by our band and twice the tank's own sight figure. Against ground targets it is long."
+        },
+        {
+          "path": "armament/1/can_target",
+          "note": "The Overlord page says the add-on works well against infantry and aircraft; ground vehicles and structures are listed from its ground damage line and the family, not from a statement. The uncited Gattling cannon page says the static version also fires at incoming ballistic missiles, which no target type covers."
+        },
+        {
+          "path": "abilities/1",
+          "note": "The Speaker tower page, read but not cited for lack of room, says the tank's speaker gives the same fire-rate gain as the static tower but heals half as fast; this entry records only that it heals and speeds up fire."
+        },
+        {
+          "path": "abilities",
+          "note": "The Horde Bonus page, read but not cited, does not list the Overlord among the units that gain it, so no horde passive is recorded. The 1.04 command set shows only the three add-on buttons besides the basic orders, and Evacuate once the bunker is fitted."
+        },
+        {
+          "path": "armour/models",
+          "note": "No cited source says whether side or rear hits do more damage."
+        },
+        {
+          "path": "crew/passengers",
+          "note": "The seats come only from the Battle Bunker add-on; they are recorded because passenger seats are copied from the source, but the stock tank carries nobody."
+        },
+        {
+          "path": "armament/1/mount",
+          "note": "Free aim follows the deck turret (a roof gun under the mount tie-break). The uncited Gattling cannon page describes the tank's version as a miniature of the static turret that works the same way, which could also be read as a gun that fires by itself (auto-target)."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/secondary",
+          "used": "siege",
+          "wanted": "a role for breaking buildings and defences by direct assault",
+          "note": "The manual's Purpose names tanks and structures, and the tooltip rates it strong against buildings. No role covers a direct-fire tank that is good at knocking down buildings; siege is the nearest, but its description is about hitting from very far or over cover."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "pilot round 2, coder A"
+    }
+  ]
+}

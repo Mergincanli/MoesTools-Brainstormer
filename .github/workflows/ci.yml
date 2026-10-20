@@ -27,6 +27,7 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
       - run: npm ci
-      # Formatting, the validator, generated docs in sync, and the tests. The copy-check needs the network,
-      # so it is not run here.
+      # Formatting, the validator, generated docs in sync, and the tests. The copy-check needs the network, so it is not run
+      # here. Pattern source units may lag in a research pull request (the validator warns); the merge pass checks them
+      # with npm run check:merge.
       - run: npm run check
