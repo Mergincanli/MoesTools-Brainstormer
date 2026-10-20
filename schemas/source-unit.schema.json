@@ -84,7 +84,7 @@
           "type": "string"
         },
         "flavour_affinity": {
-          "description": "Which of our flavours this design would sit in. 1. Start from the faction's flavours in data/games.json; a subfaction with none takes its parent's. Drop one if any weapon in the primary, secondary or alternate slot, or the body plan, is on that flavour's avoided list. 2. Score each other flavour: one point for each of these four that its favoured lists hold: the primary role; the family of any weapon in the primary, secondary or alternate slot; the mobility; the body plan. 3. Add the top-scoring other flavour if it scores 2 or more and at least as much as each flavour from step 1. If two tie at the top, add both, but only if there is room for both. A faction with no flavour starts empty, so step 3 uses the scores alone. At most two flavours in all; an empty list is fine.",
+          "description": "Which of our flavours this design would sit in. 1. Start from the faction's flavours in data/games.json; a subfaction with none takes its parent's. Drop one if any weapon in the primary, secondary or alternate slot, or the body plan, is on that flavour's avoided list. 2. Score each other flavour, leaving out any whose avoided list holds one of those weapons' families or the body plan, as in step 1: one point for each of these four that its favoured lists hold: the primary role; the family of any weapon in the primary, secondary or alternate slot (one point at most, however many weapons match); the mobility; the body plan. 3. Add the top-scoring other flavour if it scores 2 or more and at least as much as each flavour from step 1. If two tie at the top, add both, in word-list order, but only if there is room for both. A faction with no flavour starts empty, so step 3 uses the scores alone. At most two flavours in all; an empty list is fine.",
           "type": "array",
           "maxItems": 2,
           "items": {
@@ -445,7 +445,7 @@
           "description": "The pages this entry rests on. Wherever a field rule says the sources, it means these cited pages together with every other page read for this unit that an uncertain entry names (title and site, or its URL) and says what it shows; every rule reads that same set, and a code that rests only on such an uncited page gets an uncertain entry at its own path. An uncited page may carry a code only when it is of kind official, wiki or database; a guide, video or community page must be cited to count. Confidence counts only the cited pages. Before coding, read the unit's own page on each wiki the entry uses, with every tab or sub-page, and the page of each weapon and ability the entry records, where the site has one; picks that only change numbers need no page. Fill the slots in this order: an official page about the unit, when one was read (see Source kinds); the page that lists the unit's weapons one by one, when its weapons change by passenger, mode or loadout; then the pages most of the entry rests on, a mechanic's own page first when it gives a figure the entry uses. When another established site covers the unit, cite it rather than a third page of the same site. Where a registry note says a rule needs a page (a damage page for step 4, a weapon's own page), naming it in an uncertain entry meets that.",
           "type": "array",
           "minItems": 1,
-          "maxItems": 3,
+          "maxItems": 5,
           "items": {
             "$ref": "common.schema.json#/$defs/source"
           }

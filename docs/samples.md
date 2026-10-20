@@ -1,6 +1,6 @@
 <!-- Generated from the JSON in data/ and schemas/. Edit the JSON, not this file. -->
 
-# Sample entries (draft v1.0.0)
+# Sample entries (v1.0.0, approved)
 
 The three source units and three mechanic patterns the brief asks for, fully filled in, plus one hand-made concept card showing what the generator will produce. Rendered from `data/units/ra3.json`, `data/patterns/infest-vehicle.json`, `data/patterns/leech-weapon-on-kill.json`, `data/patterns/passenger-sets-weapon.json` and `docs/examples/concept-card.example.json`; the page shows only these samples (listed in `scripts/build-docs.mjs`), not the whole database. Real unit and weapon names are reference only.
 

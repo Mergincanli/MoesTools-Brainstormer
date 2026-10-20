@@ -1,6 +1,6 @@
 # Calibration pilot (step 2 of the plan)
 
-The pilot checks whether independent coders, following only the written rules, code the same unit the same way. Where they did not, the word lists and field rules got a sharper rule or a tie-break rule. No term was added, merged or removed. The result is word lists 1.0.0, still marked draft until Mustafa approves them. [What needs your OK](#what-needs-your-ok) lists the choices still open.
+The pilot checks whether independent coders, following only the written rules, code the same unit the same way. Where they did not, the word lists and field rules got a sharper rule or a tie-break rule. No term was added, merged or removed. The result is word lists 1.0.0, approved on 20 October 2026 with the recommended answer to each of [the six choices](#the-six-choices).
 
 ## How it was run
 
@@ -80,7 +80,9 @@ The record repeats what coders and analysts read, so it was checked for copied w
 
 The record also no longer holds local machine paths.
 
-## What needs your OK
+## The six choices
+
+**Approved on 20 October 2026 with every recommendation: 1A 2A 3B 4A 5A 6C.** Two of them changed files after approval: 3B raised `sources` on a unit to at most 5, and 4A settled the three flavour wording questions in `flavour_affinity` and moved infiltrator from the Soviet flavour's favoured roles to the Allied one's. The others keep the rules as they were. All 39 word lists are now marked approved.
 
 1. **Speed: method A for every unit (decision 2C).** A agreed more (100% against 94%), so it is applied. Its costs are listed under Speed test above. Recommendation: keep A, and look at the tracks and wheels speed rules again when batch R1 is reviewed.
 2. **Abilities that cost a resource each use** (Company of Heroes munitions). Today it is not a resource; the ability's summary says it in words. Round 2 had no such ability. Recommendation: keep it so, unless Shamble Frontlines charges per ability use.

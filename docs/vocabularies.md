@@ -1,6 +1,6 @@
 <!-- Generated from the JSON in data/ and schemas/. Edit the JSON, not this file. -->
 
-# Vocabularies (draft v1.0.0)
+# Vocabularies (v1.0.0, approved)
 
 Fixed word lists. Every source unit, pattern and generated card may only use these terms, and the validator rejects anything else. Ids (in `code`) are what the data stores; labels are what the app shows.
 
@@ -65,7 +65,7 @@ Generic faction identities in Red Alert 3's spirit. A flavour makes its favoured
 - **Favoured armour models:** Damage reduction, Ablative plates, Directional armour.
 - **Favoured crew models:** Driver + gunner, Driver + gunner + commander.
 - **Favoured aim / mount:** Slow turret, Free aim.
-- **Favoured roles:** Frontline assault, Anti-armour, Artillery / siege, Infiltrator / saboteur.
+- **Favoured roles:** Frontline assault, Anti-armour, Artillery / siege.
 - **Favoured team-play hooks:** Protector, Needs an escort, Swarm.
 - **Held back until spice 3 (mobility traits):** Teleport.
 - **Held back until spice 3 (armour models):** Recharging shield, Charged shield.
@@ -85,7 +85,7 @@ Generic faction identities in Red Alert 3's spirit. A flavour makes its favoured
 - **Favoured armour models:** Recharging shield, Charged shield.
 - **Favoured crew models:** Solo, Driver + gunner.
 - **Favoured weapon delivery:** Lock-on, Beam, Hitscan.
-- **Favoured roles:** Disabler / control, Support, Anti-air, Scout / recon, Transport.
+- **Favoured roles:** Disabler / control, Support, Anti-air, Scout / recon, Transport, Infiltrator / saboteur.
 - **Favoured team-play hooks:** Setup and finisher, Seat synergy, Spotter.
 - **Held back until spice 3 (mobility traits):** Crush.
 - **Held back until spice 3 (weapon families):** Drain beam, Chemical / radiation.

@@ -6,11 +6,13 @@ A creativity tool for designing units for **Shamble Frontlines**, a browser team
 
 **Step 1 of the plan, Foundations: done.** The proposal for the brief's first step (section 7 of the brief) was approved on 18 October 2026 (decisions 1B 2A 3C 4B 5B 6C 7B 8B 9A). Step 1 brought the tooling and CI (below), the games registry for the 28 games of the starting scope, the pattern registry grown past 50 ids, and decisions 4B (hard class bans only for physical nonsense, rarity per class) and 6C (low and high air, sight bands, sensor traits) applied to the word lists and data. It was approved on 18 October 2026 with the recommended answers to its two decisions: the whole team shares what any teammate sees (1A), and the calibration pilot tests two ways of banding speed in shooters before one is picked (2C).
 
-**Step 2, Calibration pilot: done, waiting for your OK.** Three independent coders per unit coded six units in round 1 and four new units in round 2, and a speed test tried both ways of banding speed. Where the coders split, the word lists and field rules got sharper rules and tie-breaks. The result is word lists 1.0.0, still marked draft until you approve them. The report and the choices still open are in [research/pilot/](research/pilot/README.md). The research run (step 3) starts only after your OK; the generator and the app have not started.
+**Step 2, Calibration pilot: done.** Three independent coders per unit coded six units in round 1 and four new units in round 2, and a speed test tried both ways of banding speed. Where the coders split, the word lists and field rules got sharper rules and tie-breaks. The result is word lists 1.0.0, approved on 20 October 2026 with the recommended answers to its six decisions: speed is banded against the game's soldier (1A); an ability's cost per use is not a resource (2A); a unit cites up to five sources (3B); faction flavour is computed from the unit's parts, and infiltrator is a favoured Allied role instead of a Soviet one (4A); a matchup about something the unit lacks keeps today's workaround (5A); and the lists are frozen now, with batch R1 opening with two units coded twice to test the last changes (6C). The report is in [research/pilot/](research/pilot/README.md).
+
+Next: step 3, the research run, starting with batch R1. The generator and the app have not started.
 
 - [Proposal](docs/proposal.md): the plan, repository structure, decisions needed. Start here. Its counts (37 word lists at version 0.3.0, 23 planned patterns) are as they were when it was approved.
 - [Samples](docs/samples.md): three researched units (RA3 Terror Drone, Hammer Tank, Multigunner IFV), three mechanic patterns and an example concept card.
-- [Vocabularies](docs/vocabularies.md): the fixed word lists every record uses (version 1.0.0, draft), with each term's coding rule and each list's tie-breaks.
+- [Vocabularies](docs/vocabularies.md): the fixed word lists every record uses (version 1.0.0, approved), with each term's coding rule and each list's tie-breaks.
 - [Fields](docs/fields.md): every field of every record type.
 
 ## Layout

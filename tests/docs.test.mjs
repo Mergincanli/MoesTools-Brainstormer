@@ -78,6 +78,25 @@ describe('docs builder', () => {
     assert.ok(readDocs(dir)['docs/vocabularies.md'].includes(`| \`${t.id}\` | Testing Label Zq |`))
   })
 
+  it('heads every page with the lists\' version, and approved only once every list is approved', () => {
+    const dir = copyRepo()
+    const vocab = path.join(dir, 'data/vocab')
+    const setStatus = (status, only) => {
+      for (const f of fs.readdirSync(vocab).filter(f => f.endsWith('.json') && (!only || f === only))) {
+        const v = JSON.parse(fs.readFileSync(path.join(vocab, f), 'utf8'))
+        v.status = status
+        fs.writeFileSync(path.join(vocab, f), JSON.stringify(v, null, 2))
+      }
+    }
+    const headings = () => Object.values(readDocs(dir)).map(page => page.split('\n').find(l => l.startsWith('# ')))
+    setStatus('approved')
+    assert.equal(run('--root', dir).status, 0)
+    for (const h of headings()) assert.match(h, /\(v\d+\.\d+\.\d+, approved\)$/)
+    setStatus('draft', 'sizes.json')
+    assert.equal(run('--root', dir).status, 0)
+    for (const h of headings()) assert.match(h, /\(v\d+\.\d+\.\d+, draft\)$/)
+  })
+
   it('renders tie-break rules on every list, faction flavours included', () => {
     const dir = copyRepo()
     const file = path.join(dir, 'data/vocab/faction-flavours.json')

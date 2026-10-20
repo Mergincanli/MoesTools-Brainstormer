@@ -197,7 +197,7 @@ function stem(name) {
 
 // ------------------------------------------------------------------ loading
 
-let ROOT, VOCABS, L, VL, REF_KINDS, REGISTRY, WRITTEN, VERSION
+let ROOT, VOCABS, L, VL, REF_KINDS, REGISTRY, WRITTEN, VERSION, STATUS
 
 const UTF8 = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }) // like read_text(encoding="utf-8")
 
@@ -234,6 +234,7 @@ function loadShared(root) {
   REGISTRY = strict(Object.fromEntries(load('data/pattern-registry.json').patterns.map(p => [p.id, p])))
   WRITTEN = strict(Object.fromEntries(listJson('data/patterns').map(file => { const p = readJson(file); return [p.id, p.name] })))
   VERSION = items(VOCABS)[0][1].version // the word lists share one version; the validator checks that they agree
+  STATUS = items(VOCABS).every(([, v]) => v.status === 'approved') ? 'approved' : 'draft' // approved only once every list is
 }
 
 function patternLabel(pid) {
@@ -343,7 +344,7 @@ function vocabDocs() {
     'armour-classes', 'crew-models']
   const core = sorted(vocabs.filter(v => v.group === 'core'), v => (order.includes(v.id) ? order.indexOf(v.id) : 99))
   const supporting = sorted(vocabs.filter(v => v.group === 'supporting'), v => v.label)
-  const out = [GEN_NOTE, f`# Vocabularies (draft v${VERSION})\n`,
+  const out = [GEN_NOTE, f`# Vocabularies (v${VERSION}, ${STATUS})\n`,
     'Fixed word lists. Every source unit, pattern and generated card may only use these terms, and the validator rejects anything else. ' +
     'Ids (in `code`) are what the data stores; labels are what the app shows.\n',
     '- **Core** lists are the ten the brief asks for. **Supporting** lists make them usable: scales, aim, traits, seats and so on.',
@@ -546,7 +547,7 @@ function fieldsDocs() {
 
   const common = schemas['common.schema.json']
   const kinds = join(', ', items(common['x-ref-kinds']).map(([k, v]) => f`\`${k}\` (${v.means})`))
-  const out = [GEN_NOTE, f`# Field reference (draft v${VERSION})\n`,
+  const out = [GEN_NOTE, f`# Field reference (v${VERSION}, ${STATUS})\n`,
     'Every field of every record type, generated from the JSON schemas in `schemas/`. ' +
     '**Vocabulary** names the fixed word list a field draws from (see [vocabularies](vocabularies.md)).\n',
     '## Conventions\n',
@@ -748,7 +749,7 @@ function samplesDocs() {
     return get(get(games, g, {}), 'title', g)
   }
 
-  const out = [GEN_NOTE, f`# Sample entries (draft v${VERSION})\n`,
+  const out = [GEN_NOTE, f`# Sample entries (v${VERSION}, ${STATUS})\n`,
     'The three source units and three mechanic patterns the brief asks for, fully filled in, plus one hand-made concept card showing what the generator will produce. ' +
     f`Rendered from ${join(', ', sampleFiles)} and \`docs/examples/concept-card.example.json\`; ` +
     'the page shows only these samples (listed in `scripts/build-docs.mjs`), not the whole database. Real unit and weapon names are reference only.\n',
