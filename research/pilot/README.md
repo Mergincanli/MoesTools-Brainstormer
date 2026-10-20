@@ -82,7 +82,7 @@ The record also no longer holds local machine paths.
 
 ## What needs your OK
 
-1. **Speed: method A for every unit (decision 2C).** A agreed more (100% against 94%), so it is applied. Its costs are listed under Speed test above. Recommendation: keep A, and look at the tracks speed rule again when batch R1 is reviewed.
+1. **Speed: method A for every unit (decision 2C).** A agreed more (100% against 94%), so it is applied. Its costs are listed under Speed test above. Recommendation: keep A, and look at the tracks and wheels speed rules again when batch R1 is reviewed.
 2. **Abilities that cost a resource each use** (Company of Heroes munitions). Today it is not a resource; the ability's summary says it in words. Round 2 had no such ability. Recommendation: keep it so, unless Shamble Frontlines charges per ability use.
 3. **Sources per unit: keep 3, or raise to 5.**
    - In round 2, 10 of 12 coders said the cap of 3 forced a trade-off, and 86 of their 166 doubts (52%) rest on pages they read but could not cite.
