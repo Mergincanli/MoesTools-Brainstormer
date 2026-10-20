@@ -84,7 +84,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 **Less certain**
 
 - *Electro-Stasis Ray:* No source gives the stasis ray's exact range or duration; a patch note implies the drone keeps the beam on the target rather than firing once.
-- *Electro-Stasis Ray, range:* No source gives the ray's reach. It is long by the profile's words (it outranges most other weapons). The drone lists a single sight figure (100), less than any long reach (over 225), but a reach known only from words counts as passing the sight only when a source says so, and none does, so the ray stays long rather than off-screen. Patch 1.11 lengthened the drone's view in stasis ray mode.
+- *Electro-Stasis Ray, range:* No source gives the ray's reach. It is long by the profile's words (it outranges most other weapons). The drone's single sight figure is shorter than any long reach would be, but a reach known only from words counts as passing the sight only when a source says so, and none does, so the ray stays long rather than off-screen. Patch 1.11 lengthened the drone's view in stasis ray mode.
 - *Countered by:* The official profile says only repair crews at facilities can remove an infesting drone; the main wiki lists many more ways (repair drones, teleporting the host, several special attacks). The entry follows the wiki. (sources disagree)
 - *Dismantler Claws, damage:* Game data gives the claws explosive-type damage against vehicles and a sniper-type hit against infantry big enough to kill even a commando at once; 'melee' is used only because the blades family requires it.
 - *Body size:* Sources call it small or diminutive and no source compares it with a soldier; it is coded small because it fills a soldier's seat in transports.
@@ -293,7 +293,8 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 - *Anti-infantry autocannons (Tanya), family:* The wiki calls the mounted guns autocannons, but they copy Tanya's own pistols, so they keep her small-arms family.
 - *Cryo beam (Cryo Legionnaire), targets:* Aircraft are named outright; ground targets are implied, not stated.
 - *Flak cannon (Flak Trooper), range:* No source gives the flak version's range; medium is the flak family default.
-- *Radiation spray (Desolator):* The Desolator trooper (Uprising) page on the Command & Conquer Wiki, which the IFV page says this weapon copies, gives the spray a reach of one and a half Conscript rifles, a damage radius and friendly fire; range and traits rest on that page.
+- *Radiation spray (Desolator), range:* The Desolator trooper (Uprising) page on the Command & Conquer Wiki, which the IFV page says this weapon copies, gives the spray a reach of one and a half Conscript rifles; the range rests on that page.
+- *Radiation spray (Desolator), traits:* The same Desolator trooper (Uprising) page gives the spray a damage radius and warns that it hurts friendly units too; the traits rest on that page.
 - *Anti-vehicle laser (Tankbuster), damage:* The wiki gives no damage category for the Tankbuster version; energy is the laser family default.
 - *Body plan:* Enclosed carrier or open buggy: the sources describe it both ways.
 - *Armour models:* The wiki doesn't say whether side or rear hits do extra damage to it.

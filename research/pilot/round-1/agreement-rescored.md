@@ -267,6 +267,8 @@ Every measured field with at least one item the coders did not all code the same
 
 ## Compared with the reference
 
+Reference: the published RA3 samples in data/units/ra3.json, as corrected by the final review of word lists 1.0. [agreement.md](agreement.md) compares with the samples as the analysts saw them.
+
 How often a coder matched the reference coding, per field (sets score their overlap).
 
 | Field | Comparisons | Agreement |
@@ -275,8 +277,8 @@ How often a coder matched the reference coding, per field (sets score their over
 | nature | 9 | 100% |
 | availability | 9 | 100% |
 | roles.primary | 9 | 100% |
-| roles.secondary | 9 | 70.4% |
-| roles (primary or secondary) | 9 | 77.8% |
+| roles.secondary | 9 | 66.7% |
+| roles (primary or secondary) | 9 | 74.4% |
 | tier.band | 9 | 100% |
 | cost_band.band | 9 | 100% |
 | mobility.base | 9 | 100% |
@@ -310,12 +312,12 @@ How often a coder matched the reference coding, per field (sets score their over
 | armament.delivery | 9 | 90.7% |
 | armament.range | 9 | 92.6% |
 | armament.can_target | 9 | 98.1% |
-| armament.traits | 9 | 96.3% |
+| armament.traits | 9 | 90.5% |
 | main weapon.family | 9 | 88.9% |
 | main weapon.damage | 9 | 66.7% |
 | main weapon.delivery | 9 | 88.9% |
 | main weapon.range | 9 | 100% |
-| main weapon.can_target | 9 | 94.4% |
+| main weapon.can_target | 9 | 86.1% |
 | main weapon.mount | 9 | 88.9% |
 | main weapon.seat | 9 | 100% |
 | abilities (number) | 9 | 66.7% |
@@ -340,8 +342,8 @@ Either the reference or a rule needs a look.
 
 | Field | Item | Reference | coder-a | coder-b | coder-c |
 |---|---|---|---|---|---|
-| roles.secondary | ra3.allied.multigunner-ifv | raider, anti-infantry | support, raider | raider, scout | anti-infantry, support |
-| roles (primary or secondary) | ra3.allied.multigunner-ifv | anti-air, anti-infantry, raider | anti-air, raider, support | anti-air, raider, scout | anti-air, anti-infantry, support |
+| roles.secondary | ra3.allied.multigunner-ifv | raider, marksman | support, raider | raider, scout | anti-infantry, support |
+| roles (primary or secondary) | ra3.allied.multigunner-ifv | anti-air, marksman, raider | anti-air, raider, support | anti-air, raider, scout | anti-air, anti-infantry, support |
 | crew.model | ra3.soviet.hammer-tank | solo | driver-gunner | driver-gunner | driver-gunner |
 | crew.basis | ra3.allied.multigunner-ifv | proposal | lore | in-game | lore |
 | crew.basis | ra3.soviet.hammer-tank | proposal | lore | lore | lore |
@@ -358,7 +360,9 @@ Either the reference or a rule needs a look.
 | armament (seat, family, mount) | ra3.allied.multigunner-ifv | driver/rockets/body-aim, passenger-module/chemical/free-aim, passenger-module/cryo/free-aim, passenger-module/flak/free-aim, passenger-module/laser/free-aim, passenger-module/machine-gun/free-aim, passenger-module/psionic/free-aim, passenger-module/repair-tool/free-aim, passenger-module/rockets/free-aim, passenger-module/shotgun/free-aim, passenger-module/small-arms/free-aim, passenger-module/sniper/free-aim, passenger-module/sonic/free-aim, passenger-module/tesla/free-aim | driver/rockets/body-aim, passenger-module/chemical/free-aim, passenger-module/cryo/free-aim, passenger-module/flak/free-aim, passenger-module/laser/free-aim, passenger-module/machine-gun/free-aim, passenger-module/psionic/free-aim, passenger-module/repair-tool/free-aim, passenger-module/rockets/free-aim, passenger-module/shotgun/free-aim, passenger-module/small-arms/free-aim, passenger-module/sniper/free-aim, passenger-module/sonic/free-aim, passenger-module/tesla/free-aim | driver/guided-missiles/free-aim, passenger-module/autocannon/free-aim, passenger-module/chemical/free-aim, passenger-module/cryo/free-aim, passenger-module/flak/free-aim, passenger-module/guided-missiles/free-aim, passenger-module/laser/free-aim, passenger-module/machine-gun/free-aim, passenger-module/psionic/free-aim, passenger-module/repair-tool/free-aim, passenger-module/shotgun/free-aim, passenger-module/small-arms/free-aim, passenger-module/sniper/free-aim, passenger-module/sonic/free-aim, passenger-module/tesla/free-aim | driver/rockets/body-aim, passenger-module/chemical/free-aim, passenger-module/cryo/free-aim, passenger-module/flak/free-aim, passenger-module/guided-missiles/free-aim, passenger-module/laser/free-aim, passenger-module/machine-gun/free-aim, passenger-module/psionic/free-aim, passenger-module/repair-tool/free-aim, passenger-module/shotgun/free-aim, passenger-module/small-arms/free-aim, passenger-module/sniper/free-aim, passenger-module/sonic/free-aim, passenger-module/tesla/free-aim |
 | armament (seat, family, mount) | ra3.soviet.hammer-tank | driver/adaptive/-, driver/cannon/slow-turret, driver/drain/slow-turret | driver/cannon/slow-turret, gunner/adaptive/-, gunner/drain/slow-turret | driver/cannon/slow-turret, driver/drain/slow-turret, gunner/adaptive/- | driver/cannon/slow-turret, driver/drain/slow-turret, gunner/adaptive/- |
 | armament.delivery | ra3.allied.multigunner-ifv | beam, hitscan, projectile | beam, hitscan, projectile | beam, hitscan, lock-on, projectile | beam, hitscan, lock-on, projectile |
+| armament.traits | ra3.allied.multigunner-ifv | anti-air, friendly-fire, knockback, magazine, pierce, splash, stun | anti-air, knockback, magazine, pierce, stun | anti-air, magazine, pierce, splash, stun | anti-air, knockback, magazine, pierce, stun |
 | main weapon.damage | ra3.soviet.terror-drone | melee | melee | explosive | explosive |
+| main weapon.can_target | ra3.soviet.hammer-tank | infantry, ground-vehicle, naval | infantry, ground-vehicle, structure, naval | infantry, ground-vehicle, structure, naval | infantry, ground-vehicle, structure, naval |
 | abilities (number) | ra3.allied.multigunner-ifv | 1 | 2 | 2 | 2 |
 | abilities.kind | ra3.allied.multigunner-ifv | passive | active, passive | active, passive | active, passive |
 | patterns (abilities and weapons) | ra3.allied.multigunner-ifv | passenger-sets-weapon | carry-passengers, passenger-sets-weapon | carry-passengers, passenger-sets-weapon | carry-passengers, passenger-sets-weapon |

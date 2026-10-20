@@ -18,7 +18,7 @@ The pilot checks whether independent coders, following only the written rules, c
   - The units: the Dawn of War II Tactical Marine Squad, the PlanetSide 2 Magrider, the Generals Overlord tank and the MechWarrior Atlas.
   - The four games first got the game-level registry notes the 1.0 rules rely on: where the official role line lives, game-wide mechanics, and damage and armour notes.
   - The coders worked from the word lists as of commit 43e9a0c, with the registry notes as of d84bc8e.
-- **Round-2 fix pass.** An analyst traced each of the 17 items where round-2 coders still split, and each round-2 hesitation, to its cause, and a reviewer checked every proposal. 39 changes were applied (commit 642a0ba), all listed in [round-2/fixes.json](round-2/fixes.json). Each was checked against all 12 round-2 codings and the three samples: with them, the coders would have agreed on every split item. Some also change codes the coders had agreed on; `applied.notes` in fixes.json lists those for the next rescoring.
+- **Round-2 fix pass.** An analyst traced each of the 17 items where round-2 coders still split, and each round-2 hesitation, to its cause, and a reviewer checked every proposal. 39 changes were applied (commit 642a0ba), all listed in [round-2/fixes.json](round-2/fixes.json). 16 of them settle those splits, and the rest settle conflicts between two rules that coders hesitated over (one, MISS-2, changes no file of its own). Each was checked against all 12 round-2 codings and the three samples: with them, the coders would have agreed on every split item. Some also change codes the coders had agreed on: `proposals.summary` in fixes.json lists the round-2 ones and `applied.notes` the round-1 ones, for the next rescoring.
 - **Final review.** Five reviewers checked the tooling, the word lists, the field rules, the data and this record, and a skeptic tried to refute every finding. The real findings were fixed:
   - 14 word lists reworded again, still at 1.0.0: aim-models, armour-classes, balance-flags, confidence, crew-models, handling, nature, on-death, range-bands, roles, seat-roles, sizes, weapon-delivery and weapon-families;
   - a few field rules in the source-unit and game schemas and in the Conventions;
@@ -36,13 +36,15 @@ The pilot checks whether independent coders, following only the written rules, c
 
 ## Results
 
-| | Round 1 (0.4.0) | Round 2 (1.0) |
+| | Round 1 (0.4.0) | Round 2 (1.0 as of 43e9a0c, before the fix pass) |
 |---|---|---|
 | Measured fields at 80% or more | 47 of 56 (41 of 49 with the first version of the measure) | 55 of 56 |
 | Mean agreement over measured fields | 92% | 96% |
 | Hesitations in 12 coder reports | 442 on 65 fields | 340 on 44 fields |
 | Places where no term fitted (gaps) | 102 | 53 |
 | Rules a coder called unclear | 226 | 137 |
+
+The last three rows are totals over 12 reports, but round 1 coded 18 units (each of its three RA3 reports held all three RA3 units) and round 2 coded 12. Per single-unit report, hesitations went from about 33 to 28, gaps from 7 to 4 and unclear rules from 19 to 11. Per unit coded, hesitations did not fall (about 25 in round 1, 28 in round 2).
 
 **Round 1 had nine fields below the target. Six of them reached 100% in round 2:**
 - the number of weapon entries (61% in round 1);
@@ -84,7 +86,7 @@ The record also no longer holds local machine paths.
 2. **Abilities that cost a resource each use** (Company of Heroes munitions). Today it is not a resource; the ability's summary says it in words. Round 2 had no such ability. Recommendation: keep it so, unless Shamble Frontlines charges per ability use.
 3. **Sources per unit: keep 3, or raise to 5.**
    - In round 2, 10 of 12 coders said the cap of 3 forced a trade-off, and 86 of their 166 doubts (52%) rest on pages they read but could not cite.
-   - Since the fix pass the cap no longer changes a code, only confidence and which pages the copy-check sees.
+   - With the fix pass, the cap would have changed no round-2 code, only confidence and which pages the copy-check sees. It can still change a code that rests on a guide, video or community page, since those count only when cited.
    - Recommendation: 5.
 4. **Flavour: the computed rule, and where infiltrator sits.**
    - The rule split on one round-2 unit, only because its body plan split.
@@ -97,7 +99,7 @@ The record also no longer holds local machine paths.
 - [word-list-changes.md](word-list-changes.md): every change from 0.4.0 (the version on main, which step 1 brought) to 1.0.0.
 - [word-list-changes-from-0.3.md](word-list-changes-from-0.3.md): every change from 0.3.0, the version the proposal showed.
 
-Items 2 to 5 are the same as the choices at the end of [round-1/decisions.md](round-1/decisions.md); round 2's evidence for each is in `proposals.for_mustafa` in [round-2/fixes.json](round-2/fixes.json).
+Items 1 to 5 are the choices at the end of [round-1/decisions.md](round-1/decisions.md), updated with round 2's evidence; for items 2 to 5 that evidence is in `proposals.for_mustafa` in [round-2/fixes.json](round-2/fixes.json). Item 6 is new.
 
 ## Files
 
@@ -107,7 +109,7 @@ Items 2 to 5 are the same as the choices at the end of [round-1/decisions.md](ro
 | `round-1/agreement.md` | Round-1 agreement as the analysts saw it, with the comparison against the published samples. |
 | `round-1/agreement-rescored.md` | Round 1 scored with the final measure, for comparison with round 2. |
 | `round-1/hesitations.md` | Every round-1 hesitation by field, every gap and every unclear rule. |
-| `round-1/speed/` | The speed test: each coder's notes, the table and its agreement. |
+| `round-1/speed/` | The speed test: each coder's notes, the table, its agreement as the analysts saw it (`agreement.md`) and rescored with the fixed measure (`agreement-rescored.md`). |
 | `round-1/analysis/<group>.json` | The six analysts' proposals and the reviewers' verdicts. |
 | `round-1/decisions.md`, `round-1/conflicts.md` | The decision on every proposal, and the final texts where groups overlapped. |
 | `round-2/coder-<a,b,c>/<game>.json` | The units each round-2 coder wrote (word lists 1.0, as of 43e9a0c). |
@@ -115,4 +117,9 @@ Items 2 to 5 are the same as the choices at the end of [round-1/decisions.md](ro
 | `round-2/fixes.json` | The round-2 fix pass: the proposals, the reviewer's verdicts, what was applied, the gaps left for later and the evidence for your choices. |
 | `word-list-changes.md`, `word-list-changes-from-0.3.md` | Every word-list change to 1.0.0, from 0.4.0 and from 0.3.0 (`npm run vocab-diff`). |
 
-These files are a record. They are not checked by the validator, and the coders' units stay as they were coded. Since then they were edited only to remove copied wording and local paths.
+These files are a record and are not checked by the validator. After the final review:
+- the coders' units and notes were edited only to remove copied wording and local paths;
+- conflicts.md (C5) got a paragraph on applying it without World in Conflict, and analysis/scales.json a marked correction;
+- the hesitation reports were regrouped under normalised field paths;
+- round-1/agreement-rescored.md and round-2/agreement.md were regenerated with the fixed measure, and speed/agreement-rescored.md was added (the speed table gained a tolerance for raw speeds);
+- round-1/agreement.md and round-1/speed/agreement.md stay as first written.

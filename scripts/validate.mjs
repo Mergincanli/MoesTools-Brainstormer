@@ -14,7 +14,8 @@
 //    keyed only by lists the rules read, so no rule is skipped unseen.
 // 2) Cross-references: unique game, faction and unit ids; patterns <-> units, the pattern registry, games and
 //    factions, typed links. A pattern's source_units that differ from the units linking it only warn: research
-//    agents never edit pattern files, and the merge pass fills source_units with npm run sync-patterns.
+//    agents never edit an existing pattern file (a new pattern gets its first list by hand), and the merge pass keeps
+//    source_units up to date with npm run sync-patterns.
 // 3) Combination rules: every term's classes, min_tier, allowed, excluded and requires. A unit or card is read as
 //    unit-wide parts (UNIT_PARTS) and, per weapon, weapon parts (WEAPON_PARTS). A weapon term's maps are compared
 //    with that weapon's own parts and with the unit-wide parts; a unit-wide term's maps with the unit-wide parts and
