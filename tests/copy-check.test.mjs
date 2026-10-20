@@ -172,6 +172,8 @@ describe('copy-check --also (notes that cite no page)', () => {
     assert.deepEqual(markdownBlocks('A [link](https://x.example/a_(b)) here.')[0][0][1], 'A [link] here.')
     assert.deepEqual(urlsIn('See https://x.example/wiki/Terror_drone_(Red_Alert_3), then <https://y.example/p>.'),
       ['https://x.example/wiki/Terror_drone_(Red_Alert_3)', 'https://y.example/p'])
+    assert.deepEqual(urlsIn('API at `https://w.example/wiki/api.php`, or https://w.example/api.php?action=parse; page https://w.example/wiki/Api.php_page'),
+      ['https://w.example/wiki/Api.php_page'])
   })
 
   it('lists note files at any depth and skips dot folders', () => {

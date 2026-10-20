@@ -17,7 +17,7 @@ Entries: `cnc-td`, `cnc-ts`, `cnc3`, `renegade` in `games_r2.json`. `check_games
   - In multiplayer, the build level comes from the game setup (the Remastered client passes it in). Every unit that can be built in multiplayer has level 7 or lower, so at full tech the level never gates a unit and only the buildings do. I did not check what the original DOS lobby defaulted to.
   - In the 2020 source, the Temple of Nod counts as the Advanced Communications Center. So the MRLS, the Commando and the MCV are both sides' units ("shared") at t3.
   - The Remastered balance patch made the APC need the Repair Facility. Under the original rules the APC is t1 (Barracks); under the Remastered rules it would be t2. The entry describes the original rules.
-- **Tiberian Sun.** The wiki's war factory pages list production by tier, together with each requirement. Besides Radar (t2), the two Tech Centers and the Upgrade Center or Temple of Nod (t3), there are special gates:
+- **Tiberian Sun.** The wiki's war factory pages list production by tier, together with each requirement. Besides Radar (t2), the two Tech Centers and the Upgrade Center or the Temple of Nod (t3), there are special gates:
   - Electromagnetic Pulse Cannon (t2, for the Mobile EMP)
   - Stealth Generator (t3, for the Mobile Stealth Generator)
   - Tiberium Waste Facility (t3, for the Weed Eater)

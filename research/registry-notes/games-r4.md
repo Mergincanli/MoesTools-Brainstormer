@@ -82,7 +82,7 @@ A six-word copy-check of every text field against all the pages read (wiki text,
   Prices changed between titles (T-80B: 105 in European Escalation, 100 in AirLand Battle, 80 in Red Dragon); use Red Dragon. Do not mix in deck activation points or availability.
 - **Broken Arrow** (anchor about 225; thresholds 115, 205, 315, 450):
   - Very low: rifle squads 60.
-  - Low: T-72B 130, T-72B3 180.
+  - Low: the T-72B (130) and the T-72B3 (180).
   - Medium: M1A2 215, T-90M 250, Leopard 2A8 260, SEP v3 280.
   - High: T-14 Armata 390.
 
@@ -93,7 +93,7 @@ A six-word copy-check of every text field against all the pages read (wiki text,
 - **CoH1:** ratio = speed / 3 (m/s). Sherman 5.5 (1.83, fast), Panther 5.2, Panzer IV 5.
 - **CoH2:** ratio = speed / 3. T-34/76 6.5 (2.17, fast), Panzer IV 6.3, Cromwell 7. These are wiki infobox values from several patches.
 - **CoH3:** ratio = speed / 3.6. Sherman 5.5 (1.53, fast), Panzer IV 5.25 (1.46, medium), Tiger 3.8 (1.06, medium), King Tiger 3.25 (0.9, slow), Chaffee 6.9 (1.92, fast).
-- **World in Conflict:** the wiki gives only a word plus a 0-100 score; ratio = score / 20. M60A3 40 (2.0, fast). Where a page shows only the word, record the band from the word and leave `speed_raw` out.
+- **World in Conflict:** the wiki gives only a word plus a 0-100 score; ratio = score / 20. M60A3 40 (2.0, fast). Where a page shows only the word, follow Speed bands: the word goes in notes (the reference infantry is itself Slow), the band is judged from units that have a score, with an uncertain entry for mobility/speed, and `speed_raw` stays out.
 - **Wargame:** ratio = off-road speed / 20. M1A1 65 (3.25, very fast), T-72 60 (3.0). Every vehicle is "very fast" against foot infantry, so say in the notes how it compares with other vehicles.
 - **Broken Arrow:** ratio = speed / 18. Main battle tanks at 70 km/h give 3.9 (very fast). The same caveat as Wargame applies.
 
@@ -124,7 +124,7 @@ Retreat (retreat-to-base); reinforce (reinforce-squad); veterancy (earn-veteranc
 - **Veterancy** (earn-veterancy): each side gets it in its own way. American units earn it from their own kills. Panzer Elite units earn it, share part of each kill with units nearby, and the player picks an offensive or a defensive bonus at each level. The Wehrmacht buys it at the Kampfkraft Center for whole groups (infantry, support, vehicles, tanks), a side-wide upgrade; the King Tiger and the Goliath never get it. Most British units get none: the Lieutenant, the Captain and the Cromwell Command Tank earn it and pass bonuses to units near them, an aura recorded on those three units.
 - **Re-crewing abandoned team weapons** (recover-wreck): most infantry squads can take over a team weapon whose crew is gone; part of the squad becomes the new weapon team. Only infantry can.
 - **Picking up dropped weapons** (leech-weapon-on-kill): most infantry squads can pick up special weapons left on the ground. Most basic weapons (rifles, pistols, submachine guns) are never dropped. Only infantry can.
-- **Garrison** (carry-passengers, recorded on the building or transport, not on the riders): every infantry squad can enter neutral or friendly buildings and infantry transports. Vehicles and weapon teams cannot.
+- **Garrison** (carry-passengers, recorded on the building or transport, not on the riders; a vehicle whose riders fire out of it links passenger-sets-weapon instead, as Paired entries says): every infantry squad can enter neutral or friendly buildings and infantry transports. Vehicles and weapon teams cannot.
 - **Point capture** (a game-mode rule, no pattern): almost every infantry squad captures strategic points. A unit that captures faster or slower says so in strengths or weaknesses (Riflemen capture at one and a half times the usual rate, Panzer Grenadiers at three quarters). Very few vehicles or weapon teams can capture; the Jeep is one.
 
 Company of Heroes 2 and 3, World in Conflict, Wargame and Broken Arrow have no list yet. Write one before any of their units is coded.

@@ -2,7 +2,7 @@
 
 Coders: coder-a, coder-b, coder-c. Items: 4 (dow2.space-marines.tactical-marine-squad, generals.china.overlord-tank, mechwarrior.inner-sphere.atlas, ps2.vs.magrider). Threshold: 80%.
 
-**55 of 56 measured fields reach the threshold; 1 fall below it.** Agreement is the mean over every pair of coders on every item (sets score their overlap). "Within one step" counts pairs at most one rank apart, for ranked word lists and counts. Matchup lists are open choices, and derived fields follow from the others; both are measured for information only.
+**55 of 56 measured fields reach the threshold; 1 falls below it.** Agreement is the mean over every pair of coders on every item (sets score their overlap). "Within one step" counts pairs at most one rank apart, for ranked word lists and counts. Matchup lists are open choices, and derived fields follow from the others; both are measured for information only.
 
 | Field | Kind | Items | Agreement | Within one step | Items all agree | Note |
 |---|---|---|---|---|---|---|
@@ -52,7 +52,7 @@ Coders: coder-a, coder-b, coder-c. Items: 4 (dow2.space-marines.tactical-marine-
 | main weapon.range | one | 4 | 100% | 100% | 4 of 4 |  |
 | main weapon.can_target | set | 4 | 100% |  | 4 of 4 |  |
 | main weapon.mount | one | 4 | 100% |  | 4 of 4 | proposal |
-| main weapon.seat | one | 4 | 100% |  | 4 of 4 | proposal |
+| main weapon.seat | one | 4 | 100% |  | 4 of 4 | partly proposal |
 | abilities (number) | count | 4 | 83.3% | 100% | 3 of 4 |  |
 | abilities.kind | set | 4 | 88.9% |  | 3 of 4 |  |
 | abilities.cooldown | set | 4 | 100% |  | 4 of 4 |  |

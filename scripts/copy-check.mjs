@@ -360,9 +360,9 @@ export function noteFiles(dir) {
 
 // A web address in running text; one level of brackets is kept, as in wiki titles such as Terror_drone_(Red_Alert_3).
 const URL_RE = /https?:\/\/(?:[^\s<>()[\]"'`|]|\([^\s<>()]*\))+/g
-/** The web addresses in a text, without trailing punctuation. */
+/** The web addresses in a text, without trailing punctuation. A wiki's api.php is an endpoint, not a page, so it is left out. */
 export function urlsIn(text) {
-  return [...String(text).matchAll(URL_RE)].map(m => m[0].replace(/[.,;:!?*_]+$/, ''))
+  return [...String(text).matchAll(URL_RE)].map(m => m[0].replace(/[.,;:!?*_]+$/, '')).filter(u => !/\/api\.php(?:[?#]|$)/i.test(u))
 }
 
 // A Markdown line that starts a new block: a heading, a list item or a table row.

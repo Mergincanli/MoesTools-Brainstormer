@@ -29,13 +29,13 @@ Checks run:
   - BF1 behemoths are a comeback mechanic for the losing team.
   - Vehicle unlocks are XP progression.
 - **Factions.**
-  - `shared` holds the archetypes: the sides' vehicles are mirrors (the wiki calls the Bad Company M1A2 statistically identical to its Russian and MEC counterparts).
+  - `shared` holds the archetypes: the sides' vehicles are mirrors (the wiki says the Bad Company M1A2 has the same stats as its Russian and MEC counterparts).
   - `us`, `russia`, `germany` and `britain` exist only for vehicles one side alone fields, such as BF1's L30 airship (Germany) and Dreadnought (Britain), or BFV's side-specific tanks.
   - No flavour is given, because the sides play the same.
 - **Speed.** 6.5 m/s comes from a DICE gameplay designer's posts relayed by MP1st, cited as `community`. Vehicle top speeds are in some Battlefield Wiki infoboxes only (BF4 M1 Abrams 40/56 km/h); older titles give words ("Medium").
 
 ### PlanetSide 2 (`has_tiers` false, `has_costs` true)
-- **Tiers.** No tech ladder. The one gate is map control: main battle tanks can be pulled away from the warpgate only while a linked Tech Plant is held. MBTs also spawn only at large outposts, major facilities and the warpgate. Either rule as a tier would make MBTs T2 and everything else T1, which says little.
+- **Tiers.** No tech ladder. The one gate is map control: main battle tanks can be pulled away from the warpgate only while a linked Tech Plant is held. MBTs also spawn only at the warpgate, major facilities and large outposts. Either rule as a tier would make MBTs T2 and everything else T1, which says little.
 - **Prices.**
   - The anchor is 450 nanites, the price of every MBT.
   - The bank caps at 750, so nothing priced in nanites reaches "high". The Liberator and Galaxy also cost 450 (medium).
@@ -144,7 +144,7 @@ Checks run:
   - **Other kinds of unit** (combat vehicles, aerospace fighters, battle armour), if any is coded, are not in the map either: go on to step 4.
 - **Damage map.** It covers the three weapon kinds (Energy, Ballistic, Missile). They are MechWarrior Online's hardpoint types, and the BattleTechWiki's BattleMech page sorts 'Mech weapons into the same three, with physical attacks besides.
 - **MechWarrior damage: which step decides** (armament[].damage). Checked against the BattleTechWiki's BattleMech page and about twenty weapon pages, and the MechWarrior Online Wiki's Weapons page (October 2026).
-  - **Step 4 binds.** A weapon's kind is the first word of the Type field in its BattleTechWiki infobox: Energy for lasers, PPCs, flamers and plasma weapons, Ballistic for machine guns, autocannons and Gauss rifles, Missile for LRMs and other launchers. In MechWarrior Online it is the hardpoint type the weapon needs. A 'Mech's own page lists its weapons without their kind, so step 4 needs the weapon's page, or the MechWarrior Online 'Mech page's hardpoint types, among the sources (cited, or named in an uncertain entry).
+  - **Step 4 binds.** A weapon's kind is the first word of the Type field in its BattleTechWiki infobox: Energy for lasers, PPCs, flamers and plasma weapons, Ballistic for autocannons, machine guns and Gauss rifles, Missile for LRMs and other launchers. In MechWarrior Online it is the hardpoint type the weapon needs. A 'Mech's own page lists its weapons without their kind, so step 4 needs the weapon's page, or the MechWarrior Online 'Mech page's hardpoint types, among the sources (cited, or named in an uncertain entry).
   - **Kinds the map leaves out take step 5:** Artillery (the Long Tom, Thumper and Sniper pieces, and the Arrow IV, whose Type reads Artillery (Missile)), Equipment (the anti-missile system and TAG) and Utility (the Narc beacon). Melee weapons a design carries (a hatchet and the like) have no kind, and step 5 gives melee. Unarmed physical attacks stay off the unit (see Game-wide mechanics).
   - **Steps 1 and 2 still come first.** TAG and the Narc beacon do no damage: they only mark a target for friendly guided fire, so they take step 2. The anti-missile system shoots down incoming missiles; where its sources show it firing on its own, it is the interceptor armour model rather than a weapon.
   - **Step 3 exceptions** (record these kinds of weapon as the type named, whatever their kind): flamers (Energy) are fire; Gauss rifles of every size (Ballistic) are armour-piercing.
