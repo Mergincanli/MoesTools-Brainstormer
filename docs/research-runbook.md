@@ -141,7 +141,7 @@ Keep both codings, the agreement report and the hesitations in `research/r<N>/op
 ### 4. Merge pass
 
 1. **Add the units** to `data/units/<game>.json`. In a file that already has units, check with `JSON.stringify` that the existing entries are unchanged.
-2. **Registry or note errors found while coding** get a researcher and a skeptic before they change anything. For example, R1 found that RA2 infantry move at one and a half times their listed speed. Then recheck every unit the fix touches, including roles that depend on the changed value.
+2. **Registry or note errors found while coding** get a researcher and a skeptic before they change anything. For example, R1's speed check found that RA2's jumpjet fliers move on another scale than their listed speed. Then recheck every unit the fix touches, including roles that depend on the changed value.
 3. **Check links between units** (`unit:` ids), shared conventions and repeated facts across the batch.
 4. Run the checks and commit.
 
@@ -295,7 +295,7 @@ The pilot used this shape (research/pilot/README.md, Final review).
    - write the morning summary from the night log and the state file;
    - send a short push notification if the tool is available;
    - start nothing, and stop.
-3. **Read** the state file, the night log and the notifications. Then look at the open pull request (CI on the head, merge state, review threads) and at what the workflow tool lists as running.
+3. **Read** the state file, the night log and the notifications. Then look at the open pull request (CI on the head, merge state, review threads) and at which workflows are still running (section "The state file and the night log").
 4. **Resume** whatever failed on a limit, once its reset time has passed (section 3).
 5. **Start** the next phase that is ready, unless one is already running. If everything is waiting, end the turn without a message.
 6. **If Mustafa has written,** his message comes first.
