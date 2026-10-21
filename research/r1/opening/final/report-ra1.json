@@ -1,0 +1,83 @@
+{
+ "id": "ra1.soviet.mammoth-tank",
+ "file_written": "data/units/ra1.json",
+ "decisions": [
+  {
+   "path": "armament/0/can_target",
+   "a": "[infantry, ground-vehicle, naval]",
+   "b": "[infantry, ground-vehicle, structure, naval]",
+   "chosen": "[infantry, ground-vehicle, naval] (A)",
+   "why": "The rule is fields.md armament[].can_target. I re-fetched StrategyWiki's Soviet units page, which heads the cannons '120mm large anti-armor cannons' with 'Target: Ground'. I also re-fetched the C&C Wiki's Mammoth tank (Red Alert 1) infobox, which lists the AP cannons only under groundattack. A target label (anti-vehicle) or a 'hits only some kinds' line both put the weapon at step 3. The rule's Structures sentence then names steps 1 and 3 outright: 'list them only when the sources say the weapon damages buildings'. No page says that of the cannons. The C&C Wiki credits the missile racks, not the cannons, with hurting buildings, as well as infantry and aircraft. StrategyWiki's 'Strong vs. ... Structures' and 'devastate any ground targets' describe the whole tank, and the manual's 'unmatched in power on land' names no buildings. TECHNO.CPP picks a weapon by comparing warhead modifiers, but the damage table is in rules.ini, which could not be read. B used the general sentence 'a source that says ground or surface means these'. The structures clause is the narrower, later rule for step 3, and the ra3.json Hammer Tank example applies it the same way: an anti-vehicle cannon with no building text gets no structures. An uncertain entry at armament/0/can_target records the split and the other reading."
+  },
+  {
+   "path": "(whole entry) base coding",
+   "a": "agent A file",
+   "b": "agent B file",
+   "chosen": "Started from B, merged A's text where it was clearer",
+   "why": "B is better sourced. Its sources[].supports paths are finer, it raised more uncertain points that name their pages (mobility/base, armament/1/mount, armament/0/delivery, tier from the War factory page, countered_by, and UNIT.CPP and ADATA.CPP given by URL), and it pairs unit: rivals with a word-list link as Matchups rule 3 asks. A's text was clearer in four places, which I took: body.notes (the code's size flag, checked in UDATA.CPP and TYPE.H as larger than one cell but under two, and shared with the Medium and Heavy Tanks), the weapon-choice part of the summaries, the Iron Curtain note in armour.notes and the speed-at-half-health note. All 16 distinct uncertain points from both coders still hold and are kept. All three fit_notes are kept: roles/primary (both coders), armour/class (B) and armour/models (A)."
+  },
+  {
+   "path": "armament/0/summary",
+   "a": "no claim about buildings",
+   "b": "'They hit any ground target'",
+   "chosen": "Rewritten: the cannons fire only at ground targets, never at aircraft, and no page says they damage buildings",
+   "why": "B's wording contradicted the can_target decision. The rest of the summary merges both coders: the manual, wiki and StrategyWiki ratings, the staggered second shell, the reach given in words, and the TECHNO.CPP rule that picks one weapon per target."
+  },
+  {
+   "path": "armament/1/name",
+   "a": "Mammoth Tusk missiles",
+   "b": "Mammoth Tusk missile packs",
+   "chosen": "Mammoth Tusk missiles",
+   "why": "The name is for reference only, so I used the exact heading StrategyWiki gives. The manual's 'missile packs' wording is kept in the summary and the uncertain note."
+  },
+  {
+   "path": "strengths",
+   "a": "heavy, weapon:cannon, weapon-trait:anti-air, damage:explosive, self-repair",
+   "b": "heavy, damage:armour-piercing, hits:high-air, hits:infantry, self-repair, mobility-trait:crush",
+   "chosen": "armour-class:heavy, damage:armour-piercing, weapon-trait:anti-air, damage:explosive, armour-model:self-repair",
+   "why": "Matchups rules 1, 2 and 7, which say to name the part behind the reason and keep about two to five entries. damage:armour-piercing (B) keeps weapon:cannon free for the weakness. weapon-trait:anti-air beats hits:high-air because the point covers air units in general and RA1 does not split its fliers. damage:explosive names the warhead behind the one-hit soldier kills and the work on buildings. I dropped crush because every RA1 tank crushes (registry game-wide list), so it is no edge; crushing still appears in counters/0."
+  },
+  {
+   "path": "weaknesses",
+   "a": "5 entries, including the self-repair cap",
+   "b": "4 entries",
+   "chosen": "A's five, with merged wording",
+   "why": "The armour-model:self-repair weakness (slow healing, capped at half health) rests on the infobox and TECHNO.CPP, and the list stays within five."
+  },
+  {
+   "path": "countered_by / counters (class:vehicle)",
+   "a": "class:vehicle in both lists",
+   "b": "class:vehicle in countered_by only",
+   "chosen": "B: countered_by only, with 'one on one it outguns any tank' moved into the reason",
+   "why": "Matchups rule 6: put the enemy where the head-on fight at equal cost ends, and give the tactic that turns it in the reason. The wiki says cheaper basic tanks outnumber it and destroy it with relative ease, which is the equal-cost fight, so vehicles go in countered_by only. class:aircraft stays in both lists, as both coders had it, because the reasons are different situations: a few aircraft against a concentrated air attack during the reload. B's unit: links to the Medium and Light Tanks, which the wiki names, are kept under rule 3."
+  },
+  {
+   "path": "combos",
+   "a": "class:vehicle escort, role:anti-air cover",
+   "b": "[] (none sourced)",
+   "chosen": "A's two combos",
+   "why": "Combos are an open choice. Both rest on warnings the wiki itself gives: the tank is most at risk alone, and massed air attacks catch it during the missile reload. The why text names the wiki as the basis."
+  },
+  {
+   "path": "sources",
+   "a": "manual, wiki, StrategyWiki, UDATA.CPP, TECHNO.CPP",
+   "b": "manual, wiki, StrategyWiki, TECHNO.CPP, UDATA.CPP",
+   "chosen": "Same five pages, official manual first, and TECHNO.CPP before UDATA.CPP because more fields rest on it; supports merged path by path",
+   "why": "sources[] slot order: an official page about the unit first, then the pages most of the entry rests on, five at most. I checked the manual paragraph on PDF page 69 of the scan and the Soviet Tech Center line myself with pdftotext. Uncited pages that a code rests on are named in uncertain entries: Heavy tank and Medium tank (Red Alert 1), War factory (Red Alert 1), and TYPE.H, UNIT.CPP and ADATA.CPP by URL."
+  },
+  {
+   "path": "researched_by / review",
+   "chosen": "\"batch r1, opening check (agents A and B, reconciled)\"; {\"status\": \"unchecked\"}",
+   "why": "Task item 4."
+  }
+ ],
+ "validator_result": "node scripts/format-json.mjs data/units/ra1.json: checked 1 file, rewrote 0. node scripts/validate.mjs . exits 0 and ends with OK; it counts 4 units. No ERROR lines. No ATYPICAL lines for ra1.soviet.mammoth-tank, so the unit has no atypical list. The only lines that touch the unit are the expected WARN that unit links point to units not yet researched (ra1.allied.light-tank, ra1.allied.medium-tank). The remaining WARN lines (planned patterns) and the three ATYPICAL lines all belong to ra3 and are already recorded there.",
+ "copy_check_result": "Exit 0, 'OK: no shared runs', with 5 of 5 cited pages checked and 0 not checked. I used --only Red_Alert_1_Manual, Mammoth_tank_(Red_Alert_1), Red_Alert/Soviet_units, REDALERT/TECHNO.CPP and REDALERT/UDATA.CPP, with a 2000 ms delay. The File page, the Mammoth page and StrategyWiki were re-fetched with --refresh; the two code files were fetched fresh. After the last edit I re-ran the check offline on the same five pages: exit 0 again. The File page returns only a licence template, so I also ran my own 6-word check, with a small script of its own. It covered the manual's PDF text and the pages read but not cited: the Red Alert 1 pages Heavy tank, Medium tank, War factory and Soviet tech center, plus TYPE.H, UNIT.CPP, TECHNO.CPP and UDATA.CPP. The only shared run is the page title 'Heavy tank (Red Alert 1) and Medium tank (Red Alert 1)' in an uncertain note, which the real check ignores as a title.",
+ "rule_problems": [
+  "roles.primary step 4, with the RA1 registry note on official text. Rule text: 'Anti-armour, anti-air or anti-infantry if ... official text says the unit is strong against it ... When this step gives more than one target ... take the one with the largest bonus or, if that cannot be told, the one official text names first.' games-r1.md adds: 'Text about the unit counts even when it is about a second weapon: the Mammoth's missiles make it strong against infantry and aircraft.' Both coders followed this and got anti-infantry. That makes the game's heaviest armour-piercing cannon tank primary anti-infantry, only because the manual praises its secondary missiles and names infantry first. Kept anti-infantry, with an uncertain entry and a fit_note at roles/primary. Proposed fix: in step 4, when the strong-against text is tied to a weapon other than the main weapon, let that text give a candidate only if the main weapon gives none; or move such text to roles.secondary step 3. Separately, let step 4 read a strong-against claim about the main weapon that names a kind of terrain ('unmatched on land') as armour when the weapon's damage is armour-piercing. With either change the Mammoth would be anti-armour primary, with anti-infantry and anti-air secondary.",
+  "roles.secondary step 4, assault. Rule text: 'Assault: medium or heavier armour and a short- or medium-range main weapon.' RA1's reference rifle (reach 3) is among the game's shortest, so every tank gun bands long (the registry expects this), and no RA1 tank can ever get assault, even one whose wiki role line says heavy assault tank. Kept [anti-armour, anti-air], with the gap noted in the roles/secondary uncertain entry and the roles/primary fit_note. Proposed fix: for assault, judge 'short- or medium-range' against the game's standard tank gun (the cost-anchor tanks) rather than the range bands. Or allow assault when the main weapon's reach is no more than the cost-anchor tanks' main gun.",
+  "armament[].can_target, the step 3 structures clause against the 'ground' sentence. Rule text: 'A source that says ground or surface means these [infantry, ground vehicles and structures]' and 'Structures: under steps 1 and 3 ... list them only when the sources say the weapon damages buildings.' The coders split here. I kept the stricter reading, which the Hammer Tank sample in ra3.json also follows, so the Mammoth's cannons cannot target structures. That looks wrong for an RA1 tank gun: the AP warhead works on buildings in RA1, and the game falls back to the cannons whenever their warhead suits a target's armour as well as the missiles' does. The uncertain entry at armament/0/can_target records this. Proposed fix: say outright which sentence wins. My suggestion: a weapon's own target line or attack line that says ground or surface (an infobox groundattack line, a guide's 'Target: Ground') counts as the sources saying it damages buildings, even under step 3. Only a label alone (anti-armour, anti-infantry) with no ground or surface line leaves structures out.",
+  "Sizes and the armour-class check A for super-heavy tanks. Rule text: huge is 'Two tanks or more: super-heavies, giant mechs, airships'; large is 'Tanks of every weight'; 'A weight word in the unit's type (light, medium or heavy tank or mech) is not a size'; check A: 'super-heavy is only for a unit two tanks in size or more (body size huge) at t3 ... or registry notes make super-heavy'. Both coders coded large and heavy, as the code's size flag and the registry's closed list also give. But the wiki calls the Mammoth a super-heavy tank, and the super-heavy description itself lists 'super-heavy tanks' and 'top heavyweights, set apart from its battle tanks'. Kept large and heavy, with uncertain entries at body/size and armour/class and B's fit_note at armour/class. Proposed fix: add 'super-heavy' to the weight words that are not a size. Then let check A also accept a t3 tank with clearly more health than the cost-anchor tanks that the registry names, so the class does not hang on the footprint. Or have the registry list the Mammoth as super-heavy if that is the intent.",
+  "Weapon traits, magazine on a fixed burst. Rule text: 'Set it only when the sources ... name its reload or clip as a strength or weakness of this weapon ... A weapon that holds one shot per reload ... never gets it for that reload.' The missiles get magazine because the wiki names their 'significant reload time' as a weakness. The cannons fire the same two-shot burst with the same cooldown in both stat tables and get no magazine, only because no page names their reload. Kept [anti-air, magazine] on the missiles, with an uncertain entry at armament/1/traits. Proposed fix: extend the one-shot exception to a fixed burst that the game repeats at its normal rate of fire. Such a wait is the weapon's rate of fire unless the sources show a clip or ammunition count."
+ ]
+}
