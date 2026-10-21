@@ -1,0 +1,593 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra2",
+  "units": [
+    {
+      "id": "ra2.iraq.desolator",
+      "game": "ra2",
+      "faction": "iraq",
+      "name": "Desolator",
+      "lineage": "desolator",
+      "flavour_affinity": ["soviet"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["area-denial"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Radar Tower",
+        "basis": "Trained at the Soviet Barracks once a Radar Tower stands, by Iraq alone: the Yuri's Revenge manual's Soviet tech table lists him among the country units with those two buildings, and the wiki infobox also gives tier 2."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 600,
+        "basis": "His list price is a little below the Allied and Yuri main battle tanks' price, so he falls under the medium threshold, in the low band."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": ["deploy-anchor"],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "Walks exactly as fast as the Conscript in the wiki's game data, and cannot cross water. To flood an area he has to deploy and stay put; walking on means packing up, after which his field starts to fade."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "notes": "One soldier in a sealed suit that shields him from radiation (the manual); the wiki's lore calls it a nuclear battle suit. Coded humanoid rather than power suit, since no source says the suit is powered."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class steps decided: the infobox armour type plate maps to light, which the soldier rule keeps, so he is tougher than basic riflemen. One health bar. His suit makes him immune to radiation, his own field included (no term records this; see fit_notes). Elite rank adds self-healing, which belongs to veterancy and is left off."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Red Alert 2 has no fog of war, so the band is the medium proposal. His Sight figure, which only sets how far he lifts the shroud, is a little larger than a Conscript's."
+      },
+      "armament": [
+        {
+          "name": "Rad cannon",
+          "slot": "primary",
+          "family": "chemical",
+          "damage": "toxic",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "naval"],
+          "traits": [],
+          "summary": "Shoots a wavy beam of radiation at one target at a time. Most soldiers melt under it within moments. It is next to useless against most vehicles, does nothing to radiation-proof machines such as the Robot Tank, cannot harm buildings and never aims at aircraft. It reaches about one and a half times as far as the Conscript's rifle; at Elite rank it reaches further and hits harder. While he is deployed it stays silent."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "A single soldier; the player is the Desolator."
+      },
+      "abilities": [
+        {
+          "name": "Deploy (irradiate the ground)",
+          "kind": "deploy",
+          "source": "innate",
+          "summary": "He drives his cannon into the ground and at once soaks a wide patch around himself in radiation. The field hurts every unit standing in it, his own side as much as the enemy, except radiation-proof machines; buildings take nothing. Infantry die almost at once and tanks wear down if they stay long, and the manual says infantry and light vehicles cannot get through it. Fields from several Desolators add up. It seeps into water, hurting ships and briefly forcing submarines to the surface. He takes no harm from it, and while he stays deployed he refreshes it whenever it weakens (since patch 1.004 he no longer piles it up without end). Kills made by the field give him no veterancy. Once he packs up or dies, the ground slowly recovers.",
+          "patterns": ["deploy-siege-mode", "leave-hazard-zone"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "deployed",
+          "name": "Deployed",
+          "via": "deploy-siege-mode",
+          "summary": "Planted in place with his cannon in the ground: he cannot move, and his rad cannon is silent, because deployed he only keeps the radiation field around him going. Undeploying lets him walk and shoot again, and the field begins to fade."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "Nothing is left behind; the ground he irradiated slowly returns to normal after he dies."
+      },
+      "strengths": [
+        {
+          "ref": "hits:infantry",
+          "why": "His rad cannon melts most soldiers within moments."
+        },
+        {
+          "ref": "pattern:leave-hazard-zone",
+          "why": "Deployed, he wipes out infantry rushes and whole paratrooper drops that land on his field, and transports that unload into it get badly hurt too."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Unlike other soldiers he is immune to radiation, his own field included, so he can stand in the middle of the zone he creates."
+        },
+        {
+          "ref": "role:area-denial",
+          "why": "The field reaches into water and covers enough ground to outreach the Slave Miner's gun, and it lingers for a while after he leaves."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:chemical",
+          "why": "The rad cannon cannot aim at aircraft or harm buildings, and does next to nothing to most vehicles."
+        },
+        {
+          "ref": "pattern:leave-hazard-zone",
+          "why": "The field hurts his own side as well, so friendly troops must give way at choke points he holds, and kills made in it earn him no veterancy."
+        },
+        {
+          "ref": "mobility-trait:deploy-anchor",
+          "why": "He must stay planted to keep the field strong; deployed he can neither move nor fire his cannon, and the field fades once he leaves."
+        },
+        {
+          "ref": "speed:medium",
+          "why": "He walks only at infantry pace, so enemy aircraft often pick him off before he reaches the massed infantry he is meant to melt."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Nothing he carries can reach aircraft, and Allied air support picks off Desolators on their way to the front."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Most vehicles shrug off the rad cannon; only long exposure to his field wears tanks down, and even stacked fields rarely beat heavier units."
+        },
+        {
+          "ref": "nature:uncrewed-machine",
+          "why": "A few machines are fully immune to radiation, so neither his cannon nor his field touches them."
+        },
+        {
+          "ref": "unit:ra2.allied.robot-tank",
+          "why": "The wiki names the Robot Tank as one of the units radiation cannot hurt."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "The cannon melts soldiers, and a Desolator deployed under a paradrop kills the whole squad before it fires a shot."
+        },
+        {
+          "ref": "role:transport",
+          "why": "Infantry carriers that unload into his field lose their riders and often take heavy damage themselves, as Allied NightHawk rushes do."
+        },
+        {
+          "ref": "role:logistics",
+          "why": "Yuri's Slaves die quickly in radiation, and the field reaches further than the Slave Miner's gun."
+        },
+        {
+          "ref": "mobility:naval-submerged",
+          "why": "His field reaches under water, forcing submarines up for a moment and quickly killing dolphins."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:ra2.iraq.desolator",
+          "why": "Fields from several Desolators deployed close together stack their damage and melt enemies faster."
+        },
+        {
+          "ref": "pattern:leave-hazard-zone",
+          "why": "Any overlapping radiation field adds to his, since the damage of overlapping fields stacks."
+        },
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "Inside a captured IFV he gives it a stronger, longer-reaching rad cannon and gets carried fast to massed infantry, though he dies if the IFV is destroyed."
+        },
+        {
+          "ref": "unit:ra2.allied.ifv",
+          "why": "The wiki suggests loading Desolators into captured Allied IFVs to deliver radiation into the middle of enemy infantry."
+        }
+      ],
+      "memorable": "A soldier who plants his gun in the ground and turns the earth around him into a radioactive zone that kills infantry of both sides.",
+      "as_player": "A T2 anti-infantry trooper. Left mouse fires a rad gun that melts soldiers but barely scratches vehicles and can't hit aircraft or buildings. Deploy to root in place and flood the ground around you with radiation that hurts everyone but you, teammates included; stay planted to keep it strong, and it fades slowly once you move.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF hosted by the Command & Conquer Wiki)",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "supports": ["tier"],
+          "note": "Printed page 17, the Soviet tech table: under the country-specific units, Iraq's Desolator needs the Barracks and a Radar Tower. Read in the PDF, since no wiki page copies the table; paraphrase checked by hand.",
+          "version": "Yuri's Revenge manual (2001)"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Desolator_(Red_Alert_2)",
+          "title": "Desolator (Red Alert 2), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": [
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "modes/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable",
+            "lineage"
+          ],
+          "note": "Its Official description box copies the Red Alert 2 manual's Iraqi Desolator entry (printed page 41), and its first quote box copies the Iraq multiplayer loading screen, which is in-game text. The infobox gives price, tier, armour type, land speed, reach and Sight; the changelog gives the patch 1.004 change.",
+          "version": "Red Alert 2 1.006 and Yuri's Revenge 1.001"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_2_manual",
+          "title": "Command & Conquer: Red Alert 2 manual (transcript), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["roles/primary", "body", "armour", "abilities/0", "modes/0", "on_death", "strengths/2"],
+          "note": "Transcribes the Red Alert 2 manual (Westwood, 2000). The Iraqi Desolator entry under Special Multiplayer Forces says his deploy makes ground impassable to infantry and light vehicles, that his suit protects him, and that the ground recovers slowly once he dies or undeploys."
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/DESO",
+          "title": "DESO, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["abilities/0", "modes/0", "armament/0"],
+          "note": "The game treats the Desolator's deploy specially: he refires his deployed weapon only when the radiation at his spot has dropped, and while deployed he can use only that weapon, not his cannon."
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/RadSiteWarhead",
+          "title": "RadSiteWarhead, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["abilities/0", "weaknesses/1"],
+          "note": "Radiation sites do not affect buildings in the unmodified game, and because a site keeps no owner, its kills give the Desolator no experience."
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Anti-infantry rests on the Iraq multiplayer loading screen (in-game text, copied on the Desolator page), which says his rad cannon can wipe out enemy troops; that is read as official strong-against text. The manual's entry names no target, and the registry note lists only the manuals and the official site's profiles as Red Alert 2's official text. If the loading screen does not count, step 4 finds no bonus and step 5 gives assault."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No source says whether the shot travels or lands at once. ModEnc's IsRadBeam page (https://modenc.renegadeprojects.com/IsRadBeam) says the game draws a short-lived wave along the shot's path; the wiki speaks of beams of radiation, but nothing says the beam is held on the target. Projectile is the chemical family's default."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Naval is listed by the naval rule; no source says whether the cannon hurts ships. Ground vehicles are listed because the wiki calls it next to useless against most vehicles, which still means a little damage."
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "No source gives the cannon's hit an area or says it leaves radiation where it lands; the radiation field comes from the deploy."
+        },
+        {
+          "path": "armament/0",
+          "note": "In Yuri's Revenge 1.000 a Desolator inside an IFV turned it into a small radioactive suicide bomb; the wiki says that at 1.001 the IFV fires a stronger rad cannon instead. That is the IFV's passenger weapon, so it is only mentioned in combos."
+        },
+        {
+          "path": "abilities/0",
+          "note": "No page gives the field's size, strength or how long it lasts; the wiki calls it large. The registry note, citing the manual, says radiation hurts light vehicles, while the wiki says long exposure melts tanks; the summary gives both. The infobox's deployed line gives a reach equal to the Conscript rifle's, which seems to describe his deployed weapon firing at his own spot rather than the field's size."
+        },
+        {
+          "path": "modes/0",
+          "note": "No source says in so many words that he cannot walk while deployed; the wiki has him plunge the cannon into the ground, and the manual says the field fades once he undeploys."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "Deploy-anchor is coded because he must stop and plant himself to get his field and pack up to move; whether a hazard mode counts as the trait's stronger stationary mode is a judgement."
+        },
+        {
+          "path": "body/plan",
+          "note": "The wiki's lore names his suit a nuclear battle suit, while the manual calls it a protective suit against radiation. The body tie-break gives power suit for a battlesuit, but no source says it is powered armour, so humanoid was kept."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armour/models",
+          "used": "flat-pool",
+          "wanted": "an immunity to toxic or radiation damage",
+          "note": "His suit makes him immune to radiation, his own field included. Our nature term organic marks him as vulnerable to toxic damage, and no armour model or flag records a damage immunity."
+        }
+      ],
+      "researched_by": "batch r1, agent J06-RA2",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra2.soviet.boris",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "soviet",
+      "name": "Boris",
+      "flavour_affinity": ["soviet"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "unique",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["siege"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Battle Lab",
+        "basis": "Trained at the Soviet Barracks once a Battle Lab stands: the Yuri's Revenge manual's Soviet tech table lists him with those two buildings, and the wiki infobox gives tier 3. The archived official profile still names the Radar Tower, a launch-time line the registry says not to use."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 1500,
+        "basis": "His list price sits exactly on the very-high threshold, about twice a main battle tank's, and an edge value takes the higher band. The archived profile gives an older, lower price."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1.25,
+        "notes": "A little faster than a Conscript in the wiki's game data. He is not amphibious, whereas Tanya and Yuri Prime are."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small"
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class steps decided: the infobox armour type flak maps to unarmoured, the same type the Conscript has. One health bar. As a hero he cannot be crushed by any vehicle except the Allied Battle Fortress (no term records this; see fit_notes). Elite rank adds self-healing, which belongs to veterancy and is left off."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Red Alert 2 has no fog of war, so the band is the medium proposal. His Sight figure, which only sets how far he lifts the shroud, is almost twice a Conscript's."
+      },
+      "armament": [
+        {
+          "name": "AKM",
+          "slot": "primary",
+          "family": "small-arms",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "summary": "A fast-firing, very accurate assault rifle. A single burst kills most soldiers, and it reaches a little under twice as far as the Conscript's rifle, enough to outrange Navy SEALs and Desolators. Despite its anti-infantry job it still does real damage to vehicles. He fires it at buildings only where the airstrike is not allowed, such as barrels, ammunition crates and a deployed Slave Miner. Elite rank adds reach, damage and fire rate. The official profile calls it a machine gun."
+        },
+        {
+          "name": "Laser designator (MiG airstrike)",
+          "slot": "secondary",
+          "family": "laser",
+          "damage": "energy",
+          "mount": "free-aim",
+          "delivery": "beam",
+          "range": "long",
+          "can_target": ["structure"],
+          "traits": [],
+          "summary": "Ordered to attack a building, he paints it with a laser from about three times the Conscript rifle's reach, further than any base defence but the French Grand Cannon. The beam itself does no damage. It calls two MiG jets (four once he is Elite) in from a random map edge, and they bomb the building, usually wrecking it in one run. He must keep the beam on until the bombs land and cannot fight meanwhile. If the beam stops for any reason, or he dies, the jets head home; if he aims again before they leave, they swing round to the new target. Jets shot down on the way are replaced by a fresh flight after a short wait, for as long as he keeps lasing. Patch 1.001 stopped soldiers entering or leaving a garrison from breaking the beam, and let him call strikes on occupied Tank Bunkers.",
+          "patterns": ["bombard-area"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "A single soldier. The MiGs he calls are not seats of his: they fly on their own, come only for the strike and then leave the map."
+      },
+      "abilities": [],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "Jets already on their way turn back when he dies. A new Boris can then be trained: a player may field just one of the three heroes (Tanya, Boris, Yuri Prime) at once, and the Soviets have no Cloning Vats in Yuri's Revenge, so there are no free copies. Patch 1.001 fixed a bug that kept the hero slot taken when he died inside a transport sunk at sea."
+      },
+      "strengths": [
+        {
+          "ref": "hits:infantry",
+          "why": "Official text calls him highly effective against infantry: one burst kills most soldiers, from beyond the reach of Navy SEALs and Desolators."
+        },
+        {
+          "ref": "pattern:bombard-area",
+          "why": "One MiG run usually levels a building, and he calls it from further away than almost every base defence can shoot."
+        },
+        {
+          "ref": "hits:ground-vehicle",
+          "why": "His rifle does real damage to vehicles; the wiki says it kills them quicker than a dug-in Guardian GI's anti-tank weapon."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Unlike ordinary soldiers, as a hero he cannot be mind-controlled, and no vehicle but the Battle Fortress can run him over."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "delivery:beam",
+          "why": "He must hold the laser on the target until the bombs land, unable to fight back, and the strike is called off if the beam breaks or he dies."
+        },
+        {
+          "ref": "weapon:laser",
+          "why": "The airstrike works only on buildings; against units he has only his rifle."
+        },
+        {
+          "ref": "tier:t3",
+          "why": "He needs a Battle Lab, sits in the top price band, and a player may field only one hero at a time."
+        },
+        {
+          "ref": "mobility:foot",
+          "why": "He cannot cross water, while the other two heroes, Tanya and Yuri Prime, can."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-air",
+          "why": "Anti-air fire can shoot his MiGs down before they reach the target; he calls replacements only while he keeps the beam on, exposed."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "Only one crusher works on him: the Allied Battle Fortress, the single vehicle able to run over heroes."
+        },
+        {
+          "ref": "unit:ra2.allied.battle-fortress",
+          "why": "The Yuri's Revenge manual names the Battle Fortress as the one vehicle that can crush heroes."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "He cuts soldiers down in single bursts from beyond the reach of most infantry, Navy SEALs and Desolators included."
+        },
+        {
+          "ref": "target:structure",
+          "why": "His airstrike destroys key buildings such as refineries and factories from outside nearly every defence's reach, setting the enemy's tech back."
+        },
+        {
+          "ref": "pattern:mind-control",
+          "why": "Heroes are immune to mind control, so Yuri's controllers cannot turn him against his own side."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:anti-air",
+          "why": "Teammates who win control of the air make it far more likely that his jets survive the run in, as the MiG page advises."
+        }
+      ],
+      "memorable": "A hero who points a laser at a building and keeps it there until a pair of jets streaks in from the map edge to flatten it.",
+      "as_player": "A T3 hero, one per team at a time. Left mouse fires a long-reaching rifle that cuts down soldiers and still hurts vehicles. Aim at a building and hold the laser on it: two jets (four once you are elite) fly in from the map edge to bomb it, but only while you keep the beam on, standing exposed and unable to shoot. Enemy anti-air can down them, and more come while you hold. Immune to mind control and being run over.",
+      "sources": [
+        {
+          "url": "https://web.archive.org/web/20071214201459/http://www.ea.com/official/cc/redalert2/english/newsovietinfo2.jsp",
+          "title": "New Soviet Units: Boris, official Red Alert 2 site (Wayback Machine copy)",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "supports": ["roles", "armament/0", "armament/1", "counters/1"],
+          "note": "EA's archived Yuri's Revenge unit profile. Its Application line (hero unit, psychically immune) names no role. It says the rifle is for ground units and his real strength is against structures, which a laser-guided MiG strike destroys. Its price and building lines predate release and are not used. web.archive.org reset every connection from this session, so the page was read from the copy-check cache's copy of this snapshot.",
+          "version": "Yuri's Revenge launch site (2001)"
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF hosted by the Command & Conquer Wiki)",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "supports": [
+            "availability",
+            "tier",
+            "armour",
+            "strengths/3",
+            "countered_by/1",
+            "countered_by/2",
+            "counters/2",
+            "on_death"
+          ],
+          "note": "Printed page 12, Tactical Update: Gameplay Changes, items 8 (heroes cannot be mind-controlled or crushed, except by the Battle Fortress) and 9 (one hero at a time), with item 18 (the Soviets lose the Cloning Vats); page 17, the Soviet tech table (Barracks plus Battle Lab); page 18, Boris's own entry. Read in the PDF, since no wiki page copies the Gameplay Changes or the table; paraphrase checked by hand.",
+          "version": "Yuri's Revenge manual (2001)"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Boris",
+          "title": "Boris, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": [
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "armament/1",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "counters",
+            "memorable"
+          ],
+          "note": "Its Official description box copies Boris's entry in the Yuri's Revenge manual (printed page 18). The infobox gives price, tier, armour type, land speed, reach and Sight; the changelog gives the patch 1.001 fixes.",
+          "version": "Yuri's Revenge 1.001"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/MiG_(Yuri%27s_Revenge)",
+          "title": "MiG (Yuri's Revenge), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["armament/1", "strengths/1", "countered_by/0", "combos/0"],
+          "note": "The jets Boris calls: spawned off the map, only by him, with one load each; they turn back when the laser is called off and are replaced after a short delay when shot down. Patch 1.001 made them sturdier.",
+          "version": "Yuri's Revenge 1.001"
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/Airstrike",
+          "title": "Airstrike, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["armament/0", "armament/1", "weaknesses/0", "on_death"],
+          "note": "The airstrike warhead does no damage itself and is used only against buildings; the jets abort and go home if the guiding unit dies before the strike lands; a recharge time applies to jets after they return; Boris falls back to his rifle on a few building types."
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "armour/models",
+          "note": "The Yuri's Revenge manual (its Yuri Prime entry) says heroes regenerate on their own, while Boris's infobox lists self-healing only at Elite rank. The entry follows the infobox and gives no self-repair model.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/1/family",
+          "note": "Coded as the laser itself, the in-game weapon: ModEnc says its warhead deals no damage, so the damage is the laser family's default and the strike lives in the summary and bombard-area. The harm comes from the MiGs' ordnance, which the official profile calls iron bombs, the MiG page's prose laser-guided bombs and its infobox laser-guided missiles. Coding the bombs instead would give bombs with drop delivery, which our lists allow only on a flier.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/1/range",
+          "note": "Long, not off-screen: the call reaches well past his Sight figure, but Red Alert 2's sight band is a proposal with no figure, and no source says he needs spotters."
+        },
+        {
+          "path": "armament/0/family",
+          "note": "The official profile calls the gun an AKM machine gun and the wiki an assault rifle firing bursts; by the small-arms tie-break a rifle is small arms."
+        },
+        {
+          "path": "armament/0/damage",
+          "note": "Kinetic, the family default. The wiki credits the rifle with some anti-tank capacity, but no source calls it an anti-tank weapon or gives it a bonus against armour, so armour-piercing was not used and anti-armour is not among the secondary roles."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Structures come from can_target step 4 and from ModEnc's note that he fires the rifle at barrels, ammunition crates and a deployed Slave Miner; against other buildings he uses the airstrike. No source says whether the rifle hurts ships; naval follows the naval rule."
+        },
+        {
+          "path": "cost_band",
+          "note": "The archived official profile gives a lower price and the Radar Tower as his building, both from before release; the band and tier follow the infobox and the manual's tech table, as the registry says.",
+          "sources_disagree": true
+        },
+        {
+          "path": "countered_by/1",
+          "note": "The Battle Fortress page (https://cnc.fandom.com/wiki/Battle_Fortress) agrees that it crushes vehicles and walls; the hero exception itself rests on the Yuri's Revenge manual. The link names crushing, but every other crusher fails against him."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armour/models",
+          "used": "flat-pool",
+          "wanted": "uncrushable: vehicles cannot run it over",
+          "note": "As a hero he cannot be crushed by any vehicle but the Battle Fortress. No armour model, mobility trait or other term records immunity to crushing; the strengths say it in words."
+        },
+        {
+          "path": "armament/1/damage",
+          "used": "energy",
+          "wanted": "explosive, from the called-in jets' bombs",
+          "note": "The laser does no damage; energy is only the laser family's default under damage step 2. What wrecks the building is the MiGs' ordnance, which no field of this weapon can show."
+        },
+        {
+          "path": "armament/1/traits",
+          "used": "none",
+          "wanted": "a designator trait: holding the beam calls a strike that lands only while the beam stays on",
+          "note": "The mark trait is closest, but it means the whole team sees the target and hits it harder for a time; here the beam summons the strike and aborts it when broken."
+        }
+      ],
+      "researched_by": "batch r1, agent J06-RA2",
+      "review": {
+        "status": "unchecked"
+      }
+    }
+  ]
+}
