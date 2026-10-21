@@ -59,7 +59,7 @@ Keep `r<N>/state.json` in the scratchpad, and update it before and after every l
 - **For each phase:** its status and its commit.
 - **Under `open_decisions`:** the decisions taken or waiting.
 
-**A workflow is running only while its completion notice has not arrived and its output file (`tasks/<task id>.output` in the session folder) does not exist.** After a notice that the session's worker was restarted, assume no workflow survived: resume each unfinished one (section 3). The current batch is the one whose state file still has a phase that is not done.
+**A workflow is running while its completion notice has not arrived and its output file (`tasks/<task id>.output` in the session folder) is still empty.** The file is created empty at launch and filled when the workflow ends. After a notice that the session's worker was restarted, assume no workflow survived: resume each unfinished one (section 3). The current batch is the one whose state file still has a phase that is not done.
 - Never launch an agent into a workspace that another running job owns.
 - After a resume, check that each failed job really ran again: its report is not empty, and its unit file is newer than the resume. If not, launch that job on its own, as a new workflow with a new label.
 
