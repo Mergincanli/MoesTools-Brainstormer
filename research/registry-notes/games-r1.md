@@ -26,8 +26,150 @@ Entries written: `ra1` (Red Alert with Counterstrike and The Aftermath) and `ra2
 
 ## Speed
 
-- The reference is land speed 4 in both games: RA1 Rifle Infantry, and RA2 Conscript (the GI and Initiate are also 4, per their wiki pages). Ratio = unit land speed / 4. Examples: RA1 Medium Tank 8 (2.0, fast), Mammoth 4 (1.0, medium); RA2 Grizzly 7 (1.75, fast), Rhino 6 (1.5, medium), IFV and Terror Drone 10 (2.5, fast).
+- **The reference is Speed 4 in both games:** RA1's Rifle Infantry and RA2's Conscript (the GI and Initiate are also 4). The wiki's land, sea and air speeds repeat the rules Speed. Both engines turn Speed into a step of Speed × 256 / 100 leptons per tick, with fractions dropped and a cap of 255; a cell is 256 leptons. So Speed 4 is a 10-lepton step.
+- **The step-1 rule "ratio = land speed / 4" holds only for RA2 walkers, drivers, ships and Fly aircraft.** RA1 bands compare paces worked out from the released code, as set out below. This replaces the step-1 examples (RA1 Medium Tank 2.0, Mammoth 1.0) and the first fix's factors (× 0.8 × 16/15 and the rest).
+- **Round once.** speed_raw is the exact ratio rounded to two decimals (fields.md). Never round a ratio that was already printed to three decimals: that slip gave 1.65 for 1.64496 and 4.32 for 4.3148 in an earlier draft.
+- **Where the Research notes below say otherwise, this section wins for speed.** Three of their lines are amended to match: the RA1 engine line (take speed from the rules file), the UnitBox line (band by this section, not by dividing by 4) and the line on sources that would not load (a reference copy of the rules now loads). The RA1 Figures paragraph and the RA2 chrono line are amended too.
+
+### Red Alert 1: bands from the code
+
+**Sources.** The code is EA's release in the Remastered Collection:
+- [TECHNO.CPP](https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP)
+- [INFANTRY.CPP](https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/INFANTRY.CPP)
+- [COORD.CPP](https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/COORD.CPP)
+- [DRIVE.CPP](https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/DRIVE.CPP)
+- [UDATA.CPP](https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UDATA.CPP)
+- [UNIT.H](https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UNIT.H) and [VESSEL.H](https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/VESSEL.H)
+- [FLY.CPP](https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/FLY.CPP) and [AIRCRAFT.CPP](https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/AIRCRAFT.CPP)
+
+EA's 2025 release of the original 1990s source has the same routines: the same line-for-line `While_Moving`, `Movement_AI` and flight code ([CODE/DRIVE.CPP](https://raw.githubusercontent.com/electronicarts/CnC_Red_Alert/main/CODE/DRIVE.CPP)). Only its 8.8 fixed-point maths differs, and that gives the same throttles. The ground rates and the Tracked flags come from a [reference copy of Rules.ini](https://raw.githubusercontent.com/OpenRA/raclassic/master/ref/Rules.ini) and its [aftrmath.ini](https://raw.githubusercontent.com/OpenRA/raclassic/master/ref/aftrmath.ini).
+
+**Checks.** Two independent tick-by-tick models agreed to two decimals on every ratio; they differ only in the third decimal of a few diagonals. A third check of the per-cell arithmetic, which reads the track tables from DRIVE.CPP and the sine table from COORD.CPP, matched them. The formulas below give the same numbers without simulating.
+
+- **Which figure.** Take Speed and the Tracked flag from the rules file: Rules.ini, with aftrmath.ini on top (the game reads them in that order).
+  - The wiki infobox repeats Speed for every unit checked except two: the Rocket Soldier (rules 3, wiki 4, StrategyWiki 3) and the Mobile Gap Generator (rules 9, wiki 4, StrategyWiki 9).
+  - For those two, use the rules figure and add an uncertain entry with sources_disagree.
+  - For speed only, this overrides the advice under Research notes, Red Alert 1, Figures, to band from the wiki infobox.
+- **m** is Speed × 256 / 100 with fractions dropped: 3 → 7, 4 → 10, 5 → 12, 6 → 15, 7 → 17, 8 → 20, 9 → 23, 10 → 25, 12 → 30, 14 → 35, 16 → 40, 20 → 51, 40 → 102.
+- **The reference pace.**
+  - A walking soldier sets full throttle on every leg. Only formation moves read the ground table, so the clear-ground Foot 90% never slows it.
+  - It steps m leptons a tick toward the next cell's spot, snaps onto the spot once within 16 leptons, and spends the next tick starting the following leg without moving.
+  - The step also rounds down: one lepton short going north or east, full going south or west (COORD.CPP).
+  - So a straight cell takes floor(240 / (m − 1)) + 3 ticks going north or east, and floor(240 / m) + 3 going south or west.
+  - For the rifleman that is 29 and 27 ticks, or 8.83 and 9.48 leptons a tick. Its straight pace is **9.155** (the four axis directions averaged; 9.15453 unrounded). Its diagonal pace is **9.25**: a diagonal cell is 362 leptons, three diagonals take 38 ticks, and north-east takes 43.
+  - Divide every straight pace by 9.155 and every diagonal pace by 9.25.
+- **Infantry** follow the same rule. Ratios are straight, with the diagonal in brackets:
+  - Speed 3 (Rocket Soldier, Flamethrower Infantry, Shock Trooper): 0.70, slow (0.71).
+  - Speed 4: 1.00.
+  - Speed 5 (Grenadier, Tanya, civilians): 1.19 (1.23).
+  - The Attack Dog doubles its step whenever it has a target (m = 20): 1.86, fast (1.93). Nothing limits this, and it is how the dog moves in a fight, so the band counts it. On a plain move order the dog walks at 1.00; say so in mobility.notes.
+- **Vehicles.**
+  - Tracked=yes takes the Track rate and anything else the Wheel rate (UDATA.CPP). The wheeled vehicles are the Ranger, MCV, Mobile Gap Generator, Supply Truck and the Aftermath Demolition Truck.
+  - Read the flag from the reference copy of the rules. Batch entries whose mobility/base uncertain note says the rules file could not be read, or that no page names the drive (M.A.D. Tank, Mobile Gap Generator, Minelayer, Mammoth), should now cite it. For the M.A.D. Tank the band turns on it: wheeled, it would be very slow (0.47).
+  - As a vehicle sets off into each cell, its throttle becomes the clear-ground rate × 255: 204 tracked, 153 wheeled.
+  - Each tick it banks a = m × throttle / 256, rounded to the nearest whole number. Each 10 points buy one step along a track table.
+  - The step that closes a cell drops whatever is left over, and the next cell starts in the same tick.
+  - So a straight cell (256 leptons) takes floor(240 / a) ticks, and a diagonal cell (362 leptons) takes floor(320 / a). The direction makes no difference.
+  - Tracked, straight ratio with the diagonal in brackets: Speed 3 0.70 (0.74), 4 0.93 (0.98), 5 1.17 (1.22), 6 1.40 (1.51), 7 1.64 (1.78), 8 1.86 (1.96), 9 2.15 (2.30), 10 2.33 (2.45).
+  - Wheeled, the same way: Speed 6 1.08 (1.12), 8 1.40 (1.51), 9 1.64 (1.78), 10 1.75 (1.86).
+  - Worked example, Mammoth Tank: m 10, a = 10 × 204 / 256 = 7.97 → 8. A straight cell takes 240 / 8 = 30 ticks, so 8.53 leptons a tick: 0.93, slow. A diagonal cell takes 40 ticks, so 9.05: 0.98, also slow.
+  - Worked example, Ranger: m 25, a = 25 × 153 / 256 = 14.9 → 15. A straight cell takes 16 ticks, so 16.0 leptons a tick: 1.75, fast.
+  - Worked example, Mobile Gap Generator: m 23, a = 23 × 153 / 256 = 13.7 → 14. A straight cell takes 17 ticks, so 15.06 leptons a tick: 1.64496, stored 1.64, fast. The Heavy Tank and V2 (Speed 7, tracked) bank the same 14 and get the same ratio.
+- **Ships.** They use the vehicle routine on open water at full throttle (Float 100%, so 255), with one more step that the code takes without meaning to.
+  - The routine halves the top speed of any unit carrying a capture-the-flag flag. Unlike the flag test in the teleport code, this one does not check that the object is a land vehicle first.
+  - Read through a ship, the flag field is the low byte of the word that holds two repair flags. VESSEL.H puts that word right after the type pointer, where UNIT.H keeps the flag's owner. The heap zeroes it.
+  - So the byte reads as house 0 to 3 and never as 'no house', and every ship moves at half rate: a = floor(m / 2) × 255 / 256, rounded.
+  - The same holds in both builds. The original makefile packs structures byte by byte and does not force int-sized enums, so the house type is one byte there ([CODE/MAKEFILE](https://raw.githubusercontent.com/electronicarts/CnC_Red_Alert/main/CODE/MAKEFILE)). The Remastered code declares it as a char. A small layout test compiled with GCC, packed and unpacked, reads the byte as 0.
+  - This is an inference from the code and the class layouts. No play test or community source confirms it.
+  - At half rate, straight with the diagonal in brackets: Speed 4 (Cruiser) 0.58, very slow (0.61); 5 (Missile Sub) 0.70, slow (0.74); 6 (Destroyer, Submarine) 0.82, slow (0.87); 9 (Gunboat) 1.33, medium (1.35); 14 (Transport) 2.00, fast (2.17).
+  - At full rate they would be 1.17, 1.40 (1.51), 1.75, 2.80 and 4.66.
+  - Worked example, Submarine: m 15 is halved to 7, so a is 7. A straight cell takes floor(240 / 7) = 34 ticks, so 7.53 leptons a tick: 0.82, slow.
+- **Aircraft and helicopters** cruise at full throttle with no per-cell loss.
+  - Helicopters keep full throttle until three cells from the target. Fliers move in whole pixels (tens of leptons) and carry the leftover from tick to tick (FLY.CPP).
+  - The straight pace is about m − 0.5, and the diagonal a little lower. The Spy Plane, with the largest step, loses a little more to rounding: about 100.75 for its m of 102. So the ratio is the pace over 9.155:
+    - Speed 12 (Hind, Chinook): 3.22.
+    - Speed 16 (Yak, Longbow, Badger): 4.31.
+    - Speed 20 (MiG): 5.52.
+    - Speed 40 (Spy Plane): about 11.0.
+  - All of them are very fast.
+- **Which lens.** Store the straight ratio (the four axis directions averaged) as speed_raw.
+  - If the straight and diagonal ratios fall in different bands, take the band nearer medium, store the ratio that lies inside it, and add an uncertain entry. Ore Truck, Artillery and Demolition Truck (1.40 and 1.51) are therefore medium.
+  - Add an uncertain entry too when a ratio rounds onto an edge. The M.A.D. Tank, the Speed-3 infantry and the Missile Sub all sit at 0.70, which is slow.
+  - A second model that ran mixed-heading paths agreed. The Rocket Soldier dipped just under 0.7 there, and the edge rule keeps it slow.
+- **Left out of bands:**
+  - vehicles and ships at half health or less, which slow to three quarters;
+  - prone soldiers, who crawl at half speed (civilians run at double);
+  - land vehicles carrying a flag;
+  - Ukraine's faster ground units, difficulty settings and crates;
+  - formation moves, the opening turn and crowding.
+
+### Red Alert 2 with Yuri's Revenge
+
+- **No per-cell check is possible.** RA2's code is not released. The method assumes that a walker and a driver with the same Speed keep the same pace on open ground, because both turn Speed into leptons per frame the same way ([ModEnc, Speed](https://modenc.renegadeprojects.com/Speed/On_Unit_Types); [Phobos docs](https://phobos.readthedocs.io/en/latest/Fixed-or-Improved-Logics.html)). That is an inference.
+- **The stored ratio is on the Speed scale** (the figures as the sources give them, divided by 4). Check whole leptons as well: the step (Speed × 256 / 100, fractions dropped) times the ground's share, against the Conscript's 10. At full share (walkers, Drive, Ship and Fly units) this changes no stock unit's band. Checked against every unit in Yuri's Revenge's rulesmd.ini, the one unit it moves is the Navy SEAL, under the amphibious share.
+- **Walking infantry: land speed / 4.** Desolator 4 is 1.0; Boris 5 is 1.25 (1.2 in whole leptons).
+  - ModEnc's two-thirds and three-halves infantry factors are prone speeds; Phobos made them editable as prone settings and calls the vanilla values hard-coded.
+  - Never apply them to a walking soldier or to the reference.
+- **Amphibious infantry** (SpeedType Amphibious: Tanya, Navy SEAL, Yuri Prime) cross clear ground at 80% of Speed ([ModEnc, LandTypes](https://modenc.renegadeprojects.com/LandTypes)). Take land speed × 0.8 / 4:
+  - Tanya 6 (Yuri's Revenge): 1.2, medium.
+  - Yuri Prime 6: 1.2, medium. In whole leptons both are 15 × 0.8 = 12 against 10, the same.
+  - SEAL 5: exactly 1.0 on the Speed scale, on the edge between slow and medium. In whole leptons it steps 12 × 0.8 = 9.6 a frame, or 9 if that product is truncated too, against the Conscript's 10: 0.90 to 0.96, slow. With no released code, which comes first cannot be told, so it takes medium by the edge rule, with speed_raw 1.0 and an uncertain entry that names the lepton reading. If the lead reads the lepton premise strictly, it is slow at 0.96 instead.
+- **Drive vehicles and Ship units: land or sea speed / 4.** Clear ground costs tracks, wheels and floats nothing. Examples:
+  - Grizzly 7: 1.75, fast.
+  - Rhino 6: 1.5, medium.
+  - IFV and Terror Drone 10: 2.5, fast.
+  - Chaos Drone 8: 2.0, fast.
+  - Mastermind 4: 1.0.
+  - Magnetron 5: 1.25.
+  - Slave Miner 3: 0.75, slow (0.70 in whole leptons, on the edge, also slow).
+  - The Chrono Miner drives and teleports only back to a refinery ([ModEnc, Locomotor](https://modenc.renegadeprojects.com/Locomotor)), so band it as a Drive vehicle.
+- **Fly aircraft** (Harrier, Black Eagle): air speed / 4. Both are 14, so 3.5, very fast.
+- **Hover units** (the Robot Tank and the Allied, Soviet and Yuri amphibious transports) get no speed_raw.
+  - Clear ground holds them to half their Speed (ModEnc LandTypes), and a global boost raises it on straight runs ([ModEnc, HoverBoost](https://modenc.renegadeprojects.com/HoverBoost)).
+  - ModEnc's Locomotor page puts hover units roughly a third slower than drive units with the same Speed.
+  - No source shows how these combine. So judge between half and three quarters of land speed / 4, take the band nearer medium when that range crosses an edge, and add an uncertain entry.
+  - Robot Tank 10: 1.25 to 1.9, medium, leaning fast.
+  - Transports 6: 0.75 to 1.1, medium.
+  - In whole leptons the low ends are 1.2 and 0.7, which changes neither band.
+- **Jumpjet fliers** (Rocketeer, Siege Chopper, NightHawk Transport, Kirov, Floating Disc) fly on their rules JumpjetSpeed, not on the Speed the wiki shows ([ModEnc, JumpjetSpeed](https://modenc.renegadeprojects.com/JumpjetSpeed); ModEnc's [Speed page for JumpjetControls](https://modenc.renegadeprojects.com/Speed/In_JumpjetControls) says Red Alert 2's jumpjet units use it in place of Speed).
+  - Yuri's Revenge's rulesmd.ini gives 30 for the Rocketeer, Siege Chopper and NightHawk, 5 for the Kirov and 16 for the Floating Disc. Their wiki air speeds are 9, 12, 14, 5 and 15.
+  - No source says what unit the value is in, so give no speed_raw. Band from the possible readings (÷ 10 as leptons per frame, or ÷ 4 on the Speed scale) and the wiki's comparisons, and add an uncertain entry.
+  - The Rocketeer, Siege Chopper and NightHawk are very fast on every reading (3.0 or 7.5). Do not band the Rocketeer from its wiki air speed, which would give fast.
+  - The Kirov and the Floating Disc depart from the letter of the comparison rule in speed-bands.json, which with no usable figure gives a compared unit's band. Each one's mobility/speed uncertain entry must say so:
+    - **Kirov: slow.** The wiki calls it the slowest Soviet vehicle. Read literally, that hands it the band of the slowest others (the Apocalypse, V3, War Miner and MCV at 1.0: medium, which on an airship would need the atypical entry `mobility:airship allowed.speed-bands medium`). This text departs from that: those vehicles sit exactly on medium's lower edge, so anything slower is under 1.0. Its readings are 0.5 (÷ 10) or 1.25 (÷ 4, which the wiki's comparison rules out), so the range left runs from 0.5 to just under 1.0, straddles 0.7, and takes slow by the edge rule (very slow if ÷ 10 is right).
+    - **Floating Disc: fast.** The wiki says only that it outpaces the Kirov. Read literally, that gives it the Kirov's band, slow. This text departs from that, because outpacing a slow unit sets only a floor. Its readings, 1.6 or 4.0, straddle 2.5, so it takes fast by the edge rule.
+- **Teleporting infantry** (Chrono Legionnaire, Chrono Commando, Chrono Ivan) never walk.
+  - A move order jumps them to the spot at once. They then stay frozen while they phase in.
+  - The freeze depends on the distance and on game-wide settings, not on their Speed: distance divided by a factor, never under a minimum ([ModEnc, ChronoDistanceFactor](https://modenc.renegadeprojects.com/ChronoDistanceFactor); [ModEnc, ChronoMinimumDelay](https://modenc.renegadeprojects.com/ChronoMinimumDelay)). The rules file calls the Legionnaire's Speed a dummy value.
+  - Yuri's Revenge sets the factor at 48 leptons a frame and the minimum at 16 frames. Over a jump plus its freeze, that gives about 1.6 times the Conscript's pace for a one-cell hop, 3.2 times for two cells, and 4.8 times from three cells on.
+  - Band them very fast, with no speed_raw and an uncertain entry. The foot mobility type allows only slow to fast, so the coder needs the atypical entry `mobility:foot allowed.speed-bands very-fast`.
+  - The line under Research notes, Red Alert 2, saying that their infobox land speed sets the phase-in time should be reworded.
+- **Damage.** Damaged Drive and Ship units slow to three quarters (ModEnc Speed). Leave it off.
+- **Where the rules values come from.** The jumpjet and chrono values come from the YRinis.zip archive that [the wiki's Rules.ini page](https://cnc.fandom.com/wiki/Rules.ini) links. The archive is http only, so it cannot be a sources URL. It predates patch 1.001's price changes, and 1.001 changed no speeds.
+
+### Patches
+
 - Some speeds changed between patches. The RA2 Demolition Truck went from 6 to 5 in patch 1.004. Use the version named in `version_researched`.
+
+### Batch R1 units
+
+- **RA1:**
+  - Spy and Field Mechanic: medium, 1.00.
+  - Attack Dog: fast, 1.86 (from its charge).
+  - M.A.D. Tank: slow, 0.70 (edge).
+  - Mobile Gap Generator: fast, 1.64 (rules Speed 9).
+  - Minelayer: fast, 2.15.
+  - Mammoth Tank: slow, 0.93.
+  - Yak: very fast, 4.31.
+  - Submarine: slow, 0.82 (half rate; fast at full rate).
+- **RA2:**
+  - Desolator and Mastermind: medium, 1.0.
+  - Boris and Magnetron: medium, 1.25.
+  - Chaos Drone: fast, 2.0.
+  - Slave Miner: slow, 0.75.
+  - Siege Chopper: very fast, no speed_raw.
+  - Robot Tank: medium, no speed_raw.
+  - Chrono Legionnaire: very fast, no speed_raw.
 
 ## Damage and armour maps (not in `sources` because of the 1-4 guide)
 
@@ -300,7 +442,7 @@ Written for pilot round 1, then checked and extended to Uprising's skirmish unit
 
 - **Best source:** the Command & Conquer Wiki, read through its API. The production building pages (barracks, war factory, shipyard, airfield) list units under tier headings with their extra requirements, and each unit's infobox gives cost, land speed, armour type, tier and internal name. Space requests out and retry after a 429.
 - **For RA2 rules meanings** (armour types, Verses, warhead flags), use ModEnc (modenc.renegadeprojects.com). Its pages download directly with `?action=raw`.
-- **For RA1 engine behaviour,** EA's GitHub source release shows what the code does. Numbers such as cost and speed live in RULES.INI, so take them from the wiki.
+- **For RA1 engine behaviour,** EA's GitHub source release shows what the code does. Numbers such as cost live in RULES.INI, so take them from the wiki; take speed and the Tracked flag from the reference copy of the rules file, as the Speed section says.
 - **Research what is buildable in skirmish.** Campaign-only units: Counterstrike's specials (Volkov, Chitzkoi, the ant missions), RA2's Cosmonaut, and the Navy SEAL in RA2 (it is buildable in Yuri's Revenge). Mark multiplayer-only units (RA1 Tanya, Thief, Mobile Gap Generator, Radar Jammer) in their notes. Counterstrike adds no skirmish units; The Aftermath does, so set `introduced_in: ra1-aftermath`.
 - **Units dropped in Yuri's Revenge** (the Soviet Psi-Corps Trooper, and Yuri Prime as Soviet stolen tech) are RA2-only. Say so in their notes, because the researched version is Yuri's Revenge.
 - **Unit id examples:** `ra2.iraq.desolator`, `ra2.shared.engineer`, `ra1.shared.rifle-infantry`, `ra2.yuri.lasher-tank`.
@@ -328,7 +470,7 @@ Written for pilot round 1, then checked and extended to Uprising's skirmish unit
 - **Reading the UnitBox.**
   - `groundattack` and `airattack` give the damage, then the warhead in brackets: that warhead is the damage_map key. `x2` means two shots.
   - Some figures use a decimal comma (3,5 is 3.5).
-  - `landspeed`, `seaspeed` and `airspeed` are the same rules Speed value (TECHNO.CPP), so divide any of them by the Rifle Infantry's 4. The Missile submarine page puts its speed under `landspeed`.
+  - `landspeed`, `seaspeed` and `airspeed` are the same rules Speed value (TECHNO.CPP): they all repeat the rules Speed; band by the Speed section's method, not by dividing by the Rifle Infantry's 4. The Missile submarine page puts its speed under `landspeed`.
   - Weapon range and sight are both in cells (WEAPON.CPP, TECHNO.CPP), so the off-screen test, which compares the two, works.
 - **Band outcomes to expect (not errors).**
   - The rifle's reach of 3 is among the game's shortest, so the Medium, Heavy and Mammoth Tanks' guns come out long.
@@ -342,16 +484,16 @@ Written for pilot round 1, then checked and extended to Uprising's skirmish unit
   - Mark the MCV and the Transport Helicopter as multiplayer-only too (the manual's asterisks).
   - Tesla Tank: `introduced_in: ra1-aftermath`. Its Counterstrike version was campaign-only; say so in notes.
   - Longbow: slug `longbow`. The Remastered Collection calls it Attack Helicopter and the manual Apache Longbow; give both names in notes.
-- **Figures.** The C&C Wiki and StrategyWiki disagree on some (Rocket Soldier: speed 4 and sight 3 on the C&C Wiki, 3 and 4 on StrategyWiki). Band from the C&C Wiki infobox and add an uncertain entry with sources_disagree. Tanya's infobox has no land speed; StrategyWiki gives one, so cite it to use it.
+- **Figures.** The C&C Wiki and StrategyWiki disagree on some (Rocket Soldier: speed 4 and sight 3 on the C&C Wiki, 3 and 4 on StrategyWiki). Band from the C&C Wiki infobox (for speed, from the rules file, as the Speed section says) and add an uncertain entry with sources_disagree. Tanya's infobox has no land speed; StrategyWiki gives one, so cite it to use it.
 - **Ore Truck death blast.** The [Ore truck](https://cnc.fandom.com/wiki/Ore_truck) page says its load bursts out and hurts nearby units, but the code does that only when the rules key OreExplosive is on (UNIT.CPP), and it is off by default (RULES.CPP). Code death-blast, basis in-game, from the page, with an uncertain entry (sources_disagree).
-- **Sources that would not load.** web.archive.org, and the Red Alert Archive's rules.ini downloads (ra.afraid.org answers only over http, and its download link times out). So rules-only values (the Crewed and Sensors flags, the warheads' damage table) could not be read. Code them only from a wiki page or the source code, and add an uncertain entry where it matters.
+- **Sources that would not load.** web.archive.org, and the Red Alert Archive's rules.ini downloads (ra.afraid.org answers only over http, and its download link times out). So rules-only values (the Crewed and Sensors flags, the warheads' damage table) could not be read. Code them only from a wiki page or the source code, and add an uncertain entry where it matters. A reference copy of Rules.ini and aftrmath.ini does load, over https, from OpenRA's raclassic repository (https://raw.githubusercontent.com/OpenRA/raclassic/master/ref/Rules.ini); it is used for Speed and Tracked. Using it for other rules-only values is the lead's call.
 
 ### Red Alert 2 with Yuri's Revenge (`ra2`)
 
 - **Armour, step 1 (a named step).** The Flak Track steps down one class, to medium. Its armour type is heavy, which resists almost like light (ModEnc Armor types), but the RA2 manual calls it a light vehicle, its health is about 60% of the Grizzly's (its infobox), and the class list puts half-tracks in medium. Every other vehicle keeps its mapped class on purpose: the IFV, Prism Tank and Mirage Tank stay light, and the Robot Tank stays heavy (its infobox; its page's prose about thin armour is the wiki's own words). Say in armour.notes that step 1 decided.
 - **Soldiers' armour.** Read the armour type in the unit's infobox. The Conscript, the soldier rule's yardstick, is flak there and the GI is none, so flak and none soldiers are unarmoured and plate soldiers are light (the map). ModEnc's general line that standard infantry wear none does not override the infobox. Soldiers whose infobox gives no type (Crazy Ivan, Chrono Commando, Psi Commando, Cosmonaut, Slave) follow the soldier rule. The Kirov is light in Red Alert 2 and medium in Yuri's Revenge: use medium.
 - **Infobox lines that are not the soldier's own weapon.** Infantry infoboxes also give damage and reach inside a garrison and inside an IFV. Those belong to the garrison mechanic and to the IFV. Band the soldier's own weapon from its plain line.
-- **Chrono units do not walk.** The Chrono Legionnaire, Chrono Commando and Chrono Ivan teleport, and their infobox land speed sets how fast they phase back in. Add an uncertain entry at mobility/speed if you band from it.
+- **Chrono units do not walk.** The Chrono Legionnaire, Chrono Commando and Chrono Ivan teleport, The wiki says their infobox land speed sets how fast they phase back in, but ModEnc's phase-in rule uses only the jump's distance and game-wide settings, and the rules file calls the Legionnaire's speed a dummy. Band them as the Speed section says: very fast, no speed_raw, with an uncertain entry.
 - **Tier.** The YR manual's tech tables (PDF pages 15, 17 and 19) list every factory-built unit with its production building and any extra building, country units included. Cite them, kind official, for tier.basis. They leave out the three stolen-tech commandos and the spawned Hornets, Osprey and Slaves. Where an infobox tier disagrees (the Typhoon's says 2, but the table puts the Attack Sub at the Naval Yard alone), take the band from the tier_map.
   - The Chaos Drone is t1, gate War Factory: the page 19 table puts it in the War Factory row with nothing else needed, and its own page gives tier 1. The Psychic radar page and the official site's profile (newunits-yuri2.jsp) still tie it to the Psychic Radar, so keep an uncertain entry marked sources_disagree that names both.
 - **Prices at Yuri's Revenge 1.001.** Where 1.001 changed a price, the infobox gives both; use the 1.001 figure: Siege Chopper 1,100 (was 1,400), Slave Miner 1,750 (was 1,500), Chaos Drone 1,000 (was 800). Tanya's infobox now gives 1,500 for Yuri's Revenge, so the price the Prices note calls missing is there. The Chrono Ivan costs 1,750.
