@@ -458,7 +458,9 @@ const cases = [
   // One rule is checked once, and an adaptive weapon is not bound by a body's family list (review fix).
   ["unit: an adaptive weapon is not bound by a body's family list", '', 'ok', dir => {
     const u = unit(load(dir, UNITS), 'hammer-tank'); assert.ok(u.armament.some(w => w.family === 'adaptive'))
-    const families = [...new Set(u.armament.map(w => w.family).filter(f => f !== 'adaptive'))]
+    // Every other family on a unit with this body, so only the adaptive weapon falls outside the list.
+    const same = fs.readdirSync(path.join(dir, 'data/units')).flatMap(f => load(dir, `data/units/${f}`).units).filter(v => v.body.plan === u.body.plan)
+    const families = [...new Set(same.flatMap(v => v.armament.map(w => w.family)).filter(f => f !== 'adaptive'))]
     editTerm(dir, 'bodies', u.body.plan, t => { t.allowed['weapon-families'] = families })
   }],
   ["unit: a body's family list binds the other families", "has no entry with rule 'bodies:hull-turret allowed.weapon-families drain'", 'error', dir => {

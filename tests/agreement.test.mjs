@@ -14,7 +14,10 @@ import {
 } from '../scripts/agreement.mjs'
 
 const AGREEMENT = path.join(REPO_ROOT, 'scripts/agreement.mjs')
+// The three pilot sample units, so the counts below hold as research batches add units to the file.
+const PILOT = ['ra3.soviet.terror-drone', 'ra3.soviet.hammer-tank', 'ra3.allied.multigunner-ifv']
 const RA3 = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'data/units/ra3.json'), 'utf8'))
+RA3.units = PILOT.map(id => RA3.units.find(u => u.id === id))
 const ranks = loadRanks(path.join(REPO_ROOT, 'data/vocab'))
 const field = (result, p) => result.fields.find(f => f.path === p) ?? assert.fail(`no field '${p}'`)
 

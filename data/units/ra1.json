@@ -1,0 +1,2474 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra1",
+  "units": [
+    {
+      "id": "ra1.allied.spy",
+      "game": "ra1",
+      "faction": "allied",
+      "name": "Spy",
+      "lineage": "spy",
+      "flavour_affinity": ["allied"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "infiltrator",
+        "secondary": ["scout"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Radar Dome",
+        "basis": "Trained at the Allied barracks only once the side has a Radar Dome; the wiki infobox gives tier 2 and StrategyWiki the same two buildings. A Soviet side can train it in skirmish only from a captured Allied barracks, and the Soviet-owned Spy of the campaign is campaign-only, so the entry is recorded under the Allies."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 500,
+        "basis": "Five times a Rifle Infantry's price and a little over half the main-battle-tank anchor, so low."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "Both wikis give it the same land speed as the Rifle Infantry, the speed reference."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "notes": "One soldier. Every player but its owner sees it drawn as a Rifle Infantry in that player's own colours (see abilities/0)."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Half the Rifle Infantry's health. Step 1 of the armour-class order decided: the wiki infobox leaves the armour type as N/A and StrategyWiki gives none, which the armour map makes unarmoured; the manual's own Armor grade is None as well."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Sees a quarter further than the Rifle Infantry, so medium. The disguise is a pattern, not the stealth trait: the spy is in plain view, only mistaken for a friendly rifleman. Inside an enemy Radar Dome it shares that enemy's view with its own side (abilities/1)."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One soldier, one player."
+      },
+      "abilities": [
+        {
+          "name": "Disguise",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Always on. To every player but its owner the spy looks like one of that viewer's own Rifle Infantry, in the viewer's colours and under the rifleman's name, and this fools players allied with its owner too. Enemy units and base defences never pick it as a target by themselves, so it can stroll through a base unless a watchful human notices the stray rifleman and orders an attack, or an attack dog sees through it. Vehicles can still run it over.",
+          "patterns": ["disguise"]
+        },
+        {
+          "name": "Infiltrate",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "per-life",
+          "summary": "Sent into an enemy building, the spy slips inside and is used up; the building keeps working. What its side learns depends on the building. Construction Yard, barracks, War Factory or Naval Yard: selecting it shows what it is building. Helipad and Airfield: that, plus the ammunition left in aircraft parked there. Power plants: a gauge of the enemy's power. Ore Refinery or Silo: how full it is (exact figures in the Remastered Collection). Radar Dome: the spy's side sees whatever that enemy sees. A fake building is shown up as a fake. A Sub Pen also earns a Sonar Pulse and an Airfield a parabomb strike (abilities/2 and abilities/3). Spies trained by a Soviet player show exact power and ore figures.",
+          "patterns": ["capture-structure"]
+        },
+        {
+          "name": "Sonar Pulse (earned in a Sub Pen)",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "per-life",
+          "summary": "A spy that gets into an enemy Sub Pen puts a Sonar Pulse button on its side's sidebar. Used once, it briefly exposes every enemy submarine anywhere on the battlefield, so ships can find and hit them; then it is gone. In multiplayer the code grants it only when superweapons are switched on. In the Remastered Collection it keeps recharging while the infiltrated Sub Pen stands (patch 740600).",
+          "patterns": ["reveal-area"]
+        },
+        {
+          "name": "Parabombs (earned in an Airfield)",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "per-life",
+          "summary": "A spy that gets into an enemy Airfield gives its side one parabomb strike. The player picks a spot; a Badger bomber flies over and lets a row of bombs on parachutes drift down, wrecking the target and what stands near it, while soldiers who see them falling try to run clear. It works once. In multiplayer the code grants it only when superweapons are switched on; otherwise parabombs are a Soviet power of the campaign only.",
+          "patterns": ["bombard-area"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal"
+      },
+      "strengths": [
+        {
+          "ref": "pattern:disguise",
+          "why": "Enemy units and base defences never choose it as a target on their own, so it can walk through a base that keeps no dogs."
+        },
+        {
+          "ref": "pattern:capture-structure",
+          "why": "One spy in an enemy Radar Dome gives its side the enemy's view; others expose production, power, stored ore or fake buildings."
+        },
+        {
+          "ref": "pattern:bombard-area",
+          "why": "Inside an enemy Airfield it earns a free parabomb strike that wrecks a target and its surroundings."
+        },
+        {
+          "ref": "pattern:reveal-area",
+          "why": "Inside an enemy Sub Pen it earns a pulse that shows every enemy submarine for a few seconds."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "Half a rifleman's health and no weapon of any kind, so it dies at once to whoever does decide to shoot it."
+        },
+        {
+          "ref": "pattern:disguise",
+          "why": "It fools the game's targeting, not people: a careful human player spots a rifleman where none should be and has it shot."
+        },
+        {
+          "ref": "pattern:capture-structure",
+          "why": "Each spy is spent on a single building, and most buildings give only information."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "sensor:detector",
+          "why": "Attack dogs see through the disguise and hunt spies down by themselves; computer opponents rely on them to stop spies."
+        },
+        {
+          "ref": "unit:ra1.soviet.attack-dog",
+          "why": "Attack dogs see through the disguise and hunt spies down by themselves; computer opponents rely on them to stop spies."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "Like any soldier it can be run over, and computer-driven vehicles sometimes flatten an enemy spy without meaning to."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "mobility:naval-submerged",
+          "why": "The Sonar Pulse it earns briefly exposes every enemy submarine, wherever it lurks, so ships can hunt them."
+        },
+        {
+          "ref": "unit:ra1.soviet.submarine",
+          "why": "The Sonar Pulse it earns briefly exposes every enemy submarine, wherever it lurks, so ships can hunt them."
+        }
+      ],
+      "combos": [],
+      "memorable": "Everyone who looks at it sees one of their own riflemen; only a dog can tell, and one spy in the right building hands over the enemy's view, sonar or a bomber strike.",
+      "as_player": "You look like a rifleman of whoever is watching, so bots and turrets ignore you, but sharp players notice a soldier in the wrong place. Walk into an enemy building to spend your life on its secret: share their view, learn what they build, or earn a one-time sonar ping or bomber strike for your team. Unarmed and fragile: one dog, or one player who calls you out, ends the run.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Spy_(Red_Alert_1)",
+          "title": "Spy (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert with Counterstrike and The Aftermath; notes the Remastered Collection",
+          "note": "Its quote box copies the Spy paragraph of the Red Alert manual (Westwood, 1996). Infobox: Allied barracks plus Radar Dome, tier 2, armour type N/A; the Soviet version is marked campaign only.",
+          "supports": [
+            "faction",
+            "lineage",
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament",
+            "abilities/0",
+            "abilities/1",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Allied_units",
+          "title": "Command & Conquer: Red Alert/Allied units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "note": "Stat table: barracks plus Radar Dome, price, armour none, health, sight and speed; short lines on infiltration, sabotage and disguise.",
+          "supports": ["tier", "cost_band", "mobility", "armour", "sensors", "abilities/0", "abilities/1"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Sonar_pulse",
+          "title": "Sonar pulse, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Its quote box copies the Sonar Pulse paragraph of the Red Alert manual, which says a Spy in an enemy Sub Pen earns it.",
+          "supports": ["abilities/2", "strengths/3", "counters", "roles/secondary"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Parabombs",
+          "title": "Parabombs, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Its quote box copies the Parachute Bombs paragraph of the Red Alert manual; the page says a spy in an Airfield earns them once.",
+          "supports": ["abilities/3", "strengths/2"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/INFANTRY.CPP",
+          "title": "REDALERT/INFANTRY.CPP, EA's Command & Conquer Remastered Collection source release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release, master branch",
+          "note": "EA's released game code: a spy that enters a building is removed; entering a Radar Dome shares the radar view; a Sub Pen enables the Sonar Pulse and an Airfield a one-time parabomb strike, in multiplayer only with superweapons on; spies are drawn with the Rifle Infantry's images to non-owners.",
+          "supports": ["abilities/0", "abilities/1", "abilities/2", "abilities/3", "body"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "abilities/2/cooldown",
+          "note": "The Sonar pulse page calls it single-use, but EA's code enables the spy's pulse as a recharging power (INFANTRY.CPP), removed only when no infiltrated Sub Pen remains (HOUSE.CPP, https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/HOUSE.CPP), and the Command & Conquer Wiki page Remastered Collection patch 740600 (https://cnc.fandom.com/wiki/Remastered_Collection_patch_740600) fixed the pulse being usable only once. The code is the Remastered release, so it may not show 3.03; the band follows the wiki page. If the pulse recharges in 3.03 too, the band would be long.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0",
+          "note": "That enemy units and defences never choose a spy as a target unless they are dogs, and that a spy is recoloured in the viewer's colours, rests on EA's code, TECHNO.CPP (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP). The Spy page confirms the look and that a careful human can still spot it."
+        },
+        {
+          "path": "strengths/0",
+          "note": "Rests on TECHNO.CPP (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP), which skips spies when any non-dog unit picks a target."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Scout rests on the infiltrate button (the Radar Dome's shared view) and on the earned Sonar Pulse. The wiki's own prose calls spies great scouts, but no official text uses the scout label or an alias, so it ranks at step 2."
+        },
+        {
+          "path": "abilities/1",
+          "note": "The building-by-building effects come from the Spy page's table. The manual also says a spy can show how many units the enemy has, which the table does not list, and a Supply depot is listed with no effect. The code (INFANTRY.CPP) does not say how long the shared Radar Dome view lasts."
+        },
+        {
+          "path": "abilities/3",
+          "note": "The Parabombs page's infobox describes the campaign power (Soviet, with a long recharge); the one-time strike a spy earns comes from that page's prose and from INFANTRY.CPP, which enables it as a one-time power."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J01-RA1"
+    },
+    {
+      "id": "ra1.soviet.attack-dog",
+      "game": "ra1",
+      "faction": "soviet",
+      "name": "Attack Dog",
+      "lineage": "attack-dog",
+      "flavour_affinity": ["soviet"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["scout"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Kennel",
+        "basis": "Trained only at the Kennel, a Soviet building that needs nothing but the barracks; the wiki lists both the dog and the Kennel at tier 1."
+      },
+      "cost_band": {
+        "band": "very-low",
+        "raw": 200,
+        "basis": "Twice a Rifle Infantry's price and under a quarter of the main-battle-tank anchor: among the cheapest units."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "Both wikis give it the Rifle Infantry's land speed. EA's code doubles its pace whenever it has a target, so it closes on a victim at twice its walking speed; the band uses the plain figure."
+      },
+      "body": {
+        "plan": "beast",
+        "size": "small",
+        "notes": "A German shepherd; the size list names war dogs as small."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "About a quarter of the Rifle Infantry's health. Step 1 of the armour-class order decided: the wiki infobox gives N/A and StrategyWiki none, which the armour map makes unarmoured; the manual also calls dogs unarmoured. Unlike other soldiers, dogs never drop prone, so they never get the prone soldier's halved damage."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": ["detector"],
+        "basis": "in-game",
+        "notes": "Sees a quarter further than the Rifle Infantry. Detector: the manual makes it the only unit that can see through the Spy's disguise, and it attacks spies in reach on its own. No source says it unmasks a spy for teammates."
+      },
+      "armament": [
+        {
+          "name": "Dog bite (the manual's Sharp teeth)",
+          "slot": "primary",
+          "family": "blades",
+          "damage": "melee",
+          "mount": "free-aim",
+          "delivery": "melee",
+          "range": "melee",
+          "can_target": ["infantry"],
+          "traits": [],
+          "summary": "Runs at a soldier, springs at him from about three quarters of a rifle's reach and mauls him. The bite kills any soldier outright, whatever his health, and hurts nobody else nearby. It can be aimed only at infantry: never at a vehicle, building, aircraft, ship or patch of ground. Only one dog may go for a given soldier at a time, so any other dog must pick another victim. Victims never shoot back at a dog by reflex; it must be picked as an ordinary target.",
+          "patterns": []
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One dog, one player."
+      },
+      "abilities": [],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal"
+      },
+      "strengths": [
+        {
+          "ref": "hits:infantry",
+          "why": "One bite kills any soldier outright, whatever his health, so even the toughest infantry fall to it."
+        },
+        {
+          "ref": "sensor:detector",
+          "why": "The only unit that sees through spies, and it goes after them on its own."
+        },
+        {
+          "ref": "tier:t1",
+          "why": "Cheap and early: twice a rifleman's price, from a Kennel that needs only the barracks."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "About a quarter of a rifleman's health, so a single rifle burst kills it."
+        },
+        {
+          "ref": "weapon:blades",
+          "why": "The bite works only on soldiers: no vehicle, building, aircraft, ship or patch of ground, and only one dog may take a given soldier at a time."
+        },
+        {
+          "ref": "range:melee",
+          "why": "It must run up and spring, so it is under fire all the way in."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "weapon:small-arms",
+          "why": "Rifle infantry kill a dog with one burst, and a group of them standing still is the worst thing to send dogs at."
+        },
+        {
+          "ref": "unit:ra1.shared.rifle-infantry",
+          "why": "Rifle infantry kill a dog with one burst, and a group of them standing still is the worst thing to send dogs at."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Nothing it does can harm a vehicle, so armour ignores it."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "role:infiltrator",
+          "why": "A base guard that sees through spies and catches thieves, killing either with one bite."
+        },
+        {
+          "ref": "unit:ra1.allied.spy",
+          "why": "The only unit that can find a spy, and it kills one with one bite."
+        },
+        {
+          "ref": "role:engineer",
+          "why": "A cheap base guard against engineers slipping in to take buildings."
+        },
+        {
+          "ref": "weapon:flamethrower",
+          "why": "Flamethrower troops struggle to hit a charging dog with their slow shots."
+        },
+        {
+          "ref": "weapon:explosives",
+          "why": "Grenadiers' slow grenades struggle to catch a charging dog."
+        }
+      ],
+      "combos": [],
+      "memorable": "A cheap, frail dog that kills any soldier in one leap, can't touch a tank, and no other unit in the game can sniff out a spy.",
+      "as_player": "Cheap and quick to buy: sprint at a soldier and spring on him to kill him outright, however tough he is, but you can't bite vehicles or buildings, and only one dog may maul a target at a time. You sniff out disguised spies for your side. A single rifle burst ends you, so strike the isolated and the slow.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Attack_dog_(Red_Alert_1)",
+          "title": "Attack dog (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert with Counterstrike and The Aftermath",
+          "note": "Its quote box copies the Attack Dog paragraph of the Red Alert manual (Westwood, 1996). Infobox: Kennel, tier 1, armour type N/A, Organic bite, spy detection.",
+          "supports": [
+            "faction",
+            "lineage",
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Soviet_units",
+          "title": "Command & Conquer: Red Alert/Soviet units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "note": "Stat table: Kennel, price, armour none, health, sight, speed, and the bite's target (infantry only), reach and Organic type.",
+          "supports": ["tier", "cost_band", "mobility", "armour", "sensors", "armament/0", "roles/primary"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/INFANTRY.CPP",
+          "title": "REDALERT/INFANTRY.CPP, EA's Command & Conquer Remastered Collection source release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release, master branch",
+          "note": "EA's released game code: a dog may target only infantry and never a cell; its bite deals the target's full health to the target alone; only one dog may attack a given soldier; the dog leaves the map while it leaps and reappears on the hit; it runs at double pace while it has a target and never goes prone.",
+          "supports": ["armament/0", "mobility", "armour", "weaknesses/1", "roles/primary"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP",
+          "title": "REDALERT/TECHNO.CPP, EA's Command & Conquer Remastered Collection source release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release, master branch",
+          "note": "EA's released game code: only dogs treat a spy as a valid target, and units never retaliate against a dog by reflex.",
+          "supports": ["sensors", "armament/0", "strengths/1", "counters/1"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Kennel",
+          "title": "Kennel, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Infobox: tier 1, needs the Soviet barracks; trains only attack dogs, and more Kennels train them faster.",
+          "supports": ["tier"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "armament/0/range",
+          "note": "The infobox reach is about three quarters of the Rifle Infantry's rifle, which would be medium by the figure. The band is melee because the dog covers that gap by its own leap and bites on contact (INFANTRY.CPP takes it off the map during the leap and puts it back on the hit), and the melee band counts a unit's own leap."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Melee, as a lunge that lands at touching distance. Ram was the other reading, since the dog itself flies at the target, but it survives the hit and mauls rather than collides."
+        },
+        {
+          "path": "sensors/traits",
+          "note": "The detector term reveals disguised enemies for the whole team; the sources only say the dog itself sees through spies and attacks them, and the code still draws a spy as a friendly rifleman to everyone else. The Kennel page's production list also says dogs detect Thieves; no other page read says so."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The code doubles the dog's pace while it has a target, which would make it fast while chasing; the band uses the plain land speed."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Scout rests only on the detector trait (step 4). The Kennel page's production list calls the dog scout infantry, but that line is the wiki's own words, not official text."
+        },
+        {
+          "path": "counters/3",
+          "note": "Rests on the dog page's own prose, which says grenadiers and flamethrowers defend poorly against dogs because their shots travel slowly."
+        },
+        {
+          "path": "counters/4",
+          "note": "Rests on the same prose as counters/3."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armament/0/patterns",
+          "used": "none",
+          "wanted": "execute-target",
+          "note": "No registered pattern covers an attack that kills one kind of target outright whatever its health, while it cannot touch any other kind; proposed as execute-target."
+        },
+        {
+          "path": "sensors/traits",
+          "used": "detector",
+          "wanted": "a detector that sees through disguises for itself and attacks, without unmasking them for the team",
+          "note": "The dog sees through the Spy's disguise and attacks it, but nothing shows teammates seeing the spy for what it is."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J01-RA1"
+    },
+    {
+      "id": "ra1.allied.field-mechanic",
+      "game": "ra1",
+      "introduced_in": "ra1-aftermath",
+      "faction": "allied",
+      "name": "Field Mechanic",
+      "flavour_affinity": ["allied"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "support",
+        "secondary": []
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Service Depot",
+        "basis": "Trained at the Allied Barracks only once a Service Depot stands: its infobox gives tier 2 with that requirement, and the depot's page lists him among the units it unlocks. The registry counts the depot as one tech step beyond the basics."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 950,
+        "basis": "List price a little above the Medium Tank's and just past the medium threshold, a high price for a soldier, as the wiki remarks."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "His land speed in the infobox equals the Rifle Infantry's, so medium. The Aftermath manual calls him slow, a word about him among soldiers that does not set the band. The vehicles he serves outpace him: the Medium Tank moves twice as fast. Like any soldier he can be run over by a crushing vehicle."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "notes": "An ordinary soldier carrying a socket wrench; one per purchase."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the infobox armour type Light maps to light. The Aftermath manual grades him as having no armour at all, so the two disagree (see uncertain). He has a little more health than a Rifle Infantry and less than a Medic. Like other infantry he drops flat when frightened and then takes half damage, a game-wide rule that adds no model."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox sight is three quarters of the Rifle Infantry's, inside medium but close to the short edge. No sensor trait of his own; the engine lets every soldier make a cloaked enemy beside it shimmer into view, which is game-wide."
+      },
+      "armament": [
+        {
+          "name": "Socket Wrench",
+          "slot": "primary",
+          "family": "repair-tool",
+          "damage": "repair",
+          "mount": "free-aim",
+          "delivery": "beam",
+          "range": "short",
+          "can_target": ["ground-vehicle"],
+          "affects": "allies",
+          "traits": [],
+          "summary": "Restores health to a damaged friendly vehicle and can never be turned on an enemy. Ordered onto a hurt vehicle, or left idle near one, he walks over and works on it until it is whole, which takes a while, as with the Medic's healing. The wiki says this is far quicker than a trip to the Service Depot and costs nothing, whereas the depot bills credits for each repair and the vehicle must drive back onto its pad. The code also accepts friendly aircraft as patients, but never ships or soldiers. A board order on a damaged transport becomes a repair order: he fixes it fully first and only then climbs in.",
+          "patterns": ["repair-allies"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One soldier. He rides in an APC like any infantry (entering is a universal key), but only once the carrier is at full health, because his repair order takes over while it is damaged (wiki; INFANTRY.CPP). In the 2020 source release a force move sends him into a damaged APC without the repair."
+      },
+      "abilities": [],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "No page shows anything special when he dies; the code has no survivor logic for infantry."
+      },
+      "strengths": [
+        {
+          "ref": "weapon:repair-tool",
+          "why": "Mends friendly vehicles where they fight, for free and, by the wiki's account, far quicker than a Service Depot, so tanks need not leave the front to be fixed."
+        },
+        {
+          "ref": "pattern:repair-allies",
+          "why": "Finds damaged friendly vehicles near him by himself and keeps at them until they are fully repaired."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:repair-tool",
+          "why": "His one tool only repairs: he has no gun, so he can neither defend himself nor hurt anything."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "A frail soldier the manual calls unarmoured; Soviet infantry and tanks pick him off easily, and crushing tanks can drive over him."
+        },
+        {
+          "ref": "speed:medium",
+          "why": "Walks at a rifleman's pace, which the manual calls slow, so the faster tanks he serves leave him behind."
+        },
+        {
+          "ref": "tier:t2",
+          "why": "Needs a Service Depot first and costs a little more than a Medium Tank, a steep price for a soldier who cannot fight."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:infantry",
+          "why": "The manual singles out Soviet infantry as a threat to him; with no weapon he can only run from riflemen."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "The manual also names Soviet tanks: their guns kill him quickly, and he cannot answer them."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "In a long tank fight the side he serves keeps its tanks topped up in the field, while the enemy's tanks must leave for a depot and pay for repairs."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:vehicle",
+          "why": "Follows friendly tanks and patches them up between engagements, so an armoured push keeps going without trips home."
+        },
+        {
+          "ref": "role:transport",
+          "why": "An APC can carry him to the front under armour, but a damaged carrier must be fully repaired by him before he can climb in."
+        }
+      ],
+      "memorable": "The Aftermath's wrench-carrying soldier who fixes friendly tanks in the field for free, quicker than the Service Depot, yet cannot fire a single shot.",
+      "as_player": "A T2 Allied support pick with no gun. Follow your team's tanks and keep the wrench on damaged vehicles to bring them back to full for free. With little health and a rifleman's pace, stay behind the armour: enemy infantry and tanks will hunt you first.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/File:Red_Alert_-_The_Aftermath_-_English.pdf",
+          "title": "Command & Conquer: Red Alert - The Aftermath instruction manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "1997 manual",
+          "note": "Westwood's printed manual, read in the PDF behind this file page. The Field Mechanic entry gives his stat words (range short, armour none, weapon a socket wrench) and the paragraph used for the role and the matchups.",
+          "supports": [
+            "roles/primary",
+            "armament/0",
+            "armour",
+            "mobility",
+            "strengths/1",
+            "weaknesses/1",
+            "weaknesses/2",
+            "countered_by/0",
+            "countered_by/1",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Field_mechanic",
+          "title": "Field mechanic, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with The Aftermath",
+          "note": "Infobox: price, tier 2, trained at the Allied barracks with a Service Depot, health, armour type, land speed and sight. Its quote box copies the Aftermath manual paragraph. The prose compares him with the Service Depot and gives the rule that he must repair a transport before boarding it.",
+          "supports": [
+            "introduced_in",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "crew",
+            "strengths/0",
+            "weaknesses/0",
+            "weaknesses/3",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Service_depot_(Red_Alert_1)",
+          "title": "Service depot (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "The depot repairs vehicles driven onto its pad for a fee and unlocks the Field Mechanic at the barracks; its quote box copies the Red Alert manual's depot paragraph.",
+          "supports": ["tier", "armament/0", "strengths/0", "counters/0"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/INFANTRY.CPP",
+          "title": "REDALERT/INFANTRY.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The mechanic's click and firing logic: he works only on friendly vehicles and aircraft below full health, a damaged APC gets a repair order instead of a board order unless force move is held, and he stops once the patient is whole.",
+          "supports": ["armament/0", "crew", "combos/1"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP",
+          "title": "REDALERT/TECHNO.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "Target choice for units with a healing weapon: they never pick an enemy and pick only damaged friends; the mechanic's own scan looks at vehicles and aircraft.",
+          "supports": ["armament/0", "strengths/1", "weaknesses/0"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "armour/class",
+          "note": "The infobox gives armour type Light, while the Aftermath manual grades him as wearing none. The registry notes say the manual's word is a grade and the infobox decides, so he is coded light.",
+          "sources_disagree": true
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The manual calls him slow, yet the infobox gives him the same land speed as the Rifle Infantry, the speed reference. The band follows the infobox figure; the Medic's page shows the same mismatch between its prose and its figure.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No page says how the wrench reaches the vehicle, so beam, the repair-tool family's default, is used. A hand tool may need him right beside the vehicle; the weapon's own figures live in the game's rules file, which no page read shows."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "No page gives the wrench's reach. Short is the repair-tool family's default; the manual's grade Short agrees, but the registry notes say the manual's grades are not band data."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "INFANTRY.CPP and TECHNO.CPP also accept friendly aircraft as patients, but no page says whether he can reach one in flight. A flier he can treat only when it stands on the ground is not an air target, so only ground vehicles are listed."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "That he is faster than the depot and free is the wiki's own prose; the manual says only that he takes time to bring a vehicle back to full strength. No page gives his repair rate."
+        },
+        {
+          "path": "crew/notes",
+          "note": "The force-move exception for a damaged APC is in the 2020 source release; whether the 1997 to 1999 game already had it is unchecked. The wiki describes only the rule that he repairs the carrier first."
+        },
+        {
+          "path": "counters",
+          "note": "No page names a matchup he wins; the counter is drawn from the repair facts (free field repair against depot repair that costs credits)."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armament/0/delivery",
+          "used": "beam",
+          "wanted": "touch or melee delivery for a repair tool",
+          "note": "A socket wrench worked by hand on the vehicle fits neither of the repair-tool family's deliveries (beam, projectile); melee, the touching-distance delivery, is not allowed for the family."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J02-RA1"
+    },
+    {
+      "id": "ra1.soviet.mad-tank",
+      "game": "ra1",
+      "introduced_in": "ra1-aftermath",
+      "faction": "soviet",
+      "name": "M.A.D. Tank",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": []
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Tech Center",
+        "basis": "Built at the Soviet War Factory once a Soviet Tech Center stands; its infobox gives tier 3, and the wiki's War Factory list files it under tier 3 as a unit of The Aftermath only. It counts as buildable in skirmish and in Aftermath-mode multiplayer, as the registry's version note says."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 2300,
+        "basis": "List price about two and a half times the main-battle-tank anchor, well past the very-high threshold, for a unit that is used up in a single blast. The Russian country discount is ignored."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": ["crush"],
+        "speed": "slow",
+        "speed_raw": 0.75,
+        "notes": "Built on the Mammoth Tank's chassis. Its land speed is three quarters of the Rifle Infantry's and of the Mammoth's, and well under half the Medium Tank's, so it is slower than both. It rolls over infantry (wiki; the crusher flag in the game code). Once its countdown starts it never moves again. Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
+      },
+      "body": {
+        "plan": "launcher-rack",
+        "size": "large",
+        "notes": "The wiki says it uses the Mammoth Tank's chassis and carries a large piston on its back that pumps faster as the charge builds; the code gives it no turret. Launcher-rack is the nearest body plan (an exposed device on a chassis with no passenger room), although the chassis is a heavy one, not a light one (see fit_notes). Coded large: it is a tank, and the code's sprite-size flag groups it with the Medium, Heavy and Mammoth Tanks."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the infobox armour type Heavy maps to heavy, and the RA1 registry notes step the M.A.D. Tank down to medium as a ground vehicle with less health than the main battle tanks. It has half the health of the Mammoth Tank whose chassis it uses, and the wiki stresses that it is far easier to destroy. The manual's Armor word (heavy) is a grade, not the class. The Soviet Iron Curtain, a side-wide power, can make it immune to damage for a while, which also holds back its countdown."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its sight is half again the Rifle Infantry's, exactly on the edge, which goes to medium; the Mammoth sees as far. No sensor trait. Its pulse reaches well past what it can see."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player drives and starts the countdown. In the source a single crewman climbs out when the countdown begins and runs off (wiki); the code makes him an unarmed civilian technician."
+      },
+      "abilities": [
+        {
+          "name": "Harmonic shock wave (activate)",
+          "kind": "active",
+          "cooldown": "per-life",
+          "source": "innate",
+          "patterns": ["self-destruct"],
+          "summary": "Clicking the selected tank on itself (in the Remastered Collection the Deploy key works too) sounds a siren and starts the charge. From then on the tank stays put and takes no more orders, and its lone crewman climbs out and runs. A piston on its back pumps faster and faster until the seismic pulse goes off and wrecks the tank itself. The charge cannot be called off: only destroying the tank first stops it, and then no pulse comes at all. While the Soviet Iron Curtain covers the tank, the charge cannot finish. The pulse reaches about as far as a nuclear blast, well beyond the tank's own sight. Every vehicle, ship and aircraft inside it, aircraft in flight included, loses a little under half of its own maximum health, and every building about two fifths, whichever side owns it and whatever its armour. Soldiers take no damage at all."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "in-game",
+        "notes": "The crewman gets out when the countdown starts, not at the moment of death; the tank then dies in its own pulse, which spares him. If enemies destroy the tank first, nothing explodes. The game code also gives a crewed vehicle without passenger seats an even chance of leaving one crewman when it is destroyed, if the rules mark it as crewed, which no page read shows for this tank."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:self-destruct",
+          "why": "One pulse strips a little under half of the maximum health from every vehicle, ship and aircraft in a very wide area, flying aircraft too, and a large share from every building; armour makes no difference, so the wiki notes that three pulses finish off anything that is not infantry."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "It runs over soldiers in its path, which the wiki says makes it dangerous to infantry even though its pulse leaves them unhurt."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:medium",
+          "why": "Far less armour than the Mammoth it is built on, with half its health, so focused fire can kill it before the countdown ends, and then the pulse never comes."
+        },
+        {
+          "ref": "pattern:self-destruct",
+          "why": "Once started it cannot be stopped or moved, its pulse hurts its own side's vehicles and buildings as much as the enemy's, and it does nothing to infantry, so the wiki calls it almost useless for defence."
+        },
+        {
+          "ref": "speed:slow",
+          "why": "Slower than the Rifle Infantry and the Mammoth, so it is slow to reach its target and easy to see coming."
+        },
+        {
+          "ref": "tier:t3",
+          "why": "Needs a Soviet Tech Center and costs about two and a half main battle tanks, all spent in one blast."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:infantry",
+          "why": "The pulse cannot hurt soldiers, so infantry can keep shooting it through the whole countdown; the wiki names infantry as its best counter."
+        },
+        {
+          "ref": "weapon:rockets",
+          "why": "The wiki singles out rocket infantry: soldiers the pulse cannot touch, carrying weapons that hurt vehicles."
+        },
+        {
+          "ref": "unit:ra1.shared.rocket-soldier",
+          "why": "Red Alert's own rocket infantry, the counter the wiki names: untouched by the pulse and armed against vehicles."
+        },
+        {
+          "ref": "pattern:become-invulnerable",
+          "why": "The charge cannot finish while the Soviet Iron Curtain covers the tank, and the game lets a Soviet player cast it on any vehicle, so an enemy Soviet player can stall it; anything under the curtain also shrugs off the pulse."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Every vehicle in the pulse loses the same large share of its maximum health whatever its armour, so a massed tank column is gutted at once."
+        },
+        {
+          "ref": "armour-class:heavy",
+          "why": "Damage by share of maximum health makes thick armour worthless: the toughest tanks lose as large a share as the lightest trucks."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Buildings in range lose a large share of their health to each pulse, and three pulses level any building, so a few of these tanks can break a base."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:ra1.soviet.mad-tank",
+          "why": "The wiki notes that three pulses in a row destroy any vehicle or building, provided the target gets no chance to repair in between."
+        },
+        {
+          "ref": "role:anti-infantry",
+          "why": "Soldiers are its counter and the pulse spares them, so escorts that clear infantry keep it alive through the countdown."
+        }
+      ],
+      "memorable": "A tank that is a countdown: once started, only its death stops the pulse that guts every vehicle and building around it, friend or foe, while soldiers walk away unhurt.",
+      "as_player": "A slow, unarmed T3 tank that is one big bomb. Drive into the enemy and press the key: the tank locks in place behind a siren and a long, loud charge, and when it ends every vehicle and building nearby, your team's too, loses a big share of its health. You hop out as a soldier when the charge starts and slip away, since the pulse spares soldiers. That same rule makes enemy infantry your hunters during the countdown.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/File:Red_Alert_-_The_Aftermath_-_English.pdf",
+          "title": "Red Alert: The Aftermath manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "1997 Aftermath manual",
+          "note": "Westwood's printed manual, read in the PDF behind this file page; the M.A.D. Tank entry is on PDF page 4. Its paragraph is the unit's official one-line description.",
+          "supports": ["roles/primary", "abilities/0", "weaknesses/1", "countered_by/0", "memorable"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/M.A.D._tank",
+          "title": "M.A.D. tank, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with The Aftermath",
+          "note": "Infobox for tier, price, health, armour type, land speed, sight and the Iron Curtain rule; its quote box copies the Aftermath manual paragraph. The prose gives the crewman, the share of health the pulse takes, its reach and the counters.",
+          "supports": [
+            "introduced_in",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "crew",
+            "abilities/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/War_factory_(Red_Alert_1)",
+          "title": "War factory (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "The Soviet tab lists it under tier 3, needing the Soviet Tech Center, marked as an Aftermath-only unit, with a one-line summary of the pulse.",
+          "supports": ["introduced_in", "tier", "abilities/0"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UNIT.CPP",
+          "title": "REDALERT/UNIT.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The M.A.D. Tank's countdown in the unload mission: an unarmed technician is placed next to the tank and sent away, the charge waits while the Iron Curtain lasts, mouse orders are ignored once the charge has begun, and at the end the tank is set to die and a local quake is started at its position.",
+          "supports": ["abilities/0", "on_death", "crew", "mobility", "countered_by/3"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/LOGIC.CPP",
+          "title": "REDALERT/LOGIC.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The quake loop: every object within the M.A.D. Tank's distance, whatever side owns it and aircraft included, takes damage equal to a set share of its own maximum health, buildings a different share and infantry none.",
+          "supports": ["abilities/0", "strengths/0", "weaknesses/1", "counters"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "abilities/0",
+          "note": "The pulse's sizes (a little under half of each vehicle's, ship's and aircraft's maximum health, about two fifths of each building's, over roughly a nuclear blast's area) come from the wiki's prose. The built-in defaults in REDALERT/RULES.CPP of EA's source release are different (half for units, a quarter for buildings, and a much wider reach), and the Aftermath rules file can override them; that file could not be read, so the entry follows the wiki."
+        },
+        {
+          "path": "abilities/0/kind",
+          "note": "Active or deploy. The Remastered Collection patch 735514 page (Command & Conquer Wiki, read, not cited) says the Deploy key starts it, and the tank never moves again once the charge starts, but it gains no mode: it only counts down to its own death. Coded active."
+        },
+        {
+          "path": "abilities/0/cooldown",
+          "note": "Per-life because the tank dies in its own pulse; no source gives a figure. No page gives the countdown's length either: in the code it is a delay from the rules (RULES.CPP default), scaled by the owner's fire-rate bonus, followed by the charging animation."
+        },
+        {
+          "path": "on_death",
+          "note": "Bail-out, basis in-game, because the cited wiki page shows the single crewman getting out on his own, as the registry notes ask. He leaves when the countdown starts rather than as the tank dies, and the code makes him an unarmed civilian technician, not a rifleman. Whether the rules also mark the tank as crewed, which would give an even chance of a survivor on an ordinary death, could not be checked."
+        },
+        {
+          "path": "body/plan",
+          "note": "REDALERT/UDATA.CPP of EA's source release (read, not cited) gives the tank no turret; the wiki describes the piston on its back. No body plan describes a heavy tank hull carrying a device instead of a gun; launcher-rack was taken as the nearest."
+        },
+        {
+          "path": "body/size",
+          "note": "Large as a tank on the Mammoth's chassis. REDALERT/UDATA.CPP gives it the sprite-size flag that REDALERT/TYPE.H explains (bigger than one cell but under two), which the Medium, Heavy and Mammoth Tanks share, while the Light Tank and the APC lack it."
+        },
+        {
+          "path": "mobility/base",
+          "note": "Tracks rests on the wiki's statement that it uses the Mammoth Tank's chassis; no page read names its drive outright."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "Crush rests on the wiki, which says it can crush infantry; REDALERT/UDATA.CPP's crusher flag and the registry's list of RA1 crushers agree."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The speed comparisons use the Mammoth tank (Red Alert 1) page of the Command & Conquer Wiki (read, not cited), whose infobox gives the Mammoth the Rifle Infantry's land speed and the same sight as this tank, and the Medium Tank's speed in the registry notes. The same page's health figure backs the health comparison in armour.notes."
+        },
+        {
+          "path": "countered_by/3",
+          "note": "REDALERT/HOUSE.CPP of EA's source release (read, not cited) lets the Iron Curtain be cast on any vehicle, building, ship or aircraft with no ownership check, and REDALERT/TECHNO.CPP skips all damage to an object while it is under the curtain. The wiki only says an enemy Soviet commander can exploit the rule."
+        },
+        {
+          "path": "armour/class",
+          "note": "The infobox type (Heavy) and the manual's grade (heavy) both say heavy; medium comes only from the registry notes' closed list of units stepped down, which names this tank."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "assault",
+          "wanted": "anti-armour or siege",
+          "note": "Its only job is the pulse, which hurts only vehicles, ships, aircraft and buildings. That pulse is an ability, not a weapon, so roles step 2 (unarmed) finds no listed role that fits, steps 3 and 4 have no main weapon to read, and anti-armour's and siege's requires, which read weapons, fail. Step 5 then gives assault for a slow unit with medium armour."
+        },
+        {
+          "path": "abilities/0/patterns",
+          "used": "self-destruct",
+          "wanted": "deal-percent-damage",
+          "note": "Self-destruct covers blowing itself up to hurt everything nearby. It misses that the pulse takes a fixed share of each target's maximum health instead of a set amount (so armour does not matter and a few pulses kill anything), and that it spares infantry altogether."
+        },
+        {
+          "path": "body/plan",
+          "used": "launcher-rack",
+          "wanted": "a heavy tank hull carrying a device instead of a gun, with no turret",
+          "note": "Hull-turret needs a turret and casemate a fixed gun, and launcher-rack speaks of a light chassis; this is a Mammoth chassis carrying a seismic piston."
+        },
+        {
+          "path": "on_death/outcomes",
+          "used": "bail-out",
+          "wanted": "crew that leave when a self-destruct starts",
+          "note": "Bail-out describes crew getting out as the vehicle dies; here the crewman leaves at the start of the countdown and the vehicle then dies by its own pulse."
+        }
+      ],
+      "researched_by": "batch r1, agent J03-RA1",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra1.allied.mobile-gap-generator",
+      "game": "ra1",
+      "faction": "allied",
+      "name": "Mobile Gap Generator",
+      "flavour_affinity": ["allied"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": []
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Tech Center",
+        "basis": "Built at the Allied War Factory once an Allied Tech Center stands; its infobox gives tier 3. The manual marks it as a multiplayer-only unit (it adds that such units may turn up in some single-player missions), so players build it only in skirmish and multiplayer; StrategyWiki says the same."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 600,
+        "basis": "List price a little over two thirds of the main-battle-tank anchor, inside low; StrategyWiki gives the same multiplayer price."
+      },
+      "mobility": {
+        "base": "wheels",
+        "handling": "steer",
+        "traits": ["crush"],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "The wiki calls it a gap generator mounted on a truck, on wheels. By the Command & Conquer Wiki's figure it moves at the Rifle Infantry's pace, half the Medium Tank's speed; StrategyWiki's figure is a little over twice that, slightly faster than the Medium Tank (see uncertain). It runs over infantry (the crusher flag in the game code). Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
+      },
+      "body": {
+        "plan": "launcher-rack",
+        "size": "large",
+        "notes": "A truck carrying the gap generator; the code gives it a rotating dish and no gun turret, which fits launcher-rack's chassis with an exposed mast or sensor gear. No size example names a truck, so it is measured against the main battle tank: the code's sprite-size flag puts it with the Medium and Heavy Tanks (drawn bigger than one cell), not with the APC, Light Tank or Radar Jammer, so it is coded large."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the infobox armour type Light maps to light, and StrategyWiki and the manual's grade agree. It has very little health."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its sight equals the Rifle Infantry's; StrategyWiki gives the same. No sensor trait: the gap field hides an area from the enemy, not just the truck, which neither stealth nor jammer describes (see fit_notes). The code does not make it a radar jammer, unlike the Radar Jammer truck, nor hide it from radar by itself."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player drives; there is nothing to fire. No page read names a crew."
+      },
+      "abilities": [
+        {
+          "name": "Shroud generator (gap field)",
+          "kind": "passive",
+          "source": "innate",
+          "patterns": [],
+          "summary": "Always on, with no button. The truck keeps a small patch of ground around itself under black shroud for its enemies and keeps renewing it, so the field travels with it; the truck and any units close by drop out of the enemy's view. An enemy unit that drives in uncovers only the ground within its own sight, and the shroud settles over that ground again once it moves on or dies. The field is smaller than the one the Gap Generator building casts. Computer opponents ignore shroud altogether, so it only fools human players. Remastered Collection patch 744746 fixed a bug that left its shroud on the map for good."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No page read shows anything special when it dies, so the 3C default applies. The game code may let one crewman out on an even chance if the rules mark the truck as crewed; since it has no weapon, he would be an unarmed technician. The code also takes its field away when it is destroyed."
+      },
+      "strengths": [
+        {
+          "ref": "body:launcher-rack",
+          "why": "Its gap dish keeps the ground around it black for the enemy, hiding the truck and every unit near it, so the enemy cannot see what is being sent against them."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "It can run over infantry, its only way of hurting anything."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:light",
+          "why": "Light armour and very little health, so it dies fast once found."
+        },
+        {
+          "ref": "body:launcher-rack",
+          "why": "It carries the gap dish instead of a gun, so it cannot fight back, and its field is smaller than the gap generator building's, so escorts must keep close. The dish's shroud also means nothing to the computer opponent, which ignores shroud, so it pays off only against human players."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:scout",
+          "why": "A scout that drives into the field uncovers the ground within its own sight and sees what hides there; the shroud only closes again after it leaves or is destroyed."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "It has no gun and light armour, so any armed vehicle that finds it can destroy it unopposed."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "role:scout",
+          "why": "Scouts and lookouts watching from outside the field see only shroud, so they cannot read the size or make-up of the force under it."
+        },
+        {
+          "ref": "role:siege",
+          "why": "Long-range guns that need others to spot for them find no targets under the field until their own units come close enough to uncover them."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:assault",
+          "why": "Driving with an attack group, it keeps the whole group under its field, so the enemy sees nothing of the push until it arrives; the wiki recalls enemy trucks hiding advancing attackers this way in a Soviet campaign mission."
+        }
+      ],
+      "memorable": "A truck with no gun that fights with darkness: the ground around it and its escorts stays black for the enemy, who sees only what his own units stand next to.",
+      "as_player": "An unarmed T3 support truck. You carry no gun: drive with your team and the ground around all of you stays dark for the enemy, so they cannot see what is coming. An enemy who drives in sees only what is next to him, and the dark closes again when he leaves. Light, fragile and with nothing to shoot back with, you die quickly once found, so stay inside your escort.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/File:Red_Alert_1_Manual.pdf",
+          "title": "Red Alert 1 Manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "1996 manual",
+          "note": "Westwood's printed manual, read in the PDF behind this file page. The Mobile Gap Generator entry on PDF page 51 carries the multiplayer-only mark; the Gap Generator building's entry on PDF page 43 says what enemies inside a gap see and that the shroud closes behind them.",
+          "supports": ["roles/primary", "tier", "abilities/0", "strengths/0", "countered_by/0", "counters/0", "combos/0"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Mobile_gap_generator",
+          "title": "Mobile gap generator, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "Infobox for tier, price, health, armour type, land speed and sight; its quote box copies the manual paragraph. The prose says the field follows the truck on the move, and the changelog names Remastered patch 744746.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "abilities/0",
+            "strengths/0",
+            "weaknesses",
+            "countered_by/1",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Gap_generator_(Red_Alert_1)",
+          "title": "Gap generator (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "The building the truck copies: a passing unit lifts the shroud only near itself and it returns behind it, the AI is not affected by shroud at all, and enemy trucks hide groups of attackers in a Soviet campaign mission.",
+          "supports": ["abilities/0", "weaknesses/1", "countered_by/0", "counters", "combos/0"]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Allied_units",
+          "title": "Command & Conquer: Red Alert/Allied units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "note": "Its table gives the truck's multiplayer price, armour, health, sight and a speed that differs from the Command & Conquer Wiki's, and says it is normally kept to multiplayer.",
+          "supports": ["tier", "cost_band", "armour", "sensors", "mobility/notes"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UDATA.CPP",
+          "title": "REDALERT/UDATA.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The truck's unit type (internal name MGG): crusher, rotating dish, no gun turret, the sprite-size flag it shares with the Medium and Heavy Tanks, the gap-generator flag, and no radar jamming or radar invisibility.",
+          "supports": ["mobility/traits", "body", "sensors"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "mobility/speed",
+          "note": "The Command & Conquer Wiki's infobox gives the Rifle Infantry's land speed (medium); StrategyWiki, on the same scale (its Rifle Infantry and Medium Tank match the C&C Wiki's), gives a little over twice that, which would be fast. The C&C Wiki's own Radar jammer page (read, not cited) gives that similar truck StrategyWiki's figure too. Banded from the C&C Wiki infobox, as the registry notes ask. This drops confidence to medium: the contradicted figure decides the speed band and, through roles step 5, the primary role.",
+          "sources_disagree": true
+        },
+        {
+          "path": "roles/primary",
+          "note": "Assault comes from roles step 5 on the C&C Wiki's speed. With StrategyWiki's speed the truck would be fast with light armour, and step 5 would give raider instead."
+        },
+        {
+          "path": "body/size",
+          "note": "The wiki calls it a truck, and trucks have no size example. Large rests on the code's sprite-size flag (REDALERT/TYPE.H of EA's source release, read, not cited, explains it as bigger than one cell but under two), which the Medium and Heavy Tanks share. If it were coded medium, the crush trait would break the trait's size rule."
+        },
+        {
+          "path": "mobility/base",
+          "note": "Wheels rests on the wiki's words (a truck-mounted generator, on wheels); no page read gives its drive, and the rules file that would say could not be read."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "Crush rests on the code's crusher flag and the registry's list of RA1 crushers; no wiki page says it crushes."
+        },
+        {
+          "path": "abilities/0",
+          "note": "REDALERT/UNIT.CPP of EA's source release (read, not cited) renews the field once a second while the truck stands still, at each new cell only for a truck the computer controls, and clears it when the truck dies; how a human player's truck updates the field while driving is not clear from the code, whose multiplayer path was rewritten for the Remastered Collection. The wiki says the field follows the truck on the move. That computer opponents ignore it rests on the Gap generator (Red Alert 1) page, which says so for the building; the manual says the truck works the same way."
+        },
+        {
+          "path": "counters/1",
+          "note": "No page names artillery as a victim of the field. The counter is reasoned from the Gap generator (Red Alert 1) page (a passing unit lifts the shroud only near itself) and the Fog of war page of the Command & Conquer Wiki (read, not cited), whose shroud section says a shrouded area hides the units in it and whose fog section pairs long-range units with spotters."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "assault",
+          "wanted": "support",
+          "note": "Its job is hiding teammates, which is team support, but support's requires (a repair tool, or a repair or resupply pattern) fail. Roles step 2 (unarmed) finds no listed role that fits: buffer is for making allies stronger and scout for finding enemies. Steps 3 and 4 have no main weapon to read, so step 5 gives the generalist default, assault, for a truck that never fights. The wiki's own role line calls it a support unit."
+        },
+        {
+          "path": "abilities/0/patterns",
+          "used": "none",
+          "wanted": "shroud-area",
+          "note": "No registry id fits a field that keeps the ground around the unit dark for the enemy, hiding it and nearby allies, while an enemy inside still sees around itself and the darkness closes behind it. Cloak's area variant breaks when the unit fires or meets a detector, lay-smoke blocks sight for both sides for a short time, and jam-sensors hides only from radar and locks."
+        },
+        {
+          "path": "sensors/traits",
+          "used": "none",
+          "wanted": "an always-on area shroud for the enemy, if shroud-area gets a sensor-trait twin",
+          "note": "The field is always on, so a term would be its natural home, but stealth hides only the unit itself and lets enemies see it up close, and jammer hides from radar and lock-ons, not from sight."
+        },
+        {
+          "path": "strengths/0",
+          "used": "body:launcher-rack",
+          "wanted": "pattern:shroud-area",
+          "note": "No link kind names the gap field, so its strength and one of its weaknesses hang on the body plan that carries the dish."
+        }
+      ],
+      "researched_by": "batch r1, agent J03-RA1",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra1.shared.minelayer",
+      "game": "ra1",
+      "faction": "shared",
+      "name": "Minelayer",
+      "flavour_affinity": [],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "area-denial",
+        "secondary": []
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Service Depot",
+        "basis": "Built at either side's War Factory once a Service Depot stands; both wiki infoboxes give tier 2 with that requirement, and the registry counts the depot as one tech step."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 800,
+        "basis": "The same list price on both sides, equal to the Medium Tank's and a little under the anchor; exactly on the medium threshold, so medium."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": [],
+        "speed": "fast",
+        "speed_raw": 2.25,
+        "notes": "Land speed a little over twice the Rifle Infantry's, so fast: a little quicker than both main battle tanks, the Medium Tank and the Heavy Tank. The code marks it as a vehicle that crushes infantry, but the crush trait is kept for large and huge units, so it is left out (see fit_notes). Tracks rest on the wiki's mention of treads and its APC-based Soviet design."
+      },
+      "body": {
+        "plan": "box-carrier",
+        "size": "medium",
+        "notes": "One unit type for both sides (internal name MNLY): an enclosed hull with no turret that turns, opens a rear hatch and drops a mine, reusing the APC's door routine in the code. It carries mines, not troops. The manual and the wiki call the Allied one the Anti-Tank Mine Layer and the Soviet one the AP Mine Layer."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the Anti-personnel page's armour type Heavy maps to heavy, and the RA1 registry notes step both minelayers down to medium, since they have a quarter of a main battle tank's health. The Anti-tank page leaves the type blank, but both are one internal type. The wiki calls it tough enough to soak some punishment."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox sight is a quarter more than the Rifle Infantry's, the same as the main battle tanks'. No sensor trait."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player drives and drops the mines; no page read names a crew."
+      },
+      "abilities": [
+        {
+          "name": "Mine deployment",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "per-life",
+          "summary": "Double-clicking the minelayer where it stands (the Remastered Deploy key does the same) makes it turn, open its hatch and leave one mine in the cell under it; a cell that already holds a mine or a building's foundation slab is refused. It holds five, shown as pips, and gets all five back free by driving onto a Service Depot, which reloads it before any repair. The owner's side picks the mine: an Allied country lays anti-tank mines that badly hurt or kill the first enemy vehicle over them while soldiers cross unharmed; a Soviet country lays anti-personnel mines whose blast kills every soldier close by and barely scratches a vehicle. Enemy vehicles set mines off, friendly ones never do, but any soldier stepping on an anti-personnel mine triggers it, so units of the laying side path around their own mines. Mines cannot be targeted directly; force fire on the ground clears them.",
+          "patterns": ["lay-mines"]
+        }
+      ],
+      "resources": ["limited-ammo"],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No page read shows what happens when it dies, so the 3C default applies. The code may let one crewman, a civilian technician since it is unarmed, escape on an even chance if the rules mark it as crewed; no page read says whether they do."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:lay-mines",
+          "why": "Each mine is deadly: by the manual, one Allied mine kills most units and one Soviet mine can wipe out a whole group of soldiers, so a few mines stop an attack short of the base."
+        },
+        {
+          "ref": "speed:fast",
+          "why": "Quicker than either side's main battle tank, so it can seed an approach or an enemy ore field and get away again."
+        },
+        {
+          "ref": "armour-class:medium",
+          "why": "The wiki calls it tough enough to soak some punishment while it works."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "resource:limited-ammo",
+          "why": "Only five mines; every refill means a drive back to a Service Depot."
+        },
+        {
+          "ref": "pattern:lay-mines",
+          "why": "Each side gets one kind of mine: Allied mines let soldiers walk over them and Soviet mines barely scratch vehicles, so the wrong kind of enemy walks straight through."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "It has no gun and mines never touch fliers, so aircraft attack it freely; the wiki adds that a Yak force-firing at the ground clears a minefield."
+        },
+        {
+          "ref": "unit:ra1.soviet.yak",
+          "why": "Ordered to force fire at a patch of ground, a Yak's strafing guns set off every mine there, which the wiki recommends for clearing minefields."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Against the Allied version: soldiers walk over its anti-tank mines unharmed, and it has no gun to stop them."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Against the Soviet version: its anti-personnel mines only scratch vehicles, and it cannot shoot back at the tanks rolling through."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Allied mines: one is enough to kill a V2 rocket launcher and leaves a Heavy Tank badly hurt, so a mined approach blunts a tank push."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Soviet mines: one blast kills every soldier near it, so a single mine can wipe out a whole group."
+        },
+        {
+          "ref": "role:logistics",
+          "why": "Mines laid in an enemy ore field catch the harvesters that come to gather there."
+        },
+        {
+          "ref": "unit:ra1.shared.ore-truck",
+          "why": "The wiki suggests mining enemy ore fields to wreck or hurt the Ore Trucks working them."
+        }
+      ],
+      "combos": [],
+      "memorable": "One mine-laying truck for both sides, but the side picks the mine: Allied mines wreck tanks and ignore soldiers, Soviet mines wipe out squads and barely scratch tanks.",
+      "as_player": "A fast, unarmed T2 vehicle. Drive to a choke point or an enemy ore field, press the mine key to drop one of your five mines under you, then race back to the Service Depot to reload. Your team's side decides the mine: anti-tank for the Allies, anti-personnel for the Soviets. With no gun, you live on speed, armour and the minefields you leave behind.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/File:Red_Alert_1_Manual.pdf",
+          "title": "Command & Conquer: Red Alert Field Manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "1996 manual",
+          "note": "Westwood's printed manual, read in the PDF behind this file page: the AT Mine Layer (Allied units) and AP Mine Layer (Soviet units) entries, the Service Depot entries, and the section on repairing and reloading at the depot and on ammo pips.",
+          "supports": [
+            "roles/primary",
+            "abilities/0",
+            "resources",
+            "strengths/0",
+            "weaknesses/0",
+            "counters/0",
+            "counters/1",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Anti-tank_minelayer",
+          "title": "Anti-tank minelayer, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "The Allied version. Infobox: internal name MNLY, price, tier 2, War Factory plus Service Depot, health, land speed and sight; its quote box copies the manual paragraph. The prose gives what one mine does to the Heavy Tank, V2 and Mammoth, that infantry are unharmed, the ore-field tactic and how to deploy.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "sensors",
+            "abilities/0",
+            "strengths/1",
+            "strengths/2",
+            "weaknesses/1",
+            "countered_by/2",
+            "counters/0",
+            "counters/2",
+            "counters/3"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Anti-personnel_minelayer",
+          "title": "Anti-personnel minelayer, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "The Soviet version. Infobox: the same internal name, price, tier, health, speed and sight, with armour type Heavy; its quote box copies the manual paragraph. The prose describes the APC-based design, the treads, the free refill, that it has no real armament and that Soviet troops avoid their own mines.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "abilities/0",
+            "strengths/2",
+            "weaknesses/1",
+            "countered_by/3",
+            "counters/1"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UNIT.CPP",
+          "title": "REDALERT/UNIT.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The one minelayer type: it lays an anti-personnel mine for the USSR, Ukraine and the Soviet side and an anti-tank mine otherwise; the deploy routine and its limits; what each mine does to a vehicle; and units of the laying side treating their own mines as blocked ground.",
+          "supports": ["faction", "body", "abilities/0", "weaknesses/1", "countered_by/3"]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Allied_units",
+          "title": "Command & Conquer: Red Alert/Allied units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "note": "Its Mine Layer table agrees with the C&C Wiki on price, armour type, health, sight and speed, and lists the mine deployment and the depot reload; the Soviet units page gives the same table with anti-personnel mines.",
+          "supports": ["cost_band", "mobility", "sensors", "abilities/0"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "faction",
+          "note": "One shared entry rather than one per side. UNIT.CPP has a single minelayer type whose mine is picked by the owner's side, and both wiki infoboxes give one internal name with the same price, speed, sight and health. Against that, the manual prints two paragraphs and the wiki two pages, and the registry's list of RA1 shared units does not name the minelayer."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Left empty: each side's mine supports a different anti role (anti-armour for the Allied copies, anti-infantry for the Soviet copies), and a shared entry may count only what every copy has. Anti-armour's requires also cannot be met through an ability, which carries no damage type. See fit_notes."
+        },
+        {
+          "path": "abilities/0/cooldown",
+          "note": "Per-life, because the mines come back only at the Service Depot, a resupply point. The other reading is no band at all, since five uses are held back by a stock rather than a timer."
+        },
+        {
+          "path": "abilities/0/summary",
+          "note": "Several points rest on uncited pages of EA's source release: INFANTRY.CPP (an anti-personnel mine's blast hurts every soldier near it, any soldier entering its cell sets it off, anti-tank mines never react to infantry), TECHNO.CPP (the depot refills the mines free and before any repair) and BDATA.CPP (both mines are hidden from radar, cannot be selected and are no legal target). No page read says whether enemy players can see a laid mine on the map."
+        },
+        {
+          "path": "abilities/0/summary",
+          "note": "The Anti-personnel minelayer page says Soviet troops avoid their own mines; UNIT.CPP and INFANTRY.CPP apply that avoidance to both sides, through a rules setting that is on by default.",
+          "sources_disagree": true
+        },
+        {
+          "path": "countered_by",
+          "note": "The Yak's mine sweeping rests on the Yak page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Yak), which is not cited: force fire on ground makes a Yak destroy the mines there."
+        },
+        {
+          "path": "mobility/base",
+          "note": "Tracks rest on the Anti-personnel page's treads and its APC-based design; the rules flag that sets tracks or wheels is in the game's rules file, which no page read shows."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "The crusher flag is in UDATA.CPP of the source release (uncited), and the registry notes list both minelayers as crushers; the trait is left out only because of its size rule."
+        },
+        {
+          "path": "armour/class",
+          "note": "The Anti-tank page's infobox has no armour type and the Anti-personnel page gives Heavy; the registry notes take Heavy for both, as one internal type, and step it down to medium."
+        },
+        {
+          "path": "body/plan",
+          "note": "Troop carrier is the nearest shape for an enclosed, turretless hull, though it carries mines and no passengers."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles",
+          "used": "area-denial alone",
+          "wanted": "anti-armour (Allied copies) and anti-infantry (Soviet copies)",
+          "note": "A shared entry cannot hold roles that only one side's copies earn, and an ability cannot meet anti-armour's need for armour-piercing, energy, electric or EMP damage, so mines alone never give it."
+        },
+        {
+          "path": "mobility/traits",
+          "used": "none",
+          "wanted": "crush",
+          "note": "The code makes the minelayer run over infantry, but the crush trait is allowed only on large and huge units, and the minelayer is medium."
+        },
+        {
+          "path": "body/plan",
+          "used": "box-carrier",
+          "wanted": "an enclosed utility or cargo hull with no troop compartment",
+          "note": "The minelayer is an enclosed, turretless hull carrying mines; no body plan covers a cargo or utility vehicle without riders."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J02-RA1"
+    },
+    {
+      "id": "ra1.soviet.mammoth-tank",
+      "game": "ra1",
+      "faction": "soviet",
+      "name": "Mammoth Tank",
+      "lineage": "mammoth-tank",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["anti-armour", "anti-air"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Tech Center",
+        "basis": "Built at the War Factory once a Soviet Tech Center stands (the wiki's infobox; StrategyWiki agrees), and the manual's Tech Center entry names it among the high-tech units that building allows. The Tech Center is the t3 gate, and the wiki lists the tank as tier 3. The Service Depot requirement and the Allied side in the infobox apply only to Counterstrike's ant missions, which are left out. A side that holds a captured Soviet War Factory together with the buildings the tank needs can also build it (War factory (Red Alert 1) page)."
+      },
+      "cost_band": {
+        "band": "high",
+        "raw": 1700,
+        "basis": "List price from the wiki's infobox (StrategyWiki agrees): a little under twice the anchor of the two main battle tanks, which lands in high, just short of the very-high threshold. The Russian country discount is ignored, as the registry says."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": ["crush"],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "By the wiki's land speed figures it moves exactly as fast as the Rifle Infantry: half the Allied Medium Tank's speed and a little over half the Soviet Heavy Tank's, the two main battle tanks, and the wiki says no other vehicle is slower. It runs over infantry in its path (StrategyWiki; the game code marks it as a crusher), and Force Move sends it onto a soldier on purpose (manual). Pivot is the tracks default. Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "large",
+        "notes": "A tracked hull under one large turret that carries both the twin cannons and the two missile packs: the game code sets both weapons' firing points along the turret's facing, so they turn together. The manual says no tank is bigger and calls it the largest land weapons platform, and the wiki's prose calls it a super-heavy tank. But the code's size flag puts it in one group with the Medium and Heavy Tanks (and the Ore Truck and MCV): vehicles drawn larger than one map cell but under two cells across. No page says it is twice a tank's size, so it is coded large, a tank among tanks."
+      },
+      "armour": {
+        "class": "heavy",
+        "models": ["self-repair"],
+        "notes": "Step 1 of the armour-class steps decided: the infobox armour type Heavy maps to heavy, and the RA1 registry notes keep the Mammoth heavy. Check A does not lift it, since the body is coded large. It has half again the health of the Soviet Heavy Tank and the Allied Medium Tank. Self-repair: once at half health or below it slowly mends itself, and the healing stops at half (infobox; the self-healing check in TECHNO.CPP). A full repair needs the Service Depot, which is game-wide. No source gives it facing armour, and no armour upgrade exists. Side-wide powers stay off: the Soviet Iron Curtain can make it immune to damage for a while."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox sight figure is exactly half again the Rifle Infantry's, on the upper edge of medium, so it goes to medium. It sees a little further than the Medium and Heavy Tanks. No sensor trait: it has no radar of its own and detects nothing hidden."
+      },
+      "armament": [
+        {
+          "name": "Twin 120mm cannons",
+          "slot": "primary",
+          "family": "cannon",
+          "damage": "armour-piercing",
+          "mount": "slow-turret",
+          "delivery": "projectile",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "naval"],
+          "traits": [],
+          "summary": "Two heavy guns on the turret fire a pair of armour-piercing shells, one barrel just after the other, then wait a long while before the next pair. The manual rates them the most powerful guns on land, the wiki says the one-two shot works well against armour, and StrategyWiki calls them anti-armour cannons. Because the second shell leaves a moment later, it misses a moving target more often. They fire only at ground targets, never at aircraft, and no page says they damage buildings. They reach a little over one and a half times as far as the Rifle Infantry's rifle. For each target the game compares how much this warhead and the missiles' warhead do to its armour type and fires the better one, preferring a weapon already in range, so only one of the two fires at a time."
+        },
+        {
+          "name": "Mammoth Tusk missiles",
+          "slot": "secondary",
+          "family": "rockets",
+          "damage": "explosive",
+          "mount": "slow-turret",
+          "delivery": "projectile",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure", "low-air", "high-air", "naval"],
+          "traits": ["anti-air", "magazine"],
+          "summary": "Two missile packs on the same turret launch a pair of high-explosive missiles at ground or air targets, then wait out a long reload. The manual says they make the tank good against infantry and aircraft, the wiki adds buildings, and both wikis say a soldier often dies to a single hit. They are the tank's only weapon that reaches aircraft, and the wiki names the slow reload as the reason massed air attacks can overwhelm it. They reach a bit further than the cannons, about two thirds again the rifle's range. The game uses them on every aircraft and on any ground target whose armour suffers more from their warhead."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "No player seats in the source. One player drives and fires both weapons. Both sit on the one turret, and the game fires only one of them at a time, picked for each target, so decision 2A proposes no gunner seat."
+      },
+      "abilities": [],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No page read says what happens when it dies, so the decision-3C default applies. The game code gives a ground vehicle flagged as crewed, with no passenger seats, an even chance of letting one rifleman out with part of his health; whether the Mammoth has that flag is set in the rules file, which no page read shows. Its death also shakes the screen, and its explosion animation is bigger than most vehicles' but does no damage."
+      },
+      "strengths": [
+        {
+          "ref": "armour-class:heavy",
+          "why": "The biggest tank in the game, with half again the health of the main battle tanks: the manual says it can both take and deal heavy punishment."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "The manual rates its twin cannons the most powerful guns on land; the paired shells hit armour hard."
+        },
+        {
+          "ref": "weapon-trait:anti-air",
+          "why": "Unlike the main battle tanks it can fire back at aircraft: its missiles reach every flier."
+        },
+        {
+          "ref": "damage:explosive",
+          "why": "The missiles often kill a soldier with one hit and also work well against buildings."
+        },
+        {
+          "ref": "armour-model:self-repair",
+          "why": "Mends itself without a trip to the Service Depot once it falls to half health or below."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "speed:medium",
+          "why": "No vehicle is slower (wiki): it only keeps pace with a rifleman and moves at about half the main battle tanks' speed, so it cannot chase, and faster tanks can hit it and pull back."
+        },
+        {
+          "ref": "weapon-trait:magazine",
+          "why": "After each pair of missiles it waits out a long reload, which leaves it open to a concentrated air attack."
+        },
+        {
+          "ref": "weapon:cannon",
+          "why": "Its guns fire slowly, and the second shell of each pair is more likely to miss a target on the move."
+        },
+        {
+          "ref": "tier:t3",
+          "why": "Needs a Tech Center, costs nearly twice a main battle tank and takes a long time to build."
+        },
+        {
+          "ref": "armour-model:self-repair",
+          "why": "The healing is slow and never lifts it above half health, so heavy damage still needs a depot."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:vehicle",
+          "why": "One on one it outguns any tank, but at equal cost several cheaper basic tanks outnumber it and destroy it with relative ease, above all when they catch it alone with hit-and-run attacks it is too slow to answer."
+        },
+        {
+          "ref": "unit:ra1.allied.medium-tank",
+          "why": "The wiki names Allied Medium Tanks among the basic tanks that swarm and kill a lone Mammoth; they are far faster."
+        },
+        {
+          "ref": "unit:ra1.allied.light-tank",
+          "why": "The wiki also names Allied Light Tanks among the cheap tanks that outnumber and kill it in hit-and-run attacks."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "A concentrated air attack overwhelms it while its missiles reload, and its cannons cannot fire upward at all."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Its missiles often kill a soldier in one hit and it crushes the rest; the manual calls it effective against infantry."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "Aircraft that come at it a few at a time get shot down: the manual credits its missiles against air units, which the main battle tanks cannot reach."
+        },
+        {
+          "ref": "target:structure",
+          "why": "StrategyWiki rates it strong against structures, and the wiki says its missiles also work well on buildings."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:vehicle",
+          "why": "The wiki warns it is most at risk when caught alone, so faster escort tanks that keep raiders off it suit it."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "Its missiles reload slowly, so extra anti-air cover helps against the massed air attacks the wiki warns about."
+        }
+      ],
+      "memorable": "Red Alert's biggest tank: twin cannons for armour, missile packs for infantry, buildings and even aircraft, and it mends itself, but only back up to half health.",
+      "as_player": "A slow, costly T3 fortress. Left mouse fires the twin cannons, a staggered pair of anti-armour shells; right mouse fires the missile pair, which hits soldiers, buildings and aircraft, then reloads for a long while. The big turret turns slowly, so quick tanks can circle you. Below half health you slowly patch yourself back up to half, no further, and you crush soldiers you drive over, but you cannot outrun fast tanks or a massed air strike, so hold the line with your team.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/File:Red_Alert_1_Manual.pdf",
+          "title": "Command & Conquer: Red Alert manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Red Alert manual, 1996",
+          "note": "Westwood's printed manual, read in the PDF behind this File page. The Mammoth Tank entry is in the Soviet units section (PDF page 69), and its paragraph is the unit's official one-line description; the Soviet Tech Center entry a few pages earlier and the Force Move section on overrunning infantry are also used.",
+          "supports": [
+            "tier",
+            "roles/primary",
+            "roles/secondary",
+            "armament/0/name",
+            "armament/1/name",
+            "mobility/traits",
+            "body",
+            "strengths/0",
+            "strengths/1",
+            "strengths/2",
+            "counters/0",
+            "counters/1"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Mammoth_tank_(Red_Alert_1)",
+          "title": "Mammoth tank (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Patch 3.03 with Counterstrike and The Aftermath",
+          "note": "Its quote box copies the manual's paragraph (Red Alert manual, 1996). Infobox: price, tier 3, Soviet Tech Center, health, armour type, land speed, sight, both reaches, warheads and self-repair to half health. The Game unit section gives the matchups and the weapons' strong and weak points.",
+          "supports": [
+            "faction",
+            "lineage",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Soviet_units",
+          "title": "Command & Conquer: Red Alert/Soviet units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "note": "Its stat box for the Mammoth Tank matches the C&C Wiki's figures and lists the two weapons one by one, with their targets, reach and warheads; it heads the cannons as anti-armour guns that target the ground. Its Strong vs. lines are the guide's own words, not official text.",
+          "supports": [
+            "roles/secondary",
+            "tier",
+            "cost_band",
+            "mobility",
+            "armour/models",
+            "sensors",
+            "armament/0",
+            "armament/1",
+            "strengths/3",
+            "weaknesses/0",
+            "counters/0",
+            "counters/2"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP",
+          "title": "REDALERT/TECHNO.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Source released with the Remastered Collection, 2020",
+          "note": "EA's own release of the game code. It shows the self-healing rule (a little health on a timer while at or below the yellow health level, half by default in RULES.CPP), that both weapons fire from points along the turret's facing, and the routine that picks one of the two weapons for each target by how well its warhead suits the target's armour.",
+          "supports": ["armour/models", "armament/0/summary", "armament/1/summary", "armament/1/mount", "crew"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UDATA.CPP",
+          "title": "REDALERT/UDATA.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Source released with the Remastered Collection, 2020",
+          "note": "The Mammoth's unit type (internal name 4TNK): a turreted vehicle that crushes infantry, the firing points of both weapons along the turret line, and the large-unit size flag it shares with the Medium and Heavy Tanks.",
+          "supports": ["mobility/traits", "body", "armament/1/mount", "crew"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Step 1 finds no role label in the manual paragraph. Step 4 reads its line that the missiles make the tank good against infantry and air units, and the registry notes say text about a second weapon counts (their own Mammoth example). No damage table was read, so the larger bonus cannot be told, and infantry, named first, wins. The cannon is the main weapon, but the manual's praise of it, unmatched on land, names no kind of target. Both coders reached anti-infantry by these steps; a reading that takes only main-weapon text would give anti-armour."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Anti-armour rests only on StrategyWiki, a guide, heading the cannons as anti-armour cannons (roles.secondary: a source calls it an anti-tank weapon). The C&C Wiki's prose only says their paired shots work well against armour, which is words about what they are good at, and the manual says only that they are unmatched on land. The registry bars StrategyWiki from roles step 4 and the drop rule but not from this clause; without the heading only anti-air would remain. Assault, the job the wiki's role line gives it, cannot enter: step 4 supports it only with a short- or medium-range main weapon, and RA1's short rifle reach bands every tank gun long."
+        },
+        {
+          "path": "body/size",
+          "note": "Large or huge. The wiki's prose calls it a super-heavy tank and the manual the biggest tank, which points at huge's super-heavies; but its infobox role line says heavy assault tank, the size rule treats a weight word as no size, and the code's size flag (explained in REDALERT/TYPE.H of the same source release, https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TYPE.H) puts it in one class with the Medium and Heavy Tanks. No page compares its footprint with a tank's. Coded large."
+        },
+        {
+          "path": "armour/class",
+          "note": "Heavy by step 1 and the RA1 registry notes. If the body were coded huge, check A (huge at t3) would make it super-heavy whatever the steps gave, so the class depends on the size call above."
+        },
+        {
+          "path": "mobility/base",
+          "note": "No page read says in words that it runs on tracks. Every source calls it a tank, and the manual lets only tracked or heavy units overrun infantry with Force Move; in the code the movement type comes from the rules file, which could not be read."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "The coders split here; reconciled to leave structures out. StrategyWiki heads the cannons as anti-armour guns and gives their target as ground, and the C&C Wiki's infobox lists them only under ground attack, so can_target step 3 applies. Under step 3, structures are listed only when a source says the weapon damages buildings, and none says so for the cannons: the C&C Wiki credits the missiles with working on buildings, and StrategyWiki's strong against structures is about the tank as a whole. The rule's other sentence, that a source saying ground means infantry, ground vehicles and structures, would put structures in. The Hammer Tank sample in ra3.json leaves structures out the same way. The warhead damage table that would show the cannons hurting buildings is in the rules file, which could not be read."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "The infobox gives one reach for ground and a slightly longer one for air without naming the weapons; StrategyWiki gives the shorter reach to the cannons and the longer one to the missiles. Both come out long either way, and neither reaches past the tank's own sight."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "The cannon family default. The wiki's remark that the second shell misses moving targets more often hints at travel time but does not say it."
+        },
+        {
+          "path": "armament/1/family",
+          "note": "Rockets, because no page read says the missiles steer or home in; the manual calls them missile packs, while it calls the Chrono Tank's weapon heat-seeking missiles. The weapon's projectile is set in the rules file, which is not in EA's source release and could not be read; if it makes the missiles homing, the family would be guided missiles with lock-on delivery."
+        },
+        {
+          "path": "armament/1/traits",
+          "note": "Magazine rests on the wiki naming the missiles' long reload as the reason massed air attacks can swamp the tank. The infobox and StrategyWiki give both weapons the same wait between pairs of shots, so the reload may simply be the missiles' rate of fire after a two-missile burst; the cannons get no magazine only because no source names their reload."
+        },
+        {
+          "path": "armament/1/mount",
+          "note": "The physical mount comes from the game code (TECHNO.CPP fires both weapons along the turret's facing; UDATA.CPP gives the unit a turret and places the secondary weapon along it), not from any page's words. Without the code, the rockets family default free-aim would apply."
+        },
+        {
+          "path": "armour/models",
+          "note": "The wiki says the self-repair works only while the tank is not taking damage; the healing check in TECHNO.CPP adds health on a timer whenever it is at or below half, with no check for recent hits, so it may also heal under fire. Self-repair is coded either way.",
+          "sources_disagree": true
+        },
+        {
+          "path": "on_death",
+          "note": "The death facts in the notes come from the game code: UNIT.CPP (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UNIT.CPP) for the even chance of a crewman getting out of a crewed vehicle without passenger seats and the screen shake, and ADATA.CPP (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/ADATA.CPP) for the death animation, which does no damage. Whether the Mammoth carries the crewed flag is set in the rules file, which could not be read."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparisons with the main battle tanks (speed here, health in armour/notes, sight in sensors/notes, and the reasons in strengths/0, strengths/2 and weaknesses/0) use the infobox figures on the Heavy tank (Red Alert 1) and Medium tank (Red Alert 1) pages of the Command & Conquer Wiki, which are read but not cited."
+        },
+        {
+          "path": "tier",
+          "note": "The remark on building it from a captured Soviet War Factory rests on the War factory (Red Alert 1) page of the Command & Conquer Wiki, which is read but not cited; it changes no code."
+        },
+        {
+          "path": "countered_by",
+          "note": "Two weaknesses rest only on the C&C Wiki's own prose: massed basic tanks that strike and pull back, and the slow missile reload that leaves it open to concentrated aircraft. No official text speaks to them."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "anti-infantry",
+          "wanted": "assault or anti-armour",
+          "note": "The written steps make the game's heaviest cannon tank an infantry hunter: step 4 takes the manual's strong-against words about its secondary missiles, while its headline cannons give no anti role there (the manual says only that they are unmatched on land). Assault cannot reach the secondary list either: RA1's rifle reach is so short that every tank gun bands long, and roles.secondary step 4 supports assault only with a short- or medium-range main weapon. The wiki's own role line calls it a heavy assault tank."
+        },
+        {
+          "path": "armour/class",
+          "used": "heavy",
+          "wanted": "super-heavy",
+          "note": "The Mammoth is the game's top heavyweight, set apart from its battle tanks (t3, half again their health, called super-heavy by the wiki), which is what super-heavy describes. Check A keeps super-heavy for units two tanks in size or more, and the registry keeps it heavy, so heavy is used."
+        },
+        {
+          "path": "armour/models",
+          "used": "self-repair",
+          "wanted": "self-repair that stops at a health threshold",
+          "note": "The model says nothing about a cap; this tank heals only while at or below half health and never above it. The cap is in armour.notes."
+        }
+      ],
+      "researched_by": "batch r1, opening check (agents A and B, reconciled)",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra1.soviet.yak",
+      "game": "ra1",
+      "faction": "soviet",
+      "name": "Yak",
+      "flavour_affinity": ["soviet", "allied"],
+      "class": "aircraft",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["raider"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Radar Dome",
+        "basis": "Built only at the Airfield, and the Airfield itself needs a Radar Dome (Airfield infobox); the Yak's infobox gives tier 2. As the registry notes ask for planes, the gate recorded is the Radar Dome, the tech step behind the Airfield. Its Allied version is campaign-only."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 800,
+        "basis": "The list price sits exactly on the medium threshold, which takes the higher band: the same price as the Allied Medium Tank and a little under the main-battle-tank anchor."
+      },
+      "mobility": {
+        "base": "jet",
+        "handling": "forward-only",
+        "traits": [],
+        "speed": "very-fast",
+        "speed_raw": 4,
+        "notes": "Its air speed is four times the Rifle Infantry's land speed. Among the game's aircraft it matches the Longbow, is a third quicker than the Hind and reaches four fifths of the MiG's speed; the manual still calls it not that fast. A fixed-wing plane that cannot hover or set down on open ground, only on its Airfield, and that must swing round to face its target before it fires, so it attacks in passes; its handling is the jet default."
+      },
+      "body": {
+        "plan": "fixed-wing",
+        "size": "large",
+        "notes": "A single attack plane; its sprite and cameo follow the Second World War Yak-3 or Yak-9 fighter. Planes are large by the size examples (jets)."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the infobox armour type Light maps to light. Its health is a little above the MiG's and about a quarter of the Hind's or the Longbow's. Like every aircraft it takes half damage while it is in the air (game-wide). Side-wide powers stay off: the Iron Curtain can make it immune for a while."
+      },
+      "sensors": {
+        "sight": "short",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox gives it no sight range at all, as for every RA1 aircraft: in flight it clears no shroud and works from what its team already sees, and once landed it reveals only its own cell (game-wide). Planes in flight never show on the enemy's radar map (the Airfield's production list); that is game-wide and not the stealth trait."
+      },
+      "armament": [
+        {
+          "name": "Twin machine guns",
+          "slot": "primary",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "body-aim",
+          "delivery": "hitscan",
+          "range": "off-screen",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "summary": "Two guns fire together in strafing passes. It fires only when its nose points almost straight at the target, and each burst is aimed at a point straight ahead along its heading, well inside its full reach, so the fire follows the plane's line of flight. The manual says one pass can wipe out a group of soldiers on the march. Small-arms warhead; ground and sea targets only, and the wiki has Yaks raiding outlying buildings too. Force-firing a patch of ground sets off the mines there. It carries 15 bursts, then flies home to reload. Reach is a bit over one and a half times the rifle's; it bands off-screen only because aircraft have no sight range of their own."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One pilot flies and fires. The source has no seats and names no crew."
+      },
+      "abilities": [],
+      "resources": ["limited-ammo"],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No page read shows a survivor, so the 3C default applies. The game code drops a rifleman by parachute from a crewed aircraft nine times in ten when it goes down over ground a soldier can stand on, if the rules mark it as crewed, which no page read shows for the Yak. If its Airfield is destroyed while it is airborne, the plane crashes (manual)."
+      },
+      "strengths": [
+        {
+          "ref": "weapon:machine-gun",
+          "why": "The manual nicknames it the infantry eraser: a single strafing pass can kill a whole group of marching soldiers."
+        },
+        {
+          "ref": "target:high-air",
+          "why": "It flies high, so only anti-air weapons such as Rocket Soldiers, AA guns and SAM sites can shoot at it."
+        },
+        {
+          "ref": "mobility:jet",
+          "why": "Flying above minefields, it can force-fire on mined ground and clear the mines from the air, which the wiki rates it very good at."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "resource:limited-ammo",
+          "why": "After 15 bursts it must fly back to its Airfield, and a plane with that many rounds reloads far more slowly than the MiG or the Longbow."
+        },
+        {
+          "ref": "mobility:jet",
+          "why": "It can land only on its own Airfield, one plane per Airfield, and it crashes if that Airfield is destroyed while it is in the air (manual)."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Light armour and little health: the wiki warns it will not last long against an AA gun that is still firing."
+        },
+        {
+          "ref": "speed:very-fast",
+          "why": "Quick next to ground units but slower than the MiG; the manual says that makes it easy prey for Rocket Soldiers who live through its first pass."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-air",
+          "why": "The wiki says to knock out SAM sites, AA guns and Rocket Soldiers before Yaks go in; the manual says AA guns badly damage any plane that flies over them."
+        },
+        {
+          "ref": "unit:ra1.shared.rocket-soldier",
+          "why": "The manual names Rocket Soldiers who survive the first strafing run as the Yak's natural killers."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Its strafing passes cut down whole groups of soldiers (manual); StrategyWiki also rates it strong against infantry."
+        },
+        {
+          "ref": "pattern:lay-mines",
+          "why": "Minefields do not stop it: a force-fire order on the mined ground destroys the mines from the air (wiki)."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "armour-class:heavy",
+          "why": "The wiki suggests heavy tanks as a distraction: they keep the defenders busy while Yaks hit the outlying buildings, once the AA guns are gone."
+        },
+        {
+          "ref": "unit:ra1.soviet.heavy-tank",
+          "why": "The Heavy Tank is the decoy the wiki names for Yak raids on a base."
+        }
+      ],
+      "memorable": "The manual's infantry eraser: a Soviet attack plane that mows down marching soldiers in strafing passes, then must fly home to reload its many bursts.",
+      "as_player": "A plane that never stops: you fly wide loops and line up passes, aiming the twin guns by pointing the nose down a line of soldiers. After 15 bursts you head back to your airfield pad for a slow reload. Only anti-air can touch you, so find the rocket troops and AA guns first, and force-fire into a minefield to open it for your tanks.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/7b/Red_Alert_1_Manual.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert Field Manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "1996 manual",
+          "note": "Westwood's printed manual, read in the PDF behind the wiki's File:Red_Alert_1_Manual.pdf page. Yak entry on PDF page 70, Airfield on page 60, AA Gun on page 42, the Guard and Force Fire orders on page 25.",
+          "supports": [
+            "roles/primary",
+            "tier",
+            "armament/0",
+            "mobility/notes",
+            "availability",
+            "on_death",
+            "strengths/0",
+            "weaknesses/1",
+            "weaknesses/3",
+            "countered_by/0",
+            "countered_by/1",
+            "counters/0",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Yak",
+          "title": "Yak, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "Infobox for faction, tier, price, health, armour type, air speed, sight, reach, warhead and ammunition; its quote box copies the manual paragraph. The prose covers clearing minefields by force-fire, rearming at the Airfield, the anti-air threats and the heavy-tank decoy.",
+          "supports": [
+            "faction",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "resources",
+            "strengths/2",
+            "weaknesses/2",
+            "countered_by/0",
+            "counters/1",
+            "combos/0",
+            "combos/1"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Airfield_(Red_Alert_1)",
+          "title": "Airfield (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "Infobox: needs a Radar Dome, tier 2. The text says rearming takes longer the more rounds a plane carries and names the Yak's 15 bursts; the production list says its planes stay off radar unless grounded. Its quote box copies the manual's Airfield entry.",
+          "supports": ["tier", "resources", "weaknesses/0", "weaknesses/1", "sensors/notes", "on_death"]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Soviet_units",
+          "title": "Command & Conquer: Red Alert/Soviet units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "version": "Build times from the Remastered Collection; other figures match the original",
+          "note": "Yak entry: price, health, sight and speed, and a weapon table giving ground targets only, two shots per attack and the small-arms type; its Strong vs. line names infantry and it notes reloading at the Airfield. A guide's words, not official text.",
+          "supports": ["armament/0", "counters/0", "mobility/speed", "sensors/sight"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/AIRCRAFT.CPP",
+          "title": "REDALERT/AIRCRAFT.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The fixed-wing attack routine: a plane fires only when nearly facing its target, aims each burst at a point ahead along its heading and fires twice when it has two guns; an idle plane heads back to its landing building; airborne aircraft take half damage.",
+          "supports": ["armament/0", "armament/0/mount", "mobility/handling", "armour/notes", "on_death"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "mobility/notes",
+          "note": "The comparisons with other aircraft (speed here, health in armour.notes) come from the infoboxes of MiG (Red Alert 1), Hind and Longbow (Red Alert 1) on the Command & Conquer Wiki, read but not cited. REDALERT/AADATA.CPP of the same source release (read, not cited) marks the Yak as fixed-wing, unable to land on clear ground and hidden on radar."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Structures rest on the Yak page's tip that Yaks can hit a base's outlying buildings, read with StrategyWiki's target line Ground; no page says how much its small-arms warhead does to buildings. Air is left out: the infobox's air attack line is empty, StrategyWiki says ground, and no page says it attacks aircraft."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "Off-screen follows from aircraft having no sight range at all, as the registry notes expect; by reach alone the gun is long, and the manual grades its Range as Short, a grade the bands do not read."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Raider rests on the very fast band (four times the rifleman's speed) with light armour. The manual calls the Yak not that fast, which is about it among aircraft; speed names no target, so the drop rule does not remove raider."
+        },
+        {
+          "path": "armour/notes",
+          "note": "The Yak page's prose calls it less armoured than the MiG, but both infoboxes give armour type Light and the Yak slightly more health. The class is light either way; the infobox is followed.",
+          "sources_disagree": true
+        },
+        {
+          "path": "availability",
+          "note": "Each Airfield holds one plane (manual), so the number of Yaks and MiGs together is tied to the number of Airfields built. That is a slot rule shared by both plane types and lifted by building more Airfields, not a fixed cap on the Yak, so it is coded open."
+        },
+        {
+          "path": "on_death",
+          "note": "Whether the rules file marks the Yak as crewed, which decides the chance of a parachuting survivor, could not be read; the registry notes say the rules.ini downloads would not load."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armament/0/range",
+          "used": "off-screen",
+          "wanted": "long (the band its reach alone gives)",
+          "note": "Every RA1 aircraft has a nil sight range in the game data, so any gun an aircraft carries reaches past its sight and bands off-screen. In play this is a short strafing gun, not a weapon that fires beyond its view; a rule for units whose sight is nil would help."
+        }
+      ],
+      "researched_by": "batch r1, agent J04-RA1",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra1.soviet.submarine",
+      "game": "ra1",
+      "faction": "soviet",
+      "name": "Submarine",
+      "flavour_affinity": ["soviet"],
+      "class": "naval",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["scout"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Submarine Pen",
+        "basis": "Built at the Soviet Submarine Pen with no other tech building (infobox; StrategyWiki); the infobox gives tier 1, and the manual's Sub Pen entry names it among what the Pen builds."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 950,
+        "basis": "The list price equals the Soviet Heavy Tank's, a little above the main-battle-tank anchor, so medium."
+      },
+      "mobility": {
+        "base": "naval-submerged",
+        "handling": "steer",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1.5,
+        "notes": "Its water speed is one and a half times the Rifle Infantry's land speed, exactly on the edge, which goes to medium. Among ships it keeps pace with the Destroyer, is slower than the Gunboat, and it is faster than the Missile Submarine and the Cruiser. It travels under water and comes up only to fire. The word list gives the naval mobility types no default handling, so steer is proposed: a submarine turns in arcs while under way. The sprite turning on the spot, as RTS models do, does not decide it."
+      },
+      "body": {
+        "plan": "ship",
+        "size": "large",
+        "notes": "A teardrop-hulled attack submarine. No page gives its footprint; it is coded large, about one tank in size, by the size rule's comparison with the main battle tank."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the infobox armour type Light maps to light; the manual's Armor word Medium is a grade, not the game's type. Its health is under a third of the Destroyer's. Like every ship it slows down at half health or less and is repaired by docking at a Sub Pen (game-wide)."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": ["detector"],
+        "basis": "in-game",
+        "notes": "The infobox sight is one and a half times the Rifle Infantry's, on the edge, so medium. It finds other submerged submarines (Stealth page; the Submarine Pen's production list says so too). Like every ship it also makes a cloaked enemy right beside it shimmer into view, which is game-wide and gives no trait."
+      },
+      "armament": [
+        {
+          "name": "Torpedoes",
+          "slot": "primary",
+          "family": "torpedoes",
+          "damage": "armour-piercing",
+          "mount": "body-aim",
+          "delivery": "projectile",
+          "range": "off-screen",
+          "can_target": ["naval", "structure"],
+          "traits": [],
+          "summary": "Torpedoes with an armour-piercing warhead, fired only after the sub surfaces and only while it is stopped. They run through water alone: the code allows them against ships, buildings that sit in the water (the Naval Yard and the Sub Pen) and bridges, and only when open water lies all the way to the target with no friendly boat in between. Land targets and aircraft are out of reach. A long pause separates shots. Reach is three times the rifle's, past its own sight."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player steers and fires. The source has no seats and names no crew."
+      },
+      "abilities": [
+        {
+          "name": "Cloaked when not attacking (submerged)",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "It stays under water, unseen by the enemy, whenever it is not attacking, and moves freely while under. It comes up to fire and is then open to anything nearby that can hit it; it dives again only once its torpedoes have reloaded and no target is in reach. Taking damage also brings it up, and at low health it often fails to dive. While it is under, no enemy can target it, but detectors (the Destroyer, the Gunboat and other subs) and the Allied Sonar Pulse bring it into view.",
+          "patterns": ["burrow"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No page read shows survivors, and the game code gives ships no survivor logic, so the 3C default for a crewed machine applies."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:burrow",
+          "why": "Silent and unseen while under water, and no enemy can fire on it there, so it chooses when to surface and strike."
+        },
+        {
+          "ref": "range:off-screen",
+          "why": "Its torpedoes reach three times the rifle's range, past its own sight, so it attacks ships from afar (manual)."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Its armour-piercing torpedoes hit ships hard: StrategyWiki rates it strong against ships, and the wiki calls them deadly to most vessels."
+        },
+        {
+          "ref": "sensor:detector",
+          "why": "It spots other hidden submarines near it (Stealth page)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:torpedoes",
+          "why": "Torpedoes run only through water: it cannot attack anything on land or in the air, so it needs other units to defend it from those."
+        },
+        {
+          "ref": "pattern:burrow",
+          "why": "It must surface to fire, which gives away where it is (manual), and it stays up until its tubes reload."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Light armour and modest health: once depth charges find it, it is out of the fight quickly (manual)."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "sensor:detector",
+          "why": "Destroyers and Gunboats find submerged subs, and their depth charges fire at any sub they detect (manual)."
+        },
+        {
+          "ref": "unit:ra1.allied.destroyer",
+          "why": "The manual says a Destroyer that detects a sub takes it out of the fight rapidly with its twin depth-charge launchers."
+        },
+        {
+          "ref": "role:infiltrator",
+          "why": "A Spy that gets into a Sub Pen earns the one-shot Sonar Pulse, which shows every enemy sub on the map for a short while (manual)."
+        },
+        {
+          "ref": "unit:ra1.allied.spy",
+          "why": "The Allied Spy is the unit that wins the Sonar Pulse by entering a Soviet Sub Pen."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:naval",
+          "why": "It strikes ships from hiding and from afar; ships without depth charges have no way to answer it (manual, StrategyWiki)."
+        },
+        {
+          "ref": "unit:ra1.allied.cruiser",
+          "why": "The manual calls the Cruiser a favourite target of submarines: it has no sea-based defence and relies on Destroyers and Gunboats."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:aircraft",
+          "why": "With nothing that reaches land, subs need aircraft to support them, the wiki says."
+        }
+      ],
+      "memorable": "Red Alert's Soviet attack sub: invisible under the waves until it surfaces to torpedo a ship, then exposed until it can dive again.",
+      "as_player": "Research only (naval). As a player unit you would cruise unseen and pick your moment: every shot brings you up, and you stay visible until the tubes reload, so each attack is a commitment. You can hit only ships and targets on the water, and detector ships with depth charges are your hard counter.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/7b/Red_Alert_1_Manual.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert Field Manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "1996 manual",
+          "note": "Westwood's printed manual, read in the PDF behind the wiki's File:Red_Alert_1_Manual.pdf page. Submarine entry on PDF page 70, Sub Pen on page 59, Sonar Pulse on page 54, Gunboat on page 52, Destroyer and Cruiser on page 53.",
+          "supports": [
+            "roles/primary",
+            "tier",
+            "armament/0",
+            "abilities/0",
+            "strengths/1",
+            "weaknesses/1",
+            "weaknesses/2",
+            "countered_by/0",
+            "countered_by/1",
+            "countered_by/2",
+            "countered_by/3",
+            "counters/0",
+            "counters/1"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Submarine_(Red_Alert_1)",
+          "title": "Submarine (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "Infobox for faction, tier, price, health, armour type, sea speed, sight, reach, warhead and its cloak when not attacking; its quote box copies the manual paragraph. The prose says it stays submerged except to fire, cannot hit air or land targets, is deadly to ships and naval yards and needs air support.",
+          "supports": [
+            "faction",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors/sight",
+            "armament/0",
+            "abilities/0",
+            "strengths/2",
+            "weaknesses/0",
+            "combos/0"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Stealth",
+          "title": "Stealth, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Red Alert tab: the Submarine hides by submerging and also detects other submarines; the Destroyer and the Sonar Pulse detect submarines.",
+          "supports": ["sensors/traits", "abilities/0", "strengths/3", "countered_by/0", "countered_by/2"]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Soviet_units",
+          "title": "Command & Conquer: Red Alert/Soviet units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "version": "Build times from the Remastered Collection; other figures match the original",
+          "note": "Submarine entry: price, armour, health, sight and speed, and a torpedo table giving naval targets only and the armour-piercing type; its lines say strong against ships and invisible when not firing. A guide's words, not official text.",
+          "supports": ["armament/0", "abilities/0", "strengths/2", "counters/0", "mobility/speed", "sensors/sight"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/VESSEL.CPP",
+          "title": "REDALERT/VESSEL.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The ship firing checks: torpedoes only at ships, floating buildings and bridges, with open water to the target and no friendly boat in the way; a ship without a turret cannot fire while moving; depth charges serve only against submarines, and other ship weapons cannot target them; a sub surfaces before it fires and cannot dive again while a sonar pulse holds it.",
+          "supports": [
+            "armament/0",
+            "armament/0/can_target",
+            "armament/0/mount",
+            "abilities/0",
+            "countered_by/0",
+            "countered_by/1",
+            "weaknesses/0"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "abilities/0",
+          "note": "Several details come from REDALERT/TECHNO.CPP of the same source release (read, not cited): an enemy that is fully hidden cannot be fired on; any damage brings a hidden unit up; at low health it starts and finishes diving only by chance; it will not dive while reloading or while a target is in reach. The Missile submarine page (Command & Conquer Wiki, read, not cited) agrees that subs come up when attacked."
+        },
+        {
+          "path": "strengths/0",
+          "note": "That no enemy can fire on it while it is under rests on REDALERT/TECHNO.CPP (read, not cited); the cited pages say only that it is hidden and silent until it surfaces."
+        },
+        {
+          "path": "weaknesses/1",
+          "note": "That it stays up until its tubes reload rests on REDALERT/TECHNO.CPP (read, not cited), which holds back the dive while the weapon reloads or a target is in reach."
+        },
+        {
+          "path": "countered_by/2",
+          "note": "REDALERT/HOUSE.CPP (read, not cited) shows the Sonar Pulse bringing up every Submarine and Missile Submarine at once and keeping them from diving for a fixed time; the manual says it lasts a few seconds. The Sonar pulse page of the Command & Conquer Wiki (read, not cited) repeats the manual."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Structures rest on VESSEL.CPP letting torpedoes be fired at buildings that float (the Naval Yard and Sub Pen) and at bridges, and on the Submarine page's line that the torpedoes are very effective against naval yards; no page gives the damage. Whether the torpedoes may target another submarine depends on a projectile flag in the rules file, which could not be read."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "REDALERT/BULLET.CPP (read, not cited) moves a torpedo cell by cell through water and sets it off on the first unit in its path or where the water ends; projectile is also the family default."
+        },
+        {
+          "path": "sensors/traits",
+          "note": "The Submarine Pen (Red Alert 1) page (Command & Conquer Wiki, read, not cited) also lists the Submarine as detecting submerged units; the cited Stealth page says the same."
+        },
+        {
+          "path": "body/size",
+          "note": "No page gives the hull's footprint. Large is a judgement against the main battle tank; medium would hold if the hull is clearly smaller than a tank."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparisons with other ships (speed here, health in armour.notes) come from the infoboxes of the Destroyer (Red Alert 1), Gunboat (Red Alert 1), Cruiser and Missile submarine pages on the Command & Conquer Wiki, read but not cited."
+        },
+        {
+          "path": "roles/primary",
+          "note": "The manual's paragraph names ships, which match none of the three anti roles (registry notes), and the torpedoes hit nothing an anti role covers, so step 4 gives nothing and step 5 gives assault: medium speed, not fast."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "assault",
+          "wanted": "an anti-ship role",
+          "note": "A hidden torpedo boat that hunts ships comes out as frontline assault by step 5, because ships are no anti role's target. The role does not describe it."
+        },
+        {
+          "path": "mobility/handling",
+          "used": "steer",
+          "wanted": "a default handling for naval-submerged",
+          "note": "The naval mobility types have no default handling, and the Handling tie-break starts from the default, so the proposal has no rule to follow."
+        },
+        {
+          "path": "mobility/traits",
+          "used": "none",
+          "wanted": "burrow, as an automatic dive",
+          "note": "The sub dives and surfaces by itself, with no key, and naval-submerged already says it moves under water and surfaces to act. The burrow trait is a key, and its class list leaves out naval, so it is not coded; the passive ability carries the burrow pattern."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "sensors/traits",
+          "rule": "sensor-traits:detector classes naval",
+          "note": "The detector trait's classes are the generator's six, which leave out the research-only naval class, but the sources say this sub finds other submerged submarines."
+        }
+      ],
+      "researched_by": "batch r1, agent J04-RA1",
+      "review": {
+        "status": "unchecked"
+      }
+    }
+  ]
+}
