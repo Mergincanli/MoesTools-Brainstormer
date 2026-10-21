@@ -4,7 +4,7 @@ export const meta = {
   phases: [{ title: 'Review', detail: 'one reviewer per dimension' }, { title: 'Verify', detail: 'one skeptic per dimension tries to refute each finding' }],
 }
 
-// args: { batch: { id: 'r1', scope: '...' }, base: 'origin/main', dimensions: ['data', 'consistency', 'patterns', 'record'] }
+// args: { batch: { id: 'r1', scope: '...' }, base: 'origin/main', draft: '<scratchpad>/r<N>/pr-body.md', dimensions: ['data', 'consistency', 'patterns', 'record'] }
 // Add 'tooling' to the dimensions when the batch changed scripts, tests or workflows.
 // Fix only the findings marked real, then run verify-fixes.js (runbook section 7).
 const REPO = '/home/user/MoesTools-Brainstormer'
@@ -16,7 +16,7 @@ const DIMENSIONS = {
   consistency: `Consistency across the batch and with the rules: the same fact coded the same way on every unit that shares it (game-wide mechanics, shared weapons, the registry's references), unit links (unit:...) that point at real units, matchup links that describe the right part, atypical lists that match the validator's ATYPICAL lines, uncertain and fit_notes paths that exist, the registry notes and data/games.json agreeing with the units, and rule problems the agents reported that the report leaves out. Run node scripts/validate.mjs and read its output.`,
   patterns: `The pattern files and registry entries the batch added or changed (git diff ${BASE} -- data/patterns data/pattern-registry.json): each against its cited pages, schemas/pattern.schema.json, the word lists, and the units that link it; duplicates of existing patterns; source_units against the units (npm run sync-patterns:check).`,
   tooling: `The scripts, tests and workflows the batch changed (git diff ${BASE} -- scripts tests research/workflows package.json .github): run npm run check:merge and each changed script; look for a check that no longer catches what it caught, a command, option or path the runbook names that does not exist, and a test removed or weakened.`,
-  record: `The record and the report: research/${B.id}/ (README, prep, opening, checker), research/registry-notes/games-${B.id}.md, and the open pull request's description (read it with the GitHub tools if you have them, or ask for it in your findings). Recompute every number the report gives from the files; check that each claim matches the record; check that "Decisions needed" items are self-contained with options and a recommendation; look for local paths, six-word runs copied from a page (npm run copy-check -- --offline --also research/${B.id}), and plain-words problems.`,
+  record: `The record and the report: research/${B.id}/ (README, prep, opening, fill, checker, review), research/registry-notes/games-${B.id}.md, and the draft pull-request description at ${args.draft}. Recompute every number the report gives from the files; check that each claim matches the record; check that "Decisions needed" items are self-contained with options and a recommendation; look for local paths, six-word runs copied from a page (npm run copy-check -- --offline --also research/${B.id}), and plain-words problems.`,
 }
 
 const FINDINGS = { type: 'object', required: ['findings'], properties: { findings: { type: 'array', items: { type: 'object',

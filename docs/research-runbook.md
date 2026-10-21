@@ -43,7 +43,7 @@ The scratchpad can be lost if the machine is replaced. So record each finished j
 Commands, all run from the repository root:
 - `npm run check:merge`: format, validator, pattern sync, docs and tests. It must pass before every push.
 - `npm run copy-check`: see section 8, step 4, for the three parts.
-- `npm run sample -- --seed <text> --json --root <folder>`: picks what the checker re-checks.
+- `npm run --silent sample -- --seed <text> --json --root <folder>`: picks what the checker re-checks.
 - `npm run agreement -- <folder>`: compares independent codings.
 - `npm run sync-patterns`: run at merge time, then `npm run docs`.
 
@@ -55,18 +55,18 @@ Commands, all run from the repository root:
 ## The state file and the night log
 
 Keep `r<N>/state.json` in the scratchpad, and update it before and after every launch. Read it first on every wake-up.
-- **For each workflow:** the run id, the script, the arguments (or the file they are saved in), the commit its workspaces were made from, the phase, and each job with its workspace and status: running; done and saved; or failed, with the reason.
+- **For each workflow:** the run id, the script, the arguments (or the file they are saved in), the commit its workspaces were made from, its task id, the phase, and each job with its workspace and status: running; done (result in the scratchpad); recorded (with the commit); or failed, with the reason.
 - **For each phase:** its status and its commit.
 - **Under `open_decisions`:** the decisions taken or waiting.
 
-**A workflow counts as running only when the workflow tool lists it as running now.** If it does not, it died: resume it (section 3).
+**A workflow is running only while its completion notice has not arrived and its output file (`tasks/<task id>.output` in the session folder) does not exist.** After a notice that the session's worker was restarted, assume no workflow survived: resume each unfinished one (section 3). The current batch is the one whose state file still has a phase that is not done.
 - Never launch an agent into a workspace that another running job owns.
 - After a resume, check that each failed job really ran again: its report is not empty, and its unit file is newer than the resume. If not, launch that job on its own, as a new workflow with a new label.
 
 **A phase is ready when the phase before it has its commit:**
 - prep: `research/r<N>/prep/trim.json`;
 - opening check: `research/r<N>/opening/agreement.md`;
-- fill: a recorded report for every unit in the trim;
+- fill: a recorded report for every unit in the trim, except the opening-check units;
 - merge pass: every unit in the trim in `data/units/`;
 - patterns: the pattern files and the units' links;
 - checker: `research/r<N>/checker/result.json`;
@@ -82,7 +82,11 @@ Each phase ends with a commit and a push of its record.
 
 After every workflow, before you use any result:
 1. `git -C /home/user/MoesTools-Brainstormer status --porcelain` shows only your own changes. If anything else changed, save it as a patch in the scratchpad, restore the file with `git checkout -- <file>`, and note it in the night log. Prep, notes, checker and review agents read the repository itself and must change nothing in it.
-2. Check each workspace `$WS` the workflow used. Run from the repository: `git ls-files -z | xargs -0 -I{} sh -c 'cmp -s "{}" "$WS/{}" || echo "{}"'`. It must print only the agent's own file, such as `data/units/<game>.json`, plus any files that changed in the repository after the workspace was made.
+2. Check each workspace `$WS` the workflow used against the commit it was made from (`<start>`, in the state file). Run from the repository:
+   - changed files: `git ls-tree -r -z --name-only <start> | xargs -0 -I{} sh -c 'git show "$1:$2" | cmp -s - "$3/$2" || echo "$2"' _ <start> {} "$WS"`;
+   - new files: `(cd "$WS" && find . -path ./.cache -prune -o -path ./node_modules -prune -o -type f -print | sed 's|^\./||' | sort) | comm -23 - <(git ls-tree -r --name-only <start> | sort)`.
+
+   Together they must print only the agent's own file, such as `data/units/<game>.json`. A file of the agent's own scratch work outside the repository's folders is fine; note it.
 3. The units that were already in that file are unchanged: compare `JSON.stringify` of each with the repository's.
 4. Re-run `node scripts/validate.mjs "$WS"` and `node scripts/copy-check.mjs "$WS" --offline --only <each cited URL>` yourself, and keep the output.
 
@@ -110,11 +114,11 @@ When it runs:
 4. **A field below 80%:** an analyst proposes a fix from the splits and the hesitations, and a skeptic checks it against both codings. The fix goes to "Decisions needed", and the batch waits for Mustafa.
 5. A reconciler merges each pair into one entry, deciding each split by the rules and the pages (`reconcile.js`).
 
-Keep both codings, the agreement report and the hesitations in `research/r<N>/opening/`.
+Keep both codings, the agreement report and the hesitations in `research/r<N>/opening/`. Copy each reconciled entry and the reconciler's report to `research/r<N>/opening/final/`, and commit them.
 
 ### 3. Fill
 
-- **One research agent per two related units.** Each works in its own copy of the repository, made with `sh research/workflows/mkws.sh <scratchpad>/r<N>/fill/ws-<job>`. The copy has no git history, `node_modules` linked and the page cache copied. Note in the state file the commit the copies were made from.
+- **One research agent per two related units.** Each works in its own copy of the repository, made with `sh research/workflows/mkws.sh <scratchpad>/r<N>/fill/ws-<job>` (it refuses any other kind of path). The copy has no git history, `node_modules` linked and the page cache copied. Note in the state file the commit the copies were made from.
 - **The agent's brief** is the trim's one-line brief.
 - **Its prompt** is `code-units.js`. It says what to read first, how to research and paraphrase, and what to check before finishing. It also asks for a report: hesitations, gaps, unclear rules, new mechanics, and pages read but not cited.
 - **Record each finished job at once.** Once the checks at the top of this section pass:
@@ -126,7 +130,7 @@ Keep both codings, the agreement report and the hesitations in `research/r<N>/op
   Units enter `data/units/` only in the merge pass.
 - **A job that failed on a usage limit:**
   1. Note the reset time the error gives in the state file.
-  2. Reset only the workspaces of jobs that returned no report; never touch a finished job's. Run `case "$WS" in */r*/fill/ws-*) ;; *) exit 1;; esac; find "$WS" -mindepth 1 -maxdepth 1 ! -name .cache ! -name node_modules -exec rm -rf {} +; git -C /home/user/MoesTools-Brainstormer archive <start commit> | tar -x -C "$WS"`. This keeps the page cache and restores the commit the copy was made from.
+  2. Reset only the workspaces of jobs that returned no report; never touch a finished job's. Run `case "$WS" in */scratchpad/r*/*/ws-*) ;; *) exit 1;; esac; find "$WS" -mindepth 1 -maxdepth 1 ! -name .cache ! -name node_modules -exec rm -rf {} +; git -C /home/user/MoesTools-Brainstormer archive <start commit> | tar -x -C "$WS"`. This keeps the page cache and restores the commit the copy was made from.
   3. After the reset time, resume the workflow with `resumeFromRunId`, the same script and the same arguments.
 - **A job that failed for another reason** gets one more run in a fresh workspace. If it fails again, leave it for the morning.
 - **When the fill is done,** write `research/r<N>/fill/hesitations.md` the way `research/r1/opening/hesitations.md` was written:
@@ -153,7 +157,7 @@ Keep both codings, the agreement report and the hesitations in `research/r<N>/op
 1. **Draw the sample once, from the batch's own records:**
    - Write the seed (`r<N>-<date>`) in `research/r<N>/checker/result.json` and commit it before drawing.
    - Make a copy with `mkws.sh`. In it, `data/units/` holds only the units whose `researched_by` names this batch, and `data/patterns/` holds only the files this batch added.
-   - Run `npm run sample -- --seed <seed> --json --root <copy>`. It picks one in five units per game (at least three) and every proposed pattern.
+   - Run `npm run --silent sample -- --seed <seed> --json --root <copy> > <scratchpad>/r<N>/checker/sample.json` (without `--silent`, npm's header lines break the JSON). It picks one in five units per game (at least three) and every proposed pattern.
    - Never draw again with another seed.
 2. **A checker who wrote none of them re-opens the sources** (`checker.js`). On every sampled unit it must check:
    - `tier.band`, `tier.gate`, `cost_band.band`, `cost_band.raw`;
@@ -191,7 +195,7 @@ The pilot used this shape (research/pilot/README.md, Final review).
 4. The online copy-check, in three parts, each with zero FOUND lines:
    1. `npm run copy-check -- --also research/r<N> --also research/registry-notes`. Every record file lists the URLs of the pages its agent read, so the check fetches them.
    2. For each page named in the batch's uncertain entries but not cited, run `npm run copy-check -- --also data/units --only <url>` and read the FOUND lines on the batch's units.
-   3. For every cited PDF or wiki `File:` page (the cache holds only the page's licence text), extract the text with `pdftotext`. Compare it with the prose that cites it using a six-word check (copy-check's `words`, `grams` and `sharedRuns`). List each one in the report as checked by hand.
+   3. For every cited PDF or wiki `File:` page (the cache holds only the page's licence text; list them with `grep -rhoE '"url": "[^"]*(\.pdf|/wiki/File:)[^"]*"' data/units data/patterns research/r<N> | sort -u`), extract the text with `pdftotext`. Compare it with the prose that cites it using a six-word check (copy-check's `words`, `grams` and `sharedRuns`). List each one in the report as checked by hand.
 
    The report lists every page that could not be fetched, with the reason. `https://cnc.fandom.com/wiki/` and `.../CnC_Remastered_Collection/master/REDALERT/` always appear there: they are placeholders in the notes, not pages.
 5. A search of the record for local paths: `grep -rnE "file://|/home/user|/tmp/|scratchpad" research/r<N>`.
@@ -208,7 +212,7 @@ The pilot used this shape (research/pilot/README.md, Final review).
 
 **The pull-request description** follows the brief's format: TL;DR first, then "Decisions needed" (each self-contained, with options and a recommendation), then "For Mustafa".
 
-**The claims check runs last.** After the last commit that changes either text, run `verify-fixes.js` with only the claims angle. It returns `checked`: every number and factual claim in both texts, each with the command or file it was recomputed from and the value found. A number missing from `checked` has not been checked. Post only when every entry holds.
+**The claims check runs last.** After the last change to either text (log both in the night log), run `verify-fixes.js` with only the claims angle. It returns `checked`: every number and factual claim in both texts, each with the command or file it was recomputed from and the value found. A number missing from `checked` has not been checked. Post only when every entry holds.
 
 ### 9. Merge and the next batch
 
@@ -220,13 +224,13 @@ The pilot used this shape (research/pilot/README.md, Final review).
 5. `research/r<N>/checker/result.json` gives every game a rate of 0.15 or less.
 6. In `research/r<N>/review/findings.json`, every finding marked real is `fixed` (with its commit) or `answered` (with the reason).
 7. `research/r<N>/README.md` exists. The pull-request description starts with `## TL;DR`, and neither text says "work in progress", "running now" or "Next:".
-8. The claims check ran after the last commit that changed either text.
-9. `pull_request_read` with `get_review_comments` shows no unresolved thread. Since the last report, every comment carries the Claude Code footer. A comment without it may be Mustafa's: answer it first. Mustafa and the session use the same GitHub account, so the footer is the only way to tell them apart.
+8. The claims check ran after the last change to either text: the README's last commit and the last edit of `r<N>/pr-body.md`, both in the night log.
+9. `pull_request_read` with `get_review_comments` shows no unresolved thread, and `get_comments` and `get_reviews` show no comment or review since the last report without the Claude Code footer. A comment without it may be Mustafa's: answer it first. Mustafa and the session use the same GitHub account, so the footer is the only way to tell them apart.
 10. No "Decisions needed" item is a change to the word lists or field rules (see Decisions).
 
 **Then:**
 1. Merge with `merge_pull_request`, `merge_method: merge` (never a squash, so that the commit hashes the record cites stay reachable) and `expectedHeadSha` set to the checked head. Never push to main.
-2. Run `git fetch origin`. Then `git log -1 --format=%P origin/main` must show two parents, the second being the merged head, and CI on that merge commit must be green. Otherwise stop and report.
+2. Run `git fetch origin`. Then `git log -1 --format=%P origin/main` must show two parents, the second being the merged head; otherwise stop and report. If CI on the merge commit is still running, end the turn and check it on the next wake-up; if it failed, stop and report.
 3. Restart the branch, only when `git status --porcelain` and `git log origin/main..HEAD` both print nothing: `git checkout -B claude/quirky-cray-tih1w4 origin/main && git push origin claude/quirky-cray-tih1w4`. After a merge commit this is a fast-forward; no force is ever needed.
 4. Start the next batch's prep. Open its pull request from the prep commit (section 1, step 4), because GitHub refuses a pull request that has no commits.
 5. After R6 is merged, the night shift stops. Plan step 4 waits for Mustafa.
@@ -287,7 +291,7 @@ The pilot used this shape (research/pilot/README.md, Final review).
 
 **On every wake-up, in this order:**
 1. **Check the clock.** Run `TZ=Europe/Amsterdam date`, and write the time in the night log. The night powers (merging, decisions, starting a batch) apply only inside the window. Outside it, the day rules apply, and Mustafa decides merges and decisions.
-2. **At 08:00 or later:**
+2. **On the routine's 08:05 wake-up (between 08:00 and 08:30):**
    - write the morning summary from the night log and the state file;
    - send a short push notification if the tool is available;
    - start nothing, and stop.
