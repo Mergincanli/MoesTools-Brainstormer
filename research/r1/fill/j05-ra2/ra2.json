@@ -1,0 +1,573 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra2",
+  "units": [
+    {
+      "id": "ra2.allied.chrono-legionnaire",
+      "game": "ra2",
+      "faction": "allied",
+      "name": "Chrono Legionnaire",
+      "flavour_affinity": ["allied"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["disabler"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Battle Lab",
+        "basis": "Trained at the Allied Barracks only once an Allied Battle Lab stands: the Yuri's Revenge manual's tech table lists it after the Barracks and the Battle Lab, and the wiki's infobox gives tier 3."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 1500,
+        "basis": "Its list price sits exactly on the very-high threshold, so it takes that band: a little over twice the Grizzly's price."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": ["teleport"],
+        "speed": "medium",
+        "speed_raw": 1.25,
+        "notes": "It never walks. Every move order sends it through time straight to the destination, where it stands frozen while it phases back in: it can't move or fire then, but it can be hurt, and the farther the jump, the longer the wait. Several short hops leave it exposed for less time than one long one. The infobox gives a land speed a little over the Conscript's, which the wiki says sets how fast it phases back in rather than a walking pace; the band rests on that figure, as the registry allows (see uncertain). The Chronosphere, which kills other soldiers it moves, carries it unharmed."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "notes": "A soldier in a chrono suit. The game has walking frames for it, but they show only when an Allied Spy disguises himself as one."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class order decided: the infobox's armour type None maps to unarmoured. It gets no protection while it phases in after a jump. Self-healing comes only with Elite rank, which is veterancy."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Red Alert 2 has no fog of war in skirmish, so the band is the medium proposal (registry sight_reference). Its Sight figure lifts the shroud about one and a half times as far as the Conscript's does."
+      },
+      "armament": [
+        {
+          "name": "Neutron rifle (chrono beam)",
+          "slot": "primary",
+          "family": "laser",
+          "damage": "energy",
+          "mount": "free-aim",
+          "delivery": "beam",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "affects": "both",
+          "traits": ["root", "silence"],
+          "summary": "Pulls one target out of time instead of shooting it. While the beam stays on, the target is frozen: it can't move or fire, and no other weapon can touch it. Once held long enough it is erased; the wait grows with the target's full health, whatever damage it has already taken, so tanks and buildings take far longer than soldiers. It never wears a target down: if the beam stops, or the legionnaire dies, the target returns unharmed. Erased buildings leave no ruin, and since Yuri's Revenge patch 1.001 no soldier can enter or leave a building under the beam. Fliers in the air are out of its reach. Elite rank makes it erase about twice as fast. Force-fired on a friendly unit it shields that unit from all harm while the beam holds, but holding too long erases the friend.",
+          "patterns": ["lock-in-stasis"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One soldier; one player aims the beam and picks where to jump."
+      },
+      "abilities": [
+        {
+          "name": "Chrono teleport (movement)",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "How it moves: each move order is an instant jump through time to the chosen spot, followed by a phase-in during which it stands frozen and open to fire, longer for longer jumps. It has no button of its own and no cooldown; the move order triggers it.",
+          "patterns": ["teleport"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "A target it was erasing comes back unharmed when it dies."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:lock-in-stasis",
+          "why": "Once its beam lands, any single ground unit or building is as good as gone: the target can't fire back and nothing can rescue it, so a well-handled legionnaire wins one-on-one fights against anything on the ground."
+        },
+        {
+          "ref": "mobility-trait:teleport",
+          "why": "Jumps straight to wherever it is sent, so it reaches the rear of an army or a base without crossing the ground between."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Unlike most soldiers it can't be crushed: tanks that run infantry over can't do that to it."
+        },
+        {
+          "ref": "hits:structure",
+          "why": "Erases buildings outright and leaves no ruin behind, which also frees the ground for its own side to build on."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "mobility-trait:teleport",
+          "why": "After every jump it stands frozen while it phases in, longer the farther it went; it can't move or fire then and dies very easily."
+        },
+        {
+          "ref": "pattern:lock-in-stasis",
+          "why": "Freezes one target at a time and never wears it down: interrupt it and the target returns unharmed, big targets take a long time, and teammates can't help finish them."
+        },
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "No armour, so even weak anti-infantry fire kills it while it is busy with one target."
+        },
+        {
+          "ref": "weapon:laser",
+          "why": "Its beam can't reach aircraft in flight, so it has no answer to air attack."
+        },
+        {
+          "ref": "tier:t3",
+          "why": "Needs a Battle Lab and costs a little over twice a Grizzly, a lot for a soldier this fragile."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-infantry",
+          "why": "Groups of even the weakest anti-infantry units overwhelm it, because it can freeze only one of them at a time."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "Its beam can't reach fliers, so aircraft attack it freely."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Beats any single ground vehicle, heavy tanks included: a frozen tank can't shoot back, and crushers can't run it over."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Erases enemy buildings one by one without leaving ruins."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "Inside an IFV it turns the car's weapon into a chrono beam that reaches a little further than its own, though it erases more slowly."
+        },
+        {
+          "ref": "unit:ra2.allied.ifv",
+          "why": "Inside an IFV it turns the car's weapon into a chrono beam that reaches a little further than its own; later patches stopped the car from letting go of targets once they move past its reach."
+        }
+      ],
+      "memorable": "A soldier who never walks: he blinks across the map and erases whatever he holds in his beam, all or nothing.",
+      "as_player": "A fragile, pricey T3 soldier. Clicking a spot blinks you there, but you arrive frozen and exposed for longer the farther you jumped, so you hop in short steps. Hold the beam on one target: it freezes, can't fire or be hit, and is erased when the bar fills; let go or die and it returns unharmed. Turn the beam on a teammate to shield them, and release before the bar fills. Tanks can't run you over; anti-infantry groups and aircraft are your nightmare.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Chrono_legionnaire",
+          "title": "Chrono legionnaire, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-21",
+          "note": "Its Official description box copies the unit's entry in the Red Alert 2 manual (Units and Structures, Allied infantry). Infobox: price, armour type, land speed, sight, range, ChronoBeam damage (doubled when elite, and the IFV version), tier 3, Battle Lab requirement, teleporting and uncrushable.",
+          "version": "Red Alert 2 1.006 and Yuri's Revenge 1.001",
+          "supports": [
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer Red Alert 2 Yuri's Revenge manual (English PDF), EA / Westwood, hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-21",
+          "note": "PDF page 15, the Allied tech table: the Chrono Legionnaire comes from the Barracks with a Battle Lab. Gameplay Changes item 13 (PDF page 12): an IFV carrying a Chrono Legionnaire no longer drops its target when the target is out of reach.",
+          "version": "Yuri's Revenge, 2001",
+          "supports": ["tier", "combos/1"]
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/Temporal",
+          "title": "Temporal, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-21",
+          "note": "The warhead flag behind the chrono beam: the target is frozen, can't move or attack, and can't be hit by other warheads; the firer must keep firing or the target unfreezes unharmed; erase time comes from the weapon's damage and the target's maximum health, ignoring armour and current health; units above the ground are not affected.",
+          "supports": ["armament/0", "strengths/0", "weaknesses/1", "weaknesses/3", "countered_by/1"]
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/ChronoDistanceFactor",
+          "title": "ChronoDistanceFactor, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-21",
+          "note": "For units with the chronoshift (Teleport) locomotor, the phase-in time after a jump grows with the distance; while phasing in a unit can't move or fire but still takes damage.",
+          "supports": ["mobility", "abilities/0", "weaknesses/0"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "mobility/speed",
+          "note": "The unit never walks, so no figure is a walking speed. The wiki's infobox says its land speed sets how fast it phases back in; ModEnc's ChronoDistanceFactor page instead makes the phase-in time depend on the jump's distance and a global factor alone. The band and speed_raw follow the infobox figure, as the registry allows for chrono units; judged by travel time, an instant jump plus a phase-in, it would be much faster than any walker over long distances.",
+          "sources_disagree": true
+        },
+        {
+          "path": "roles/primary",
+          "note": "Step 1 finds no role: the manual's first sentence only says the unit never walks, and Red Alert 2 units have no Application line; no official text says what it is strong against. Steps 2 to 4 give nothing, so step 5 decides, and it hangs on the speed band: medium gives assault; a band from travel time (fast or very fast) would give raider, since it is unarmoured."
+        },
+        {
+          "path": "armament/0/family",
+          "note": "No family describes a beam that erases its target; laser is the beam family nearest to how it behaves (a ray held on one target). Cryo and EMP were set aside: the target is not set up for bonus damage but protected, and infantry are affected too."
+        },
+        {
+          "path": "armament/0/damage",
+          "note": "Energy is the laser family's default (damage step 5: Red Alert 2 has no damage map). In the game the erasure ignores armour type and current health altogether."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "The infobox gives no air attack and ModEnc's Temporal page says units above the ground are unaffected, so no air layer is listed. Ships are listed by the naval rule; no page read names them as targets."
+        },
+        {
+          "path": "armament/0/affects",
+          "note": "Using the beam to shield allies rests on the wiki's game-unit prose alone (it advises protecting friends with it, but not for too long); the manual speaks only of enemies."
+        },
+        {
+          "path": "abilities/0/kind",
+          "note": "The teleport has no button of its own in the source: the ordinary move order does it. It is recorded as a passive because the source names the effect (the manual and the infobox's ability line) and it adds a mechanic, the distance-scaled frozen arrival, that the teleport trait alone does not say."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "Elite rank doubling the erase speed is read from the infobox's elite damage figure, which ModEnc's Temporal page says sets the erase rate."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "mobility/base",
+          "used": "foot",
+          "wanted": "teleport-only movement (no walking)",
+          "note": "Infantry may only be on foot or on a jetpack, but this soldier never walks: it only teleports. The teleport trait records the jumps."
+        },
+        {
+          "path": "armament/0/family",
+          "used": "laser",
+          "wanted": "a temporal or erasing beam family",
+          "note": "The chrono beam freezes its target out of time and erases it outright when held long enough; no family has that behaviour."
+        },
+        {
+          "path": "armament/0/damage",
+          "used": "energy",
+          "wanted": "a damage type that erases regardless of armour",
+          "note": "The erasure ignores armour type and current health; its time depends only on the target's full health. No damage type says this."
+        },
+        {
+          "path": "armament/0/traits",
+          "used": "root, silence",
+          "wanted": "a stasis trait: the target can't act and can't be hurt while held",
+          "note": "Root and silence together say the frozen target can neither move nor fire, as the EMP tie-break pairs them, but neither says the target is also untouchable; the lock-in-stasis pattern carries that."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J05-RA2"
+    },
+    {
+      "id": "ra2.allied.robot-tank",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "allied",
+      "name": "Robot Tank",
+      "flavour_affinity": ["allied", "soviet"],
+      "class": "hover",
+      "nature": "uncrewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-armour",
+        "secondary": ["raider", "assault"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Robot Control Center",
+        "basis": "Built at the Allied War Factory once a Robot Control Center stands, one building beyond the factory: the Yuri's Revenge manual's tech table lists it after the War Factory and the Robot Control Center, and the wiki's infobox gives tier 2."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 600,
+        "basis": "Six sevenths of the Grizzly's price, which puts it in the low band."
+      },
+      "mobility": {
+        "base": "hover",
+        "handling": "drift",
+        "traits": ["crush"],
+        "speed": "fast",
+        "speed_raw": 2.5,
+        "notes": "Hovers, so it crosses water as freely as land. Noticeably faster than the Grizzly, the Allied main battle tank. The ratio sits exactly on the fast band's upper edge, so it stays fast; ModEnc says hover units actually move about a third slower than their speed figure suggests, which still leaves it fast. When it shuts down over water it sinks."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "large",
+        "notes": "A light hover tank with a cannon, which the wiki calls a cheaper version of the Allied main battle tank; no page gives its size or describes its turret, so the tank examples decide (see uncertain)."
+      },
+      "armour": {
+        "class": "heavy",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class order decided: the infobox's armour type Heavy maps to heavy, and the registry keeps the Robot Tank there. The wiki's prose calls its armour thin and light, which is the wiki's own wording. With no ranks it never gains the self-healing of Elite units."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Red Alert 2 has no fog of war in skirmish, so the band is the medium proposal (registry sight_reference). Its Sight figure lifts the shroud a little further than the Conscript's does."
+      },
+      "armament": [
+        {
+          "name": "105mm APDS cannon",
+          "slot": "primary",
+          "family": "cannon",
+          "damage": "armour-piercing",
+          "mount": "slow-turret",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["ground-vehicle", "infantry", "naval"],
+          "traits": [],
+          "summary": "An armour-piercing anti-tank gun with a reach a little beyond the Conscript's rifle, close to the Grizzly's gun in punch per the wiki. Good against vehicles, poor against infantry (worst against soldiers it can't run over), and it can't fire at aircraft. The official site's early text called it short-range rocket pods; the game gives it a cannon."
+        }
+      ],
+      "crew": {
+        "model": "remote",
+        "basis": "proposal",
+        "notes": "Nobody rides inside (the Yuri's Revenge manual). The tanks are steered from the Robot Control Center, a building on the field that the wiki's background says houses the operators, and every tank stops when it falls or loses power. Proposal: the player version keeps that link as a remote unit whose operator, a control station, stays parked and exposed; losing the station shuts the tank down."
+      },
+      "abilities": [
+        {
+          "name": "Robot Control Center link",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "It works only while its owner has a working, powered Robot Control Center. If the last one is destroyed, sold or captured, or base power runs low, every Robot Tank of that player shuts down where it stands, unable to move or fire, and any hovering over water sink and are lost. They come back to life once a powered center stands again.",
+          "patterns": []
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "When its control center goes down while it is over water, it sinks and is lost; the wiki adds that a Giant Squid also sinks it rather than blowing it up."
+      },
+      "strengths": [
+        {
+          "ref": "nature:uncrewed-machine",
+          "why": "With no driver aboard it can't be mind-controlled, its main strength by the manual; the war factory page adds that radiation can't hurt it either."
+        },
+        {
+          "ref": "mobility:hover",
+          "why": "Hovers over water as easily as land, so it turns up almost anywhere quickly and can fight beside a fleet."
+        },
+        {
+          "ref": "speed:fast",
+          "why": "Faster than the Grizzly, suited to ambushes and hit-and-run attacks."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Its armour-piercing gun makes it a capable tank hunter, above all in packs."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "crew:remote",
+          "why": "Every Robot Tank shuts down when its control center is destroyed or loses power, leaving them helpless; those over water sink."
+        },
+        {
+          "ref": "nature:uncrewed-machine",
+          "why": "Being a robot, it can never gain veterancy, so it never grows tougher or heals itself."
+        },
+        {
+          "ref": "weapon:cannon",
+          "why": "Its gun struggles against infantry, especially soldiers it can't run over, and can't fire at aircraft at all."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Completely helpless against air attack: its gun can't reach fliers."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Its anti-tank gun does poorly against soldiers, above all ones it can't crush."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "pattern:mind-control",
+          "why": "Mind control can't take it, which made it a key Allied answer to Yuri's mind-controlling units."
+        },
+        {
+          "ref": "unit:ra2.yuri.yuri-clone",
+          "why": "Immune to the clone's mind control, the Robot Control Center page names fighting Yuri Clones as a reason to field it."
+        },
+        {
+          "ref": "unit:ra2.yuri.mastermind",
+          "why": "Immune to the Mastermind's mind control, the Robot Control Center page names fighting Masterminds as a reason to field it."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Fielded as a tank hunter: its armour-piercing gun and speed let packs of them pick off enemy vehicles, heavier Soviet tanks included."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:ra2.allied.robot-tank",
+          "why": "Cheap enough to field in packs that swarm heavier enemy tanks."
+        },
+        {
+          "ref": "class:naval",
+          "why": "Gives Allied fleets the anti-vehicle punch their own ships lack."
+        }
+      ],
+      "memorable": "A cheap hover tank with nobody inside: mind control can't take it, but every one goes dead the moment its control center falls.",
+      "as_player": "A fast, cheap T2 hover tank: slide over land and water and hunt vehicles with an armour-piercing cannon on a slow turret. Nobody can mind-control you, but you never rank up. Your team's control station is your lifeline: if the enemy wrecks or unpowers it, you freeze where you are, and sink if you are over water. Infantry swarms and aircraft are bad news.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Robot_Tank",
+          "title": "Robot Tank, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-21",
+          "note": "Infobox: price, armour type Heavy, land and sea speed, range, sight, AP cannon, tier 2, built at the Allied War Factory with a Robot Control Center. Prose: no veterancy, immune to psychic powers, shutdown and sinking when the center is lost.",
+          "version": "Yuri's Revenge 1.001",
+          "supports": [
+            "nature",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "crew",
+            "abilities/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters/0",
+            "counters/3",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_2_-_Yuri%27s_Revenge_manual",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (transcript), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-21",
+          "note": "Copies the Yuri's Revenge manual's Tactical Update entries for the Robot Tank and the Robot Control Center: no human driver, so no mind control; it hovers across water; it needs the center and stops on low or no power.",
+          "supports": [
+            "nature",
+            "mobility",
+            "crew",
+            "abilities/0",
+            "strengths/0",
+            "strengths/1",
+            "weaknesses/0",
+            "counters/0"
+          ]
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer Red Alert 2 Yuri's Revenge manual (English PDF), EA / Westwood, hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-21",
+          "note": "PDF page 15, the Allied tech table: the Robot Tank comes from the War Factory with a Robot Control Center. Pages 16 and 17 hold the entries the transcript copies.",
+          "version": "Yuri's Revenge, 2001",
+          "supports": ["tier"]
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/PoweredUnit",
+          "title": "PoweredUnit, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-21",
+          "note": "The Yuri's Revenge vehicle flag used by the Robot Tank: the vehicle is active only while a building that powers it exists and works; otherwise it is paralysed.",
+          "supports": ["abilities/0", "weaknesses/0"]
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/Locomotor",
+          "title": "Locomotor, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-21",
+          "note": "Hover locomotor, used by the Robot Tank: a hover unit disabled by the powered-unit rule drops to the ground and sinks over water, and hover units move about a third slower than their speed figure suggests.",
+          "supports": ["mobility", "abilities/0", "on_death"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles",
+          "note": "The official site's Yuri's Revenge profile (newalliedinfo2.jsp on the Wayback Machine) could not be opened: web.archive.org reset every connection. Anti-armour (its Application line names anti-vehicle) and raider (it calls the tank a hit-and-run raider) rest on the registry note's reading of that profile. Without it, roles step 5 would make the tank assault, and raider would fail step 4 because its armour is heavy."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "Crush rests on one remark on the Robot Tank page, that its gun struggles most against infantry that can't be crushed; no page read says outright that it runs soldiers over."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "Land and sea speed are both two and a half times the Conscript's figure, exactly on the fast band's upper edge. ModEnc's Locomotor page says hover units move about a third slower than their figure on the drive locomotor would; even so the ratio stays fast."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "The wiki calls it an anti-tank gun, so can_target step 3 lists ground vehicles plus infantry, which the same page says it struggles against. No page read says the gun damages buildings, so structures are left out, though the game surely lets it fire at them. Ships are listed by the naval rule."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Projectile is the cannon family's default; no page describes the shell's flight."
+        },
+        {
+          "path": "body/plan",
+          "note": "No page read describes a turret; hull-turret follows from the wiki calling it a light tank and a cheaper main battle tank. Size large follows the size examples for tanks of every weight."
+        },
+        {
+          "path": "crew/model",
+          "note": "The remote model's rule speaks of a person who stays on the field outside the machine. Here the operator is a building, the Robot Control Center, whose operators exist only in the wiki's background text; the in-game fact is that the tank depends on that building."
+        },
+        {
+          "path": "abilities/0",
+          "note": "That the tanks come back once a powered center stands again rests on ModEnc's PowersUnit page (https://modenc.renegadeprojects.com/PowersUnit), which also says the logic misbehaves when one side owns several kinds of powering building. That selling or capturing the center also shuts them down comes from the Robot Tank page's glitch notes, and the sinking also from the Robot control center page (https://cnc.fandom.com/wiki/Robot_control_center)."
+        },
+        {
+          "path": "strengths/0",
+          "note": "Radiation immunity comes from the Allied war factory (Red Alert 2) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Allied_war_factory_(Red_Alert_2)), whose production list says neither mind control nor radiation affects the tank; the registry's list of radiation-immune units does not name it."
+        },
+        {
+          "path": "weaknesses/1",
+          "note": "ModEnc's Trainable page (https://modenc.renegadeprojects.com/Trainable) says a Spy inside a War Factory overrides a unit's no-rank setting, so a Robot Tank built after such a raid may still start Veteran; nobody has tested it."
+        },
+        {
+          "path": "counters",
+          "note": "The Yuri Clone and Mastermind links rest on the Robot control center page (https://cnc.fandom.com/wiki/Robot_control_center), which names fighting them as the reason to field the tanks; the Robot Tank page speaks of the fight against Yuri in general."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "abilities/0/patterns",
+          "used": "",
+          "wanted": "depend-on-relay",
+          "note": "No pattern covers a unit that works only while a friendly relay (a building or another unit) stands and has power, and shuts down when the enemy destroys or starves that relay."
+        },
+        {
+          "path": "crew/model",
+          "used": "remote",
+          "wanted": "remote control from a structure rather than a parked soldier",
+          "note": "The tank is steered from a building on the field, not from a soldier who parks to pilot it; remote is the nearest crew model."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J05-RA2"
+    }
+  ]
+}
