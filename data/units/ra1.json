@@ -260,7 +260,7 @@
       "availability": "open",
       "roles": {
         "primary": "anti-infantry",
-        "secondary": ["scout"]
+        "secondary": ["scout", "raider"]
       },
       "tier": {
         "band": "t1",
@@ -276,9 +276,9 @@
         "base": "foot",
         "handling": "strafe",
         "traits": [],
-        "speed": "medium",
-        "speed_raw": 1,
-        "notes": "Both wikis give it the Rifle Infantry's land speed. EA's code doubles its pace whenever it has a target, so it closes on a victim at twice its walking speed; the band uses the plain figure."
+        "speed": "fast",
+        "speed_raw": 1.86,
+        "notes": "Both wikis give it the Rifle Infantry's land speed. By EA's code it walks at the rifleman's pace on a plain move order and charges at nearly twice it whenever it has a target; the band counts the charge, the way it moves in a fight (see uncertain)."
       },
       "body": {
         "plan": "beast",
@@ -465,11 +465,11 @@
         },
         {
           "path": "mobility/speed",
-          "note": "The code doubles the dog's pace while it has a target, which would make it fast while chasing; the band uses the plain land speed."
+          "note": "The game code doubles the dog's stride whenever it has a target, with no meter, stamina or cooldown, so in a fight it runs at a little under twice the Rifle Infantry's pace, and the band counts that charge (EA's released code, INFANTRY.CPP). On a plain move order with no target it walks exactly at the rifleman's pace, which would be medium. The band rests on reading the charge as the way it moves in a fight."
         },
         {
           "path": "roles/secondary",
-          "note": "Scout rests only on the detector trait (step 4). The Kennel page's production list calls the dog scout infantry, but that line is the wiki's own words, not official text."
+          "note": "Scout rests on the detector trait (step 4). The fast band also meets scout's requires, but by the raider or scout tie-break speed alone makes a scout only when official text calls the unit one, and the Kennel page's production list, which calls the dog scout infantry, is the wiki's own words. Raider enters at step 4 too, through the fast band with no armour, and comes after scout in the roles list. Its description fits only loosely: the dog page warns against sending dogs at groups of riflemen and calls rocket soldiers and unarmed infantry easy prey, which comes close to picking off isolated targets, but no source has the dog pull back after a kill, and the manual presents it as a base guard. With a medium band (see mobility/speed), raider would drop out."
         },
         {
           "path": "counters/3",
@@ -529,7 +529,7 @@
         "traits": [],
         "speed": "medium",
         "speed_raw": 1,
-        "notes": "His land speed in the infobox equals the Rifle Infantry's, so medium. The Aftermath manual calls him slow, a word about him among soldiers that does not set the band. The vehicles he serves outpace him: the Medium Tank moves twice as fast. Like any soldier he can be run over by a crushing vehicle."
+        "notes": "His land speed in the infobox equals the Rifle Infantry's, so medium. The Aftermath manual calls him slow, a word about him among soldiers that does not set the band. The vehicles he serves outpace him: the Medium Tank moves nearly twice as fast. Like any soldier he can be run over by a crushing vehicle."
       },
       "body": {
         "plan": "humanoid",
@@ -782,8 +782,8 @@
         "handling": "pivot",
         "traits": ["crush"],
         "speed": "slow",
-        "speed_raw": 0.75,
-        "notes": "Built on the Mammoth Tank's chassis. Its land speed is three quarters of the Rifle Infantry's and of the Mammoth's, and well under half the Medium Tank's, so it is slower than both. It rolls over infantry (wiki; the crusher flag in the game code). Once its countdown starts it never moves again. Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
+        "speed_raw": 0.7,
+        "notes": "Built on the Mammoth Tank's chassis. Its land speed is about seven tenths of the Rifle Infantry's pace and three quarters of the Mammoth's, and well under half the Medium Tank's, so it is slower than both. It rolls over infantry (wiki; the crusher flag in the game code). Once its countdown starts it never moves again. Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
       },
       "body": {
         "plan": "launcher-rack",
@@ -981,8 +981,12 @@
           "note": "Large as a tank on the Mammoth's chassis. REDALERT/UDATA.CPP gives it the sprite-size flag that REDALERT/TYPE.H explains (bigger than one cell but under two), which the Medium, Heavy and Mammoth Tanks share, while the Light Tank and the APC lack it."
         },
         {
+          "path": "mobility/speed",
+          "note": "By the movement rules in EA's released code, open ground costs a tracked vehicle part of its throttle, while a walking soldier keeps all of his. On straight runs that puts this tank right on the edge between slow and very slow: a hair under seven tenths of the Rifle Infantry's pace, and exactly on the edge once rounded. On diagonals it is a little quicker and clearly slow. The band nearer medium, slow, is taken. The tracked rate rests on the reference copy of the Aftermath rules file (aftrmath.ini, in OpenRA's raclassic repository), which marks it tracked; as a wheeled vehicle it would be very slow."
+        },
+        {
           "path": "mobility/base",
-          "note": "Tracks rests on the wiki's statement that it uses the Mammoth Tank's chassis; no page read names its drive outright."
+          "note": "Tracks rests on the wiki's statement that it uses the Mammoth Tank's chassis and on the reference copy of aftrmath.ini (OpenRA's raclassic repository), which marks it tracked."
         },
         {
           "path": "mobility/traits",
@@ -990,7 +994,7 @@
         },
         {
           "path": "mobility/notes",
-          "note": "The speed comparisons use the Mammoth tank (Red Alert 1) page of the Command & Conquer Wiki (read, not cited), whose infobox gives the Mammoth the Rifle Infantry's land speed and the same sight as this tank, and the Medium Tank's speed in the registry notes. The same page's health figure backs the health comparison in armour.notes."
+          "note": "The speed comparisons follow the registry's speed method, worked out from the rules figures, not the infobox of the Mammoth tank (Red Alert 1) page of the Command & Conquer Wiki (read, not cited). That infobox still gives the Mammoth the same sight as this tank, and the same page's health figure backs the health comparison in armour.notes."
         },
         {
           "path": "abilities/0",
@@ -1042,7 +1046,7 @@
       "nature": "crewed-machine",
       "availability": "open",
       "roles": {
-        "primary": "assault",
+        "primary": "raider",
         "secondary": []
       },
       "tier": {
@@ -1059,9 +1063,9 @@
         "base": "wheels",
         "handling": "steer",
         "traits": ["crush"],
-        "speed": "medium",
-        "speed_raw": 1,
-        "notes": "The wiki calls it a gap generator mounted on a truck, on wheels. By the Command & Conquer Wiki's figure it moves at the Rifle Infantry's pace, half the Medium Tank's speed; StrategyWiki's figure is a little over twice that, slightly faster than the Medium Tank (see uncertain). It runs over infantry (the crusher flag in the game code). Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
+        "speed": "fast",
+        "speed_raw": 1.64,
+        "notes": "The wiki calls it a gap generator mounted on a truck, on wheels. By the rules file's figure, the one the game reads, it moves about two thirds faster than the Rifle Infantry and a little slower than the Medium Tank; the C&C Wiki's infobox figure would make it much slower (see uncertain). It runs over infantry (the crusher flag in the game code). Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
       },
       "body": {
         "plan": "launcher-rack",
@@ -1209,12 +1213,12 @@
       "uncertain": [
         {
           "path": "mobility/speed",
-          "note": "The Command & Conquer Wiki's infobox gives the Rifle Infantry's land speed (medium); StrategyWiki, on the same scale (its Rifle Infantry and Medium Tank match the C&C Wiki's), gives a little over twice that, which would be fast. The C&C Wiki's own Radar jammer page (read, not cited) gives that similar truck StrategyWiki's figure too. Banded from the C&C Wiki infobox, as the registry notes ask. This drops confidence to medium: the contradicted figure decides the speed band and, through roles step 5, the primary role.",
+          "note": "The Command & Conquer Wiki's infobox gives it the Rifle Infantry's land speed. StrategyWiki and the game's own rules file (the reference copy in OpenRA's raclassic repository) give a little over twice that, and EA's released code reads the rules file, so the band follows the rules figure. Open ground cuts a wheeled vehicle's throttle, and even after that cut it moves about two thirds faster than the rifleman, which is fast. On the wiki's figure it would sit on the edge between slow and very slow.",
           "sources_disagree": true
         },
         {
           "path": "roles/primary",
-          "note": "Assault comes from roles step 5 on the C&C Wiki's speed. With StrategyWiki's speed the truck would be fast with light armour, and step 5 would give raider instead."
+          "note": "Raider comes from roles step 5 on the rules file's speed. On the C&C Wiki's figure the truck would be slow and step 5 would give assault."
         },
         {
           "path": "body/size",
@@ -1222,7 +1226,7 @@
         },
         {
           "path": "mobility/base",
-          "note": "Wheels rests on the wiki's words (a truck-mounted generator, on wheels); no page read gives its drive, and the rules file that would say could not be read."
+          "note": "Wheels rests on the wiki's words (a truck-mounted generator, on wheels) and on the reference copy of Rules.ini (OpenRA's raclassic repository), which gives it no Tracked key, so the code's default (UDATA.CPP) makes it wheeled."
         },
         {
           "path": "mobility/traits",
@@ -1240,9 +1244,9 @@
       "fit_notes": [
         {
           "path": "roles/primary",
-          "used": "assault",
+          "used": "raider",
           "wanted": "support",
-          "note": "Its job is hiding teammates, which is team support, but support's requires (a repair tool, or a repair or resupply pattern) fail. Roles step 2 (unarmed) finds no listed role that fits: buffer is for making allies stronger and scout for finding enemies. Steps 3 and 4 have no main weapon to read, so step 5 gives the generalist default, assault, for a truck that never fights. The wiki's own role line calls it a support unit."
+          "note": "Its job is hiding teammates, which is team support, but support's requires (a repair tool, or a repair or resupply pattern) fail. Roles step 2 (unarmed) finds no listed role that fits: buffer is for making allies stronger and scout for finding enemies. Steps 3 and 4 have no main weapon to read, so step 5 gives raider, the default for a fast generalist with light armour, for a truck that never fights. The wiki's own role line calls it a support unit."
         },
         {
           "path": "abilities/0/patterns",
@@ -1296,7 +1300,7 @@
         "handling": "pivot",
         "traits": [],
         "speed": "fast",
-        "speed_raw": 2.25,
+        "speed_raw": 2.15,
         "notes": "Land speed a little over twice the Rifle Infantry's, so fast: a little quicker than both main battle tanks, the Medium Tank and the Heavy Tank. The code marks it as a vehicle that crushes infantry, but the crush trait is kept for large and huge units, so it is left out (see fit_notes). Tracks rest on the Anti-personnel minelayer page's mention of treads, for the one unit type both sides build; the Anti-tank page names no drive."
       },
       "body": {
@@ -1488,7 +1492,7 @@
         },
         {
           "path": "mobility/base",
-          "note": "Tracks rest on the Anti-personnel page's treads, for the one internal type both sides share; the Anti-tank page names no drive, and the rules flag that sets tracks or wheels is in the game's rules file, which no page read shows."
+          "note": "Tracks rest on the Anti-personnel page's treads, for the one internal type both sides share, and the reference copy of Rules.ini (OpenRA's raclassic repository) marks it tracked, the flag the code reads; the Anti-tank page names no drive."
         },
         {
           "path": "mobility/traits",
@@ -1556,7 +1560,7 @@
         "handling": "pivot",
         "traits": [],
         "speed": "fast",
-        "speed_raw": 2.25,
+        "speed_raw": 2.15,
         "notes": "Land speed a little over twice the Rifle Infantry's, so fast: a little quicker than both main battle tanks, the Medium Tank and the Heavy Tank. The code marks it as a vehicle that crushes infantry, but the crush trait is kept for large and huge units, so it is left out (see fit_notes). Tracks rest on the wiki's mention of treads and its APC-based Soviet design."
       },
       "body": {
@@ -1733,7 +1737,7 @@
         },
         {
           "path": "mobility/base",
-          "note": "Tracks rest on the Anti-personnel page's treads and its APC-based design; the rules flag that sets tracks or wheels is in the game's rules file, which no page read shows."
+          "note": "Tracks rest on the Anti-personnel page's treads and its APC-based design, and the reference copy of Rules.ini (OpenRA's raclassic repository) marks it tracked, the flag the code reads."
         },
         {
           "path": "mobility/traits",
@@ -1791,9 +1795,9 @@
         "base": "tracks",
         "handling": "pivot",
         "traits": ["crush"],
-        "speed": "medium",
-        "speed_raw": 1,
-        "notes": "By the wiki's land speed figures it moves exactly as fast as the Rifle Infantry: half the Allied Medium Tank's speed and a little over half the Soviet Heavy Tank's, the two main battle tanks, and the wiki calls it the slowest vehicle, though by the infobox figures the Aftermath's M.A.D. Tank, built on its chassis, is slower still. It runs over infantry in its path (StrategyWiki; the game code marks it as a crusher), and Force Move sends it onto a soldier on purpose (manual). Pivot is the tracks default. Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
+        "speed": "slow",
+        "speed_raw": 0.93,
+        "notes": "By the registry's paces, worked out from the game code, it moves a little slower than the Rifle Infantry: half the Allied Medium Tank's pace and a little over half the Soviet Heavy Tank's, the two main battle tanks, and the wiki calls it the slowest vehicle, though by the infobox figures the Aftermath's M.A.D. Tank, built on its chassis, is slower still. It runs over infantry in its path (StrategyWiki; the game code marks it as a crusher), and Force Move sends it onto a soldier on purpose (manual). Pivot is the tracks default. Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
       },
       "body": {
         "plan": "hull-turret",
@@ -1872,8 +1876,8 @@
       ],
       "weaknesses": [
         {
-          "ref": "speed:medium",
-          "why": "Among the slowest vehicles: it only keeps pace with a rifleman and moves at about half the main battle tanks' speed (the wiki calls it the slowest, though the Aftermath's M.A.D. Tank on its chassis is slower), so it cannot chase, and faster tanks can hit it and pull back."
+          "ref": "speed:slow",
+          "why": "Among the slowest vehicles: a little slower than a rifleman and about half the main battle tanks' pace (the wiki calls it the slowest, though the Aftermath's M.A.D. Tank on its chassis is slower), so it cannot chase, and faster tanks can hit it and pull back."
         },
         {
           "ref": "weapon-trait:magazine",
@@ -2044,7 +2048,11 @@
         },
         {
           "path": "mobility/base",
-          "note": "No page read says in words that it runs on tracks. Every source calls it a tank, and the manual lets only tracked or heavy units overrun infantry with Force Move; in the code the movement type comes from the rules file, which could not be read."
+          "note": "No page read says in words that it runs on tracks. Every source calls it a tank, and the manual lets only tracked or heavy units overrun infantry with Force Move; the reference copy of Rules.ini (OpenRA's raclassic repository) marks it tracked, the flag the code reads."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "It has the Rifle Infantry's Speed, but EA's released code cuts a tracked vehicle's throttle on open ground while a walking soldier keeps full throttle. So it is slower than the rifleman on straight runs and only just slower on diagonals. Every way of measuring gives slow, so the band does not rest on the edge rule, but the margin on diagonals is thin."
         },
         {
           "path": "armament/0/can_target",
@@ -2081,7 +2089,7 @@
         },
         {
           "path": "mobility/notes",
-          "note": "The comparisons with the main battle tanks (speed here, health in armour/notes, sight in sensors/notes, and the reasons in strengths/0, strengths/2 and weaknesses/0) use the infobox figures on the Heavy tank (Red Alert 1) and Medium tank (Red Alert 1) pages of the Command & Conquer Wiki, which are read but not cited."
+          "note": "The comparisons with the main battle tanks rest on the Heavy tank (Red Alert 1) and Medium tank (Red Alert 1) pages of the Command & Conquer Wiki, read but not cited. Their infobox figures back health in armour/notes, sight in sensors/notes and the reasons in strengths/0, strengths/2 and weaknesses/0. For speed, their Speed values, which the rules file repeats, go through the registry's code-based paces, as mobility.notes now says."
         },
         {
           "path": "tier",
@@ -2150,8 +2158,8 @@
         "handling": "forward-only",
         "traits": [],
         "speed": "very-fast",
-        "speed_raw": 4,
-        "notes": "Its air speed is four times the Rifle Infantry's land speed. Among the game's aircraft it matches the Longbow, is a third quicker than the Hind and reaches four fifths of the MiG's speed; the manual still calls it not that fast. A fixed-wing plane that cannot hover or set down on open ground, only on its Airfield, and that must swing round to face its target before it fires, so it attacks in passes; its handling is the jet default."
+        "speed_raw": 4.31,
+        "notes": "Its air speed is a little over four times the Rifle Infantry's pace. Among the game's aircraft it matches the Longbow, is a third quicker than the Hind and reaches four fifths of the MiG's speed; the manual still calls it not that fast. A fixed-wing plane that cannot hover or set down on open ground, only on its Airfield, and that must swing round to face its target before it fires, so it attacks in passes; its handling is the jet default."
       },
       "body": {
         "plan": "fixed-wing",
@@ -2352,7 +2360,7 @@
         },
         {
           "path": "roles/secondary",
-          "note": "Raider rests on the very fast band (four times the rifleman's speed) with light armour. The manual calls the Yak not that fast, which is about it among aircraft; speed names no target, so the drop rule does not remove raider."
+          "note": "Raider rests on the very fast band (a little over four times the rifleman's pace) with light armour. The manual calls the Yak not that fast, which is about it among aircraft; speed names no target, so the drop rule does not remove raider."
         },
         {
           "path": "armour/notes",
@@ -2408,9 +2416,9 @@
         "base": "naval-submerged",
         "handling": "steer",
         "traits": [],
-        "speed": "medium",
-        "speed_raw": 1.5,
-        "notes": "Its water speed is one and a half times the Rifle Infantry's land speed, exactly on the edge, which goes to medium. Among ships it keeps pace with the Destroyer, is slower than the Gunboat, and it is faster than the Missile Submarine and the Cruiser. It travels under water and comes up only to fire. The word list gives the naval mobility types no default handling, so steer is proposed: a submarine turns in arcs while under way. The sprite turning on the spot, as RTS models do, does not decide it."
+        "speed": "slow",
+        "speed_raw": 0.82,
+        "notes": "Its water speed is a little over four fifths of the Rifle Infantry's pace (see uncertain). Among ships it keeps pace with the Destroyer, is slower than the Gunboat, and it is faster than the Missile Submarine and the Cruiser. It travels under water and comes up only to fire. The word list gives the naval mobility types no default handling, so steer is proposed: a submarine turns in arcs while under way. The sprite turning on the spot, as RTS models do, does not decide it."
       },
       "body": {
         "plan": "ship",
@@ -2645,12 +2653,16 @@
           "note": "No page gives the hull's footprint. Large is a judgement against the main battle tank; medium would hold if the hull is clearly smaller than a tank."
         },
         {
+          "path": "mobility/speed",
+          "note": "Banded from a reading of EA's released code that no play test or community source confirms. Vehicles and ships share one movement routine, which halves the top speed of a unit carrying a flag, and it makes that check on ships too. In a ship, the byte it reads (VESSEL.H and UNIT.H) never holds the no-flag value, so every ship sails at half its rated speed. That leaves the Submarine at a little over four fifths of the Rifle Infantry's pace, which is slow: level with the Destroyer, and ahead of both the Missile Submarine and the Cruiser. If ships in fact sail at full rate, it would be well over one and a half times the rifleman's pace (fast)."
+        },
+        {
           "path": "mobility/notes",
           "note": "The comparisons with other ships (speed here, health in armour.notes) come from the infoboxes of the Destroyer (Red Alert 1), Gunboat (Red Alert 1), Cruiser and Missile submarine pages on the Command & Conquer Wiki, read but not cited."
         },
         {
           "path": "roles/primary",
-          "note": "The manual's paragraph names ships, which match none of the three anti roles (registry notes), and the torpedoes hit nothing an anti role covers, so step 4 gives nothing and step 5 gives assault: medium speed, not fast."
+          "note": "The manual's paragraph names ships, which match none of the three anti roles (registry notes), and the torpedoes hit nothing an anti role covers, so step 4 gives nothing and step 5 gives assault: slow, not fast (at the full-rate reading it would be fast and step 5 would give raider)."
         }
       ],
       "fit_notes": [

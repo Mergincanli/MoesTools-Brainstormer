@@ -14,7 +14,7 @@
       "nature": "organic",
       "availability": "open",
       "roles": {
-        "primary": "assault",
+        "primary": "raider",
         "secondary": ["disabler"]
       },
       "tier": {
@@ -31,9 +31,8 @@
         "base": "foot",
         "handling": "strafe",
         "traits": ["teleport"],
-        "speed": "medium",
-        "speed_raw": 1.25,
-        "notes": "It never walks. Every move order sends it through time straight to the destination, where it stands frozen while it phases back in: it can't move or fire then, but it can be hurt, and the farther the jump, the longer the wait. Several short hops leave it exposed for less time than one long one. The infobox gives a land speed a little over the Conscript's, which the wiki says sets how fast it phases back in rather than a walking pace; the band rests on that figure, as the registry allows (see uncertain). The Chronosphere, which kills other soldiers it moves, carries it unharmed."
+        "speed": "very-fast",
+        "notes": "It never walks. Every move order sends it through time straight to the destination, where it stands frozen while it phases back in: it can't move or fire then, but it can be hurt, and the farther the jump, the longer the wait. Several short hops leave it exposed for less time than one long one. The band is judged from a jump plus its phase-in, which covers ground several times faster than a walking Conscript on any jump beyond a cell or so; the infobox land speed is no travel pace (see uncertain). The Chronosphere, which kills other soldiers it moves, carries it unharmed."
       },
       "body": {
         "plan": "humanoid",
@@ -215,12 +214,12 @@
       "uncertain": [
         {
           "path": "mobility/speed",
-          "note": "The unit never walks, so no figure is a walking speed. The wiki's infobox says its land speed sets how fast it phases back in; ModEnc's ChronoDistanceFactor page instead makes the phase-in time depend on the jump's distance and a global factor alone. The band and speed_raw follow the infobox figure, as the registry allows for chrono units; judged by travel time, an instant jump plus a phase-in, it would be much faster than any walker over long distances.",
+          "note": "He never walks. A move order jumps him to the spot at once, and he then stays frozen while he phases in, for longer the further he went. The wiki's infobox says his land speed sets how fast he re-emerges. But ModEnc's phase-in rule (https://modenc.renegadeprojects.com/ChronoDistanceFactor) uses only the distance and game-wide chrono settings, and the rules file calls his speed a dummy value, so the land speed is no travel pace and gives no ratio. The band is a judgement from that rule. Over a jump plus the freeze after it, he covers ground several times faster than a walking Conscript on any jump beyond a cell or so. Only very short hops, held back by the minimum freeze, come down towards fast.",
           "sources_disagree": true
         },
         {
           "path": "roles/primary",
-          "note": "Step 1 finds no role: the manual's first sentence only says the unit never walks, and Red Alert 2 units have no Application line. The manual entry does not say what it is strong against, but the official site's Allied unit profiles (alliedunits.jsp to alliedunits4.jsp on the Wayback Machine, at the address the registry notes give), which the registry also counts for step 4, could not be read: web.archive.org reset every connection, and the page cache holds none of them. If its profile calls it strong against a kind of target, step 4 could give that anti role instead of assault (anti-armour, for one, meets its requires through the beam's energy damage); the role stands until the page can be read. On the pages read, steps 2 to 4 give nothing, so step 5 decides, and it hangs on the speed band: medium gives assault; a band from travel time (fast or very fast) would give raider, since it is unarmoured."
+          "note": "Step 1 finds no role: the manual's first sentence only says the unit never walks, and Red Alert 2 units have no Application line. The manual entry does not say what it is strong against, but the official site's Allied unit profiles (alliedunits.jsp to alliedunits4.jsp on the Wayback Machine, at the address the registry notes give), which the registry also counts for step 4, could not be read: web.archive.org reset every connection, and the page cache holds none of them. If its profile calls it strong against a kind of target, step 4 could give that anti role instead of raider (anti-armour, for one, meets its requires through the beam's energy damage); the role stands until the page can be read. On the pages read, steps 2 to 4 give nothing, so step 5 decides: very fast with no armour gives raider. A band from the infobox figure (medium) would give assault."
         },
         {
           "path": "armament/0/family",
@@ -279,6 +278,13 @@
           "note": "No link names the immunity to crushing, so the strength hangs on its class, the part that makes other soldiers crushable."
         }
       ],
+      "atypical": [
+        {
+          "path": "mobility/base",
+          "rule": "mobility:foot allowed.speed-bands very-fast",
+          "note": "This soldier never walks: it moves only by jumps, and a jump plus the frozen phase-in after it covers ground several times faster than a walking Conscript, so the registry bands it very fast. Our foot type stops at fast, but foot is the nearest type for a soldier who only teleports (see the fit_note at mobility/base)."
+        }
+      ],
       "review": {
         "status": "unchecked"
       },
@@ -296,7 +302,7 @@
       "availability": "open",
       "roles": {
         "primary": "anti-armour",
-        "secondary": ["raider", "assault"]
+        "secondary": ["assault"]
       },
       "tier": {
         "band": "t2",
@@ -312,9 +318,8 @@
         "base": "hover",
         "handling": "drift",
         "traits": ["crush"],
-        "speed": "fast",
-        "speed_raw": 2.5,
-        "notes": "Hovers, so it crosses water as freely as land. Noticeably faster than the Grizzly, the Allied main battle tank. The ratio sits exactly on the fast band's upper edge, so it stays fast; ModEnc says hover units actually move about a third slower than their speed figure suggests, which still leaves it fast. When it shuts down over water it sinks."
+        "speed": "medium",
+        "notes": "Hovers, so it crosses water as freely as land. On open ground hover units run at half their speed, plus a boost on straight runs that no source sizes, so it may be anywhere from well behind the Grizzly, the Allied main battle tank, to a little ahead of it; the band takes medium by the edge rule (see uncertain). When it shuts down over water it sinks."
       },
       "body": {
         "plan": "hull-turret",
@@ -375,10 +380,6 @@
           "why": "Hovers over water as easily as land, so it turns up almost anywhere quickly and can fight beside a fleet."
         },
         {
-          "ref": "speed:fast",
-          "why": "Faster than the Grizzly, suited to ambushes and hit-and-run attacks."
-        },
-        {
           "ref": "damage:armour-piercing",
           "why": "Its armour-piercing gun makes it a capable tank hunter, above all in packs."
         }
@@ -422,7 +423,7 @@
         },
         {
           "ref": "class:vehicle",
-          "why": "Fielded as a tank hunter: its armour-piercing gun and speed let packs of them pick off enemy vehicles, heavier Soviet tanks included."
+          "why": "Fielded as a tank hunter: its armour-piercing gun lets packs of them pick off enemy vehicles, heavier Soviet tanks included."
         }
       ],
       "combos": [
@@ -436,7 +437,7 @@
         }
       ],
       "memorable": "A cheap hover tank with nobody inside: mind control can't take it, but every one goes dead the moment its control center falls.",
-      "as_player": "A fast, cheap T2 hover tank: slide over land and water and hunt vehicles with an armour-piercing cannon on a slow turret. Nobody can mind-control you, but you never rank up. Your team's control station is your lifeline: if the enemy wrecks or unpowers it, you freeze where you are, and sink if you are over water. Infantry swarms and aircraft are bad news.",
+      "as_player": "A cheap T2 hover tank: slide over land and water and hunt vehicles with an armour-piercing cannon on a slow turret. Nobody can mind-control you, but you never rank up. Your team's control station is your lifeline: if the enemy wrecks or unpowers it, you freeze where you are, and sink if you are over water. Infantry swarms and aircraft are bad news.",
       "sources": [
         {
           "url": "https://web.archive.org/web/20071213221819/http://www.ea.com/official/cc/redalert2/english/newalliedinfo2.jsp",
@@ -514,7 +515,7 @@
       "uncertain": [
         {
           "path": "roles",
-          "note": "The official site's Yuri's Revenge profile (newalliedinfo2.jsp, now cited and read from the copy-check cache) gives its Application line as anti-vehicle, an alias of anti-armour, whose requires its armour-piercing gun meets, and its text calls it a fast raider made for hit-and-run attacks, which ranks raider at roles.secondary step 1. The same profile gives it medium armour and rocket pods, written before release; the entry follows the infobox for both."
+          "note": "The official site's Yuri's Revenge profile (newalliedinfo2.jsp, now cited and read from the copy-check cache) gives its Application line as anti-vehicle, an alias of anti-armour, whose requires its armour-piercing gun meets. Its text also calls it a fast raider made for hit-and-run attacks, which would rank raider at roles.secondary step 1, but raider needs fast or better and the hover judgement gives medium, so raider is left out and recorded in fit_notes. The same profile gives it medium armour and rocket pods, written before release; the entry follows the infobox for both."
         },
         {
           "path": "mobility/traits",
@@ -522,7 +523,7 @@
         },
         {
           "path": "mobility/speed",
-          "note": "Land and sea speed are both two and a half times the Conscript's figure, exactly on the fast band's upper edge. ModEnc's Locomotor page says hover units move about a third slower than their figure on the drive locomotor would; even so the ratio stays fast."
+          "note": "Hover units cross open ground at half their speed (ModEnc LandTypes, https://modenc.renegadeprojects.com/LandTypes) and get a boost on straight runs (ModEnc HoverBoost), but no source shows how the two combine. Open ground alone would put the Robot Tank at about one and a quarter times the Conscript's pace (medium); with the full boost on top, nearly twice (fast). ModEnc's Locomotor page says hover units run roughly a third slower than the same setting on the drive locomotor. That lands just past the medium and fast edge, too close to settle. So the band nearer medium is taken, and fast is quite possible."
         },
         {
           "path": "armament/0/can_target",
@@ -558,7 +559,7 @@
         },
         {
           "path": "mobility/notes",
-          "note": "That hover units move about a third slower than their speed figure suggests rests on ModEnc's Locomotor page (https://modenc.renegadeprojects.com/Locomotor), read but no longer cited, to keep five sources. That page also says a hover unit shut down by the power rule settles and sinks over water, which the Robot Tank page says as well."
+          "note": "ModEnc's Locomotor page (https://modenc.renegadeprojects.com/Locomotor), read but no longer cited, to keep five sources, says a hover unit shut down by the power rule settles and sinks over water, which the Robot Tank page says as well. Its point that hover units run about a third slower than drive units with the same setting is now used in the mobility/speed entry."
         }
       ],
       "fit_notes": [
@@ -573,6 +574,12 @@
           "used": "remote",
           "wanted": "remote control from a structure rather than a parked soldier",
           "note": "The tank is steered from a building on the field, not from a soldier who parks to pilot it; remote is the nearest crew model."
+        },
+        {
+          "path": "roles",
+          "used": "anti-armour, assault",
+          "wanted": "raider",
+          "note": "The official profile calls it a hit-and-run raider, but raider needs fast or better and the hover judgement gives medium."
         }
       ],
       "review": {
@@ -1199,8 +1206,7 @@
         "handling": "strafe",
         "traits": ["deploy-anchor"],
         "speed": "very-fast",
-        "speed_raw": 3,
-        "notes": "Hovering flight at three times the Conscript's land speed by the wiki's game values (see uncertain). Among the game's aircraft it is a little slower than the NightHawk transport and the Harrier, about a third faster than the Rocketeer and well over twice as fast as the Kirov (their wiki infoboxes). It hovers in place when it stops and touches down only on a deploy order (ModEnc DeployToLand); while landed it cannot move. Handling stays the hovering-flight default."
+        "notes": "Hovering flight, very fast on every reading of its jumpjet value (see uncertain). Among the game's aircraft it flies on the same jumpjet value as the Rocketeer and the NightHawk transport, so it keeps pace with both, and on six times the Kirov's. Against the Harrier it is a little slower or far faster depending on the jumpjet value's unconfirmed unit. It hovers in place when it stops and touches down only on a deploy order (ModEnc DeployToLand); while landed it cannot move. Handling stays the hovering-flight default."
       },
       "body": {
         "plan": "rotorcraft",
@@ -1479,7 +1485,7 @@
         },
         {
           "path": "mobility/speed",
-          "note": "speed_raw divides the wiki infobox's air speed by the Conscript's land speed, as the registry says. ModEnc's DeployToLand and IsSimpleDeployer pages (https://modenc.renegadeprojects.com/IsSimpleDeployer) discuss the chopper alongside jumpjet settings, which suggests it flies on the jumpjet locomotor, and ModEnc's JumpjetSpeed page (https://modenc.renegadeprojects.com/JumpjetSpeed) says such fliers move by a separate JumpjetSpeed value; the wiki does not say which key its air speed copies, and no page read gives this unit's JumpjetSpeed. ModEnc's Speed page (https://modenc.renegadeprojects.com/Speed/On_Unit_Types) also says infantry move half again faster than their Speed value when not crawling, so measured against the Conscript's actual walking pace the chopper would be fast, not very fast. The aircraft comparisons in mobility.notes use the air speeds on the Command & Conquer Wiki pages NightHawk transport, Harrier, Rocketeer and Kirov airship (Red Alert 2)."
+          "note": "It flies on the jumpjet value in its rules, not on the general speed the wiki's infobox shows (ModEnc's JumpjetSpeed page, https://modenc.renegadeprojects.com/JumpjetSpeed, and its Speed page for jumpjet settings, https://modenc.renegadeprojects.com/Speed/In_JumpjetControls), and no source says what unit that value is in, so no ratio is recorded. Read as a per-frame value it is about three times the Conscript's pace. Read on the Speed scale it is far more, and the infobox figure alone also gives about three times. Every reading is very fast, so the band does not hang on the unit. ModEnc's infantry speed factors are prone speeds and do not change the Conscript's walking pace. The jumpjet values come from Yuri's Revenge's rulesmd.ini, in the INI archive that the Command & Conquer Wiki's Rules.ini page links; the aircraft comparisons in mobility.notes use them."
         },
         {
           "path": "modes/0",
