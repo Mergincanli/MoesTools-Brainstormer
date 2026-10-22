@@ -166,7 +166,7 @@ Keep both codings, the agreement report and the hesitations in `research/r<N>/op
 1. **Draw the sample once, from the batch's own records:**
    - Write the seed (`r<N>-<date>`) in `research/r<N>/checker/result.json` and commit it before drawing.
    - Make a copy with `mkws.sh`. In it, `data/units/` holds only the units whose `researched_by` names this batch, and `data/patterns/` holds only the files this batch added.
-   - Run `npm run --silent sample -- --seed <seed> --json --root <copy> > <scratchpad>/r<N>/checker/sample.json` (without `--silent`, npm's header lines break the JSON). It picks one in five units per game (at least three) and every proposed pattern.
+   - Run `npm run --silent sample -- --seed <seed> --json --root <copy> > <scratchpad>/r<N>/checker/sample.json` (without `--silent`, npm's header lines break the JSON). It picks one in five units per game (at least three) and one proposed pattern in three (at least three), Mustafa's decision of 22 October 2026. R1 checked every proposed pattern (`--all-patterns` repeats its draw).
    - Never draw again with another seed.
 2. **A checker who wrote none of them re-opens the sources** (`checker.js`). On every sampled unit it must check:
    - `tier.band`, `tier.gate`, `cost_band.band`, `cost_band.raw`;
@@ -190,6 +190,8 @@ Fix every confirmed wrong field, even below the 15% line.
    - the tooling, if the batch changed any.
 
    A skeptic then tries to refute each finding and defaults to refuting it.
+
+   The reviewers leave out the fields the checker re-checked one by one (`research/r<N>/checker/checks.json`), and the record reviewer only spot-checks numbers, since the claims check recomputes them all (section 8). So no field is checked three times.
 3. **Save every finding** in `research/r<N>/review/findings.json`, with its verdict, the evidence, and a status: `fixed` (with its commit), `answered` (with the reason), or `for Mustafa`. Fix only what the skeptic confirms with evidence.
 4. **Run `verify-fixes.js`** (closure and regression): did every fix land, and did any fix create a new contradiction?
 

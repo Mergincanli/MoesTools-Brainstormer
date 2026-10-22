@@ -10,7 +10,7 @@ These are the multi-agent workflow scripts a research batch runs, in the order o
 | `code-units.js` | 2, 3 | Research agents fill unit entries, each in its own copy. Mode `opening` for the two independent coders of an opening check, `fill` for the batch. |
 | `reconcile.js` | 2 | Merges the two codings of an opening-check unit into the final entry. |
 | `patterns.js` | 5 | Writes proposed pattern files for new and planned pattern ids: writer, then skeptic, then the writer applies the confirmed corrections. |
-| `checker.js` | 6 | The separate checker re-opens the sources of the sampled units and every proposed pattern (`npm run --silent sample -- --seed <seed> --json --root <copy>`); a skeptic re-checks each field marked wrong. |
+| `checker.js` | 6 | The separate checker re-opens the sources of the sampled units and patterns (`npm run --silent sample -- --seed <seed> --json --root <copy>`); a skeptic re-checks each field marked wrong. |
 | `final-review.js` | 7 | One reviewer per dimension (data, consistency, patterns, record, and tooling when the batch changed any), then a skeptic per dimension. |
 | `verify-fixes.js` | 7 | After the fixes: closure of each finding, new problems the fixes made, and the truth of every claim in the report and the pull-request description. |
 

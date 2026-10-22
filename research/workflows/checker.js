@@ -1,6 +1,6 @@
 export const meta = {
   name: 'batch-checker',
-  description: 'Research batch checker: re-open the sources of the sampled units and every proposed pattern; a skeptic re-checks each field marked wrong',
+  description: 'Research batch checker: re-open the sources of the sampled units and patterns; a skeptic re-checks each field marked wrong',
   phases: [{ title: 'Check', detail: 'one checker per group; none checks its own work' }, { title: 'Verify', detail: 'a skeptic re-checks every field marked wrong' }],
 }
 

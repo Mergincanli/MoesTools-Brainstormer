@@ -7,7 +7,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { describe, it, before, after } from 'node:test'
 import { REPO_ROOT, validate } from '../scripts/validate.mjs'
-import { buildSample, pickCount, sampleIds } from '../scripts/sample-for-check.mjs'
+import { buildSample, patternCount, pickCount, sampleIds } from '../scripts/sample-for-check.mjs'
 import { citedUrls, grams, mediaWikiTarget, proseStrings, sharedRuns, wikitextToText, words } from '../scripts/copy-check.mjs'
 
 const VALIDATE = path.join(REPO_ROOT, 'scripts/validate.mjs')
@@ -781,11 +781,23 @@ describe('sample-for-check', () => {
     assert.notDeepEqual(sampleIds(ids, 'seed-one'), sampleIds(ids, 'seed-two'))
   })
 
-  it('samples every game in the repo and lists the proposed patterns', () => {
+  it('checks 1 in 3 proposed patterns, rounded up, at least 3, or all when there are fewer', () => {
+    const want = { 0: 0, 2: 2, 3: 3, 9: 3, 10: 4, 33: 11, 34: 12 }
+    for (const [n, k] of Object.entries(want)) assert.equal(patternCount(Number(n)), k, `patternCount(${n})`)
+    const a = sampleIds(ids, 'r2-seed', patternCount)
+    assert.equal(a.length, 14)
+    assert.deepEqual(sampleIds([...ids].reverse(), 'r2-seed', patternCount), a)
+  })
+
+  it('samples every game in the repo and the proposed patterns, or lists them all with allPatterns', () => {
     const s = buildSample(REPO_ROOT, { seed: 'test' })
     assert.ok(s.games.length > 0)
     for (const g of s.games) assert.equal(g.picked.length, pickCount(g.total), g.game)
-    for (const id of s.patterns) assert.equal(load(REPO_ROOT, PATTERN(id)).status, 'proposed')
+    const all = buildSample(REPO_ROOT, { seed: 'test', allPatterns: true })
+    assert.equal(all.patterns.length, s.patterns_total)
+    assert.equal(s.patterns.length, patternCount(s.patterns_total))
+    for (const id of s.patterns) assert.ok(all.patterns.includes(id), id)
+    for (const id of all.patterns) assert.equal(load(REPO_ROOT, PATTERN(id)).status, 'proposed')
   })
 
   it('prints the same output on every run with the same seed', () => {
