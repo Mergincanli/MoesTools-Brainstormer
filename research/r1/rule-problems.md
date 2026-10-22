@@ -4,7 +4,7 @@ Every place where the R1 agents found a written rule unclear, two rules in confl
 
 Unit examples are as coded when the problem was raised. Since then the RA1 reference rules copy became a source for every rules value (b46b01c), which changed a few of them: the Mammoth Tank's cannons now list structures, its missiles are guided missiles, and the Field Mechanic is unarmoured.
 
-- **Open, for Mustafa: 60.** The fix changes the word lists, the field rules or the validator's checks.
+- **Open, for Mustafa: 61.** The fix changes the word lists, the field rules or the validator's checks.
 - **Open, for the batch: 20.** Only the registry notes, the games registry or the pattern registry would change (or, for one, the unit data).
 - **Settled during the batch: 8.**
 
@@ -371,6 +371,12 @@ Each list runs from the problem that touches the most batch units to the fewest.
 - *Problem:* Tanya must reach the target and plant her charge by hand; the rules do not cover a placed charge. It was coded melee. Units: `ra3.allied.tanya`.
 - *Fix:* Add a charge placed by hand at touching distance to melee's coding rule.
 - *Raised by* 1 report (j11).
+
+**61. Body plans: a wiki's 'battle suit' label on a sealed protective suit gives power suit** (raised by the checker)
+- *Rule:* the body tie-break gives power suit "when the sources say the soldier wears powered armour, an exosuit or a battlesuit", and humanoid for ordinary body armour.
+- *Problem:* the wiki's unit box calls the Desolator's sealed radiation suit a nuclear battle suit, so the rule gives power suit, though no source says the suit is powered. Units: `ra2.iraq.desolator` (recoded power suit in 0c3d4e2).
+- *Fix:* say that a sealed protective or hazmat suit is humanoid unless a source calls it powered or an exosuit.
+- *Raised by* the checker's skeptic (research/r1/checker/).
 
 ## Open, for the batch
 
