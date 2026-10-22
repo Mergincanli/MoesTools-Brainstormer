@@ -308,7 +308,7 @@
           "can_target": ["infantry"],
           "traits": [],
           "summary": "Runs at a soldier, springs at him from about three quarters of a rifle's reach and mauls him. The bite kills any soldier outright, whatever his health, and hurts nobody else nearby. It can be aimed only at infantry: never at a vehicle, building, aircraft, ship or patch of ground. Only one dog may go for a given soldier at a time, so any other dog must pick another victim. Victims never shoot back at a dog by reflex; it must be picked as an ordinary target.",
-          "patterns": []
+          "patterns": ["execute-target"]
         }
       ],
       "crew": {
@@ -481,12 +481,6 @@
         }
       ],
       "fit_notes": [
-        {
-          "path": "armament/0/patterns",
-          "used": "none",
-          "wanted": "execute-target",
-          "note": "No registered pattern covers an attack that kills one kind of target outright whatever its health, while it cannot touch any other kind; proposed as execute-target."
-        },
         {
           "path": "sensors/traits",
           "used": "detector",
@@ -813,7 +807,7 @@
           "kind": "active",
           "cooldown": "per-life",
           "source": "innate",
-          "patterns": ["self-destruct"],
+          "patterns": ["self-destruct", "deal-percent-damage"],
           "summary": "Clicking the selected tank on itself (in the Remastered Collection the Deploy key works too) sounds a siren and starts the charge. From then on the tank stays put and takes no more orders, and its lone crewman climbs out and runs. A piston on its back pumps faster and faster until the seismic pulse goes off and wrecks the tank itself. The charge cannot be called off: only destroying the tank first stops it, and then no pulse comes at all. While the Soviet Iron Curtain covers the tank, the charge cannot finish, which the wiki notes a rival Soviet player can use to stall it. The pulse reaches about as far as a nuclear blast, well beyond the tank's own sight. Every vehicle, ship and aircraft inside it, aircraft in flight included, loses a little under half of its own maximum health, and every building about two fifths, whichever side owns it and whatever its armour. Soldiers take no damage at all."
         }
       ],
@@ -1013,12 +1007,6 @@
           "note": "Its only job is the pulse, which hurts only vehicles, ships, aircraft and buildings. That pulse is an ability, not a weapon, so roles step 2 (unarmed) finds no listed role that fits, steps 3 and 4 have no main weapon to read, and anti-armour's and siege's requires, which read weapons, fail. Step 5 then gives assault for a slow unit with medium armour."
         },
         {
-          "path": "abilities/0/patterns",
-          "used": "self-destruct",
-          "wanted": "deal-percent-damage",
-          "note": "Self-destruct covers blowing itself up to hurt everything nearby. It misses that the pulse takes a fixed share of each target's maximum health instead of a set amount (so armour does not matter and a few pulses kill anything), and that it spares infantry altogether."
-        },
-        {
           "path": "body/plan",
           "used": "launcher-rack",
           "wanted": "a heavy tank hull carrying a device instead of a gun, with no turret",
@@ -1094,7 +1082,7 @@
           "name": "Shroud generator (gap field)",
           "kind": "passive",
           "source": "innate",
-          "patterns": [],
+          "patterns": ["shroud-area"],
           "summary": "Always on, with no button. The truck keeps a small patch of ground around itself under black shroud for its enemies and keeps renewing it, so the field travels with it; the truck and any units close by drop out of the enemy's view. An enemy unit that drives in uncovers only the ground within its own sight, and the shroud settles over that ground again once it moves on or dies. The field is smaller than the one the Gap Generator building casts. Computer opponents ignore shroud altogether, so it only fools human players. Remastered Collection patch 744746 fixed a bug that left its shroud on the map for good."
         }
       ],
@@ -1105,7 +1093,7 @@
       },
       "strengths": [
         {
-          "ref": "body:launcher-rack",
+          "ref": "pattern:shroud-area",
           "why": "Its gap dish keeps the ground around it black for the enemy, hiding the truck and every unit near it, so the enemy cannot see what is being sent against them."
         },
         {
@@ -1249,22 +1237,10 @@
           "note": "Its job is hiding teammates, which is team support, but support's requires (a repair tool, or a repair or resupply pattern) fail. Roles step 2 (unarmed) finds no listed role that fits: buffer is for making allies stronger and scout for finding enemies. Steps 3 and 4 have no main weapon to read, so step 5 gives raider, the default for a fast generalist with light armour, for a truck that never fights. The wiki's own role line calls it a support unit."
         },
         {
-          "path": "abilities/0/patterns",
-          "used": "none",
-          "wanted": "shroud-area",
-          "note": "No registry id fits a field that keeps the ground around the unit dark for the enemy, hiding it and nearby allies, while an enemy inside still sees around itself and the darkness closes behind it. Cloak's area variant breaks when the unit fires or meets a detector, lay-smoke blocks sight for both sides for a short time, and jam-sensors hides only from radar and locks."
-        },
-        {
           "path": "sensors/traits",
           "used": "none",
           "wanted": "an always-on area shroud for the enemy, if shroud-area gets a sensor-trait twin",
           "note": "The field is always on, so a term would be its natural home, but stealth hides only the unit itself and lets enemies see it up close, and jammer hides from radar and lock-ons, not from sight."
-        },
-        {
-          "path": "strengths/0",
-          "used": "body:launcher-rack",
-          "wanted": "pattern:shroud-area",
-          "note": "No link kind names the gap field, so its strength and one of its weaknesses hang on the body plan that carries the dish."
         }
       ],
       "researched_by": "batch r1, agent J03-RA1",

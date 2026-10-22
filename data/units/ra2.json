@@ -362,7 +362,7 @@
           "kind": "passive",
           "source": "innate",
           "summary": "It works only while its owner has a working, powered Robot Control Center. If the last one is destroyed, sold or captured, or base power runs low, every Robot Tank of that player shuts down where it stands, unable to move or fire, and any hovering over water sink and are lost. They come back to life once a powered center stands again.",
-          "patterns": []
+          "patterns": ["depend-on-relay"]
         }
       ],
       "on_death": {
@@ -563,12 +563,6 @@
         }
       ],
       "fit_notes": [
-        {
-          "path": "abilities/0/patterns",
-          "used": "",
-          "wanted": "depend-on-relay",
-          "note": "No pattern covers a unit that works only while a friendly relay (a building or another unit) stands and has power, and shuts down when the enemy destroys or starves that relay."
-        },
         {
           "path": "crew/model",
           "used": "remote",
@@ -1595,7 +1589,7 @@
           "kind": "passive",
           "source": "innate",
           "summary": "Once it holds more than three captives it overloads: a voice line announces it, it rocks and sparks, and it loses health at short, regular intervals, faster the more units it holds. With four to six captives the loss is modest, with seven to ten it is heavy, and with eleven or more it wrecks the tank almost at once, unless an armour crate has halved it and outside repair (a captured Machine Shop, IFVs carrying Engineers) keeps up. The state ends as soon as it is back to three or fewer, whether captives die in battle or are fed to a Grinder or Bio Reactor. If it breaks down, every captive is freed. The Iron Curtain stops the loss while it lasts.",
-          "patterns": []
+          "patterns": ["overload-past-cap"]
         }
       ],
       "on_death": {
@@ -1627,7 +1621,7 @@
           "why": "Mind control is its only weapon, so it cannot hurt aircraft, buildings or any immune unit (robots, drones, dogs, miners, heroes, psychic units) and is helpless against them alone."
         },
         {
-          "ref": "pattern:mind-control",
+          "ref": "pattern:overload-past-cap",
           "why": "It cannot stop taking captives: past three it overloads and damages itself, faster the more it holds, so a big crowd of enemies can make it destroy itself unless the player spends captives quickly."
         },
         {
@@ -1812,18 +1806,6 @@
         }
       ],
       "fit_notes": [
-        {
-          "path": "abilities/0/patterns",
-          "used": "none",
-          "wanted": "overload-past-cap",
-          "note": "A unit whose capture or summon has a safe limit but no hard cap and no off switch: past the limit it takes damage that grows with each extra captive, and it recovers only by losing captives. No registered pattern covers this self-damage past a soft cap."
-        },
-        {
-          "path": "armament/0/patterns",
-          "used": "mind-control",
-          "wanted": "a lasting variant of mind-control",
-          "note": "The mind-control summary speaks of control for a short time; here control lasts until the Mastermind or the captive dies, and many targets are held at once."
-        },
         {
           "path": "roles",
           "used": "anti-infantry, assault",
@@ -2800,12 +2782,6 @@
           "used": "no class or body change",
           "wanted": "a structure class and body for a deployed building form",
           "note": "Deployed it is a building, which no unit class or body plan describes, so the mode keeps the vehicle's class and body."
-        },
-        {
-          "path": "abilities/1/patterns",
-          "used": "reinforce-squad",
-          "wanted": "a pattern for worker minions that respawn at their master for free",
-          "note": "The pattern is about replacing a squad's own members; the Slaves are separate, uncontrollable worker units tied to the miner, replaced automatically and free. The interaction and counterplay (kill the bodies to weaken it, kill the source to end it) match, but the fit is loose."
         }
       ],
       "researched_by": "batch r1, agent J08-RA2",
