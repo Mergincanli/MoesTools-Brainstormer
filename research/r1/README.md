@@ -8,8 +8,8 @@ R1 is the first of the six research batches of step 3 of the approved plan ([doc
 - **33 new pattern files,** 7 of them for mechanics no registry id covered. The pattern registry now has 63 ids.
 - **The word lists stay at 1.0.0.** The opening check (your decision 6C) found no field below 80% agreement.
 - **The checker passed every game.** It re-checked 1,828 fields of 9 sampled units and all 33 patterns. The confirmed error rate is 2.5% for RA1, 1.7% for RA2 and 0.8% for RA3, against the 15% line, and 3.6% for the patterns. All 58 confirmed fields are fixed.
-- **61 rule problems need you,** because their fix changes the word lists or field rules. 20 more touch only the registry notes or the data, and 8 were settled during the batch. The units are coded by the current rules meanwhile. See [Rule problems](#rule-problems) for how I propose to settle them.
-- **Decisions:** seven were taken during the batch with the recommended option, and all can be reversed. Four prep questions follow the recommendation until you answer them. See [Decisions](#decisions).
+- **61 rule problems change the word lists or field rules.** By Mustafa's decision they go to a rule-fix round before R2. 20 more touch only the registry notes or the data, and 8 were settled during the batch. The units are coded by the current rules meanwhile (see [Rule problems](#rule-problems)).
+- **Decisions:** seven were taken during the batch with the recommended option, and all can be reversed. On 22 October Mustafa took the recommendations on the rest. See [Decisions](#decisions).
 
 ## How it ran
 
@@ -155,7 +155,7 @@ Every game is well under the 15% line. The skeptic refuted one flagged pattern f
 6. **In-game text counts as official text** for roles, such as a country's loading screen in RA2. It decides the Desolator's main role.
 7. **The RA1 reference rules copy counts for every rules value,** not only speed: Rules.ini and aftrmath.ini from OpenRA's raclassic repository, which win over a wiki, with an uncertain entry. It changes eight units (b46b01c): on-death crew for both Minelayers, the Mobile Gap Generator, the Mammoth Tank and the Yak; the Mammoth's cannons hit structures and its missiles are guided; the Field Mechanic is unarmoured and his wrench lands at once; the M.A.D. Tank's pulse reaches about twice as far as the wiki says.
 
-**Prep questions where the batch follows the recommendation until you answer:**
+**Prep questions, settled with the recommended answers (your decision of 22 October 2026):**
 1. The RA1 Ore Truck, Destroyer and Cruiser keep the heavy armour class.
 2. For a unit both RA1 sides build, a manual paragraph printed once counts for the shared entry.
 3. RA2's own armour types keep their map to our classes, with one named step down for the Flak Track.
@@ -163,14 +163,14 @@ Every game is well under the 15% line. The skeptic refuted one flagged pattern f
 
 **Decided by you during the batch:** from R2 the checker re-checks one pattern in three, at least three, instead of every one (22 October 2026; ebcf283).
 
-**Waiting for you:**
-1. **How to settle the 61 rule problems** ([rule-problems.md](rule-problems.md)):
+**Decided by you on 22 October 2026, taking the recommendations:**
+1. **How to settle the 61 rule problems** ([rule-problems.md](rule-problems.md)). Chosen: A. The options were:
    - A. A rule-fix round before R2's fill, like the pilot's fix pass. Analysts turn the proposed fixes into exact rule changes, a skeptic checks each against the R1 codings, you approve the set as word lists 1.1.0, and the R1 units they touch are recoded. It covers the 37 problems raised by more than one report or touching more than one unit; the 24 one-off cases wait until they come up again.
    - B. The same round after R2, so that R2's coders add evidence first. More units to recode afterwards.
    - C. Settle each problem one by one in this pull request.
 
-   **Recommendation: A.** The recurring problems will come up in every batch, and fixing them before R2 keeps the recode small. R1 can merge as coded once you choose, since its units follow the current rules.
-2. **Keep decision 7 above** (the RA1 rules copy counts for every rules value)? Recommendation: yes. It replaced guesses with the game's own data on eight units.
+   A was recommended because the recurring problems will come up in every batch, and fixing them before R2 keeps the recode small. R1 merges as coded, since its units follow the current rules; the finished set of rule changes comes back to you for approval as word lists 1.1.0.
+2. **Decision 7 above stays** (the RA1 rules copy counts for every rules value): it replaced guesses with the game's own data on eight units.
 
 ## Files
 
