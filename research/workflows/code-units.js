@@ -9,6 +9,7 @@ export const meta = {
 //   mode: 'opening' | 'fill',   // opening: two agents code the same units independently (runbook section 2)
 //   jobs: [{ label, agent, game, ws, units: [{ id, brief }] }],  // ws made with research/workflows/mkws.sh
 // }
+// Each agent keeps its notes in <ws>/.progress/<stage>/, so a resumed run goes on from them (runbook, "Progress notes").
 const B = args.batch
 const MODE = args.mode
 const NOTES_FILE = `research/registry-notes/games-${B.id}.md`
@@ -36,6 +37,15 @@ const REPORT = {
   },
 }
 
+// Progress notes (docs/research-runbook.md, "Progress notes"): an agent cut off part way and started again with
+// the same task goes on from its notes instead of starting over. root is the repository or copy it works in.
+const saving = (dir, root) => `## Saving your progress
+A usage limit can cut you off part way, and you would then be started again with this same task. So keep notes in ${dir}/progress.md (make the folder; you may always write there).
+- Look there first. If the notes are for another task (their first line names the task), move them into ${dir}/old/ and start fresh. If they end with DONE, write your answer from them without redoing the work. Otherwise go on from where they stop, without redoing the steps they mark done.
+- A new notes file starts with one line naming your task. After each step you finish (a unit or record done, a page read, a check run), add a line or two: what is done, what you found and where (page URL or file), what comes next. Keep them short: just enough to write your answer without opening the pages again.
+- When the work is done, add a last line DONE, then give your answer.
+Pages fetched before are cached in ${root}/.cache/sources/<site>/ (one JSON file per page, named after its path; the raw field holds the page text): look there before fetching a page. Read long files and pages in parts, by searching for the section you need.`
+
 function prompt(j) {
   const indep = MODE === 'opening'
     ? `This is the opening check of batch ${B.id.toUpperCase()}: another research agent codes the same units in a separate workspace, and the two codings are compared field by field to test the word lists on fresh units before the rest of the batch. Do not open, list or search /home/user/MoesTools-Brainstormer or any folder outside your workspace, and do not look up Unit Forge data elsewhere. Code every field exactly as the written rules say; wherever they still leave you unsure, say so in your report instead of guessing silently.`
@@ -45,6 +55,8 @@ function prompt(j) {
 ## Your workspace
 ${j.ws}, a copy of the Unit Forge repository (no git history). Run every command from it.
 ${indep}
+
+${saving(`${j.ws}/.progress/code`, j.ws)}
 
 ## Task
 Research and fill in these units, using exactly these unit ids:

@@ -11,11 +11,22 @@ export const meta = {
 //   trim: true | false,
 //   trimGames: ['ra1', 'ra2', 'ra3'], // every game of the batch, when the editors run in more than one workflow
 //   keep: 'about 9 per game; ...',     // the trim target, counting units already researched
+//   progress: '<scratchpad>/r<N>/progress/notes-and-trim',   // the agents' notes, outside the repository; the same folder on a resume
 // }
 const REPO = '/home/user/MoesTools-Brainstormer'
 const B = args.batch
 const DIR = args.dir
+if (!args.progress) throw new Error('args.progress is required: a folder outside the repository for the agents\' notes (runbook, "Progress notes")')
 const NOTES_FILE = `research/registry-notes/games-${B.id}.md`
+
+// Progress notes (docs/research-runbook.md, "Progress notes"): an agent cut off part way and started again with
+// the same task goes on from its notes instead of starting over. root is the repository or copy it works in.
+const saving = (dir, root) => `## Saving your progress
+A usage limit can cut you off part way, and you would then be started again with this same task. So keep notes in ${dir}/progress.md (make the folder; you may always write there).
+- Look there first. If the notes are for another task (their first line names the task), move them into ${dir}/old/ and start fresh. If they end with DONE, write your answer from them without redoing the work. Otherwise go on from where they stop, without redoing the steps they mark done.
+- A new notes file starts with one line naming your task. After each step you finish (a unit or record done, a page read, a check run), add a line or two: what is done, what you found and where (page URL or file), what comes next. Keep them short: just enough to write your answer without opening the pages again.
+- When the work is done, add a last line DONE, then give your answer.
+Pages fetched before are cached in ${root}/.cache/sources/<site>/ (one JSON file per page, named after its path; the raw field holds the page text): look there before fetching a page. Read long files and pages in parts, by searching for the section you need.`
 
 const COMMON = `Unit Forge (repository ${REPO}; read only for you, never edit a file there) is a research database of real RTS and shooter units, coded with fixed word lists (data/vocab/, docs/vocabularies.md, version 1.0.0, approved) and field rules (docs/fields.md, Conventions first), that feeds a generator of original unit concepts for Shamble Frontlines, a top-down team shooter where each player buys and becomes one unit. Step 3 is the research run; batch ${B.id.toUpperCase()} covers ${B.scope}, about 9 units per game (decision 8B). docs/research-runbook.md is the procedure. House rules: plain words and short sentences, paraphrase only (never six or more words copied from a page), no images, mechanics over numbers, cite pages by URL. Read wikis through their API, about two seconds between requests, retry after a 429.`
 
@@ -45,6 +56,8 @@ const TRIM = { type: 'object', required: ['keep', 'cut', 'opening_check', 'cover
 function editPrompt(g) {
   return `${COMMON}
 
+${saving(`${args.progress}/edit-${g.id}`, REPO)}
+
 ## Your task: the final game-level notes and registry edits for ${g.name} (\`${g.id}\`)
 A researcher drafted this game's notes before any unit of it is coded, and a skeptic checked every claim. Both are in ${DIR}/prep-${g.id}.json: \`notes\` (role_line, game_wide, registry_findings, other_notes, pages_read) and \`verdicts\` (each claim marked real or not, with corrections, plus \`missing\` items). Read first: docs/fields.md (Conventions, the roles steps, armour-class steps, Paired entries, Shared mechanics and universal keys, Bands with numbers), research/registry-notes/README.md, research/registry-notes/games-r1.md (the model), ${NOTES_FILE}, and this game's entry in data/games.json.
 
@@ -54,11 +67,13 @@ Write the final texts:
 3. Registry: turn the confirmed registry findings into exact edits of this game's entry in data/games.json (JSON pointers inside the entry). Keep the registry's shape (schemas/game.schema.json). Decide unclear findings by the field rules; leave a finding out when the rules already handle it, and say why in \`changes\`. A design question only Mustafa can answer goes in open_questions, with options and a recommendation.
 4. ${g.existing ? `This game already has: ${g.existing}. Your text replaces it: list the old lines in remove_from_existing, keep what was right word for word where you can, and say in changes if anything you change would change a unit already coded (data/units/).` : 'This game has no role-line or game-wide text yet.'}
 
-Do not edit any file; return the texts and edits.`
+Do not edit any file (your notes aside); return the texts and edits.`
 }
 
 function trimPrompt() {
   return `${COMMON}
+
+${saving(`${args.progress}/trim`, REPO)}
 
 ## Your task: pick batch ${B.id.toUpperCase()}'s units
 Researchers proposed candidate units for each game; they are in ${(args.trimGames || args.games.map(g => g.id)).map(id => `${DIR}/prep-${id}.json`).join(', ')} under \`candidates\`. The plan (docs/proposal.md section 2.2, step 2 of How a batch runs) keeps about 9 units per game and removes repeats. Target: ${args.keep}.
@@ -71,7 +86,7 @@ How to pick:
 - Name two units for an opening check (two different games), in case the runbook calls for one.
 - List the mechanics in the kept units that no registry id covers, deduplicated across games, as new patterns.
 
-Each kept unit gets a one-line brief for its researcher. Give a reason for every cut. Do not edit any file.`
+Each kept unit gets a one-line brief for its researcher. Give a reason for every cut. Do not edit any file (your notes aside).`
 }
 
 const out = {}

@@ -10,12 +10,23 @@ export const meta = {
 // args: {
 //   batch: { id: 'r2', scope: 'C&C Tiberian Dawn, Tiberian Sun, Tiberium Wars (with Kane\'s Wrath), Renegade' },
 //   game: { id, name, scope, want, notesTask },
+//   progress: '<scratchpad>/r<N>/progress/prep',   // the agents' notes, outside the repository; the same folder on a resume
 // }
 // The result ({ game, notes, verdicts, candidates }) goes to the scratchpad as prep-<game>.json for notes-and-trim.js.
 const REPO = '/home/user/MoesTools-Brainstormer'
 const B = args.batch
 const G = args.game
+if (!args.progress) throw new Error('args.progress is required: a folder outside the repository for the agents\' notes (runbook, "Progress notes")')
 const NOTES_FILE = `research/registry-notes/games-${B.id}.md`
+
+// Progress notes (docs/research-runbook.md, "Progress notes"): an agent cut off part way and started again with
+// the same task goes on from its notes instead of starting over. root is the repository or copy it works in.
+const saving = (dir, root) => `## Saving your progress
+A usage limit can cut you off part way, and you would then be started again with this same task. So keep notes in ${dir}/progress.md (make the folder; you may always write there).
+- Look there first. If the notes are for another task (their first line names the task), move them into ${dir}/old/ and start fresh. If they end with DONE, write your answer from them without redoing the work. Otherwise go on from where they stop, without redoing the steps they mark done.
+- A new notes file starts with one line naming your task. After each step you finish (a unit or record done, a page read, a check run), add a line or two: what is done, what you found and where (page URL or file), what comes next. Keep them short: just enough to write your answer without opening the pages again.
+- When the work is done, add a last line DONE, then give your answer.
+Pages fetched before are cached in ${root}/.cache/sources/<site>/ (one JSON file per page, named after its path; the raw field holds the page text): look there before fetching a page. Read long files and pages in parts, by searching for the section you need.`
 
 const COMMON = `Unit Forge (repository ${REPO}; read only for you, never edit a file there) is a research database of real RTS and shooter units, coded with fixed word lists (data/vocab/, rendered in docs/vocabularies.md, version 1.0.0, approved) and field rules (docs/fields.md, Conventions first), that feeds a generator of original unit concepts for Shamble Frontlines, a top-down team shooter where each player buys and becomes one unit. Step 3 of the plan is the research run; batch ${B.id.toUpperCase()} covers ${B.scope} (docs/proposal.md, section 2.2, says how a batch runs; decision 8B sets about 9 units per game). docs/research-runbook.md is the procedure. Your game: ${G.name} (registry id \`${G.id}\`, ${G.scope}).
 
@@ -67,6 +78,8 @@ const VERDICTS = { type: 'object', required: ['verdicts', 'missing'], properties
 function notesPrompt() {
   return `${COMMON}
 
+${saving(`${args.progress}/notes-${G.id}`, REPO)}
+
 ## Your task: the game-level notes and the registry check for ${G.name}
 The 1.0 field rules rely on game-level notes that are written once, before any unit of the game is coded. Read first: docs/fields.md (the Conventions, especially Shared mechanics and universal keys, Paired entries, Series games, Bands with numbers, and the roles.primary steps), research/registry-notes/README.md, research/registry-notes/games-r1.md (its Official role lines and Game-wide mechanics sections are the model to follow), ${NOTES_FILE}, the \`${G.id}\` entry in data/games.json, and data/pattern-registry.json.
 
@@ -77,22 +90,26 @@ ${G.notesTask}
 3. **Registry check.** Check the \`${G.id}\` entry in data/games.json against the sources: factions and subfactions, tier_map gates, cost_thresholds and their basis, speed_reference (is the reference unit's listed speed the speed it really moves at in the engine?), sight_reference, range_reference, damage_map and armour_map, version_researched. Report only real problems, each with evidence.
 4. **Other notes** the unit researchers need that the batch's note does not already say.
 
-Return the Markdown texts and the findings. Do not edit any file.`
+Return the Markdown texts and the findings. Do not edit any file (your notes aside).`
 }
 
 function candidatesPrompt() {
   return `${COMMON}
+
+${saving(`${args.progress}/candidates-${G.id}`, REPO)}
 
 ## Your task: candidate units for ${G.name}
 Propose ${G.want}. Read first: docs/proposal.md section 2.2 (how a batch runs), ${NOTES_FILE}, the \`${G.id}\` entry in data/games.json, data/pattern-registry.json (every registered pattern id) and research/registry-notes/patterns.md (example units already named for each id), docs/samples.md and data/units/*.json (units already researched), and data/vocab/classes.json and roles.json.
 
 A good candidate teaches the generator something: a distinct mechanic, an iconic counter, or a memorable twist that would make a fun player-controlled unit. Spread the list across classes (infantry, vehicles, aircraft, ships, walkers, odd ones), factions, roles and price tiers, and across mechanics: avoid two candidates that teach the same thing, and avoid repeating what units already in data/units/ teach unless the unit adds a clear twist. Prefer units that are buildable in skirmish or multiplayer. Check each candidate's main page exists on the wiki (one API request each is enough) and give the pages a researcher would cite. Name the registry pattern ids each would link, and any mechanic no registry id covers as a proposed new id with a one-line summary.
 
-Return the list and a short note on coverage. Do not edit any file.`
+Return the list and a short note on coverage. Do not edit any file (your notes aside).`
 }
 
 function verifyPrompt(notes) {
   return `${COMMON}
+
+${saving(`${args.progress}/verify-${G.id}`, REPO)}
 
 ## Your job: try to refute the notes below
 Another researcher wrote these game-level notes and registry findings for ${G.name}. Check every claim against the pages (fetch them yourself). Mark real=false for anything the sources do not support, give the corrected text, and list game-wide mechanics or registry problems that were missed (with evidence). Default to real=false when you cannot confirm a claim. Also check the house rules: no run of six or more words copied from a page.
