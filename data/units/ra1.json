@@ -531,9 +531,9 @@
         "notes": "An ordinary soldier carrying a socket wrench; one per purchase."
       },
       "armour": {
-        "class": "light",
+        "class": "unarmoured",
         "models": ["flat-pool"],
-        "notes": "Step 1 decided: the infobox armour type Light maps to light. The Aftermath manual grades him as having no armour at all, so the two disagree (see uncertain). He has a little more health than a Rifle Infantry and less than a Medic. Like other infantry he drops flat when frightened and then takes half damage, a game-wide rule that adds no model."
+        "notes": "Step 1 decided: the armour type none in the reference copy of the Aftermath rules file maps to unarmoured, and the Aftermath manual also grades him as wearing no armour; the wiki's infobox says Light (see uncertain). He has a little more health than a Rifle Infantry and less than a Medic. Like other infantry he drops flat when frightened and then takes half damage, a game-wide rule that adds no model."
       },
       "sensors": {
         "sight": "medium",
@@ -548,7 +548,7 @@
           "family": "repair-tool",
           "damage": "repair",
           "mount": "free-aim",
-          "delivery": "beam",
+          "delivery": "hitscan",
           "range": "short",
           "can_target": ["ground-vehicle"],
           "affects": "allies",
@@ -701,7 +701,7 @@
       "uncertain": [
         {
           "path": "armour/class",
-          "note": "The infobox gives armour type Light, while the Aftermath manual grades him as wearing none. The registry notes say the manual's word is a grade and the infobox decides, so he is coded light.",
+          "note": "The Command & Conquer Wiki's infobox gives armour type Light, but the reference copy of the Aftermath rules file (aftrmath.ini in OpenRA's raclassic repository, https://raw.githubusercontent.com/OpenRA/raclassic/master/ref/aftrmath.ini), which the game reads, gives him the type none, and the Aftermath manual's grade agrees. The copy wins where it and a wiki disagree on a rules value, so he is coded unarmoured.",
           "sources_disagree": true
         },
         {
@@ -711,19 +711,19 @@
         },
         {
           "path": "armament/0/delivery",
-          "note": "No page says how the wrench reaches the vehicle, so beam, the repair-tool family's default, is used. A hand tool may need him right beside the vehicle; the weapon's own figures live in the game's rules file, which no page read shows."
+          "note": "No wiki page says how the wrench reaches the vehicle. The reference copy of the Aftermath rules file (aftrmath.ini, OpenRA's raclassic repository) gives it the invisible projectile at the top projectile speed, used from a short way off rather than by hand, and REDALERT/BULLET.CPP of EA's source release (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/BULLET.CPP; read, not cited) puts such a shot straight onto its target with no flight. So each repair lands the moment it is made: hitscan, a delivery the repair-tool family does not list (see atypical)."
         },
         {
           "path": "armament/0/range",
-          "note": "No page gives the wrench's reach. Short is the repair-tool family's default; the manual's grade Short agrees, but the registry notes say the manual's grades are not band data."
+          "note": "The reach comes from the reference copy of the Aftermath rules file (aftrmath.ini, OpenRA's raclassic repository): a little under two thirds of the Rifle Infantry rifle's, the registry's range reference, so short. The manual's grade Short agrees, though the registry notes say the manual's grades are not band data."
         },
         {
           "path": "armament/0/can_target",
-          "note": "INFANTRY.CPP and TECHNO.CPP also accept friendly aircraft as patients, but no page says whether he can reach one in flight. A flier he can treat only when it stands on the ground is not an air target, so only ground vehicles are listed."
+          "note": "INFANTRY.CPP and TECHNO.CPP also accept friendly aircraft as patients, but TECHNO.CPP fires at an aircraft off the ground only a projectile with the anti-aircraft flag, and the reference copy of the Aftermath rules file gives the wrench the invisible projectile, which lacks it. So he can treat a flier only while it stands on the ground, which is not an air target, and only ground vehicles are listed."
         },
         {
           "path": "armament/0/summary",
-          "note": "That he is faster than the depot and free is the wiki's own prose; the manual says only that he takes time to bring a vehicle back to full strength. No page gives his repair rate."
+          "note": "That he is faster than the depot and free is the wiki's own prose; the manual says only that he takes time to bring a vehicle back to full strength. The reference copy of the Aftermath rules file gives his rate: each use of the wrench restores about a quarter of a main battle tank's health, then he waits a few seconds before the next. No page sets that against the depot's pace."
         },
         {
           "path": "crew/notes",
@@ -734,12 +734,11 @@
           "note": "No page names a matchup he wins; the counter is drawn from the repair facts (free field repair against depot repair that costs credits)."
         }
       ],
-      "fit_notes": [
+      "atypical": [
         {
-          "path": "armament/0/delivery",
-          "used": "beam",
-          "wanted": "touch or melee delivery for a repair tool",
-          "note": "A socket wrench worked by hand on the vehicle fits neither of the repair-tool family's deliveries (beam, projectile); melee, the touching-distance delivery, is not allowed for the family."
+          "path": "armament/0/family",
+          "rule": "weapon-families:repair-tool allowed.weapon-delivery hitscan",
+          "note": "The reference copy of the Aftermath rules file and EA's released BULLET.CPP show the wrench's repair landing on the vehicle the moment it is used, from a short way off and with no flight; the repair-tool family lists only beam and projectile deliveries."
         }
       ],
       "review": {
@@ -808,13 +807,13 @@
           "cooldown": "per-life",
           "source": "innate",
           "patterns": ["self-destruct", "deal-percent-damage"],
-          "summary": "Clicking the selected tank on itself (in the Remastered Collection the Deploy key works too) sounds a siren and starts the charge. From then on the tank stays put and takes no more orders, and its lone crewman climbs out and runs. A piston on its back pumps faster and faster until the seismic pulse goes off and wrecks the tank itself. The charge cannot be called off: only destroying the tank first stops it, and then no pulse comes at all. While the Soviet Iron Curtain covers the tank, the charge cannot finish, which the wiki notes a rival Soviet player can use to stall it. The pulse reaches about as far as a nuclear blast, well beyond the tank's own sight. Every vehicle, ship and aircraft inside it, aircraft in flight included, loses a little under half of its own maximum health, and every building about two fifths, whichever side owns it and whatever its armour. Soldiers take no damage at all."
+          "summary": "Clicking the selected tank on itself (in the Remastered Collection the Deploy key works too) sounds a siren and starts the charge. From then on the tank stays put and takes no more orders, and its lone crewman climbs out and runs. A piston on its back pumps faster and faster until the seismic pulse goes off and wrecks the tank itself. The charge cannot be called off: only destroying the tank first stops it, and then no pulse comes at all. While the Soviet Iron Curtain covers the tank, the charge cannot finish, which the wiki notes a rival Soviet player can use to stall it. The pulse reaches about three times as far as the tank can see. Every vehicle, ship and aircraft inside it, aircraft in flight included, loses a little under half of its own maximum health, and every building about two fifths, whichever side owns it and whatever its armour. Soldiers take no damage at all."
         }
       ],
       "on_death": {
         "outcomes": ["bail-out"],
         "basis": "in-game",
-        "notes": "The crewman gets out when the countdown starts, not at the moment of death; the tank then dies in its own pulse, which spares him. If enemies destroy the tank first, nothing explodes. The game code also gives a crewed vehicle without passenger seats an even chance of leaving one crewman when it is destroyed, if the rules mark it as crewed, which no page read shows for this tank."
+        "notes": "The crewman gets out when the countdown starts, not at the moment of death; the tank then dies in its own pulse, which spares him. If enemies destroy the tank first, nothing explodes. The game code gives a vehicle without passenger seats that the rules mark as crewed an even chance of leaving a crewman when it is destroyed, but the reference copy of the Aftermath rules file marks this tank as not crewed, so an ordinary death leaves no one behind."
       },
       "strengths": [
         {
@@ -952,7 +951,8 @@
       "uncertain": [
         {
           "path": "abilities/0",
-          "note": "The pulse's sizes (a little under half of each vehicle's, ship's and aircraft's maximum health, about two fifths of each building's, over roughly a nuclear blast's area) come from the wiki's prose. The built-in defaults in REDALERT/RULES.CPP of EA's source release are different (half for units, a quarter for buildings, and a much wider reach), and the Aftermath rules file can override them; that file could not be read, so the entry follows the wiki."
+          "note": "The pulse's sizes come from the Aftermath section of the reference copy of aftrmath.ini (OpenRA's raclassic repository, https://raw.githubusercontent.com/OpenRA/raclassic/master/ref/aftrmath.ini), which the game reads over the built-in defaults in REDALERT/RULES.CPP: a little under half of each vehicle's, ship's and aircraft's maximum health, two fifths of each building's and nothing for infantry, out to a reach that LOGIC.CPP measures in cells from the tank, about three times its sight. The wiki's prose gives the same shares but only half that reach, which it likens to a nuclear blast; the copy is followed. The built-in defaults (half for units, a quarter for buildings and half again the copy's reach) would hold only without the Aftermath file.",
+          "sources_disagree": true
         },
         {
           "path": "abilities/0/kind",
@@ -960,11 +960,11 @@
         },
         {
           "path": "abilities/0/cooldown",
-          "note": "Per-life because the tank dies in its own pulse; no source gives a figure. No page gives the countdown's length either: in the code it is a delay from the rules (RULES.CPP default), scaled by the owner's fire-rate bonus, followed by the charging animation."
+          "note": "Per-life because the tank dies in its own pulse; no source gives a cooldown figure. The countdown's length is a rules delay: the reference copy of aftrmath.ini (OpenRA's raclassic repository) sets it to the same value as the built-in default in RULES.CPP, several seconds at the middle game speed, which UNIT.CPP scales by the owner's fire-rate bonus; the charging animation follows."
         },
         {
           "path": "on_death",
-          "note": "Bail-out, basis in-game, because the cited wiki page shows the single crewman getting out on his own, as the registry notes ask. He leaves when the countdown starts rather than as the tank dies, and the code makes him an unarmed civilian technician, not a rifleman. Whether the rules also mark the tank as crewed, which would give an even chance of a survivor on an ordinary death, could not be checked."
+          "note": "Bail-out, basis in-game, because the cited wiki page shows the single crewman getting out on his own, as the registry notes ask. He leaves when the countdown starts rather than as the tank dies, and the code makes him an unarmed civilian technician, not a rifleman. The reference copy of aftrmath.ini (OpenRA's raclassic repository) marks the tank as not crewed, so an ordinary death gives no chance of a survivor; the countdown routine in UNIT.CPP places the crewman without reading that flag."
         },
         {
           "path": "body/plan",
@@ -1075,7 +1075,7 @@
       "crew": {
         "model": "solo",
         "basis": "proposal",
-        "notes": "One player drives; there is nothing to fire. No page read names a crew."
+        "notes": "One player drives; there is nothing to fire. The reference copy of the rules marks the truck as crewed, with a crewman who can get out (see on_death), but no page says how many ride in it."
       },
       "abilities": [
         {
@@ -1088,8 +1088,8 @@
       ],
       "on_death": {
         "outcomes": ["bail-out"],
-        "basis": "proposal",
-        "notes": "No page read shows anything special when it dies, so the 3C default applies. The game code may let one crewman out on an even chance if the rules mark the truck as crewed; since it has no weapon, he would be an unarmed technician. The code also takes its field away when it is destroyed."
+        "basis": "in-game",
+        "notes": "The reference copy of the rules marks the truck as crewed, and the game code gives such a vehicle without passenger seats an even chance, when it is destroyed, of letting one crewman out with part of his health; since it has no weapon, he is an unarmed civilian technician. He gets out only by chance. The code also takes its field away when it is destroyed."
       },
       "strengths": [
         {
@@ -1159,7 +1159,8 @@
           "supports": [
             "tier",
             "cost_band",
-            "mobility",
+            "mobility/base",
+            "mobility/notes",
             "body",
             "armour",
             "sensors",
@@ -1185,7 +1186,7 @@
           "kind": "guide",
           "accessed": "2026-10-20",
           "note": "Its table gives the truck's multiplayer price, armour, health, sight and a speed that differs from the Command & Conquer Wiki's, and says it is normally kept to multiplayer.",
-          "supports": ["tier", "cost_band", "armour", "sensors", "mobility/notes"]
+          "supports": ["tier", "cost_band", "armour", "sensors", "mobility/speed", "mobility/notes"]
         },
         {
           "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UDATA.CPP",
@@ -1227,6 +1228,10 @@
         {
           "path": "counters/1",
           "note": "No page names artillery as a victim of the field. The counter is reasoned from the Gap generator (Red Alert 1) page (a passing unit lifts the shroud only near itself) and the Fog of war page of the Command & Conquer Wiki (read, not cited), whose shroud section says a shrouded area hides the units in it and whose fog section pairs long-range units with spotters."
+        },
+        {
+          "path": "on_death",
+          "note": "Bail-out, basis in-game: the reference copy of Rules.ini (OpenRA's raclassic repository, https://raw.githubusercontent.com/OpenRA/raclassic/master/ref/Rules.ini) marks the truck as crewed, and REDALERT/UNIT.CPP of EA's source release (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UNIT.CPP) gives a crewed vehicle without passenger seats an even chance of letting one crewman out when it dies, an unarmed technician when it has no weapon. Neither is cited, as the entry already has five sources."
         }
       ],
       "fit_notes": [
@@ -1299,7 +1304,7 @@
       "crew": {
         "model": "solo",
         "basis": "proposal",
-        "notes": "One player drives and drops the mines; no page read names a crew."
+        "notes": "One player drives and drops the mines. The reference copy of the rules marks the minelayer as crewed, with a crewman who can get out (see on_death), but no page says how many ride in it."
       },
       "abilities": [
         {
@@ -1307,15 +1312,15 @@
           "kind": "active",
           "source": "innate",
           "cooldown": "per-life",
-          "summary": "Double-clicking the minelayer where it stands (the Remastered Deploy key does the same) makes it turn, open its hatch and leave one anti-tank mine in the cell under it; a cell that already holds a mine or a building's foundation slab is refused. It holds five, shown as pips, and gets all five back free by driving onto a Service Depot, which reloads it before any repair. The game gives every Allied country this mine: it badly hurts or kills the first enemy vehicle to drive over it, while soldiers cross it unharmed and never set it off. Friendly vehicles never set it off, and units of the laying side path around their own mines. Mines cannot be targeted directly; force fire on the ground clears them.",
+          "summary": "Double-clicking the minelayer where it stands (the Remastered Deploy key does the same) makes it turn, open its hatch and leave one anti-tank mine in the cell under it; a cell that already holds a mine or a building's foundation slab is refused. It holds five, shown as pips, and gets all five back free by driving onto a Service Depot, which reloads it before any repair. The game gives every Allied country this mine: it badly hurts or kills the first enemy vehicle to drive over it, while soldiers cross it unharmed and never set it off. Friendly vehicles never set it off, and units of the laying side path around their own mines. Laid mines stay hidden from enemy players and cannot be targeted directly; force fire on the ground clears them.",
           "patterns": ["lay-mines"]
         }
       ],
       "resources": ["limited-ammo"],
       "on_death": {
         "outcomes": ["bail-out"],
-        "basis": "proposal",
-        "notes": "No page read shows what happens when it dies, so the 3C default applies. The code may let one crewman, a civilian technician since it is unarmed, escape on an even chance if the rules mark it as crewed; no page read says whether they do."
+        "basis": "in-game",
+        "notes": "The reference copy of the rules marks the minelayer as crewed, and the cited game code gives such a vehicle without passenger seats an even chance, when it is destroyed, of letting one crewman out with part of his health: a civilian technician, since it is unarmed. He gets out only by chance."
       },
       "strengths": [
         {
@@ -1427,8 +1432,8 @@
           "kind": "official",
           "accessed": "2026-10-20",
           "version": "Remastered Collection source release (2020)",
-          "note": "The one minelayer type: it lays an anti-personnel mine for the USSR, Ukraine and the Soviet side and an anti-tank mine for every other side; the deploy routine and its limits; the heavy damage an anti-tank mine does to a vehicle; and units of the laying side treating their own mines as blocked ground.",
-          "supports": ["faction", "body", "abilities/0", "counters/0"]
+          "note": "The one minelayer type: it lays an anti-personnel mine for the USSR, Ukraine and the Soviet side and an anti-tank mine for every other side; the deploy routine and its limits; the heavy damage an anti-tank mine does to a vehicle; units of the laying side treating their own mines as blocked ground; and the even chance that a crewed vehicle without passenger seats lets one crewman out when destroyed, an unarmed technician for an unarmed vehicle.",
+          "supports": ["faction", "body", "abilities/0", "counters/0", "on_death"]
         },
         {
           "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Allied_units",
@@ -1455,7 +1460,7 @@
         },
         {
           "path": "abilities/0/summary",
-          "note": "Several points rest on uncited pages of EA's source release: INFANTRY.CPP (anti-tank mines never react to infantry), TECHNO.CPP (the depot refills the mines free and before any repair) and BDATA.CPP (the mines are hidden from radar, cannot be selected and are no legal target). No page read says whether enemy players can see a laid mine on the map."
+          "note": "Several points rest on uncited pages of EA's source release: INFANTRY.CPP (anti-tank mines never react to infantry), TECHNO.CPP (the depot refills the mines free and before any repair) and BDATA.CPP (the mines are hidden from radar, cannot be selected and are no legal target). That enemy players never see a laid mine rests on the reference copy of Rules.ini (OpenRA's raclassic repository), which flags both mine types as hidden from the enemy at all times, and on TECHNO.CPP, which keeps such objects out of the enemy's view."
         },
         {
           "path": "abilities/0/summary",
@@ -1481,6 +1486,10 @@
         {
           "path": "body/plan",
           "note": "Troop carrier is the nearest shape for an enclosed, turretless hull, though it carries mines and no passengers."
+        },
+        {
+          "path": "on_death",
+          "note": "Bail-out, basis in-game: the reference copy of Rules.ini (OpenRA's raclassic repository, https://raw.githubusercontent.com/OpenRA/raclassic/master/ref/Rules.ini) marks the one minelayer type both sides build as crewed, and the cited UNIT.CPP lets one crewman out of such a vehicle on an even chance. The copy is not cited, as the entry already has five sources."
         }
       ],
       "fit_notes": [
@@ -1559,7 +1568,7 @@
       "crew": {
         "model": "solo",
         "basis": "proposal",
-        "notes": "One player drives and drops the mines; no page read names a crew."
+        "notes": "One player drives and drops the mines. The reference copy of the rules marks the minelayer as crewed, with a crewman who can get out (see on_death), but no page says how many ride in it."
       },
       "abilities": [
         {
@@ -1567,15 +1576,15 @@
           "kind": "active",
           "source": "innate",
           "cooldown": "per-life",
-          "summary": "Double-clicking the minelayer where it stands (the Remastered Deploy key does the same) makes it turn, open its hatch and leave one anti-personnel mine in the cell under it; a cell that already holds a mine or a building's foundation slab is refused. It holds five, shown as pips, and gets all five back free by driving onto a Service Depot, which reloads it before any repair. The game gives every Soviet country this mine: its blast kills every soldier close by, while an enemy vehicle that drives over it sets it off but is barely scratched. Friendly vehicles never set it off, but any soldier stepping on it triggers it, so units of the laying side path around their own mines. Mines cannot be targeted directly; force fire on the ground clears them.",
+          "summary": "Double-clicking the minelayer where it stands (the Remastered Deploy key does the same) makes it turn, open its hatch and leave one anti-personnel mine in the cell under it; a cell that already holds a mine or a building's foundation slab is refused. It holds five, shown as pips, and gets all five back free by driving onto a Service Depot, which reloads it before any repair. The game gives every Soviet country this mine: its blast kills every soldier close by, while an enemy vehicle that drives over it sets it off but is barely scratched. Friendly vehicles never set it off, but any soldier stepping on it triggers it, so units of the laying side path around their own mines. Laid mines stay hidden from enemy players and cannot be targeted directly; force fire on the ground clears them.",
           "patterns": ["lay-mines"]
         }
       ],
       "resources": ["limited-ammo"],
       "on_death": {
         "outcomes": ["bail-out"],
-        "basis": "proposal",
-        "notes": "No page read shows what happens when it dies, so the 3C default applies. The code may let one crewman, a civilian technician since it is unarmed, escape on an even chance if the rules mark it as crewed; no page read says whether they do."
+        "basis": "in-game",
+        "notes": "The reference copy of the rules marks the minelayer as crewed, and the cited game code gives such a vehicle without passenger seats an even chance, when it is destroyed, of letting one crewman out with part of his health: a civilian technician, since it is unarmed. He gets out only by chance."
       },
       "strengths": [
         {
@@ -1672,8 +1681,8 @@
           "kind": "official",
           "accessed": "2026-10-20",
           "version": "Remastered Collection source release (2020)",
-          "note": "The one minelayer type: it lays an anti-personnel mine for the USSR, Ukraine and the Soviet side and an anti-tank mine for every other side; the deploy routine and its limits; the slight damage an anti-personnel mine does to a vehicle that sets it off; and units of the laying side treating their own mines as blocked ground.",
-          "supports": ["faction", "body", "abilities/0", "weaknesses/1", "countered_by/2"]
+          "note": "The one minelayer type: it lays an anti-personnel mine for the USSR, Ukraine and the Soviet side and an anti-tank mine for every other side; the deploy routine and its limits; the slight damage an anti-personnel mine does to a vehicle that sets it off; units of the laying side treating their own mines as blocked ground; and the even chance that a crewed vehicle without passenger seats lets one crewman out when destroyed, an unarmed technician for an unarmed vehicle.",
+          "supports": ["faction", "body", "abilities/0", "weaknesses/1", "countered_by/2", "on_death"]
         },
         {
           "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Soviet_units",
@@ -1682,6 +1691,14 @@
           "accessed": "2026-10-20",
           "note": "Its Mine Layer table agrees with the C&C Wiki on price, armour type, health, sight and speed, and lists the anti-personnel mines, the mine deployment and the depot reload.",
           "supports": ["cost_band", "mobility", "sensors", "abilities/0"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/OpenRA/raclassic/master/ref/Rules.ini",
+          "title": "Rules.ini (reference copy of the original Red Alert rules), OpenRA raclassic repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-22",
+          "note": "A copy of the game's own rules file, kept by OpenRA's raclassic project, which does not state its patch level; the game reads it first and aftrmath.ini on top. Its entry for the minelayer type both sides build marks it tracked and crewed, with five mines, heavy armour and the speed the band uses, and both mine types are flagged to stay hidden from the enemy.",
+          "supports": ["mobility/base", "mobility/speed", "armour", "on_death", "abilities/0"]
         }
       ],
       "confidence": "high",
@@ -1700,7 +1717,7 @@
         },
         {
           "path": "abilities/0/summary",
-          "note": "Several points rest on uncited pages of EA's source release: INFANTRY.CPP (an anti-personnel mine's blast hurts every soldier near it, and any soldier entering its cell sets it off), TECHNO.CPP (the depot refills the mines free and before any repair) and BDATA.CPP (the mines are hidden from radar, cannot be selected and are no legal target). No page read says whether enemy players can see a laid mine on the map."
+          "note": "Several points rest on uncited pages of EA's source release: INFANTRY.CPP (an anti-personnel mine's blast hurts every soldier near it, and any soldier entering its cell sets it off), TECHNO.CPP (the depot refills the mines free and before any repair) and BDATA.CPP (the mines are hidden from radar, cannot be selected and are no legal target). That enemy players never see a laid mine rests on the cited reference copy of Rules.ini, which flags both mine types as hidden from the enemy at all times, and on TECHNO.CPP, which keeps such objects out of the enemy's view."
         },
         {
           "path": "abilities/0/summary",
@@ -1800,21 +1817,21 @@
           "mount": "slow-turret",
           "delivery": "projectile",
           "range": "long",
-          "can_target": ["infantry", "ground-vehicle", "naval"],
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
           "traits": [],
-          "summary": "Two heavy guns on the turret fire a pair of armour-piercing shells, one barrel just after the other, then wait a long while before the next pair. The manual rates them the most powerful guns on land, the wiki says the one-two shot works well against armour, and StrategyWiki calls them anti-armour cannons. Because the second shell leaves a moment later, it misses a moving target more often. They fire only at ground targets, never at aircraft, and no page says they damage buildings. They reach a little over one and a half times as far as the Rifle Infantry's rifle. For each target the game compares how much this warhead and the missiles' warhead do to its armour type and fires the better one, preferring a weapon already in range, so only one of the two fires at a time."
+          "summary": "Two heavy guns on the turret fire a pair of armour-piercing shells, one barrel just after the other, then wait a long while before the next pair. The manual rates them the most powerful guns on land, the wiki says the one-two shot works well against armour, and StrategyWiki calls them anti-armour cannons. Because the second shell leaves a moment later, it misses a moving target more often. They fire only at ground targets, never at aircraft; by the rules file's damage table their shells do three quarters of their full damage to the wood armour it gives buildings and half to concrete, and they can break walls. They reach a little over one and a half times as far as the Rifle Infantry's rifle. For each target the game compares how much this warhead and the missiles' warhead do to its armour type and fires the better one, preferring a weapon already in range, so only one of the two fires at a time."
         },
         {
           "name": "Mammoth Tusk missiles",
           "slot": "secondary",
-          "family": "rockets",
+          "family": "guided-missiles",
           "damage": "explosive",
           "mount": "slow-turret",
-          "delivery": "projectile",
+          "delivery": "lock-on",
           "range": "long",
           "can_target": ["infantry", "ground-vehicle", "structure", "low-air", "high-air", "naval"],
           "traits": ["anti-air", "magazine"],
-          "summary": "Two missile packs on the same turret launch a pair of high-explosive missiles at ground or air targets, then wait out a long reload. The manual says they make the tank good against infantry and aircraft, the wiki adds buildings, and both wikis say a soldier often dies to a single hit. They are the tank's only weapon that reaches aircraft, and the wiki names the slow reload as the reason massed air attacks can overwhelm it. They reach a bit further than the cannons, about two thirds again the rifle's range. The game uses them on every aircraft and on any ground target whose armour suffers more from their warhead."
+          "summary": "Two missile packs on the same turret launch a pair of high-explosive homing missiles at ground or air targets, then wait out a long reload. The manual says they make the tank good against infantry and aircraft, the wiki adds buildings, and both wikis say a soldier often dies to a single hit. They are the tank's only weapon that reaches aircraft, and the wiki names the slow reload as the reason massed air attacks can overwhelm it. They reach a bit further than the cannons, about two thirds again the rifle's range. The game uses them on every aircraft and on any ground target whose armour suffers more from their warhead."
         }
       ],
       "crew": {
@@ -1825,8 +1842,8 @@
       "abilities": [],
       "on_death": {
         "outcomes": ["bail-out"],
-        "basis": "proposal",
-        "notes": "No page read says what happens when it dies, so the decision-3C default applies. The game code gives a ground vehicle flagged as crewed, with no passenger seats, an even chance of letting one rifleman out with part of his health; whether the Mammoth has that flag is set in the rules file, which no page read shows. Its death also shakes the screen, and its explosion animation is bigger than most vehicles' but does no damage."
+        "basis": "in-game",
+        "notes": "The reference copy of the rules marks the Mammoth as crewed, and the game code gives a crewed ground vehicle without passenger seats an even chance, when it is destroyed, of letting one rifleman out with part of his health; he gets out only by chance. Its death also shakes the screen, and its explosion animation is bigger than most vehicles' but does no damage."
       },
       "strengths": [
         {
@@ -2008,7 +2025,7 @@
       "uncertain": [
         {
           "path": "roles/primary",
-          "note": "Step 1 finds no role label in the manual paragraph. Step 4 reads its line that the missiles make the tank good against infantry and air units, and the registry notes say text about a second weapon counts (their own Mammoth example). No damage table was read, so the larger bonus cannot be told, and infantry, named first, wins. The cannon is the main weapon, but the manual's praise of it, unmatched on land, names no kind of target. Both coders reached anti-infantry by these steps; a reading that takes only main-weapon text would give anti-armour."
+          "note": "Step 1 finds no role label in the manual paragraph. Step 4 reads its line that the missiles make the tank good against infantry and air units, and the registry notes say text about a second weapon counts (their own Mammoth example). The warhead table in the reference copy of the rules file gives no warhead more than full damage against any armour type, so it adds no bonus to weigh, and infantry, named first, wins; the missiles' warhead also does more to unarmoured soldiers than to any aircraft. The cannon is the main weapon, but the manual's praise of it, unmatched on land, names no kind of target. Both coders reached anti-infantry by these steps; a reading that takes only main-weapon text would give anti-armour."
         },
         {
           "path": "roles/secondary",
@@ -2032,7 +2049,7 @@
         },
         {
           "path": "armament/0/can_target",
-          "note": "The coders split here; reconciled to leave structures out. StrategyWiki heads the cannons as anti-armour guns and gives their target as ground, and the C&C Wiki's infobox lists them only under ground attack, so can_target step 3 applies. Under step 3, structures are listed only when a source says the weapon damages buildings, and none says so for the cannons: the C&C Wiki credits the missiles with working on buildings, and StrategyWiki's strong against structures is about the tank as a whole. The rule's other sentence, that a source saying ground means infantry, ground vehicles and structures, would put structures in. The Hammer Tank sample in ra3.json leaves structures out the same way. The warhead damage table that would show the cannons hurting buildings is in the rules file, which could not be read."
+          "note": "StrategyWiki heads the cannons as anti-armour guns and gives their target as ground, and the C&C Wiki's infobox lists them only under ground attack, so can_target step 3 applies, which lists structures only when a source says the weapon damages buildings. The reference copy of Rules.ini (OpenRA's raclassic repository, https://raw.githubusercontent.com/OpenRA/raclassic/master/ref/Rules.ini) does: it gives the cannons the AP warhead, whose damage table has them do three quarters of full damage to the wood armour it marks as buildings' and half to concrete, and whose flags let them break walls. So structures are listed. The coders had split here, and the reconcile left structures out while that table could not be read; the C&C Wiki credits only the missiles with working on buildings."
         },
         {
           "path": "armament/0/range",
@@ -2040,11 +2057,11 @@
         },
         {
           "path": "armament/0/delivery",
-          "note": "The cannon family default. The wiki's remark that the second shell misses moving targets more often hints at travel time but does not say it."
+          "note": "Projectile. The reference copy of Rules.ini (OpenRA's raclassic repository) gives the shells a flight speed well below the top projectile speed, which counts as saying they travel; projectile is also the cannon family default. The wiki's remark that the second shell misses moving targets more often fits a shell in flight."
         },
         {
           "path": "armament/1/family",
-          "note": "Rockets, because no page read says the missiles steer or home in; the manual calls them missile packs, while it calls the Chrono Tank's weapon heat-seeking missiles. The weapon's projectile is set in the rules file, which is not in EA's source release and could not be read; if it makes the missiles homing, the family would be guided missiles with lock-on delivery."
+          "note": "Guided missiles with lock-on delivery. The reference copy of Rules.ini (OpenRA's raclassic repository) fires them as its HeatSeeker projectile, which it describes as a small homing missile and gives a non-zero rate of turn, the key that the file says makes a projectile home; REDALERT/BULLET.CPP of EA's source release (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/BULLET.CPP; read, not cited) turns such a projectile toward its target as it flies. In a commanded game a missile that homes in by itself is a guided missile with lock-on delivery and no homing trait. The same projectile may be fired at aircraft and at ground targets, so the attack order can pick any target on the list. No wiki page says the missiles steer; the manual calls them missile packs."
         },
         {
           "path": "armament/1/traits",
@@ -2052,7 +2069,7 @@
         },
         {
           "path": "armament/1/mount",
-          "note": "The physical mount comes from the game code (TECHNO.CPP fires both weapons along the turret's facing; UDATA.CPP gives the unit a turret and places the secondary weapon along it), not from any page's words. Without the code, the rockets family default free-aim would apply."
+          "note": "The physical mount comes from the game code (TECHNO.CPP fires both weapons along the turret's facing; UDATA.CPP gives the unit a turret and places the secondary weapon along it), not from any page's words. Without the code, the guided-missiles family default free-aim would apply."
         },
         {
           "path": "armour/models",
@@ -2061,7 +2078,7 @@
         },
         {
           "path": "on_death",
-          "note": "The death facts in the notes come from the game code: UNIT.CPP (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UNIT.CPP) for the even chance of a crewman getting out of a crewed vehicle without passenger seats and the screen shake, and ADATA.CPP (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/ADATA.CPP) for the death animation, which does no damage. Whether the Mammoth carries the crewed flag is set in the rules file, which could not be read."
+          "note": "The death facts in the notes come from the game code: UNIT.CPP (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UNIT.CPP) for the even chance of a crewman getting out of a crewed vehicle without passenger seats and the screen shake, and ADATA.CPP (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/ADATA.CPP) for the death animation, which does no damage. The reference copy of the rules (Rules.ini and aftrmath.ini in OpenRA's raclassic repository, https://raw.githubusercontent.com/OpenRA/raclassic/master/ref/Rules.ini) marks the Mammoth as crewed, so with UNIT.CPP it shows a crewman getting out by chance: bail-out, basis in-game. None of these pages is cited, as the entry already has five sources."
         },
         {
           "path": "mobility/notes",
@@ -2170,14 +2187,14 @@
       "crew": {
         "model": "solo",
         "basis": "proposal",
-        "notes": "One pilot flies and fires. The source has no seats and names no crew."
+        "notes": "One pilot flies and fires. The source has no seats; the reference copy of the rules marks the plane as crewed, with a crewman who can get out (see on_death)."
       },
       "abilities": [],
       "resources": ["limited-ammo"],
       "on_death": {
         "outcomes": ["bail-out"],
-        "basis": "proposal",
-        "notes": "No page read shows a survivor, so the 3C default applies. The game code drops a rifleman by parachute from a crewed aircraft nine times in ten when it goes down over ground a soldier can stand on, if the rules mark it as crewed, which no page read shows for the Yak. If its Airfield is destroyed while it is airborne, the plane crashes (manual)."
+        "basis": "in-game",
+        "notes": "The reference copy of the rules marks the Yak as crewed, and the game code drops a rifleman by parachute from a crewed aircraft nine times in ten when it goes down over ground a soldier can stand on; he gets out only by chance. If its Airfield is destroyed while it is airborne, the plane crashes (manual)."
       },
       "strengths": [
         {
@@ -2316,7 +2333,7 @@
           "kind": "official",
           "accessed": "2026-10-20",
           "version": "Remastered Collection source release (2020)",
-          "note": "The fixed-wing attack routine: a plane fires only when nearly facing its target, aims each burst at a point ahead along its heading and fires twice when it has two guns; an idle plane heads back to its landing building; airborne aircraft take half damage.",
+          "note": "The fixed-wing attack routine: a plane fires only when nearly facing its target, aims each burst at a point ahead along its heading and fires twice when it has two guns; an idle plane heads back to its landing building; airborne aircraft take half damage; and a crewed aircraft that is shot down drops a rifleman by parachute nine times in ten over ground a soldier can stand on.",
           "supports": ["armament/0", "armament/0/mount", "mobility/handling", "armour/notes", "on_death"]
         }
       ],
@@ -2328,7 +2345,7 @@
         },
         {
           "path": "armament/0/can_target",
-          "note": "Structures rest on the Yak page's tip that Yaks can hit a base's outlying buildings, read with StrategyWiki's target line Ground; no page says how much its small-arms warhead does to buildings. Air is left out: the infobox's air attack line is empty, StrategyWiki says ground, and no page says it attacks aircraft."
+          "note": "Structures rest on the Yak page's tip that Yaks can hit a base's outlying buildings, read with StrategyWiki's target line Ground; the reference copy of Rules.ini (OpenRA's raclassic repository, https://raw.githubusercontent.com/OpenRA/raclassic/master/ref/Rules.ini) has its small-arms warhead do half its full damage to the wood armour it gives buildings and a quarter to concrete. Air is left out: the infobox's air attack line is empty, StrategyWiki says ground, and the copy gives the guns the invisible projectile without the anti-aircraft flag, which REDALERT/TECHNO.CPP of EA's source release (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP; read, not cited) requires for firing at an aircraft in the air."
         },
         {
           "path": "armament/0/range",
@@ -2349,7 +2366,7 @@
         },
         {
           "path": "on_death",
-          "note": "Whether the rules file marks the Yak as crewed, which decides the chance of a parachuting survivor, could not be read; the registry notes say the rules.ini downloads would not load."
+          "note": "Bail-out, basis in-game: the reference copy of Rules.ini (OpenRA's raclassic repository, https://raw.githubusercontent.com/OpenRA/raclassic/master/ref/Rules.ini) marks the Yak as crewed, and the cited AIRCRAFT.CPP parachutes a rifleman from a crewed aircraft that is shot down, nine times in ten, where a soldier can stand. The copy is not cited, as the entry already has five sources."
         }
       ],
       "fit_notes": [
@@ -2582,7 +2599,7 @@
           "kind": "official",
           "accessed": "2026-10-20",
           "version": "Remastered Collection source release (2020)",
-          "note": "The ship firing checks: torpedoes only at ships, floating buildings and bridges, with open water to the target and no friendly boat in the way; a ship without a turret cannot fire while moving; depth charges serve only against submarines, and other ship weapons cannot target them; a sub surfaces before it fires and cannot dive again while a sonar pulse holds it.",
+          "note": "The ship firing checks: torpedoes only at ships, floating buildings and bridges, with open water to the target and no friendly boat in the way; a ship without a turret cannot fire while moving; depth charges serve only against submarines, and a ship weapon whose projectile lacks the anti-submarine flag cannot target them; a sub surfaces before it fires and cannot dive again while a sonar pulse holds it.",
           "supports": [
             "armament/0",
             "armament/0/can_target",
@@ -2614,7 +2631,7 @@
         },
         {
           "path": "armament/0/can_target",
-          "note": "Structures rest on VESSEL.CPP letting torpedoes be fired at buildings that float (the Naval Yard and Sub Pen) and at bridges, and on the Submarine page's line that the torpedoes are very effective against naval yards; no page gives the damage. Whether the torpedoes may target another submarine depends on a projectile flag in the rules file, which could not be read."
+          "note": "Structures rest on VESSEL.CPP letting torpedoes be fired at buildings that float (the Naval Yard and Sub Pen) and at bridges, and on the Submarine page's line that the torpedoes are very effective against naval yards. The reference copy of Rules.ini (OpenRA's raclassic repository, https://raw.githubusercontent.com/OpenRA/raclassic/master/ref/Rules.ini) gives the damage: both yards have light armour, against which the torpedoes' armour-piercing warhead does three quarters of its full damage. The same copy gives the torpedo projectile the anti-submarine flag as well as the underwater one, and VESSEL.CPP lets a ship fire at a Submarine or Missile Submarine only with a weapon whose projectile has that flag, so the torpedoes can also be fired at other submarines; naval covers them."
         },
         {
           "path": "armament/0/delivery",
