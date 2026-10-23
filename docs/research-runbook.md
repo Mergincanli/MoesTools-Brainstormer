@@ -175,7 +175,8 @@ Keep both codings, the agreement report and the hesitations in `research/r<N>/op
    - for each ability: kind, source, cooldown and patterns.
 3. **A skeptic re-checks every field marked wrong.** A field the skeptic could not check counts as unsupported.
 4. **The rate per game** is (confirmed wrong + confirmed unsupported) ÷ fields checked. Write the counts and the rate in `result.json`.
-5. **More than 15% in a game:** redo that game's units, record it in "Decisions needed", then check the redone units with a new sample.
+5. **Record the check on each checked unit and pattern:** `review` gets status `checked`, `checked_by` ("batch r<N> checker"), `checked_on`, `checked_paths` and `wrong_paths`, from `checks.json` and `result.json`. A path changed after the check is left out of `checked_paths` and named in the review's notes.
+6. **More than 15% in a game:** redo that game's units, record it in "Decisions needed", then check the redone units with a new sample.
 
 Fix every confirmed wrong field, even below the 15% line.
 
@@ -231,7 +232,7 @@ The pilot used this shape (research/pilot/README.md, Final review).
 1. `git fetch origin` runs, then `git rev-parse HEAD origin/claude/quirky-cray-tih1w4` prints the same hash twice, and `git status --porcelain` prints nothing.
 2. `pull_request_read` with `get_check_runs` lists the four `check (...)` jobs on that head, all completed and successful.
 3. `pull_request_read` with `get` shows `mergeable_state` as `clean`.
-4. Every `keep` id in `research/r<N>/prep/trim.json` is a unit in `data/units/`, and `npm run check:merge` passes.
+4. Every `keep` id in `research/r<N>/prep/trim.json` is a unit in `data/units/`, or was split in the merge pass into units whose ids its `split_into` lists, and `npm run check:merge` passes.
 5. `research/r<N>/checker/result.json` gives every game a rate of 0.15 or less.
 6. In `research/r<N>/review/findings.json`, every finding marked real is `fixed` (with its commit) or `answered` (with the reason).
 7. `research/r<N>/README.md` exists. The pull-request description starts with `## TL;DR`, and neither text says "work in progress", "running now" or "Next:".

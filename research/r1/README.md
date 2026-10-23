@@ -19,7 +19,7 @@ R1 is the first of the six research batches of step 3 of the approved plan ([doc
 4. **Merge pass.** The units went into `data/units/` (194f4d7). A resolver and two skeptics settled how fast units move in RA1 and RA2. In RA1, the pace comes from the game's released source code, with each unit's speed read from a reference copy of its rules file. In RA2, the listed speed of walking, driving, sailing and most flying units is compared with the reference soldier's, and hover units, jumpjet fliers and teleporting units are banded by judgement. The registry and notes changed in 3df217b and the units' speed bands in c07bfbd. A consistency check across the batch raised 32 possible problems, and 26 were confirmed and fixed (63e8d8b). In the same pass the RA1 Minelayer became two entries, one per side.
 5. **Patterns** (657bc26). For each mechanic the coders reported with no pattern id, and for each registered id the units use that had no file yet, a writer wrote a proposed pattern file. A skeptic checked each one against its pages, the schema and the units, and the writer applied the 86 confirmed corrections. The units now link the patterns.
 6. **Checker.** The sample seed was recorded before the draw (f8743f3). A checker who wrote none of the records re-opened the sources of 9 sampled units, three per game, and of all 33 patterns, and checked 1,828 fields. A skeptic re-checked each of the 59 fields marked wrong or unsupported and confirmed 58. All are fixed (b46b01c, 0c3d4e2, cbe6de8, dcc4080), and the record is in [checker/](checker/) (e54f737).
-7. **Final review:** one reviewer each for the data, consistency, patterns, the record and the tooling, each followed by a skeptic. Not run yet.
+7. **Final review:** one reviewer each for the data, consistency, patterns, the record and the tooling, each followed by a skeptic. They raised 53 findings, and the skeptics confirmed 50; all 50 are fixed or answered ([review/findings.json](review/findings.json)). Among the fixes: the Siege Chopper's cannon does armour-piercing damage and its second roles are anti-air and raider, since a direct-fire gun with no area hit is not siege; four more RA2 units drop to medium confidence where their sources disagree on a coded term (Boris, the Chrono Legionnaire, the Mastermind and the Slave Miner); the checked units and patterns record their review; and the workflow scripts, `mkws.sh` and their tests are tightened.
 
 The runbook and the workflow scripts ([research/workflows/](../workflows/)) were written for this batch (0cd0de4 and later). Since 040b347 every agent keeps progress notes, so an agent cut off by a usage limit goes on from where it stopped.
 
@@ -80,7 +80,7 @@ Units of the batch by class (the three RA3 samples in brackets):
 | naval | 1 | 0 | 0 |
 
 - **Main roles:** anti-infantry 10, assault 4, raider 2, area-denial 2, disabler 2, and one each of infiltrator, support, anti-armour, transport and siege. No R1 unit has anti-air, marksman, scout, buffer, engineer or logistics as its main role (the Multigunner IFV sample is anti-air). Ten anti-infantry units is a lot: for the Mammoth Tank it comes from a rule problem (see [Rule problems](#rule-problems)).
-- **Patterns:** 33 new files, all `proposed` and unchecked by Mustafa, in `data/patterns/`. By category: control 6, weapon behaviour 5, support 4, area 3, mobility 3, mode change 3, conversion 2, stealth and deception 2, and one each of infiltration, transport and garrison, progression, summon and defence.
+- **Patterns:** 33 new files in `data/patterns/`, all `proposed` (not yet approved by Mustafa); their review records the checker's check. By category: control 6, weapon behaviour 5, support 4, area 3, mobility 3, mode change 3, conversion 2, stealth and deception 2, and one each of infiltration, transport and garrison, progression, summon and defence.
 - **The 7 new registry ids,** for mechanics no id covered:
   - `overload-past-cap`: holding more captives than is safe costs health in growing steps (Mastermind);
   - `rewind-self`: on a key, snap back to where you were a few seconds ago, with the health you had then (Tanya);
@@ -102,7 +102,7 @@ Units of the batch by class (the three RA3 samples in brackets):
 
 The Multigunner IFV sample keeps its three ATYPICAL lines from step 2.
 
-**Gaps where no term fitted well:** 47 fit notes on the 25 units. By field: roles 12, body 5, armour 4, mobility 4, weapon traits 4, weapon damage 3, strengths 3, modes 3, sensors 2, on death 2, and one each for weapon range, family and mount, crew and countered by. Every gap with the coder's reasoning is in [opening/hesitations.md](opening/hesitations.md) (90 hesitations, 8 gaps, 35 unclear rules) and [fill/hesitations.md](fill/hesitations.md) (322 hesitations, 57 gaps, 94 unclear rules).
+**Gaps where no term fitted well:** 45 fit notes on the 25 units. By field: roles 12, body 5, mobility 4, weapon traits 4, weapon damage 3, strengths 3, modes 3, sensors 2, on death 2, armour 2, and one each for weapon range, family and mount, crew and countered by. Every gap with the coder's reasoning is in [opening/hesitations.md](opening/hesitations.md) (90 hesitations, 8 gaps, 35 unclear rules) and [fill/hesitations.md](fill/hesitations.md) (322 hesitations, 57 gaps, 94 unclear rules).
 
 ## Rule problems
 
@@ -149,7 +149,7 @@ Every game is well under the 15% line. The skeptic refuted one flagged pattern f
 ## Decisions
 
 **Taken during the batch with the recommended option** (each can be reversed; the units it affects are named):
-1. **The RA1 Minelayer is two entries, one per side** (`ra1.allied.minelayer`, `ra1.soviet.minelayer`). The registry's list of units both RA1 sides build leaves it out, the wiki has a page for each, and one shared entry gave matchups that cancel out.
+1. **The RA1 Minelayer is two entries, one per side** (`ra1.allied.minelayer`, `ra1.soviet.minelayer`). The registry's list of units both RA1 sides build leaves it out, the wiki has a page for each, and one shared entry gave matchups that cancel out. The unit list in `prep/trim.json` keeps the old shared id with a `split_into` naming the two.
 2. **StrategyWiki counts as a guide for its two RA1 unit pages and as a wiki for RA3,** as in the pilot samples. No unit changes.
 3. **RA1 speed comes from the reference copy of the rules file** where the wiki differs. The Mobile Gap Generator becomes fast, with raider as its main role.
 4. **The RA1 Attack Dog's charge at its target counts for its speed band,** as nothing limits it: fast.
