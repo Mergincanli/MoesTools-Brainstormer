@@ -113,7 +113,7 @@ The agents reported every place where a written rule was unclear, two rules conf
 
 The ones that change the most visible results:
 1. **Roles step 4 lets a secondary weapon decide the main role.** Official praise for the Mammoth Tank's missiles makes it anti-infantry, though its main weapon is an armour-piercing cannon.
-2. **Assault as a second role needs a short- or medium-range main weapon** (the second-role rules' step 4). RA1's reference rifle reaches so little that every tank gun bands long, so the Mammoth Tank, which the wiki calls a heavy assault tank, cannot get assault even as a second role.
+2. **Assault as a second role needs a short- or medium-range main weapon** (the second-role rules' step 4). RA1's reference rifle reaches so little that the Medium, Heavy and Mammoth Tanks' guns band long, so the Mammoth Tank, which the wiki calls a heavy assault tank, cannot get assault even as a second role.
 3. **A landed flier keeps its air target layer.** The Siege Chopper's landed mode is still coded as a low-air target, though ground weapons hit it there.
 4. **The combination check reads the base class, not the mode,** so a gun that fires only after a flier lands is checked as an aircraft's weapon (raised on the Siege Chopper, whose howitzer is now coded as a cannon).
 5. **No link kinds for price, availability or immunity** (10 units): reasons such as cheap, one per player or immune to mind control hang on stand-ins.

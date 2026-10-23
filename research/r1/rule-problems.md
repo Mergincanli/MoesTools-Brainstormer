@@ -192,9 +192,9 @@ Each list runs from the problem that touches the most batch units to the fewest.
 - *Fix:* In step 4, let text tied to a weapon other than the main weapon give a candidate only when the main weapon gives none, and otherwise count it at roles.secondary step 3. Also read a strong-against claim about an armour-piercing main weapon that names land as armour. The Mammoth would then be anti-armour, with anti-infantry and anti-air secondary; the RA1 notes' Mammoth line would change with it.
 - *Raised by* 3 reports (Mammoth coder A, Mammoth coder B, RA1 reconciler).
 
-**31. Assault needs a short- or medium-range main weapon, which no RA1 tank has (already named to Mustafa)**
+**31. Assault needs a short- or medium-range main weapon, which the Medium, Heavy and Mammoth Tanks lack (already named to Mustafa)**
 - *Rule:* roles.secondary step 4: "Assault: medium or heavier armour and a short- or medium-range main weapon."
-- *Problem:* RA1's reference rifle has one of the game's shortest reaches, so every tank gun bands long (the RA1 notes expect it) and no RA1 tank can get assault, not even one the wiki calls a heavy assault tank. Units: `ra1.soviet.mammoth-tank`.
+- *Problem:* RA1's reference rifle has one of the game's shortest reaches, so the Medium, Heavy and Mammoth Tanks' guns band long (the RA1 notes expect it) and none of these tanks can get assault as a second role, not even the one the wiki calls a heavy assault tank. Units: `ra1.soviet.mammoth-tank`.
 - *Fix:* Judge 'short or medium' against the game's standard tank gun, the cost-anchor tanks: allow assault when the main weapon reaches no further than their main gun.
 - *Raised by* 3 reports (Mammoth coder A, Mammoth coder B, RA1 reconciler).
 
