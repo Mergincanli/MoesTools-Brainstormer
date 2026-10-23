@@ -4,11 +4,11 @@ Every place where the R1 agents found a written rule unclear, two rules in confl
 
 Unit examples are as coded when the problem was raised. Since then the RA1 reference rules copy became a source for every rules value (b46b01c), which changed a few of them: the Mammoth Tank's cannons now list structures, its missiles are guided missiles, and the Field Mechanic is unarmoured. The follow-ups to the settled batch problems (a3c4d6d) then recoded the Siege Chopper's howitzer as a cannon and gave both Minelayers the crush trait, and the final review finished the Siege Chopper's recode: its gun deals armour-piercing damage, and its secondary roles are anti-air and raider, without siege.
 
-- **Open, for Mustafa: 61.** The fix changes the word lists, the field rules or the validator's checks.
+- **Open, for Mustafa: 62.** The fix changes the word lists, the field rules or the validator's checks.
 - **Open, for the batch: 20.** Proposed fixes that change only the registry notes, the registries or the unit data. 17 are settled; items 5 and 9 turned out to need the word lists and join the rule-fix round; item 13 waits for a source.
 - **Settled during the batch: 8.**
 
-Each list runs from the problem that touches the most batch units to the fewest. Units are the batch units the problem touches, by id; the four problems already named to Mustafa say so in their titles.
+Each list runs from the problem that touches the most batch units to the fewest. Units added by the final review (the Cryocopter in item 22) do not move an item. Units are the batch units the problem touches, by id; the four problems already named to Mustafa say so in their titles.
 
 ## Open, for Mustafa
 
@@ -111,7 +111,7 @@ Each list runs from the problem that touches the most batch units to the fewest.
 **17. Hedged wording in the role tests**
 - *Rule:* Roles step 4 reads official strong-against text; roles.secondary counts it when "a source calls it an anti-tank or anti-aircraft weapon"; the drop rule reads only official text; the anti-air trait follows high air in can_target.
 - *Problem:* No rule says whether a hedged line counts. The Siege Chopper gets secondary anti-air and the anti-air trait from a wiki line that its gun can, up to a point, serve against aircraft, while the same page says it is too weak for discs, airships and jets. The Yak's primary anti-infantry rests on a hedged manual line about what one strafing run may do to massed infantry. Units: `ra2.soviet.siege-chopper`, `ra1.soviet.yak`.
-- *Fix:* A hedge on whether the weapon works against a target ('to some extent', 'can be used as') does not count; a hedge only on how much it kills still counts, so the Yak stays anti-infantry. Also (the RA2 reconciler's proposal) drop a role when a cited source says the weapon is ineffective against the targets the role names, and give the anti-air trait only when no source says that of high air, keeping high air in can_target. The Siege Chopper would then take raider in place of anti-air.
+- *Fix:* A hedge on whether the weapon works against a target ('to some extent', 'can be used as') does not count; a hedge only on how much it kills still counts, so the Yak stays anti-infantry. Also (the RA2 reconciler's proposal) drop a role when a cited source says the weapon is ineffective against the targets the role names, and give the anti-air trait only when no source says that of high air, keeping high air in can_target. The Siege Chopper would then lose anti-air and keep raider alone.
 - *Raised by* 4 reports (Siege Chopper coder A, Siege Chopper coder B, RA2 reconciler, j04).
 
 **18. Roles step 1 with two named roles**
@@ -378,6 +378,12 @@ Each list runs from the problem that touches the most batch units to the fewest.
 - *Fix:* say that a sealed protective or hazmat suit is humanoid unless a source calls it powered or an exosuit.
 - *Raised by* the checker's skeptic (research/r1/checker/).
 
+**62. Unit links are checked only against the units already researched** (raised by the final review)
+- *Rule:* the validator accepts a `unit:` link whose id is in `data/units` and lists every other id in one warning, as a unit not researched yet; it checks neither the game, the faction nor the slug of those.
+- *Problem:* a link with an unknown game, a faction its game does not have or a misspelt slug passes with that warning, so only a reviewer reading the list can catch it. The 38 ids listed now all name a registered game and faction; one slug was wrong, on the Multigunner IFV sample's Desolator seat, which named `ra3.soviet.desolator` where the RA3 notes give `ra3.soviet.desolator-trooper` (fixed in df0db20). Units: none.
+- *Fix:* make the validator fail on a `unit:` link whose game is not in `data/games.json` or whose faction is not one of that game's; the reviewer then checks only the slugs in the warning. It joins the rule-fix round, as batch items 5 and 9 do.
+- *Raised by* the final review (research/r1/review/findings.json, T5).
+
 ## Open, for the batch
 
 **1. Role fit_notes use two different paths**
@@ -444,7 +450,7 @@ Each list runs from the problem that touches the most batch units to the fewest.
 - *Problem:* The same kind of wording gives different results by game: the Siege Chopper's profile says its gun harasses enemy units (a raider alias as a verb), and the Slave Miner gets logistics only through the word miner in its name. Units: `ra2.soviet.siege-chopper`, `ra2.yuri.slave-miner`.
 - *Fix:* Write one rule for both games: any word form counts, and a name counts only when it names the unit's job (Engineer, Spy, Miner), as the RA2 notes already allow. *Alternative:* Names never count in either game, as in RA1; RA2's Engineer, Spy, Tank Destroyer and miners would then lose their step 1 role.
 - *Raised by* 2 reports (Siege Chopper coder A, j08).
-- *Left open:* The roles word list says only that official words name a role through its whole label or an alias, so whether other word forms and the unit's name count is a reading of the word list for every game, which the three games' notes already split three ways (the RA3 notes call the Spy's Infiltration no label), and a notes rule for RA1 and RA2 alone would recode merged units (the Siege Chopper would gain raider from the verb harasses), so it belongs in the roles word list.
+- *Left open:* The roles word list says only that official words name a role through its whole label or an alias, so whether other word forms and the unit's name count is a reading of the word list for every game, which the three games' notes already split three ways (the RA3 notes call the Spy's Infiltration no label), and a notes rule for RA1 and RA2 alone would recode merged units (the verb harasses would move the Siege Chopper's raider ahead of anti-air), so it belongs in the roles word list.
 
 **10. Confidence: version differences and set-aside manual grades**
 - *Rule:* The High-or-Medium tie-break drops an entry to medium when sites contradict each other on a point the entry codes "and no official text settles it".
