@@ -1,6 +1,6 @@
 # Batch R1: Red Alert 1, 2 and 3 (step 3 of the plan)
 
-R1 is the first of the six research batches of step 3 of the approved plan ([docs/proposal.md](../../docs/proposal.md), section 2.2). It covers Red Alert 1 (with The Aftermath), Red Alert 2 with Yuri's Revenge and Red Alert 3 with Uprising. It ran by [docs/research-runbook.md](../../docs/research-runbook.md), partly at night.
+R1 is the first of the six research batches of step 3 of the approved plan ([docs/proposal.md](../../docs/proposal.md), section 2.2). It covers Red Alert 1 (with The Aftermath), Red Alert 2 with Yuri's Revenge and Red Alert 3 with Uprising. It ran by [docs/research-runbook.md](../../docs/research-runbook.md), partly at night, and was merged on 23 October 2026 (76ec0a8).
 
 ## TL;DR
 
@@ -9,7 +9,7 @@ R1 is the first of the six research batches of step 3 of the approved plan ([doc
 - **The word lists stay at 1.0.0.** The opening check (your decision 6C) found no field below 80% agreement.
 - **The checker passed every game.** It re-checked 1,828 fields of 9 sampled units and all 33 patterns. The confirmed error rate is 2.5% for RA1, 1.7% for RA2 and 0.8% for RA3, against the 15% line, and 3.6% for the patterns. All 58 confirmed fields are fixed.
 - **62 rule problems change the word lists, the field rules or the validator's checks.** By your decision the 37 that recur (raised by more than one report or touching more than one unit) go to a rule-fix round before R2, joined by two of the batch's own that turned out to need the word lists and by a validator check the final review proposed; the 24 one-off cases wait until they come up again. Of the 20 the batch could settle itself, 17 are settled and one waits for a source; 8 more were settled earlier. The units are coded by the current rules meanwhile (see [Rule problems](#rule-problems)).
-- **Decisions:** seven were taken during the batch with the recommended option. One more, decision 8 (the 17 batch-level rule-problem settlements), was taken at night on 23 October, after your decisions of 22 October, and is listed for you under Decisions needed in the pull request; two of its items depart from the proposed fix. All can be reversed. On 22 October you took the recommendations on the rule problems, decision 7 and the prep questions, and chose option B for the checker's patterns. See [Decisions](#decisions).
+- **Decisions:** seven were taken during the batch with the recommended option. One more, decision 8 (the 17 batch-level rule-problem settlements), was taken at night on 23 October, after your decisions of 22 October; two of its items depart from the proposed fix, and you kept both as settled (option A) the same day. All can be reversed. On 22 October you took the recommendations on the rule problems, decision 7 and the prep questions, and chose option B for the checker's patterns. See [Decisions](#decisions).
 
 ## How it ran
 
@@ -164,7 +164,7 @@ Every game is well under the 15% line. The skeptic refuted one flagged pattern f
 6. **In-game text counts as official text** for roles, such as a country's loading screen in RA2. It decides the Desolator's main role.
 7. **The RA1 reference rules copy counts for every rules value,** not only speed: Rules.ini and aftrmath.ini from OpenRA's raclassic repository, which win over a wiki, with an uncertain entry. It changes eight units (b46b01c): on-death crew for both Minelayers, the Mobile Gap Generator, the Mammoth Tank and the Yak; the Mammoth's cannons hit structures and its missiles are guided; the Field Mechanic is unarmoured and his wrench lands at once; the M.A.D. Tank's pulse reaches about twice as far as the wiki says; and the Submarine's torpedo texts now follow the copy.
 
-**Taken at night on 23 October (reversible; in the pull request's Decisions needed):**
+**Taken at night on 23 October, and kept by you the same day, with option A for items 1 and 8 (reversible):**
 
 8. **17 batch-level rule problems settled** (a3c4d6d) in the registry notes and the data, each as [rule-problems.md](rule-problems.md) says; 15 took the proposed fix, item 1 a smaller one and item 8 a different one. Seven units changed to match: the Siege Chopper's howitzer is coded as a cannon; both Minelayers get the crush trait, recorded as atypical; Boris's one-hero limit is in tier.basis; the Spy's confidence rises to high and the Field Mechanic's falls to medium; and the Slave Miner gets the rank lifts its infobox lists. Four more changed only in a note or a fit-note path: the M.A.D. Tank's and Mobile Gap Generator's fit notes, and the Chrono Legionnaire's and Chaos Drone's sight notes.
 
