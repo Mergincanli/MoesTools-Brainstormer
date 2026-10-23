@@ -64,7 +64,7 @@ const SCRIPTS = {
   'reconcile.js': { agents: 2, args: { batch: BATCH, units: ['u1', 'u2'].map(id => ({ id, game: 'g', ws: ws(id), a: 'a', b: 'b', reportA: 'ra', reportB: 'rb', diff: '' })) } },
   'patterns.js': { agents: 6, args: { batch: BATCH, groups: ['g1', 'g2'].map(label => ({ label, ws: ws(label), patterns: [{ id: 'p', kind: 'new', summary: 's', units: ['u'] }] })) } },
   'final-review.js': { readOnly: true, agents: 4, args: { batch: BATCH, draft: 'd', dimensions: ['data', 'record'] } },
-  'verify-fixes.js': { readOnly: true, agents: 4, args: { batch: BATCH, findings: 'f', since: 'abc', draft: 'd', angles: ['closure', 'claims'] } },
+  'verify-fixes.js': { readOnly: true, agents: 6, args: { batch: BATCH, findings: 'f', since: 'abc', draft: 'd', angles: ['closure', 'claims', 'recheck'], previous: 'p', draftPrev: 'dp' } },
   'prep.js': { readOnly: true, agents: 3, args: { batch: BATCH, game: { id: 'g', name: 'G', scope: 's', want: 'w', notesTask: 't' } } },
   'notes-and-trim.js': { readOnly: true, agents: 3, args: { batch: BATCH, dir: '/d', games: [{ id: 'g', name: 'G', existing: '' }, { id: 'h', name: 'H', existing: '' }], trim: true, keep: 'k' } },
 }
@@ -124,6 +124,11 @@ describe('workflow scripts', () => {
       })
     }
   }
+
+  it('verify-fixes.js: the recheck angle refuses to run without the claims run it follows', async () => {
+    const { previous, draftPrev, ...rest } = SCRIPTS['verify-fixes.js'].args
+    await assert.rejects(run('verify-fixes.js', { ...rest, progress: P }), /angle recheck needs args\.previous/)
+  })
 })
 
 const tmpDirs = []

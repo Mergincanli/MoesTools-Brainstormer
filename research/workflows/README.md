@@ -12,7 +12,7 @@ These are the multi-agent workflow scripts a research batch runs, in the order o
 | `patterns.js` | 5 | Writes proposed pattern files for new and planned pattern ids: writer, then skeptic, then the writer applies the confirmed corrections. |
 | `checker.js` | 6 | The separate checker re-opens the sources of the sampled units and patterns (`npm run --silent sample -- --seed <seed> --json --root <copy>`); a skeptic re-checks each field marked wrong. |
 | `final-review.js` | 7 | One reviewer per dimension (data, consistency, patterns, record, and tooling when the batch changed any), then a skeptic per dimension. |
-| `verify-fixes.js` | 7 | After the fixes: closure of each finding, new problems the fixes made, and the truth of every claim in the report and the pull-request description. |
+| `verify-fixes.js` | 7 | After the fixes: closure of each finding, new problems the fixes made, and the truth of every claim in the report and the pull-request description; after the claims fixes, a recheck of the sentences that changed. |
 
 **What comes back.** `code-units.js` and `reconcile.js` return `{ results, failed }`; `patterns.js`, `checker.js`, `final-review.js` and `verify-fixes.js` return `{ results, failed, unverified }`. `failed` lists the jobs or groups whose agent returned nothing (in `patterns.js`, also a group whose fixer returned nothing), and `unverified` those whose skeptic returned nothing. Both must be empty before a phase counts as done; run anything listed again on its own. Every verdict carries its evidence (the page or command and what it showed); a verdict without it counts as not checked.
 

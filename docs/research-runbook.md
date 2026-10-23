@@ -226,6 +226,8 @@ The pilot used this shape (research/pilot/README.md, Final review).
 
 **The claims check runs last.** After the last change to either text (log both in the night log), run `verify-fixes.js` with only the claims angle. It returns `checked`: every number and factual claim in both texts, each with the command or file it was recomputed from and the value found. A number missing from `checked` has not been checked. Post only when every entry holds.
 
+**Then the recheck.** Fix what the claims check's skeptic confirms. Then run `verify-fixes.js` with only the recheck angle: `since` is the README commit the claims run read, `previous` its result, and `draftPrev` a copy of the draft as it read it. The recheck reads both diffs and checks only the sentences that changed, so the claims the full run checked carry over; a second full run costs about twice as much. Fix what the recheck confirms in the same way. A fix that only writes in figures the recheck computed itself needs no further run. Log each run, and the README commit and draft it read, in the night log.
+
 ### 9. Merge and the next batch
 
 **A batch is done only when every check below passes on the same wake-up.** Save each check's output in the night log.
@@ -236,7 +238,7 @@ The pilot used this shape (research/pilot/README.md, Final review).
 5. `research/r<N>/checker/result.json` gives every game a rate of 0.15 or less.
 6. In `research/r<N>/review/findings.json`, every finding marked real is `fixed` (with its commit) or `answered` (with the reason).
 7. `research/r<N>/README.md` exists. The pull-request description starts with `## TL;DR`, and neither text says "work in progress", "running now" or "Next:".
-8. The claims check ran after the last change to either text: the README's last commit and the last edit of `r<N>/pr-body.md`, both in the night log.
+8. The claims check, or its recheck, ran after the last change to either text, other than a fix that only writes in the recheck's own figures: the README's last commit and the last edit of `r<N>/pr-body.md`, both in the night log.
 9. `pull_request_read` with `get_review_comments` shows no unresolved thread, and `get_comments` and `get_reviews` show no comment or review since the last report without the Claude Code footer. A comment without it may be Mustafa's: answer it first. Mustafa and the session use the same GitHub account, so the footer is the only way to tell them apart.
 10. No "Decisions needed" item is a change to the word lists or field rules (see Decisions).
 
