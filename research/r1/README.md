@@ -9,7 +9,7 @@ R1 is the first of the six research batches of step 3 of the approved plan ([doc
 - **The word lists stay at 1.0.0.** The opening check (your decision 6C) found no field below 80% agreement.
 - **The checker passed every game.** It re-checked 1,828 fields of 9 sampled units and all 33 patterns. The confirmed error rate is 2.5% for RA1, 1.7% for RA2 and 0.8% for RA3, against the 15% line, and 3.6% for the patterns. All 58 confirmed fields are fixed.
 - **62 rule problems change the word lists, the field rules or the validator's checks.** By your decision the 37 that recur (raised by more than one report or touching more than one unit) go to a rule-fix round before R2, joined by two of the batch's own that turned out to need the word lists and by a validator check the final review proposed; the 24 one-off cases wait until they come up again. Of the 20 the batch could settle itself, 17 are settled and one waits for a source; 8 more were settled earlier. The units are coded by the current rules meanwhile (see [Rule problems](#rule-problems)).
-- **Decisions:** seven were taken during the batch with the recommended option. One more, decision 8 (the 17 batch-level rule-problem settlements), was taken at night on 23 October, after your decisions of 22 October, and is listed for you under Decisions needed in the pull request; two of its items depart from the proposed fix. All can be reversed. On 22 October you took the recommendations on the rest. See [Decisions](#decisions).
+- **Decisions:** seven were taken during the batch with the recommended option. One more, decision 8 (the 17 batch-level rule-problem settlements), was taken at night on 23 October, after your decisions of 22 October, and is listed for you under Decisions needed in the pull request; two of its items depart from the proposed fix. All can be reversed. On 22 October you took the recommendations on the rule problems, decision 7 and the prep questions, and chose option B for the checker's patterns. See [Decisions](#decisions).
 
 ## How it ran
 
@@ -108,12 +108,12 @@ The Multigunner IFV sample keeps its three ATYPICAL lines from step 2.
 
 The agents reported every place where a written rule was unclear, two rules conflicted, or a rule gave a result that looks wrong for the unit. [rule-problems.md](rule-problems.md) merges them into one list. Each entry gives the rule, what goes wrong, the units, a proposed fix and how many reports raised it.
 - **62 for Mustafa:** the fix changes the word lists, the field rules or the validator's checks. Grouped by theme (my grouping): roles 14, matchups 11, weapons 11, body and class 7, abilities 5, other 14. 37 were raised by more than one report or touch more than one unit; 24 are one-off cases; the last, a validator check the final review proposed, joins the rule-fix round.
-- **20 for the batch:** only the registry notes, the games registry, the pattern registry or the data would change. 17 are settled: seven units changed to match the new notes, and four more changed only in a note or a fit-note path. Two turned out to need the word lists and join the rule-fix round. One, a frame rate for RA2, needs a source this session cannot reach: its network proxy blocks ModEnc.
+- **20 for the batch:** only the registry notes, the games registry, the pattern registry or the data would change. 17 are settled: seven units changed to match the new notes, and four more changed only in a note or a fit-note path. Two turned out to need the word lists and join the rule-fix round. One, a frame rate for RA2, needs a source not read yet: ModEnc, the likeliest one, now refuses this session's requests (HTTP 403), though it served the batch's earlier ModEnc pages.
 - **8 settled** earlier in the batch, each with its commit.
 
 The ones that change the most visible results:
 1. **Roles step 4 lets a secondary weapon decide the main role.** Official praise for the Mammoth Tank's missiles makes it anti-infantry, though its main weapon is an armour-piercing cannon.
-2. **Assault needs a short- or medium-range main weapon.** RA1's reference rifle reaches so little that every tank gun bands long, so no RA1 tank can be assault.
+2. **Assault as a second role needs a short- or medium-range main weapon** (the second-role rules' step 4). RA1's reference rifle reaches so little that every tank gun bands long, so the Mammoth Tank, which the wiki calls a heavy assault tank, cannot get assault even as a second role.
 3. **A landed flier keeps its air target layer.** The Siege Chopper's landed mode is still coded as a low-air target, though ground weapons hit it there.
 4. **The combination check reads the base class, not the mode,** so a gun that fires only after a flier lands is checked as an aircraft's weapon (raised on the Siege Chopper, whose howitzer is now coded as a cannon).
 5. **No link kinds for price, availability or immunity** (10 units): reasons such as cheap, one per player or immune to mind control hang on stand-ins.
@@ -134,8 +134,8 @@ Meanwhile the units are coded by the current rules, and the coders recorded thei
 | Patterns | 1,458 | 53 | 49 | 3 | 3.6% |
 
 Every game is well under the 15% line. The skeptic refuted one flagged pattern field.
-- **What was wrong on the units:** two outdated claims that the RA1 rules file could not be read (Minelayer, Yak); a source listed as backing a speed it contradicts (Mobile Gap Generator); the Desolator's body plan, and a source listed as backing its main role; and Tanya's charges, which can also be aimed at infantry.
-- **What was wrong on the patterns:** mostly one slip. 38 examples whose page copies official text were rated below high confidence, and 5 of their source notes did not say the page copies it. The rest are single facts: a franchise name, a redirect cited instead of the page, and wording that went past its source.
+- **What was wrong on the units:** two outdated claims that the RA1 rules file could not be read (Minelayer, Yak); a source listed as backing a speed it contradicts (Mobile Gap Generator); the Desolator's body plan, and a source listed as backing its main role; and Tanya's charges, which by the target rule's last step also list infantry, since no source says whether they can hurt soldiers.
+- **What was wrong on the patterns:** mostly confidence levels one step off. 25 examples whose page copies official text were rated medium instead of high, and 5 of their source notes did not say the page copies it; 13 examples that rest on one wiki were rated high instead of medium. The other 9 are single facts: a franchise name, two source titles that did not name the page the link leads to (one a redirect, one a page that does not exist), two seen-in lists that named units their pages do not show, and four texts that went past or against their page.
 - **Fixes:** all 58, in b46b01c, 0c3d4e2, cbe6de8 and dcc4080. [checker/result.json](checker/result.json) names the commit of each fix, and [checker/checks.json](checker/checks.json) lists every field checked with its verdict. The checkers' evidence quotes the pages, so it is not kept in the repository.
 
 ## Copied wording
@@ -184,7 +184,7 @@ Every game is well under the 15% line. The skeptic refuted one flagged pattern f
 
    A was recommended because the recurring problems will come up in every batch, and fixing them before R2 keeps the recode small. R1 merges as coded, since its units follow the current rules; the finished set of rule changes comes back to you for approval as word lists 1.1.0.
 
-   Batch items 5 and 9 ([rule-problems.md](rule-problems.md), Open for the batch), found after this decision, recur too (3 and 2 reports) and join the round. So does item 62 of the list for you, a validator check the final review proposed (an error for a unit link to an unknown game or faction).
+   Batch items 5 and 9 ([rule-problems.md](rule-problems.md), Open for the batch), which turned out after this decision to need the word lists, recur too (3 and 2 reports) and join the round. So does item 62 of the list for you, a validator check the final review proposed (an error for a unit link to an unknown game or faction).
 2. **Decision 7 above stays** (the RA1 rules copy counts for every rules value): it replaced guesses with the game's own data on eight units.
 
 ## Files

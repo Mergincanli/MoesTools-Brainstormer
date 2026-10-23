@@ -479,7 +479,7 @@ Each list runs from the problem that touches the most batch units to the fewest.
 - *Problem:* The wiki converts frames to seconds at 60 a second on one page and 15 a second on another, so the same frame figure gives different bands. Units: `ra2.yuri.chaos-drone`.
 - *Fix:* Add one frame rate for normal multiplayer speed, with its source, to the RA2 notes, so every RA2 cooldown given in frames converts the same way.
 - *Raised by* 1 report (j07).
-- *Left open:* The fix needs a source, and none read so far gives the frame rate at normal multiplayer speed (the wiki's Chaos drone and Mastermind pages, the only ones that convert, disagree), while ModEnc, the likeliest source, was refused by this session's network proxy; the Chaos Drone's gas is spam at either rate, so no unit waits on it.
+- *Left open:* The fix needs a source, and none read so far gives the frame rate at normal multiplayer speed (the wiki's Chaos drone and Mastermind pages, the only ones that convert, disagree), while ModEnc, the likeliest source, now refuses this session's requests (HTTP 403); the Chaos Drone's gas is spam at either rate, so no unit waits on it.
 
 **14. Tier gate when a unit needs two top-tier buildings**
 - *Rule:* The notes say to "record the highest tech building in the unit's chain", written with RA1 and RA2 in mind.
