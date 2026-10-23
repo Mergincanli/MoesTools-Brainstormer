@@ -141,10 +141,17 @@ Every game is well under the 15% line. The skeptic refuted one flagged pattern f
 ## Copied wording
 
 - Each research agent ran the copy-check on its own file before finishing, and each record was checked again when it was committed.
-- The offline copy-check of the fill folder finds no shared runs in its 714 cached pages; four pages are not cached yet. The checker record keeps no quoted evidence, and its copy-check finds no shared runs; nor does the rule-problems list's.
 - **The game manuals, by hand.** The copy-check cannot read PDFs, so the text of the six manuals (Red Alert 1, The Aftermath, Red Alert 2, Yuri's Revenge, Red Alert 3 and Uprising) was extracted and compared, six words at a time, with every prose string in the batch's units, patterns, registry, notes and record. One phrase from the Yuri's Revenge manual, in the mind-control pattern, was reworded (0c3d4e2). The only shared run left is the name of the Cryocopter's shrink ability (abilities/0).
 - Four older phrases in the R4 and R5 game notes (games-r4.md and games-r5.md) shared six words with cached pages; they were reworded (fa06d5a), so the notes folder passes the copy-check.
-- The full online copy-check, in three parts, runs last, after the final review's fixes.
+- **The full online copy-check** (runbook section 8, step 4) ran in three parts on f9a38a7, after the last fixes:
+  1. **The data, the whole record and the registry notes** (`npm run copy-check -- --also research/r1 --also research/registry-notes`): no shared run in the 788 pages it could read, 22 of them fetched for this run. Ten could not be read, and no unit or pattern cites any of them:
+     - two placeholders in the notes, not pages: `https://cnc.fandom.com/wiki/` and the `REDALERT/` folder of EA's source-code release;
+     - three ModEnc pages, which refused the request (HTTP 403): Magnetron and MagnetronLocomotor, which the j08 fill job had found empty, and Speed, named in the review record;
+     - the C&C Wiki's Gastroburners page, which does not exist (the singular Gastroburner page does), and CNCNZ's Yuri page, which returns not found (j07);
+     - the fourth archived Soviet units page of the official RA2 site (sovietunits4.jsp), on which the Wayback Machine timed out, as it resets this session's connections; the Desolator's notes say it could not be read;
+     - two web addresses that the copy-check cut short at an apostrophe when reading them from `checker/checks.json`: the Devil's Tongue (Tiberian Sun) page and Rek'Sai's data templates. The full pages, which `data/patterns/burrow.json` cites, are cached and were checked.
+  2. **The 51 pages named in the batch's uncertain entries but not cited,** all cached: no shared run.
+  3. **The six cited manuals:** the hand check above, where the shrink ability's name is the only shared run.
 
 ## Decisions
 
