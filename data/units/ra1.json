@@ -215,12 +215,11 @@
           "supports": ["abilities/0", "abilities/1", "abilities/2", "abilities/3", "body"]
         }
       ],
-      "confidence": "medium",
+      "confidence": "high",
       "uncertain": [
         {
           "path": "abilities/2/cooldown",
-          "note": "The Sonar pulse page calls it single-use, but EA's code enables the spy's pulse as a recharging power (INFANTRY.CPP), removed only when no infiltrated Sub Pen remains (HOUSE.CPP, https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/HOUSE.CPP), and the Command & Conquer Wiki page Remastered Collection patch 740600 (https://cnc.fandom.com/wiki/Remastered_Collection_patch_740600) fixed the pulse being usable only once. The code is the Remastered release, so it may not show 3.03; the band follows the wiki page. If the pulse recharges in 3.03 too, the band would be long.",
-          "sources_disagree": true
+          "note": "The Sonar pulse page calls it single-use, but EA's code enables the spy's pulse as a recharging power (INFANTRY.CPP), removed only when no infiltrated Sub Pen remains (HOUSE.CPP, https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/HOUSE.CPP), and the Command & Conquer Wiki page Remastered Collection patch 740600 (https://cnc.fandom.com/wiki/Remastered_Collection_patch_740600) fixed the pulse being usable only once. The code is the Remastered release, so it may not show 3.03; the band follows the wiki page. If the pulse recharges in 3.03 too, the band would be long."
         },
         {
           "path": "abilities/0",
@@ -697,7 +696,7 @@
           "supports": ["armament/0", "strengths/1", "weaknesses/0"]
         }
       ],
-      "confidence": "high",
+      "confidence": "medium",
       "uncertain": [
         {
           "path": "armour/class",
@@ -706,8 +705,7 @@
         },
         {
           "path": "mobility/speed",
-          "note": "The manual calls him slow, yet the infobox gives him the same land speed as the Rifle Infantry, the speed reference. The band follows the infobox figure; the Medic's page shows the same mismatch between its prose and its figure.",
-          "sources_disagree": true
+          "note": "The manual calls him slow, yet the infobox gives him the same land speed as the Rifle Infantry, the speed reference. The band follows the infobox figure; the Medic's page shows the same mismatch between its prose and its figure."
         },
         {
           "path": "armament/0/delivery",
@@ -1001,7 +999,7 @@
       ],
       "fit_notes": [
         {
-          "path": "roles/primary",
+          "path": "roles",
           "used": "assault",
           "wanted": "anti-armour or siege",
           "note": "Its only job is the pulse, which hurts only vehicles, ships, aircraft and buildings. That pulse is an ability, not a weapon, so roles step 2 (unarmed) finds no listed role that fits, steps 3 and 4 have no main weapon to read, and anti-armour's and siege's requires, which read weapons, fail. Step 5 then gives assault for a slow unit with medium armour."
@@ -1236,7 +1234,7 @@
       ],
       "fit_notes": [
         {
-          "path": "roles/primary",
+          "path": "roles",
           "used": "raider",
           "wanted": "support",
           "note": "Its job is hiding teammates, which is team support, but support's requires (a repair tool, or a repair or resupply pattern) fail. Roles step 2 (unarmed) finds no listed role that fits: buffer is for making allies stronger and scout for finding enemies. Steps 3 and 4 have no main weapon to read, so step 5 gives raider, the default for a fast generalist with light armour, for a truck that never fights. The wiki's own role line calls it a support unit."
@@ -1279,10 +1277,10 @@
       "mobility": {
         "base": "tracks",
         "handling": "pivot",
-        "traits": [],
+        "traits": ["crush"],
         "speed": "fast",
         "speed_raw": 2.15,
-        "notes": "Land speed a little over twice the Rifle Infantry's, so fast: a little quicker than both main battle tanks, the Medium Tank and the Heavy Tank. The code marks it as a vehicle that crushes infantry, but the crush trait is kept for large and huge units, so it is left out (see fit_notes). Tracks rest on the Anti-personnel minelayer page's mention of treads, for the one unit type both sides build; the Anti-tank page names no drive."
+        "notes": "Land speed a little over twice the Rifle Infantry's, so fast: a little quicker than both main battle tanks, the Medium Tank and the Heavy Tank. The code marks it as a vehicle that crushes infantry, so it has the crush trait, though the trait is kept for large and huge units (see atypical). Tracks rest on the Anti-personnel minelayer page's mention of treads, for the one unit type both sides build; the Anti-tank page names no drive."
       },
       "body": {
         "plan": "box-carrier",
@@ -1477,7 +1475,7 @@
         },
         {
           "path": "mobility/traits",
-          "note": "The crusher flag is in UDATA.CPP of the source release (uncited), and the registry notes list both minelayers as crushers; the trait is left out only because of its size rule."
+          "note": "Crush rests on the crusher flag in UDATA.CPP of the source release (uncited), on the registry notes' list of RA1 crushers and on the Anti-personnel page, which says a minelayer can run soldiers down under its treads, for the one type both sides build; the Anti-tank page does not say so. Being medium, it breaks the trait's size rule (see atypical)."
         },
         {
           "path": "armour/class",
@@ -1500,16 +1498,17 @@
           "note": "An ability cannot meet anti-armour's need for armour-piercing, energy, electric or EMP damage, so the anti-tank mines alone never give it."
         },
         {
-          "path": "mobility/traits",
-          "used": "none",
-          "wanted": "crush",
-          "note": "The code makes the minelayer run over infantry, but the crush trait is allowed only on large and huge units, and the minelayer is medium."
-        },
-        {
           "path": "body/plan",
           "used": "box-carrier",
           "wanted": "an enclosed utility or cargo hull with no troop compartment",
           "note": "The minelayer is an enclosed, turretless hull carrying mines; no body plan covers a cargo or utility vehicle without riders."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "mobility/traits",
+          "rule": "mobility-traits:crush allowed.sizes medium",
+          "note": "The code and the registry's list of RA1 crushers make the minelayer run over infantry, as the Anti-personnel page says of the one type both sides build, but the crush trait is allowed only on large and huge units and the minelayer is medium. Coded as the real unit is, as the registry's RA1 Crushing note asks."
         }
       ],
       "review": {
@@ -1543,10 +1542,10 @@
       "mobility": {
         "base": "tracks",
         "handling": "pivot",
-        "traits": [],
+        "traits": ["crush"],
         "speed": "fast",
         "speed_raw": 2.15,
-        "notes": "Land speed a little over twice the Rifle Infantry's, so fast: a little quicker than both main battle tanks, the Medium Tank and the Heavy Tank. The code marks it as a vehicle that crushes infantry, but the crush trait is kept for large and huge units, so it is left out (see fit_notes). Tracks rest on the wiki's mention of treads and its APC-based Soviet design."
+        "notes": "Land speed a little over twice the Rifle Infantry's, so fast: a little quicker than both main battle tanks, the Medium Tank and the Heavy Tank. The code marks it as a vehicle that crushes infantry, so it has the crush trait, though the trait is kept for large and huge units (see atypical). Tracks rest on the wiki's mention of treads and its APC-based Soviet design."
       },
       "body": {
         "plan": "box-carrier",
@@ -1734,7 +1733,7 @@
         },
         {
           "path": "mobility/traits",
-          "note": "The crusher flag is in UDATA.CPP of the source release (uncited), and the registry notes list both minelayers as crushers; the trait is left out only because of its size rule."
+          "note": "Crush rests on the crusher flag in UDATA.CPP of the source release (uncited), on the registry notes' list of RA1 crushers and on its own page, which says a minelayer can run soldiers down under its treads. Being medium, it breaks the trait's size rule (see atypical)."
         },
         {
           "path": "body/plan",
@@ -1743,16 +1742,17 @@
       ],
       "fit_notes": [
         {
-          "path": "mobility/traits",
-          "used": "none",
-          "wanted": "crush",
-          "note": "The code makes the minelayer run over infantry, but the crush trait is allowed only on large and huge units, and the minelayer is medium."
-        },
-        {
           "path": "body/plan",
           "used": "box-carrier",
           "wanted": "an enclosed utility or cargo hull with no troop compartment",
           "note": "The minelayer is an enclosed, turretless hull carrying mines; no body plan covers a cargo or utility vehicle without riders."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "mobility/traits",
+          "rule": "mobility-traits:crush allowed.sizes medium",
+          "note": "The code and the registry's list of RA1 crushers make the minelayer run over infantry, as its own page says, but the crush trait is allowed only on large and huge units and the minelayer is medium. Coded as the real unit is, as the registry's RA1 Crushing note asks."
         }
       ],
       "review": {

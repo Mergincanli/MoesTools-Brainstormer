@@ -385,120 +385,145 @@ Each list runs from the problem that touches the most batch units to the fewest.
 - *Problem:* The batch's units now mix both paths, and the vocabulary-gaps report reads fit_notes by path. Units: `ra1.soviet.mad-tank`, `ra1.allied.mobile-gap-generator`, `ra1.allied.minelayer`, `ra1.soviet.mammoth-tank`, `ra1.soviet.submarine`, `ra2.allied.robot-tank`, `ra2.yuri.mastermind`, `ra2.yuri.magnetron`, `ra2.yuri.slave-miner`, `ra3.soviet.sickle`, `ra3.soviet.kirov-airship`.
 - *Fix:* Make every role fit_note follow the word list (path roles). This is a data fix, with no rule change. *Alternative:* Mustafa changes the word list to roles/primary or roles/secondary, which says more.
 - *Raised by* 1 report (j03).
+- *Settled in the batch:* A smaller fix: the MAD Tank's and Mobile Gap Generator's notes, the only two at roles/primary that record a role left out because its requires fail, now use path roles as the word list asks, while the four about which role the primary steps chose (Mammoth Tank, Submarine, the Magnetron's first, Slave Miner) keep roles/primary, since the word list's path covers only a role left out, fields.md puts a path where the term would go, and their used field names the primary alone.
 
 **2. Sight figures in RA2 text fields**
 - *Rule:* The games registry's RA2 sight reference and the R1 notes on shroud and sight say to give the unit's Sight figure in sensors.notes. Bands with numbers says text fields give sight "as comparisons in words", never as figures.
 - *Problem:* The two rules conflict for every RA2 unit; each coder wrote a ratio in words. Units: `ra2.allied.chrono-legionnaire`, `ra2.allied.robot-tank`, `ra2.iraq.desolator`, `ra2.soviet.boris`, `ra2.soviet.siege-chopper`, `ra2.yuri.mastermind`, `ra2.yuri.magnetron`, `ra2.yuri.chaos-drone`, `ra2.yuri.slave-miner`.
 - *Fix:* Reword the registry and the notes: say in sensors.notes, in words, how far the unit lifts the shroud compared with the Conscript (the RA2 reconciler's proposal).
 - *Raised by* 4 reports (Siege Chopper coder A, Siege Chopper coder B, RA2 reconciler, j06).
+- *Settled in the batch:* As proposed: the RA2 sight_reference and the notes' Shroud and sight line now ask for a comparison in words with the Conscript and never the figure, and of the nine units, all already in words and checked against their infoboxes, the Chaos Drone and Slave Miner now say how far they lift the shroud and the Chrono Legionnaire's ratio reads a little over one and a half times.
 
 **3. Archived official profiles that will not load**
 - *Rule:* sources: cite "The page actually read"; the RA2 notes give each profile's normal Wayback snapshot URL.
 - *Problem:* The archive often resets connections from these sessions. Coders read the same snapshot through its raw form, read it from the copy-check cache, or relied on the notes' own reading of a profile they could not open (Robot Tank, Magnetron, Slave Miner). The merge pass then cited cached profiles under the registry's URLs (63e8d8b), but no rule says that counts as read. Units: `ra2.soviet.siege-chopper`, `ra2.yuri.mastermind`, `ra2.soviet.boris`, `ra2.allied.robot-tank`, `ra2.yuri.magnetron`, `ra2.yuri.slave-miner`.
 - *Fix:* Write the practice into the RA2 notes: a snapshot read through its raw form or from the copy-check cache counts as read; cite the registry's snapshot URL and say in the source note how it was read; the notes' own account of a page never stands in for reading it.
 - *Raised by* 4 reports (Siege Chopper coder B, j05, j07, j08).
+- *Settled in the batch:* As proposed: the RA2 Official role lines now say that a snapshot read in its raw id_ form or from the copy-check cache counts as read, cited under the registry's address with a source note on how it was read (and the cache's fetch date), and that the notes' account of a profile never replaces reading it, an unreadable profile going in an uncertain entry instead.
 
 **4. Source kinds for released code and fan sites**
 - *Rule:* Source kinds name official, wiki, database, guide, video and community. None names a publisher's source-code release or a long-running fan site.
 - *Problem:* Coders split between official and database for EA's released Red Alert code, and between guide, community and wiki for CNCNZ. It is also unclear whether the code counts as official text that settles a contradiction. The games registry and every merged unit now cite the code as official, but no note says so. Units: `ra1.soviet.mammoth-tank`, `ra1.allied.spy`, `ra1.soviet.attack-dog`, `ra2.yuri.chaos-drone`.
 - *Fix:* Say in the R1 notes that EA's released code is kind official and settles what the engine does only for the version it is, and that CNCNZ is kind guide. *Alternative:* Mustafa adds both cases to Source kinds, so later batches follow them too.
 - *Raised by* 4 reports (Mammoth coder A, Mammoth coder B, j01, j07).
+- *Settled in the batch:* As proposed: the R1 Research notes now say to cite EA's released code as kind official, as the registry and every merged unit do, settling engine behaviour only for the build it comes from (the Remastered files for the 2020 remaster, the 2025 release for the original), and that CNCNZ is kind guide; the alternative, adding both to Source kinds for later batches, is still Mustafa's to take.
 
 **5. Armour class in RA3 for units between two classes**
 - *Rule:* With no armour map, RA3's armour class goes by kind (step 4): "drones and robots no bigger than a soldier" are light, light walkers bigger than one are medium; a soldier is light only with tougher armour than the rifle infantry.
 - *Problem:* A hovering combat robot (Mecha Tengu), a light walker with little health (Sickle) and an APC whose armour set is named for light vehicles (Sudden Transport) come out medium by kind, though their health is close to light units'; the class also decides the directional armour model. Tanya has one known resistance and no armour set, so light or unarmoured is a guess. Units: `ra3.empire.mecha-tengu`, `ra3.soviet.sickle`, `ra3.empire.sudden-transport`, `ra3.allied.tanya`.
 - *Fix:* Add a closed armour list to the RA3 notes, as the RA1 notes have, giving these units' classes from their health against the cost anchors. *Alternative:* Mustafa adds these kinds to the armour class descriptions.
 - *Raised by* 3 reports (j09, j10, j11).
+- *Left open:* Only the alternative, in the armour-class word list, can settle it: the RA1 list works as a step down from RA1's armour map (step 1), while RA3 has no armour map, step 4 lets the kind decide however tough the unit is, and the soldier rule that decides Tanya wins over every step (nor would health move all four to light: the Sickle's is a little below the Hammer tank's).
 
 **6. RA2 Sight figures and the artillery tie-break**
 - *Rule:* The RA2 notes say a proposal sight band uses no figure, so a weapon is off-screen only for its other reasons. The artillery tie-break asks whether a gun "reaches further than the unit itself can see, so others must spot for it".
 - *Problem:* The same Sight figure counts for one rule and not the other, and RA2 has no fog, so nobody needs to spot. The Siege Chopper's howitzer became artillery from its Sight figure, which also makes it atypical on an aircraft, while the Magnetron's and Boris's long weapons stay long. Units: `ra2.soviet.siege-chopper`, `ra2.yuri.magnetron`, `ra2.soviet.boris`.
 - *Fix:* Say in the RA2 notes that the artillery tie-break, like off-screen, never reads the Sight figure, so artillery needs a source that shows the gun lobbing shells over cover. *Alternative:* Let the Sight figure count for both rules; several RA2 weapons would then be off-screen.
 - *Raised by* 3 reports (Siege Chopper coder A, Siege Chopper coder B, j08).
+- *Settled in the batch:* As proposed (the alternative would read a figure the registry's proposal sight band does not use): the RA2 Shroud and sight item now says the artillery tie-break never reads the Sight figure, so a gun is artillery only when a source shows it lobbing shells over cover, which leaves the Siege Chopper's howitzer, whose sources only call it artillery, to be recoded as a cannon (dropping its atypical entry) in the merge pass, since this pass changes unit data only for items 1, 2 and 20.
+- *Follow-up done:* The Siege Chopper's 160mm gun is now family cannon with projectile delivery, its artillery atypical entry is gone, its family uncertain entry explains the cannon reading, and its weakness about missing moving targets now links weapon:cannon instead of weapon:artillery.
 
 **7. Facts that have no field: multiplayer-only, campaign-only, the hero cap**
 - *Rule:* The R1 notes ask to mark multiplayer-only units "in their notes" and to give the hero cap in notes. A source unit has no general notes field, and availability has none.
 - *Problem:* Coders put these facts in tier.basis (Spy, Gap Generator) or in on_death.notes (Boris). Units: `ra1.allied.spy`, `ra1.allied.mobile-gap-generator`, `ra2.soviet.boris`.
 - *Fix:* Name the field in the notes: tier.basis, which already says who can build the unit, holds multiplayer-only, campaign-only and one-at-a-time limits. *Alternative:* Mustafa adds a general notes field to source units.
 - *Raised by* 3 reports (j01, j03, j06).
+- *Settled in the batch:* As proposed: a new Research notes item, Where build limits go, puts multiplayer-only, campaign-only and RA2-only status, the one-hero cap and any other side or captured factory that can build a unit in tier.basis, and the lines that sent these facts to notes (multiplayer-only, RA2-only, heroes, captured factories, the Tesla Tank, the Harrier and the RA2 Attack Dog) now name tier.basis; the Spy and Gap Generator already comply, and Boris, whose cap sits in on_death.notes and weaknesses, should gain it in tier.basis in the merge pass.
+- *Follow-up done:* Boris's tier.basis now gives the one-hero cap (YR manual, Gameplay Changes item 9) and says that, with no Cloning Vats on the Soviet side in Yuri's Revenge, he gets no free copies.
 
 **8. Crushers that the crush trait's size rule leaves out**
 - *Rule:* crush is "only with sizes: Large, Huge". The RA1 notes list medium crushers (the APC, both Minelayers, the Radar Jammer) and then say "Use the trait only where its size rule allows."
 - *Problem:* Medium crushers get no trait, and no rule says whether to record them in a fit_note; the trait's size rule even pushed one size choice (the Gap Generator's large). Units: `ra1.allied.minelayer`, `ra1.soviet.minelayer`, `ra1.allied.mobile-gap-generator`.
 - *Fix:* Say in the RA1 note to leave the trait off a medium crusher and add a fit_note asking for crush, as the merged Minelayers already do, and that the trait never decides a size. *Alternative:* Mustafa allows crush on medium vehicles.
 - *Raised by* 2 reports (j02, j03).
+- *Settled in the batch:* Differently from the proposal, which clashes with the word lists' Rules paragraph (a real unit that breaks a rule is recorded as it is and listed as atypical) and spends a fit_note on a term that fits: the RA1 Crushing item now gives the trait to every listed crusher, records a medium one's size break in atypical (`mobility-traits:crush allowed.sizes medium`) and says the trait never decides a size, the RA2 and RA3 crushing items say the same (no unit of theirs changes), and both merged Minelayers are left for the merge pass to recode (crush, the atypical entry, no fit_note).
+- *Follow-up done:* Both Minelayers now have the crush trait with an atypical entry for its size rule, their crush fit_notes are gone, and their uncertain entries and mobility notes say what the trait rests on, the Anti-personnel page's word that a minelayer can crush soldiers under its treads included.
 
 **9. The RA1 and RA2 notes differ on which words count for roles**
 - *Rule:* RA1 roles step 1: a role label or alias counts "in any word form", and "The unit's own name never counts". The RA2 notes count the name ("the unit's name included") and say nothing of word forms.
 - *Problem:* The same kind of wording gives different results by game: the Siege Chopper's profile says its gun harasses enemy units (a raider alias as a verb), and the Slave Miner gets logistics only through the word miner in its name. Units: `ra2.soviet.siege-chopper`, `ra2.yuri.slave-miner`.
 - *Fix:* Write one rule for both games: any word form counts, and a name counts only when it names the unit's job (Engineer, Spy, Miner), as the RA2 notes already allow. *Alternative:* Names never count in either game, as in RA1; RA2's Engineer, Spy, Tank Destroyer and miners would then lose their step 1 role.
 - *Raised by* 2 reports (Siege Chopper coder A, j08).
+- *Left open:* The roles word list says only that official words name a role through its whole label or an alias, so whether other word forms and the unit's name count is a reading of the word list for every game, which the three games' notes already split three ways (the RA3 notes call the Spy's Infiltration no label), and a notes rule for RA1 and RA2 alone would recode merged units (the Siege Chopper would gain raider from the verb harasses), so it belongs in the roles word list.
 
 **10. Confidence: version differences and set-aside manual grades**
 - *Rule:* The High-or-Medium tie-break drops an entry to medium when sites contradict each other on a point the entry codes "and no official text settles it".
 - *Problem:* It does not say whether a difference that may only be a Remastered change counts (the Spy's sonar pulse is single use on the wiki and recharging in the Remastered code), or whether the manual's stat words, which the RA1 notes already set aside as band data, contradict the infobox (the Field Mechanic's armour and speed). The Spy dropped to medium; the Mechanic stayed high. Units: `ra1.allied.spy`, `ra1.allied.field-mechanic`.
 - *Fix:* Add to the RA1 notes: a difference that the Remastered code or patch notes explain is a version difference, not a contradiction (code the version researched and note the other); and the manual's stat words never count as a contradiction, since they are not band data.
 - *Raised by* 2 reports (j01, j02).
+- *Settled in the batch:* As proposed, in a new RA1 Research notes item on confidence that also covers a lone speed word in the manual's paragraph (the Mechanic's slow, which the speed-band rules send to notes) and keeps a clash between the rules copy and a wiki as a contradiction, so the merge pass should drop sources_disagree from the Spy's Sonar Pulse entry and the Mechanic's speed entry and judge both units' confidence again (the Spy has no other clash; the Mechanic's armour type, Light in his infobox and none in the rules copy, still counts).
+- *Follow-up done:* Both entries lost sources_disagree, and by the tie-break the Spy, with no clash left, is now high, while the Field Mechanic is now medium, since his armour type decides his armour class and no official text settles it (the manual's grade is not band data), as for the Mobile Gap Generator's speed.
 
 **11. 'A third page of the same site' for the RA1 manual and StrategyWiki**
 - *Rule:* sources: "When another established site covers the unit, cite it rather than a third page of the same site."
 - *Problem:* It is unclear whether the manual scan that the wiki hosts counts as a page of the wiki, and whether StrategyWiki, which the RA1 notes cite as kind guide, is an established site for this rule. Units: `ra1.allied.minelayer`, `ra1.soviet.minelayer`.
 - *Fix:* Say in the RA1 notes that the manual PDF is the publisher's, not a wiki page, and that StrategyWiki counts as another established site here.
 - *Raised by* 1 report (j02).
+- *Settled in the batch:* As proposed: the RA1 Official role lines now say the manual PDF is the publisher's, not a page of the wiki that hosts it, and that StrategyWiki is the other established site for the third-page rule though its kind stays guide, which is how both merged Minelayers already cite.
 
 **12. Desolator page listed as having no manual quote**
 - *Rule:* The RA2 notes on citing list the Desolator among wiki pages with no manual quote.
 - *Problem:* The page now has an official-description box that copies the manual. Units: `ra2.iraq.desolator`.
 - *Fix:* Take the Desolator off that list.
 - *Raised by* 1 report (j06).
+- *Settled in the batch:* As proposed: the Desolator is off the RA2 notes' list of pages with no manual quote, since its page's Official description box is credited to the Red Alert 2 manual.
 
 **13. Frames to seconds in RA2**
 - *Rule:* Cooldown bands use "real seconds at the game's normal multiplayer speed"; the RA2 notes give no frame rate.
 - *Problem:* The wiki converts frames to seconds at 60 a second on one page and 15 a second on another, so the same frame figure gives different bands. Units: `ra2.yuri.chaos-drone`.
 - *Fix:* Add one frame rate for normal multiplayer speed, with its source, to the RA2 notes, so every RA2 cooldown given in frames converts the same way.
 - *Raised by* 1 report (j07).
+- *Left open:* The fix needs a source, and none read so far gives the frame rate at normal multiplayer speed (the wiki's Chaos drone and Mastermind pages, the only ones that convert, disagree), while ModEnc, the likeliest source, was refused by this session's network proxy; the Chaos Drone's gas is spam at either rate, so no unit waits on it.
 
 **14. Tier gate when a unit needs two top-tier buildings**
 - *Rule:* The notes say to "record the highest tech building in the unit's chain", written with RA1 and RA2 in mind.
 - *Problem:* RA3's Tanya needs both Max Clearance and the Defense Bureau, both t3, and the RA3 notes say only that she is t3. Units: `ra3.allied.tanya`.
 - *Fix:* Say which gate to record when two gates of the same tier are needed (the coder took the Defense Bureau, as the registry suggests for other units that need both), and name both in tier.basis.
 - *Raised by* 1 report (j11).
+- *Settled in the batch:* As proposed: the RA3 Tier traps now record the Defense Bureau for Tanya, as for the FutureTank X-1 and Harbinger Gunship, with both gates named in tier.basis, and say that a unit needing two gates of one tier records the one fewer units need, which is how her merged entry already reads.
 
 **15. The Desolator's deployed radiation: weapon or ability**
 - *Rule:* The RA2 notes' basic orders call the Desolator's radiation the deploy key's ability; their Radiation item says "The weapon that leaves it gets the zone trait."
 - *Problem:* The two lines point different ways. Coded as a weapon, Paired entries and Granularity would forbid the leave-hazard-zone link; the coder made it a deploy ability. Units: `ra2.iraq.desolator`.
 - *Fix:* Reword the Radiation item: the zone trait is for a weapon fired with the attack order that leaves radiation; a field made with the deploy key is that unit's ability, linking leave-hazard-zone.
 - *Raised by* 1 report (j06).
+- *Settled in the batch:* As proposed: the RA2 Radiation item now gives the zone trait only to a weapon fired with the attack order that leaves radiation and makes a field laid with the deploy key, such as the Desolator's, that unit's ability linking leave-hazard-zone, as his merged entry already has it.
 
 **16. An empty attack line in a wiki infobox**
 - *Rule:* can_target in a commanded game lists air "only when the sources say the weapon attacks air units".
 - *Problem:* The Siege Chopper's infobox leaves its air-attack line empty, as do those of two other units with the same gun, while the prose says it fires at aircraft. No rule says whether an empty line means it cannot. Units: `ra2.soviet.siege-chopper`.
 - *Fix:* Say in the RA2 notes that an empty attack line is silence, not a statement that the weapon cannot attack; the prose decides.
 - *Raised by* 1 report (Siege Chopper coder A).
+- *Settled in the batch:* As proposed: a new RA2 Research notes item, Empty attack lines, reads an empty infobox attack line as silence and lets the other sources, the page's prose included, decide whether air is listed, as the merged Siege Chopper's machine gun already does.
 
 **17. Earned side-wide buttons: the Spy's sonar pulse and parabombs**
 - *Rule:* The RA1 notes say what a spy earns belongs to the spy, and that no RA1 ability has source commander-power.
 - *Problem:* Nothing says which kind the earned buttons take: active (the player presses them) or triggered (an event grants them). Units: `ra1.allied.spy`.
 - *Fix:* Add to the RA1 notes that they are active abilities, source innate, as coded.
 - *Raised by* 1 report (j01).
+- *Settled in the batch:* As proposed: the RA1 Side-wide powers item now codes each button a Spy earns (the Sonar Pulse, the parabomb strike) as an active ability of the Spy, source innate, since the player presses it and the Spy's own entry earns it, which is how the merged Spy reads.
 
 **18. One plane per Airfield and availability**
 - *Rule:* availability limited covers "a unit cap, a slot limit or a set number of spawns".
 - *Problem:* Each Airfield holds one plane, shared by Yaks and MiGs and raised by building more Airfields, so it is unclear whether that is a slot limit. Units: `ra1.soviet.yak`.
 - *Fix:* Say in the RA1 notes that this is not a cap on the unit, so planes stay open, and that it is a weakness, as the notes already say.
 - *Raised by* 1 report (j04).
+- *Settled in the batch:* As proposed: the RA1 Ammunition item, which already calls the one plane per Airfield a weakness, now says that this pad limit, shared by every plane type and raised by each new Airfield, is no cap on the unit, so planes stay availability open, as the merged Yak is coded.
 
 **19. Rank lifts when a unit's page and infobox disagree**
 - *Rule:* The RA2 veterancy note gives every unit the same rank lifts, and handles elite weapons through Paired entries.
 - *Problem:* The Slave Miner's page says it gets the elite cannon but none of the lifts, while its infobox says it gets them; the note covers the weapon, not this conflict. Units: `ra2.yuri.slave-miner`.
 - *Fix:* Say in the RA2 notes to follow the infobox and add an uncertain entry naming the page, as the notes already do for heroes' healing.
 - *Raised by* 1 report (j08).
+- *Settled in the batch:* As proposed, in line with the notes' rule to trust the infobox as game data: the RA2 Veterancy item now follows the infobox when a page denies a unit the rank lifts, with an uncertain entry naming the page, which leaves the merged Slave Miner, whose elite-cannon summary follows the page, for the merge pass to reword.
+- *Follow-up done:* The Slave Miner's elite-cannon summary now follows the infobox (it gets the rank lifts), and its uncertain entry, still marked sources_disagree, names the page's claim that it gets none and so loses to an elite War Miner.
 
 **20. throw-explosive's summary says it is on a cooldown**
 - *Rule:* The pattern registry's one-line summary for throw-explosive says the charge is thrown or planted "on a cooldown"; the patterns notes name Tanya's charge as its planted variant.
 - *Problem:* Tanya's charge is on the attack order with no cooldown, so by the letter of the summary the link fails the pattern-link test. The pattern's own file, written in 657bc26, already covers commandos who plant charges with no cooldown. Units: `ra3.allied.tanya`.
 - *Fix:* Reword the registry summary to match its file (for example, on a cooldown or from a stock), as the batch did for mind-control's summary in 657bc26.
 - *Raised by* 1 report (j11).
+- *Settled in the batch:* As proposed: the pattern registry's throw-explosive summary now reads "on a cooldown or from a stock", matching the pattern file, whose uses come from a cooldown, a small stock or a commando's large one, so Tanya's planted charge passes the pattern-link test.
 
 ## Settled during the batch
 

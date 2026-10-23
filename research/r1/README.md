@@ -8,8 +8,8 @@ R1 is the first of the six research batches of step 3 of the approved plan ([doc
 - **33 new pattern files,** 7 of them for mechanics no registry id covered. The pattern registry now has 63 ids.
 - **The word lists stay at 1.0.0.** The opening check (your decision 6C) found no field below 80% agreement.
 - **The checker passed every game.** It re-checked 1,828 fields of 9 sampled units and all 33 patterns. The confirmed error rate is 2.5% for RA1, 1.7% for RA2 and 0.8% for RA3, against the 15% line, and 3.6% for the patterns. All 58 confirmed fields are fixed.
-- **61 rule problems change the word lists or field rules.** By Mustafa's decision they go to a rule-fix round before R2. 20 more touch only the registry notes or the data, and 8 were settled during the batch. The units are coded by the current rules meanwhile (see [Rule problems](#rule-problems)).
-- **Decisions:** seven were taken during the batch with the recommended option, and all can be reversed. On 22 October Mustafa took the recommendations on the rest. See [Decisions](#decisions).
+- **61 rule problems change the word lists or field rules.** Two of the batch's own turned out to need the word lists too, and by Mustafa's decision all of them go to a rule-fix round before R2. Of the 20 the batch could settle itself, 17 are settled and one waits for a source; 8 more were settled earlier. The units are coded by the current rules meanwhile (see [Rule problems](#rule-problems)).
+- **Decisions:** eight were taken during the batch with the recommended option, and all can be reversed. On 22 October Mustafa took the recommendations on the rest. See [Decisions](#decisions).
 
 ## How it ran
 
@@ -93,28 +93,29 @@ Units of the batch by class (the three RA3 samples in brackets):
 ## Units that break rules, and gaps
 
 **Units that break a combination rule** (the validator's ATYPICAL lines; each is recorded in the unit's `atypical` list with a note):
+- **Field Mechanic** (RA1): the repair-tool family lists only beam and projectile delivery, but by the rules copy and the released code his wrench repairs the moment it is used.
+- **Both Minelayers** (RA1), one line each: the crush trait is listed for large and huge units, but the code and the registry make these medium vehicles run over infantry.
 - **Submarine** (RA1): the detector sensor trait is not listed for the naval class, but the sources say it finds other submerged submarines.
 - **Chrono Legionnaire** (RA2): foot movement stops at fast, but it never walks. It moves by teleporting jumps, which cover ground several times faster than a walking soldier, so it is banded very fast.
-- **Siege Chopper** (RA2): an artillery weapon on an aircraft. The howitzer fires only once the chopper has landed, but the check reads its base class (see [Rule problems](#rule-problems)).
 - **Magnetron** (RA2): the magnetic weapon family cannot hit structures, but its beam also damages buildings.
 - **Mecha Tengu** (RA3), two lines: the humanoid mech body is listed for walkers only, and this robot hovers.
 
 The Multigunner IFV sample keeps its three ATYPICAL lines from step 2.
 
-**Gaps where no term fitted well:** 50 fit notes on the 25 units. By field: roles 12, mobility 6, body 5, armour 4, weapon traits 4, weapon damage 3, strengths 3, modes 3, sensors 2, on death 2, and one each for weapon delivery, range, family and mount, crew and countered by. Every gap with the coder's reasoning is in [opening/hesitations.md](opening/hesitations.md) (90 hesitations, 8 gaps, 35 unclear rules) and [fill/hesitations.md](fill/hesitations.md) (322 hesitations, 57 gaps, 94 unclear rules).
+**Gaps where no term fitted well:** 47 fit notes on the 25 units. By field: roles 12, body 5, armour 4, mobility 4, weapon traits 4, weapon damage 3, strengths 3, modes 3, sensors 2, on death 2, and one each for weapon range, family and mount, crew and countered by. Every gap with the coder's reasoning is in [opening/hesitations.md](opening/hesitations.md) (90 hesitations, 8 gaps, 35 unclear rules) and [fill/hesitations.md](fill/hesitations.md) (322 hesitations, 57 gaps, 94 unclear rules).
 
 ## Rule problems
 
 The agents reported every place where a written rule was unclear, two rules conflicted, or a rule gave a result that looks wrong for the unit. [rule-problems.md](rule-problems.md) merges them into one list. Each entry gives the rule, what goes wrong, the units, a proposed fix and how many reports raised it.
 - **61 for Mustafa:** the fix changes the word lists, the field rules or the validator's checks. Grouped by theme (my grouping): roles 14, matchups 11, weapons 11, body and class 7, abilities 5, other 13. 37 were raised by more than one report or touch more than one unit; the other 24 are one-off cases.
-- **20 for the batch:** only the registry notes, the games registry or the pattern registry would change, plus two data fixes (the paths of role fit notes on 11 units, and RA2 sight figures in words on 9 units).
-- **8 settled** during the batch, each with its commit.
+- **20 for the batch:** only the registry notes, the games registry, the pattern registry or the data would change. 17 are settled, with five units changed to match the new notes. Two turned out to need the word lists and join the rule-fix round. One, a frame rate for RA2, needs a source this session cannot reach: its network proxy blocks ModEnc.
+- **8 settled** earlier in the batch, each with its commit.
 
 The ones that change the most visible results:
 1. **Roles step 4 lets a secondary weapon decide the main role.** Official praise for the Mammoth Tank's missiles makes it anti-infantry, though its main weapon is an armour-piercing cannon.
 2. **Assault needs a short- or medium-range main weapon.** RA1's reference rifle reaches so little that every tank gun bands long, so no RA1 tank can be assault.
 3. **A landed flier keeps its air target layer.** The Siege Chopper's landed mode is still coded as a low-air target, though ground weapons hit it there.
-4. **The combination check reads the base class, not the mode,** so the Siege Chopper's ground-fired howitzer shows as artillery on an aircraft.
+4. **The combination check reads the base class, not the mode,** so a gun that fires only after a flier lands is checked as an aircraft's weapon (raised on the Siege Chopper, whose howitzer is now coded as a cannon).
 5. **No link kinds for price, availability or immunity** (10 units): reasons such as cheap, one per player or immune to mind control hang on stand-ins.
 6. **What counts as a weapon label in can_target step 3** (7 units), and whether a ground line includes structures.
 
@@ -154,6 +155,7 @@ Every game is well under the 15% line. The skeptic refuted one flagged pattern f
 5. **RA1 ships sail at half speed,** read from the released code and stated as an inference. The Submarine becomes slow.
 6. **In-game text counts as official text** for roles, such as a country's loading screen in RA2. It decides the Desolator's main role.
 7. **The RA1 reference rules copy counts for every rules value,** not only speed: Rules.ini and aftrmath.ini from OpenRA's raclassic repository, which win over a wiki, with an uncertain entry. It changes eight units (b46b01c): on-death crew for both Minelayers, the Mobile Gap Generator, the Mammoth Tank and the Yak; the Mammoth's cannons hit structures and its missiles are guided; the Field Mechanic is unarmoured and his wrench lands at once; the M.A.D. Tank's pulse reaches about twice as far as the wiki says.
+8. **17 batch-level rule problems settled** in the registry notes and the data, each as [rule-problems.md](rule-problems.md) says. Five units changed to match: the Siege Chopper's howitzer is coded as a cannon; both Minelayers get the crush trait, recorded as atypical; Boris's one-hero limit is in tier.basis; the Spy's confidence rises to high and the Field Mechanic's falls to medium; and the Slave Miner gets the rank lifts its infobox lists.
 
 **Prep questions, settled with the recommended answers (your decision of 22 October 2026):**
 1. The RA1 Ore Truck, Destroyer and Cruiser keep the heavy armour class.
