@@ -175,7 +175,7 @@ Keep both codings, the agreement report and the hesitations in `research/r<N>/op
    - for each ability: kind, source, cooldown and patterns.
 3. **A skeptic re-checks every field marked wrong.** A field the skeptic could not check counts as unsupported.
 4. **The rate per game** is (confirmed wrong + confirmed unsupported) ÷ fields checked. Write the counts and the rate in `result.json`.
-5. **Record the check on each checked unit and pattern:** `review` gets status `checked`, `checked_by` ("batch r<N> checker"), `checked_on`, `checked_paths` and `wrong_paths`, from `checks.json` and `result.json`. A path changed after the check is left out of `checked_paths` and named in the review's notes.
+5. **Record the check on each checked unit and pattern:** `review` gets status `checked`, `checked_by` ("batch r<N> checker"), `checked_on`, `checked_paths` and `wrong_paths`, from `checks.json` and `result.json`. A path changed after the check, other than by the fix of a confirmed wrong path, is left out of `checked_paths` and named in the review's notes.
 6. **More than 15% in a game:** redo that game's units, record it in "Decisions needed", then check the redone units with a new sample.
 
 Fix every confirmed wrong field, even below the 15% line.
