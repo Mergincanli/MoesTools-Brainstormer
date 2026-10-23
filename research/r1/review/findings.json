@@ -1,0 +1,913 @@
+{
+ "batch": "r1",
+ "review_run": "research/workflows/final-review.js, dimensions data, consistency, patterns, record, tooling",
+ "counts": {
+  "found": 53,
+  "real": 50,
+  "refuted": 3
+ },
+ "findings": [
+  {
+   "dimension": "data",
+   "id": "F1-siege-chopper-recode-left-siege-and-explosive",
+   "severity": "major",
+   "file": "data/units/ra2.json (ra2.soviet.siege-chopper: roles.secondary, armament/1/damage, uncertain/1, as_player, memorable)",
+   "summary": "Commit a3c4d6d changed the Siege Chopper's howitzer from lobbed artillery to a direct-fire cannon. It did not change the two values that rested on the artillery coding. roles.secondary still lists siege, and armament/1/damage is still explosive, the artillery family's default. The checker's verdicts on both fields come from before this recode.",
+   "evidence": "`git show a3c4d6d -- data/units/ra2.json` changes only family artillery->cannon, delivery lobbed->projectile, the atypical entry and the weakness link. roles stays {primary anti-infantry, secondary [siege, anti-air]} and armament/1 stays damage explosive with traits []. The unit's own uncertain/0 says no source shows the howitzer hitting an area. The wiki infobox (cache wiki_Siege_chopper) gives the gun only '90 (deployed) (SCHOPWH)', range 12, with no area. The profile (cache newsovietinfo2.jsp, id_ form) gives 'Application line: an anti-infantry gun that also serves as ground artillery.\n\nRules: fields.md roles.secondary says a role's coding rule applies there just as for the primary, unless the rule says As primary. Siege's coding rule (vocabularies.md, roles) accepts only a lobbed weapon reaching long or further, dropped bombs, a deploy-mode gun reaching long or further that hits an area, or a long-range missile or rocket built mainly to destroy structures. It also says a long-range missile or cannon alone is not siege. So the Application line's 'artillery' cannot give siege without area damage.\n\nfields.md armament[].damage step 5: with no damage map, use the family default unless the weapon is built mainly to bring down aircraft or its hit is a blast that hurts an area. The cannon family's default is armour-piercing.\n\nThe unit's uncertain/1 already says that without the other role, raider (very fast with light armour) would take the second slot. Its as_player still says the howitzer 'lobs shells', and memorable says it 'flies the artillery'.",
+   "fix": "In ra2.soviet.siege-chopper:\n- Set armament/1/damage to \"armour-piercing\".\n- Set roles.secondary to [\"anti-air\", \"raider\"]: anti-air ranks at step 3 (its machine gun) and raider at step 4 (very fast, light armour).\n- Rewrite uncertain/1 to say siege is left out because a direct-fire cannon with no area hit fails siege's coding rule, which applies to roles.secondary, even though the Application line says artillery.\n- In as_player, change 'lobs shells at buildings' to 'fires shells at buildings'. In memorable, change 'it flies the artillery wherever it is wanted' to 'it flies a heavy gun wherever it is wanted'.\n\nIf a cited source is found showing the deployed shell hurting an area instead, add the splash trait, keep explosive and siege, and cite that source.",
+   "verdict": {
+    "real": true,
+    "reason": "Commit a3c4d6d recoded the howitzer as a direct-fire cannon but left two values that depended on the old artillery coding. Siege's coding rule applies to roles.secondary (fields.md: 'A role's coding rule binds here as for the primary'). It accepts a deploy-mode gun only if the gun hits an area, and it says a long-range cannon alone is not siege. No source shows an area hit. Step 1 of roles.secondary only ranks roles that already qualify, so the Application line's word 'artillery' cannot bring siege back. Damage step 5 gives the cannon default, armour-piercing. The batch already did exactly this for the Slave Miner's elite cannon firing high-explosive rounds but has no sourced area hit. The checker passed both fields before the recode.",
+    "evidence": "`git show a3c4d6d -- data/units/ra2.json` changes only armament/1's family (artillery to cannon), its delivery (lobbed to projectile), the atypical entry and the weakness link. roles stays {anti-infantry, [siege, anti-air]}, and armament/1 keeps damage explosive with traits []. docs/vocabularies.md gives siege's coding rule. docs/fields.md line 42 has the roles.secondary rule. On the unit, uncertain armament/1/traits says no source shows a shell hurting an area, and uncertain/1 says 'Siege comes from step 1 (the Application line says artillery)' and that raider (very fast, light armour) would otherwise take the slot. Opening coder A already noted that a cannon would need an area hit for siege (research/r1/opening/hesitations.md line 95). research/registry-notes/games-r1.md line 178 says RA2 has no damage map, so step 5 applies, and the cannon default is armour-piercing. The Slave Miner's uncertain armament/1/damage applies the same rule. as_player still says 'lobs shells'. The checker commit e54f737 (2026-10-22 21:25) predates a3c4d6d (2026-10-23 01:59). No cached rules data gives the shell an area.",
+    "better_fix": "Apply the proposed fix, with these additions. (1) Before ranking anti-air at step 3, check roles.secondary step 2, the cannon the deploy mode switches to. No game data, official text or source gives it a bonus against armour or calls it strong against vehicles, so it adds no role and [anti-air, raider] stands. (2) In uncertain/1, say that the Application line still names artillery, but siege is not a candidate because its coding rule fails. (3) In games-r1.md, RA2 Official role lines, add to 'anti-infantry and artillery, so siege (Siege Chopper)' that siege must still pass its coding rule, and with the gun now a cannon it does not. (4) In README Decisions item 8, add that the Siege Chopper loses siege. Re-run the copy-check on the reworded text and npm run check:merge."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "data",
+   "id": "F2-confidence-high-despite-sources-disagree-on-coded-terms",
+   "severity": "major",
+   "file": "data/units/ra2.json (ra2.yuri.slave-miner, ra2.yuri.mastermind, ra2.soviet.boris: confidence)",
+   "summary": "Three RA2 entries stay at confidence high although each has an uncertain entry marked sources_disagree on a point that decides a coded term. The confidence tie-break drops such an entry to medium, as the batch itself did for the Field Mechanic and the Mobile Gap Generator.",
+   "evidence": "Rule (data/vocab/confidence.json, tie-break high/medium): when sites or pages of one site contradict each other and no official text settles it, record sources_disagree. Then drop to medium only when a contradicted point decides a term the entry codes, such as a weapon's family or damage, a band, a role or the tier.\n\n(1) Slave Miner, uncertain/9, path armament/1/family, sources_disagree true. The Slave miner page's infobox says 'Cannon when elite' and its prose 'tank gun'. The War miner page's prose (cache wiki_War_miner) says the gun becomes a strong autocannon when upgraded. The coded family is cannon. No official text covers the elite gun. Confidence is high.\n\n(2) Mastermind, uncertain/5, path mobility/base, sources_disagree true: the voxel render shows tracks, while a Yuri (faction) caption says wheels. Also uncertain/3, path sensors/traits, sources_disagree true, against YR manual Gameplay Changes item 20. Confidence is high.\n\n(3) Boris (sampled, but confidence is not among his checked paths in checks.json), uncertain/0, path armour/models, sources_disagree true: the YR manual says heroes regenerate, while the infobox gives healing only at Elite. Confidence is high.\n\nPrecedent: rule-problems.md item 10 follow-up (a3c4d6d) set the Field Mechanic to medium because 'his armour type decides his armour class and no official text settles it'. The Mobile Gap Generator is medium for its speed clash.",
+   "fix": "Set confidence to \"medium\" on ra2.yuri.slave-miner, ra2.yuri.mastermind and ra2.soviet.boris. If the Mastermind's 'on wheels' caption is judged a figure of speech rather than a contradiction, remove sources_disagree from its uncertain/5. Its uncertain/3 (sensors/traits, which the registry requires to be flagged) still keeps it at medium.",
+   "verdict": {
+    "real": true,
+    "reason": "Each of the three units has a sources_disagree entry on a point that decides a coded term, and no official text settles it. For Boris and the Mastermind, the registry itself sets the official line aside and orders the flag. The confidence tie-break then drops the unit to medium, which is what the batch did for the Field Mechanic (armour class) and the Mobile Gap Generator (speed). Boris is the clearest case: the flag decides armour.models. The Mastermind's 'on wheels' flag is a figure of speech, but its flag on sensors/traits (ordered by the registry) decides the detector trait. The Slave Miner's case is the weakest of the three, because the family tie-break goes by rate of fire, not name. Still, the War miner page's 'auto-cannon' implies rapid fire against the infobox's slow rate, and the coder flagged the clash at the family path and listed autocannon as the alternative.",
+    "evidence": "The confidence tie-break is in docs/vocabularies.md line 436. In data/units/ra2.json all three read confidence high. Boris: uncertain/0 at armour/models, marked sources_disagree (the YR manual says heroes regenerate; the infobox lists healing only at Elite). games-r1.md line 381 orders: follow the infobox, no self-repair model, flag sources_disagree. Mastermind: uncertain/3 at sensors/traits, as games-r1.md line 386 orders (Gameplay Changes item 20, but no page confirms the Mastermind). Mastermind uncertain/5 at mobility/base: the Yuri (faction) caption's 'on wheels', which the note itself calls 'apparently a figure of speech'. Slave Miner: uncertain/9 at armament/1/family, cannon against the War miner page's auto-cannon. The j08 hesitation lists autocannon as the alternative, and no official text covers the elite gun. rule-problems.md item 10 follow-up: the Field Mechanic falls to medium because his armour type decides his armour class.",
+    "better_fix": "Apply the proposed fix: medium on all three, and remove sources_disagree from the Mastermind's uncertain/5 while keeping its note. Run the same test on the other high units that carry sources_disagree. ra2.allied.chrono-legionnaire uncertain/0 at mobility/speed is the same case: the wiki says land speed sets how fast he re-emerges, ModEnc says only distance counts, and the band is a judgement. It decides the speed band but stayed high (fill hesitations line 291), so it needs the same decision. The other flags decide no term: the Mammoth's and Yak's armour notes and Tanya's tier/gate say 'either way', and the Chaos Drone's tier and cost and Boris's cost_band are older figures that the manual's tech table and the infobox settle. If Mustafa reads flags the registry orders as already settled, write that into the tie-break instead."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "data",
+   "id": "F3-readme-five-units-changed",
+   "severity": "major",
+   "file": "research/r1/README.md (line 111 and Decisions item 8)",
+   "summary": "The report tells Mustafa that five units changed to match the settled rule problems. The same sentence then names seven units, and commit a3c4d6d edited eleven unit entries.",
+   "evidence": "README line 111 says the 17 settled items came 'with five units changed to match'. Decisions item 8 says 'Five units changed to match:' and then names the Siege Chopper, both Minelayers, Boris, the Spy, the Field Mechanic and the Slave Miner, which is seven units.\n\nA script comparing each unit in `git show a3c4d6d~1:data/units/*.json` against `a3c4d6d` lists the changed entries:\n- ra1: spy, field-mechanic, mad-tank (fit_notes), mobile-gap-generator (fit_notes), allied.minelayer, soviet.minelayer;\n- ra2: chrono-legionnaire (sensors), boris, siege-chopper, chaos-drone (sensors), slave-miner;\n- ra3: none.\n\nThat makes 11 entries. rule-problems.md items 1, 2, 6, 7, 8, 10 and 19 record these follow-ups.",
+   "fix": "In both places, replace 'five units changed to match' with 'seven units changed to match (the Siege Chopper, both Minelayers, Boris, the Spy, the Field Mechanic and the Slave Miner), and four more were reworded (the M.A.D. Tank's and Mobile Gap Generator's fit-note paths, the Chrono Legionnaire's and Chaos Drone's sight notes)'.",
+   "verdict": {
+    "real": true,
+    "reason": "The report says five units changed, then names seven, and the commit edited 11 unit entries. 'Five' matches the five unit bullets in the commit message, not the number of units.",
+    "evidence": "research/r1/README.md line 111: '17 are settled, with five units changed to match the new notes'. Line 158 (Decisions item 8): 'Five units changed to match:', followed by the Siege Chopper, both Minelayers, Boris, the Spy, the Field Mechanic and the Slave Miner, which is seven units. a3c4d6d's commit message lists these seven under five bullets. A script comparing every unit between a3c4d6d~1 and a3c4d6d finds 11 changed entries. RA1: spy, field-mechanic, allied and soviet minelayer, mad-tank (fit_notes path) and mobile-gap-generator (fit_notes path). RA2: chrono-legionnaire (sensors/notes), boris (tier/basis), siege-chopper, chaos-drone (sensors/notes) and slave-miner. RA3: none.",
+    "better_fix": "Apply the proposed wording in both places; it matches the diff. The commit title in git history cannot be changed, so fixing the report is enough."
+   },
+   "status": "fixed",
+   "commit": "cc42b30"
+  },
+  {
+   "dimension": "data",
+   "id": "F4-sampled-units-review-status-unchecked",
+   "severity": "minor",
+   "file": "data/units/ra1.json, ra2.json, ra3.json (review of the 9 sampled units)",
+   "summary": "The nine units the checker sampled and checked field by field still have review.status 'unchecked', with no checked_by, checked_on, checked_paths or wrong_paths. The data therefore contradicts the checker record.",
+   "evidence": "fields.md defines review as 'Checker status. The research run samples entries and re-checks them against their sources.' Its status is one of unchecked, checked or disputed, with checked_by, checked_on, checked_paths and wrong_paths.\n\nresearch/r1/checker/checks.json lists the fields checked on ra1.allied.minelayer, ra1.allied.mobile-gap-generator, ra1.soviet.yak, ra2.iraq.desolator, ra2.soviet.boris, ra2.soviet.siege-chopper, ra3.allied.tanya, ra3.empire.mecha-tengu and ra3.empire.sudden-transport (370 fields per the README). result.json lists six fixed unit fields: minelayer on_death.notes, MGG sources[1].supports, Yak uncertain[6], Desolator body.plan and sources/2/supports, Tanya armament[1].can_target.\n\nAll nine units read `\"review\": {\"status\": \"unchecked\"}` (dumped with a script). No script or workflow writes this field (`grep review research/workflows/checker.js` finds nothing).",
+   "fix": "On each of the nine sampled units, set review to {\"status\": \"checked\", \"checked_by\": \"batch r1 checker (research/workflows/checker.js)\", \"checked_on\": \"2026-10-22\", \"checked_paths\": [the unit's paths from research/r1/checker/checks.json], \"wrong_paths\": [its confirmed paths from result.json, e.g. on_death/notes for ra1.allied.minelayer], \"notes\": \"fixed in b46b01c / 0c3d4e2 / dcc4080\"}. Use an empty wrong_paths list for Boris, the Siege Chopper, the Mecha Tengu and the Sudden Transport.",
+   "verdict": {
+    "real": true,
+    "reason": "The schema defines review as the checker status, and the checker checked these nine units field by field. They still read unchecked, so the data contradicts the checker record. No step in the runbook or the workflows writes the field. The generated docs therefore print 'review: unchecked' for units that were checked. This is a minor record problem plus a gap in the procedure.",
+    "evidence": "A script shows all 28 units and all 36 pattern files read {\"status\": \"unchecked\"}. research/r1/checker/checks.json lists the checked paths for the nine sampled units. result.json lists the wrong fields, fixed in 0c3d4e2, b46b01c and dcc4080, and 33 checked pattern files. schemas/common.schema.json defines review with status, checked_by, checked_on, checked_paths, wrong_paths and notes. The workflows code-units.js, reconcile.js and patterns.js only set the field to unchecked, and docs/research-runbook.md never mentions writing it. scripts/build-docs.mjs lines 789 and 840 print '(review: <status>)'. The pilot's sample units on origin/main were never set either, so nothing yet does this.",
+    "better_fix": "Apply the proposed fix, with these additions. (1) Also set review on the 33 pattern files the checker covered, which carry the same review group. (2) Write checked_paths in fields.md's slash form; checks.json mixes tier.band, armament/0/family and abilities[0].kind. (3) Leave out, or name in review.notes, the paths a3c4d6d changed after the check: both Minelayers' mobility/traits (crush added) and the Siege Chopper's armament/1 family and delivery, plus its roles and damage if F1 is fixed. (4) Use status checked, not disputed, since the confirmed errors were fixed, with checked_on 2026-10-22. (5) Add a step to the runbook's checker section (and to the checker workflow) that writes review on every sampled unit and pattern, so R2 does it from the start."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "data",
+   "id": "F5-field-mechanic-source-backs-armour-it-contradicts",
+   "severity": "minor",
+   "file": "data/units/ra1.json (ra1.allied.field-mechanic: sources/1/supports)",
+   "summary": "The Field mechanic wiki page is listed as backing 'armour', but its infobox gives armour type Light, while the entry codes the class unarmoured from the rules copy. The checker confirmed the same kind of error on the Mobile Gap Generator (a source listed as backing a speed it contradicts).",
+   "evidence": "The cached infobox at cnc.fandom.com/wiki/Field_mechanic has '|armortype = Light'. The reference aftrmath.ini [MECH] has 'Armor=none'. The unit codes armour.class unarmoured, and its uncertain/0 (armour/class, sources_disagree true) names the clash. Its sources/1.supports nevertheless includes \"armour\".\n\nfields.md says sources[].supports lists 'Which fields this source backs'. Precedent: research/r1/checker/result.json marks ra1.allied.mobile-gap-generator sources[1].supports as wrong. The skeptic's fix replaced 'mobility' with 'mobility/base' and 'mobility/notes' because that wiki infobox contradicted the coded speed.",
+   "fix": "In ra1.allied.field-mechanic sources/1.supports, replace \"armour\" with \"armour/models\" and \"armour/notes\". The page still backs the health comparison and the flat-pool model.",
+   "verdict": {
+    "real": true,
+    "reason": "The wiki page is listed as backing the whole armour group, but its infobox gives armour type Light, against the coded unarmoured class. The checker confirmed this kind of error on the Mobile Gap Generator. Commit b46b01c fixed that one while recoding the Field Mechanic's class, but left his supports list as it was. Minor.",
+    "evidence": "The cached cnc.fandom.com/wiki/Field_mechanic page has infobox armortype = Light and hp 60. The reference aftrmath.ini [MECH] gives Armor=none. In data/units/ra1.json, armour.class is unarmoured, and uncertain/0 at armour/class (sources_disagree) names the clash. Yet sources/1 (the wiki page) still lists 'armour' in supports. research/r1/checker/result.json marks the Mobile Gap Generator's sources[1].supports wrong; that fix replaced 'mobility' with mobility/base and mobility/notes.",
+    "better_fix": "Apply the proposed fix: replace 'armour' with 'armour/models' and 'armour/notes'. The page still backs the health comparison in the notes and the flat-pool model. Leave sources/0 (the Aftermath manual) as it is: its grade agrees with the class, even though the registry says a manual grade never decides it."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "data",
+   "id": "F6-third-page-of-same-site-magnetron-slave-miner",
+   "severity": "minor",
+   "file": "data/units/ra2.json (ra2.yuri.magnetron sources/4, ra2.yuri.slave-miner sources/2)",
+   "summary": "The Magnetron and the Slave Miner each cite three Command & Conquer Wiki pages and no other non-official site, although CNCNZ's Yuri's units page covers both units. The batch read that page, and the Chaos Drone cites it. The Magnetron's third wiki page is the manual transcript, which repeats the manual PDF it already cites.",
+   "evidence": "Rule (fields.md sources[]): when another established site covers the unit, cite it rather than a third page of the same site.\n\nMagnetron sources: the profile, cnc.fandom.com/wiki/Magnetron, /wiki/Magnetic_beam, the YR manual PDF, and /wiki/Command_%26_Conquer:_Red_Alert_2_-_Yuri%27s_Revenge_manual (the transcript). The transcript's supports (roles, body, weaknesses/0, countered_by/0, combos/0) are already backed by sources/3, the PDF.\n\nSlave Miner sources: the profile, /wiki/Slave_miner, /wiki/Slave_(Yuri%27s_Revenge), the YR PDF, and /wiki/War_miner.\n\nCNCNZ page https://cncnz.com/games/yuris-revenge/yuris-units/ (cache cncnz.com/games_yuris-revenge_yuris-units, fetched 2026-10-20) has its own Magnetron entry (cost, Psychic Radar, lifts vehicles, damages structures, no way to crush infantry). It also has Slave Miner and Slave entries: deploys and releases Slaves, free replacement, Slaves join their 'liberators'. games-r1.md calls CNCNZ 'a long-running fan site', kind guide. ra2.yuri.chaos-drone already cites this page.",
+   "fix": "Magnetron: replace sources/4 (the transcript) with {url: https://cncnz.com/games/yuris-revenge/yuris-units/, title: 'Red Alert 2 - Yuri's Revenge: Yuri's Units, CNCNZ.com', kind: guide}, supporting armament/0 and weaknesses/0, and move the transcript's supports to sources/3.\n\nSlave Miner: replace sources/2 (Slave (Yuri's Revenge)) with the same CNCNZ page, supporting abilities/0, abilities/1, on_death and strengths/4. Name the Slave page in an uncertain entry for any point that rests on it alone, such as weaknesses/2 on radiation.",
+   "verdict": {
+    "real": true,
+    "reason": "Both units cite three Command & Conquer Wiki pages and no other non-official site, yet CNCNZ's Yuri's units page has its own entry for each. The batch treats a guide-kind fan site as the other established site for this rule (StrategyWiki for RA1, rule-problems item 11). The j08 coder looked for a second site only on StrategyWiki and missed CNCNZ. No code or confidence changes; this is only about following the citation rule. Severity minor. One caveat: the RA2 notes do not yet name CNCNZ for this rule, as the RA1 notes name StrategyWiki, so that reading needs writing down.",
+    "evidence": "In ra2.json, the Magnetron cites the official profile, wiki/Magnetron, wiki/Magnetic_beam, the YR manual PDF and the wiki's YR manual transcript. The PDF is not counted as a wiki page (games-r1.md line 206). Every path the transcript supports is already in the PDF's supports. The Slave Miner cites the profile, wiki/Slave_miner, wiki/Slave_(Yuri's_Revenge), the PDF and wiki/War_miner. The CNCNZ page (cache cncnz.com games_yuris-revenge_yuris-units, fetched 2026-10-20) has its own Magnetron entry: $1000, Psychic Radar, lifts vehicles and ships toward itself, damages structures, has no weapon that works against infantry and cannot crush them, poorly armoured. Its Slave Miner entry: $1750, deploys and releases up to five Slaves, repairs itself while mobile, Engineer repair when deployed, free replacements, and Slaves join their liberators. Its Slave entry says they cannot be ordered. The prices match both entries. The Chaos Drone cites this page as sources/4. research/r1/fill/j08-ra2/report.json source_problems item 4 says StrategyWiki has no page for either unit, 'so every source but the manual is from the Command & Conquer Wiki'. games-r1.md line 225 (StrategyWiki is the other site for this rule, though its kind stays guide) is RA1 only, and line 450 makes CNCNZ kind guide. Of the 28 units, only these two have a third page of one site and no second site.",
+    "better_fix": "(1) In the RA2 notes, or the R1 Research notes' CNCNZ line, say that CNCNZ is the other established site for the third-page rule, kind still guide, as the RA1 notes say for StrategyWiki. (2) Magnetron: replace sources/4 (the transcript) with CNCNZ, supporting armament/0, weaknesses/0 and countered_by/0. Moving the transcript's supports changes nothing, since sources/3 already lists them all. The Tank Bunker point stays backed by the PDF note (page 23) and by the Tank bunker page named in uncertain body/plan. CNCNZ's 'significant damage to structures' sits uneasily with weaknesses/4 (slow, weak building damage), so do not cite it for that path, or add an uncertain note. (3) Slave Miner: replace sources/2 (the Slave page) with CNCNZ, supporting abilities/0, abilities/1, on_death and strengths/4. The radiation point in weaknesses/2 is already on the cited Slave miner page (sources/1). The only points that rest on the Slave page alone are that freed Slaves cannot mine and that the ore they carried is lost (on_death notes); name the Slave page in the on_death uncertain entry for those. Dropping the War miner page instead also works: it is about another unit, and every code it carries is already named in uncertain entries. Run the copy-check on the new source notes."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "consistency",
+   "id": "F1-siege-chopper-cannon-damage",
+   "severity": "major",
+   "file": "data/units/ra2.json",
+   "summary": "The Siege Chopper's 160mm gun (ra2.soviet.siege-chopper armament/1, line 1247) was recoded from artillery to cannon in a3c4d6d, but its damage was left as explosive, which is the artillery default. Under the rules it should be armour-piercing, the cannon default, which is how the batch coded the Slave Miner's elite cannon in the same game. Its as_player text also still says the gun 'lobs shells'.",
+   "evidence": "git show a3c4d6d -- data/units/ra2.json changes family artillery->cannon and delivery lobbed->projectile and leaves damage explosive; opening/coder-a, coder-b and final/ra2.json all had artillery/explosive/lobbed. data/vocab/weapon-families.json: cannon default_damage armour-piercing, artillery explosive. data/games.json ra2 has no damage_map, so armament[].damage step 5 gives the family default; the explosive exception needs 'a blast that hurts an area'. The unit's own uncertain at armament/1/traits (ra2.json line 1478) says 'No source says whether a shell hurts an area'. No uncertain entry exists at armament/1/damage. Same game, same rule: Slave Miner uncertain (line 2731): 'no source says the hit hurts an area, so damage step 5 keeps the cannon default, armour-piercing'. My script comparing damage with family default across R1 weapons: this is the only one with neither a damage map nor an uncertain entry to explain it (Mammoth missiles and Tengu guns follow the RA1/RA3 maps; Tanya's C4 has an uncertain entry). as_player (line 1381) says the gun 'lobs shells', which no longer matches projectile delivery. Opening coder A (opening/hesitations.md line 95) had warned that with cannon, siege's coding rule would need an area hit that no source states. The roles/secondary uncertain (line 1462) was not updated after the recode.",
+   "fix": "In ra2.soviet.siege-chopper armament/1 set \"damage\": \"armour-piercing\" and add uncertain {path: \"armament/1/damage\", note: \"No damage category is given and Red Alert 2 has no damage map, so step 5 keeps the cannon default. The sources call it a howitzer that levels buildings, but none says its shell hurts an area, so the explosive exception does not apply (as for the Slave Miner's elite cannon).\"}. In as_player replace 'lobs shells at buildings and parked units' with 'fires shells at buildings and parked units'. Add to the roles/secondary uncertain note: 'Now that the gun is coded as a cannon fired straight at its target, with no stated area, siege meets none of its coding rule's weapon clauses and rests on the Application line alone.' Add these changes to rule-problems.md, batch item 6, Follow-up done.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. a3c4d6d changed armament/1 from artillery to cannon and from lobbed to projectile delivery but left the damage as explosive. RA2 has no damage map, so damage step 5 gives the cannon default, armour-piercing. The explosive exception needs a hit that hurts an area, and the unit's own traits note says no source states one. The Slave Miner's elite cannon was coded armour-piercing by the same reasoning. as_player still says the gun 'lobs shells', which no longer matches projectile delivery. The proposed fix is right. The extra roles/secondary note matters: siege's coding rule says a long-range cannon alone is not siege, so siege now rests only on the Application line.",
+    "evidence": "Read data/units/ra2.json, ra2.soviet.siege-chopper: armament/1 is family cannon, damage explosive, delivery projectile, traits []. Its uncertain armament/1/traits says no source says a shell hurts an area. There is no uncertain entry at armament/1/damage. as_player says 'lobs shells at buildings and parked units'. Ran a script over data/games.json: ra2 has no damage_map. research/registry-notes/games-r1.md line 178 says 'No RA2 damage map ... Use step 5'. docs/fields.md line 77, step 5: explosive only when built mainly against aircraft or the hit is a blast that hurts an area. data/vocab/weapon-families.json gives cannon the default armour-piercing. rule-problems.md item 6's follow-up does not mention damage. data/vocab/roles.json, siege source_rule: 'A long-range missile or cannon alone is not siege'.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "consistency",
+   "id": "F2-tldr-misstates-decision",
+   "severity": "major",
+   "file": "research/r1/README.md",
+   "summary": "The TL;DR (line 11) tells Mustafa that by his decision 'all of them go to a rule-fix round before R2'. The option he chose (Decision 1, line 170) covers only the 37 problems that recur, and the 24 one-off rule problems wait. So the report contradicts itself, and the TL;DR hides 24 rule problems that agents reported but that are left out of the round.",
+   "evidence": "README.md line 11: '61 rule problems ... Two of the batch's own turned out to need the word lists too, and by Mustafa's decision all of them go to a rule-fix round before R2.' Line 170, option A (chosen): 'It covers the 37 problems raised by more than one report or touching more than one unit; the 24 one-off cases wait until they come up again.' I recounted the 'Open, for Mustafa' section of rule-problems.md with a script (Units list and 'Raised by' count): 37 recurring, 24 one-off (items 38-61).",
+   "fix": "In the TL;DR, replace 'and by Mustafa's decision all of them go to a rule-fix round before R2' with 'and by Mustafa's decision the 37 that recur (raised by more than one report or touching more than one unit), plus those two, go to a rule-fix round before R2; the 24 one-off cases wait until they come up again'.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The TL;DR says that by Mustafa's decision 'all of them' go to a rule-fix round before R2. The option he chose (Decision 1, A) covers only the 37 problems raised by more than one report or touching more than one unit, and the 24 one-off cases wait. The two batch items that joined the round (5 and 9) were each raised by more than one report, so 'plus those two' is accurate. The fix is right.",
+    "evidence": "research/r1/README.md line 11: 'Two of the batch's own turned out to need the word lists too, and by Mustafa's decision all of them go to a rule-fix round before R2.' Line 170, option A (chosen): 'It covers the 37 problems raised by more than one report or touching more than one unit; the 24 one-off cases wait until they come up again.' A script recount of rule-problems.md 'Open, for Mustafa' gave 37 recurring and 24 one-off (items 38-61). The fa34093 commit message also says 37.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "cc42b30"
+  },
+  {
+   "dimension": "consistency",
+   "id": "F3-confidence-tie-break-uneven",
+   "severity": "major",
+   "file": "data/units/ra2.json",
+   "summary": "The confidence tie-break was applied unevenly. The Field Mechanic and the Mobile Gap Generator were dropped to medium because a sources_disagree point decides a coded term. The Slave Miner (line 2686) and the Mastermind (line 1756) stay high, although each has a sources_disagree entry on a coded term that no official text settles.",
+   "evidence": "data/vocab/confidence.json tie-break: 'Drop to medium only when a contradicted point decides a term the entry codes, such as a weapon's family...'. Slave Miner uncertain armament/1/family is marked sources_disagree (line 2726): the Slave miner page says cannon and the War miner page says auto-cannon, so it decides armament/1/family. The cached official profile (.cache/sources/web.archive.org/...newstructures-y...json) says nothing about the elite gun, so no official text settles it. The j08 hesitation (fill/hesitations.md) records the split and never weighs confidence. Mastermind uncertain mobility/base is marked sources_disagree (line 1782): tracks from images against a 'wheels' caption, which decides mobility.base. rule-problems.md line 455: the Field Mechanic is medium 'since his armour type decides his armour class and no official text settles it ... as for the Mobile Gap Generator's speed' (ra1.json lines 699 and 1199 are medium).",
+   "fix": "Set ra2.yuri.slave-miner \"confidence\" to \"medium\". For ra2.yuri.mastermind, set \"confidence\" to \"medium\". If the 'wheels' caption is judged a figure of speech and not a real contradiction, remove \"sources_disagree\": true from its mobility/base uncertain entry instead and keep high. Note the change in README Decision 8, next to the Spy and the Field Mechanic.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed for the Slave Miner. Its sources_disagree entry at armament/1/family sets cannon against autocannon, two separate families, so the clash decides a coded term. No official text mentions the elite gun. By the reading the batch used to drop the Field Mechanic and the Mobile Gap Generator to medium, it should be medium too. The j08 agent kept it high 'through the manual' and never weighed the family clash. The Mastermind's mobility/base flag rests only on a caption, 'Yuri's mind-control tech carried on wheels, which the entry's own note calls a figure of speech. Removing that flag is better than dropping the unit's confidence. Its sensors/traits flag does not force medium: the registry note requires it, and official text (YR manual item 20) exists on that point. The j07 agent judged confidence only on the captive count.",
+    "evidence": "data/vocab/confidence.json tie-break: drop to medium when a contradicted point decides a coded term 'such as a weapon's family'. rule-problems.md line 455: the Field Mechanic is medium 'since his armour type decides his armour class and no official text settles it ... as for the Mobile Gap Generator's speed'. Cached cnc.fandom.com Slave_miner: 'infobox weapons: a rapid 20mm machine gun, then a cannon once elite)' and prose 'tank gun'. Cached War_miner prose: 'becomes a strong autocannon when upgraded. Cached official profile newstructures-yuri and the YR manual transcript say nothing about the elite gun. Cached Yuri_(faction) caption: 'Yuri's mind-control tech carried on wheels, for the Mastermind. Fill reports: j07 kept the Mastermind high because the captive-count clash 'decides none'; j08 said 'both units keep confidence high through the manual'.",
+    "better_fix": "Set ra2.yuri.slave-miner confidence to medium, as proposed. For ra2.yuri.mastermind, take the finding's alternative: remove sources_disagree from the mobility/base entry, since the caption is an idiom and no text names the running gear, and keep high. Note both in README Decision 8. In the same sweep, re-judge ra2.allied.chrono-legionnaire (high, with sources_disagree at mobility/speed, a band set by judgement), after deciding whether the RA2 rules file counts as official text."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "consistency",
+   "id": "F4-trim-keep-id-gate",
+   "severity": "major",
+   "file": "research/r1/prep/trim.json",
+   "summary": "The trim's keep list still names ra1.shared.minelayer (line 34). After the merge-pass split no such unit exists in data/units/. So two runbook checks that require every keep id to be a unit cannot pass as written: the 'merge pass' phase-ready line (runbook line 70) and done-check 4 of section 9 (line 234).",
+   "evidence": "trim.json keep list: 24 ids, including 'ra1.shared.minelayer'. data/units/ra1.json has ra1.allied.minelayer and ra1.soviet.minelayer, whose researched_by says 'split in the merge pass from ra1.shared.minelayer'. docs/research-runbook.md line 70: 'merge pass: every unit in the trim in data/units/'. Line 234: 'Every keep id in research/r<N>/prep/trim.json is a unit in data/units/'. grep over tests/ and scripts/ finds no code that maps a split id.",
+   "fix": "In docs/research-runbook.md, change line 234 to 'Every keep id in research/r<N>/prep/trim.json is a unit in data/units/, or was split in the merge pass into units whose researched_by names it (R1: ra1.shared.minelayer became ra1.allied.minelayer and ra1.soviet.minelayer), and npm run check:merge passes.' Change line 70 the same way. This leaves the prep record as the judge wrote it.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. trim.json keeps 24 ids. Only ra1.shared.minelayer is missing from data/units/; the merge pass split it into ra1.allied.minelayer and ra1.soviet.minelayer, whose researched_by says so. Read literally, done-check 4 (runbook line 234) cannot pass. No script checks it: check:merge runs only sync-patterns and format, validate, docs and tests. Line 70 is a phase-ready line for a phase already finished, so only line 234 actually blocks. The README records the split, so this is a wording gap in the procedure, not missing data.",
+    "evidence": "A script compared trim.json keep ids with data/units/*.json: missing ['ra1.shared.minelayer']; the two split units name it in researched_by. docs/research-runbook.md line 70: 'merge pass: every unit in the trim in data/units/'. Line 234: 'Every keep id ... is a unit in data/units/'. package.json scripts: check:merge = sync-patterns:check + check. grep found no trim check in scripts/ or tests/. README lines 19 and 151 describe the split.",
+    "better_fix": "Keep the runbook generic and put no R1 unit names in it. Change done-check 4 to: 'Every keep id in research/r<N>/prep/trim.json is a unit in data/units/, or was split in the merge pass into units whose researched_by names it, and npm run check:merge passes.' Line 70 may get the same clause, but that phase is already past. Leave trim.json as the judge wrote it."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "consistency",
+   "id": "F5-robot-tank-weakness-link",
+   "severity": "minor",
+   "file": "data/units/ra2.json",
+   "summary": "The Robot Tank's weakness that it shuts down when its control center falls hangs on crew:remote (weaknesses/0, line 389). That is a proposal field, and rule problem 47 proposes to remove it. The part behind the weakness is the unit's own ability, which links depend-on-relay, the pattern the batch registered for exactly this mechanic.",
+   "evidence": "weaknesses/0: ref 'crew:remote', why 'Every Robot Tank shuts down when its control center is destroyed or loses power...'. abilities/0 'Robot Control Center link' links depend-on-relay. The registry summary of depend-on-relay: 'if it is destroyed, captured or unpowered, every linked unit shuts down'. Matchups: 'pick the link that names the part behind it'. rule-problems.md item 47 says such a unit 'is not remote ... its dependence on the building is the depend-on-relay pattern'.",
+   "fix": "Change ra2.allied.robot-tank weaknesses/0 ref from \"crew:remote\" to \"pattern:depend-on-relay\" and keep the reason. This is also correct under rule problem 47's proposed fix.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed, minor. The shutdown weakness describes in-game behaviour that the unit's own ability codes as depend-on-relay. The pattern file names the Robot Tank as its only source unit, and its summary is this weakness. Every other unit in the batch hangs ability-driven strengths and weaknesses on the pattern link (16 units). This is the batch's only crew: link, and it points at a proposal crew model that the entry's own fit_note calls a poor fit and rule problem 47 would remove. Matchup rule 4 does allow links to proposal fields when the reason is sourced, so this is a consistency fix, not a rule breach. At fill time depend-on-relay was not yet registered (the j05 gap), which explains the link.",
+    "evidence": "ra2.json, ra2.allied.robot-tank: weaknesses/0 ref crew:remote; abilities/0 'Robot Control Center link' patterns [depend-on-relay]. data/patterns/depend-on-relay.json: source_units ['ra2.allied.robot-tank']. A script over all units found the only crew: link in strengths or weaknesses here, and pattern links for ability-driven entries on 16 other units. docs/fields.md line 11, rule 4: a link may name a proposal field when the reason is sourced. rule-problems.md item 47 fix: 'its dependence on the building is the depend-on-relay pattern'. fill/hesitations.md j05 gap: 'abilities.patterns: used (empty); wanted depend-on-relay'. scripts/validate.mjs line 655 would warn on crew:remote only if crew changed.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "consistency",
+   "id": "F6-ra2-radiation-note-omits-robot-tank",
+   "severity": "minor",
+   "file": "research/registry-notes/games-r1.md",
+   "summary": "The RA2 Radiation item lists the units that the sources call immune to radiation and leaves out the Robot Tank (line 396). Two batch units treat it as immune: the Robot Tank's own strengths/0 and the Desolator's countered_by/2-3 and weapon summary.",
+   "evidence": "games-r1.md line 396 lists 'the Terror Drone and Chaos Drone ..., the Desolator ... and the Slave Miner'. ra2.allied.robot-tank strengths/0 says radiation can't hurt it. Its uncertain strengths/0 (ra2.json line 550) cites the Allied war factory (Red Alert 2) page and says 'the registry's list of radiation-immune units does not name it'. ra2.iraq.desolator countered_by/2 nature:uncrewed-machine plus /3 unit:ra2.allied.robot-tank, and its armament/0 summary: 'does nothing to radiation-proof machines such as the Robot Tank'.",
+   "fix": "In the RA2 Radiation item, add 'the Robot Tank (the Allied war factory (Red Alert 2) page)' to the list of immune units. Then drop the clause 'the registry's list of radiation-immune units does not name it' from the Robot Tank's strengths/0 uncertain note.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed, minor (a loose end in the docs; no data is wrong). The RA2 Radiation item lists the Terror Drone, Chaos Drone, Desolator and Slave Miner as units the sources call immune, but not the Robot Tank. A cited page calls the Robot Tank immune, and two batch units rely on it. The Robot Tank's own uncertain entry points out the omission, and a3c4d6d reworded this very item (rule problem 15) without adding it. The Robot Tank's own page does not mention radiation, so the Allied war factory page is the right citation.",
+    "evidence": "research/registry-notes/games-r1.md line 396 lists the four units. Cached cnc.fandom.com Allied_war_factory_(Red_Alert_2), Robot Tank sidebox: 'amphibious light tank that mind control and radiation cannot touch. The same page's Chrono Miner sidebox says it is immune to radiation too. The cached Robot_Tank page has no 'radiation'. ra2.json: robot-tank strengths/0 and its uncertain ('the registry's list ... does not name it'); desolator countered_by/3 unit:ra2.allied.robot-tank and armament/0 summary 'radiation-proof machines such as the Robot Tank'.",
+    "better_fix": "As proposed. Optionally also name the Chrono Miner from the same page, so the list matches the page for later RA2 work."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "consistency",
+   "id": "F7-tanya-hero-cap-not-in-tier-basis",
+   "severity": "minor",
+   "file": "data/units/ra3.json",
+   "summary": "RA3 Tanya's one-per-player cap is missing from tier.basis (line 2419). The batch's 'Where build limits go' rule puts such caps in tier.basis, and Boris was updated to follow it. Tanya has the cap only in weaknesses/3 and in availability: unique.",
+   "evidence": "games-r1.md line 453 is in the general research notes for every r1 agent: 'Write who can build the unit, and when, in tier.basis ...: ... a cap such as Yuri's Revenge's one hero at a time'. Line 557: 'Tanya, Natasha and Yuriko are limited to one per player (Boot camp (Red Alert 3) ... pages)'. Boris's tier.basis gained the one-hero cap in a3c4d6d (README Decision 8). Tanya's tier.basis (line 2419) names only Max Clearance and the Defense Bureau; 'One per player' appears only in weaknesses/3 (line 2527).",
+   "fix": "Append to ra3.allied.tanya tier.basis: 'A player may field only one Tanya at a time (Boot camp (Red Alert 3) page).'",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. 'Where build limits go' sits in the general research notes for every r1 agent and puts caps in tier.basis. Rule problem 7 was settled that way, but its follow-up fixed only Boris. RA3 Tanya's tier.basis has no one-per-player cap, which appears only in weaknesses/3 and in availability: unique. The Boot camp page, which she cites, states the cap.",
+    "evidence": "games-r1.md line 453 sits under '## Research notes for the r1 agents' (line 445), before the per-game sections. Line 557 says Tanya, Natasha and Yuriko are limited to one per player. rule-problems.md item 7: settled, and 'Follow-up done' covers Boris only. Diff of a3c4d6d: ra2.soviet.boris changed tier/basis. ra3.json, ra3.allied.tanya tier.basis names Max Clearance and the Defense Bureau only; weaknesses/3 says 'One per player'. Cached Boot_camp_(Red_Alert_3): 'needs maximum clearance, and each player may train just one.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "consistency",
+   "id": "F8-captured-war-factory-route",
+   "severity": "minor",
+   "file": "data/units/ra1.json",
+   "summary": "The captured War Factory route applies to every RA1 War Factory vehicle, but only the Mammoth's tier.basis records it. The M.A.D. Tank cites the very page that states it (line 764), and the Mobile Gap Generator and both Minelayers also leave it out.",
+   "evidence": "Cached War factory (Red Alert 1) page (.cache/sources/cnc.fandom.com/wiki_War_factory__Red_Alert_1-4604fee520.json): 'capturing the other side's War Factory lets a player build that side's vehicles, as far as their current buildings allow.' games-r1.md line 488: a side that holds a captured enemy production building can build some of the other side's units; 'record it under its own side and say so in tier.basis'. Mammoth tier.basis (line 1780) has 'A side that holds a captured Soviet War Factory together with the buildings the tank needs can also build it (War factory (Red Alert 1) page)'. The M.A.D. Tank cites that page as sources[2] but its tier.basis (line 764) does not say it. The same holds for ra1.allied.mobile-gap-generator, ra1.allied.minelayer and ra1.soviet.minelayer.",
+   "fix": "Append the same kind of sentence to tier.basis. For ra1.soviet.mad-tank and ra1.soviet.minelayer: 'A side that holds a captured Soviet War Factory together with the buildings it needs can also build it (War factory (Red Alert 1) page).' For ra1.allied.mobile-gap-generator and ra1.allied.minelayer, say 'Allied War Factory' instead.",
+   "verdict": {
+    "real": true,
+    "reason": "Partly confirmed. The M.A.D. Tank (which cites the War factory page) and the Mobile Gap Generator lack the captured-War-Factory sentence that the RA1 notes ask for and the Mammoth has. The Minelayer part is wrong. Both sides build the Minelayer at their own War Factory, and the game code picks the mine from the builder's own side. So a captured factory never gives a side the other side's Minelayer, and the proposed sentences for both Minelayers would be false.",
+    "evidence": "Cached War_factory_(Red_Alert_1): 'capturing the other side's War Factory lets a player build that side's vehicles, as far as their current buildings allow.' games-r1.md lines 488 and 453 say to put this in tier.basis. ra1.json tier.basis: Mammoth and Spy mention capture; MAD Tank, MGG and both Minelayers do not. Cached OpenRA Rules.ini: [MNLY] Owner=allies,soviet; [MGG] Owner=allies, Prerequisite=weap,atek. aftrmath.ini: [QTNK] Owner=soviet, Prerequisite=stek. Cached REDALERT/UNIT.CPP, unloading: the mine is STRUCT_APMINE if House->ActLike is USSR, UKRAINE or BAD, else STRUCT_AVMINE. HOUSE.CPP Can_Build: in multiplayer either tech center counts.",
+    "better_fix": "Add the sentence only to ra1.soviet.mad-tank ('A side that holds a captured Soviet War Factory together with the buildings it needs can also build it (War factory (Red Alert 1) page).') and to ra1.allied.mobile-gap-generator (same wording, Allied War Factory). Leave both Minelayers unchanged. If anything is added there, it should say that either side builds its own Minelayer and the mine follows the builder's side (UNIT.CPP)."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "consistency",
+   "id": "F9-immunity-fit-notes-paths",
+   "severity": "minor",
+   "file": "data/units/ra2.json",
+   "summary": "The same immunity gap is filed under different fields on different units. Boris's 'uncrushable' is at armour/models (line 1150), while the Chrono Legionnaire's identical one is at strengths/2 (line 277). The Desolator files its radiation-immunity gap twice (lines 879 and 885). The gap report reads fit_notes by path, so it splits or double-counts these gaps, and the README's fit-note counts include the duplicate.",
+   "evidence": "Chrono fit_note strengths/2, wanted 'uncrushable: vehicles cannot run it over'. Boris fit_note armour/models, same wanted text, while his mind-control gap is at strengths/3, the strength that states both immunities. Desolator: armour/models 'an immunity to toxic or radiation damage' and strengths/2 'an immunity to radiation and toxic damage'; the second note says 'the same gap is recorded in the fit_note at armour/models'. README line 105 counts 47 fit notes, armour 4 and strengths 3, which include these.",
+   "fix": "Merge Boris's two notes into one fit_note at path strengths/3, with wanted 'immunity to mind control and to being run over (only the Battle Fortress can)', and remove his armour/models note. Remove the Desolator's armour/models fit_note and keep strengths/2. Update README line 105 to 45 fit notes, with armour 2.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed, minor. The 'uncrushable: vehicles cannot run it over' gap is filed at armour/models for Boris and at strengths/2 for the Chrono Legionnaire. Boris's own two immunities sit at two different paths. The Desolator files one immunity gap twice, and its second note admits it is 'the same gap recorded in the fit_note at armour/models'. Both paths fit fields.md's 'where the term would go', so either convention is acceptable as long as it is the same everywhere. README's counts (47; armour 4, strengths 3) match the data now, and the fix's arithmetic (45; armour 2) is right.",
+    "evidence": "ra2.json fit_notes: chrono-legionnaire strengths/2 (used class:infantry, wanted 'uncrushable...'); boris armour/models (same wanted) and strengths/3 (mind control); desolator armour/models and strengths/2. A script over the 25 batch units gives 47 fit notes: roles 12, body 5, armour 4, mobility 4, traits 4, damage 3, strengths 3, and so on. docs/fields.md line 163 defines the path rule. rule-problems.md 'Open, for the batch' item 1: the gap report reads fit_notes by path. No gap-report script exists yet; only build-docs lists fit_notes.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "consistency",
+   "id": "F10-cryocopter-counter-overclaims",
+   "severity": "minor",
+   "file": "data/units/ra3.json",
+   "summary": "The Cryocopter's counters/0 link armour-class:>=heavy (line 2803) also covers super-heavy airships such as the Kirov. Its own reason says those are out of its reach, and the cryobeam lists no air targets. This is the 'link claims too much' problem of rule problem 19, which names only the Siege Chopper and the M.A.D. Tank.",
+   "evidence": "counters/0 why: '...Apocalypse tanks and Dreadnought battleships ...; airships such as the Kirov are out of its reach.' ra3.soviet.kirov-airship armour class is super-heavy, which ranks above heavy. Cryocopter armament/0 can_target is infantry, ground-vehicle, structure and naval. The j11 hesitation chose >=heavy without noting the airships. rule-problems.md item 19 lists Units `ra2.soviet.siege-chopper`, `ra1.soviet.mad-tank` only.",
+   "fix": "Add `ra3.allied.cryocopter` to rule-problems.md item 19's Units, with: 'armour-class:>=heavy for the freeze also covers super-heavy airships such as the Kirov, which the cryobeam cannot target.' Add uncertain {path: \"counters/0\", note: \"The link also covers super-heavy airships, which the beam cannot reach; no single link names heavy surface units.\"}.",
+   "verdict": {
+    "real": true,
+    "reason": "The overclaim is real, and the batch recorded it only in the reason text. The merge pass (63e8d8b, 'the Cryocopter's targets are narrowed') added 'surface' and 'the Kirov is out of its reach' to counters/0 and 'ground artillery' to counters/1, but kept the links and added no uncertain entry or rule problem. A rule-fix round that recodes the units its items list would therefore miss it. Rule problem 19 is the wrong home: its fix (a second entry for the other half) adds links but cannot exclude the Kirov. Item 22 fits: every word-list link claims too much, and its fix allows unit links alone, while the Cryocopter page names the Apocalypse tank and the Dreadnought.",
+    "evidence": "ra3.json, ra3.allied.cryocopter: counters/0 armour-class:>=heavy with the Kirov clause; armament/0 can_target is infantry, ground-vehicle, structure and naval. ra3.soviet.kirov-airship armour.class is super-heavy. git log -S shows the Kirov clause came from 63e8d8b; the j11 fill version lacked it. rule-problems.md item 19 (two-way phrase; fix adds a second entry) and item 22 ('every word-list link claims too much'; fix allows a unit link alone). fill/hesitations.md j11: '>=heavy ... The Cryocopter page names Apocalypse tanks and Dreadnoughts'.",
+    "better_fix": "Add `ra3.allied.cryocopter` to rule problem 22's Units (not 19), with: 'armour-class:>=heavy for the freeze also covers super-heavy airships such as the Kirov, which the cryobeam cannot target, and its source names only the Apocalypse tank and the Dreadnought.' counters/1 role:siege, which also covers bombers the beam cannot reach, could be named there too. The uncertain entry is optional, since the reason already states the exclusion."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "consistency",
+   "id": "F11-mgg-weakness-wrong-part",
+   "severity": "minor",
+   "file": "data/units/ra1.json",
+   "summary": "The Mobile Gap Generator's weaknesses/1 (line 1108) hangs three points on body:launcher-rack. Only the first, that it carries a dish and no gun, belongs to the body. The other two, that its field is smaller than the building's and that the computer opponent ignores shroud, are limits of its shroud-area ability (abilities/0).",
+   "evidence": "weaknesses/1 ref 'body:launcher-rack', why: 'It carries the gap dish instead of a gun, so it cannot fight back, and its field is smaller than the gap generator building's, so escorts must keep close. The dish's shroud also means nothing to the computer opponent...'. abilities/0 'Shroud generator (gap field)' links shroud-area, and strengths/0 already uses pattern:shroud-area. The j03 report says two weaknesses that shared one link were merged. Matchups ask for 'the link that names the part behind it'.",
+   "fix": "Split weaknesses/1 into two entries. The first keeps body:launcher-rack with 'It carries the gap dish instead of a gun, so it cannot fight back.' The second uses pattern:shroud-area with 'Its field is smaller than the gap generator building's, so escorts must keep close, and the computer opponent, which ignores shroud, is not fooled by it.'",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The smaller field and the computer ignoring shroud are limits of the shroud-area ability, not of the body. The weakness was hung on body:launcher-rack only because shroud-area did not exist at fill time. The removed fit_note said the strength and one weakness both wanted pattern:shroud-area. When the patterns pass (657bc26) registered the pattern, it moved strengths/0 to pattern:shroud-area and deleted that fit_note, but left the weakness on the body plan. The proposed split matches the batch's convention.",
+    "evidence": "ra1.json, ra1.allied.mobile-gap-generator: weaknesses/1 ref body:launcher-rack with all three points; strengths/0 pattern:shroud-area; abilities/0 patterns [shroud-area]. fill/hesitations.md j03 line 178: chose body:launcher-rack because no link named an ability without a pattern; 'merged the AI-ignores-shroud weakness into weaknesses/1'. git show 657bc26: strengths/0 body:launcher-rack became pattern:shroud-area, and the fit_note at strengths/0 ('its strength and one of its weaknesses hang on the body plan', wanted pattern:shroud-area) was deleted.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "consistency",
+   "id": "F12-five-units-count",
+   "severity": "minor",
+   "file": "research/r1/README.md",
+   "summary": "The README says 'five units changed to match' the settled batch rule problems (lines 111 and 158). The list right after it, and the data, show seven units changed.",
+   "evidence": "Comparing ra1, ra2 and ra3.json before and after a3c4d6d: unit values changed on ra1.allied.spy, ra1.allied.field-mechanic, ra1.allied.minelayer, ra1.soviet.minelayer, ra2.soviet.boris, ra2.soviet.siege-chopper and ra2.yuri.slave-miner. Only fit-note paths changed on the MAD Tank and MGG, and only sight wording on the Chrono Legionnaire and Chaos Drone. Line 158 lists the Siege Chopper, both Minelayers, Boris, the Spy, the Field Mechanic and the Slave Miner: seven.",
+   "fix": "Replace 'five units changed to match the new notes' (line 111) and 'Five units changed to match' (line 158) with 'seven units changed to match'.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. Seven units had coded values changed to match the settled notes: the Spy, the Field Mechanic, both Minelayers, Boris, the Siege Chopper and the Slave Miner. The MAD Tank and the Mobile Gap Generator changed only fit-note paths, and the Chrono Legionnaire and Chaos Drone only sight wording. 'Five' counts the five bullet points, not units, and the list that follows in the README names seven. The fix is right. The a3c4d6d commit title says five too, but commits stay as they are.",
+    "evidence": "A script diffed data/units/*.json between a3c4d6d^ and a3c4d6d by field. Changed: ra1.allied.field-mechanic (confidence), ra1.allied.spy (confidence), both minelayers (mobility/traits, atypical), ra2.soviet.boris (tier/basis), ra2.soviet.siege-chopper (armament/1), ra2.yuri.slave-miner (armament/1). Paths only: ra1.soviet.mad-tank and ra1.allied.mobile-gap-generator fit_notes/0. Notes only: chrono-legionnaire and chaos-drone sensors/notes. README line 111: 'with five units changed'; line 158: 'Five units changed to match:' followed by seven units.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "cc42b30"
+  },
+  {
+   "dimension": "patterns",
+   "id": "P1",
+   "severity": "major",
+   "file": "data/patterns/lay-mines.json",
+   "summary": "The lay-mines snare-trap variant lets a T1 card freeze its victim, which breaks decision 5B (stuns and freezes only from T2). freeze-and-shatter puts the same cold trap at T2.",
+   "evidence": "lay-mines.json variants/2 snare-trap (line 408) reads: 'the first enemy to touch it is rooted (or slowed, or frozen with a cold payload) for a moment'. Its overrides set only adds_strengths and adds_weaknesses, so the base generator.min_tier \"t1\" (line 508) applies. Decision 5 in docs/proposal.md (lines 311-316) covers 'Hard crowd control (stuns and freezes that stop the victim acting)', and option B, stuns only from T2, was chosen (line 283: '1B 2A 3C 4B 5B ...'). The stun weapon trait has min_tier t2 (data/vocab/weapon-traits.json). In the batch's own freeze-and-shatter, a frozen target 'can't move, fire or use abilities'. Its generator.min_tier is t2, and its cold-trap variant (line 320) cites the same Halo Wars 2 Cryogenic Generator that snare-trap's seen_in cites. Other variants spell out the gate: burrow's erupt says '(a brief stun only from T2 up)' and passenger-sets-weapon's tool-seat says '(a stun only on T2 and higher carriers)'. A script over all variants (summary mentions stun or freeze, effective min_tier below t2) flagged only this one as ungated.",
+   "fix": "In lay-mines.json variants/2, replace '(or slowed, or frozen with a cold payload)' with '(or slowed; a freezing payload only from T2 up)'. Or add \"min_tier\": \"t2\" to its overrides.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The snare-trap variant has no min_tier override, so it inherits t1, and its text lets a T1 trap freeze its victim. The batch itself treats a full stop as covered by decision 5B: disable-machine's changes_from_rts says a full shutdown is a stun for vehicles, so under 5B it comes only from T2. freeze-and-shatter is t2, and its cold-trap variant inherits t2. My own scan of every batch variant found no other enemy freeze or stun below T2. teleport frozen-arrival and burrow hide-in-place are effects on the user, not on an enemy. One caveat that does not save it: the vocab gates only the stun trait (weapon-traits.json min_tier t2), and rule problem 11 (code a freeze as root plus silence) is still open. That is a gap in the word lists, not permission for a T1 freeze. The text fix is the right one. Adding min_tier t2 would also take away the root, which T1 may have.",
+    "evidence": "Read data/patterns/lay-mines.json. Line 408 is snare-trap: 'rooted (or slowed, or frozen with a cold payload)', and its overrides set only adds_strengths and adds_weaknesses. Line 508 is generator.min_tier t1. docs/proposal.md line 311: decision 5 is about 'stuns and freezes that stop the victim acting', and 5B was taken. disable-machine.json changes_from_rts: 'A full shutdown is a stun for vehicles, so under decision 5B it comes only from T2'. freeze-and-shatter.json: generator min_tier t2 at line 429; as_target says a frozen target can't move, fire or use abilities; cold-trap cites the Halo Wars 2 Cryogenic Generator. My node script listed each variant's effective tier for summaries that mention stun or freeze. Only snare-trap was an enemy freeze at t1. burrow erupt and passenger-sets-weapon tool-seat already carry the T2 wording.",
+    "better_fix": "Use the text fix: in variants/2 replace '(or slowed, or frozen with a cold payload)' with '(or slowed; a freezing payload only from T2 up)'. Do not add min_tier t2: that would also block the root, which T1 may have."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "patterns",
+   "id": "P2",
+   "severity": "major",
+   "file": "data/patterns/burrow.json",
+   "summary": "Four variants inherit a base adds_weakness that their own text contradicts, because they don't override it. A card rolled with them would carry a false weakness.",
+   "evidence": "The schema says variants[].overrides.adds_weaknesses 'Replaces the base generator's adds_weaknesses for this variant', so without an override the base text applies. (1) burrow.json variants/6 buried-strike (lines 422-427) has no overrides and says 'One attack works from below without surfacing'. The base adds_weaknesses (line 471) says 'It can't attack from below: it must come up first'. (2) capture-structure.json variants/4 clamp-a-device (lines 300-307) overrides only kinds and says 'you are free to move'. The base (line 373) says 'It has to reach the structure and stay next to it while the work runs, exposed and unable to shoot'. variants/6 hack-from-range ('Works from a short distance, so you can stay behind cover') has no overrides either. (3) lock-in-stasis.json variants/5 return-displacement (lines 327-332) has no overrides and says 'anything standing there when they return is destroyed, and the returning units are badly hurt too'. The base (line 369) says it 'deals no damage ... it returns unharmed'. (4) disguise.json variants/2 prop-when-still (line 274) overrides only kinds and says 'firing makes you flicker for a moment, and moving ends it'. The base (line 334) says 'The cover ends when it attacks or is hit'.",
+   "fix": "Add overrides.adds_weaknesses to each variant. buried-strike: [{\"ref\":\"mobility-trait:burrow\",\"why\":\"Only its one buried strike works from below and using it shows where it is; everything else needs it to come up first.\"}]. clamp-a-device: [{\"ref\":\"pattern:capture-structure\",\"why\":\"It must get close enough to stick the device on, and enemies can knock the device off.\"}]. hack-from-range: [{\"ref\":\"pattern:capture-structure\",\"why\":\"Starting the hack gives its position away, and it must stay in reach until the hack ends.\"}]. return-displacement: [{\"ref\":\"pattern:lock-in-stasis\",\"why\":\"Holds one target at a time, and its return hurts the target and wrecks whatever stands in its place, friend or foe.\"}]. prop-when-still: [{\"ref\":\"pattern:disguise\",\"why\":\"Moving ends the cover and firing makes it flicker, and once found it is usually fragile.\"}].",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed for all five variants. The schema says a variant's adds_weaknesses replaces the base list, so a variant without one inherits the base text. Each base text is contradicted by its variant's own summary. buried-strike strikes from below, but inherits 'can't attack from below'. clamp-a-device leaves you 'free to move' and hack-from-range 'works from a short distance', but both inherit 'stay next to it ... exposed'. return-displacement destroys things and badly hurts the returning units, but inherits 'deals no damage ... returns unharmed'. prop-when-still only flickers when firing and ends when moving, but inherits 'cover ends when it attacks or is hit'. The checker did not cover this: for these patterns checks.json lists only variants/*/seen_in.",
+    "evidence": "schemas/pattern.schema.json lines 307-308: 'Replaces the base generator's adds_weaknesses for this variant.' A node dump of variants and generator blocks: burrow.json buried-strike at line 422 has no overrides, base weakness at line 471. capture-structure.json clamp-a-device at line 300 overrides only kinds, hack-from-range at line 326 has no overrides, base at line 373. lock-in-stasis.json return-displacement at line 327 has no overrides, base at line 369. disguise.json prop-when-still at line 274 overrides only kinds, base at line 334. checks.json burrow, capture-structure, disguise and lock-in-stasis: no generator or variant-summary paths were checked.",
+    "better_fix": "The proposed overrides are right. lock-in-stasis's base kinds are channel and active (a single-target beam), so 'Holds one target at a time' in the return-displacement text fits. Optionally, return-displacement could also override adds_strengths, since sheltering a teammate now hurts them when they return."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "patterns",
+   "id": "P3",
+   "severity": "major",
+   "file": "data/units/ra1.json",
+   "summary": "The checker's fix to self-destruct says the M.A.D. Tank's crewman is a civilian technician with a feeble pistol. The unit records still call him unarmed: the M.A.D. Tank's crew notes, a source note and its on_death uncertain entry, plus the Mobile Gap Generator's on_death notes.",
+   "evidence": "self-destruct.json player_translation/changes_from_rts/0 (line 143) was changed in cbe6de8. checks.json records it as 'wrong', and the skeptic confirmed the new text 'a civilian technician with only a feeble pistol'. data/units/ra1.json still says: line 799 (ra1.soviet.mad-tank crew.notes) 'the code makes him an unarmed civilian technician'; line 935 (mad-tank source note) 'an unarmed technician is placed next to the tank'; line 965 (mad-tank uncertain, path on_death) 'the code makes him an unarmed civilian technician'; line 1090 (ra1.allied.mobile-gap-generator on_death.notes) 'since it has no weapon, he is an unarmed civilian technician'. In the cached REDALERT/UNIT.CPP (lines 1101-1102 and 2801), the crewman of an unarmed crewed vehicle is INFANTRY_C1 with IsTechnician = true. The cached reference Rules.ini (OpenRA raclassic) has '[C1] Primary=Pistol' (line 929) and '[Pistol] Damage=1' (line 2179). The cached aftrmath.ini has no [C1] or [Pistol] override. Decision 7 makes this rules copy count for every rules value.",
+   "fix": "In data/units/ra1.json: at lines 799 and 965, replace 'an unarmed civilian technician' with 'a civilian technician armed only with a feeble pistol'. At line 935, replace 'an unarmed technician is placed' with 'a technician is placed'. At line 1090, replace 'he is an unarmed civilian technician' with 'he is a civilian technician with only a feeble pistol'.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed, but the finding misses three places. The code makes the crewman an INFANTRY_C1 with IsTechnician set, and IsTechnician only changes his name. C1 gets its weapon from the rules, and the reference Rules.ini gives [C1] Primary=Pistol, with [Pistol] Damage=1. aftrmath.ini does not override either. Decision 7 makes that rules copy count, and the checker's skeptic confirmed the 'feeble pistol' fix to self-destruct. Even so, ra1.json still calls him unarmed in seven notes, not four. Three more lines say 'an unarmed technician': 1232 (the Mobile Gap Generator's uncertain/7) and 1433 and 1683 (the source notes of both Minelayers). Lines 1321 and 1586 say 'since it is unarmed' about the vehicle, which is fine.",
+    "evidence": "Cached sources in .cache/sources/raw.githubusercontent.com. UNIT.CPP lines 1101-1103 and 2800-2801: new InfantryClass(INFANTRY_C1) with IsTechnician = true. INFANTRY.CPP line 3255: IsTechnician only returns TXT_TECHNICIAN. IDATA.CPP: the C1 definition holds no weapon. Rules.ini lines 929-931: [C1] Primary=Pistol. Lines 2179-2180: [Pistol] Damage=1. aftrmath.ini has no [C1] or [Pistol]. research/r1/README.md line 157 is decision 7. checks.json self-destruct changes_from_rts/0 is wrong and skeptic-confirmed. A node walk of ra1.json found 'unarmed' technician wording at units/3 crew.notes (799), sources/3 (935), uncertain/3 (965), units/4 on_death.notes (1090), units/4 uncertain/7 (1232), units/5 sources/3 (1433) and units/6 sources/2 (1683).",
+    "better_fix": "Apply the four proposed edits. Then also edit three more lines. Line 1232: 'an unarmed technician when it has no weapon' becomes 'a civilian technician with only a feeble pistol when it has no weapon'. Lines 1433 and 1683: 'an unarmed technician for an unarmed vehicle' becomes 'a civilian technician with a feeble pistol for an unarmed vehicle'."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "patterns",
+   "id": "P4",
+   "severity": "major",
+   "file": "data/patterns/burrow.json",
+   "summary": "The checker's fix to burrow left the unsupported claim in place elsewhere. as_target still says 'In some variants an EMP or a ground-shaking hit forces it to the surface', yet the skeptic found the ground-shaking part unsupported, and no burrow variant forces a burrower up.",
+   "evidence": "checks.json burrow counterplay/4: verdict unsupported. The skeptic confirmed the fix: 'Force it up: in Tiberian Sun an EMP forces a tunnelling tank to the surface. (Drop or a ground-shaking hit ...)'. git show cbe6de8 changes only line 18 (counterplay/4). Line 262 (player_translation/as_target/4) still reads 'In some variants an EMP or a ground-shaking hit forces it to the surface.' None of the 10 variants (hide-in-place, tunnel, shallow-mound, erupt, tripwire-ambush, auto-dive, buried-strike, mend-below, tremor-sense, own-terrain) forces a burrower up. Line 304 (build_difficulty/notes/3) also asks for a rule on 'what EMP or ground-shaking hits do to it'. generator.countered_by damage:emp keeps the supported version ('in the versions that use machines to tunnel').",
+   "fix": "Line 262: replace the line with 'An EMP forces a tunnelling machine to the surface, as in Tiberian Sun.' Line 304: replace 'and what EMP or ground-shaking hits do to it' with 'and what an EMP does to it'.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed but minor, and only line 262 needs changing. cbe6de8 fixed counterplay/4 and left as_target/4 saying 'In some variants an EMP or a ground-shaking hit forces it to the surface'. None of the 10 variants does that. The only supporting rule is the base countered_by damage:emp, which covers machine versions. A ground-shaking hit appears nowhere else in the pattern. So the line promises a counter that the pattern's rules don't contain. Line 304 is a build-difficulty note asking which rule to write, not a claim, so it can stay.",
+    "evidence": "git show cbe6de8 -- data/patterns/burrow.json changes line 18 and two confidence values only. Line 262 still reads as quoted. A node dump of the 10 variants shows none forcing a burrower up. Lines 490-491: countered_by damage:emp, 'in the versions that use machines to tunnel'. In checks.json, burrow's checked paths include counterplay/4 (unsupported, skeptic-confirmed) and changes_from_rts, but not as_target or build_difficulty.",
+    "better_fix": "Line 262: 'An EMP forces a tunnelling machine to the surface.' This matches countered_by damage:emp. Editing line 304 is optional, because a build note may ask design questions."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "patterns",
+   "id": "P5",
+   "severity": "minor",
+   "file": "data/patterns/self-destruct.json",
+   "summary": "Some source mechanics are modelled twice across the new patterns, with no link between the two versions. Elsewhere the batch links such cases with requires or implies.",
+   "evidence": "(1) self-destruct.json variants/5 disguised-bomb (line 268, seen_in 'Generals Bomb Truck') has no requires. disguise.json variants/5 wolf-in-the-column (line 302, seen_in 'Generals bomb truck') is the same twist and has requires [[\"pattern:self-destruct\"]]. (2) gather-resources.json variants/1 warp-home (line 287, RA2 Chrono Miner teleports back to the drop-off) and teleport.json variants/4 home-jump (line 320, RA2 Chrono Miner, 'to escape or to deliver cargo') model the same mechanic, with no requires or implies between them. (3) gather-resources.json variants/2 deploy-processor (lines 294-302; overrides only classes and kinds deploy) is the Slave Miner deploy that deploy-siege-mode's become-structure also covers. It has no implies of mobility-trait:deploy-anchor, while the batch's other three deploy variants all imply it: leave-hazard-zone planted-field (line 204), reveal-area deployed-array (line 263) and shroud-area fixed-generator (line 166). bombard-area counters and deploy-siege-mode read that trait. The batch's convention is shown by carry-passengers tunnel-carrier ('implies' pattern:burrow) and disguise wolf-in-the-column (requires self-destruct). docs/fields.md Granularity: same interaction and same counterplay = one pattern.",
+   "fix": "self-destruct disguised-bomb: add \"requires\": [[\"pattern:disguise\"]] to its overrides, or delete it and keep disguise's wolf-in-the-column. gather-resources warp-home: add \"implies\": [\"mobility-trait:teleport\"]. gather-resources deploy-processor: add \"implies\": [\"mobility-trait:deploy-anchor\"].",
+   "verdict": {
+    "real": true,
+    "reason": "Partly real. The deploy-processor item is confirmed and matters in practice. It is a deploy-kind variant with no implies, while the batch's three other deploy-into-a-fixed-mode variants imply mobility-trait:deploy-anchor. deploy-siege-mode's become-structure models the same Slave Miner deploy with that trait. bombard-area's and throw-explosive's counters read the trait, so a deploy-processor card misses those matchups. The warp-home item is also true: gather-resources and teleport have no link in either direction. But only teleport.json itself reads mobility-trait:teleport, so nothing changes in practice. The disguised-bomb item is overstated. self-destruct's related lists disguise as combos-with and disguise's lists self-destruct, so the two patterns are linked. The variant also carries its own detector countered_by.",
+    "evidence": "A node dump of the variants. self-destruct line 268, disguised-bomb: no requires. Both self-destruct.related and disguise.related have combos-with entries for each other. gather-resources line 287 (warp-home) and teleport line 320 (home-jump): no related link either way. gather-resources line 294 (deploy-processor): kinds deploy, no implies. planted-field (lines 204/212), deployed-array (lines 263/271) and fixed-generator (lines 166/174) imply deploy-anchor. Grep: bombard-area line 343 and throw-explosive line 351 counters ref mobility-trait:deploy-anchor. mobility-trait:teleport is referenced only inside teleport.json. passenger-sets-weapon anchor-to-fire also lacks the trait, but that file is not one the batch added.",
+    "better_fix": "Required: add \"implies\": [\"mobility-trait:deploy-anchor\"] to deploy-processor's overrides. Optional: add \"implies\": [\"mobility-trait:teleport\"] to warp-home, or a related link between gather-resources and teleport. For disguised-bomb, adding a requires is not needed. If the duplicate is to go, delete disguised-bomb and keep wolf-in-the-column. A requires would force a separate disguise ability, and its key, onto the card."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "patterns",
+   "id": "P6",
+   "severity": "minor",
+   "file": "data/patterns/overclock-self.json",
+   "summary": "The alias 'berserk' is given to two patterns, so the resolver, which accepts aliases, can't tell which one it means.",
+   "evidence": "overclock-self.json line 8: aliases [\"stim\", \"overdrive\", \"berserk\", \"self-buff\", \"power surge\", \"stat buff\"]. confuse-enemies.json line 8: aliases [\"berserk\", ...]. In confuse-enemies, berserk is the core of the pattern: the berserk-cloud variant and the source term 'Berserk'. schemas/pattern.schema.json says of aliases: 'Generic synonyms and old ids merged into this one (the resolver accepts them)'. A script over all 36 files found no other duplicate alias, and no alias equal to another pattern's id or name.",
+   "fix": "Remove \"berserk\" from overclock-self's aliases.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. 'berserk' is an alias of both overclock-self and confuse-enemies. The schema says the resolver accepts aliases, so this alias is ambiguous. In overclock-self the word appears only in the alias list, with no source term or example behind it. In confuse-enemies it is a source term and the core of the RA2 Chaos Drone example. No resolver code exists yet, so the harm is latent, but the data breaks the stated contract.",
+    "evidence": "overclock-self.json line 8 and confuse-enemies.json line 8 (source term 'Berserk' at line 12). My node script over all 36 pattern files: 'berserk' is the only alias shared by two patterns, and no alias equals another pattern's id or name. pattern-registry.json entries have no aliases. Grep of scripts: aliases are used only by build-docs ('Also called') and copy-check. pattern.schema.json line 54 says the resolver accepts aliases.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "patterns",
+   "id": "P7",
+   "severity": "minor",
+   "file": "data/pattern-registry.json",
+   "summary": "reinforce-squad's registry summary covers only squad members. Its only source unit links it through the follower form: the Slave Miner's free, respawning Slaves. The batch reworded the registry summaries of mind-control and throw-explosive for the same kind of mismatch, but not this one.",
+   "evidence": "data/pattern-registry.json line 210: 'Replace lost squad members in the field, near a teammate, a vehicle or a point.' The file's summary adds the follower form ('separate AI followers ... come back by themselves at their master after a delay, free and up to a cap'). ra2.yuri.slave-miner abilities/1 'Slave replacement' (triggered) is its only link. research/r1/rule-problems.md item 20 (lines 521-526) treats the registry summary as the text the pattern-link test reads, and fixed throw-explosive's in a3c4d6d as was done for mind-control in 657bc26.",
+   "fix": "Set the summary to: 'Get lost bodies back in the field: replace squad members near a teammate, a vehicle or a point, or have AI followers respawn at their master for free.'",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed but minor. The registry summary still covers only squad members. The file's follower form is the only one with a linked unit: the Slave Miner's free, respawning Slaves through its triggered 'Slave replacement'. The batch's own convention is to reword a registry summary when its wording does not cover a linked unit. That was done for mind-control in 657bc26 and for throw-explosive in a3c4d6d (rule problem 20). The registry notes' boundary line also limits the pattern to the squad crew model.",
+    "evidence": "data/pattern-registry.json line 210 has been unchanged since 633f733, which predates the batch. reinforce-squad.json's summary has the follower form, and its source_units is [ra2.yuri.slave-miner]. A node read of ra2.json shows the 'Slave replacement' ability linking reinforce-squad. research/r1/rule-problems.md lines 521-526 (item 20), and the settled item at line 536 (followers added as a variant in 657bc26). research/registry-notes/patterns.md line 35: 'the action for the squad crew model'.",
+    "better_fix": "Use the proposed registry summary. Optionally widen the boundary line in research/registry-notes/patterns.md (line 35) to cover AI followers that respawn at their master. fields.md line 18 says the notes lose to the summary anyway."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "patterns",
+   "id": "P8",
+   "severity": "minor",
+   "file": "data/patterns/bombard-area.json",
+   "summary": "All 33 batch patterns still have review {\"status\": \"unchecked\"}, though the checker re-checked every one of them field by field and the confirmed fixes are in.",
+   "evidence": "A node check over data/patterns found review = {\"status\":\"unchecked\"} in all 36 files. research/r1/checker/checks.json groups p1-p6 list all 33 batch patterns with their checked paths. The README says the checker 're-checked ... all 33 patterns'. docs/fields.md (lines 288-293) defines review as the checker status (unchecked, checked or disputed, with checked_by, checked_on, checked_paths and wrong_paths). research/workflows/checker.js never writes it.",
+   "fix": "For each of the 33 patterns, set review to {\"status\":\"checked\",\"checked_by\":\"batch r1 checker\",\"checked_on\":\"2026-10-22\",\"checked_paths\":[its paths from checks.json],\"wrong_paths\":[its skeptic-confirmed paths]}. Or state in runbook section 6 that checks.json replaces this field.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed but minor: the data contradicts the documented meaning of the field. Schema and fields.md define review as the checker status of the research run's sampling checker. The build-docs legend says 'unchecked' means that checker hasn't signed the record yet. The R1 checker re-checked all 33 patterns, yet every one says unchecked. So do the 9 units the checker sampled, so the gap is batch-wide, not patterns only. Nothing reads the field: validate.mjs, sample-for-check (which filters on status) and the docs for R1 patterns all ignore it. Runbook section 6 and checker.js never set it. The README's 'unchecked by Mustafa' reads the field in a way the schema doesn't. The step-1 'unchecked on purpose' precedent came before any research-run checker existed.",
+    "evidence": "common.schema.json lines 256-257 and docs/fields.md line 287: 'Checker status. The research run samples entries and re-checks them against their sources.' scripts/build-docs.mjs line 758 is the legend. A node read of the review field in data/units/*.json: all unchecked, including ra1.allied.minelayer, mobile-gap-generator, yak, ra2.iraq.desolator, boris, siege-chopper, ra3.allied.tanya, mecha-tengu and sudden-transport, the checks.json u-ra1/2/3 groups. Grep: no 'review' in research/workflows/checker.js or scripts/validate.mjs. research/r1/README.md line 83 says 'unchecked by Mustafa'.",
+    "better_fix": "Option 1: set review to checked on the 33 patterns and on the 9 sampled units, with checked_by, checked_on 2026-10-22, checked_paths and wrong_paths taken from checks.json. Also change README line 83 to 'not yet accepted by Mustafa'. Option 2: document that checks.json holds the checker's status. That needs runbook section 6, the review row in fields.md, the description in common.schema.json and the build-docs legend, not the runbook alone."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "patterns",
+   "id": "P9",
+   "severity": "minor",
+   "file": "data/patterns/execute-target.json",
+   "summary": "The first StarCraft game with Brood War is written as two different extra game ids across the new patterns.",
+   "evidence": "'extra:StarCraft / Brood War' is used in capture-structure other_examples/6, disable-machine other_examples/6, lock-in-stasis other_examples/1 and teleport other_examples/5. 'extra:StarCraft: Brood War' is used in execute-target other_examples/1 (Spawn Broodling), lay-mines other_examples/3 (spider mines) and mind-control other_examples/3. Spawn Broodling and spider mines are already in the original game, so these are not expansion-only examples (a script listed every game and franchise pair).",
+   "fix": "Use 'extra:StarCraft / Brood War' in execute-target, lay-mines and mind-control as well.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed but cosmetic. The same game appears under two extra: titles, with the same kind of sources behind each: Liquipedia's StarCraft wiki and the StarCraft fandom wiki. Nothing groups or counts these titles. The validator ignores extra: values and build-docs only strips the prefix, so the only cost is tidiness. The checker passed each record's game field, but it could not see a mismatch across files. Spawn Broodling and spider mines are in the original game. The Dark Archon is Brood War only, but 'StarCraft / Brood War' covers it.",
+    "evidence": "A node script over other_examples and shooter_analogues in every pattern. 'extra:StarCraft / Brood War' at capture-structure/6, disable-machine/6, lock-in-stasis/1 and teleport/5. 'extra:StarCraft: Brood War' at execute-target/1, lay-mines/3 and mind-control/3. Their source URLs are liquipedia.net/starcraft/... and starcraft.fandom.com/wiki/.... Grep: validate.mjs has no extra: handling, and build-docs.mjs line 748 only strips the prefix. The older files (infest-vehicle and others) write registry games such as ra2, generals and sc2 as extra: titles, but the batch did not change them, so they are outside its scope.",
+    "better_fix": "The proposed edit is fine. Use 'extra:StarCraft / Brood War' in execute-target other_examples/1, lay-mines other_examples/3 and mind-control other_examples/3."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "record",
+   "id": "record-1",
+   "severity": "major",
+   "file": "the draft pull-request description",
+   "summary": "The 17 batch-level rule-problem settlements were decisions taken at night on 23 October. They are missing from 'Decisions needed', which says 'None left'. Two of them did not take the proposed fix, yet the README files all 17 under 'Taken during the batch with the recommended option'.",
+   "evidence": "Runbook, Decisions (l.251): take the recommended option at night and 'Record each one in \"Decisions needed\" and in the state file as: \"taken at night (reversible): <option>, because <reason>; units it affects: <ids>\"'. Night log, Amsterdam time: 03:32 batch-fix agent resumed, 03:47 'done: 17 settled', 04:00 integrated as a3c4d6d (git: 2026-10-23 01:59 UTC = 03:59 Amsterdam, inside the 00:00-08:30 window). Its commit message says 'taking the recommended option at night'. Mustafa's decisions came earlier (night log 23:51 on 22 Oct). pr-body.md l.12: 'None left: on 22 October you took the recommendations.' The 17 appear only as one 'For Mustafa' bullet (l.33). grep 'taken at night' over pr-body.md and README.md finds nothing, and state.json open_decisions has no entry for them. rule-problems.md l.388 (batch item 1): 'Settled in the batch: A smaller fix ...'. l.439 (item 8): 'Settled in the batch: Differently from the proposal ...'. README l.150 still files decision 8 under 'Taken during the batch with the recommended option'. The a3c4d6d diff (my script) changed 11 units.",
+   "fix": "In pr-body.md, replace l.12 with a numbered item: '**Taken at night on 23 October (reversible): 17 batch-level rule problems settled** in the notes, registries and data (research/r1/rule-problems.md, \"Open, for the batch\"), because their fixes change no word list or field rule. Units it affects: ra1.allied.spy, ra1.allied.field-mechanic, ra1.soviet.mad-tank, ra1.allied.mobile-gap-generator, ra1.allied.minelayer, ra1.soviet.minelayer, ra2.allied.chrono-legionnaire, ra2.soviet.boris, ra2.soviet.siege-chopper, ra2.yuri.chaos-drone, ra2.yuri.slave-miner. Fifteen follow the proposed fix. Two do not. Item 8: A. as settled: medium crushers get the crush trait and the size break is recorded as atypical, as the word lists\\' Rules paragraph asks; B. the proposal: no trait, plus a fit note asking for crush. Item 1: A. as settled: only the two notes about a role left out move to path roles; B. the proposal: every role fit note moves to path roles. Recommended: A for both, because each follows the current word lists.' In README l.12 and l.150, say that decision 8 was taken at night on 23 October and that items 1 and 8 of it depart from the proposed fix. Add the matching 'taken at night (reversible)' line to state.json open_decisions.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. By the session's own record, the 17 settlements were taken at night. The batch-fix agent resumed at 03:32 Amsterdam and the work was integrated at 04:00 on 23 Oct, inside the night window. The commit message of a3c4d6d says 'taking the recommended option at night'. The runbook (Decisions) says each night decision goes in 'Decisions needed' and in the state file as 'taken at night (reversible): ...'. Neither happened: pr-body 'Decisions needed' says 'None left', and state.json open_decisions has no entry for the 17. All other decisions (1-7, Mustafa's B, Mustafa's 22 Oct choice) do have entries. Mustafa's own decision (night log 23:51, 22 Oct) was recorded as covering only the 61 problems, the rules copy and the prep answers. Two settlements also depart from the proposal: item 1 is 'A smaller fix' and item 8 is 'Differently from the proposal'. Yet README l.150 files decision 8 under 'Taken during the batch with the recommended option'. No morning summary was written for 23 Oct either (night log 11:10), so Mustafa has not seen this decision in the required form.",
+    "evidence": "Night log (working folder r1/night-log.md): 23:44 batch-fix agent launched; 23:51 Mustafa's decisions; 03:32 agent resumed; 03:47 '17 settled'; 04:00 'Integrated ... a3c4d6d'. git show -s a3c4d6d: dated 2026-10-23 01:59:42 UTC, message 'taking the recommended option at night'. state.json open_decisions has 15 entries and none mentions the batch-level settlements. The agent's notes (r1/batchfix/ws-fix/.progress/batchfix/progress.md) say '17 settled (1 smaller fix, 8 different fix, rest as proposed)'. rule-problems.md l.388 and l.439 confirm the two departures. My JSON diff of a3c4d6d~1..a3c4d6d data/units shows exactly the 11 unit ids the fix lists.",
+    "better_fix": "The proposed fix is right. Also list this night decision first in the next morning summary, as the runbook asks, since none was written for 23 October."
+   },
+   "status": "fixed",
+   "commit": "pull-request description (Decisions needed and For Mustafa)"
+  },
+  {
+   "dimension": "record",
+   "id": "record-2",
+   "severity": "major",
+   "file": "research/r1/README.md",
+   "summary": "README line 145 fails the copy-check. Its own sentence about the leftover weapon name shares a six-word run with the cited Cryocopter page, so the zero-FOUND gate fails.",
+   "evidence": "Ran: npm run copy-check -- --offline --also research/r1. Exit 1. Output: 'FOUND research/r1/README.md line 145 (the weapon's dotted name, read as six one-letter words) shared with https://cnc.fandom.com/wiki/Cryocopter', then 'FAILED: 1 shared run(s)'. Adding --also research/registry-notes gives the same single FOUND line, so the notes are clean. README l.145 ends: 'The only shared run left is a weapon's name, SHRINK Beam.' The runbook quality bar and section 8 step 4.1 require zero FOUND lines. I also re-ran the working folder's PDF six-word check (r1/pdfcheck/bin/check.mjs) on the current text: 4 runs, all the letters s h r i n k, so no new manual phrase has crept in.",
+   "fix": "README l.145: replace 'The only shared run left is a weapon's name, SHRINK Beam.' with 'The only shared run left is the Cryocopter's weapon name.' Then re-run npm run copy-check -- --offline --also research/r1 --also research/registry-notes and expect no FOUND line.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The copy-check fails on README line 145. The shared run comes from the Cryocopter page's ability box ('|name = [[SHRINK beam]]'), so it is only a name, but the runbook requires zero FOUND lines. The proposed rewording passes the check.",
+    "evidence": "Ran npm run --silent copy-check -- --offline --also research/r1: exit 1, 'FOUND research/r1/README.md line 145 (the weapon's dotted name, read as six one-letter words) shared with https://cnc.fandom.com/wiki/Cryocopter', then 'FAILED: 1 shared run(s)'. Adding --also research/registry-notes gives the same single FOUND line. The cached page .cache/sources/cnc.fandom.com/wiki_Cryocopter-8a7778a9f1.json holds '|name  = [[SHRINK beam]]'. git log -L shows the line came from d2f8b5f. I put the reworded line 145 ('The only shared run left is the Cryocopter's weapon name.') in a scratch folder and ran node scripts/copy-check.mjs --offline --also <that folder>: exit 0, 'OK: no shared runs' against 888 pages.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "cc42b30"
+  },
+  {
+   "dimension": "record",
+   "id": "record-3",
+   "severity": "major",
+   "file": "research/r1/prep/trim.json",
+   "summary": "The trim still keeps ra1.shared.minelayer, which no longer exists in data/units since the split. Merge gate 9.4 ('every keep id is a unit in data/units/') fails as written.",
+   "evidence": "A script compared every trim.json keep id with the ids in data/units/ra1.json, ra2.json and ra3.json. 23 match. 'NOT IN DATA ra1.shared.minelayer' (trim.json l.34). The split into ra1.allied.minelayer and ra1.soviet.minelayer happened in 63e8d8b (README decision 1). Runbook section 9 step 4: 'Every keep id in research/r<N>/prep/trim.json is a unit in data/units/'. Neither README nor PR says how that gate treats the split. No test or script reads trim.json (grep over tests/ and scripts/), so adding a field breaks nothing.",
+   "fix": "In trim.json, keep the entry's id, since the fill record uses it, and add two fields to that keep entry: \"split_into\": [\"ra1.allied.minelayer\", \"ra1.soviet.minelayer\"] and \"split_note\": \"one entry per side, merge pass 63e8d8b (README, Decisions, item 1)\". In README decision 1, add: 'The trim's keep id ra1.shared.minelayer maps to these two entries for the merge check.' Optionally, the tooling owner can change gate 9.4 to read 'or each id in its split_into'.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed as a literal gate failure. Gate 9.4 says every keep id in trim.json is a unit in data/units/, but ra1.shared.minelayer is in no units file. In the repository, the old id appears only in trim.json and the j02 fill record. README decision 1 names only the two new ids. The mapping from old to new is written only in the working folder state.json, which the runbook warns can be lost. So the gate cannot be passed from the repository as written, though its intent is met: the trim's own brief asked to 'settle one shared entry against one entry per side'. This is minor rather than major. No script or test reads trim.json, so adding fields to it is safe.",
+    "evidence": "A script compared trim.json keep ids (24) with the ids in data/units/ra1.json, ra2.json and ra3.json: 23 match, 'NOT IN DATA ra1.shared.minelayer'. grep -rn ra1.shared.minelayer over the repository (cache excluded) finds only research/r1/prep/trim.json l.34 and research/r1/fill/j02-ra1/*. grep over scripts/, tests/ and research/workflows/ for trim.json finds no reader of it. state.json records 'split ra1.shared.minelayer into ra1.allied.minelayer and ra1.soviet.minelayer'.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "record",
+   "id": "record-4",
+   "severity": "major",
+   "file": "research/r1/README.md",
+   "summary": "The TL;DRs say all rule problems go to the rule-fix round, but the decision text says the round covers only 37 and the 24 one-off cases wait. The two batch items that now need the word lists are recurring, yet are counted nowhere. They are also credited to a decision Mustafa took before they were found.",
+   "evidence": "README l.11: 'Two of the batch's own turned out to need the word lists too, and by Mustafa's decision all of them go to a rule-fix round before R2.' README l.170 (option A): 'It covers the 37 problems ...; the 24 one-off cases wait until they come up again.' pr-body.md l.7 says 'By your decision they go to a rule-fix round', while l.15 has the same 37/24 split. My script over rule-problems.md confirmed 61 = 37 + 24. Batch item 5 (l.411; 3 reports, 4 units) and item 9 (l.442; 2 reports, 2 units) are both 'Left open' as word-list changes, and both meet option A's test. Night log: Mustafa decided at 23:51 on 22 Oct. The batch agent found these two at 03:47 on 23 Oct.",
+   "fix": "README l.11: replace the second sentence with 'Two of the batch's own (batch items 5 and 9) turned out to need the word lists too. By Mustafa's decision of 22 October, the recurring problems go to a rule-fix round before R2: the 37 raised by more than one report or touching more than one unit, plus these two, which are recurring too and were found after his decision. The 24 one-off cases wait.' pr-body.md l.7: '... and two of the batch's own problems (batch items 5 and 9) turned out to need them too. By your decision, the recurring ones (the 37, plus these two) go to a rule-fix round before R2, and the 24 one-off cases wait. The units follow the current rules meanwhile.' This also fixes the clipped 'turned out to as well'. In option A, README l.170 and pr-body.md l.15, add '(and batch items 5 and 9, found after the decision)'.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. README l.11 says that by Mustafa's decision 'all of them go to a rule-fix round before R2'. Option A, as decided (README l.170, pr-body l.15), covers only the 37 recurring problems, and the 24 one-off cases wait. Batch items 5 and 9 meet option A's test, but option A's text does not cover them, and they were settled after Mustafa decided. One part of the finding is slightly overstated: README l.111 does say the two 'join the rule-fix round', so they are mentioned, though not counted in any decision text. The proposed fix edits option A's own wording, which is the record of what Mustafa chose. It is better to leave that wording as decided and add a separate line after it.",
+    "evidence": "A script over rule-problems.md 'Open, for Mustafa' (Raised by N reports, unit ids before Fix) gives 37 recurring and 24 one-off. Batch item 5: 3 reports, 4 units. Item 9: 2 reports, 2 units. Item 13: 1 report, 1 unit. Night log: Mustafa decided at 23:51 on 22 Oct. The batch-fix agent's notes put items 5 and 9 as OPEN in its run, which started at 23:44, and the session learned of them at 03:47.",
+    "better_fix": "Fix README l.11 and pr-body l.7 as proposed. Do not insert text into option A in README l.170 or pr-body l.15: that wording is what Mustafa chose. Instead add a separate sentence after the decision (README after l.174, pr-body after l.19): 'Batch items 5 and 9, found after this decision, are recurring too (3 and 2 reports) and join the round.'"
+   },
+   "status": "fixed",
+   "commit": "cc42b30"
+  },
+  {
+   "dimension": "record",
+   "id": "record-5",
+   "severity": "major",
+   "file": "research/r1/README.md",
+   "summary": "Both texts say 'five units' changed to match the 17 settlements, but they name seven. The commit actually changed 11 units.",
+   "evidence": "README l.111: '17 are settled, with five units changed to match the new notes.' README l.158: 'Five units changed to match:' then lists the Siege Chopper, both Minelayers, Boris, the Spy, the Field Mechanic and the Slave Miner, which is seven. pr-body.md l.33 repeats it. A JSON diff of data/units between a3c4d6d~1 and a3c4d6d (my script) shows 11 changed units: ra1.allied.spy and ra1.allied.field-mechanic (confidence), ra1.soviet.mad-tank and ra1.allied.mobile-gap-generator (fit_notes path), both Minelayers (crush trait and atypical), ra2.allied.chrono-legionnaire (sensors.notes), ra2.soviet.boris (tier.basis), ra2.soviet.siege-chopper (family, delivery, atypical), ra2.yuri.chaos-drone (sensors.notes) and ra2.yuri.slave-miner. The 'five' is the count of follow-up tasks in the night log (03:47), not units.",
+   "fix": "README l.111: '17 are settled, and 11 units changed to match the new notes.' README l.158 and pr-body.md l.33: 'Seven units changed to match: <same list>. Four more changed only in wording: the M.A.D. Tank's and Mobile Gap Generator's role fit notes now use the path roles, and the Chrono Legionnaire's and Chaos Drone's sight notes are reworded.'",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. README l.111, README l.158 and pr-body l.33 say 'five units' changed, then list seven: Siege Chopper, two Minelayers, Boris, Spy, Field Mechanic and Slave Miner. The 'five' is the number of follow-up tasks (night log 03:47). Commit a3c4d6d changed 11 units in all.",
+    "evidence": "My JSON diff of a3c4d6d~1..a3c4d6d over data/units/*.json shows 11 units changed: field-mechanic and spy (confidence, sources_disagree); both minelayers (atypical, fit_notes, mobility traits and notes, uncertain/7); mobile-gap-generator and mad-tank (fit_notes/0/path only); chrono-legionnaire and chaos-drone (sensors/notes only); boris (tier/basis); siege-chopper (armament/1 family and delivery, atypical, uncertain/4, weaknesses/3/ref); slave-miner (armament/1/summary, sensors/notes, uncertain/11).",
+    "better_fix": "As proposed, but say 'Four more changed only in their notes' rather than 'only in wording'. The M.A.D. Tank's and Mobile Gap Generator's change is a fit-note path, not wording."
+   },
+   "status": "fixed",
+   "commit": "cc42b30"
+  },
+  {
+   "dimension": "record",
+   "id": "record-6",
+   "severity": "minor",
+   "file": "the draft pull-request description",
+   "summary": "'Decisions needed' holds three items Mustafa already decided. Items 2 and 3 have no options, and item 2 says 'Taken today' for a decision of 22 October. A literal merge gate 9.10 would read item 1, which is about word-list changes, as blocking the merge.",
+   "evidence": "pr-body.md l.12: 'None left', followed by items 1-3. Item 2 (l.20): 'Taken today and reversible'. Night log 22:40 on 22 Oct: 'Decision (reversible, by day): the RA1 reference rules copy counts for every rules value'. b46b01c is dated 2026-10-22 21:18 UTC, and the text will be read on the 23rd or later. Items 2 and 3 offer no A/B choice. Runbook section 8: each Decisions needed item must be 'self-contained, with options and a recommendation'. Gate 9.10: 'No \"Decisions needed\" item is a change to the word lists or field rules.'",
+   "fix": "Move items 1-3 to '## For Mustafa' under '**Decided by you on 22 October (recommendations taken):**'. Keep '## Decisions needed' for the night item in record-1, or write 'None.' if that is gone. In the moved item 2, change 'Taken today and reversible' to 'Taken on 22 October, by day, reversible'.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. 'Decisions needed' opens with 'None left', then lists three items Mustafa already decided. Items 2 and 3 have no options, which the runbook format asks of a Decisions needed item. Item 2 says 'Taken today' for a decision of 22 Oct 22:40, but the draft was last edited at 04:00 on 23 Oct, so 'today' was already wrong when written. Item 1 is about word-list changes, so a literal reading of gate 9.10 could take it as blocking the merge. The README already files these under 'Decided by you on 22 October 2026', so the proposed move makes the two texts match.",
+    "evidence": "pr-body.md l.10-21 read. The pr-body.md file was last modified 2026-10-23 02:00 UTC (04:00 Amsterdam). Night log 22:40 on 22 Oct: 'Decision (reversible, by day): the RA1 reference rules copy counts for every rules value'. Runbook section 8 says each Decisions needed item is 'self-contained, with options and a recommendation'. Gate 9.10 reads 'No \"Decisions needed\" item is a change to the word lists or field rules'. README l.168 has the matching 'Decided by you on 22 October 2026' heading.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "pull-request description (Decisions needed and For Mustafa)"
+  },
+  {
+   "dimension": "record",
+   "id": "record-7",
+   "severity": "minor",
+   "file": "research/r1/rule-problems.md",
+   "summary": "Rule problem 35 still says the check shows the Siege Chopper's howitzer as artillery on an aircraft, which has not been true since a3c4d6d. The README's 'most visible' list and the PR still present it as a visible Siege Chopper result.",
+   "evidence": "rule-problems.md l.221: 'The Siege Chopper's howitzer works only once it has landed, but the check shows it as artillery on an aircraft.' The a3c4d6d diff made armament/1 family cannon and removed the atypical entry. node scripts/validate.mjs now prints no ATYPICAL line for ra2.soviet.siege-chopper; the 11 ATYPICAL lines are Field Mechanic, 2 Minelayers, Submarine, Chrono Legionnaire, Magnetron, 3x Multigunner and 2x Mecha Tengu. The intro (l.5) lists the later unit changes from b46b01c only. README l.118 lists it under 'The ones that change the most visible results'. pr-body.md l.14 says '... and the combination check reads its base class (the Siege Chopper)'.",
+   "fix": "rule-problems.md item 35 Problem: add 'Since a3c4d6d the howitzer is coded as a cannon, so no batch unit shows this now; the gap in the check stays.' Intro l.5: add 'and a3c4d6d recoded the Siege Chopper's howitzer as a cannon and gave both Minelayers the crush trait'. README l.118: move it out of 'most visible' or end it with 'no R1 unit shows it since a3c4d6d'. pr-body.md l.14: delete ', and the combination check reads its base class'.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed, but only for rule-problems.md. Item 35 (l.221) says in the present tense that the check shows the howitzer as artillery on an aircraft. Since a3c4d6d no ATYPICAL line names the Siege Chopper. The intro's list of later changes (l.5) names only b46b01c's. The intro's general caveat ('Unit examples are as coded when the problem was raised') and batch item 6's follow-up line soften this, but item 35 still misleads the rule-fix round. The README and PR parts of the fix are not needed. README l.118 already says '(raised on the Siege Chopper, whose howitzer is now coded as a cannon)'. pr-body l.14 states a rule problem that still stands (the check does read the base class), so it is not false.",
+    "evidence": "node scripts/validate.mjs prints 11 ATYPICAL lines (Field Mechanic, 2 Minelayers, Submarine, Chrono Legionnaire, Magnetron, 3 Multigunner, 2 Mecha Tengu) and none for ra2.soviet.siege-chopper. rule-problems.md l.5 and l.221 read as quoted. The a3c4d6d diff sets siege-chopper armament/1/family to cannon and removes its atypical entry. README l.118 read.",
+    "better_fix": "Edit only rule-problems.md: add to item 35's Problem 'Since a3c4d6d the howitzer is coded as a cannon, so no batch unit shows this now; the gap in the check stays.' Extend the intro l.5 with the a3c4d6d changes (Siege Chopper howitzer recoded as a cannon; both Minelayers given crush). Leave README l.118 and pr-body l.14 as they are."
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "record",
+   "id": "record-8",
+   "severity": "minor",
+   "file": "research/r1/rule-problems.md",
+   "summary": "The intro says the 20 batch problems change only notes and registries, 'or, for one, the unit data'. Since the settlements, items 5 and 9 need the word lists and several items changed unit data, and the intro gives no 17/2/1 outcome.",
+   "evidence": "l.8: '**Open, for the batch: 20.** Only the registry notes, the games registry or the pattern registry would change (or, for one, the unit data).' l.416 (item 5): 'Left open: Only the alternative, in the armour-class word list, can settle it'. l.447 (item 9): 'it belongs in the roles word list'. l.476 (item 13): needs a source. Follow-ups changed unit data for items 1, 2, 6, 7, 8, 10 and 19 (a3c4d6d diff).",
+   "fix": "l.8: '**Open, for the batch: 20.** Proposed fixes that change only the registry notes, the registries or the unit data. 17 are settled; items 5 and 9 turned out to need the word lists and join the rule-fix round; item 13 waits for a source.'",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The intro still says 'Open, for the batch: 20' and '(or, for one, the unit data)', with no outcome. By now 17 are settled (several with unit follow-ups), items 5 and 9 were left open as word-list matters, and item 13 waits for a source. Only the README (l.111) gives the 17/2/1 outcome. The minor flaw is that the record file's own summary is stale.",
+    "evidence": "rule-problems.md l.8 read. The item lines read 'Settled in the batch' for 17 items and 'Left open' for items 5 (l.416), 9 (l.447) and 13 (l.476). The 'Follow-up done' lines under items 6, 7, 8, 10 and 19, and the a3c4d6d unit diff, show unit data changed for items 1, 2, 6, 7, 8, 10 and 19.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "record",
+   "id": "record-9",
+   "severity": "minor",
+   "file": "research/r1/README.md",
+   "summary": "The rules-copy decision says it changes 'eight units' but names seven. The PR version also drops the Field Mechanic's wrench change.",
+   "evidence": "README l.157: 'It changes eight units (b46b01c):' then names both Minelayers, the Mobile Gap Generator, the Mammoth Tank, the Yak, the Field Mechanic and the M.A.D. Tank, which is seven. My JSON diff of b46b01c~1..b46b01c data/units/ra1.json shows an eighth unit, ra1.soviet.submarine, with 2 text changes. The commit message says 'texts on the Submarine's torpedoes ... now say what the copy shows', and state.json lists the Submarine among the units it affects. pr-body.md l.20 has the same seven and omits 'his wrench lands at once'.",
+   "fix": "README l.157: after '...about twice as far as the wiki says' add '; and the Submarine's torpedo texts now follow the copy'. pr-body.md l.20: 'the Field Mechanic is unarmoured and his wrench lands at once; the M.A.D. Tank's pulse reaches about twice as far as the wiki says; and the Submarine's torpedo texts follow the copy.'",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The count of eight is right, but the list after the colon names seven units: the Submarine is missing. The PR version also drops the Field Mechanic's wrench change (delivery now hitscan, recorded as atypical), which the README includes.",
+    "evidence": "My JSON diff of b46b01c~1..b46b01c data/units shows 8 units changed: field-mechanic, both minelayers, mobile-gap-generator, mad-tank, mammoth-tank, yak, and soviet.submarine (sources/4/note and uncertain/4/note). git diff b46b01c shows both Submarine texts are about its torpedoes. The commit message says 'texts on the Submarine's torpedoes ... now say what the copy shows'. pr-body l.20 reads 'the Field Mechanic is unarmoured;' with no wrench.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "cc42b30"
+  },
+  {
+   "dimension": "record",
+   "id": "record-10",
+   "severity": "minor",
+   "file": "research/r1/fill/j05-ra2/report.json",
+   "summary": "The section 8 step 5 local-path search prints two record lines that point at working folder folders and scripts.",
+   "evidence": "Ran: grep -rnE \"|the home folder|a temporary folder research/r1. Two hits. research/r1/fill/j05-ra2/report.json l.409 (source_problems): '... my first fetch wrote two files into the pre-existing working folder folder r1/fill/j05-dl before I noticed ...'. research/r1/opening/final/report-ra2.json l.168 (copy_check_result): '... so I also ran my own 6-word n-gram check (<working folder>/r1/opening/final-ra2-scripts/ngram.py)'. The quality bar says 'The record has no local paths.'",
+   "fix": "In j05-ra2/report.json, change 'into the pre-existing working folder folder r1/fill/j05-dl' to 'into a shared working folder outside the repository'. In opening/final/report-ra2.json, change '(<working folder>/r1/opening/final-ra2-scripts/ngram.py)' to '(a helper script kept outside the repository)'. Re-run the grep and expect no output.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed (minor). The runbook's local-path search (section 8, step 5) prints two record lines, and its pattern includes 'working folder' on purpose. One line names the working folder folder r1/fill/j05-dl. The other names a helper script at '<working folder>/r1/opening/final-ra2-scripts/ngram.py'. When recording at 3978f5f, the session had already shortened the second from an absolute /tmp path to this placeholder (night log 06:15, 22 Oct), but it still points readers to a local file outside the repository, and the gate search still flags it. The proposed rewordings settle both.",
+    "evidence": "Ran grep -rnE \"|the home folder|a temporary folder research/r1: two hits, research/r1/fill/j05-ra2/report.json l.409 ('into the pre-existing working folder folder r1/fill/j05-dl') and research/r1/opening/final/report-ra2.json l.168 ('(<working folder>/r1/opening/final-ra2-scripts/ngram.py)'). The working folder's r1/opening/reconcile.json holds the original absolute a temporary folder path.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "record",
+   "id": "record-11",
+   "severity": "minor",
+   "file": "the draft pull-request description",
+   "summary": "'For Mustafa' is not self-contained: 'Your decision B' is never explained. It also leaves out the one batch item that is waiting on a source the session cannot fetch now.",
+   "evidence": "pr-body.md l.25: '**Your decision B is in** (ebcf283)'. No other line says what B was. README l.111 and rule-problems.md l.476 (item 13) say the RA2 frame rate needs a source and ModEnc is refused; the PR never mentions it. I fetched https://modenc.renegadeprojects.com/Speed?action=raw and https://modenc.renegadeprojects.com/ with curl, three tries in all, two seconds apart: every reply was 403 'Forbidden'. Yet .cache/sources/modenc.renegadeprojects.com holds 67 pages fetched on 20 and 21 October.",
+   "fix": "pr-body.md l.25: '**Your decision of 22 October on checker sampling (option B) is in** (ebcf283): ...'. Add a For Mustafa bullet: '**Waits on a source:** RA2's frame rate for cooldowns given in frames (rule-problems.md, batch item 13). ModEnc, the likeliest source, answers 403 from this environment now, though it loaded on 20 and 21 October. No unit waits on it.'",
+   "verdict": {
+    "real": false,
+    "reason": "Not a problem. pr-body l.25 says what decision B is in the same line: 'from R2 the checker re-checks one pattern in three, at least three'. Batch item 13 needs nothing from Mustafa: no unit waits on it, and the item says the Chaos Drone's gas is spam at either frame rate. The README (l.111) already reports it, along with the blocked source. The PR body also says it becomes the batch report when the batch is done. ModEnc does still answer 403 now, but that does not make the omission a defect.",
+    "evidence": "pr-body.md l.25 read. rule-problems.md l.476 read. README l.111 read. One fetch of https://modenc.renegadeprojects.com/api.php?action=parse&page=Speed&prop=wikitext&format=json: the proxy CONNECT succeeded, then HTTP/2 403, text/plain, 9 bytes. The cache holds 67 ModEnc pages fetched on 20-22 Oct.",
+    "better_fix": ""
+   },
+   "status": "answered",
+   "answer": "The skeptic refuted it (see verdict.reason)."
+  },
+  {
+   "dimension": "record",
+   "id": "record-12",
+   "severity": "minor",
+   "file": "research/registry-notes/games-r1.md",
+   "summary": "Two places in the notes credit the rules-copy decision to 'the lead's call'. Later batches reading the notes will not know who 'the lead' is.",
+   "evidence": "l.52: 'By the lead's call the reference copy now counts for every rules value, not only speed'. l.498: 'By the lead's call it is a source for every rules value'. 'Lead' is not defined in the notes. The decision is README decision 7 (night log 22:40 on 22 Oct, reversible).",
+   "fix": "In both lines, replace 'By the lead's call' with 'By batch R1's decision of 22 October 2026 (reversible; research/r1/README.md, Decisions, item 7),'.",
+   "verdict": {
+    "real": false,
+    "reason": "A wording nit, not a problem in practice. The two lines state the rule clearly ('the reference copy now counts for every rules value'), and that is all a later coder needs. Either reading of 'the lead' is accurate: the session took the decision, and Mustafa explicitly kept it on 22 October (README, decided item 2). The provenance and reversibility are recorded in README decision 7 and in commit b46b01c, and the lines are easy to find by 'reference copy' if the decision is reversed.",
+    "evidence": "games-r1.md l.52 and l.498 both contain 'By the lead's call' (git log -S shows both came from b46b01c and 3df217b). The night log for 23:51 on 22 Oct records 'keep RA1 rules copy'. README l.157 (decision 7) and l.175 read.",
+    "better_fix": ""
+   },
+   "status": "answered",
+   "answer": "The skeptic refuted it (see verdict.reason)."
+  },
+  {
+   "dimension": "record",
+   "id": "record-13",
+   "severity": "minor",
+   "file": "research/registry-notes/games-r1.md",
+   "summary": "In the notes, the line about chrono units has a broken sentence, and the Speed section still asks for a rewording that is already done.",
+   "evidence": "l.506: 'The Chrono Legionnaire, Chrono Commando and Chrono Ivan teleport, The wiki says their infobox land speed sets how fast they phase back in, but ModEnc's phase-in rule ...'. l.146: 'The line under Research notes, Red Alert 2, saying that their infobox land speed sets the phase-in time should be reworded.' That line is l.506 itself, which now gives ModEnc's rule, and l.32 says 'the RA2 chrono line [is] amended too'.",
+   "fix": "l.506: change 'teleport, The wiki says' to 'teleport. The wiki says'. l.146: delete the bullet, since l.32 already records the amendment.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed (minor). Line 506 has a comma splice with a capital letter ('teleport, The wiki says'). The Speed-section bullet at l.146 still asks for that chrono line to be reworded, but the line already gives ModEnc's rule, and l.32 says the RA2 chrono line was amended. Both lines came in the same commit, 3df217b, so the bullet was stale from the start.",
+    "evidence": "sed -n 506p, 140-150p and 28-34p on research/registry-notes/games-r1.md read. git log -S 'teleport, The wiki says' and -S 'should be reworded' both point to 3df217b.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  },
+  {
+   "dimension": "record",
+   "id": "record-14",
+   "severity": "minor",
+   "file": "research/r1/README.md",
+   "summary": "The README file index has no row for rule-problems.md, though it is a main record file the report leans on.",
+   "evidence": "Files table (l.177-190) rows: prep/trim.json, opening/, fill/<job>/, fill/hesitations.md, checker/, review/, games-r1.md, data/units, data/patterns, data/games.json. research/r1/rule-problems.md exists (537 lines) and is linked four times in the text, but has no row. Runbook section 8 asks for 'a file index'.",
+   "fix": "Add a row after fill/hesitations.md: '| [rule-problems.md](rule-problems.md) | Every rule problem the agents raised: 61 for Mustafa, 20 for the batch (how each was settled), 8 settled earlier |'.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed (minor). The Files table has no row for rule-problems.md, though the README links it three times and it is the main record behind the Rule problems section and decision 8. Runbook section 8 asks for a file index.",
+    "evidence": "README l.177-190 read: rows for prep/trim.json, opening/, fill/<job>/, fill/hesitations.md, checker/, review/, games-r1.md, data/units, data/patterns and data/games.json only. grep finds rule-problems.md links at README l.109, l.158 and l.169. wc -l research/r1/rule-problems.md gives 537.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "cc42b30"
+  },
+  {
+   "dimension": "record",
+   "id": "record-15",
+   "severity": "minor",
+   "file": "research/r1/README.md",
+   "summary": "The pull request also rewords other batches' notes (games-r4.md and games-r5.md, commit fa06d5a), but neither the README nor the PR says so.",
+   "evidence": "git diff --stat origin/main...HEAD lists research/registry-notes/games-r4.md (2 lines) and games-r5.md (6 lines). Commit fa06d5a: 'Registry notes: four older phrases shared with cached pages, reworded'. Night log 03:49. grep for 'r4', 'r5' or 'fa06d5a' in README.md and pr-body.md finds nothing.",
+   "fix": "Add to README 'Copied wording': '- Four older phrases in the R4 and R5 game notes (games-r4.md, games-r5.md) shared six words with cached pages; they were reworded (fa06d5a), so the notes folder passes the copy-check.'",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed (minor). The pull request changes two other batches' note files (four phrases reworded so the notes folder passes the copy-check), but neither the README nor the PR description says so. A reviewer sees R4 and R5 files in the diff with no explanation.",
+    "evidence": "git diff --stat origin/main...HEAD -- research/registry-notes/ lists games-r4.md (2 lines) and games-r5.md (6 lines). git log origin/main..HEAD on those files gives only fa06d5a ('Registry notes: four older phrases shared with cached pages, reworded'). grep for r4, r5, fa06d5a or 'older' in README.md and pr-body.md finds no mention.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "cc42b30"
+  },
+  {
+   "dimension": "record",
+   "id": "record-16",
+   "severity": "minor",
+   "file": "research/r1/README.md",
+   "summary": "The README's rule-problems section names the six most visible problems without their proposed fixes. Runbook section 8 asks the report for 'the rule problems with proposed fixes'.",
+   "evidence": "README l.114-120 lists problems 1-6 as statements only, for example '1. Roles step 4 lets a secondary weapon decide the main role ...', with no fix. The fixes are only in rule-problems.md: items 30, 31, 32, 35, 1 and 2.",
+   "fix": "Add one fix clause to each item, worded from rule-problems.md. 1: 'Fix: secondary-weapon praise decides only when the main weapon gives no candidate; the Mammoth would be anti-armour.' 2: 'Fix: judge short or medium against the game's standard tank gun.' 3: 'Fix: let a mode that cannot move still set mobility, or add a target field per mode.' 4: 'Fix: check a mode's weapon against the mode's class and mobility.' 5: 'Fix: add link kinds such as cost:high, availability:unique, immune:mind-control.' 6: 'Fix: define a weapon label once for both rules; a ground or surface target line counts as hitting buildings.'",
+   "verdict": {
+    "real": false,
+    "reason": "Not a problem in practice. The README's Rule problems section points to rule-problems.md and says each entry there gives the rule, what goes wrong, the units, a proposed fix and the number of reports. That covers the runbook's 'rule problems with proposed fixes' by a link to the batch's own record. Listing 81 fixes in the README would bloat it. The six highlights are a summary, and Mustafa has already chosen how all 61 are handled (a rule-fix round where analysts work from the listed fixes).",
+    "evidence": "README l.109-121 read, including 'Each entry gives the rule, what goes wrong, the units, a proposed fix and how many reports raised it'. rule-problems.md items 1, 2, 30, 31, 32 and 35 each have a Fix line. README l.169-174 records decision A.",
+    "better_fix": ""
+   },
+   "status": "answered",
+   "answer": "The skeptic refuted it (see verdict.reason)."
+  },
+  {
+   "dimension": "tooling",
+   "id": "T1",
+   "severity": "major",
+   "file": "research/workflows/final-review.js",
+   "summary": "Since commit ebcf283, the data and patterns reviewers only look at records the checker did not sample. So any field the checker skipped on a sampled record is now checked by nobody. Runbook 7.2 says reviewers leave out only the fields the checker re-checked, not whole records. This review ran with the narrower text.",
+   "evidence": "Current text, line 18 (data): \"The checker re-checked the sampled units field by field (research/${B.id}/checker/checks.json), so do not re-check those fields. For the other units, fetch their cited pages ...\". Line 20 (patterns): \"Check the patterns the checker did not sample against their cited pages, schemas/pattern.schema.json, the word lists and the units that link them\". Text before ebcf283 (from git show ebcf283): \"For each unit, fetch its cited pages ... check that every coded field follows the written rules ... Give most time to the fields the checker did not cover\", and each pattern was checked \"against its cited pages, schemas/pattern.schema.json, the word lists, and the units that link it\". Runbook section 7, step 2: \"The reviewers leave out the fields the checker re-checked one by one (research/r<N>/checker/checks.json)\". I compared every sampled record's top-level keys with the paths in research/r1/checker/checks.json using a node script. The 9 sampled units have 36 to 46 checked fields each. Never checked: nature on ra1.allied.mobile-gap-generator, ra1.soviet.yak, ra2.iraq.desolator, ra2.soviet.boris and ra2.soviet.siege-chopper; availability on ra1.allied.minelayer, ra2.iraq.desolator, ra2.soviet.boris and ra2.soviet.siege-chopper; modes on ra2.iraq.desolator and ra2.soviet.siege-chopper; strengths and weaknesses on all 9; lineage and introduced_in where present. checker.js line 49 never asks for nature, availability, modes or matchups (its optional list is class, roles, mobility and speed, armour, weapons, crew, death, sensors, sources[].supports). R1 sampled all 33 patterns, and the checker left these unchecked: category on 18, summary on 12, counterplay on 13, related on 29, generator on 28. With the current text, the R1 patterns reviewer checks no pattern against the schema, the word lists or the units that link it, and the data reviewer has no instruction for 9 of the batch's 25 units.",
+   "fix": "final-review.js line 18: replace the second and third sentences with \"research/${B.id}/checker/checks.json lists every field the checker re-checked: do not re-check those. For every unit the batch added, the sampled ones included, fetch its cited pages and the pages its uncertain entries name, and check every other coded field: it must follow the written rules (docs/fields.md, docs/vocabularies.md, research/registry-notes/games-${B.id}.md) and be true to the pages. Start with tier, price, class, roles, speed, armour and the weapons. On the sampled units these are the fields checks.json does not list for them (often nature, availability, modes and the matchups).\" Line 20: replace \"Check the patterns the checker did not sample against ...\" with \"Check every pattern against its cited pages, schemas/pattern.schema.json, the word lists and the units that link it, leaving out only the fields checks.json lists for it; ...\". For R1, run the data and patterns reviewers once more, on just those unlisted fields, before the claims check.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. In final-review.js the data and patterns texts limit the full check to records the checker did not sample. Runbook section 7 step 2 and the ebcf283 commit message both say only the fields the checker re-checked are left out. On the sampled units, the fields the checker skipped (nature, availability, modes, lineage/introduced_in, the matchups, some confidence) now get no second check, because code-units.js has no skeptic stage. Two corrections. (1) The pattern counts are too high because combined paths were not split. If 'category, name' and 'summary (sourced claims)' count as covering their fields, category is unchecked on 12 patterns (not 18), summary on 2 (not 12) and counterplay on 8 (not 13). Related (29) and generator (28) are right. 'Checked by nobody' is also too strong for patterns: each one had the writer's skeptic. (2) In R1 the patterns reviewer went beyond the text and checked the unchecked fields of all 33 patterns (generator blocks, variants, unit links, registry). So for R1 only the data dimension needs to run again, not the patterns one.",
+    "evidence": "Read final-review.js l.18 ('For the other units') and l.20 ('the patterns the checker did not sample'), runbook l.194, and git show ebcf283 (the message says the review no longer re-checks fields the checker went through one by one). checker.js l.49 never asks for nature, availability, modes or matchups. code-units.js has one stage and no skeptic. A node script compared each sampled record's keys with its paths in research/r1/checker/checks.json. The 9 sampled units have 36 to 46 checked fields each. nature is unchecked on ra1.allied.mobile-gap-generator, ra1.soviet.yak, ra2.iraq.desolator, ra2.soviet.boris and ra2.soviet.siege-chopper. availability is unchecked on ra1.allied.minelayer, desolator, boris and siege-chopper; modes on desolator and siege-chopper; strengths and weaknesses on all 9; lineage on desolator and tanya; introduced_in on boris and siege-chopper. Run on the 33 patterns with combined paths split, the same script gives category 12, summary 2, counterplay 8, related 29, generator 28. The R1 data reviewer's progress notes show nature and roles re-walked for the 16 unsampled units only, and a planned step for the sampled units' unchecked fields that is never logged as done. The R1 patterns reviewer's notes say the checker covered only some fields of each pattern, so it checked the rest, then go through generator, variants and unit links for all 33.",
+    "better_fix": "Line 18: 'research/${B.id}/checker/checks.json lists, per unit, the fields the checker re-checked: do not re-check those. For every unit the batch added, the sampled ones included, fetch its cited pages and the pages its uncertain entries name. Check every other coded field against the written rules (docs/fields.md, docs/vocabularies.md, research/registry-notes/games-${B.id}.md) and the pages, starting with tier, price, class, roles, speed, armour and the weapons. On a sampled unit, that leaves fields such as nature, availability, modes, lineage, confidence and the matchups.' Line 20: as proposed. For R1, re-run only the data reviewer and its skeptic, limited to the 9 sampled units' fields that checks.json does not list (the list in the evidence, plus counters, countered_by, combos and confidence where they are not listed). The patterns reviewer does not need to run again."
+   },
+   "status": "fixed",
+   "commit": "ad9173a"
+  },
+  {
+   "dimension": "tooling",
+   "id": "T2",
+   "severity": "major",
+   "file": "research/workflows/patterns.js",
+   "summary": "If the Fix-stage agent returns nothing, the group is still counted as done. It sits in results with fixed: null, and neither failed nor unverified lists it. So corrections the skeptic confirmed can go unapplied without anyone noticing.",
+   "evidence": "patterns.js line 97: agent(fixPrompt(g, r.v), ...).then(f => ({ group: g.label, ws: g.ws, write: r.w, verdicts: r.v, fixed: f })). The return statement builds failed only from !out[i] and unverified only from r.unverified. The workflow tool reference says agent() \"Returns null if the user skips the agent mid-run or the subagent dies on a terminal API error after retries\". research/workflows/README.md says \"failed lists the jobs or groups whose agent returned nothing ... Both must be empty before a phase counts as done\". I ran patterns.js with the same stand-in hooks as tests/workflows.test.mjs (scratch script wf-null.mjs), with one agent returning null each time. write:g1 null gives failed=[\"g1\"]. verify:g1 null gives unverified=[\"g1\"]. fix:g1 null gives failed=[] and unverified=[], with g1 in results and fixed=null. For comparison, checker.js and final-review.js report a null agent at either stage correctly. R1's run applied all 86 corrections (research/r1/README.md line 20), so this matters from R2 on, for example when a usage limit hits during the Fix stage at night.",
+   "fix": "Stage 3 of patterns.js: .then(f => ({ group: g.label, ws: g.ws, write: r.w, verdicts: r.v, fixed: f, unfixed: !f })). In the return: failed: [...args.groups.filter((g, i) => !out[i]).map(g => g.label), ...out.filter(r => r && r.unfixed).map(r => r.group)]. Add a case to tests/workflows.test.mjs where the stand-in agent returns null for 'fix:g1', and expect 'g1' in failed.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. When the Fix agent returns null, the group stays in results with fixed: null. That looks the same as a group with no real verdicts, and neither failed nor unverified names it. So the phase counts as done while the confirmed corrections were never applied. checker.js and final-review.js have only two stages and report a null at either one. The proposed fix works and fits the README's meaning of failed.",
+    "evidence": "Ran patterns.js with the stand-in hooks from tests/workflows.test.mjs, with the agent returning null at one label. write:g1 gives failed [g1]. verify:g1 gives unverified [g1]. fix:g1 gives 6 agents, failed [], unverified [], and g1 in results with fixed null. The same test on checker.js (null at check:u-a goes to failed, at verify:u-a to unverified) and final-review.js (review:data to failed, verify:data to unverified) reports both stages correctly. Also read patterns.js l.97 and l.101-104, research/workflows/README.md l.17, and research/r1/README.md l.20 (all 86 corrections applied in R1).",
+    "better_fix": "As proposed: list a group whose fixer returned nothing in failed, and add the fix:g1 null case to tests/workflows.test.mjs. Also make research/workflows/README.md l.17 say that failed includes a group whose fixer returned nothing."
+   },
+   "status": "fixed",
+   "commit": "ad9173a"
+  },
+  {
+   "dimension": "tooling",
+   "id": "T3",
+   "severity": "major",
+   "file": "research/workflows/mkws.sh",
+   "summary": "Since commit fcfe9f6, mkws.sh's path guard accepts relative paths, which the earlier guard refused. Neither version ever refused paths with '..' or paths that go on past the ws- folder. So 'rm -rf' can delete a folder outside any workspace, while the runbook says mkws.sh refuses any other kind of path.",
+   "evidence": "Guard at 60a962f: case \"$WS\" in /*/ws-*) (absolute paths only). Current guard (fcfe9f6), line 6: case \"$WS\" in */working folder/r*/*/ws-*). I tested both patterns with a scratch script that only matches and does nothing (guardtest2.sh). './working folder/r1/fill/ws-j01': old refuses, new accepts. 'r2/working folder/r2/fill/ws-j01': old refuses, new accepts. '/s/working folder/r1/fill/ws-j01/../../../../..' and '/s/working folder/r1/fill/ws-j01/../../../../..the home folder/MoesTools-Brainstormer': both accept. '/s/working folder/r1/fill/ws-j01/data': accepted. The next line runs rm -rf \"$WS\" on whatever was accepted. With a relative path, rm and mkdir act in the caller's folder, but cd \"$REPO\" comes before the copy, so cp --parents and cp -r .cache write relative to the repository. Run from the repository root, as the runbook asks, that puts the copy inside the repository. Runbook, Safety section: \"workspace copies, and only through mkws.sh (it refuses any other kind of path)\"; section 3 says the same. Correct use still works: run on <working folder>/r1/progress/final-review/review-tooling/ws-sample, it made 220 files, the .cache folder and the node_modules link, and it refused a temporary folder and a path that does not end in ws-<job> with exit 2. No test covers mkws.sh.",
+   "fix": "Replace line 6 of mkws.sh with:\nWS=\"${1%/}\"\nusage() { echo \"usage: mkws.sh <working folder>/r<N>/<phase>/ws-<job> (an absolute path)\" >&2; exit 2; }\ncase \"$WS\" in /*) ;; *) usage;; esac\ncase \"$WS/\" in */../*|*/./*) usage;; esac\ncase \"$WS\" in */working folder/r[0-9]*/*/ws-*) ;; *) usage;; esac\ncase \"${WS##*/}\" in ws-?*) ;; *) usage;; esac\nThen add a test, skipped on Windows, that runs mkws.sh on a relative path, on <tmp>/working folder/r1/x/ws-a/.. and on <tmp>/working folder/r1/x/ws-a/data. Each must exit 2 and leave the folders untouched.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The fcfe9f6 guard accepts some relative paths that the 60a962f guard refused. Neither guard refuses '..' segments or a path that goes on past the ws- folder. So the runbook's claim (section 3 and Safety) that mkws.sh refuses any other kind of path is false. Damage needs a malformed argument, for example a '..' path that resolves to a phase folder holding other jobs' workspaces and notes, or to the repository itself. Still, this guard is the only safety on an rm -rf that the night shift runs with nobody watching. The proposed guard is right.",
+    "evidence": "Compared git show 60a962f:research/workflows/mkws.sh (case /*/ws-*) with the current l.6 (case */working folder/r*/*/ws-*), using a match-only sh script under dash. A path starting with ./ and one starting with r2/ are refused by the old guard and accepted by the new one. '<...>/ws-j01/../../../../..', '<...>/ws-j01/../../../../../<repo path>' and '<...>/ws-j01/data' are accepted by both. A path outside any workspace is refused by both. Runbook l.43 says every command runs from the repository root, and mkws.sh does cd $REPO before the copy, so a relative path puts the copy inside the repository. No file in tests/ mentions mkws. Ran the proposed guard match-only too: it refuses all of these and accepts real workspace paths, with or without a trailing slash.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "ad9173a"
+  },
+  {
+   "dimension": "tooling",
+   "id": "T4",
+   "severity": "minor",
+   "file": "tests/workflows.test.mjs",
+   "summary": "The new workflow test still passes when a later stage of a script crashes. Its stand-ins turn a thrown error into null, as the real tool does, and the test only checks that at least 2 agents ran. It never checks the number of agents or the failed and unverified lists the script returns.",
+   "evidence": "Lines 31-41: the stand-in parallel uses .catch(() => null) and the stand-in pipeline uses catch { return null }. Line 69 asserts prompts.length >= 2, and the script's return value is thrown away. My scratch script wf-demo.mjs copies the test's run() and assertions. I misspelt one variable in final-review.js's Verify prompt (${kee}): every assertion still passes, only 2 of 4 agents run, and the script returns failed=[\"data\",\"record\"]. Agent counts for the unchanged scripts: checker 4, code-units 2, reconcile 2, patterns 6, final-review 4, verify-fixes 4, prep 3, notes-and-trim 3. The test cannot catch T2 either. npm run check:merge passes (264 tests).",
+   "fix": "In run(), return the script's value with the prompts, and collect stage errors (catch (e) { errors.push(e); return null } in both stand-ins). Assert that errors is empty. Give each SCRIPTS entry an agents count (the numbers above) and assert prompts.length equals it. Assert that failed and unverified are empty wherever the script returns them. Add, for each pipeline script, a case where the agent returns null at each stage, and expect that label in failed or unverified.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed (minor). The stand-ins swallow a crash in a later stage, and the test only asserts that at least 2 agents ran. It never checks how many ran or the failed and unverified lists the script returns. So the agents a crash skips are never checked for their notes folders either. The fix is right. Asserting an empty error list and empty failed/unverified lists already catches a crash; the per-script agent counts also catch a stage that is skipped.",
+    "evidence": "Copied run() and the assertions from tests/workflows.test.mjs into a scratch script. On the current scripts everything passes, with agent counts checker 4, code-units 2, reconcile 2, patterns 6, final-review 4, verify-fixes 4, prep 3 and notes-and-trim 3. On a copy of final-review.js with ${kee} in the Verify prompt, every assertion still passes: only 2 agents run, and the script returns failed [data, record]. In the test, l.34 and l.37 turn errors into null, l.68 (not 69) asserts >= 2, and run() throws the return value away. npm run check:merge: exit 0, 264 tests pass, working tree unchanged.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "ad9173a"
+  },
+  {
+   "dimension": "tooling",
+   "id": "T5",
+   "severity": "minor",
+   "file": "research/workflows/final-review.js",
+   "summary": "Since commit dc5adf3, the consistency reviewer is told the validator already checks unit links, so it no longer checks that they point at real units. But the validator only lists the ids that are missing from data/units. A misspelt link or one with the wrong faction is now checked by no one.",
+   "evidence": "Old text: \"unit links (unit:...) that point at real units\". New text, line 19: the validator \"already checks ... which unit links point at units not researched yet, so do not redo those by hand\". scripts/validate.mjs line 314: else if (!unitIds.has(id)) missingUnits.add(id). Line 784 only prints a WARN with the list (38 ids now) and checks neither game, faction nor name. I checked those 38 against data/games.json: all use a registered game and faction, so no link is wrong today.",
+   "fix": "Line 19: replace \"and which unit links point at units not researched yet, so do not redo those by hand\" with \"and lists the unit links that point at units not researched yet: check that each id in that list names a real unit of that game and faction, spelled by the Ids convention; do not redo the other checks by hand\".",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed (minor). dc5adf3 removed 'unit links that point at real units' from the consistency text and now says the validator checks unit links. But the validator only checks whether an id exists in data/units and lists every other id as not researched yet, without checking game, faction or spelling. No R1 link is wrong: the R1 data reviewer's notes say it checked the unit: link ids, and the finding found all 38 on registered games and factions. The prompt change is right for later batches.",
+    "evidence": "Read git show dc5adf3 -- research/workflows/final-review.js. scripts/validate.mjs l.312-314: a unit link only gets unitIds.has, otherwise it goes into missingUnits. l.784 prints one WARN with that list (node scripts/validate.mjs lists 38 ids on HEAD). l.595 checks factions only for researched units. The typed-link regex in schemas/common.schema.json accepts any dotted id. Test: in a copy of the repository with unit:ra1.sovet.rocket-soldeir in data/units/ra1.json, the validator lists that id among the 38 and ends OK.",
+    "better_fix": "Use the proposed line 19 text. Optionally, put a validator check to Mustafa as a decision (the runbook's Decisions section says the validator's rule checks need him): an error for a unit: link whose game is not in data/games.json or whose faction is not one of that game's factions. The reviewer would then only check the spelling of the slugs in the WARN list."
+   },
+   "status": "fixed",
+   "commit": "ad9173a",
+   "note": "The optional part, a validator error for a unit link to an unknown game or faction, changes scripts/validate.mjs and is left for the rule-fix round."
+  },
+  {
+   "dimension": "tooling",
+   "id": "T6",
+   "severity": "minor",
+   "file": "research/workflows/mkws.sh",
+   "summary": "mkws.sh copies the files as they are on disk, uncommitted edits included. The runbook checks each workspace against the commit it was made from. So a copy made while the repository has uncommitted edits carries them, and the check then blames them on the agent.",
+   "evidence": "mkws.sh line 10: git ls-files -z | xargs -0 -I{} cp --parents {} \"$WS\"/ copies files from disk, not from HEAD. Runbook, \"How a batch runs\", step 2, checks each workspace \"against the commit it was made from (<start>, in the state file)\" with git show \"$1:$2\" | cmp -s - \"$3/$2\". Section 3 says \"Note in the state file the commit the copies were made from\". Step 1 expects the orchestrator to have uncommitted changes of its own while workflows run. I ran both runbook commands on a fresh copy and they printed nothing. After I edited README.md in the copy they printed README.md, and an orchestrator edit present at copy time would show up the same way.",
+   "fix": "In mkws.sh, before the copy: git diff --quiet HEAD -- || { echo \"mkws.sh: the repository has uncommitted changes to tracked files; commit them first\" >&2; exit 2; }. At the end, print git rev-parse HEAD next to \"$WS\", so the state file records the commit that was actually copied.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed (minor). mkws.sh copies the files as they are on disk. Any uncommitted edit to a tracked file at copy time lands in the workspace, and the runbook's workspace check against the recorded commit then lists it as if the agent had changed it. The proposed refusal only helps if it runs before rm -rf. Otherwise a refused re-make has already deleted the job's workspace and its notes. Copying the commit itself avoids the refusal altogether.",
+    "evidence": "mkws.sh l.10 copies with git ls-files and cp --parents from disk. Test: in a depth-1 clone of the repository with one uncommitted edit to README.md, a copy of mkws.sh pointed at the clone made a workspace. The runbook's changed-files command (l.94-96), run against the clone's HEAD, printed README.md; the new-files command printed nothing. Separately, git archive HEAD | tar -x into an empty folder gave exactly the 220 tracked files, none different from HEAD (.gitattributes has no export-ignore).",
+    "better_fix": "Replace line 10 with: git -C \"$REPO\" archive HEAD | tar -x -C \"$WS\". End with: echo \"$WS $(git -C \"$REPO\" rev-parse HEAD)\", so the state file records the commit that was actually copied. If you keep the refusal instead, put git -C \"$REPO\" diff --quiet HEAD -- || { echo ... >&2; exit 2; } right after the path guard, before rm -rf."
+   },
+   "status": "fixed",
+   "commit": "ad9173a"
+  },
+  {
+   "dimension": "tooling",
+   "id": "T7",
+   "severity": "minor",
+   "file": "research/workflows/patterns.js",
+   "summary": "The writer's prompt points to \"the three written patterns in data/patterns/ as worked examples\", but data/patterns now holds 36 files.",
+   "evidence": "patterns.js line 58: \"the three written patterns in data/patterns/ as worked examples\". data/patterns has 36 .json files after R1, and a node loop over them shows every one with status proposed and review unchecked. The README says these scripts are meant for the next batches.",
+   "fix": "Change it to: \"the patterns in data/patterns/ as worked examples (docs/samples.md shows the step-1 samples infest-vehicle, leech-weapon-on-kill and passenger-sets-weapon readably)\".",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed (minor). data/patterns now holds 36 files, so 'the three written patterns' no longer points at any particular three. The text was right when R1 ran patterns.js (origin/main had 3 files) but is out of date for R2. The fix is right.",
+    "evidence": "patterns.js l.58. ls data/patterns shows 36 files, all with status proposed and review unchecked. git ls-tree origin/main data/patterns shows only infest-vehicle, leech-weapon-on-kill and passenger-sets-weapon. docs/samples.md l.5 renders those three. code-units.js l.74 already uses the wording the fix proposes.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "ad9173a"
+  },
+  {
+   "dimension": "tooling",
+   "id": "T8",
+   "severity": "minor",
+   "file": "research/workflows/notes-and-trim.js",
+   "summary": "The editor's prompt sends the reader to docs/fields.md for the armour-class steps. Those steps are in docs/vocabularies.md, in the first tie-break under Armour classes.",
+   "evidence": "notes-and-trim.js line 62: \"Read first: docs/fields.md (Conventions, the roles steps, armour-class steps, Paired entries, ...)\". The armour.class row in docs/fields.md only says \"A term from *Armour classes*.\" docs/vocabularies.md, Armour classes: \"Code it with the steps in the first tie-break below\", and that tie-break says \"Go through steps 1 to 5 in order\". grep for 'armour-class steps' in docs/fields.md finds nothing.",
+   "fix": "Change it to: \"Read first: docs/fields.md (Conventions, the roles.primary steps, Paired entries, Shared mechanics and universal keys, Bands with numbers), docs/vocabularies.md (the armour-class steps: Armour classes, first tie-break), research/registry-notes/README.md, ...\".",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed (minor). docs/fields.md has no armour-class steps: the armour.class row only names the word list. The steps are in docs/vocabularies.md under Armour classes, in the first tie-break (steps 1 to 5). The other items in that parenthesis (the roles steps, Paired entries, Shared mechanics and universal keys, Bands with numbers) really are in fields.md. The fix is right.",
+    "evidence": "notes-and-trim.js l.62. Searching docs/fields.md for 'armour-class steps' finds nothing. fields.md l.64 is the armour.class row ('A term from Armour classes'). vocabularies.md l.276-290: Armour classes says to code it with the steps in the first tie-break, which gives steps 1 to 5. fields.md l.41 has the roles.primary steps, and the Conventions bullets cover Paired entries, Shared mechanics and Bands with numbers.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "ad9173a"
+  },
+  {
+   "dimension": "tooling",
+   "id": "T9",
+   "severity": "minor",
+   "file": "docs/research-runbook.md",
+   "summary": "Two places point to \"section 8, step 4a\", but no step 4a exists. Step 4's three parts are a numbered list, 1 to 3.",
+   "evidence": "Line 113: \"after the checks and the copy-check (section 8, step 4a)\". Line 136: \"Run section 8, step 4a, on the folder.\" In section 8, step 4 lists its parts as \"1.\", \"2.\" and \"3.\" (lines 207-209).",
+   "fix": "Write \"section 8, step 4, part 1\" in both places.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed (minor). Both references say 'step 4a', but step 4's parts are numbered 1 to 3. GitHub renders a nested ordered list as i to iii, so no 'a' exists in either form. A reader can guess what is meant. Both references came in with 60a962f on this branch.",
+    "evidence": "docs/research-runbook.md l.113 and l.136 say 'section 8, step 4a'. Step 4 is at l.206, with parts '1.', '2.' and '3.' at l.207-209. git log -S 'step 4a' finds 60a962f, which already had the same 1 to 3 numbering.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "ad9173a"
+  },
+  {
+   "dimension": "tooling",
+   "id": "T10",
+   "severity": "minor",
+   "file": "research/r1/fill/j05-ra2/report.json",
+   "summary": "The runbook's own search for local paths (section 8, step 5) still finds two hits in the R1 record. The quality bar says the record has no local paths. This is record text, but it fails a runbook command.",
+   "evidence": "the runbook's local-path search over research/r1... into the pre-existing working folder folder r1/fill/j05-dl ...\") and research/r1/opening/final/report-ra2.json:168 (\"... (<working folder>/r1/opening/final-ra2-scripts/ngram.py)\").",
+   "fix": "Reword both without the path. For example: \"into a folder of another job's files in the shared working area\" and \"a six-word n-gram script of its own (not kept)\". Then run the grep again until it prints nothing.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed (minor), but this is the same problem as the record dimension's record-10, which the record skeptic already confirmed. Fix it once and save both ids against that one fix. Neither hit leaks an absolute path, but the quality bar says the record has no local paths, and the runbook's own search prints both.",
+    "evidence": "The runbook's local-path search (section 8, step 5, l.212) on research/r1 prints two lines. research/r1/fill/j05-ra2/report.json:409 is in source_problems and names another job's download folder. research/r1/opening/final/report-ra2.json:168 is in copy_check_result and names the agent's own n-gram script by a placeholder path. The quality bar is at runbook l.26. The record reviewer's and record skeptic's progress notes list the same two hits as record-10, with verdict real.",
+    "better_fix": ""
+   },
+   "status": "fixed",
+   "commit": "42e27d6"
+  }
+ ]
+}
