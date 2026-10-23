@@ -57,7 +57,7 @@ For each item:
 Return the items in the order given.`
 
 const TEST_TASK = (g, draft) => `## Your job: test the drafted changes for group ${g.label}
-Make a scratch copy of the repository: sh ${REPO}/research/workflows/mkws.sh ${args.ws}/ws-${g.label} (it prints the folder and the commit). In that copy, apply each item's edits in order; an old text that does not appear exactly once is a failed edit. Then run npm run check:merge in the copy and note what fails and why.
+Make a scratch copy of the repository: sh ${REPO}/research/workflows/mkws.sh ${args.ws}/ws-${g.label} (it prints the folder and the commit). In that copy, apply each item's edits in order; an old text that does not appear exactly once is a failed edit. Then run npm run check:merge in the copy and note what fails and why (the vocab-diff test always fails in a copy, which has no git history; leave that one out).
 For each item, decide whether the change does what the fix intends and nothing more, whether it breaks or contradicts another rule, and whether its recode list is complete and right: check the units yourself against the new rule, and a unit the validator now rejects must be on the list. Mark confirmed=true only when you checked it; default to false when you cannot. When the drafted edits or recodes are wrong or incomplete, give the corrected ones in full.
 
 The drafts:
@@ -78,7 +78,7 @@ const confirmed = tested.flatMap(r => r.draft.map(d => {
   return v && v.confirmed ? { group: r.label, item: d.item, edits: v.edits && v.edits.length ? v.edits : d.edits, recodes: v.recodes && v.recodes.length ? v.recodes : d.recodes } : null
 }).filter(Boolean))
 const whole = confirmed.length ? await agent(`${COMMON}\n\n${saving(`${args.progress}/whole-all`, REPO)}\n\n## Your job: the whole set
-Make a scratch copy: sh ${REPO}/research/workflows/mkws.sh ${args.ws}/ws-all. Apply every item below, in the order given, each item's edits in order. List each clash: an edit whose old text an earlier item already changed, two items that change the same rule in different ways, or rules that now contradict each other; give the fix for each. Then run npm run check:merge in the copy and report what it showed. Last, merge the recodes per unit and path, and list every unit and path that two items recode differently as a clash.
+Make a scratch copy: sh ${REPO}/research/workflows/mkws.sh ${args.ws}/ws-all. Apply every item below, in the order given, each item's edits in order. List each clash: an edit whose old text an earlier item already changed, two items that change the same rule in different ways, or rules that now contradict each other; give the fix for each. Then run npm run check:merge in the copy and report what it showed (the vocab-diff test always fails in a copy, which has no git history; leave that one out). Last, merge the recodes per unit and path, and list every unit and path that two items recode differently as a clash.
 
 ${JSON.stringify(confirmed, null, 1)}`, { label: 'whole:all', phase: 'Whole set', schema: WHOLE }) : null
 
