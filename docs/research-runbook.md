@@ -110,7 +110,7 @@ After every workflow, before you use any result:
    A skeptic checks every claim against the pages. An editor applies the confirmed corrections, re-fetches any point the two disagree on, and turns registry findings into exact JSON-pointer edits. Scripts: `prep.js`, then `notes-and-trim.js`.
 2. **Candidates, per game:** about half again as many as the batch keeps. Each says what it teaches the generator, the pattern ids it links, any mechanic no id covers, its pages, and whether it is buildable in skirmish.
 3. **Trim, one judge for the whole batch.** Keep about 9 per game, counting units already researched. Remove repeats within the batch and against units already in the data. Cover the classes, factions, roles, tiers and the registry patterns whose examples are in this batch. Give a reason for every cut. Record it in `research/r<N>/prep/trim.json`.
-4. **Commit the prep:** the notes, the registry edits and the trim, after the checks and the copy-check (section 8, step 4a). Then open the batch's pull request from that commit, ready for review, with a short progress description, and subscribe to it.
+4. **Commit the prep:** the notes, the registry edits and the trim, after the checks and the copy-check (section 8, step 4, part 1). Then open the batch's pull request from that commit, ready for review, with a short progress description, and subscribe to it.
 
 ### 2. Opening check (only when the rules changed)
 
@@ -127,13 +127,13 @@ Keep both codings, the agreement report and the hesitations in `research/r<N>/op
 
 ### 3. Fill
 
-- **One research agent per two related units.** Each works in its own copy of the repository, made with `sh research/workflows/mkws.sh <scratchpad>/r<N>/fill/ws-<job>` (it refuses any other kind of path). The copy has no git history, `node_modules` linked and the page cache copied. Note in the state file the commit the copies were made from.
+- **One research agent per two related units.** Each works in its own copy of the repository, made with `sh research/workflows/mkws.sh <scratchpad>/r<N>/fill/ws-<job>` (it refuses any other kind of path). The copy holds the last commit, without uncommitted edits or git history, with `node_modules` linked and the page cache copied. Note in the state file the commit the copies were made from: mkws.sh prints it after the folder.
 - **The agent's brief** is the trim's one-line brief.
 - **Its prompt** is `code-units.js`. It says what to read first, how to research and paraphrase, and what to check before finishing. It also asks for a report: hesitations, gaps, unclear rules, new mechanics, and pages read but not cited.
 - **Record each finished job at once.** Once the checks at the top of this section pass:
   1. Copy its unit file and its report to `research/r<N>/fill/<job>/`.
   2. Paraphrase any wording the report copies from a page.
-  3. Run section 8, step 4a, on the folder.
+  3. Run section 8, step 4, part 1, on the folder.
   4. Commit and push.
 
   Units enter `data/units/` only in the merge pass.

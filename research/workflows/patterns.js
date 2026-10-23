@@ -55,7 +55,7 @@ ${saving(`${g.ws}/.progress/write`, g.ws)}
 ${g.patterns.map(p => `- \`${p.id}\` (${p.kind === 'new' ? 'new id, not in the registry yet' : 'registered, no file yet'}): ${p.summary}. Batch units that use it: ${p.units.join(', ')}.${p.hint ? ` ${p.hint}` : ''}`).join('\n')}
 
 ## Read first
-schemas/pattern.schema.json (every field and its description), the three written patterns in data/patterns/ as worked examples, the Pattern section of docs/fields.md, docs/vocabularies.md for the lists the pattern uses, data/pattern-registry.json (categories and every existing id: never make a duplicate of one), research/registry-notes/patterns.md, and the batch's units that use each pattern (data/units/*.json).
+schemas/pattern.schema.json (every field and its description), the patterns in data/patterns/ as worked examples (docs/samples.md shows three of them readably: infest-vehicle, leech-weapon-on-kill and passenger-sets-weapon), the Pattern section of docs/fields.md, docs/vocabularies.md for the lists the pattern uses, data/pattern-registry.json (categories and every existing id: never make a duplicate of one), research/registry-notes/patterns.md, and the batch's units that use each pattern (data/units/*.json).
 
 ## Task
 1. For each pattern, write data/patterns/<id>.json with status "proposed", review {"status": "unchecked"} and every field the schema allows that applies. source_units lists the batch units that use it (the merge pass keeps it up to date later). other_examples come from other games and franchises, each with its sources and confidence; research them. player_translation, team_play, build_difficulty, risks, variants and the generator rules say how it works for a player-controlled unit in a team shooter.
@@ -94,12 +94,12 @@ const out = await pipeline(
   (r, g) => r && (!r.v
     ? { group: g.label, ws: g.ws, write: r.w, verdicts: null, fixed: null, unverified: true }
     : r.v.verdicts.some(x => x.real)
-    ? agent(fixPrompt(g, r.v), { label: `fix:${g.label}`, phase: 'Fix', schema: FIXED }).then(f => ({ group: g.label, ws: g.ws, write: r.w, verdicts: r.v, fixed: f }))
+    ? agent(fixPrompt(g, r.v), { label: `fix:${g.label}`, phase: 'Fix', schema: FIXED }).then(f => ({ group: g.label, ws: g.ws, write: r.w, verdicts: r.v, fixed: f, unfixed: !f }))
     : { group: g.label, ws: g.ws, write: r.w, verdicts: r.v, fixed: null }),
 )
-// A group with no result, or whose skeptic returned nothing, is not done: run it again on its own.
+// A group with no result, or whose skeptic or fixer returned nothing, is not done: run it again on its own.
 return {
   results: out.filter(Boolean),
-  failed: args.groups.filter((g, i) => !out[i]).map(g => g.label),
+  failed: [...args.groups.filter((g, i) => !out[i]).map(g => g.label), ...out.filter(r => r && r.unfixed).map(r => r.group)],
   unverified: out.filter(r => r && r.unverified).map(r => r.group),
 }

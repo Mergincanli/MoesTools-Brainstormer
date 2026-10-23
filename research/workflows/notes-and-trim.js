@@ -59,7 +59,7 @@ function editPrompt(g) {
 ${saving(`${args.progress}/edit-${g.id}`, REPO)}
 
 ## Your task: the final game-level notes and registry edits for ${g.name} (\`${g.id}\`)
-A researcher drafted this game's notes before any unit of it is coded, and a skeptic checked every claim. Both are in ${DIR}/prep-${g.id}.json: \`notes\` (role_line, game_wide, registry_findings, other_notes, pages_read) and \`verdicts\` (each claim marked real or not, with corrections, plus \`missing\` items). Read first: docs/fields.md (Conventions, the roles steps, armour-class steps, Paired entries, Shared mechanics and universal keys, Bands with numbers), research/registry-notes/README.md, research/registry-notes/games-r1.md (the model), ${NOTES_FILE}, and this game's entry in data/games.json.
+A researcher drafted this game's notes before any unit of it is coded, and a skeptic checked every claim. Both are in ${DIR}/prep-${g.id}.json: \`notes\` (role_line, game_wide, registry_findings, other_notes, pages_read) and \`verdicts\` (each claim marked real or not, with corrections, plus \`missing\` items). Read first: docs/fields.md (Conventions, the roles steps, Paired entries, Shared mechanics and universal keys, Bands with numbers), docs/vocabularies.md (the armour-class steps: Armour classes, first tie-break), research/registry-notes/README.md, research/registry-notes/games-r1.md (the model), ${NOTES_FILE}, and this game's entry in data/games.json.
 
 Write the final texts:
 1. Apply every correction the skeptic confirmed, and add every missing item that holds up. Where the researcher and the skeptic disagree and the evidence is not plain, fetch the page and decide yourself; say what you decided in \`changes\`.
