@@ -1,0 +1,364 @@
+{
+ "label": "j10-ra3",
+ "game": "ra3",
+ "file_written": "data/units/ra3.json",
+ "units": [
+  "ra3.soviet.sickle",
+  "ra3.soviet.kirov-airship"
+ ],
+ "validator_result": "OK. node scripts/validate.mjs . reports no errors. The WARN lines are the expected ones: planned patterns (leap, overclock-self and others) and unit links to units not yet researched (ra3.soviet.bullfrog among them). There are no ATYPICAL lines for ra3.soviet.sickle or ra3.soviet.kirov-airship, so neither unit needs an atypical list. The only ATYPICAL lines are three about the existing Multigunner IFV sample (stun min_tier t2 twice, and laser allowed.damage-types kinetic). The three samples are unchanged: they are byte-identical to the original apart from the comma after the last sample.",
+ "copy_check_result": "Exit 0. Command: node scripts/copy-check.mjs . --only wiki/Sickle --only Kirov_airship_ --only strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Soviet_units --only wiki/Hammer_tank/Profile --only wiki/Gastroburner --only RA3_Manual_-_PC.pdf. It checked 8 pages (all cached by now, the Gastroburner page fetched on the first run) and found no shared runs. The check of the manual PDF means nothing, because copy-check stores the PDF's raw bytes as HTML. So I also compared every prose string of both units with text extracted from the RA3 and Uprising manuals (.cache/j10-work/pdfcheck.mjs). That found no 6-word runs. It found one 5-word run ('excellent for crowd control and'), which I reworded. A further local check of both units against every cached wiki page I read, cited or not (.cache/j10-work/wikicheck.mjs), found no 6-word runs.",
+ "hesitations": [
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "roles/secondary",
+   "chosen": "[scout, assault]",
+   "alternatives": [
+    "[assault]"
+   ],
+   "reason": "roles.secondary step 1 needs official text that 'calls the unit by' a role label or alias. The profile's Notes from the Field say the Flea Jump is extremely useful for reconnaissance, an alias of scout, but the sentence is about the jump, not a name for the unit. The raider/scout tie-break gives scout to a unit without an information part only when official text calls the unit a scout. Read strictly, scout fails and only assault remains (step 4: medium armour and a medium-range main weapon). An uncertain entry records this."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "crew/model",
+   "chosen": "solo",
+   "alternatives": [
+    "driver-gunner"
+   ],
+   "reason": "Each of the three guns sits in its own ball canopy that aims on its own, and they fire at the same time at different targets. But Weapon entries rule 2 makes copies of one gun one entry. The driver-gunner proposal rule and decision 2A speak of two weapons, or another weapon, on its own mount. With one entry there is no second weapon, so solo. The rule never says how separately aimed copies of one gun count."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "armament/0/mount",
+   "chosen": "limited-arc",
+   "alternatives": [
+    "free-aim"
+   ],
+   "reason": "Aim/mount step 3 fits each gun, which covers a 130-degree arc. Together the three cover the whole circle, but at most two reach any one target. No term describes overlapping partial arcs, so I filed a fit_note."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "armament/0/family",
+   "chosen": "machine-gun",
+   "alternatives": [
+    "autocannon"
+   ],
+   "reason": "The infobox gives the guns the Auto-Cannon damage category, but the sources call them 12.7 mm heavy machine guns that fire bullets. The machine-gun/autocannon/cannon tie-break says what it fires wins. The category only sets the damage."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "armament/0/damage",
+   "chosen": "kinetic",
+   "alternatives": [
+    "family default (also kinetic)"
+   ],
+   "reason": "The infobox writes 'Auto-Cannon' with a hyphen. I read it as the damage_map's 'Auto Cannon' (step 4; 'the same name written out' counts). Both readings give kinetic, so no code depends on it."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "armament/0/can_target",
+   "chosen": "[infantry, ground-vehicle, structure, naval]",
+   "alternatives": [
+    "[infantry, ground-vehicle, naval] (no structures)"
+   ],
+   "reason": "The profile says the guns cannot attack aircraft. If that counts as saying the weapon 'hits only some kinds', can_target step 3 applies, and structures would need a source saying the guns damage buildings. None does. I took the sentence as a statement of what it cannot hit, so step 4 fills in the ground kinds, structures included. An uncertain entry records this."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "armament/0/traits",
+   "chosen": "[]",
+   "alternatives": [
+    "[suppress]"
+   ],
+   "reason": "The manual says it was designed for riot suppression. That describes its original police job, not fire that pins targets, and RA3 has no suppression mechanic. The suppress trait's coding rule needs the sources to say its fire pins targets."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "body/size",
+   "chosen": "medium",
+   "alternatives": [
+    "large"
+   ],
+   "reason": "Sizes go by named examples. StrategyWiki calls it a light walker, which is medium. The C&C Wiki only calls it compact and spindly, and no source gives dimensions; on screen it is close to a tank's footprint. The rule was clear, but the source evidence was thin."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "body/plan",
+   "chosen": "spider-frame",
+   "alternatives": [
+    "hull-turret"
+   ],
+   "reason": "hull-turret allows many legs, but the Sickle has no main turret, only three ball canopies around a pod held up on four stilt legs (profile). The profile calls the shape spiderlike."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "armour/class",
+   "chosen": "medium",
+   "alternatives": [
+    "light"
+   ],
+   "reason": "There is no armour_map, and its armour set name is not a plain armour word, so step 4 decides by kind: a light walker bigger than a soldier is medium. Its health is a little below the Hammer tank's, and its armour takes over full damage from cannons, which might argue for light. But step 4 decides by kind, not by health."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "mobility/traits",
+   "chosen": "[leap]",
+   "alternatives": [
+    "[leap, crush]",
+    "[leap, climb]"
+   ],
+   "reason": "Its walking crush level is 0. It rises to 21 only for the Flea Jump landing, and crush is limited to large and huge units anyway. Jumping up cliffs is leap, not climb, by climb's coding rule."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "abilities/0/patterns",
+   "chosen": "[leap]",
+   "alternatives": [
+    "[leap, bombard-area]",
+    "[leap, drop-in-from-above]"
+   ],
+   "reason": "The landing deals melee-category damage in a small radius, can crush infantry, and per the main wiki can stun commandos. No registered pattern covers a damaging landing as its own interaction: bombard-area needs a warned strike on a spot, and drop-in-from-above is about arriving on the map. I folded it into leap as a variant."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "strengths",
+   "chosen": "5 entries; dropped tier:t1 ('cheap and plentiful')",
+   "alternatives": [
+    "6 entries with tier:t1"
+   ],
+   "reason": "Matchups rule 7 says to keep each list to about two to five. The cheapness claim is also disputed: the profile calls it cost-effective, StrategyWiki calls it expensive, and its price sits exactly on the medium threshold."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "countered_by/2",
+   "chosen": "class:vehicle",
+   "alternatives": [
+    "weapon:cannon",
+    "armour-class:heavy"
+   ],
+   "reason": "The wiki says heavy weapons and vehicles do to the Sickle what it does to infantry. Rule 1 takes a kind of unit as class. The armour set's large bonus to cannon damage might argue for weapon:cannon, but the source names vehicles."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "sources/4",
+   "chosen": "Hammer tank/Profile (supports combos)",
+   "alternatives": [
+    "Special ability (Red Alert 3) page",
+    "Hammer tank page",
+    "leave it in uncertain only"
+   ],
+   "reason": "The sources rule gives no order once the unit's own pages and a second site are cited. The Hammer combo rests wholly on that profile, so I cited it. The other pages are named in uncertain entries."
+  },
+  {
+   "unit": "ra3.kirov-airship",
+   "path": "mobility/traits",
+   "chosen": "[boost]",
+   "alternatives": [
+    "[]"
+   ],
+   "reason": "Gastroburners are a burst of speed on a key, which is the boost trait. But boost's key pattern is dash, while the abilities rule sends a boost that costs health to overclock-self, which the ability links. I kept the trait and filed a fit_note."
+  },
+  {
+   "unit": "ra3.soviet.kirov-airship",
+   "path": "modes",
+   "chosen": "no mode",
+   "alternatives": [
+    "a 'gastroburners' mode via overclock-self with mobility speed medium"
+   ],
+   "reason": "modes[] is for second forms (deploy, siege, transform), and a weapon swap alone is not a mode. A speed toggle that changes neither body nor movement type reads as a timed boost (abilities rule), not a second form. Still, modes[].mobility allows a mode that only changes speed."
+  },
+  {
+   "unit": "ra3.soviet.kirov-airship",
+   "path": "abilities/0/kind",
+   "chosen": "toggle",
+   "alternatives": [
+    "active",
+    "channel"
+   ],
+   "reason": "The game lists Gastroburners and Propellers as a toggle pair, and it can move in both states. Two buttons that undo each other make one entry."
+  },
+  {
+   "unit": "ra3.soviet.kirov-airship",
+   "path": "armament/0/traits",
+   "chosen": "[splash, friendly-fire]",
+   "alternatives": [
+    "[friendly-fire]"
+   ],
+   "reason": "The Kirov page gives no blast radius. Splash rests on the uncited Splash damage page (named in uncertain), which lists the RA3 Kirov, and on the infobox's reduced damage to friendlies. The rule was clear, but the evidence is indirect."
+  },
+  {
+   "unit": "ra3.soviet.kirov-airship",
+   "path": "armament/0/affects",
+   "chosen": "left out (enemies)",
+   "alternatives": [
+    "both"
+   ],
+   "reason": "The bombs hurt friendly units at half damage. The friendly-fire trait already says that, and affects is described for repair and buff tools. The pilot's SC2 siege tank also left affects out with friendly-fire."
+  },
+  {
+   "unit": "ra3.soviet.kirov-airship",
+   "path": "armament/0/damage",
+   "chosen": "explosive",
+   "alternatives": [
+    "armour-piercing"
+   ],
+   "reason": "The infobox gives the Explosive category, so step 4 maps it to explosive. The profile calls the bombs armour-piercing and says one Kirov can ruin an armour division, but step 4 comes before step 5's anti-armour exception. Anti-armour then fails its requires, so I filed a fit_note."
+  },
+  {
+   "unit": "ra3.soviet.kirov-airship",
+   "path": "roles/secondary",
+   "chosen": "[anti-infantry, assault]",
+   "alternatives": [
+    "[assault]",
+    "[anti-infantry]"
+   ],
+   "reason": "Anti-infantry comes in at step 3 from the splash weapon. Assault comes in at step 4 from super-heavy armour and a short-range main weapon, though 'leads pushes, brawls at short range' fits a bomber loosely."
+  },
+  {
+   "unit": "ra3.soviet.kirov-airship",
+   "path": "countered_by",
+   "chosen": "role:anti-air, unit:ra3.allied.multigunner-ifv, class:aircraft, speed:>=fast",
+   "alternatives": [
+    "target:high-air for fighter jets",
+    "role:infiltrator (Battle Lab spies)"
+   ],
+   "reason": "StrategyWiki's 'air-to-air jets' name a job, so rule 1 folds them into role:anti-air. class:aircraft covers the gap per rule 5. The sources disagree on fighters (the profile says they barely trouble it), recorded with sources_disagree. The main wiki also says a spy infiltrating the Battle Lab can shut down Kirovs. I left that out as a tech-building effect rather than a head-on counter, and it rests on one page."
+  },
+  {
+   "unit": "ra3.soviet.kirov-airship",
+   "path": "strengths / weaknesses",
+   "chosen": "5 each; dropped weapon-trait:splash from strengths and tier:t3 (expense) from weaknesses",
+   "alternatives": [
+    "6 each"
+   ],
+   "reason": "Matchups rule 7 says about two to five. Which entry to drop is my own call."
+  },
+  {
+   "unit": "ra3.soviet.kirov-airship",
+   "path": "sources/4",
+   "chosen": "Gastroburner page cited (abilities/0, on_death/notes, weaknesses)",
+   "alternatives": [
+    "name it only in an uncertain entry"
+   ],
+   "reason": "The rule asks for each ability's own page to be read. It gives no figure, so the 'mechanic page first' clause does not apply. It is the only page that says overuse can bring the Kirov down, and a slot was free."
+  },
+  {
+   "unit": "ra3.soviet.kirov-airship",
+   "path": "on_death/outcomes",
+   "chosen": "[death-blast]",
+   "alternatives": [
+    "[death-blast] plus a note on friendly damage"
+   ],
+   "reason": "The registry and infobox make it death-blast. No source says whether the crash also hurts friendly units, so the notes say nothing on it."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "armament/0/mount",
+   "used": "limited-arc",
+   "wanted": "split arcs: several mounts that together cover the whole circle, with only some able to bear on one target",
+   "note": "Three 130-degree gun arcs cover 360 degrees, but at most two guns reach any one target. Recorded as a fit_note."
+  },
+  {
+   "unit": "ra3.soviet.sickle",
+   "path": "roles",
+   "used": "anti-infantry, scout, assault",
+   "wanted": "disabler",
+   "note": "The manual rates it highly for crowd control, and the jump knocks infantry down or stuns commandos. But a leap has no stun trait or control pattern, so disabler's requires fail. Recorded as a fit_note."
+  },
+  {
+   "unit": "ra3.soviet.kirov-airship",
+   "path": "mobility/traits",
+   "used": "boost",
+   "wanted": "a boost trait whose key may link overclock-self when the burst of speed costs health",
+   "note": "Boost's key pattern is dash, but Gastroburners burn the hull, so the ability links overclock-self. Recorded as a fit_note."
+  },
+  {
+   "unit": "ra3.soviet.kirov-airship",
+   "path": "roles",
+   "used": "siege, anti-infantry, assault",
+   "wanted": "anti-armour",
+   "note": "The profile says it ruins armour divisions and calls its bombs armour-piercing, but their category is Explosive, so anti-armour's requires fail. Recorded as a fit_note."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "roles.secondary step 1 and the raider/scout tie-break",
+   "note": "Does official text 'call the unit by' an alias when it uses the alias for the unit's purpose or for one of its abilities (Sickle profile: the flea jump is extremely useful for reconnaissance)? Or must it name the unit itself (a scout, a recon walker)? The answer decides whether the Sickle gets scout."
+  },
+  {
+   "topic": "Key-bound mobility traits against the abilities rule for boosts",
+   "note": "The boost trait 'uses a key (pattern: Dash)', but a timed boost that costs anything besides speed must link overclock-self. The rules don't say whether a unit with a costly speed boost (the Kirov's Gastroburners, likely also the Dreadnought-style self-damaging boosts) still takes the boost trait."
+  },
+  {
+   "topic": "crew.model proposal with several copies of one gun on separate mounts",
+   "note": "Weapon entries rule 2 merges copies of one gun into one entry. The driver-gunner proposal counts weapons firing at once from separate mounts. It is unclear whether three separately aimed copies firing at different targets at once count as several weapons for crew purposes."
+  },
+  {
+   "topic": "can_target step 3 trigger",
+   "note": "It is unclear whether a source saying a weapon cannot attack aircraft counts as saying it 'hits only some kinds'. If so, step 3 applies, and structures then need explicit support. The difference decides whether ground weapons with an explicit no-air statement list structures."
+  },
+  {
+   "topic": "armament[].affects with friendly-fire",
+   "note": "It is unclear whether a weapon whose blast hurts friendly units (at reduced strength) should be affects: both, or keep the enemies default with the friendly-fire trait alone."
+  },
+  {
+   "topic": "Matchup list length",
+   "note": "Rule 7 says 'about two to five'. It is unclear whether six well-sourced strengths or weaknesses are acceptable or should be trimmed. I trimmed to five."
+  },
+  {
+   "topic": "modes for a speed toggle",
+   "note": "modes[] describes second forms, yet modes[].mobility allows a mode that changes only speed. It is unclear whether a toggle such as Gastroburners, which only changes speed and adds self-damage, is ever a mode."
+  }
+ ],
+ "new_mechanics": [],
+ "pages_read_not_cited": [
+  {
+   "url": "https://cnc.fandom.com/wiki/Special_ability_(Red_Alert_3) (Flea Jump redirects here; named in an uncertain entry)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Hammer_tank (speed, health and armour set used for comparisons; named in uncertain entries)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Splash_damage (Kirov splash; named in an uncertain entry)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/MiG_fighter_(Red_Alert_3) (air speed comparison; named in an uncertain entry)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Twinblade (air speed comparison; named in an uncertain entry)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Century_bomber (air speed comparison; named in an uncertain entry)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Conscript_(Red_Alert_3) (reference figures; the registry gives them)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Tier"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/War_factory_(Red_Alert_3)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Airfield_(Red_Alert_3)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Battle_lab_(Red_Alert_3)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Veterancy (Kirov's stock self-healing, which the cited infobox also gives)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Kirov_airship (disambiguation page)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/PKX_12.7_mm_machinegun (redirects to Sickle)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/File:CCRA3UP_pcMAN(EN_US).pdf (Uprising manual; it repeats the base-game Sickle and Kirov paragraphs)"
+  }
+ ],
+ "source_problems": "copy-check stores the manual PDF (static.wikia.nocookie.net .../RA3_Manual_-_PC.pdf/revision/latest) as raw PDF bytes under the html format, so its run comparison against the manual means nothing. I checked against locally extracted manual text instead (no 6-word runs). The original EA profiles on web.archive.org were not opened (the registry notes say archive.org resets connections from these sessions), so the profiles were read through the C&C Wiki's /Profile transcriptions. https://cnc.fandom.com/wiki/Gastroburners (plural) does not exist; the singular Gastroburner page does. Flea Jump and PKX 12.7 mm machinegun are redirects. The sources disagree on how fast Gastroburners hurt the hull: the wiki's ability box gives a heavy loss each second, while the profile, the Gastroburner page and StrategyWiki speak of slow corrosion. They also disagree on fighters against the Kirov. Both disagreements are recorded with sources_disagree. Workspace note: since the last session, data/units/ra3.json had gone back to its original state (only the samples). I re-merged from my saved draft (.cache/j10-work/new-units.json) with the revisions in .cache/j10-work/revise.mjs, and confirmed the samples are unchanged."
+}

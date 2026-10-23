@@ -1,0 +1,365 @@
+{
+ "label": "j01-ra1",
+ "game": "ra1",
+ "file_written": "data/units/ra1.json",
+ "units": [
+  "ra1.allied.spy",
+  "ra1.soviet.attack-dog"
+ ],
+ "validator_result": "OK. No errors and no ATYPICAL lines for either ra1 unit. The only ra1 warnings are the expected ones: planned patterns (disguise, capture-structure, reveal-area, bombard-area) and unit links to units not researched yet (ra1.shared.rifle-infantry, ra1.soviet.submarine).",
+ "copy_check_result": "Exit 0: \"OK: no shared runs\". All 9 cited pages were checked: Spy_(Red_Alert_1), StrategyWiki Allied_units and Soviet_units, Sonar_pulse, Parabombs, INFANTRY.CPP, TECHNO.CPP, Attack_dog_(Red_Alert_1) and Kennel. The first run found one 7-word run copied from the Sonar pulse page (a phrase about how long the pulse shows units), in spy counters/0 and counters/1. I rewrote it, and also reworded the matching phrase in abilities/2, then ran the check again.",
+ "hesitations": [
+  {
+   "unit": "ra1.allied.spy",
+   "path": "abilities",
+   "chosen": "Four entries: Disguise (passive, disguise), Infiltrate (active, capture-structure; its summary gives every building's result, including the Radar Dome's shared view), Sonar Pulse (active, reveal-area) and Parabombs (active, bombard-area)",
+   "alternatives": [
+    "Fold the Sonar Pulse and the parabomb strike into the Infiltrate entry, which links only capture-structure",
+    "Keep them as separate entries but also link capture-structure on them"
+   ],
+   "reason": "The task asks for the infiltration results as capture-structure sabotage, including the sonar pulse and parabombs. But abilities[] says one entry per button, and the earned powers are sidebar buttons of their own. Under Pattern links, pressing them gives a reveal or a strike, not a building takeover. So capture-structure stays on the Infiltrate button that earns them."
+  },
+  {
+   "unit": "ra1.allied.spy",
+   "path": "abilities/1/cooldown",
+   "chosen": "per-life",
+   "alternatives": [
+    "no cooldown (an instant order)"
+   ],
+   "reason": "Cooldown bands say an instant order with no wait has no band, but per-life means one use per life or purchase. The spy is used up by entering, so there is exactly one use per purchase. The rule does not say which wins for an action that spends the unit."
+  },
+  {
+   "unit": "ra1.allied.spy",
+   "path": "abilities/2/cooldown",
+   "chosen": "per-life",
+   "alternatives": [
+    "long (recharging)",
+    "left out (no figure)"
+   ],
+   "reason": "The rule is clear; the sources are not. The Sonar pulse page says single use. EA's code grants the spy's pulse as a recharging power, and Remastered patch 740600 fixed it being usable only once. I followed the wiki for 3.03, as the Ore Truck precedent does, and added an uncertain entry with sources_disagree."
+  },
+  {
+   "unit": "ra1.allied.spy",
+   "path": "abilities/2/kind",
+   "chosen": "active (also abilities/3), source innate",
+   "alternatives": [
+    "triggered (granted when the spy gets in)",
+    "source commander-power"
+   ],
+   "reason": "The grant happens on an event, but the player then presses the button and picks a spot. The registry note says what a spy earns belongs to the spy and that no RA1 ability has source commander-power."
+  },
+  {
+   "unit": "ra1.allied.spy",
+   "path": "confidence",
+   "chosen": "medium",
+   "alternatives": [
+    "high"
+   ],
+   "reason": "Official manual text is quoted on the Spy page, which alone would give high. The High-or-Medium tie-break drops to medium when a contradicted point decides a band, and the sonar pulse dispute decides abilities/2's cooldown band. It is unclear whether this is a real contradiction or only a Remastered change, because the code is the Remastered release."
+  },
+  {
+   "unit": "ra1.allied.spy",
+   "path": "roles/secondary",
+   "chosen": "[\"scout\"]",
+   "alternatives": [
+    "[] (leave empty)",
+    "siege (from the parabombs)"
+   ],
+   "reason": "Scout's requirement is met through the disguise pattern's stealth-deception category. It fits through the Radar Dome's shared view and the sonar pulse, which are buttons every copy has (step 2). Siege's requirements need a weapon part (drop or lobbed delivery, or long range), and the spy has no weapon. It also did not seem to fit the unit's job, so I added no fit_note."
+  },
+  {
+   "unit": "ra1.allied.spy",
+   "path": "sensors/traits",
+   "chosen": "[]",
+   "alternatives": [
+    "stealth"
+   ],
+   "reason": "The rule is clear: the registry gives the spy's disguise to the disguise pattern, and stealth means being hard to see. The spy is in plain view, only mistaken for a friendly unit."
+  },
+  {
+   "unit": "ra1.allied.spy",
+   "path": "countered_by/2",
+   "chosen": "mobility-trait:crush",
+   "alternatives": [
+    "class:vehicle"
+   ],
+   "reason": "Matchups step 1 names the enemy by what wins. The Spy page says AI vehicles sometimes run spies over, and running over infantry is the crush trait, not every vehicle."
+  },
+  {
+   "unit": "ra1.allied.spy",
+   "path": "counters",
+   "chosen": "mobility:naval-submerged plus unit:ra1.soviet.submarine",
+   "alternatives": [
+    "add target:structure-like links for fake buildings or production (no such unit kind)"
+   ],
+   "reason": "Counters must describe units. The spy's other wins are against buildings, which no link kind covers, so only the sonar pulse's submarine counter is listed."
+  },
+  {
+   "unit": "ra1.allied.spy",
+   "path": "weaknesses/0",
+   "chosen": "armour-class:unarmoured (with having no weapon named in the reason)",
+   "alternatives": [
+    "leave the lack of a weapon out of weaknesses"
+   ],
+   "reason": "Matchups step 5 says to hang something the unit lacks on the part that causes it. An unarmed unit has no weapon part to hang it on, so it went on its fragility."
+  },
+  {
+   "unit": "ra1.allied.spy",
+   "path": "sources/4/kind",
+   "chosen": "official (EA's GitHub source release; the same for TECHNO.CPP on the dog)",
+   "alternatives": [
+    "database"
+   ],
+   "reason": "Source kinds lists the publisher's own site and in-game text under official and data-mined values under database. Released source code is between the two."
+  },
+  {
+   "unit": "ra1.soviet.attack-dog",
+   "path": "armament/0/range",
+   "chosen": "melee",
+   "alternatives": [
+    "medium (the reach is about three quarters of the rifle's, inside 0.7 to 1.5)"
+   ],
+   "reason": "The melee coding rule and the Melee-or-Short tie-break count a unit's own leap as melee. The code shows the dog leaping to its victim. The infobox figure would band medium."
+  },
+  {
+   "unit": "ra1.soviet.attack-dog",
+   "path": "armament/0/delivery",
+   "chosen": "melee",
+   "alternatives": [
+    "ram",
+    "attach"
+   ],
+   "reason": "The code takes the dog off the map while it leaps and puts it back on the hit, so the dog itself flies at the target. Ram means hitting by collision and usually self-destruction; the dog survives and mauls. Melee covers strikes or lunges at touching distance."
+  },
+  {
+   "unit": "ra1.soviet.attack-dog",
+   "path": "mobility/speed",
+   "chosen": "medium (speed_raw 1)",
+   "alternatives": [
+    "fast (the code doubles its pace whenever it has a target)"
+   ],
+   "reason": "Speed bands count an unlimited sprint but do not cover a speed that applies only while chasing a target. speed_raw uses the plain land speed figure."
+  },
+  {
+   "unit": "ra1.soviet.attack-dog",
+   "path": "sensors/traits",
+   "chosen": "[\"detector\"]",
+   "alternatives": [
+    "[] with a fit_note"
+   ],
+   "reason": "The task and the registry say detector. But the term means revealing for the whole team, and the sources only show the dog seeing through spies itself. I added a fit_note."
+  },
+  {
+   "unit": "ra1.soviet.attack-dog",
+   "path": "roles/secondary",
+   "chosen": "[\"scout\"]",
+   "alternatives": [
+    "[]"
+   ],
+   "reason": "Step 4 allows scout from a sensor trait with an in-game basis. Whether spotting spies fits scout's 'finds, spots and marks enemies' is a judgement. The Kennel's 'scout infantry' line is the wiki's own words, so it does not count."
+  },
+  {
+   "unit": "ra1.soviet.attack-dog",
+   "path": "countered_by/0",
+   "chosen": "weapon:small-arms (plus unit:ra1.shared.rifle-infantry)",
+   "alternatives": [
+    "role:anti-infantry",
+    "class:infantry"
+   ],
+   "reason": "The source names only a unit (Rifle Infantry). Matchups step 1 then reads what makes that unit win, and here it is its quick rifle burst."
+  },
+  {
+   "unit": "ra1.soviet.attack-dog",
+   "path": "counters/3",
+   "chosen": "weapon:flamethrower and weapon:explosives (counters/4), for the Flamethrower Infantry and Grenadier",
+   "alternatives": [
+    "class:infantry",
+    "unit: links to those soldiers"
+   ],
+   "reason": "The wiki names units and says their slow shots are why they lose. I took each unit's weapon family. The Grenadier's family (explosives) is my reading, since that unit is not researched."
+  },
+  {
+   "unit": "ra1.soviet.attack-dog",
+   "path": "counters/0",
+   "chosen": "role:infiltrator (spies and thieves) and role:engineer",
+   "alternatives": [
+    "pattern:disguise",
+    "class:infantry"
+   ],
+   "reason": "The manual names Engineers, Spies and Thieves, which are units. Matchups step 1 reads them by their job first."
+  },
+  {
+   "unit": "ra1.soviet.attack-dog",
+   "path": "weaknesses/1",
+   "chosen": "weapon:blades (infantry only, one dog per victim)",
+   "alternatives": [
+    "range:melee",
+    "delivery:melee"
+   ],
+   "reason": "Matchups step 5 says to hang the gap on the part that causes it. The bite's limits belong to the weapon itself."
+  },
+  {
+   "unit": "ra1.soviet.attack-dog",
+   "path": "strengths/2",
+   "chosen": "tier:t1",
+   "alternatives": [
+    "leave the low price out"
+   ],
+   "reason": "No link kind exists for price. I followed the Terror Drone sample, which uses tier:t1 for being cheap."
+  },
+  {
+   "unit": "ra1.allied.spy",
+   "path": "combos",
+   "chosen": "[] (and [] for the dog)",
+   "alternatives": [
+    "unsourced pairings such as spy plus engineer, or dogs beside base defences"
+   ],
+   "reason": "No page read names a combination, and Matchups asks for sourced reasons."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "ra1.soviet.attack-dog",
+   "path": "armament/0/patterns",
+   "used": "none (empty list)",
+   "wanted": "execute-target",
+   "note": "No registered pattern covers an attack that kills one kind of target outright, whatever its health, while it cannot touch any other kind."
+  },
+  {
+   "unit": "ra1.soviet.attack-dog",
+   "path": "sensors/traits",
+   "used": "detector",
+   "wanted": "a detector that sees through disguises for itself and attacks them, without unmasking them for the team",
+   "note": "Recorded as a fit_note on the unit."
+  },
+  {
+   "unit": "ra1.allied.spy",
+   "path": "abilities/1/patterns",
+   "used": "capture-structure",
+   "wanted": "possibly a separate 'spy on a structure' pattern",
+   "note": "No fit_note was written, because 'sabotage it from inside' plus the infiltration category cover it acceptably. Still, most of the spy's results are intelligence (production, power, ore, the shared radar view), not takeover or damage."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Earned one-shot powers",
+   "note": "Nothing says how a side-wide one-shot button that a unit earns (the Spy's Sonar Pulse and parabombs) is counted. Is it an ability of the earning unit, and which kind and source does it take (active or triggered, innate or commander-power)? The registry says only that it belongs to the Spy."
+  },
+  {
+   "topic": "Cooldown of an action that uses up the unit",
+   "note": "Cooldown bands say instant orders have no band, while per-life means one use per life or purchase. For an infiltration or capture that removes the unit, either reading fits."
+  },
+  {
+   "topic": "Speed only while chasing",
+   "note": "Speed bands handle sprints limited by a meter but not a pace the engine gives only while the unit has a target (the dog runs at double speed while chasing)."
+  },
+  {
+   "topic": "Detector scope",
+   "note": "The detector term says it reveals hidden enemies for the whole team. Several units (this dog, and possibly the RA2 and RA3 dogs) only see through a disguise themselves and attack. There is no term for 'sees through for itself'."
+  },
+  {
+   "topic": "Released source code as a source",
+   "note": "Source kinds do not say whether EA's GitHub code release is official or database. Nor do they say whether it counts as official text that 'settles' a contradiction under the confidence tie-break. The registry relies on it for engine behaviour but follows wiki pages over it in places (Ore Truck)."
+  },
+  {
+   "topic": "Version contradiction against Remastered",
+   "note": "The confidence tie-break does not say whether a disagreement that may only be a Remastered change counts as sources contradicting each other. Here the code and patch notes are from the Remastered Collection and the wiki claim is version-unspecified. I treated it as a contradiction and dropped the spy to medium."
+  },
+  {
+   "topic": "Weakness of an unarmed unit",
+   "note": "Matchups step 5 says to hang a missing part on the part that causes it. An unarmed unit has no weapon part, so it is unclear where 'no weapon' goes."
+  },
+  {
+   "topic": "Where to note faction facts",
+   "note": "Source units have no general notes field. The task asked to note that the Soviet Spy is campaign-only, and I put it in tier.basis."
+  }
+ ],
+ "new_mechanics": [
+  {
+   "unit": "ra1.soviet.attack-dog",
+   "path": "armament/0",
+   "proposed_id": "execute-target",
+   "summary": "A close-range strike that kills one kind of target outright, whatever its health or armour, but cannot touch any other kind of target; in Red Alert only one attacker may go for each victim. Counterplay is to shoot the fragile attacker down on its approach, especially with fast-firing small arms in a group, or to field units of the kinds it cannot hit.",
+   "pages": [
+    {
+     "url": "https://cnc.fandom.com/wiki/Attack_dog_(Red_Alert_1)"
+    },
+    {
+     "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/INFANTRY.CPP"
+    },
+    {
+     "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Soviet_units"
+    }
+   ]
+  }
+ ],
+ "pages_read_not_cited": [
+  {
+   "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_manual (manual transcript; the unit pages' quote boxes copy the same paragraphs)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Allied_barracks_(Red_Alert_1)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Soviet_barracks_(Red_Alert_1)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Radar_Dome"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Infiltration"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Stealth (via the Detector redirect)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Remastered_Collection_patch_740600 (named in a spy uncertain entry)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Remastered_Collection_patch_735514"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Remastered_Collection_patch_741245"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Remastered_Collection_patch_744746"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Remastered_Collection_patch_745903"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Remastered_Collection_patch_745903.1"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Remastered_Collection_patch_745903.2"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Remastered_Collection_patch_16_March_2021"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Remastered_Collection_beta_patch_737929"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Remastered_Collection_beta_patch_738763"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Red_Alert_patch_2.00"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Red_Alert_patch_1.08"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/HOUSE.CPP (named in a spy uncertain entry)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/SUPER.CPP"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/IDATA.CPP"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP (cited for the dog; named in the spy's uncertain entries, not cited there)"
+  }
+ ],
+ "source_problems": "Every page loaded; nothing failed. The sources disagree on the Sonar Pulse. The C&C Wiki's Sonar pulse page says single use. EA's code (INFANTRY.CPP and HOUSE.CPP) enables the spy's pulse as a recharging power that is removed only when no infiltrated Sub Pen remains, and Remastered patch 740600 fixed the pulse being usable only once. The code on GitHub is the Remastered release, so I cannot confirm 3.03's behaviour. The Parabombs page's infobox describes the Soviet campaign power (with a long recharge) rather than the spy's one-time strike, so the strike rests on that page's prose and on INFANTRY.CPP. Both units' wiki infoboxes give armour type N/A; StrategyWiki's 'none' settles it, as the registry note says. The Kennel page's production list says dogs also detect Thieves, which no other page read confirms. The Spy page's infiltration table lists a 'Supply depot' with no effect, a building name I could not tie to a known RA1 structure. The dog's double pace while chasing and its leap are only in the code, not in wiki prose. Note: when I resumed, my workspace had no ra1.json yet, so I redid the research from scratch with fresh fetches dated 2026-10-20."
+}

@@ -1,0 +1,511 @@
+{
+ "label": "j06-ra2",
+ "game": "ra2",
+ "file_written": "data/units/ra2.json",
+ "units": [
+  "ra2.iraq.desolator",
+  "ra2.soviet.boris"
+ ],
+ "validator_result": "OK. No errors, and no ATYPICAL lines for either unit. The only lines about them are WARN: the patterns leave-hazard-zone, deploy-siege-mode, bombard-area and mind-control are planned, and the unit links ra2.allied.robot-tank, ra2.allied.ifv and ra2.allied.battle-fortress point at units not researched yet. Both are expected.",
+ "copy_check_result": "Exit 0. I ran copy-check with --only on all nine cited pages: the Desolator (Red Alert 2) page, the RA2 manual transcript, the ModEnc DESO, RadSiteWarhead and Airstrike pages, the Boris profile snapshot, the Yuri's Revenge manual PDF, the Boris page and the MiG (Yuri's Revenge) page. All nine were checked and no shared runs remain. The first run found three 6-word runs shared with the Boris page (two about his difference from Tanya and Yuri Prime, one comparing his rifle with a deployed Guardian GI). I rewrote all three. The cache stores the two manual PDFs as raw PDF bytes, so copy-check cannot really compare against them. I checked every prose string by hand with my own 6-word overlap script (_tools/ngram.py in the workspace) against the PDFs' extracted text, the ModEnc pages and the uncited wiki pages I used. One more run, from Gameplay Changes item 9 (the limit of one such hero at a time), was found and rewritten.",
+ "hesitations": [
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "abilities/0 (and armament)",
+   "chosen": "The deployed radiation is an ability: 'Deploy (irradiate the ground)', kind deploy, source innate, linking deploy-siege-mode and leave-hazard-zone. There is no alternate weapon; the mode summary says the rad cannon is silent.",
+   "alternatives": [
+    "An alternate weapon 'Rad eruption' (chemical, toxic, zone trait, mode deployed) plus a deploy ability, both linking deploy-siege-mode only. Granularity bars a swapped-in weapon and its toggle from linking the mirroring leave-hazard-zone."
+   ],
+   "reason": "The rules point both ways. The Weapons vs abilities convention makes a weapon anything fired with an attack button; the deployed shot fires by itself at his own spot when he deploys, never by an attack order. The r1 note's Basic orders also lists 'Desolator radiation' among things the deploy key does as the unit's ability. But the wiki infobox lists the shot as an attack line and ModEnc calls it his secondary weapon. The note's Radiation item also says 'the weapon that leaves it gets the zone trait'. If it is a weapon, Paired entries and Granularity forbid the leave-hazard-zone link that the brief asks for."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "roles/primary",
+   "chosen": "anti-infantry (step 4, official strong-against text)",
+   "alternatives": [
+    "assault (step 5, if no official text names a target)"
+   ],
+   "reason": "The source, not the rule, is unclear. The manual entry names no target. Anti-infantry rests on the Iraq multiplayer loading screen (in-game text, copied on the Desolator page), which says his rad cannon can wipe out enemy troops. The vocabularies' definition of official text covers words the game wrote, but the RA2 note says official text 'comes from two places', the manuals and the site profiles. Its strong-against word list (effective, powerful, excellent, built to fight) has no verb like 'annihilate'; the RA1 note's list (destroys, devastates) would include it."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "roles/secondary",
+   "chosen": "[area-denial] (step 2: the deploy button, through leave-hazard-zone's Area category)",
+   "alternatives": [
+    "[] if the deploy were coded as a weapon with the zone trait, though that would still meet area denial's requires",
+    "anti-armour (the wiki says long exposure melts tanks)"
+   ],
+   "reason": "Anti-armour fails its requires (toxic damage only), and the wiki calls him next to useless against most vehicles, so the role description does not fit either. No fit_note was added."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "armament/0/family",
+   "chosen": "chemical",
+   "alternatives": [
+    "laser",
+    "a beam-style family"
+   ],
+   "reason": "The rad cannon fires a beam of radiation. The chemical / radiation family names radiation, but its description says 'lingers as a hazard zone', and the cannon's own hit leaves no zone that any source mentions."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "armament/0/delivery",
+   "chosen": "projectile (chemical family default)",
+   "alternatives": [
+    "hitscan",
+    "beam"
+   ],
+   "reason": "The rule is clear but the sources are vague. They say 'beams of radiation', and ModEnc IsRadBeam says the game draws a short-lived wave along the shot's path. Nothing says the beam is held on the target, as beam delivery needs, or that it lands at once (hitscan). Chemical allows neither beam nor hitscan anyway."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "armament/0/range",
+   "chosen": "medium",
+   "alternatives": [
+    "long"
+   ],
+   "reason": "The rule is clear: the stock reach is exactly 1.5 times the Conscript rifle's, and an edge goes to the band nearer medium. The elite reach would be long."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "armament/0/can_target",
+   "chosen": "infantry, ground-vehicle, naval",
+   "alternatives": [
+    "infantry only",
+    "with structures"
+   ],
+   "reason": "Structures are left out because the wiki says it cannot damage buildings. Ground vehicles are listed because 'next to useless' still means a little damage. Naval comes from the naval rule alone; no source mentions ships."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "armament/0/traits",
+   "chosen": "[]",
+   "alternatives": [
+    "[splash]",
+    "[zone]"
+   ],
+   "reason": "No source gives the hit an area or says the cannon itself leaves radiation."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "mobility/traits",
+   "chosen": "[deploy-anchor]",
+   "alternatives": [
+    "[]"
+   ],
+   "reason": "He must stop and plant himself to get his field, and pack up to move. Whether a hazard mode counts as the trait's 'stronger stationary mode' is a judgement. The trait then sits beside the deploy ability that links the same pattern."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "body/plan",
+   "chosen": "humanoid",
+   "alternatives": [
+    "power-suit"
+   ],
+   "reason": "The body tie-break gives power suit when sources say 'battlesuit'. The wiki's lore field calls his suit a 'Nuclear battle suit', but the manual calls it a protective suit against radiation and nothing says it is powered."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "modes/0",
+   "chosen": "A mode with no mobility (cannot move) and no armour change",
+   "alternatives": [
+    "No mode at all (only the ability)"
+   ],
+   "reason": "No source says in so many words that he cannot walk while deployed; it is inferred from him plunging the cannon into the ground and the field fading when he undeploys."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "strengths/2",
+   "chosen": "class:infantry, with radiation immunity in the reason",
+   "alternatives": [
+    "pattern:leave-hazard-zone",
+    "armour-class:light"
+   ],
+   "reason": "The registry says immune units 'say so in strengths', but no link kind names an immunity."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "countered_by",
+   "chosen": "class:aircraft, class:vehicle, nature:uncrewed-machine plus unit:ra2.allied.robot-tank",
+   "alternatives": [
+    "add unit:ra2.allied.navy-seal"
+   ],
+   "reason": "The wiki says SEALs kill him in one hit, but the SEAL page says Desolators outrange them. Matchup rule 6 (put it where the head-on fight ends) cannot place it, so I left it out."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "counters",
+   "chosen": "class:infantry, role:transport, role:logistics (Slaves and Slave Miner), mobility:naval-submerged (submarines, dolphins)",
+   "alternatives": [
+    "unit links for the NightHawk and the Slave Miner",
+    "hits:naval"
+   ],
+   "reason": "These follow matchup rule 1 for sources that name only units. The Slave Miner's job is read as logistics; neither it nor the NightHawk is coded yet."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "combos",
+   "chosen": "unit:ra2.iraq.desolator plus pattern:leave-hazard-zone (fields stack); pattern:passenger-sets-weapon plus unit:ra2.allied.ifv",
+   "alternatives": [
+    "a self link alone",
+    "role:anti-air as an escort (unsourced)"
+   ],
+   "reason": "Rule 3 allows a self link in combos when the sources say the unit works best in numbers, and wants a word-list or pattern link beside a unit link."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "sensors/notes",
+   "chosen": "Sight given in words (a little larger than a Conscript's)",
+   "alternatives": [
+    "the Sight figure itself"
+   ],
+   "reason": "The ra2 sight_reference says to give the Sight figure in sensors.notes, but the Bands with numbers convention forbids figures in text fields."
+  },
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "sources",
+   "chosen": "The YR manual PDF (tech table), the Desolator page, the RA2 manual transcript, ModEnc DESO and ModEnc RadSiteWarhead",
+   "alternatives": [
+    "the RA2 manual PDF as the official page about the unit"
+   ],
+   "reason": "The registry says to cite a PDF only for text no wiki page copies, so the manual entry is cited through the wiki. The registry also says the Desolator page has no manual quote, but it now has an Official description box."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "armament/1 (weapon or ability)",
+   "chosen": "A secondary weapon (laser designator)",
+   "alternatives": [
+    "An innate active ability calling the strike, which could then link mark-target or bombard-area"
+   ],
+   "reason": "In-game he calls the strike with the attack order on a building (Boris page; ModEnc Airstrike), and the convention makes anything fired with an attack button a weapon. The r1 note calls 'Boris's MiG strike' one of the 'units' own innate abilities, not powers'; I read that as contrasting it with side-wide powers."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "armament/1/patterns",
+   "chosen": "bombard-area",
+   "alternatives": [
+    "mark-target"
+   ],
+   "reason": "Settled by the rules plus the pattern notes. Granularity lists mark-target as a mirroring pattern that a weapon cannot link (it uses the mark trait instead). bombard-area's summary names an air strike called on a chosen spot after a visible warning. patterns.md folds the Renegade beacon call-in into bombard-area and keeps mark-target for designators that teammates' lock-ons use (the SOFLAM). The MiGs are Boris's own call-in, not teammates. Its boundary line ('mark-target tags a unit; this marks ground') fits less well, since he tags a building, not ground."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "armament/1/family, damage, delivery",
+   "chosen": "laser, energy (damage step 2: it only marks), beam",
+   "alternatives": [
+    "bombs, explosive, drop (drop needs a flier, so it would break the rules)",
+    "guided-missiles with guided delivery (the MiG infobox says laser-guided missiles, and he must keep lasing until they land)"
+   ],
+   "reason": "The in-game weapon is the flare/laser, whose warhead does no damage (ModEnc). Weapon entries rule 1 says to code the weapon as it works against its main target, and what wrecks the building is the jets' ordnance. The sources also disagree on the ordnance: iron bombs, laser-guided bombs, laser-guided missiles."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "armament/1/traits",
+   "chosen": "[]",
+   "alternatives": [
+    "[mark]"
+   ],
+   "reason": "Damage step 2 says to put the effect in traits, but mark means the team sees the target and hits it harder. The beam instead summons a strike that aborts when the beam breaks. Recorded as a fit_note."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "armament/1/range",
+   "chosen": "long",
+   "alternatives": [
+    "off-screen"
+   ],
+   "reason": "The rule is clear: its reach is about three times the Conscript rifle's and well past his Sight figure. The RA2 sight band is a proposal with no figure, and no source says he needs spotters."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "armament/0/family",
+   "chosen": "small-arms",
+   "alternatives": [
+    "machine-gun"
+   ],
+   "reason": "The official profile calls it an 'AKM machine gun'; the wiki calls it an assault rifle firing bursts. The small-arms tie-break makes rifles always small arms."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "armament/0/damage",
+   "chosen": "kinetic",
+   "alternatives": [
+    "armour-piercing"
+   ],
+   "reason": "The wiki credits the rifle with some anti-tank capacity and says it beats a dug-in Guardian GI at killing vehicles. No source calls it an anti-tank weapon or gives it a bonus against armour, so step 5's armour-piercing exception does not apply."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "armament/0/can_target",
+   "chosen": "infantry, ground-vehicle, structure, naval",
+   "alternatives": [
+    "without structure",
+    "without naval"
+   ],
+   "reason": "Structures come from can_target step 4 (small arms allows them) and from ModEnc, which says he fires the rifle at barrels, ammunition crates and a deployed Slave Miner. Naval comes from the naval rule alone."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "armament/0/range",
+   "chosen": "long",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "The rule is clear: the stock reach is a little under twice the Conscript rifle's, over 1.5 times, so long. The wiki's prose calls it medium range."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "roles/secondary",
+   "chosen": "[siege]",
+   "alternatives": [
+    "[siege, anti-armour]",
+    "[]"
+   ],
+   "reason": "Siege ranks at step 3: the laser meets siege's requires by its long range, and the coding rule's 'bombs dropped from the air' fits only through the jets it calls, not the laser itself. The manual's verb 'bombard' does not name the unit by the alias 'bombardment' (step 1). Anti-armour's requires are met only by the laser's nominal energy damage, and no source calls the rifle anti-tank."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "armour/models",
+   "chosen": "[flat-pool]",
+   "alternatives": [
+    "[self-repair]"
+   ],
+   "reason": "The registry note says to follow the infobox, which lists self-healing only at Elite, over the YR manual, whose Yuri Prime entry says heroes regenerate on their own. Recorded as an uncertain entry with sources_disagree."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "countered_by/1-2",
+   "chosen": "mobility-trait:crush plus unit:ra2.allied.battle-fortress",
+   "alternatives": [
+    "unit link only (not allowed alone)",
+    "leave the Battle Fortress out"
+   ],
+   "reason": "Rule 1 says to name what makes a named unit win, here crushing. But every other crusher fails against him, so the word-list link over-claims; the reason says so."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "strengths/3",
+   "chosen": "class:infantry, carrying his mind-control and crush immunity",
+   "alternatives": [
+    "tier:t3"
+   ],
+   "reason": "No link kind names an immunity; the registry asks only that it be said in strengths."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "combos",
+   "chosen": "[role:anti-air]",
+   "alternatives": [
+    "add pattern:passenger-sets-weapon (Boris in a captured IFV gives it an advanced machine gun, per the IFV page)"
+   ],
+   "reason": "I kept the list to what the cited pages support; the IFV point rests only on an uncited page."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "on_death/notes",
+   "chosen": "The one-hero-at-a-time cap and the lack of Cloning Vat copies are stated here",
+   "alternatives": [
+    "tier/basis",
+    "crew/notes"
+   ],
+   "reason": "The registry says to note the cap and Cloning Vat copies 'in notes', but availability has no notes field."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "tier, cost_band",
+   "chosen": "t3 Battle Lab; very-high (raw 1500)",
+   "alternatives": [
+    "t2 Radar Tower and a lower price (the archived profile)"
+   ],
+   "reason": "The rule is clear: the registry says never to take bands or tiers from the launch-time profiles. 1500 sits exactly on the very-high edge and takes the higher band."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "abilities",
+   "chosen": "[] (empty)",
+   "alternatives": [
+    "passives for mind-control and crush immunity"
+   ],
+   "reason": "The registry says being controllable needs no entry and immune units say so in strengths. Crush immunity has no term, so it is a fit_note, not an ability."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "ra2.iraq.desolator",
+   "path": "armour/models",
+   "used": "flat-pool",
+   "wanted": "an immunity to toxic or radiation damage",
+   "note": "His suit makes him immune to radiation, his own field included. The nature term organic marks him as vulnerable to toxic damage, and no armour model or flag records a damage immunity."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "armour/models",
+   "used": "flat-pool",
+   "wanted": "uncrushable: vehicles cannot run it over",
+   "note": "As a hero only the Battle Fortress can crush him; no term records crush immunity. This is the same gap the R1 plan expects for the Chrono Legionnaire and Guardian GI."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "armament/1/damage",
+   "used": "energy",
+   "wanted": "explosive, from the called-in jets' bombs",
+   "note": "The laser does no damage; energy is only the laser family's default under damage step 2. No field of the weapon can show that the harm comes from summoned aircraft."
+  },
+  {
+   "unit": "ra2.soviet.boris",
+   "path": "armament/1/traits",
+   "used": "none",
+   "wanted": "a designator trait: holding the beam calls a strike that lands only while the beam stays on",
+   "note": "mark is the closest trait but means the team sees the target and hits it harder for a time."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Weapons fired by the deploy key",
+   "note": "The Desolator's deployed shot is an attack line in the infobox and a secondary weapon in ModEnc, but it fires by itself at his own spot when he deploys, never by an attack order. Read as a weapon, Paired entries and Granularity forbid leave-hazard-zone; read as an ability, it fits leave-hazard-zone's 'on a key'. The r1 note's Basic orders says the Desolator radiation is the deploy key's ability, but its Radiation item says 'the weapon that leaves it gets the zone trait'. A rule for weapons that only a deploy fires, aimed at the unit's own spot, would settle it."
+  },
+  {
+   "topic": "Boris's strike: weapon or ability",
+   "note": "The r1 note calls 'Boris's MiG strike' one of the units' 'own innate abilities, not powers', while the Weapons vs abilities convention makes anything fired with an attack button a weapon. The brief's 'mark-target or bombard-area' choice only matters if it can be an ability, since mark-target mirrors a trait and a weapon cannot link it."
+  },
+  {
+   "topic": "Call-in weapons",
+   "note": "No rule covers a designator whose damage comes from summoned aircraft. Damage step 2 gives the laser's default energy. That nominally meets anti-armour's requires (energy damage) and misstates the bombs. Family, damage and delivery could each fairly follow either the laser or the ordnance."
+  },
+  {
+   "topic": "Official text in Red Alert 2",
+   "note": "The vocabularies define official text as words the game or its makers wrote, but the RA2 note says it 'comes from two places', the manuals and the site profiles. Whether in-game loading-screen text (Iraq: the Desolator's cannon can wipe out enemy troops) counts, and whether verbs like 'annihilate' are strong-against wording, decides the Desolator's primary role (anti-infantry or assault)."
+  },
+  {
+   "topic": "Sight figure in notes",
+   "note": "The ra2 sight_reference and the r1 notes say to give the Sight figure in sensors.notes, but Bands with numbers forbids figures in text fields. I gave it in words."
+  },
+  {
+   "topic": "Immunities in matchups",
+   "note": "The registry says immune units 'say so in strengths', but no link kind names an immunity (to mind control, radiation or crushing), so the choice of ref is arbitrary (here class:infantry)."
+  },
+  {
+   "topic": "Registry note out of date on the Desolator page",
+   "note": "The r1 note lists the Desolator page among pages with no manual quote, but the page now has an Official description box copying the RA2 manual."
+  },
+  {
+   "topic": "Copy-check and PDFs",
+   "note": "The copy-check cache holds the manual PDFs as raw bytes, so a PDF citation passes copy-check without being compared. The registry already says to hand-check PDF paraphrases; copy-check could warn when a cited page is a binary PDF."
+  }
+ ],
+ "new_mechanics": [],
+ "pages_read_not_cited": [
+  {
+   "url": "https://cnc.fandom.com/wiki/Desolator (disambiguation)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Soviet_barracks_(Red_Alert_2)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Iraq"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Typhoon_attack_submarine"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Robot_Tank"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Red_Alert_2_patch_1.004"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Yuri%27s_Revenge_patch_1.001"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Veterancy"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Commando_(Red_Alert)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_2_-_Yuri%27s_Revenge_manual"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Battle_Fortress (named in Boris's uncertain entry at countered_by/1)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Infantry_Fighting_Vehicle"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Navy_SEAL_(Red_Alert_2)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Flak_cannon_(Red_Alert_2)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Mind_control"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Sniper_(Red_Alert_2)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Attack_dog_(Red_Alert_2)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Grand_cannon"
+  },
+  {
+   "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b5/Red_Alert_2_-_English.pdf/revision/latest (RA2 manual PDF; the entry cites its wiki transcript instead)"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/IsRadBeam (named in the Desolator's uncertain entry at armament/0/delivery)"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/IsRadEruption"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/IsDesolator"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/ImmuneToRadiation"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Radiation"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/RadLevel"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/RadLevelMax"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/RadLevelDelay"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/RadLevelFactor"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/RadLightDelay"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/RadDurationMultiple"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/RadApplicationDelay"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Deployer"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/DeployFire"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/DeployFireWeapon"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/AirstrikeRechargeTime"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/AirstrikeTeam"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/AirstrikeTeamType"
+  }
+ ],
+ "source_problems": "- web.archive.org reset every connection from this session, both the normal snapshot URLs and the raw id_ form. Boris's official profile (newsovietinfo2.jsp, snapshot 20071214201459) was therefore read from the copy-check cache's stored copy, fetched earlier on 2026-10-20, and cited under the registry's URL.\n- The Red Alert 2 Soviet profile pages (sovietunits.jsp to sovietunits4.jsp), which may hold a Desolator profile, could not be read at all.\n- The Command & Conquer Wiki has no Radiation page (the API answers missingtitle) and no page for the rad cannon or the laser designator. ModEnc covers only engine behaviour, so no source gives the radiation field's size, strength or duration, or the rad beam's damage table.\n- The sources disagree on the MiGs' ordnance: iron bombs (official profile), laser-guided bombs (MiG page prose) and laser-guided missiles (MiG infobox).\n- The sources disagree on hero self-healing: the YR manual says heroes regenerate on their own, while Boris's infobox gives self-healing only at Elite.\n- The archived profile's price and building lines for Boris are from before release.\n- The copy-check cache holds both manual PDFs as raw bytes, so I checked those paraphrases by hand against the PDFs' extracted text.\n- A read-only check of the agent proxy's status was refused by the permission classifier; nothing depended on it."
+}

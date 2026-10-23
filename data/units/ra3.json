@@ -805,7 +805,7 @@
           "name": "Radiation spray (Desolator)",
           "slot": "passenger",
           "seat": "passenger-module",
-          "when": "unit:ra3.soviet.desolator",
+          "when": "unit:ra3.soviet.desolator-trooper",
           "family": "chemical",
           "damage": "toxic",
           "mount": "free-aim",
@@ -1203,6 +1203,1916 @@
         }
       ],
       "researched_by": "step-7 samples",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra3.empire.mecha-tengu",
+      "game": "ra3",
+      "faction": "empire",
+      "name": "Mecha Tengu",
+      "flavour_affinity": ["empire", "allied"],
+      "class": "hover",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["anti-air", "raider"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Mecha Bay",
+        "basis": "Built at the Mecha Bay with no further tech: its infobox gives tier 1, and the Mecha bay page lists it with the basic units."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 800,
+        "basis": "Its price is a little under the registry's medium threshold, about four fifths of a main battle tank's, so low."
+      },
+      "mobility": {
+        "base": "hover",
+        "handling": "drift",
+        "traits": ["transform"],
+        "speed": "fast",
+        "speed_raw": 2,
+        "notes": "The infobox land speed is twice the Conscript's; over water it is somewhat slower, and hover units are banded by land speed. That is about a third faster than the Hammer tank, the Soviet main battle tank, and the profile says it outruns most vehicles. It floats a few metres up on its boosters and skims over ground that would slow infantry or simpler vehicles, so it crosses water on its own (the infobox marks it amphibious). Two beta patches raised its speeds and then put them back. In jet form it is much faster (see modes). Drift is the hover default."
+      },
+      "body": {
+        "plan": "humanoid-mech",
+        "size": "medium",
+        "notes": "An anthropomorphic robot whose arms and legs act as stabilizers rather than for walking; the wiki calls it a hover walker and the profile a dual-form combat robot. Humanoid mech is the shape; it breaks that body's class and mobility rules (see atypical). Medium as a light mech; no source gives its dimensions. In jet form it folds into a fighter airframe (see modes)."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["directional"],
+        "notes": "Step 4 of the armour-class order decided: RA3 has no armour map, its armour set's name is not a plain armour word, and a light walker bigger than a soldier is medium. Its alloy shrugs off small arms: rifle-type gun damage does a quarter of normal since patch 1.11 (half before that, and still half in Uprising), and sniper and melee hits do nothing; cannon, prism and tesla hits do well over normal. Directional by the Uprising manual's armour-facing rule for armoured vehicles; its page gives no side or rear figures. The profile says current models are lighter and less sturdy than older ones. The jet form uses an aircraft armour set (see modes)."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox gives a shroud-clearing figure equal to the Conscript's, so medium. Its vision figure in hover form also equals the Conscript's; the jet's vision is a little longer since patch 1.11."
+      },
+      "armament": [
+        {
+          "name": "Kinetic burst-shot autocannons (Mecha Tengu)",
+          "slot": "primary",
+          "family": "autocannon",
+          "damage": "kinetic",
+          "mount": "body-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "summary": "Twin autocannons, one each side of the air intake, fire quick accurate bursts; the manual calls the gun a 20mm autocannon. They shred soldiers and light vehicles, yet tanks shrug them off. In this form the unit attacks only targets on the ground or on the water, never aircraft; that includes buildings such as refineries on the water. The profile says it has to steady itself before it fires."
+        },
+        {
+          "name": "Kinetic burst-shot autocannons (Jet Tengu)",
+          "slot": "alternate",
+          "family": "autocannon",
+          "damage": "kinetic",
+          "mount": "body-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["low-air", "high-air"],
+          "traits": ["anti-air"],
+          "condition": "In jet form, after transforming.",
+          "summary": "The same guns once the unit is a jet: they now hit only aircraft, reach a little further and hit much harder than in hover form. They do only a quarter of their damage to Apollo fighters, MiG fighters and other Jet Tengus, and double damage to the Harbinger gunship. Patch 1.05 raised their damage and patch 1.11 made Jet Tengus much weaker against each other. There is no ammunition to reload at an airfield.",
+          "patterns": ["transform"],
+          "mode": "jet"
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "The background text gives it a pilot in a full-body cockpit; as an RTS unit it has no player seats, so solo is our proposal. One player flies both forms."
+      },
+      "abilities": [
+        {
+          "name": "Mecha Mode / Jet Mode",
+          "kind": "toggle",
+          "cooldown": "medium",
+          "source": "innate",
+          "summary": "Switches between the hover robot and the jet fighter. The change itself takes under a second, but the unit must then wait a medium cooldown before it can switch again, so it should avoid fights while the cooldown runs. Being infested by a Terror Drone, lifted by Yuriko Omega, or hit by a stasis ray or an EMP weapon stops it switching.",
+          "patterns": ["transform"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "jet",
+          "name": "Jet Tengu",
+          "via": "transform",
+          "class": "aircraft",
+          "mobility": {
+            "base": "jet",
+            "handling": "forward-only",
+            "speed": "very-fast"
+          },
+          "body": {
+            "plan": "fixed-wing"
+          },
+          "armour": {
+            "class": "light",
+            "models": ["flat-pool"]
+          },
+          "summary": "Folds into a conventional fighter shape and flies high, at about twice its hover speed and four times the Conscript's (a little slower than the Apollo and MiG fighters). Its guns switch to the jet weapon, which can hit only aircraft, so only anti-air weapons reach it and it cannot hurt ground targets. Its armour becomes an aircraft set that takes normal damage from autocannon, flak and rocket fire (light, as planes are). The profile says its wings let it hover in place while it attacks, which forward-only handling does not show. It is the Empire's main air-superiority fighter and needs no airfield. If destroyed in this form it crashes and hurts what is near."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["death-blast"],
+        "basis": "in-game",
+        "notes": "Only in jet form: the crashing jet deals explosive damage in a small area (infobox notes). Destroyed in hover form, it is simply gone. Honorable Discharge, an Imperial protocol bought for the whole side, makes destroyed Imperial vehicles explode and makes this crash about three times as strong; that is a side-wide power, not the unit's own outcome."
+      },
+      "strengths": [
+        {
+          "ref": "hits:infantry",
+          "why": "Its burst-fire autocannons cut through soldiers and light vehicles, and its alloy shrugs off their rifles."
+        },
+        {
+          "ref": "mobility-trait:transform",
+          "why": "Changes form in under a second: it can flee a losing ground fight into the air, or drop down on ground units that were chasing a fighter."
+        },
+        {
+          "ref": "hits:high-air",
+          "why": "As a jet it is the Empire's early air-superiority fighter, with no ammunition limit and no airfield to return to, so numbers can swarm enemy fighters."
+        },
+        {
+          "ref": "speed:fast",
+          "why": "Outruns most vehicles on the ground, and the jet form is faster still, which suits early raids on refineries and derricks."
+        },
+        {
+          "ref": "mobility:hover",
+          "why": "Moves and fights over water nearly as well as on land, so it can harass refineries out at sea."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "pattern:transform",
+          "why": "Each form hits only its own layer: the robot cannot shoot aircraft, and the jet cannot shoot ground targets, so ground anti-air kills it freely. After a switch it must wait out a cooldown, and infestation, psychic lifting, stasis rays and EMP stop it switching, so it can be caught in the wrong form."
+        },
+        {
+          "ref": "weapon:autocannon",
+          "why": "In hover form its guns are no match for tanks, and in jet form they do only a quarter of their damage to Apollo and MiG fighters, so it loses to them one on one."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "armour-class:heavy",
+          "why": "Tanks shrug off its autocannons, and their cannons do well over normal damage to it, so they destroy it easily."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "In jet form it cannot fire at the ground, so ground anti-air shoots it down freely, and dedicated fighters beat it one on one."
+        },
+        {
+          "ref": "unit:ra3.allied.apollo-fighter",
+          "why": "Its jet guns do only a quarter of their damage to the Apollo, so a lone Jet Tengu loses; only numbers win."
+        },
+        {
+          "ref": "unit:ra3.soviet.mig-fighter",
+          "why": "Its jet guns do only a quarter of their damage to the MiG, so a lone Jet Tengu loses; only numbers win."
+        },
+        {
+          "ref": "unit:ra3.allied.multigunner-ifv",
+          "why": "Ground anti-air the Jet Tengu cannot shoot back at: its missiles hit aircraft about three times as hard as ground targets."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Shreds soldiers with its autocannons while their rifles barely scratch its alloy."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Light vehicles fall to its autocannons too, so it can stand up to most early units."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "As a jet it hunts aircraft that cannot shoot back at other aircraft, and Harbinger gunships take double damage from it."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:ra3.empire.mecha-tengu",
+          "why": "Works best in numbers: flocks of Jet Tengus overwhelm better enemy fighters, and groups raid economies."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Tags along with tank hunters such as Tankbusters, which cannot shoot aircraft and do poorly against infantry, covering both gaps by switching form."
+        }
+      ],
+      "memorable": "A hover mech that folds into a jet fighter in an instant: one moment it shreds infantry, the next it is hunting aircraft, but each form can only hit its own layer.",
+      "as_player": "A quick T1 hover mech. Left mouse fires twin nose autocannons, aimed by turning, that tear up infantry and light vehicles but lose to tanks and cannot touch aircraft. Press Q to snap into a jet: much faster, up where only anti-air reaches you, guns now hitting only aircraft. The switch is instant but locks for a medium cooldown, so the wrong form can get you killed. Go down as a jet and your crash hurts whatever is below.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/7c/CCRA3UP_pcMAN%28EN_US%29.pdf/revision/latest?cb=20180801163717",
+          "title": "Command & Conquer: Red Alert 3 Uprising manual (PDF), EA",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "note": "EA's printed manual, hosted as a scan by the Command & Conquer Wiki (File:CCRA3UP pcMAN(EN US).pdf). Page 20 has the Mecha Tengu paragraph (a dual-purpose interceptor that turns into a jet and back, so it can take on air or ground targets with its 20mm autocannon); the Armor Facing section says armoured vehicles take more damage from the side and more still from behind.",
+          "supports": ["armour/models", "armament/0", "abilities/0"],
+          "version": "Uprising (2009)"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Mecha_Tengu",
+          "title": "Mecha Tengu, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament",
+            "abilities/0",
+            "modes/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos/1",
+            "memorable"
+          ],
+          "version": "Patch 1.12, with Uprising notes"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Mecha_Tengu/Profile",
+          "title": "Mecha Tengu/Profile, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Copies EA's official Red Alert 3 unit profile from the launch site, now offline (the page links an archived copy). Its designation line gives the robot form an anti-infantry role and the jet form an anti-air role; its Notes from the Field are official text.",
+          "supports": [
+            "roles",
+            "body",
+            "armour/notes",
+            "armament/0",
+            "armament/1",
+            "crew",
+            "modes/0",
+            "strengths/0",
+            "strengths/1",
+            "strengths/3",
+            "strengths/4",
+            "counters/0",
+            "combos/0",
+            "memorable"
+          ],
+          "version": "2008 launch profile"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Transformation",
+          "title": "Transformation, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["abilities/0", "weaknesses/0", "modes/0"]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Empire_of_the_Rising_Sun_units",
+          "title": "Red Alert 3: Empire of the Rising Sun units, StrategyWiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["armament/1", "strengths/2", "countered_by/0", "countered_by/1", "combos/0"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "The one designation for both forms names two roles. Step 1 takes anti-infantry because the main weapon, the hover form's guns, has the bonus: the profile says they cut through infantry, and basic infantry armour (Conscript (Red Alert 3) page, Command & Conquer Wiki) takes half again normal Auto Cannon damage. The anti-air bonus belongs to the jet's alternate weapon, not to the main weapon."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Anti-air ranks at step 1 (the designation). Raider is supported only at step 2, through the transform mode: the very fast, light jet form is how it hits and then escapes (the wiki says it can flee a losing fight by transforming and that it excels at early harassment). Step 4 cannot give raider, since the hover form's armour is medium. If a mode's speed and armour do not count for raider, the second slot would be assault (step 4: medium armour and a medium-range main weapon), although the sources describe a harasser rather than a unit that leads pushes."
+        },
+        {
+          "path": "armour/class",
+          "note": "Medium by step 4 as a light walker bigger than a soldier. Light is arguable: as a hovercraft its kind is named in no class description; its health is close to that of the light Multigunner IFV (Multigunner IFV page); and StrategyWiki calls its armour poor. But small arms hurt it less than they hurt the Hammer tank (Hammer tank page), and the Riptide ACV, an APC and so medium by kind, uses the same armour set (Riptide ACV page, Command & Conquer Wiki)."
+        },
+        {
+          "path": "armour/models",
+          "note": "Directional only by the Uprising manual's rule for armoured vehicles: the Mecha Tengu page gives no side or rear figures, and the manual makes the rear sound much weaker than any infobox figure in the game does."
+        },
+        {
+          "path": "armament/1",
+          "note": "The infobox names one weapon for both forms, with separate ground and air attack lines and a range for each form, and the profile calls them the very same guns. The form decides what they can hit, so the jet version is coded as an alternate weapon with the jet mode (Paired entries) rather than one entry for both."
+        },
+        {
+          "path": "armament/1/summary",
+          "note": "The Mecha Tengu page says the jet guns do a quarter of their damage to Apollo fighters, while the Apollo fighter page (Command & Conquer Wiki) says the Apollo takes a little under a third of normal damage from Jet Tengus. Either way a lone Jet Tengu loses to an Apollo.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Structures rest on the wiki's remark that it can pester refineries on the water and on the profile's account of Tengus wrecking a super-reactor; no infobox line names buildings. The Mecha Mode button text names ground and water targets only."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "Only the 2008 profile says it must steady itself to fire; no other source read confirms whether it can fire on the move."
+        },
+        {
+          "path": "modes/0/mobility/base",
+          "note": "Jet, from its name, its fighter shape, its high flight and its role as a fighter. Hovering flight is arguable: the wiki calls it a VTOL fighter, the profile says its wings let it hover in place to attack, and the hovering-flight term names VTOL. The Apollo fighter and MiG fighter pages (Command & Conquer Wiki) describe the other sides' fighters as VTOL too, and give their air speeds, which the mode summary compares."
+        },
+        {
+          "path": "modes/0/mobility/handling",
+          "note": "Forward-only is the jet default and the handling tie-break gives no reason to change it in a commanded game, although the profile says the jet can hover in place while it attacks."
+        },
+        {
+          "path": "modes/0/body",
+          "note": "Size is left at the base form's medium. The sizes list names jets as large, but the same unit only folds into its other shape."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparison with the Hammer tank uses that tank's land speed from the Hammer tank page (Command & Conquer Wiki)."
+        },
+        {
+          "path": "on_death",
+          "note": "The infobox's crash damage is over a small radius; the registry note for ra3 counts it as a death blast. It applies only when the unit dies as a jet."
+        },
+        {
+          "path": "countered_by/4",
+          "note": "The missile comparison rests on the Multigunner IFV page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Multigunner_IFV), whose infobox gives the IFV's own missiles an air attack about three times their ground attack. The link is coded for the jet form only: the Mecha Tengu page's Background section has the IFV threaten both forms, but its Game unit section says the hover form's guns do well against light vehicles, so it can stand up to most tier 1 units, and the IFV is a light tier 1 vehicle."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "modes/0/mobility/base",
+          "used": "jet",
+          "wanted": "a fixed-wing flight type that can also hover in place (a VTOL fighter)",
+          "note": "Jet means it must keep moving and attacks in passes; hovering flight means a rotor or VTOL craft flying low. Red Alert 3's fighters, the Jet Tengu among them, are VTOL jets that fly high and still hover to attack."
+        },
+        {
+          "path": "armament/0/traits",
+          "used": "none",
+          "wanted": "a trait for a weapon the unit must stop to fire",
+          "note": "The profile says the hover form has to steady itself before it fires; no weapon trait says the unit cannot fire while moving."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "body/plan",
+          "rule": "bodies:humanoid-mech classes hover",
+          "note": "Its shape is a humanoid robot with arms and legs, but they only steady it while it hovers; the class follows how it moves (an air cushion over land and water), and our humanoid mech body is listed for walkers only."
+        },
+        {
+          "path": "body/plan",
+          "rule": "bodies:humanoid-mech allowed.mobility hover",
+          "note": "The humanoid mech body is listed only for two legs, but this robot never walks: it hovers a few metres up on its boosters."
+        }
+      ],
+      "researched_by": "batch r1, agent J09-RA3",
+      "review": {
+        "status": "checked",
+        "checked_by": "batch r1 checker",
+        "checked_on": "2026-10-22",
+        "checked_paths": [
+          "tier/band",
+          "tier/gate",
+          "cost_band/raw",
+          "cost_band/band",
+          "class",
+          "roles/primary",
+          "roles/secondary",
+          "mobility/base",
+          "mobility/speed",
+          "mobility/speed_raw",
+          "mobility/traits",
+          "mobility/handling",
+          "armour/class",
+          "armour/models",
+          "sensors/sight",
+          "sensors/traits",
+          "armament/0/family",
+          "armament/0/damage",
+          "armament/0/range",
+          "armament/0/can_target",
+          "armament/0/delivery",
+          "armament/0/traits",
+          "armament/0/mount",
+          "armament/1/family",
+          "armament/1/damage",
+          "armament/1/range",
+          "armament/1/can_target",
+          "armament/1/traits",
+          "armament/1/patterns",
+          "armament/1/slot",
+          "armament/1/mode",
+          "abilities/0/kind",
+          "abilities/0/source",
+          "abilities/0/cooldown",
+          "abilities/0/patterns",
+          "modes/0/mobility",
+          "modes/0/class",
+          "modes/0/body",
+          "modes/0/armour",
+          "on_death/outcomes",
+          "on_death/basis",
+          "crew/model",
+          "crew/basis",
+          "nature",
+          "availability",
+          "body/plan",
+          "body/size",
+          "sources/0/supports",
+          "sources/1/supports",
+          "sources/2/supports",
+          "sources/3/supports",
+          "sources/4/supports"
+        ],
+        "wrong_paths": [],
+        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. Nothing was found wrong."
+      }
+    },
+    {
+      "id": "ra3.empire.sudden-transport",
+      "game": "ra3",
+      "faction": "empire",
+      "name": "Sudden Transport",
+      "flavour_affinity": ["empire", "allied"],
+      "class": "hover",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "transport",
+        "secondary": ["infiltrator"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Mecha Bay",
+        "basis": "Built at the Mecha Bay with no further tech: its infobox gives tier 1, and the Mecha bay page lists it with the basic units."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 500,
+        "basis": "Its price sits exactly on the registry's low threshold, about half a main battle tank's, and a price on an edge takes the higher band, so low."
+      },
+      "mobility": {
+        "base": "hover",
+        "handling": "drift",
+        "traits": [],
+        "speed": "fast",
+        "speed_raw": 2,
+        "notes": "The infobox gives one speed for both land and water, twice the Conscript's. That is about a third faster than the Hammer tank, the Soviet main battle tank. As a hovercraft it crosses water by itself (the infobox and the manual call it amphibious). Drift is the hover default."
+      },
+      "body": {
+        "plan": "box-carrier",
+        "size": "medium",
+        "notes": "An enclosed hover hull with its riders hidden inside; the wiki calls it a hover armoured personnel carrier. It carries no weapon or turret. Medium as an APC; no source gives its dimensions."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["directional"],
+        "notes": "Step 4 of the armour-class order decided: RA3 has no armour map, its armour set's name is not a plain armour word (the registry note says set names never are), and an APC is medium. Melee and sniper hits do nothing to it, gun and autocannon fire does half damage, radiation almost nothing; flak, rocket, cannon, prism and tesla fire does half again normal damage. Its infobox gives slightly more damage from the side and a little more again from the rear, so directional, though the difference is small."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox gives a shroud-reveal figure equal to the Conscript's shroud-clearing figure, so medium. Its disguise is an ability (disguise pattern), not the stealth trait: it stays in view and only looks like another vehicle."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "passengers": {
+          "seats": 5,
+          "kind": "passenger-cargo"
+        },
+        "notes": "Five infantry seats, copied from the source; no page shows riders firing out, so they are cargo. No crew is named in the sources; as an RTS unit it has no player seats, so solo is our proposal: the buyer drives."
+      },
+      "abilities": [
+        {
+          "name": "Passenger seats",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Carries up to five infantry over land and water; they cannot act until they get out. Letting them out (its Evacuate button, our evict key) ends the disguise.",
+          "patterns": ["carry-passengers"]
+        },
+        {
+          "name": "Disguise",
+          "kind": "active",
+          "source": "innate",
+          "summary": "Targeting a vehicle of either side makes the transport take on that vehicle's look; the manual adds other objects, and the wiki notes that in a match against the AI, with no vehicle at hand to copy, it can even look like an aircraft at ground level. Most base defences and units are fooled. Detector units (the Allied attack dog, the Soviet war bear and the Imperial Burst Drone) see through it, and alert players can too, because it keeps its own speed rather than its model's and may copy a vehicle that cannot go on water. The disguise ends when the riders get out.",
+          "patterns": ["disguise"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["death-blast"],
+        "basis": "in-game",
+        "notes": "The infobox gives explosive damage when it is destroyed, and StrategyWiki says the explosion kills what is close by and the infantry still inside. Honorable Discharge, an Imperial protocol bought for the whole side, makes every destroyed Imperial vehicle explode; that is a side-wide power, not this unit's own outcome."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:disguise",
+          "why": "Passes as any vehicle, so most base defences and units let it through and its riders can unload in the middle of an enemy base."
+        },
+        {
+          "ref": "passengers:5",
+          "why": "Five seats are enough for an ambush party of Imperial Warriors, Tankbusters or Shinobi, or a team of engineers."
+        },
+        {
+          "ref": "mobility:hover",
+          "why": "Crosses land and water at the same speed, so it can come in from the sea."
+        },
+        {
+          "ref": "speed:fast",
+          "why": "Outpaces main battle tanks, so it puts troops in place quickly."
+        },
+        {
+          "ref": "tier:t1",
+          "why": "Cheap and available from the start, so a few of them dressed as stronger vehicles make a convincing decoy group."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "pattern:disguise",
+          "why": "Not foolproof: detector animals and drones see through it, and watchful players notice a speed that does not match its model or a land vehicle out on the water."
+        },
+        {
+          "ref": "passengers:5",
+          "why": "Letting the riders out ends the disguise, which usually gets it destroyed, and when it dies the riders still inside die with it."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "sensor:detector",
+          "why": "Detectors see through its disguise, and once it is found the unarmed transport cannot fight back."
+        },
+        {
+          "ref": "unit:ra3.allied.attack-dog",
+          "why": "Allied attack dogs see through the disguise."
+        },
+        {
+          "ref": "unit:ra3.soviet.war-bear",
+          "why": "Soviet war bears see through the disguise."
+        },
+        {
+          "ref": "unit:ra3.empire.burst-drone",
+          "why": "Burst Drones, the Empire's own flying scouts, see through the disguise."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Cannon and rocket fire does half again normal damage to it, and it has no weapon to answer with once it is found."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "target:structure",
+          "why": "Most base defences cannot see through the disguise, so it slips past them and drops troops inside the base."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:engineer",
+          "why": "A load of engineers can sneak deep into a base and capture key buildings such as the construction yard."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Imperial Warriors, Tankbusters or Shinobi spilling out inside a base wreak havoc and distract the enemy from an attack elsewhere."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Dressed as stronger vehicles, cheap transports pad out an armoured group and draw the enemy's eye away from the real attack force."
+        }
+      ],
+      "memorable": "A cheap hover carrier that takes the look of any vehicle it points at, so five soldiers can drive into an enemy base dressed as one of its own tanks.",
+      "as_player": "An unarmed T1 hover carrier with five seats for teammates. Point at any vehicle (Q) to look like it to the enemy, then slip past defences and drop your riders (G) where they hurt most; unloading ends the disguise. Detector scouts see through it, and so does a speed that does not match your disguise or a land tank driving on water. If you die you blow up, taking your riders and anything close with you.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/a/af/RA3_Manual_-_PC.pdf/revision/latest?cb=20220605033630",
+          "title": "Command & Conquer: Red Alert 3 manual (PDF), EA",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "note": "EA's printed manual, hosted as a scan by the Command & Conquer Wiki (File:RA3 Manual - PC.pdf). The unit has no official profile, so roles step 1 reads its paragraph on page 22: an amphibious transport that Imperial scientists built to move troops quickly and safely, which can pose as enemy vehicles or other objects. The Uprising manual reprints the same paragraph.",
+          "supports": ["roles", "mobility", "abilities/1"],
+          "version": "Base game (2008)"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Sudden_transport",
+          "title": "Sudden transport, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "crew",
+            "abilities",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ],
+          "version": "Patch 1.12"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Stealth",
+          "title": "Stealth, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Red Alert 3 tab: lists it among units that hide by active disguise, and names the attack dog, Burst Drone and war bear as the detectors that unmask such disguised units, this one included.",
+          "supports": ["sensors/traits", "abilities/1", "weaknesses/0", "countered_by"]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Empire_of_the_Rising_Sun_units",
+          "title": "Red Alert 3: Empire of the Rising Sun units, StrategyWiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["crew", "abilities/0", "abilities/1", "on_death", "weaknesses/1"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Mecha_bay",
+          "title": "Mecha bay, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["tier", "crew"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "abilities/1",
+          "note": "No source names a disguise button: the wiki speaks of the vehicle it targets, and the Stealth page calls it an active disguise, so it is coded as an active ability used by targeting a vehicle. The manual says it can copy other objects as well as enemy vehicles; the wiki speaks only of vehicles, friendly or not."
+        },
+        {
+          "path": "abilities/1/cooldown",
+          "note": "No source gives a wait between disguises, so no band is set."
+        },
+        {
+          "path": "abilities",
+          "note": "The wiki's ability box lists Evacuate, which drops the disguise and unloads everyone at once. It is left off as the evict key (registry note for ra3); the disguise ends whenever riders get out anyway."
+        },
+        {
+          "path": "armour/class",
+          "note": "Medium by step 4 as an APC. Its armour set's name contains the word Light, but the registry note treats set names as no armour word, and its health is only a little above that of the light Multigunner IFV (Multigunner IFV page, Command & Conquer Wiki)."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Infiltrator rests on step 2: the disguise, a button every copy has, lets it pass as an enemy vehicle, which the role's description and tie-break name. No official text calls it an infiltrator or a spy."
+        },
+        {
+          "path": "on_death/notes",
+          "note": "Only StrategyWiki says the riders die with it; the Command & Conquer Wiki page says nothing about riders when it is destroyed. No page gives the blast's radius."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparison with the Hammer tank uses that tank's land speed from the Hammer tank page (Command & Conquer Wiki)."
+        },
+        {
+          "path": "countered_by",
+          "note": "The Burst Drone, War bear (Red Alert 3) and Attack dog (Red Alert 3) pages on the Command & Conquer Wiki agree with the Stealth page that these units find disguised enemies; the Burst Drone page names Sudden Transports outright."
+        }
+      ],
+      "researched_by": "batch r1, agent J09-RA3",
+      "review": {
+        "status": "checked",
+        "checked_by": "batch r1 checker",
+        "checked_on": "2026-10-22",
+        "checked_paths": [
+          "tier/band",
+          "tier/gate",
+          "cost_band/raw",
+          "cost_band/band",
+          "class",
+          "roles/primary",
+          "roles/secondary",
+          "mobility/base",
+          "mobility/speed",
+          "mobility/speed_raw",
+          "mobility/traits",
+          "mobility/handling",
+          "armour/class",
+          "armour/models",
+          "sensors/sight",
+          "sensors/traits",
+          "sensors/basis",
+          "armament",
+          "crew/model",
+          "crew/basis",
+          "crew/passengers/seats",
+          "crew/passengers/kind",
+          "abilities/0/kind",
+          "abilities/0/source",
+          "abilities/0/cooldown",
+          "abilities/0/patterns",
+          "abilities/1/kind",
+          "abilities/1/source",
+          "abilities/1/cooldown",
+          "abilities/1/patterns",
+          "on_death/outcomes",
+          "on_death/basis",
+          "nature",
+          "availability",
+          "body/plan",
+          "body/size",
+          "sources/0/supports",
+          "sources/1/supports",
+          "sources/2/supports",
+          "sources/3/supports",
+          "sources/4/supports"
+        ],
+        "wrong_paths": [],
+        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. Nothing was found wrong."
+      }
+    },
+    {
+      "id": "ra3.soviet.sickle",
+      "game": "ra3",
+      "faction": "soviet",
+      "name": "Sickle",
+      "flavour_affinity": ["soviet"],
+      "class": "walker",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["scout", "assault"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "War Factory",
+        "basis": "The Sickle page's infobox gives tier 1: the War Factory builds it with no further tech."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 900,
+        "basis": "The Sickle page's price sits exactly on the lowest price of our medium band for RA3, so it takes that band; it is a little cheaper than a main battle tank."
+      },
+      "mobility": {
+        "base": "legs-multi",
+        "handling": "pivot",
+        "traits": ["leap"],
+        "speed": "fast",
+        "speed_raw": 2,
+        "notes": "Twice the Conscript's ground speed by the wiki's game values, and about a third faster than the Hammer, the Soviet main battle tank; the wiki ranks its speed near the top of the game's vehicles. It cannot cross water. Walking, it runs over nothing: its own crush level is nil, and only a Flea Jump landing lifts it above the level at which infantry are crushed (see abilities). Handling stays pivot, the default for many legs, since it is neither tiny nor small and no source shows a reason to change it."
+      },
+      "body": {
+        "plan": "spider-frame",
+        "size": "medium",
+        "notes": "A compact pod held up on tall stilt legs, with its three guns in separate ball-shaped canopies around the pod rather than in one turret. The official profile calls the shape spiderlike and gives it four legs. StrategyWiki calls it a light walker, which our Sizes examples put at medium; no source gives its dimensions."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["directional"],
+        "notes": "Step 4 of the armour-class order decided: its armour set's name is not a plain armour word, and our class descriptions put a light walker bigger than a soldier at medium. Its health is a little below the Hammer tank's. The armour set ignores sniper and melee hits, takes only a quarter of gun damage (half in Uprising) and three quarters of rocket damage, full damage from auto cannon, flak and explosives, and well over full damage from cannon, prism and tesla weapons: it shrugs off small arms but not anti-tank fire. Side hits do slightly more and rear hits a little more again, a small difference."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox gives a vision figure and a larger shroud-clearing figure. The shroud figure, which the registry says counts, equals the Conscript's, so medium; its vision figure equals the Conscript's too."
+      },
+      "armament": [
+        {
+          "name": "PKX 12.7 mm heavy machine guns (three)",
+          "slot": "primary",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "limited-arc",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "summary": "Three copies of one heavy machine gun, each in its own swivelling ball canopy that turns apart from the hull. Each gun covers a little over a third of the circle, so together they fire all round, keep firing on the move and can work on several targets at once, but at most two of them can aim at any one target. Deadly to infantry and weak against armour; the canopies cannot tilt up far enough to reach aircraft. Its reach equals the Conscript rifle's."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "The lore gives each Sickle three gunners, one per gun position, which changes nothing here. One player drives and fires all three guns: they are copies of one gun, so one weapon entry fired on one attack order, and decision 2A hands a gunner only another weapon on its own mount. In a player version the guns whose arcs cover the cursor fire."
+      },
+      "abilities": [
+        {
+          "name": "Flea Jump",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "short",
+          "summary": "Leaps to a chosen spot up to about twice its guns' reach away: over walls, roadblocks and other obstacles, and up onto cliffs and plateaus that troops on foot cannot reach. The landing deals melee-category damage in a small circle around it, which the Hammer tank's armour, for one, ignores, so it works on infantry rather than armour. For the jump its crush level rises above the crushable level of ordinary infantry, so it can now and then squash soldiers it lands on; the wiki adds that a well-timed landing can stun commandos. It recharges after a short wait, half of what it was before beta patch 1.5.",
+          "patterns": ["leap"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "In the source it is simply destroyed; bail-out is the default for a crewed machine. The Terror Drone Surprise protocol, which a player picks for the whole side, can make a destroyed Soviet vehicle release a Terror Drone; that is a faction power, not this unit's own outcome."
+      },
+      "strengths": [
+        {
+          "ref": "weapon:machine-gun",
+          "why": "Three heavy machine guns cut down infantry, keep firing while it moves and can work on several soldiers at once."
+        },
+        {
+          "ref": "mount:limited-arc",
+          "why": "Its three gun arcs together cover every direction, so infantry cannot slip round to an unguarded side."
+        },
+        {
+          "ref": "mobility-trait:leap",
+          "why": "Flea Jump clears obstacles and reaches plateaus that troops on foot cannot, for scouting or for landing among enemy infantry."
+        },
+        {
+          "ref": "speed:fast",
+          "why": "Its speed is near the top of the game's vehicles, so it runs down fleeing infantry and scouts well."
+        },
+        {
+          "ref": "armour-class:medium",
+          "why": "Shrugs off small-arms fire: its armour ignores sniper shots and takes little from guns."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "mount:limited-arc",
+          "why": "No more than two of its three guns can aim at one target, so it does poorly against a single tough target."
+        },
+        {
+          "ref": "weapon:machine-gun",
+          "why": "Its guns do little to armour and cannot be raised to hit aircraft at all."
+        },
+        {
+          "ref": "armour-class:medium",
+          "why": "Cannon, prism and tesla hits do more than full damage, and even a little anti-tank fire wrecks it."
+        },
+        {
+          "ref": "mobility:legs-multi",
+          "why": "Its legs cannot carry it across water; the wiki counts the lack of amphibious movement among its flaws."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Its guns cannot be raised to shoot at fliers, so any armed aircraft can attack it without return fire."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Anti-tank weapons tear through its cheap alloy armour, the official notes say."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Tanks and other heavy weapons do to it what it does to infantry, the wiki says, while its guns barely scratch them."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Mows down infantry waves, and a jump into a crowd scatters and crushes them; well timed, it can even stun and kill commandos."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:anti-armour",
+          "why": "The Hammer tank's profile calls the Sickle its natural partner: the tank kills vehicles, the Sickle the infantry its cannon handles poorly."
+        },
+        {
+          "ref": "unit:ra3.soviet.hammer-tank",
+          "why": "The Hammer tank's profile calls the Sickle its natural partner: the tank kills vehicles, the Sickle the infantry its cannon handles poorly."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "An anti-air escort covers the aircraft its guns cannot reach; the official notes joke about the gap and the Bullfrog sales it brings."
+        },
+        {
+          "ref": "unit:ra3.soviet.bullfrog",
+          "why": "The official notes pair it, tongue in cheek, with the Bullfrog, whose anti-air gun covers the Sickle's blind spot."
+        }
+      ],
+      "memorable": "A spindly anti-infantry walker whose three swivel guns cover every direction, and which flea-jumps over walls and up cliffs to land among enemy troops.",
+      "as_player": "A fast T1 walker for one player. Three swivel machine guns each cover a wide arc: aim anywhere and the guns facing that way fire, two at most on one target, so you shred infantry all round while moving. Q flea-jumps over walls and up cliffs on a short cooldown; landing in a crowd hurts and can squash soldiers. Tanks, anti-tank fire and anything flying beat you, and water stops you.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/a/af/RA3_Manual_-_PC.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 3 PC manual (scan hosted by the Command & Conquer Wiki), Units section",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3 PC manual (2008)",
+          "note": "EA's printed manual, read as a scan hosted by the Command & Conquer Wiki (File:RA3 Manual - PC.pdf). The Sickle paragraph is on printed page 18: a walking gun turret built for riot suppression, good at crowd control, that leaps obstacles.",
+          "supports": ["roles", "mobility/traits", "abilities/0"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Sickle/Profile",
+          "title": "Sickle official profile (transcribed), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Official Red Alert 3 site profile (2008), archived 2009",
+          "note": "Copies the unit profile from EA's Red Alert 3 site, now offline; the page links an archived copy. Designation: Anti-Infantry Walker. Its Notes from the Field give the guns' arcs, the lack of anti-air, the jump's use for reconnaissance and the armour's limits.",
+          "supports": [
+            "roles",
+            "nature",
+            "mobility",
+            "body",
+            "armament/0",
+            "crew",
+            "abilities/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Sickle",
+          "title": "Sickle, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Patch 1.12 infobox, with the Uprising armour set listed apart",
+          "note": "Infobox: price, tier 1 at the War Factory, health, ground speed, gun and jump reaches, sight and shroud figures, the Auto-Cannon damage category of the guns, the jump's melee damage radius and cooldown, crush levels, armour set with facing figures, not amphibious. The changelog gives the beta patch 1.5 cooldown cut.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "crew",
+            "abilities/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Soviet_units",
+          "title": "Red Alert 3: Soviet units, StrategyWiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Calls it a light anti-infantry walker that can fire at several targets and knocks infantry down where its jump lands; rates its damage as low and its jump as of little use, but good for sweeping up commandos.",
+          "supports": ["body/size", "armour/class", "armament/0", "abilities/0", "counters", "weaknesses"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Hammer_tank/Profile",
+          "title": "Hammer tank official profile (transcribed), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Official Red Alert 3 site profile (2008), archived 2009",
+          "note": "Copies the Hammer tank's unit profile from EA's Red Alert 3 site, now offline. Its Notes from the Field say commanders pair the tank with Sickles and Bullfrogs because its cannon cannot handle infantry or aircraft, and that the Sickle suits it best.",
+          "supports": ["combos"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/secondary",
+          "note": "Scout rests on the official notes saying the Flea Jump is very useful for reconnaissance, read as official text naming the scout alias for the unit. Read more strictly, as text about the jump rather than a name for the unit, scout would need an information part (long sight, a sensor trait, stealth or a reveal ability), which the Sickle lacks, and the slots would hold assault alone."
+        },
+        {
+          "path": "body",
+          "note": "The official profile gives the Sickle four stilt legs; no other page read gives a count. Many legs holds whatever the count."
+        },
+        {
+          "path": "armour/class",
+          "note": "Medium rests on reading it as a light walker, StrategyWiki's word. Its health is a little below the Hammer tank's (Hammer tank page of the Command & Conquer Wiki, https://cnc.fandom.com/wiki/Hammer_tank), but the class descriptions decide by kind, not by health."
+        },
+        {
+          "path": "armament/0/damage",
+          "note": "The infobox writes the guns' damage category as Auto-Cannon, with a hyphen; it is read as the registry map's Auto Cannon, which gives kinetic. The family stays machine gun, since the sources describe heavy machine guns firing bullets."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No source says how the bullets travel; hitscan is the machine-gun family default."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "No source names structures or ships as targets. Structures come from the family's ground kinds (can_target step 4) and ships from the naval rule; the profile rules out aircraft."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "That the guns do little to armour rests on StrategyWiki's low-damage verdict and on the Hammer tank page of the Command & Conquer Wiki, whose armour set takes only a quarter of auto cannon damage."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparison with the Hammer's speed uses the ground speed on the Hammer tank page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Hammer_tank)."
+        },
+        {
+          "path": "abilities/0",
+          "note": "Only the main wiki says a well-timed jump stuns commandos; StrategyWiki says the landing knocks infantry down. The wiki's special-ability page (the Command & Conquer Wiki's Special ability (Red Alert 3) page, where Flea Jump redirects) lists Flea Jump as a targeted ability. That the landing spares armour rests on the Hammer tank page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Hammer_tank), whose armour set takes no melee damage. No source says whether the landing also hurts friendly units."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armament/0/mount",
+          "used": "limited-arc",
+          "wanted": "split arcs: several mounts that together cover the whole circle, with only some able to bear on one target",
+          "note": "Each of the three guns covers a little over a third of the circle, so the set covers every direction while at most two guns reach any one target. Limited arc describes one mount covering part of the circle; no aim term describes overlapping partial arcs."
+        },
+        {
+          "path": "roles",
+          "used": "anti-infantry, scout, assault",
+          "wanted": "disabler",
+          "note": "The manual rates it highly for controlling crowds, and its jump knocks infantry down where it lands (StrategyWiki) or stuns commandos (wiki). Disabler's requires need a stun, root, silence or slow weapon trait, cryo or EMP damage, or a control pattern; a leap that stuns on landing has none of them, so the role is left out."
+        }
+      ],
+      "researched_by": "batch r1, agent J10-RA3",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra3.soviet.kirov-airship",
+      "game": "ra3",
+      "faction": "soviet",
+      "name": "Kirov Airship",
+      "lineage": "kirov-airship",
+      "flavour_affinity": ["soviet"],
+      "class": "aircraft",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "siege",
+        "secondary": ["anti-infantry", "assault"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Battle Lab",
+        "basis": "The Kirov page's infobox gives tier 3: the Airfield builds it, and only while a Battle Lab stands."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 2500,
+        "basis": "The Kirov page's price is well above the lowest price of our very-high band for RA3, about two and a half main battle tanks."
+      },
+      "mobility": {
+        "base": "airship",
+        "handling": "drift",
+        "traits": ["boost"],
+        "speed": "very-slow",
+        "speed_raw": 0.6,
+        "notes": "About three fifths of the Conscript's speed by the wiki's air speed figure. Among the game's aircraft it is by far the slowest: about a fifth as fast as the Twinblade and the Century Bomber, and about a seventh as fast as the MiG. The profile and the manual both name slowness as its drawback. Gastroburners nearly double its speed while they burn, which gives it the boost trait; that boosted speed is not its stock speed (see abilities). Handling stays drift, the airship default."
+      },
+      "body": {
+        "plan": "envelope",
+        "size": "huge",
+        "notes": "A massive rigid dirigible; airships are huge in our Sizes examples."
+      },
+      "armour": {
+        "class": "super-heavy",
+        "models": ["self-repair"],
+        "notes": "Step 4 of the armour-class order decided: its armour set's name is not a plain armour word, and our class descriptions name big airships as super-heavy; check A agrees, since it is huge and tier 3. The profile calls it close to indestructible and says most anti-aircraft fire barely troubles it. Its aircraft armour set takes double damage from cannon and gun hits, full damage from auto cannon, flak and rocket hits, three quarters from explosives, and next to nothing from sniper, melee and radiation hits. It mends itself slowly whenever it is not under attack (the infobox), the self-repair model; the faster healing at Heroic rank belongs to veterancy. Gastroburners burn its own health away while they run."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its vision figure is shorter than the Conscript's, but its shroud-clearing figure, which the registry says counts, equals the Conscript's, so medium."
+      },
+      "armament": [
+        {
+          "name": "BOR-57 Grom bombs",
+          "slot": "primary",
+          "family": "bombs",
+          "damage": "explosive",
+          "mount": "body-aim",
+          "delivery": "drop",
+          "range": "short",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": ["splash", "friendly-fire"],
+          "summary": "Drops heavy bombs on whatever lies directly under it, levelling buildings and slow ground units. Its reach is next to nothing, so it has to fly over each target, and the bombs never reach aircraft. Each blast hurts everything around the impact, friendly units included, though they take only half damage. Unlike the Allied Vindicator and Century Bomber it carries enough bombs for a whole battle and never flies home to rearm."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "The lore has decorated officers fly it as pilot-bombardiers who live aboard in comfort, which changes nothing here. One player flies it and drops the bombs."
+      },
+      "abilities": [
+        {
+          "name": "Gastroburners / Propellers",
+          "kind": "toggle",
+          "source": "innate",
+          "summary": "Two buttons that undo each other. Gastroburners feed a corrosive chemical into the engines and nearly double the airship's speed, to reach a base sooner, run down slow ground units or get away from anti-air fire, but the chemical eats the hull for as long as it runs, even while the airship hangs in place. Propellers bring back the normal slow speed and stop the damage. Left on too long, the burners bring the airship down.",
+          "patterns": ["overclock-self"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["death-blast"],
+        "basis": "in-game",
+        "notes": "The infobox says the falling airship deals heavy explosive damage over an area where it crashes; the profile and StrategyWiki also describe the fall as a big explosion. Burning its Gastroburners too long can bring it down by itself."
+      },
+      "strengths": [
+        {
+          "ref": "armour-class:super-heavy",
+          "why": "Enormous health: the profile says most anti-aircraft fire barely troubles it, so it keeps bombing under fire that would down other aircraft."
+        },
+        {
+          "ref": "hits:structure",
+          "why": "Its bombs level buildings quickly; the wiki rates it as lethal to buildings, and the profile says one airship can wreck an entire base."
+        },
+        {
+          "ref": "weapon:bombs",
+          "why": "It never runs out of bombs or flies home to rearm, unlike the Allied bombers."
+        },
+        {
+          "ref": "armour-model:self-repair",
+          "why": "Mends its hull by itself whenever it is not under attack."
+        },
+        {
+          "ref": "pattern:overclock-self",
+          "why": "Gastroburners nearly double its speed when it must reach a target or escape anti-air fire."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "speed:very-slow",
+          "why": "Ponderously slow; the profile names slowness as its one real flaw, so defenders see it coming."
+        },
+        {
+          "ref": "weapon:bombs",
+          "why": "Its only weapon falls straight down, so it has no way at all to fight back against aircraft."
+        },
+        {
+          "ref": "range:short",
+          "why": "It must fly right over each target, and fast ground units slip out from under it; StrategyWiki also rates it poor against quick ground targets."
+        },
+        {
+          "ref": "weapon-trait:friendly-fire",
+          "why": "Its bombs also hurt friendly units below, at half strength."
+        },
+        {
+          "ref": "pattern:overclock-self",
+          "why": "Gastroburners eat its own hull and keep doing so even while it hovers; left on, they bring it down."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-air",
+          "why": "Massed anti-air, even light units, can overwhelm it, since its slowness keeps it under fire for a long time."
+        },
+        {
+          "ref": "unit:ra3.allied.multigunner-ifv",
+          "why": "The wiki names groups of Multigunner IFVs as enough to bring down a Kirov that flies without escorts."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "It cannot shoot back at aircraft, and StrategyWiki rates it as easy prey for fighter jets."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "target:structure",
+          "why": "Deadly against buildings: the profile says even one airship can wreck an entire base."
+        },
+        {
+          "ref": "speed:<=slow",
+          "why": "Slow ground units cannot get out from under its bombs; the wiki rates it as lethal to slow surface units."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:anti-air",
+          "why": "Escort fighters or anti-air units cover its blind spot; the profile and the wiki both say it should not fly without them."
+        },
+        {
+          "ref": "role:assault",
+          "why": "A ground attack that draws the defenders gives the slow airships time to reach their targets, as the wiki advises."
+        }
+      ],
+      "memorable": "A colossal, slow airship that never runs out of bombs and can burn its own hull for speed; when it finally falls, the crash is one more bomb.",
+      "as_player": "A T3 flying fortress for one player: huge, very slow and very tough, mending between fights. Drift over targets and drop bombs on whatever is beneath you; teammates under you take half damage. Q toggles Gastroburners: nearly double speed while your own hull burns, until you switch back. You cannot hit anything in the air, so bring anti-air friends, and if you go down, your crash blasts everything below.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/a/af/RA3_Manual_-_PC.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 3 PC manual (scan hosted by the Command & Conquer Wiki), Units section",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3 PC manual (2008)",
+          "note": "EA's printed manual, read as a scan hosted by the Command & Conquer Wiki (File:RA3 Manual - PC.pdf). The Kirov paragraph is on printed page 19: war zeppelins carrying many heavy bombs, slow, with a short burst of speed paid for in hull damage.",
+          "supports": ["mobility", "armament/0", "abilities/0", "weaknesses/0"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Kirov_airship_(Red_Alert_3)/Profile",
+          "title": "Kirov Airship official profile (transcribed), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Official Red Alert 3 site profile (2008), archived 2009",
+          "note": "Copies the unit profile from EA's Red Alert 3 site, now offline; the page links an archived copy. Designation: Heavy Bomber. Its history and Notes from the Field cover its toughness, slowness, lack of anti-air, escorts, the Gastroburners' corrosion and the explosion expected if one falls.",
+          "supports": [
+            "roles/primary",
+            "nature",
+            "body",
+            "armour",
+            "armament/0",
+            "crew",
+            "abilities/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Kirov_airship_(Red_Alert_3)",
+          "title": "Kirov airship (Red Alert 3), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Patch 1.12 infobox",
+          "note": "Infobox: tier 3, price, health, aircraft armour set, Airfield with a Battle Lab, the bombs' Explosive damage and reduced damage to friendly units, air speed with and without Gastroburners, reach, sight and shroud figures, healing when not under attack and the crash damage over an area. The ability boxes give the Gastroburners' speed and health cost.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Soviet_units",
+          "title": "Red Alert 3: Soviet units, StrategyWiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Slow, heavily protected bombers that wreck ground targets below them, explode hard when they fall, cannot fight aircraft and burn their own armour with the after-burner; good against structures, poor against quick ground units and easy prey for fighter jets.",
+          "supports": ["armament/0", "abilities/0", "on_death", "strengths", "weaknesses", "countered_by"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Gastroburner",
+          "title": "Gastroburner, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "The ability's own page; it gives no figures. The fuel boosts the airship's speed, eats the hull slowly from inside, and used too long can bring the Kirov down.",
+          "supports": ["abilities/0", "on_death/notes", "weaknesses"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "armament/0/traits",
+          "note": "The Kirov page gives the bombs no blast radius. Splash rests on the Splash damage page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Splash_damage), which lists the Red Alert 3 Kirov among units that deal splash damage, and on the infobox's reduced damage to friendly units, which only an area hit could cause."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "The infobox's reach figure is tiny next to the Conscript rifle's, matching bombs that fall only on what is below; short is the nearest band."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Infantry, vehicles and buildings come from the sources' ground targets and structures; no source mentions ships, so naval rests on the naval rule alone."
+        },
+        {
+          "path": "abilities/0",
+          "note": "How fast the burners hurt the hull is told differently: the wiki's ability box gives a steady, heavy loss each second and its prose a very quick drain, while the profile, the Gastroburner page and StrategyWiki speak of slow corrosion. All agree that the damage lasts as long as the burners run.",
+          "sources_disagree": true
+        },
+        {
+          "path": "countered_by",
+          "note": "The profile says even enemy fighters barely trouble it, though it cannot strike back at them; StrategyWiki rates it as easy prey for fighter jets, and the wiki says groups of light anti-air units can overwhelm it.",
+          "sources_disagree": true
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparison with other aircraft uses the air speeds on the Command & Conquer Wiki's MiG fighter (Red Alert 3) (https://cnc.fandom.com/wiki/MiG_fighter_(Red_Alert_3)), Twinblade (https://cnc.fandom.com/wiki/Twinblade) and Century bomber (https://cnc.fandom.com/wiki/Century_bomber) pages."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "mobility/traits",
+          "used": "boost",
+          "wanted": "a boost trait whose key may link overclock-self when the burst of speed costs the unit health",
+          "note": "Gastroburners are a burst of speed on a key, usable anywhere, which is the boost trait. But the trait's key pattern is dash, while the abilities rule sends a timed boost that costs anything besides speed to overclock-self, and the burners burn the airship's own hull. The trait is kept, and the ability links overclock-self, not dash."
+        },
+        {
+          "path": "roles",
+          "used": "siege, anti-infantry, assault",
+          "wanted": "anti-armour",
+          "note": "The profile says one Kirov can ruin a whole armour division and calls its bombs armour-piercing, and the wiki calls it deadly against slow surface units. Its bombs carry the Explosive damage category, which the map reads as explosive, so anti-armour's requires fail and the role is left out."
+        }
+      ],
+      "researched_by": "batch r1, agent J10-RA3",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra3.allied.tanya",
+      "game": "ra3",
+      "faction": "allied",
+      "name": "Tanya",
+      "lineage": "tanya",
+      "flavour_affinity": ["allied"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "unique",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["anti-armour"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Defense Bureau",
+        "basis": "Trained at the Boot Camp once the construction yard or Command Hub near it has Max Clearance, and since patch 1.11 only while the player also owns a Defense Bureau (her infobox and changelog). Both gates are t3. The Defense Bureau is recorded because it is the extra building patch 1.11 added and the gate the registry gives other units that need both, such as the FutureTank X-1. Each player is limited to one Tanya (Boot camp (Red Alert 3) page)."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 2000,
+        "basis": "Her infobox price, which StrategyWiki repeats, lands exactly on the very-high threshold, so it takes that band: about twice a main battle tank."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": ["amphibious"],
+        "speed": "medium",
+        "speed_raw": 1.1,
+        "notes": "A little quicker than the Conscript on land. Her infobox gives the same figure for swimming, and in water she keeps fighting as well as on foot, so ships and naval bases are within her reach."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small"
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "The soldier rule decided: her infobox names no armour set, but a beta patch halved what explosive damage does to her, while the Conscript's armour set takes explosives in full, so her game data makes her tougher than the basic rifle infantry and she is light. She has about three times a Conscript's health. One health bar; her real protection is the Time Belt, which undoes recent hits."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Her shroud-clearing figure equals the Conscript's, so medium; patch 1.11 raised it to that level from a shorter one. Her plain vision figure is well above the Conscript's."
+      },
+      "armament": [
+        {
+          "name": "Black Buzzard custom pistols (x2)",
+          "slot": "primary",
+          "family": "small-arms",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry"],
+          "traits": [],
+          "summary": "Two custom pistols fired very fast and very accurately: each shot drops a basic soldier, so she can clear whole groups of infantry on her own. They reach a little less far than the Conscript's rifle and most other infantry rifles. Used only on infantry; her charges handle vehicles, ships and buildings, and nothing she carries can attack aircraft."
+        },
+        {
+          "name": "C4 plastic explosive charges",
+          "slot": "secondary",
+          "family": "explosives",
+          "damage": "armour-piercing",
+          "mount": "free-aim",
+          "delivery": "place",
+          "range": "melee",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "summary": "Her attack order switches to explosives against vehicles, ships and buildings (patch 1.05 gave it its own cursor over vehicles and ships). She runs right up to the target, sets a charge very quickly and the blast destroys it outright, the heaviest tanks included. She carries a large stock and needs no cooldown, so the price is the walk in under fire. Since patch 1.11, Soviet tanks she kills this way no longer release a Terror Drone from the Terror Drone Surprise protocol. It is planted on contact rather than thrown and has no key of its own: the planted variant of throw-explosive.",
+          "patterns": ["throw-explosive"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player is Tanya. She can ride in a Multigunner IFV, whose gun then becomes a copy of her pistols (see that entry), and, like other infantry, she can garrison buildings, a game-wide mechanic left off here."
+      },
+      "abilities": [
+        {
+          "name": "Time Belt",
+          "kind": "active",
+          "source": "innate",
+          "summary": "An instant effect on the special-ability key. The FutureTech belt snaps her back to the spot she stood on, with the health she had, several seconds earlier, undoing whatever happened in between. It then needs a short recharge, so it cannot be used back to back. The usual play is to run in, plant charges and rewind out; the Time Belt page adds that she can take a Chronosphere jump into a base and rewind home, and that, unlike a Chronosphere trip, the rewind leaves her free to move at once. How far back it goes differs between sources (see uncertain).",
+          "patterns": ["rewind-self"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal"
+      },
+      "strengths": [
+        {
+          "ref": "hits:infantry",
+          "why": "Rapid, accurate pistol fire kills a basic soldier per shot; the official profile credits her with beating whole groups of infantry single-handed."
+        },
+        {
+          "ref": "weapon:explosives",
+          "why": "A planted charge destroys a vehicle, ship or building in one go; official text says not even the strongest Soviet tanks are safe from her charges."
+        },
+        {
+          "ref": "mobility-trait:amphibious",
+          "why": "She swims without tiring and fights at sea as well as on land, so ships and harbours are within her reach."
+        },
+        {
+          "ref": "pattern:rewind-self",
+          "why": "The Time Belt snaps her back to where she stood, at the health she had, several seconds earlier, so a raid gone wrong can be undone."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:small-arms",
+          "why": "Nothing she carries can hit a flier: the pistols are used only on infantry and the charges need contact with a surface target."
+        },
+        {
+          "ref": "range:melee",
+          "why": "Her charges need contact, so she must cross the enemy's fire to reach a vehicle and usually takes heavy damage on the way (StrategyWiki)."
+        },
+        {
+          "ref": "range:medium",
+          "why": "Her pistols are outranged by most infantry rifles (StrategyWiki)."
+        },
+        {
+          "ref": "tier:t3",
+          "why": "One per player, at a very high price, behind Max Clearance and, since patch 1.11, a Defense Bureau as well."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Neither weapon reaches fliers, so bombers and gunships can hit her freely; StrategyWiki calls her completely ineffective against aircraft."
+        },
+        {
+          "ref": "damage:cryo",
+          "why": "Infantry freeze almost at once under a cryobeam, and the Cryocopter page names it as a good way to stop a fast commando inside a crowded base; a frozen unit cannot use abilities, so she cannot rewind out."
+        },
+        {
+          "ref": "unit:ra3.allied.cryocopter",
+          "why": "The same reason in an Allied mirror match: its cryobeam freezes her almost instantly, and any hit then shatters her."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Her pistols cut down groups of soldiers; official text says Soviet conscripts cannot stand up to her shooting."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Once she reaches a vehicle, one charge kills it, even an Apocalypse tank."
+        },
+        {
+          "ref": "class:naval",
+          "why": "She swims up to warships and blows them up; official text says no Soviet warship, however big, is safe from her."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Her charges bring down enemy buildings quickly; the Boot Camp's production list sums her up as a commando who detonates buildings."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "Riding in a Multigunner IFV gives the car a copy of her pistols with the same stats, on a fast armoured chassis."
+        },
+        {
+          "ref": "unit:ra3.allied.multigunner-ifv",
+          "why": "The same reason: the Multigunner IFV is the car whose gun she sets when she rides inside."
+        }
+      ],
+      "memorable": "A one-woman strike team who mows down infantry with twin pistols, blows up tanks, ships and buildings with planted charges, and rewinds herself a few seconds, health and all, when a raid goes wrong.",
+      "as_player": "The team's one hero pick at T3: on foot, fragile for her price and deadly up close. Left mouse fires twin pistols that drop a soldier per shot; attack a vehicle, ship or building and walking into it plants a charge that destroys it. Q (Time Belt) snaps you back to where you stood, at the health you had, a few seconds ago: dive, plant, rewind. You swim and fight in water, but nothing you carry touches aircraft.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/a/af/RA3_Manual_-_PC.pdf/revision/latest?cb=20220605033630",
+          "title": "Command & Conquer: Red Alert 3 manual (PC), scan hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Base-game manual (2008)",
+          "note": "EA's printed manual; the Command & Conquer Wiki hosts the scan at File:RA3_Manual_-_PC.pdf. Tanya's paragraph is in the Units section, printed page 14, and the Uprising manual reprints it. Paraphrases checked by hand, since the copy-check cannot read the PDF's text.",
+          "supports": ["roles", "armament", "abilities/0", "counters", "uncertain"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Tanya_(Red_Alert_3)",
+          "title": "Tanya (Red Alert 3), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Patch 1.12 and Uprising",
+          "note": "Infobox: price, tier 3, Boot Camp, needs Max Clearance and (patches 1.11 and 1.12) a Defense Bureau, land and sea speed, pistol reach, vision and shroud-clearing figures, Time Belt as an instant effect. Changelog: the explosive resistance (beta patch 1.5), the C4 cursor (1.05), and the Defense Bureau, shroud range and Terror Drone Surprise changes (1.11).",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "armour",
+            "sensors",
+            "armament",
+            "abilities/0",
+            "strengths",
+            "counters",
+            "memorable",
+            "uncertain"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Tanya_(Red_Alert_3)/Profile",
+          "title": "Tanya official profile (transcribed), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Transcribes EA's official Red Alert 3 site profile (designation Commando, with Notes from the Field); the original site is offline and the page links an archived copy from 2009.",
+          "supports": ["roles", "armament", "abilities/0", "mobility/traits", "strengths", "counters", "memorable"]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Allied_units",
+          "title": "Command & Conquer: Red Alert 3/Allied units, StrategyWiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["cost_band", "armament", "abilities/0", "weaknesses", "countered_by/0", "uncertain"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Boot_camp_(Red_Alert_3)",
+          "title": "Boot camp (Red Alert 3), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Production list: Tanya under tier 3, needing Max Clearance, one per player.",
+          "supports": ["availability", "tier", "counters/3"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "abilities/0",
+          "note": "How far back the belt goes: the ability box on her unit page gives half the span that both manuals, StrategyWiki and the Time Belt page of the Command & Conquer Wiki give. The Time Belt page is also the source of the Chronosphere trick and of the rewind leaving her free to move at once.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0/cooldown",
+          "note": "No source gives a recharge figure; the profile and the Time Belt page say only that it needs a short recharge, so the band is left out."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Infantry only rests on the Multigunner IFV page of the Command & Conquer Wiki, which labels the car's copy of her guns anti-infantry and says it has the same stats as her own weapons, and on StrategyWiki, which calls her completely ineffective against aircraft; her infobox has no air attack line. The manual's line that she is a match for opponents on land, sea or air is read as general praise, not as a weapon that attacks aircraft."
+        },
+        {
+          "path": "armament/1/damage",
+          "note": "No damage category is given for the charges, so step 5 decides. Armour-piercing is taken because the sources present the charges as how she kills tanks and ships (official text on battle tanks, the patch 1.05 cursor over vehicles and ships); they are also her tool against buildings, which would argue for the family default, explosive."
+        },
+        {
+          "path": "armament/1/can_target",
+          "note": "Infantry is listed by can_target step 4, because no source says anything about the charges and infantry. The sources pair the pistols with infantry and the charges with buildings, vehicles and ships, the C4 (Red Alert) page of the Command & Conquer Wiki among them, and the patch 1.05 C4 cursor shows only over vehicles and ships. Whether she can plant one on a landed aircraft is not covered."
+        },
+        {
+          "path": "armament/1/range",
+          "note": "No reach is given; melee is coded because she must reach the target and plant the charge by hand (StrategyWiki). The explosives family default would be short."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No source says how the pistol shots travel; hitscan is the small-arms family default."
+        },
+        {
+          "path": "armour/class",
+          "note": "Light rests on one changelog line (beta patch 1.5 halved her vulnerability to explosive damage) set against the Conscript's armour set on the Conscript (Red Alert 3) page of the Command & Conquer Wiki, which takes explosives in full. Her own infobox names no armour set, so her other resistances are unknown."
+        },
+        {
+          "path": "tier/gate",
+          "note": "The Boot camp page lists her under tier 3 with Max Clearance only; her own infobox, the Defense bureau page, the Max Clearance page and the patch 1.11 notes on the Command & Conquer Wiki add the Defense Bureau from patch 1.11. Either gate is t3.",
+          "sources_disagree": true
+        },
+        {
+          "path": "countered_by/1",
+          "note": "Rests on two uncited pages of the Command & Conquer Wiki: the Cryocopter page (cryobeams freeze infantry almost at once and suit a fast commando loose in a base) and the Cryo page (a frozen unit cannot use abilities)."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Only anti-armour, from her charges. Infiltrator was considered for the buildings she blows up, but the roles tie-break keeps infiltrator for spying, theft and sabotage from inside, and her charges are set on the target from outside; no other role has both its requires and a sourced part behind it."
+        }
+      ],
+      "researched_by": "batch r1, agent J11-RA3",
+      "review": {
+        "status": "checked",
+        "checked_by": "batch r1 checker",
+        "checked_on": "2026-10-22",
+        "checked_paths": [
+          "tier/band",
+          "tier/gate",
+          "cost_band/raw",
+          "cost_band/band",
+          "class",
+          "roles/primary",
+          "roles/secondary",
+          "mobility/base",
+          "mobility/speed",
+          "mobility/speed_raw",
+          "mobility/traits",
+          "mobility/handling",
+          "armour/class",
+          "armour/models",
+          "sensors/sight",
+          "sensors/traits",
+          "sensors/basis",
+          "armament/0/family",
+          "armament/0/damage",
+          "armament/0/range",
+          "armament/0/can_target",
+          "armament/0/delivery",
+          "armament/0/traits",
+          "armament/0/mount",
+          "armament/1/family",
+          "armament/1/damage",
+          "armament/1/range",
+          "armament/1/can_target",
+          "armament/1/delivery",
+          "armament/1/traits",
+          "armament/1/patterns",
+          "armament/1/mount",
+          "abilities/0/kind",
+          "abilities/0/source",
+          "abilities/0/cooldown",
+          "abilities/0/patterns",
+          "availability",
+          "nature",
+          "body/plan",
+          "body/size",
+          "crew/model",
+          "crew/basis",
+          "on_death/outcomes",
+          "on_death/basis",
+          "sources/0/supports",
+          "sources/1/supports",
+          "sources/2/supports",
+          "sources/3/supports",
+          "sources/4/supports"
+        ],
+        "wrong_paths": ["armament/1/can_target"],
+        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. The wrong paths were fixed as the skeptic confirmed (dcc4080)."
+      }
+    },
+    {
+      "id": "ra3.allied.cryocopter",
+      "game": "ra3",
+      "faction": "allied",
+      "name": "Cryocopter",
+      "flavour_affinity": ["allied"],
+      "class": "aircraft",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "disabler",
+        "secondary": []
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Heightened Clearance",
+        "basis": "Built at the Airbase once the construction yard or Command Hub near it has Heightened Clearance, one tech step beyond the basics; its infobox gives tier 2."
+      },
+      "cost_band": {
+        "band": "high",
+        "raw": 1600,
+        "basis": "Its infobox price, which StrategyWiki repeats, is about one and a half times a main battle tank's: our high band."
+      },
+      "mobility": {
+        "base": "rotor",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "very-fast",
+        "speed_raw": 3,
+        "notes": "Its flying speed is three times the Conscript's walking pace. Among aircraft it keeps pace with the Soviet Twinblade helicopter, is quicker than the Imperial Chopper-VX, and is slower than the Allied jets, the Vindicator bomber and the Apollo fighter. As a helicopter it is a low flier here; in the source, as for every Red Alert 3 aircraft, only weapons that can attack air units reach it."
+      },
+      "body": {
+        "plan": "rotorcraft",
+        "size": "medium",
+        "notes": "A helicopter on a British airframe; the manual calls it a light helicopter. No source gives its dimensions (see uncertain)."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 4 of the armour-class order decided: its armour set, a standard aircraft set that takes full damage from autocannon, flak and rocket fire and three quarters from explosives, is not a plain armour word, and helicopters are light. The profile praises its fuselage as unusually sturdy for a helicopter, but patch 1.11 cut its health by about an eighth (Uprising keeps the older, higher value). The Advanced Aeronautics protocol gives every Allied aircraft a quarter more health."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its shroud-clearing figure equals the Conscript's, so medium; its plain vision figure is half as large again as the Conscript's. The Advanced Aeronautics protocol widens every Allied aircraft's shroud clearing by a quarter."
+      },
+      "armament": [
+        {
+          "name": "Custom cryobeam",
+          "slot": "primary",
+          "family": "cryo",
+          "damage": "cryo",
+          "mount": "free-aim",
+          "delivery": "beam",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": ["slow", "root", "silence"],
+          "summary": "Does no damage at all. Held on a ground or sea target, the beam slows it more and more and then locks it in ice: a frozen unit cannot move, fire or use abilities, and a frozen building stops working. Frozen targets turn brittle, so almost any hit, even small-arms fire, shatters them; tesla, spectrum and radiation weapons are the exceptions and get no bonus. Several beams on one target freeze it faster, infantry freeze almost at once, and big targets take longer because the freeze is measured against the target's health. If nobody follows up, the ice thaws on its own. Reaches as far as the Conscript's rifle and cannot target aircraft. The High Technology protocol makes the beam stronger.",
+          "patterns": ["freeze-and-shatter"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player flies it and works both beams. In the fiction a pilot carries military scientists who run the equipment (background text and voice lines); that changes nothing here."
+      },
+      "abilities": [
+        {
+          "name": "S.H.R.I.N.K. Beam",
+          "kind": "active",
+          "source": "innate",
+          "summary": "A targeted ability on the special-ability key, fired at a vehicle or ship from about twice the cryobeam's reach; infantry are not affected. For a while the target is shrunk: it moves and fires faster, but deals only a quarter of its normal damage, reaches half as far, sees much less, takes double damage from everything, loses its own crushing and can be run over by any vehicle that crushes. Many shells and rockets also tend to miss a shrunken target, and a shrunken transport cannot take on infantry. It needs a cooldown between uses (no figure found); the High Technology protocol shortens it and makes the shrink last a few seconds longer.",
+          "patterns": ["shrink-target"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal"
+      },
+      "strengths": [
+        {
+          "ref": "pattern:freeze-and-shatter",
+          "why": "Freezes any surface target solid, from infantry to the heaviest tanks, warships and factories; a frozen target is helpless and breaks under almost any hit."
+        },
+        {
+          "ref": "speed:very-fast",
+          "why": "As quick as any helicopter in the game, so it reaches a threat anywhere on the map fast."
+        },
+        {
+          "ref": "pattern:shrink-target",
+          "why": "Its shrink ray leaves an enemy vehicle or ship weak, fragile and crushable for a while, from about twice the reach of its freezing beam."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "damage:cryo",
+          "why": "Neither beam does real damage, so it kills nothing alone and, with no offensive weapon, never ranks up, not even through a Veteran Academy."
+        },
+        {
+          "ref": "pattern:freeze-and-shatter",
+          "why": "Freeze and shrink both wear off if nobody follows up, and tesla, spectrum and radiation weapons get no bonus against frozen targets."
+        },
+        {
+          "ref": "weapon:cryo",
+          "why": "Its beam reaches only surface targets, so it cannot fight back against aircraft."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "A light airframe whose health patch 1.11 cut; StrategyWiki calls it vulnerable to enemy aircraft."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "It cannot target fliers at all, and StrategyWiki calls it vulnerable to enemy aircraft."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "armour-class:>=heavy",
+          "why": "Its main job is to stop the biggest surface threats, such as Apocalypse tanks and Dreadnought battleships, by freezing them until teammates break them; airships such as the Kirov are out of its reach."
+        },
+        {
+          "ref": "role:siege",
+          "why": "Freezes ground artillery before it can shell base defences."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Infantry freeze almost at once, which makes it a good answer to a fast commando loose in a crowded base."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Given time it freezes a whole war factory, shutting the building down and leaving it brittle."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "weapon:small-arms",
+          "why": "Frozen targets are brittle enough that even small-arms fire breaks them, so cheap rifle infantry can finish what it freezes; the profile adds that one shotgun blast may wreck a frozen building."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "Any vehicle that crushes can run over a target it has shrunk."
+        },
+        {
+          "ref": "unit:ra3.allied.guardian-tank",
+          "why": "The same reason: StrategyWiki's Allied strategies page notes that shrunk enemies become easy prey for Guardian tanks to crush."
+        }
+      ],
+      "memorable": "A helicopter with no gun at all: it freezes the enemy's biggest war machines solid for teammates to smash, or shrinks them into quick, feeble toys that anything heavy can roll over.",
+      "as_player": "A fast, light T2 helicopter that deals no damage of its own. Hold left mouse on a ground target to slow it and then lock it in ice for your team to shatter; Q fires the shrink ray at a vehicle or ship, leaving it faster but feeble, fragile and easy to run over. Keep away from anti-air: you can hurt nothing, least of all aircraft.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/a/af/RA3_Manual_-_PC.pdf/revision/latest?cb=20220605033630",
+          "title": "Command & Conquer: Red Alert 3 manual (PC), scan hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Base-game manual (2008)",
+          "note": "EA's printed manual; the Command & Conquer Wiki hosts the scan at File:RA3_Manual_-_PC.pdf. The Cryocopter's paragraph is in the Units section, printed page 15, and the Uprising manual reprints it. Paraphrases checked by hand, since the copy-check cannot read the PDF's text.",
+          "supports": ["body", "armament/0", "abilities/0", "uncertain"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Cryocopter",
+          "title": "Cryocopter, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Patch 1.12 and Uprising",
+          "note": "Infobox: price, tier 2, Airbase with Heightened Clearance, health per version, aircraft armour set, cryo damage category, airspeed, the two beams' reach, vision and shroud-clearing figures, the shrink beam as its ability, and a note that it cannot gain veterancy. Changelog: beta patches 1.3 and 1.5 and patch 1.11.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "strengths",
+            "weaknesses",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Cryocopter/Profile",
+          "title": "Cryocopter official profile (transcribed), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Transcribes EA's official Red Alert 3 site profile (designation Special Weapons Support, with Notes from the Field); the original site is offline and the page links an archived copy from 2009.",
+          "supports": [
+            "roles",
+            "nature",
+            "body",
+            "armour",
+            "armament/0",
+            "abilities/0",
+            "strengths/0",
+            "weaknesses/0",
+            "counters/3",
+            "combos/0",
+            "crew",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Allied_units",
+          "title": "Command & Conquer: Red Alert 3/Allied units, StrategyWiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["cost_band", "armament/0", "abilities/0", "weaknesses", "countered_by/0", "combos/1"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/S.H.R.I.N.K._beam",
+          "title": "S.H.R.I.N.K. beam, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "What shrinking does to a vehicle or ship: faster movement and fire, much less damage, reach and sight, double damage taken, crush levels cut, and weapons that tend to miss.",
+          "supports": ["abilities/0", "combos/1"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "abilities/0",
+          "note": "Coded as an ability, not a weapon: the Special ability (Red Alert 3) page of the Command & Conquer Wiki lists the shrink beam as a targeted ability, the infobox names it as the unit's ability, and the manual calls the shrink ray its pick for special occasions. The infobox also lists it among the unit's guns with a reach of its own, but no source describes a toggle between the two beams."
+        },
+        {
+          "path": "abilities/0/cooldown",
+          "note": "No source gives the cooldown. The High technology page of the Command & Conquer Wiki says that protocol cuts the Cryocopter's ability cooldown to three quarters and lengthens the shrink, so a cooldown exists; the band is left out."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "The step-by-step slowing, the freeze measured against the target's health, frozen units being unable to use abilities, and the tesla, spectrum and radiation exceptions come from the Cryo page of the Command & Conquer Wiki, with the exceptions also in the Cryocopter page's trivia."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "The infobox gives only a ground attack line and the profile says surface targets, so no air layer is listed. Naval follows the rule for games with ships; the Cryocopter page names Dreadnought battleships as targets."
+        },
+        {
+          "path": "roles/primary",
+          "note": "Roles step 2 was applied although the unit has a weapon: the profile says it has no weapons in the usual sense and cannot harm any target, so the cryobeam is read as a tool. Read strictly as an armed unit, step 1 gives nothing (Special Weapons Support names support, whose requires it fails), steps 3 and 4 give nothing, and step 5 would make it a raider, since it is very fast and light."
+        },
+        {
+          "path": "body/size",
+          "note": "No source gives its size. Medium is coded because the manual calls it a light helicopter, the size list's medium example for helicopters; large would follow if it were judged an attack or transport helicopter."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparisons with other aircraft rest on the airspeed figures in the Twinblade, Striker-VX, Vindicator and Apollo fighter infoboxes on the Command & Conquer Wiki."
+        },
+        {
+          "path": "combos/2",
+          "note": "Rests on the Allied Strategies page of StrategyWiki (https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Allied_Strategies), which names the Guardian tank as the crusher for shrunk enemies, and on the Guardian tank page of the Command & Conquer Wiki, whose infobox gives it a crush level above the one a shrunk target keeps."
+        },
+        {
+          "path": "armour/notes",
+          "note": "The health cut is from the patch 1.11 notes on the Cryocopter page; Uprising, which runs older unit data, keeps the higher value."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Left empty. Roles.secondary step 4 would offer raider for a very fast unit with light armour, but raider's description (hit and run, picking off isolated targets) needs damage, and the profile says it can do no harm to anything by itself, so raider is not a candidate. Scout fails the raider or scout tie-break: speed alone makes a scout only when official text calls the unit one."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armament/0/traits",
+          "used": "slow, root, silence",
+          "wanted": "freeze",
+          "note": "No weapon trait names a full freeze. Slow covers the build-up; root and silence together stand for the frozen state (no moving, firing or abilities), as the EMP tie-break codes a target that can do neither. The cryo family and the freeze-and-shatter pattern carry the brittle state that follows."
+        }
+      ],
+      "researched_by": "batch r1, agent J11-RA3",
       "review": {
         "status": "unchecked"
       }

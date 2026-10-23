@@ -1,0 +1,591 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra3",
+  "units": [
+    {
+      "id": "ra3.soviet.sickle",
+      "game": "ra3",
+      "faction": "soviet",
+      "name": "Sickle",
+      "flavour_affinity": ["soviet"],
+      "class": "walker",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["scout", "assault"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "War Factory",
+        "basis": "The Sickle page's infobox gives tier 1: the War Factory builds it with no further tech."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 900,
+        "basis": "The Sickle page's price sits exactly on the lowest price of our medium band for RA3, so it takes that band; it is a little cheaper than a main battle tank."
+      },
+      "mobility": {
+        "base": "legs-multi",
+        "handling": "pivot",
+        "traits": ["leap"],
+        "speed": "fast",
+        "speed_raw": 2,
+        "notes": "Twice the Conscript's ground speed by the wiki's game values, and about a third faster than the Hammer, the Soviet main battle tank; the wiki ranks its speed near the top of the game's vehicles. It cannot cross water. Walking, it runs over nothing: its own crush level is nil, and only a Flea Jump landing lifts it above the level at which infantry are crushed (see abilities). Handling stays pivot, the default for many legs, since it is neither tiny nor small and no source shows a reason to change it."
+      },
+      "body": {
+        "plan": "spider-frame",
+        "size": "medium",
+        "notes": "A compact pod held up on tall stilt legs, with its three guns in separate ball-shaped canopies around the pod rather than in one turret. The official profile calls the shape spiderlike and gives it four legs. StrategyWiki calls it a light walker, which our Sizes examples put at medium; no source gives its dimensions."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["directional"],
+        "notes": "Step 4 of the armour-class order decided: its armour set's name is not a plain armour word, and our class descriptions put a light walker bigger than a soldier at medium. Its health is a little below the Hammer tank's. The armour set ignores sniper and melee hits, takes only a quarter of gun damage (half in Uprising) and three quarters of rocket damage, full damage from auto cannon, flak and explosives, and well over full damage from cannon, prism and tesla weapons: it shrugs off small arms but not anti-tank fire. Side hits do slightly more and rear hits a little more again, a small difference."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox gives a vision figure and a larger shroud-clearing figure. The shroud figure, which the registry says counts, equals the Conscript's, so medium; its vision figure equals the Conscript's too."
+      },
+      "armament": [
+        {
+          "name": "PKX 12.7 mm heavy machine guns (three)",
+          "slot": "primary",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "limited-arc",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "summary": "Three copies of one heavy machine gun, each in its own swivelling ball canopy that turns apart from the hull. Each gun covers a little over a third of the circle, so together they fire all round, keep firing on the move and can work on several targets at once, but at most two of them can aim at any one target. Deadly to infantry and weak against armour; the canopies cannot tilt up far enough to reach aircraft. Its reach equals the Conscript rifle's."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "The lore gives each Sickle three gunners, one per gun position, which changes nothing here. One player drives and fires all three guns: they are copies of one gun, so one weapon entry fired on one attack order, and decision 2A hands a gunner only another weapon on its own mount. In a player version the guns whose arcs cover the cursor fire."
+      },
+      "abilities": [
+        {
+          "name": "Flea Jump",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "short",
+          "summary": "Leaps to a chosen spot up to about twice its guns' reach away: over walls, roadblocks and other obstacles, and up onto cliffs and plateaus that troops on foot cannot reach. The landing deals melee-category damage in a small circle around it, which the Hammer tank's armour, for one, ignores, so it works on infantry rather than armour. For the jump its crush level rises above the crushable level of ordinary infantry, so it can now and then squash soldiers it lands on; the wiki adds that a well-timed landing can stun commandos. It recharges after a short wait, half of what it was before beta patch 1.5.",
+          "patterns": ["leap"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "In the source it is simply destroyed; bail-out is the default for a crewed machine. The Terror Drone Surprise protocol, which a player picks for the whole side, can make a destroyed Soviet vehicle release a Terror Drone; that is a faction power, not this unit's own outcome."
+      },
+      "strengths": [
+        {
+          "ref": "weapon:machine-gun",
+          "why": "Three heavy machine guns cut down infantry, keep firing while it moves and can work on several soldiers at once."
+        },
+        {
+          "ref": "mount:limited-arc",
+          "why": "Its three gun arcs together cover every direction, so infantry cannot slip round to an unguarded side."
+        },
+        {
+          "ref": "mobility-trait:leap",
+          "why": "Flea Jump clears obstacles and reaches plateaus that troops on foot cannot, for scouting or for landing among enemy infantry."
+        },
+        {
+          "ref": "speed:fast",
+          "why": "Its speed is near the top of the game's vehicles, so it runs down fleeing infantry and scouts well."
+        },
+        {
+          "ref": "armour-class:medium",
+          "why": "Shrugs off small-arms fire: its armour ignores sniper shots and takes little from guns."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "mount:limited-arc",
+          "why": "No more than two of its three guns can aim at one target, so it does poorly against a single tough target."
+        },
+        {
+          "ref": "weapon:machine-gun",
+          "why": "Its guns do little to armour and cannot be raised to hit aircraft at all."
+        },
+        {
+          "ref": "armour-class:medium",
+          "why": "Cannon, prism and tesla hits do more than full damage, and even a little anti-tank fire wrecks it."
+        },
+        {
+          "ref": "mobility:legs-multi",
+          "why": "Its legs cannot carry it across water; the wiki counts the lack of amphibious movement among its flaws."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Its guns cannot be raised to shoot at fliers, so any armed aircraft can attack it without return fire."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Anti-tank weapons tear through its cheap alloy armour, the official notes say."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Tanks and other heavy weapons do to it what it does to infantry, the wiki says, while its guns barely scratch them."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Mows down infantry waves, and a jump into a crowd scatters and crushes them; well timed, it can even stun and kill commandos."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:anti-armour",
+          "why": "The Hammer tank's profile calls the Sickle its natural partner: the tank kills vehicles, the Sickle the infantry its cannon handles poorly."
+        },
+        {
+          "ref": "unit:ra3.soviet.hammer-tank",
+          "why": "The Hammer tank's profile calls the Sickle its natural partner: the tank kills vehicles, the Sickle the infantry its cannon handles poorly."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "An anti-air escort covers the aircraft its guns cannot reach; the official notes joke about the gap and the Bullfrog sales it brings."
+        },
+        {
+          "ref": "unit:ra3.soviet.bullfrog",
+          "why": "The official notes pair it, tongue in cheek, with the Bullfrog, whose anti-air gun covers the Sickle's blind spot."
+        }
+      ],
+      "memorable": "A spindly anti-infantry walker whose three swivel guns cover every direction, and which flea-jumps over walls and up cliffs to land among enemy troops.",
+      "as_player": "A fast T1 walker for one player. Three swivel machine guns each cover a wide arc: aim anywhere and the guns facing that way fire, two at most on one target, so you shred infantry all round while moving. Q flea-jumps over walls and up cliffs on a short cooldown; landing in a crowd hurts and can squash soldiers. Tanks, anti-tank fire and anything flying beat you, and water stops you.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/a/af/RA3_Manual_-_PC.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 3 PC manual (scan hosted by the Command & Conquer Wiki), Units section",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3 PC manual (2008)",
+          "note": "EA's printed manual, read as a scan hosted by the Command & Conquer Wiki (File:RA3 Manual - PC.pdf). The Sickle paragraph is on printed page 18: a walking gun turret built for riot suppression, good at crowd control, that leaps obstacles.",
+          "supports": ["roles", "mobility/traits", "abilities/0"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Sickle/Profile",
+          "title": "Sickle official profile (transcribed), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Official Red Alert 3 site profile (2008), archived 2009",
+          "note": "Copies the unit profile from EA's Red Alert 3 site, now offline; the page links an archived copy. Designation: Anti-Infantry Walker. Its Notes from the Field give the guns' arcs, the lack of anti-air, the jump's use for reconnaissance and the armour's limits.",
+          "supports": [
+            "roles",
+            "nature",
+            "mobility",
+            "body",
+            "armament/0",
+            "crew",
+            "abilities/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Sickle",
+          "title": "Sickle, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Patch 1.12 infobox, with the Uprising armour set listed apart",
+          "note": "Infobox: price, tier 1 at the War Factory, health, ground speed, gun and jump reaches, sight and shroud figures, the Auto-Cannon damage category of the guns, the jump's melee damage radius and cooldown, crush levels, armour set with facing figures, not amphibious. The changelog gives the beta patch 1.5 cooldown cut.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "crew",
+            "abilities/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Soviet_units",
+          "title": "Red Alert 3: Soviet units, StrategyWiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Calls it a light anti-infantry walker that can fire at several targets and knocks infantry down where its jump lands; rates its damage as low and its jump as of little use, but good for sweeping up commandos.",
+          "supports": ["body/size", "armour/class", "armament/0", "abilities/0", "counters", "weaknesses"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Hammer_tank/Profile",
+          "title": "Hammer tank official profile (transcribed), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Official Red Alert 3 site profile (2008), archived 2009",
+          "note": "Copies the Hammer tank's unit profile from EA's Red Alert 3 site, now offline. Its Notes from the Field say commanders pair the tank with Sickles and Bullfrogs because its cannon cannot handle infantry or aircraft, and that the Sickle suits it best.",
+          "supports": ["combos"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/secondary",
+          "note": "Scout rests on the official notes saying the Flea Jump is very useful for reconnaissance, read as official text naming the scout alias for the unit. Read more strictly, as text about the jump rather than a name for the unit, scout would need an information part (long sight, a sensor trait, stealth or a reveal ability), which the Sickle lacks, and the slots would hold assault alone."
+        },
+        {
+          "path": "body",
+          "note": "The official profile gives the Sickle four stilt legs; no other page read gives a count. Many legs holds whatever the count."
+        },
+        {
+          "path": "armour/class",
+          "note": "Medium rests on reading it as a light walker, StrategyWiki's word. Its health is a little below the Hammer tank's (Hammer tank page of the Command & Conquer Wiki, https://cnc.fandom.com/wiki/Hammer_tank), but the class descriptions decide by kind, not by health."
+        },
+        {
+          "path": "armament/0/damage",
+          "note": "The infobox writes the guns' damage category as Auto-Cannon, with a hyphen; it is read as the registry map's Auto Cannon, which gives kinetic. The family stays machine gun, since the sources describe heavy machine guns firing bullets."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No source says how the bullets travel; hitscan is the machine-gun family default."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "No source names structures or ships as targets. Structures come from the family's ground kinds (can_target step 4) and ships from the naval rule; the profile rules out aircraft."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "That the guns do little to armour rests on StrategyWiki's low-damage verdict and on the Hammer tank page of the Command & Conquer Wiki, whose armour set takes only a quarter of auto cannon damage."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparison with the Hammer's speed uses the ground speed on the Hammer tank page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Hammer_tank)."
+        },
+        {
+          "path": "abilities/0",
+          "note": "Only the main wiki says a well-timed jump stuns commandos; StrategyWiki says the landing knocks infantry down. The wiki's special-ability page (the Command & Conquer Wiki's Special ability (Red Alert 3) page, where Flea Jump redirects) lists Flea Jump as a targeted ability. That the landing spares armour rests on the Hammer tank page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Hammer_tank), whose armour set takes no melee damage. No source says whether the landing also hurts friendly units."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armament/0/mount",
+          "used": "limited-arc",
+          "wanted": "split arcs: several mounts that together cover the whole circle, with only some able to bear on one target",
+          "note": "Each of the three guns covers a little over a third of the circle, so the set covers every direction while at most two guns reach any one target. Limited arc describes one mount covering part of the circle; no aim term describes overlapping partial arcs."
+        },
+        {
+          "path": "roles",
+          "used": "anti-infantry, scout, assault",
+          "wanted": "disabler",
+          "note": "The manual rates it highly for controlling crowds, and its jump knocks infantry down where it lands (StrategyWiki) or stuns commandos (wiki). Disabler's requires need a stun, root, silence or slow weapon trait, cryo or EMP damage, or a control pattern; a leap that stuns on landing has none of them, so the role is left out."
+        }
+      ],
+      "researched_by": "batch r1, agent J10-RA3",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra3.soviet.kirov-airship",
+      "game": "ra3",
+      "faction": "soviet",
+      "name": "Kirov Airship",
+      "lineage": "kirov-airship",
+      "flavour_affinity": ["soviet"],
+      "class": "aircraft",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "siege",
+        "secondary": ["anti-infantry", "assault"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Battle Lab",
+        "basis": "The Kirov page's infobox gives tier 3: the Airfield builds it, and only while a Battle Lab stands."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 2500,
+        "basis": "The Kirov page's price is well above the lowest price of our very-high band for RA3, about two and a half main battle tanks."
+      },
+      "mobility": {
+        "base": "airship",
+        "handling": "drift",
+        "traits": ["boost"],
+        "speed": "very-slow",
+        "speed_raw": 0.6,
+        "notes": "About three fifths of the Conscript's speed by the wiki's air speed figure. Among the game's aircraft it is by far the slowest: about a fifth as fast as the Twinblade and the Century Bomber, and about a seventh as fast as the MiG. The profile and the manual both name slowness as its drawback. Gastroburners nearly double its speed while they burn, which gives it the boost trait; that boosted speed is not its stock speed (see abilities). Handling stays drift, the airship default."
+      },
+      "body": {
+        "plan": "envelope",
+        "size": "huge",
+        "notes": "A massive rigid dirigible; airships are huge in our Sizes examples."
+      },
+      "armour": {
+        "class": "super-heavy",
+        "models": ["self-repair"],
+        "notes": "Step 4 of the armour-class order decided: its armour set's name is not a plain armour word, and our class descriptions name big airships as super-heavy; check A agrees, since it is huge and tier 3. The profile calls it close to indestructible and says most anti-aircraft fire barely troubles it. Its aircraft armour set takes double damage from cannon and gun hits, full damage from auto cannon, flak and rocket hits, three quarters from explosives, and next to nothing from sniper, melee and radiation hits. It mends itself slowly whenever it is not under attack (the infobox), the self-repair model; the faster healing at Heroic rank belongs to veterancy. Gastroburners burn its own health away while they run."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its vision figure is shorter than the Conscript's, but its shroud-clearing figure, which the registry says counts, equals the Conscript's, so medium."
+      },
+      "armament": [
+        {
+          "name": "BOR-57 Grom bombs",
+          "slot": "primary",
+          "family": "bombs",
+          "damage": "explosive",
+          "mount": "body-aim",
+          "delivery": "drop",
+          "range": "short",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": ["splash", "friendly-fire"],
+          "summary": "Drops heavy bombs on whatever lies directly under it, levelling buildings and slow ground units. Its reach is next to nothing, so it has to fly over each target, and the bombs never reach aircraft. Each blast hurts everything around the impact, friendly units included, though they take only half damage. Unlike the Allied Vindicator and Century Bomber it carries enough bombs for a whole battle and never flies home to rearm."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "The lore has decorated officers fly it as pilot-bombardiers who live aboard in comfort, which changes nothing here. One player flies it and drops the bombs."
+      },
+      "abilities": [
+        {
+          "name": "Gastroburners / Propellers",
+          "kind": "toggle",
+          "source": "innate",
+          "summary": "Two buttons that undo each other. Gastroburners feed a corrosive chemical into the engines and nearly double the airship's speed, to reach a base sooner, run down slow ground units or get away from anti-air fire, but the chemical eats the hull for as long as it runs, even while the airship hangs in place. Propellers bring back the normal slow speed and stop the damage. Left on too long, the burners bring the airship down.",
+          "patterns": ["overclock-self"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["death-blast"],
+        "basis": "in-game",
+        "notes": "The infobox says the falling airship deals heavy explosive damage over an area where it crashes; the profile and StrategyWiki also describe the fall as a big explosion. Burning its Gastroburners too long can bring it down by itself."
+      },
+      "strengths": [
+        {
+          "ref": "armour-class:super-heavy",
+          "why": "Enormous health: the profile says most anti-aircraft fire barely troubles it, so it keeps bombing under fire that would down other aircraft."
+        },
+        {
+          "ref": "hits:structure",
+          "why": "Its bombs level buildings quickly; the wiki rates it as lethal to buildings, and the profile says one airship can wreck an entire base."
+        },
+        {
+          "ref": "weapon:bombs",
+          "why": "It never runs out of bombs or flies home to rearm, unlike the Allied bombers."
+        },
+        {
+          "ref": "armour-model:self-repair",
+          "why": "Mends its hull by itself whenever it is not under attack."
+        },
+        {
+          "ref": "pattern:overclock-self",
+          "why": "Gastroburners nearly double its speed when it must reach a target or escape anti-air fire."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "speed:very-slow",
+          "why": "Ponderously slow; the profile names slowness as its one real flaw, so defenders see it coming."
+        },
+        {
+          "ref": "weapon:bombs",
+          "why": "Its only weapon falls straight down, so it has no way at all to fight back against aircraft."
+        },
+        {
+          "ref": "range:short",
+          "why": "It must fly right over each target, and fast ground units slip out from under it."
+        },
+        {
+          "ref": "weapon-trait:friendly-fire",
+          "why": "Its bombs also hurt friendly units below, at half strength."
+        },
+        {
+          "ref": "pattern:overclock-self",
+          "why": "Gastroburners eat its own hull and keep doing so even while it hovers; left on, they bring it down."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-air",
+          "why": "Massed anti-air, even light units, can overwhelm it, since its slowness keeps it under fire for a long time."
+        },
+        {
+          "ref": "unit:ra3.allied.multigunner-ifv",
+          "why": "The wiki names groups of Multigunner IFVs as enough to bring down a Kirov that flies without escorts."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "It cannot shoot back at aircraft, and StrategyWiki rates it as easy prey for fighter jets."
+        },
+        {
+          "ref": "speed:>=fast",
+          "why": "Fast ground units dodge its bombs; StrategyWiki says it does poorly against quick ground targets."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "target:structure",
+          "why": "Deadly against buildings: the profile says even one airship can wreck an entire base."
+        },
+        {
+          "ref": "speed:<=slow",
+          "why": "Slow ground units cannot get out from under its bombs; the wiki rates it as lethal to slow surface units."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:anti-air",
+          "why": "Escort fighters or anti-air units cover its blind spot; the profile and the wiki both say it should not fly without them."
+        },
+        {
+          "ref": "role:assault",
+          "why": "A ground attack that draws the defenders gives the slow airships time to reach their targets, as the wiki advises."
+        }
+      ],
+      "memorable": "A colossal, slow airship that never runs out of bombs and can burn its own hull for speed; when it finally falls, the crash is one more bomb.",
+      "as_player": "A T3 flying fortress for one player: huge, very slow and very tough, mending between fights. Drift over targets and drop bombs on whatever is beneath you; teammates under you take half damage. Q toggles Gastroburners: nearly double speed while your own hull burns, until you switch back. You cannot hit anything in the air, so bring anti-air friends, and if you go down, your crash blasts everything below.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/a/af/RA3_Manual_-_PC.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 3 PC manual (scan hosted by the Command & Conquer Wiki), Units section",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3 PC manual (2008)",
+          "note": "EA's printed manual, read as a scan hosted by the Command & Conquer Wiki (File:RA3 Manual - PC.pdf). The Kirov paragraph is on printed page 19: war zeppelins carrying many heavy bombs, slow, with a short burst of speed paid for in hull damage.",
+          "supports": ["mobility", "armament/0", "abilities/0", "weaknesses/0"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Kirov_airship_(Red_Alert_3)/Profile",
+          "title": "Kirov Airship official profile (transcribed), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Official Red Alert 3 site profile (2008), archived 2009",
+          "note": "Copies the unit profile from EA's Red Alert 3 site, now offline; the page links an archived copy. Designation: Heavy Bomber. Its history and Notes from the Field cover its toughness, slowness, lack of anti-air, escorts, the Gastroburners' corrosion and the explosion expected if one falls.",
+          "supports": [
+            "roles/primary",
+            "nature",
+            "body",
+            "armour",
+            "armament/0",
+            "crew",
+            "abilities/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Kirov_airship_(Red_Alert_3)",
+          "title": "Kirov airship (Red Alert 3), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Patch 1.12 infobox",
+          "note": "Infobox: tier 3, price, health, aircraft armour set, Airfield with a Battle Lab, the bombs' Explosive damage and reduced damage to friendly units, air speed with and without Gastroburners, reach, sight and shroud figures, healing when not under attack and the crash damage over an area. The ability boxes give the Gastroburners' speed and health cost.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Soviet_units",
+          "title": "Red Alert 3: Soviet units, StrategyWiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Slow, heavily protected bombers that wreck ground targets below them, explode hard when they fall, cannot fight aircraft and burn their own armour with the after-burner; good against structures, poor against quick ground units and easy prey for fighter jets.",
+          "supports": ["armament/0", "abilities/0", "on_death", "strengths", "weaknesses", "countered_by"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Gastroburner",
+          "title": "Gastroburner, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "The ability's own page; it gives no figures. The fuel boosts the airship's speed, eats the hull slowly from inside, and used too long can bring the Kirov down.",
+          "supports": ["abilities/0", "on_death/notes", "weaknesses"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "armament/0/traits",
+          "note": "The Kirov page gives the bombs no blast radius. Splash rests on the Splash damage page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Splash_damage), which lists the Red Alert 3 Kirov among units that deal splash damage, and on the infobox's reduced damage to friendly units, which only an area hit could cause."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "The infobox's reach figure is tiny next to the Conscript rifle's, matching bombs that fall only on what is below; short is the nearest band."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Infantry, vehicles and buildings come from the sources' ground targets and structures; no source mentions ships, so naval rests on the naval rule alone."
+        },
+        {
+          "path": "abilities/0",
+          "note": "How fast the burners hurt the hull is told differently: the wiki's ability box gives a steady, heavy loss each second and its prose a very quick drain, while the profile, the Gastroburner page and StrategyWiki speak of slow corrosion. All agree that the damage lasts as long as the burners run.",
+          "sources_disagree": true
+        },
+        {
+          "path": "countered_by",
+          "note": "The profile says even enemy fighters barely trouble it, though it cannot strike back at them; StrategyWiki rates it as easy prey for fighter jets, and the wiki says groups of light anti-air units can overwhelm it.",
+          "sources_disagree": true
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparison with other aircraft uses the air speeds on the Command & Conquer Wiki's MiG fighter (Red Alert 3) (https://cnc.fandom.com/wiki/MiG_fighter_(Red_Alert_3)), Twinblade (https://cnc.fandom.com/wiki/Twinblade) and Century bomber (https://cnc.fandom.com/wiki/Century_bomber) pages."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "mobility/traits",
+          "used": "boost",
+          "wanted": "a boost trait whose key may link overclock-self when the burst of speed costs the unit health",
+          "note": "Gastroburners are a burst of speed on a key, usable anywhere, which is the boost trait. But the trait's key pattern is dash, while the abilities rule sends a timed boost that costs anything besides speed to overclock-self, and the burners burn the airship's own hull. The trait is kept, and the ability links overclock-self, not dash."
+        },
+        {
+          "path": "roles",
+          "used": "siege, anti-infantry, assault",
+          "wanted": "anti-armour",
+          "note": "The profile says one Kirov can ruin a whole armour division and calls its bombs armour-piercing, and the wiki calls it deadly against slow surface units. Its bombs carry the Explosive damage category, which the map reads as explosive, so anti-armour's requires fail and the role is left out."
+        }
+      ],
+      "researched_by": "batch r1, agent J10-RA3",
+      "review": {
+        "status": "unchecked"
+      }
+    }
+  ]
+}

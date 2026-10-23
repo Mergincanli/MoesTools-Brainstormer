@@ -1,0 +1,543 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra1",
+  "units": [
+    {
+      "id": "ra1.allied.field-mechanic",
+      "game": "ra1",
+      "introduced_in": "ra1-aftermath",
+      "faction": "allied",
+      "name": "Field Mechanic",
+      "flavour_affinity": ["allied"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "support",
+        "secondary": []
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Service Depot",
+        "basis": "Trained at the Allied Barracks only once a Service Depot stands: its infobox gives tier 2 with that requirement, and the depot's page lists him among the units it unlocks. The registry counts the depot as one tech step beyond the basics."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 950,
+        "basis": "List price a little above the Medium Tank's and just past the medium threshold, a high price for a soldier, as the wiki remarks."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "His land speed in the infobox equals the Rifle Infantry's, so medium. The Aftermath manual calls him slow, a word about him among soldiers that does not set the band. The vehicles he serves outpace him: the Medium Tank moves twice as fast. Like any soldier he can be run over by a crushing vehicle."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "notes": "An ordinary soldier carrying a socket wrench; one per purchase."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the infobox armour type Light maps to light. The Aftermath manual grades him as having no armour at all, so the two disagree (see uncertain). He has a little more health than a Rifle Infantry and less than a Medic. Like other infantry he drops flat when frightened and then takes half damage, a game-wide rule that adds no model."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox sight is three quarters of the Rifle Infantry's, inside medium but close to the short edge. No sensor trait of his own; the engine lets every soldier make a cloaked enemy beside it shimmer into view, which is game-wide."
+      },
+      "armament": [
+        {
+          "name": "Socket Wrench",
+          "slot": "primary",
+          "family": "repair-tool",
+          "damage": "repair",
+          "mount": "free-aim",
+          "delivery": "beam",
+          "range": "short",
+          "can_target": ["ground-vehicle"],
+          "affects": "allies",
+          "traits": [],
+          "summary": "Restores health to a damaged friendly vehicle and can never be turned on an enemy. Ordered onto a hurt vehicle, or left idle near one, he walks over and works on it until it is whole, which takes a while, as with the Medic's healing. The wiki says this is far quicker than a trip to the Service Depot and costs nothing, whereas the depot bills credits for each repair and the vehicle must drive back onto its pad. The code also accepts friendly aircraft as patients, but never ships or soldiers. A board order on a damaged transport becomes a repair order: he fixes it fully first and only then climbs in.",
+          "patterns": ["repair-allies"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One soldier. He rides in an APC like any infantry (entering is a universal key), but only once the carrier is at full health, because his repair order takes over while it is damaged (wiki; INFANTRY.CPP). In the 2020 source release a force move sends him into a damaged APC without the repair."
+      },
+      "abilities": [],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "No page shows anything special when he dies; the code has no survivor logic for infantry."
+      },
+      "strengths": [
+        {
+          "ref": "weapon:repair-tool",
+          "why": "Mends friendly vehicles where they fight, for free and, by the wiki's account, far quicker than a Service Depot, so tanks need not leave the front to be fixed."
+        },
+        {
+          "ref": "pattern:repair-allies",
+          "why": "Finds damaged friendly vehicles near him by himself and keeps at them until they are fully repaired."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:repair-tool",
+          "why": "His one tool only repairs: he has no gun, so he can neither defend himself nor hurt anything."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "A frail soldier the manual calls unarmoured; Soviet infantry and tanks pick him off easily, and crushing tanks can drive over him."
+        },
+        {
+          "ref": "speed:medium",
+          "why": "Walks at a rifleman's pace, which the manual calls slow, so the faster tanks he serves leave him behind."
+        },
+        {
+          "ref": "tier:t2",
+          "why": "Needs a Service Depot first and costs a little more than a Medium Tank, a steep price for a soldier who cannot fight."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:infantry",
+          "why": "The manual singles out Soviet infantry as a threat to him; with no weapon he can only run from riflemen."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "The manual also names Soviet tanks: their guns kill him quickly, and he cannot answer them."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "In a long tank fight the side he serves keeps its tanks topped up in the field, while the enemy's tanks must leave for a depot and pay for repairs."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:vehicle",
+          "why": "Follows friendly tanks and patches them up between engagements, so an armoured push keeps going without trips home."
+        },
+        {
+          "ref": "role:transport",
+          "why": "An APC can carry him to the front under armour, but a damaged carrier must be fully repaired by him before he can climb in."
+        }
+      ],
+      "memorable": "The Aftermath's wrench-carrying soldier who fixes friendly tanks in the field for free, quicker than the Service Depot, yet cannot fire a single shot.",
+      "as_player": "A T2 Allied support pick with no gun. Follow your team's tanks and keep the wrench on damaged vehicles to bring them back to full for free. With little health and a rifleman's pace, stay behind the armour: enemy infantry and tanks will hunt you first.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/File:Red_Alert_-_The_Aftermath_-_English.pdf",
+          "title": "Command & Conquer: Red Alert - The Aftermath instruction manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "1997 manual",
+          "note": "Westwood's printed manual, read in the PDF behind this file page. The Field Mechanic entry gives his stat words (range short, armour none, weapon a socket wrench) and the paragraph used for the role and the matchups.",
+          "supports": [
+            "roles/primary",
+            "armament/0",
+            "armour",
+            "mobility",
+            "strengths/1",
+            "weaknesses/1",
+            "weaknesses/2",
+            "countered_by/0",
+            "countered_by/1",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Field_mechanic",
+          "title": "Field mechanic, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with The Aftermath",
+          "note": "Infobox: price, tier 2, trained at the Allied barracks with a Service Depot, health, armour type, land speed and sight. Its quote box copies the Aftermath manual paragraph. The prose compares him with the Service Depot and gives the rule that he must repair a transport before boarding it.",
+          "supports": [
+            "introduced_in",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "crew",
+            "strengths/0",
+            "weaknesses/0",
+            "weaknesses/3",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Service_depot_(Red_Alert_1)",
+          "title": "Service depot (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "The depot repairs vehicles driven onto its pad for a fee and unlocks the Field Mechanic at the barracks; its quote box copies the Red Alert manual's depot paragraph.",
+          "supports": ["tier", "armament/0", "strengths/0", "counters/0"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/INFANTRY.CPP",
+          "title": "REDALERT/INFANTRY.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The mechanic's click and firing logic: he works only on friendly vehicles and aircraft below full health, a damaged APC gets a repair order instead of a board order unless force move is held, and he stops once the patient is whole.",
+          "supports": ["armament/0", "crew", "combos/1"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP",
+          "title": "REDALERT/TECHNO.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "Target choice for units with a healing weapon: they never pick an enemy and pick only damaged friends; the mechanic's own scan looks at vehicles and aircraft.",
+          "supports": ["armament/0", "strengths/1", "weaknesses/0"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "armour/class",
+          "note": "The infobox gives armour type Light, while the Aftermath manual grades him as wearing none. The registry notes say the manual's word is a grade and the infobox decides, so he is coded light.",
+          "sources_disagree": true
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The manual calls him slow, yet the infobox gives him the same land speed as the Rifle Infantry, the speed reference. The band follows the infobox figure; the Medic's page shows the same mismatch between its prose and its figure.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No page says how the wrench reaches the vehicle, so beam, the repair-tool family's default, is used. A hand tool may need him right beside the vehicle; the weapon's own figures live in the game's rules file, which no page read shows."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "No page gives the wrench's reach. Short is the repair-tool family's default; the manual's grade Short agrees, but the registry notes say the manual's grades are not band data."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "INFANTRY.CPP and TECHNO.CPP also accept friendly aircraft as patients, but no page says whether he can reach one in flight. A flier he can treat only when it stands on the ground is not an air target, so only ground vehicles are listed."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "That he is faster than the depot and free is the wiki's own prose; the manual says only that he takes time to bring a vehicle back to full strength. No page gives his repair rate."
+        },
+        {
+          "path": "crew/notes",
+          "note": "The force-move exception for a damaged APC is in the 2020 source release; whether the 1997 to 1999 game already had it is unchecked. The wiki describes only the rule that he repairs the carrier first."
+        },
+        {
+          "path": "counters",
+          "note": "No page names a matchup he wins; the counter is drawn from the repair facts (free field repair against depot repair that costs credits)."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armament/0/delivery",
+          "used": "beam",
+          "wanted": "touch or melee delivery for a repair tool",
+          "note": "A socket wrench worked by hand on the vehicle fits neither of the repair-tool family's deliveries (beam, projectile); melee, the touching-distance delivery, is not allowed for the family."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J02-RA1"
+    },
+    {
+      "id": "ra1.shared.minelayer",
+      "game": "ra1",
+      "faction": "shared",
+      "name": "Minelayer",
+      "flavour_affinity": [],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "area-denial",
+        "secondary": []
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Service Depot",
+        "basis": "Built at either side's War Factory once a Service Depot stands; both wiki infoboxes give tier 2 with that requirement, and the registry counts the depot as one tech step."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 800,
+        "basis": "The same list price on both sides, equal to the Medium Tank's and a little under the anchor; exactly on the medium threshold, so medium."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": [],
+        "speed": "fast",
+        "speed_raw": 2.25,
+        "notes": "Land speed a little over twice the Rifle Infantry's, so fast: a little quicker than both main battle tanks, the Medium Tank and the Heavy Tank. The code marks it as a vehicle that crushes infantry, but the crush trait is kept for large and huge units, so it is left out (see fit_notes). Tracks rest on the wiki's mention of treads and its APC-based Soviet design."
+      },
+      "body": {
+        "plan": "box-carrier",
+        "size": "medium",
+        "notes": "One unit type for both sides (internal name MNLY): an enclosed hull with no turret that turns, opens a rear hatch and drops a mine, reusing the APC's door routine in the code. It carries mines, not troops. The manual and the wiki call the Allied one the Anti-Tank Mine Layer and the Soviet one the AP Mine Layer."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the Anti-personnel page's armour type Heavy maps to heavy, and the RA1 registry notes step both minelayers down to medium, since they have a quarter of a main battle tank's health. The Anti-tank page leaves the type blank, but both are one internal type. The wiki calls it tough enough to soak some punishment."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox sight is a quarter more than the Rifle Infantry's, the same as the main battle tanks'. No sensor trait."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player drives and drops the mines; no page read names a crew."
+      },
+      "abilities": [
+        {
+          "name": "Mine deployment",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "per-life",
+          "summary": "Double-clicking the minelayer where it stands (the Remastered Deploy key does the same) makes it turn, open its hatch and leave one mine in the cell under it; a cell that already holds a mine or a building's foundation slab is refused. It holds five, shown as pips, and gets all five back free by driving onto a Service Depot, which reloads it before any repair. The owner's side picks the mine: an Allied country lays anti-tank mines that badly hurt or kill the first enemy vehicle over them while soldiers cross unharmed; a Soviet country lays anti-personnel mines whose blast kills every soldier close by and barely scratches a vehicle. Enemy vehicles set mines off, friendly ones never do, but any soldier stepping on an anti-personnel mine triggers it, so units of the laying side path around their own mines. Mines cannot be targeted directly; force fire on the ground clears them.",
+          "patterns": ["lay-mines"]
+        }
+      ],
+      "resources": ["limited-ammo"],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No page read shows what happens when it dies, so the 3C default applies. The code may let one crewman, a civilian technician since it is unarmed, escape on an even chance if the rules mark it as crewed; no page read says whether they do."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:lay-mines",
+          "why": "Each mine is deadly: by the manual, one Allied mine kills most units and one Soviet mine can wipe out a whole group of soldiers, so a few mines stop an attack short of the base."
+        },
+        {
+          "ref": "speed:fast",
+          "why": "Quicker than either side's main battle tank, so it can seed an approach or an enemy ore field and get away again."
+        },
+        {
+          "ref": "armour-class:medium",
+          "why": "The wiki calls it tough enough to soak some punishment while it works."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "resource:limited-ammo",
+          "why": "Only five mines; every refill means a drive back to a Service Depot."
+        },
+        {
+          "ref": "pattern:lay-mines",
+          "why": "Each side gets one kind of mine: Allied mines let soldiers walk over them and Soviet mines barely scratch vehicles, so the wrong kind of enemy walks straight through."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "It has no gun and mines never touch fliers, so aircraft attack it freely; the wiki adds that a Yak force-firing at the ground clears a minefield."
+        },
+        {
+          "ref": "unit:ra1.soviet.yak",
+          "why": "Ordered to force fire at a patch of ground, a Yak's strafing guns set off every mine there, which the wiki recommends for clearing minefields."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Against the Allied version: soldiers walk over its anti-tank mines unharmed, and it has no gun to stop them."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Against the Soviet version: its anti-personnel mines only scratch vehicles, and it cannot shoot back at the tanks rolling through."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Allied mines: one is enough to kill a V2 rocket launcher and leaves a Heavy Tank badly hurt, so a mined approach blunts a tank push."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Soviet mines: one blast kills every soldier near it, so a single mine can wipe out a whole group."
+        },
+        {
+          "ref": "role:logistics",
+          "why": "Mines laid in an enemy ore field catch the harvesters that come to gather there."
+        },
+        {
+          "ref": "unit:ra1.shared.ore-truck",
+          "why": "The wiki suggests mining enemy ore fields to wreck or hurt the Ore Trucks working them."
+        }
+      ],
+      "combos": [],
+      "memorable": "One mine-laying truck for both sides, but the side picks the mine: Allied mines wreck tanks and ignore soldiers, Soviet mines wipe out squads and barely scratch tanks.",
+      "as_player": "A fast, unarmed T2 vehicle. Drive to a choke point or an enemy ore field, press the mine key to drop one of your five mines under you, then race back to the Service Depot to reload. Your team's side decides the mine: anti-tank for the Allies, anti-personnel for the Soviets. With no gun, you live on speed, armour and the minefields you leave behind.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/File:Red_Alert_1_Manual.pdf",
+          "title": "Command & Conquer: Red Alert Field Manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "1996 manual",
+          "note": "Westwood's printed manual, read in the PDF behind this file page: the AT Mine Layer (Allied units) and AP Mine Layer (Soviet units) entries, the Service Depot entries, and the section on repairing and reloading at the depot and on ammo pips.",
+          "supports": [
+            "roles/primary",
+            "abilities/0",
+            "resources",
+            "strengths/0",
+            "weaknesses/0",
+            "counters/0",
+            "counters/1",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Anti-tank_minelayer",
+          "title": "Anti-tank minelayer, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "The Allied version. Infobox: internal name MNLY, price, tier 2, War Factory plus Service Depot, health, land speed and sight; its quote box copies the manual paragraph. The prose gives what one mine does to the Heavy Tank, V2 and Mammoth, that infantry are unharmed, the ore-field tactic and how to deploy.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "sensors",
+            "abilities/0",
+            "strengths/1",
+            "strengths/2",
+            "weaknesses/1",
+            "countered_by/2",
+            "counters/0",
+            "counters/2",
+            "counters/3"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Anti-personnel_minelayer",
+          "title": "Anti-personnel minelayer, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "The Soviet version. Infobox: the same internal name, price, tier, health, speed and sight, with armour type Heavy; its quote box copies the manual paragraph. The prose describes the APC-based design, the treads, the free refill, that it has no real armament and that Soviet troops avoid their own mines.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "abilities/0",
+            "strengths/2",
+            "weaknesses/1",
+            "countered_by/3",
+            "counters/1"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UNIT.CPP",
+          "title": "REDALERT/UNIT.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The one minelayer type: it lays an anti-personnel mine for the USSR, Ukraine and the Soviet side and an anti-tank mine otherwise; the deploy routine and its limits; what each mine does to a vehicle; and units of the laying side treating their own mines as blocked ground.",
+          "supports": ["faction", "body", "abilities/0", "weaknesses/1", "countered_by/3"]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Allied_units",
+          "title": "Command & Conquer: Red Alert/Allied units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "note": "Its Mine Layer table agrees with the C&C Wiki on price, armour type, health, sight and speed, and lists the mine deployment and the depot reload; the Soviet units page gives the same table with anti-personnel mines.",
+          "supports": ["cost_band", "mobility", "sensors", "abilities/0"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "faction",
+          "note": "One shared entry rather than one per side. UNIT.CPP has a single minelayer type whose mine is picked by the owner's side, and both wiki infoboxes give one internal name with the same price, speed, sight and health. Against that, the manual prints two paragraphs and the wiki two pages, and the registry's list of RA1 shared units does not name the minelayer."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Left empty: each side's mine supports a different anti role (anti-armour for the Allied copies, anti-infantry for the Soviet copies), and a shared entry may count only what every copy has. Anti-armour's requires also cannot be met through an ability, which carries no damage type. See fit_notes."
+        },
+        {
+          "path": "abilities/0/cooldown",
+          "note": "Per-life, because the mines come back only at the Service Depot, a resupply point. The other reading is no band at all, since five uses are held back by a stock rather than a timer."
+        },
+        {
+          "path": "abilities/0/summary",
+          "note": "Several points rest on uncited pages of EA's source release: INFANTRY.CPP (an anti-personnel mine's blast hurts every soldier near it, any soldier entering its cell sets it off, anti-tank mines never react to infantry), TECHNO.CPP (the depot refills the mines free and before any repair) and BDATA.CPP (both mines are hidden from radar, cannot be selected and are no legal target). No page read says whether enemy players can see a laid mine on the map."
+        },
+        {
+          "path": "abilities/0/summary",
+          "note": "The Anti-personnel minelayer page says Soviet troops avoid their own mines; UNIT.CPP and INFANTRY.CPP apply that avoidance to both sides, through a rules setting that is on by default.",
+          "sources_disagree": true
+        },
+        {
+          "path": "countered_by",
+          "note": "The Yak's mine sweeping rests on the Yak page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Yak), which is not cited: force fire on ground makes a Yak destroy the mines there."
+        },
+        {
+          "path": "mobility/base",
+          "note": "Tracks rest on the Anti-personnel page's treads and its APC-based design; the rules flag that sets tracks or wheels is in the game's rules file, which no page read shows."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "The crusher flag is in UDATA.CPP of the source release (uncited), and the registry notes list both minelayers as crushers; the trait is left out only because of its size rule."
+        },
+        {
+          "path": "armour/class",
+          "note": "The Anti-tank page's infobox has no armour type and the Anti-personnel page gives Heavy; the registry notes take Heavy for both, as one internal type, and step it down to medium."
+        },
+        {
+          "path": "body/plan",
+          "note": "Troop carrier is the nearest shape for an enclosed, turretless hull, though it carries mines and no passengers."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles",
+          "used": "area-denial alone",
+          "wanted": "anti-armour (Allied copies) and anti-infantry (Soviet copies)",
+          "note": "A shared entry cannot hold roles that only one side's copies earn, and an ability cannot meet anti-armour's need for armour-piercing, energy, electric or EMP damage, so mines alone never give it."
+        },
+        {
+          "path": "mobility/traits",
+          "used": "none",
+          "wanted": "crush",
+          "note": "The code makes the minelayer run over infantry, but the crush trait is allowed only on large and huge units, and the minelayer is medium."
+        },
+        {
+          "path": "body/plan",
+          "used": "box-carrier",
+          "wanted": "an enclosed utility or cargo hull with no troop compartment",
+          "note": "The minelayer is an enclosed, turretless hull carrying mines; no body plan covers a cargo or utility vehicle without riders."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J02-RA1"
+    }
+  ]
+}

@@ -1,0 +1,410 @@
+{
+ "label": "j05-ra2",
+ "game": "ra2",
+ "file_written": "data/units/ra2.json",
+ "units": [
+  "ra2.allied.chrono-legionnaire",
+  "ra2.allied.robot-tank"
+ ],
+ "validator_result": "OK. Neither unit has an ATYPICAL line, so neither has an atypical list. The only lines about my units are expected warnings: lock-in-stasis, teleport and mind-control are planned patterns, and ra2.allied.ifv, ra2.yuri.yuri-clone and ra2.yuri.mastermind are not researched yet.",
+ "copy_check_result": "Exit 0 (\"OK: no shared runs\"). I ran it with --refresh and again from cache, using --only for all 8 cited pages: Chrono_legionnaire, wiki/Robot_Tank, Yuri%27s_Revenge_manual, Yuri%27s_Revenge_-_English.pdf, modenc Temporal, ChronoDistanceFactor, PoweredUnit and modenc Locomotor. The script probably reads the PDF as HTML, so I also checked it by hand: I turned it into text with pdftotext and compared every 6-word run against my prose, and found none shared. I ran the same check against the pages I read but did not cite (Allied war factory, Robot control center, IFV, PowersUnit, Trainable). It found one copied run, about the unit's immunities, in an uncertain note, which I rewrote. The only runs left are a page title (Allied war factory (Red Alert 2)) and a patch name (Yuri's Revenge patch 1.001).",
+ "hesitations": [
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "mobility/speed",
+   "chosen": "medium, speed_raw 1.25 (infobox land speed 5 / Conscript 4)",
+   "alternatives": [
+    "no speed_raw, band from words (instant jump) giving fast or very-fast",
+    "leave speed_raw out and band medium as the nearer-medium judgement"
+   ],
+   "reason": "The registry allows banding from the chrono units' land speed with an uncertain entry. But the speed_raw rule says a figure whose scale the source does not explain does not count. The wiki says the figure only sets how fast the unit phases back in, and ModEnc says phase-in time comes from distance and a global factor. The sources disagree on what the figure means."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "roles/primary",
+   "chosen": "assault (step 5)",
+   "alternatives": [
+    "raider (step 5 if speed were fast or very fast, since it is unarmoured)",
+    "disabler (not reachable as primary under the steps)"
+   ],
+   "reason": "The rule is clear, but the result depends entirely on the speed band above. Step 1 gives nothing: the manual's first sentence names no role and Red Alert 2 units have no Application line."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "armament/0/family",
+   "chosen": "laser",
+   "alternatives": [
+    "cryo",
+    "emp",
+    "psionic"
+   ],
+   "reason": "No family fits a beam that erases its target. Laser is the beam family closest in behaviour. Cryo implies bonus damage after the freeze, but this beam protects the target. EMP has no effect on organic targets. I added a fit_note."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "armament/0/damage",
+   "chosen": "energy (laser default)",
+   "alternatives": [
+    "none fits: the erasure ignores armour and current health"
+   ],
+   "reason": "Damage step 2 ('does no damage at all') or step 5 (the family default): both give energy. I was unsure whether a beam that destroys without reducing health counts as doing no damage."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "armament/0/traits",
+   "chosen": "root, silence",
+   "alternatives": [
+    "no traits (lock-in-stasis pattern only)",
+    "stun"
+   ],
+   "reason": "Taken alone, root says the target can still fire and silence says it can still move. Only the EMP tie-break pairs them for 'can do neither', and I applied that by analogy. Stun means a very short stop, which this is not. I added a fit_note."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "armament/0/affects",
+   "chosen": "both",
+   "alternatives": [
+    "enemies (default)",
+    "allies"
+   ],
+   "reason": "The affects rule only names repair and buff tools. Shielding a friend with the beam rests on the wiki's prose alone."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "armament/0/patterns",
+   "chosen": "lock-in-stasis only",
+   "alternatives": [
+    "lock-in-stasis plus become-invulnerable for the friend-shield use"
+   ],
+   "reason": "The Pattern links second-pattern test: the lock-in-stasis summary already says the target can't be hurt, and shielding a friend is the same beam with the same counterplay."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "armament/0/can_target",
+   "chosen": "infantry, ground-vehicle, structure, naval",
+   "alternatives": [
+    "drop naval, since no page names ships (can_target step 1 'only the kinds the sources name' if the beam counts as doing no damage)"
+   ],
+   "reason": "I applied the naval coding rule (list naval wherever ground-vehicle is listed). Whether step 1 applies depends on the same no-damage question as for damage."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "abilities/0",
+   "chosen": "one passive ability, source innate, linking teleport, plus the teleport mobility trait",
+   "alternatives": [
+    "trait only, no ability (the rule says use a word-list term instead when one says the same)",
+    "kind active (each move order)"
+   ],
+   "reason": "The source has no button: the plain move order teleports. I kept the ability because the distance-scaled frozen arrival adds a mechanic that the trait does not describe, and the task asked for both. The passive-or-active choice is my reading."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "mobility/base",
+   "chosen": "foot",
+   "alternatives": [
+    "none fits (it never walks)"
+   ],
+   "reason": "The infantry class allows only foot or jetpack. I added a fit_note."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "strengths/2",
+   "chosen": "class:infantry (reason: it can't be crushed)",
+   "alternatives": [
+    "body:humanoid",
+    "a counters link to mobility-trait:crush"
+   ],
+   "reason": "The registry says uncrushable soldiers say so in strengths but names no link for it, and no word-list term means 'uncrushable'."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "countered_by/1",
+   "chosen": "class:aircraft",
+   "alternatives": [
+    "leave it out (no source names aircraft as its counter)"
+   ],
+   "reason": "Matchup rule 5 sends the gap (no air attack) to countered_by. The matchup itself is inferred from the infobox having no air attack and from ModEnc."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "confidence",
+   "chosen": "high",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "The disagreement on what the land speed figure means is marked sources_disagree. I judged that it does not decide the coded band, because the registry sanctions the figure. If a checker reads it as deciding the speed band, the confidence tie-break would drop the entry to medium."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "roles",
+   "chosen": "primary anti-armour (step 1), secondary raider (step 1) and assault (step 4)",
+   "alternatives": [
+    "primary assault (step 5) and no raider, if the unread official profile is not counted"
+   ],
+   "reason": "The official profile could not be loaded, so step 1 and the raider role rest only on the registry note's reading of its Application line and its hit-and-run wording."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "crew/model",
+   "chosen": "remote",
+   "alternatives": [
+    "solo"
+   ],
+   "reason": "The remote rule asks for a person on the field outside the machine. Here the operator is a building (the Robot Control Center); people inside it appear only in background text, and the lore clause ('does not count') cuts against remote. The task asked for remote, so I added a fit_note and an uncertain entry."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "abilities/0/kind",
+   "chosen": "passive",
+   "alternatives": [
+    "triggered (shutdown on the event of losing the center or power; sinking is a one-off)"
+   ],
+   "reason": "Passive or triggered tie-break: the dependency is always on, but the shutdown is caused by an event and lasts until power returns."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "mobility/traits",
+   "chosen": "crush",
+   "alternatives": [
+    "no traits"
+   ],
+   "reason": "The registry says to give crush only where the sources show it. The only evidence is the Robot Tank page saying its gun struggles most against infantry that can't be crushed, which implies but does not state crushing."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "armament/0/can_target",
+   "chosen": "ground-vehicle, infantry, naval (step 3: the wiki calls it an anti-tank gun)",
+   "alternatives": [
+    "add structure (step 4, if 'anti-tank gun' in wiki prose is not taken as a label)"
+   ],
+   "reason": "Step 3 covers a weapon labelled by its targets. I read the wiki's 'anti-tank gun' as such a label, and under step 3 structures need a source saying the gun damages buildings. None does."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "armament/0/delivery",
+   "chosen": "projectile (cannon default)",
+   "alternatives": [
+    "none"
+   ],
+   "reason": "The rule is clear, but no source describes the shell's flight."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "body/plan",
+   "chosen": "hull-turret, size large",
+   "alternatives": [
+    "casemate"
+   ],
+   "reason": "The rule is clear, but no page read describes a turret. I relied on the wiki calling it a light tank and a cheaper main battle tank."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "mobility/speed",
+   "chosen": "fast, speed_raw 2.5",
+   "alternatives": [
+    "none: ModEnc's hover speed caveat still leaves it fast"
+   ],
+   "reason": "The ratio sits exactly on the 2.5 edge, which counts as fast. ModEnc says hover units move about a third slower than their figure; the rule says to divide the data figures as given."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "flavour_affinity",
+   "chosen": "allied, soviet",
+   "alternatives": [
+    "allied only"
+   ],
+   "reason": "The rule is clear: Soviet scores 3 (anti-armour, cannon, hull-turret) against Allied's 2 (hover, hull-turret), so step 3 adds it. I flag it because the result looks surprising."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "weaknesses/1",
+   "chosen": "nature:uncrewed-machine (no veterancy)",
+   "alternatives": [
+    "pattern:earn-veterancy (would wrongly claim the unit has it)"
+   ],
+   "reason": "Matchup rule 5 says to hang a missing feature on the part that causes it. The wiki ties the missing veterancy to the tank being a robot."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "lineage",
+   "chosen": "left out",
+   "alternatives": [
+    "futuretank-x-1 / robot-tank lineage with ra3.allied.futuretank-x-1"
+   ],
+   "reason": "The wiki calls the FutureTank X-1 a successor, not the same unit, and the name differs, so the lineage rule does not apply."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "combos/1",
+   "chosen": "class:naval",
+   "alternatives": [
+    "leave it out"
+   ],
+   "reason": "The combo rests on wiki prose (it lends fleets anti-vehicle firepower). The naval class is research-only, but the term is valid."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "mobility/base",
+   "used": "foot",
+   "wanted": "teleport-only movement (no walking)",
+   "note": "It never walks, but infantry must be on foot or jetpack."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "armament/0/family",
+   "used": "laser",
+   "wanted": "a temporal or erasing beam family",
+   "note": "No family covers a beam that freezes a target out of time and erases it outright."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "armament/0/damage",
+   "used": "energy",
+   "wanted": "a damage type that erases regardless of armour",
+   "note": "Erase time depends only on the target's full health; armour type and current health are ignored."
+  },
+  {
+   "unit": "ra2.allied.chrono-legionnaire",
+   "path": "armament/0/traits",
+   "used": "root, silence",
+   "wanted": "a stasis trait (the target can't act and can't be hurt)",
+   "note": "Root and silence together cover 'can't move or fire' but not 'untouchable'."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "abilities/0/patterns",
+   "used": "(empty)",
+   "wanted": "depend-on-relay",
+   "note": "Works only while a friendly, powered relay building stands; shuts down (and sinks over water) when it falls or loses power."
+  },
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "crew/model",
+   "used": "remote",
+   "wanted": "remote control from a structure rather than a parked soldier",
+   "note": "The tank is steered from a building on the field."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Speed band for units that only teleport",
+   "note": "The registry allows banding chrono units from their infobox land speed. But the speed_raw rule excludes figures whose scale the source does not explain, and Speed bands asks for a sustained travel speed, which for a teleporter is an instant jump plus a distance-scaled freeze. The result flips the Chrono Legionnaire's primary role between assault and raider. A ruling is needed."
+  },
+  {
+   "topic": "Remote crew model with a building as the operator",
+   "note": "The remote rule needs a person on the field outside the machine, and says lore about remote control does not count. For the Robot Tank the in-game fact is dependence on a building, and the operators exist only in background text. It is unclear whether remote is allowed here."
+  },
+  {
+   "topic": "Root plus silence outside the EMP family",
+   "note": "Only the EMP tie-break sanctions pairing root and silence for 'can do neither'. The trait definitions taken alone contradict a full freeze. It is unclear whether other families (a stasis beam) may use the pair."
+  },
+  {
+   "topic": "Does a beam that erases without lowering health 'do no damage'?",
+   "note": "This decides whether damage step 2 and can_target step 1 (list only the kinds the sources name) apply to the chrono beam. Here it changed nothing for damage, but it could remove naval from can_target."
+  },
+  {
+   "topic": "Movement that is not a button",
+   "note": "The abilities rule counts buttons, plus passives where the source names the effect and it adds a mechanic. It also says to use a word-list term (the teleport trait) when one says the same. It is unclear whether a teleport-on-move unit should carry both the trait and a passive linking the teleport pattern; I did both, as the task asked."
+  },
+  {
+   "topic": "Official text known only through the registry note",
+   "note": "The Robot Tank's roles step 1 rests on an official profile I could not open. The rules do not say whether a registry note's reading of official text can stand in for reading the page."
+  }
+ ],
+ "new_mechanics": [
+  {
+   "unit": "ra2.allied.robot-tank",
+   "path": "abilities/0",
+   "proposed_id": "depend-on-relay",
+   "summary": "The unit works only while a friendly relay (a control building, a beacon or a commander unit) stands and has power. If the relay is destroyed, captured or starved of power, every unit tied to it shuts down where it is (and sinks if it is over water) until a working relay exists again. Counterplay: find and destroy or cut power to the relay, raid its power supply, or catch the units over water when it goes down; the owner protects the relay or builds a spare.",
+   "pages": [
+    "https://cnc.fandom.com/wiki/Robot_Tank",
+    "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_2_-_Yuri%27s_Revenge_manual",
+    "https://cnc.fandom.com/wiki/Robot_control_center",
+    "https://modenc.renegadeprojects.com/PoweredUnit",
+    "https://modenc.renegadeprojects.com/PowersUnit",
+    "https://modenc.renegadeprojects.com/Locomotor"
+   ]
+  }
+ ],
+ "pages_read_not_cited": [
+  {
+   "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_2_manual"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Robot_control_center (named in uncertain entries)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Allied_war_factory_(Red_Alert_2) (named in uncertain entry strengths/0)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Allied_barracks_(Red_Alert_2)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Allied_battle_lab"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Veterancy"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Mind_control"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Chrono"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Chronosphere_(Red_Alert_2)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Infantry_Fighting_Vehicle"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/PowersUnit (named in uncertain entry abilities/0)"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Trainable (named in uncertain entry weaknesses/1)"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Teleporter"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/ChronoDelay"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/ChronoMinimumDelay"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/ChronoRangeMinimum"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/ChronoTrigger"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Warpable"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Who_crushes_whom"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Crushable"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Crusher"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/OmniCrushResistant"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/ImmuneToPsionics"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/ImmuneToRadiation"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Hover"
+  }
+ ],
+ "source_problems": "- **Official site profiles (both units):** web.archive.org reset every connection, on several retries and through two URL forms. So I could not read newalliedinfo2.jsp (the Robot Tank's Application line and its hit-and-run text) or the RA2 alliedunits pages (the Chrono Legionnaire). archive.org's availability API answered and lists a 2009 snapshot, but the page itself would not load.\n- **StrategyWiki:** its API returned 503 (all ABXY wikis were down for a PHP security patch), so there is no StrategyWiki cross-check.\n- **Missing pages:** the C&C Wiki has no 'Crush' page, and ModEnc has no 'Warp_Locomotor' page (404). No C&C Wiki page exists for either unit's weapon.\n- **PDF copy-check:** copy-check.mjs reported the cited Yuri's Revenge manual PDF as checked. It probably reads it as HTML, so I checked that PDF's text by hand with pdftotext and found no shared 6-word runs.\n- **Stale files in my workspace:** .cache/dl-j05 and .cache/j05-scripts were already there (dated 2026-10-20), apparently left by an earlier run. I did not open or use them.\n- **Files I touched outside my workspace:** my first fetch wrote two files into a shared working folder outside the repository before I noticed it held someone else's files. I deleted those two files, and a `mkdir -p` in the same command may also have created an empty tools folder there, which I left in place.\n- **Proxy check denied:** reading the session's proxy notes and the proxy status was denied by the permission classifier, so I did not diagnose the web.archive.org failures further.\n- **Temporary folders removed:** I deleted my own download and tool folders (.j05-dl and .j05-tools inside the workspace) after the checks."
+}

@@ -1,0 +1,2919 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra2",
+  "units": [
+    {
+      "id": "ra2.allied.chrono-legionnaire",
+      "game": "ra2",
+      "faction": "allied",
+      "name": "Chrono Legionnaire",
+      "flavour_affinity": ["allied"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "raider",
+        "secondary": ["disabler"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Battle Lab",
+        "basis": "Trained at the Allied Barracks only once an Allied Battle Lab stands: the Yuri's Revenge manual's tech table lists it after the Barracks and the Battle Lab, and the wiki's infobox gives tier 3."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 1500,
+        "basis": "Its list price sits exactly on the very-high threshold, so it takes that band: a little over twice the Grizzly's price."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": ["teleport"],
+        "speed": "very-fast",
+        "notes": "It never walks. Every move order sends it through time straight to the destination, where it stands frozen while it phases back in: it can't move or fire then, but it can be hurt, and the farther the jump, the longer the wait. Several short hops leave it exposed for less time than one long one. The band is judged from a jump plus its phase-in, which covers ground several times faster than a walking Conscript on any jump beyond a cell or so; the infobox land speed is no travel pace (see uncertain). The Chronosphere, which kills other soldiers it moves, carries it unharmed."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "notes": "A soldier in a chrono suit. The game has walking frames for it, but they show only when an Allied Spy disguises himself as one."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class order decided: the infobox's armour type None maps to unarmoured. It gets no protection while it phases in after a jump. Self-healing comes only with Elite rank, which is veterancy."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Red Alert 2 has no fog of war in skirmish, so the band is the medium proposal (registry sight_reference). Its Sight figure lifts the shroud a little over one and a half times as far as the Conscript's does."
+      },
+      "armament": [
+        {
+          "name": "Neutron rifle (chrono beam)",
+          "slot": "primary",
+          "family": "laser",
+          "damage": "energy",
+          "mount": "free-aim",
+          "delivery": "beam",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "affects": "both",
+          "traits": ["root", "silence"],
+          "summary": "Pulls one target out of time instead of shooting it. While the beam stays on, the target is frozen: it can't move or fire, and no other weapon can touch it. Once held long enough it is erased; the wait grows with the target's full health, whatever damage it has already taken, so tanks and buildings take far longer than soldiers. It never wears a target down: if the beam stops, or the legionnaire dies, the target returns unharmed. Erased buildings leave no ruin, and since Yuri's Revenge patch 1.001 no soldier can enter or leave a building under the beam. Fliers in the air are out of its reach. Elite rank makes it erase about twice as fast. Force-fired on a friendly unit it shields that unit from all harm while the beam holds, but holding too long erases the friend.",
+          "patterns": ["lock-in-stasis"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One soldier; one player aims the beam and picks where to jump."
+      },
+      "abilities": [
+        {
+          "name": "Chrono teleport (movement)",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "How it moves: each move order is an instant jump through time to the chosen spot, followed by a phase-in during which it stands frozen and open to fire, longer for longer jumps. It has no button of its own and no cooldown; the move order triggers it.",
+          "patterns": ["teleport"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "A target it was erasing comes back unharmed when it dies."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:lock-in-stasis",
+          "why": "Once its beam lands, any single ground unit or building is as good as gone: the target can't fire back and nothing can rescue it, so a well-handled legionnaire wins one-on-one fights against anything on the ground."
+        },
+        {
+          "ref": "mobility-trait:teleport",
+          "why": "Jumps straight to wherever it is sent, so it reaches the rear of an army or a base without crossing the ground between."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Unlike most soldiers it can't be crushed: tanks that run infantry over can't do that to it."
+        },
+        {
+          "ref": "hits:structure",
+          "why": "Erases buildings outright and leaves no ruin behind, which also frees the ground for its own side to build on."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "mobility-trait:teleport",
+          "why": "After every jump it stands frozen while it phases in, longer the farther it went; it can't move or fire then and dies very easily."
+        },
+        {
+          "ref": "pattern:lock-in-stasis",
+          "why": "Freezes one target at a time and never wears it down: interrupt it and the target returns unharmed, big targets take a long time, and teammates can't help finish them."
+        },
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "No armour, so even weak anti-infantry fire kills it while it is busy with one target."
+        },
+        {
+          "ref": "weapon:laser",
+          "why": "Its beam can't reach aircraft in flight, so it has no answer to air attack."
+        },
+        {
+          "ref": "tier:t3",
+          "why": "Needs a Battle Lab and costs a little over twice a Grizzly, a lot for a soldier this fragile."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-infantry",
+          "why": "Groups of even the weakest anti-infantry units overwhelm it, because it can freeze only one of them at a time."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "Its beam can't reach fliers, so aircraft attack it freely."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Beats any single ground vehicle, heavy tanks included: a frozen tank can't shoot back, and crushers can't run it over."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Erases enemy buildings one by one without leaving ruins."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "Inside an IFV it turns the car's weapon into a chrono beam that reaches a little further than its own, though it erases more slowly."
+        },
+        {
+          "ref": "unit:ra2.allied.ifv",
+          "why": "Inside an IFV it turns the car's weapon into a chrono beam that reaches a little further than its own; later patches stopped the car from letting go of targets once they move past its reach."
+        }
+      ],
+      "memorable": "A soldier who never walks: he blinks across the map and erases whatever he holds in his beam, all or nothing.",
+      "as_player": "A fragile, pricey T3 soldier. Clicking a spot blinks you there, but you arrive frozen and exposed for longer the farther you jumped, so you hop in short steps. Hold the beam on one target: it freezes, can't fire or be hit, and is erased when the bar fills; let go or die and it returns unharmed. Turn the beam on a teammate to shield them, and release before the bar fills. Tanks can't run you over; anti-infantry groups and aircraft are your nightmare.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Chrono_legionnaire",
+          "title": "Chrono legionnaire, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-21",
+          "note": "Its Official description box copies the unit's entry in the Red Alert 2 manual (Units and Structures, Allied infantry, printed page 33, PDF page 17). Infobox: price, armour type, land speed, sight, range, ChronoBeam damage (doubled when elite, and the IFV version), tier 3, Battle Lab requirement, teleporting and uncrushable.",
+          "version": "Red Alert 2 1.006 and Yuri's Revenge 1.001",
+          "supports": [
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer Red Alert 2 Yuri's Revenge manual (English PDF), EA / Westwood, hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-21",
+          "note": "PDF page 15, the Allied tech table: the Chrono Legionnaire comes from the Barracks with a Battle Lab. Gameplay Changes item 13 (PDF page 12): an IFV carrying a Chrono Legionnaire no longer drops its target when the target is out of reach.",
+          "version": "Yuri's Revenge, 2001",
+          "supports": ["tier", "combos/1"]
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/Temporal",
+          "title": "Temporal, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-21",
+          "note": "The warhead flag behind the chrono beam: the target is frozen, can't move or attack, and can't be hit by other warheads; the firer must keep firing or the target unfreezes unharmed; erase time comes from the weapon's damage and the target's maximum health, ignoring armour and current health; units above the ground are not affected.",
+          "supports": ["armament/0", "strengths/0", "weaknesses/1", "weaknesses/3", "countered_by/1"]
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/ChronoDistanceFactor",
+          "title": "ChronoDistanceFactor, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-21",
+          "note": "For units with the chronoshift (Teleport) locomotor, the phase-in time after a jump grows with the distance; while phasing in a unit can't move or fire but still takes damage.",
+          "supports": ["mobility", "abilities/0", "weaknesses/0"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "mobility/speed",
+          "note": "He never walks. A move order jumps him to the spot at once, and he then stays frozen while he phases in, for longer the further he went. The wiki's infobox says his land speed sets how fast he re-emerges. But ModEnc's phase-in rule (https://modenc.renegadeprojects.com/ChronoDistanceFactor) uses only the distance and game-wide chrono settings, and the rules file calls his speed a dummy value, so the land speed is no travel pace and gives no ratio. The band is a judgement from that rule. Over a jump plus the freeze after it, he covers ground several times faster than a walking Conscript on any jump beyond a cell or so. Only very short hops, held back by the minimum freeze, come down towards fast.",
+          "sources_disagree": true
+        },
+        {
+          "path": "roles/primary",
+          "note": "Step 1 finds no role: the manual's first sentence only says the unit never walks, and Red Alert 2 units have no Application line. The manual entry does not say what it is strong against, but the official site's Allied unit profiles (alliedunits.jsp to alliedunits4.jsp on the Wayback Machine, at the address the registry notes give), which the registry also counts for step 4, could not be read: web.archive.org reset every connection, and the page cache holds none of them. If its profile calls it strong against a kind of target, step 4 could give that anti role instead of raider (anti-armour, for one, meets its requires through the beam's energy damage); the role stands until the page can be read. On the pages read, steps 2 to 4 give nothing, so step 5 decides: very fast with no armour gives raider. A band from the infobox figure (medium) would give assault."
+        },
+        {
+          "path": "armament/0/family",
+          "note": "No family describes a beam that erases its target; laser is the beam family nearest to how it behaves (a ray held on one target). Cryo and EMP were set aside: the target is not set up for bonus damage but protected, and infantry are affected too."
+        },
+        {
+          "path": "armament/0/damage",
+          "note": "Energy is the laser family's default (damage step 5: Red Alert 2 has no damage map). In the game the erasure ignores armour type and current health altogether."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "The infobox gives no air attack and ModEnc's Temporal page says units above the ground are unaffected, so no air layer is listed. Ships are listed by the naval rule; no page read names them as targets."
+        },
+        {
+          "path": "armament/0/affects",
+          "note": "Using the beam to shield allies rests on the wiki's game-unit prose alone (it advises protecting friends with it, but not for too long); the manual speaks only of enemies."
+        },
+        {
+          "path": "abilities/0/kind",
+          "note": "The teleport has no button of its own in the source: the ordinary move order does it. It is recorded as a passive because the source names the effect (the manual and the infobox's ability line) and it adds a mechanic, the distance-scaled frozen arrival, that the teleport trait alone does not say."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "Elite rank doubling the erase speed is read from the infobox's elite damage figure, which ModEnc's Temporal page says sets the erase rate."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "mobility/base",
+          "used": "foot",
+          "wanted": "teleport-only movement (no walking)",
+          "note": "Infantry may only be on foot or on a jetpack, but this soldier never walks: it only teleports. The teleport trait records the jumps."
+        },
+        {
+          "path": "armament/0/family",
+          "used": "laser",
+          "wanted": "a temporal or erasing beam family",
+          "note": "The chrono beam freezes its target out of time and erases it outright when held long enough; no family has that behaviour."
+        },
+        {
+          "path": "armament/0/damage",
+          "used": "energy",
+          "wanted": "a damage type that erases regardless of armour",
+          "note": "The erasure ignores armour type and current health; its time depends only on the target's full health. No damage type says this."
+        },
+        {
+          "path": "armament/0/traits",
+          "used": "root, silence",
+          "wanted": "a stasis trait: the target can't act and can't be hurt while held",
+          "note": "Root and silence together say the frozen target can neither move nor fire, as the EMP tie-break pairs them, but neither says the target is also untouchable; the lock-in-stasis pattern carries that."
+        },
+        {
+          "path": "strengths/2",
+          "used": "class:infantry",
+          "wanted": "uncrushable: vehicles cannot run it over",
+          "note": "No link names the immunity to crushing, so the strength hangs on its class, the part that makes other soldiers crushable."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "mobility/base",
+          "rule": "mobility:foot allowed.speed-bands very-fast",
+          "note": "This soldier never walks: it moves only by jumps, and a jump plus the frozen phase-in after it covers ground several times faster than a walking Conscript, so the registry bands it very fast. Our foot type stops at fast, but foot is the nearest type for a soldier who only teleports (see the fit_note at mobility/base)."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J05-RA2"
+    },
+    {
+      "id": "ra2.allied.robot-tank",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "allied",
+      "name": "Robot Tank",
+      "flavour_affinity": ["allied", "soviet"],
+      "class": "hover",
+      "nature": "uncrewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-armour",
+        "secondary": ["assault"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Robot Control Center",
+        "basis": "Built at the Allied War Factory once a Robot Control Center stands, one building beyond the factory: the Yuri's Revenge manual's tech table lists it after the War Factory and the Robot Control Center, and the wiki's infobox gives tier 2."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 600,
+        "basis": "Six sevenths of the Grizzly's price, which puts it in the low band."
+      },
+      "mobility": {
+        "base": "hover",
+        "handling": "drift",
+        "traits": ["crush"],
+        "speed": "medium",
+        "notes": "Hovers, so it crosses water as freely as land. On open ground hover units run at half their speed, plus a boost on straight runs that no source sizes, so it may be anywhere from well behind the Grizzly, the Allied main battle tank, to a little ahead of it; the band takes medium by the edge rule (see uncertain). When it shuts down over water it sinks."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "large",
+        "notes": "A light hover tank with a cannon, which the wiki calls a cheaper version of the Allied main battle tank; no page gives its size or describes its turret, so the tank examples decide (see uncertain)."
+      },
+      "armour": {
+        "class": "heavy",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class order decided: the infobox's armour type Heavy maps to heavy, and the registry keeps the Robot Tank there. The wiki's prose calls its armour thin and light, which is the wiki's own wording. With no ranks it never gains the self-healing of Elite units."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Red Alert 2 has no fog of war in skirmish, so the band is the medium proposal (registry sight_reference). Its Sight figure lifts the shroud a little further than the Conscript's does."
+      },
+      "armament": [
+        {
+          "name": "105mm APDS cannon",
+          "slot": "primary",
+          "family": "cannon",
+          "damage": "armour-piercing",
+          "mount": "slow-turret",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["ground-vehicle", "infantry", "naval"],
+          "traits": [],
+          "summary": "An armour-piercing anti-tank gun with a reach a little beyond the Conscript's rifle, close to the Grizzly's gun in punch per the wiki. Good against vehicles, poor against infantry (worst against soldiers it can't run over), and it can't fire at aircraft. The official site's early text called it short-range rocket pods; the game gives it a cannon."
+        }
+      ],
+      "crew": {
+        "model": "remote",
+        "basis": "proposal",
+        "notes": "Nobody rides inside (the Yuri's Revenge manual). The tanks are steered from the Robot Control Center, a building on the field that the wiki's background says houses the operators, and every tank stops when it falls or loses power. Proposal: the player version keeps that link as a remote unit whose operator, a control station, stays parked and exposed; losing the station shuts the tank down."
+      },
+      "abilities": [
+        {
+          "name": "Robot Control Center link",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "It works only while its owner has a working, powered Robot Control Center. If the last one is destroyed, sold or captured, or base power runs low, every Robot Tank of that player shuts down where it stands, unable to move or fire, and any hovering over water sink and are lost. They come back to life once a powered center stands again.",
+          "patterns": ["depend-on-relay"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "When its control center goes down while it is over water, it sinks and is lost; the wiki adds that a Giant Squid also sinks it rather than blowing it up."
+      },
+      "strengths": [
+        {
+          "ref": "nature:uncrewed-machine",
+          "why": "With no driver aboard it can't be mind-controlled, its main strength by the manual; the war factory page adds that radiation can't hurt it either."
+        },
+        {
+          "ref": "mobility:hover",
+          "why": "Hovers over water as easily as land, so it turns up almost anywhere quickly and can fight beside a fleet."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Its armour-piercing gun makes it a capable tank hunter, above all in packs."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "pattern:depend-on-relay",
+          "why": "Every Robot Tank shuts down when its control center is destroyed or loses power, leaving them helpless; those over water sink."
+        },
+        {
+          "ref": "nature:uncrewed-machine",
+          "why": "Being a robot, it can never gain veterancy, so it never grows tougher or heals itself."
+        },
+        {
+          "ref": "weapon:cannon",
+          "why": "Its gun struggles against infantry, especially soldiers it can't run over, and can't fire at aircraft at all."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Completely helpless against air attack: its gun can't reach fliers."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Its anti-tank gun does poorly against soldiers, above all ones it can't crush."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "pattern:mind-control",
+          "why": "Mind control can't take it, which made it a key Allied answer to Yuri's mind-controlling units."
+        },
+        {
+          "ref": "unit:ra2.yuri.yuri-clone",
+          "why": "Immune to the clone's mind control, the Robot Control Center page names fighting Yuri Clones as a reason to field it."
+        },
+        {
+          "ref": "unit:ra2.yuri.mastermind",
+          "why": "Immune to the Mastermind's mind control, the Robot Control Center page names fighting Masterminds as a reason to field it."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Fielded as a tank hunter: its armour-piercing gun lets packs of them pick off enemy vehicles, heavier Soviet tanks included."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:ra2.allied.robot-tank",
+          "why": "Cheap enough to field in packs that swarm heavier enemy tanks."
+        },
+        {
+          "ref": "class:naval",
+          "why": "Gives Allied fleets the anti-vehicle punch their own ships lack."
+        }
+      ],
+      "memorable": "A cheap hover tank with nobody inside: mind control can't take it, but every one goes dead the moment its control center falls.",
+      "as_player": "A cheap T2 hover tank: slide over land and water and hunt vehicles with an armour-piercing cannon on a slow turret. Nobody can mind-control you, but you never rank up. Your team's control station is your lifeline: if the enemy wrecks or unpowers it, you freeze where you are, and sink if you are over water. Infantry swarms and aircraft are bad news.",
+      "sources": [
+        {
+          "url": "https://web.archive.org/web/20071213221819/http://www.ea.com/official/cc/redalert2/english/newalliedinfo2.jsp",
+          "title": "New Allied units (Guardian GI, Battle Fortress and Robot Tank), Command & Conquer: Red Alert 2 official site, archived by the Wayback Machine",
+          "kind": "official",
+          "accessed": "2026-10-21",
+          "note": "Application line: anti-vehicle, and immune to psychic powers. Its text calls the tank a fast raider suited to hit-and-run attacks that cannot gain veterancy and is useful against Yuri's forces. Read from the copy-check cache's copy of this snapshot (fetched 2026-10-20); its cost, armour and weapon lines date from release and are not used (it gives medium armour and rocket pods).",
+          "version": "Yuri's Revenge launch site (snapshot of December 2007)",
+          "supports": ["roles", "strengths/0", "weaknesses/1"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Robot_Tank",
+          "title": "Robot Tank, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-21",
+          "note": "Infobox: price, armour type Heavy, land and sea speed, range, sight, AP cannon, tier 2, built at the Allied War Factory with a Robot Control Center. Prose: no veterancy, immune to psychic powers, shutdown and sinking when the center is lost.",
+          "version": "Yuri's Revenge 1.001",
+          "supports": [
+            "nature",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "crew",
+            "abilities/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters/0",
+            "counters/3",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_2_-_Yuri%27s_Revenge_manual",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (transcript), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-21",
+          "note": "Copies the Yuri's Revenge manual's Tactical Update entries for the Robot Tank and the Robot Control Center: no human driver, so no mind control; it hovers across water; it needs the center and stops on low or no power.",
+          "supports": [
+            "nature",
+            "mobility",
+            "crew",
+            "abilities/0",
+            "strengths/0",
+            "strengths/1",
+            "weaknesses/0",
+            "counters/0"
+          ]
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer Red Alert 2 Yuri's Revenge manual (English PDF), EA / Westwood, hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-21",
+          "note": "PDF page 15, the Allied tech table: the Robot Tank comes from the War Factory with a Robot Control Center. Pages 16 and 17 hold the entries the transcript copies.",
+          "version": "Yuri's Revenge, 2001",
+          "supports": ["tier"]
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/PoweredUnit",
+          "title": "PoweredUnit, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-21",
+          "note": "The Yuri's Revenge vehicle flag used by the Robot Tank: the vehicle is active only while a building that powers it exists and works; otherwise it is paralysed.",
+          "supports": ["abilities/0", "weaknesses/0"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles",
+          "note": "The official site's Yuri's Revenge profile (newalliedinfo2.jsp, now cited and read from the copy-check cache) gives its Application line as anti-vehicle, an alias of anti-armour, whose requires its armour-piercing gun meets. Its text also calls it a fast raider made for hit-and-run attacks, which would rank raider at roles.secondary step 1, but raider needs fast or better and the hover judgement gives medium, so raider is left out and recorded in fit_notes. The same profile gives it medium armour and rocket pods, written before release; the entry follows the infobox for both."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "Crush rests on one remark on the Robot Tank page, that its gun struggles most against infantry that can't be crushed; no page read says outright that it runs soldiers over."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "Hover units cross open ground at half their speed (ModEnc LandTypes, https://modenc.renegadeprojects.com/LandTypes) and get a boost on straight runs (ModEnc HoverBoost), but no source shows how the two combine. Open ground alone would put the Robot Tank at about one and a quarter times the Conscript's pace (medium); with the full boost on top, nearly twice (fast). ModEnc's Locomotor page says hover units run roughly a third slower than the same setting on the drive locomotor. That lands just past the medium and fast edge, too close to settle. So the band nearer medium is taken, and fast is quite possible."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "The wiki calls it an anti-tank gun, so can_target step 3 lists ground vehicles plus infantry, which the same page says it struggles against. No page read says the gun damages buildings, so structures are left out, though the game surely lets it fire at them. Ships are listed by the naval rule."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Projectile is the cannon family's default; no page describes the shell's flight."
+        },
+        {
+          "path": "body/plan",
+          "note": "No page read describes a turret; hull-turret follows from the wiki calling it a light tank and a cheaper main battle tank. Size large follows the size examples for tanks of every weight."
+        },
+        {
+          "path": "crew/model",
+          "note": "The remote model's rule speaks of a person who stays on the field outside the machine. Here the operator is a building, the Robot Control Center, whose operators exist only in the wiki's background text; the in-game fact is that the tank depends on that building."
+        },
+        {
+          "path": "abilities/0",
+          "note": "That the tanks come back once a powered center stands again rests on ModEnc's PowersUnit page (https://modenc.renegadeprojects.com/PowersUnit), which also says the logic misbehaves when one side owns several kinds of powering building. That selling or capturing the center also shuts them down comes from the Robot Tank page's glitch notes, and the sinking also from the Robot control center page (https://cnc.fandom.com/wiki/Robot_control_center)."
+        },
+        {
+          "path": "strengths/0",
+          "note": "Radiation immunity comes from the Allied war factory (Red Alert 2) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Allied_war_factory_(Red_Alert_2)), whose production list says neither mind control nor radiation affects the tank."
+        },
+        {
+          "path": "weaknesses/1",
+          "note": "ModEnc's Trainable page (https://modenc.renegadeprojects.com/Trainable) says a Spy inside a War Factory overrides a unit's no-rank setting, so a Robot Tank built after such a raid may still start Veteran; nobody has tested it."
+        },
+        {
+          "path": "counters",
+          "note": "The Yuri Clone and Mastermind links rest on the Robot control center page (https://cnc.fandom.com/wiki/Robot_control_center), which names fighting them as the reason to field the tanks; the Robot Tank page speaks of the fight against Yuri in general."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "ModEnc's Locomotor page (https://modenc.renegadeprojects.com/Locomotor), read but no longer cited, to keep five sources, says a hover unit shut down by the power rule settles and sinks over water, which the Robot Tank page says as well. Its point that hover units run about a third slower than drive units with the same setting is now used in the mobility/speed entry."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "crew/model",
+          "used": "remote",
+          "wanted": "remote control from a structure rather than a parked soldier",
+          "note": "The tank is steered from a building on the field, not from a soldier who parks to pilot it; remote is the nearest crew model."
+        },
+        {
+          "path": "roles",
+          "used": "anti-armour, assault",
+          "wanted": "raider",
+          "note": "The official profile calls it a hit-and-run raider, but raider needs fast or better and the hover judgement gives medium."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J05-RA2"
+    },
+    {
+      "id": "ra2.iraq.desolator",
+      "game": "ra2",
+      "faction": "iraq",
+      "name": "Desolator",
+      "lineage": "desolator",
+      "flavour_affinity": ["soviet"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["area-denial"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Radar Tower",
+        "basis": "Trained at the Soviet Barracks once a Radar Tower stands, by Iraq alone: the Yuri's Revenge manual's Soviet tech table lists him among the country units with those two buildings, and the wiki infobox also gives tier 2."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 600,
+        "basis": "His list price is a little below the Allied and Yuri main battle tanks' price, so he falls under the medium threshold, in the low band."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": ["deploy-anchor"],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "Walks exactly as fast as the Conscript in the wiki's game data, and cannot cross water. To flood an area he has to deploy and stay put; walking on means packing up, after which his field starts to fade."
+      },
+      "body": {
+        "plan": "power-suit",
+        "size": "small",
+        "notes": "One soldier in a sealed suit that shields him from radiation (the manual). Coded power suit by the body tie-break, because the wiki's unit box calls it a nuclear battle suit; no source says the suit is powered."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class steps decided: the infobox armour type plate maps to light, which the soldier rule keeps, so he is tougher than basic riflemen. One health bar. His suit makes him immune to radiation, his own field included (no term records this; see fit_notes). Elite rank adds self-healing, which belongs to veterancy and is left off."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Red Alert 2 has no fog of war, so the band is the medium proposal. His Sight figure, which only sets how far he lifts the shroud, is a little larger than a Conscript's."
+      },
+      "armament": [
+        {
+          "name": "Rad cannon",
+          "slot": "primary",
+          "family": "chemical",
+          "damage": "toxic",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "naval"],
+          "traits": [],
+          "summary": "Shoots a wavy beam of radiation at one target at a time. Most soldiers melt under it within moments. It is next to useless against most vehicles, does nothing to radiation-proof machines such as the Robot Tank, cannot harm buildings and never aims at aircraft. It reaches about one and a half times as far as the Conscript's rifle; at Elite rank it reaches further and hits harder. While he is deployed it stays silent."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "A single soldier; the player is the Desolator."
+      },
+      "abilities": [
+        {
+          "name": "Deploy (irradiate the ground)",
+          "kind": "deploy",
+          "source": "innate",
+          "summary": "He drives his cannon into the ground and at once soaks a wide patch around himself in radiation. The field hurts every unit standing in it, his own side as much as the enemy, except radiation-proof machines; buildings take nothing. Infantry die almost at once and tanks wear down if they stay long, and the manual says infantry and light vehicles cannot get through it. Fields from several Desolators add up. It seeps into water, hurting ships and briefly forcing submarines to the surface. He takes no harm from it, and while he stays deployed he refreshes it whenever it weakens (since patch 1.004 he no longer piles it up without end). Kills made by the field give him no veterancy. Once he packs up or dies, the ground slowly recovers.",
+          "patterns": ["deploy-siege-mode", "leave-hazard-zone"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "deployed",
+          "name": "Deployed",
+          "via": "deploy-siege-mode",
+          "summary": "Planted in place with his cannon in the ground: he cannot move, and his rad cannon is silent, because deployed he only keeps the radiation field around him going. Undeploying lets him walk and shoot again, and the field begins to fade."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "Nothing is left behind; the ground he irradiated slowly returns to normal after he dies."
+      },
+      "strengths": [
+        {
+          "ref": "hits:infantry",
+          "why": "His rad cannon melts most soldiers within moments."
+        },
+        {
+          "ref": "pattern:leave-hazard-zone",
+          "why": "Deployed, he wipes out infantry rushes and whole paratrooper drops that land on his field, and transports that unload into it get badly hurt too."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Unlike other soldiers he is immune to radiation, his own field included, so he can stand in the middle of the zone he creates."
+        },
+        {
+          "ref": "role:area-denial",
+          "why": "The field reaches into water and covers enough ground to outreach the Slave Miner's gun, and it lingers for a while after he leaves."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:chemical",
+          "why": "The rad cannon cannot aim at aircraft or harm buildings, and does next to nothing to most vehicles."
+        },
+        {
+          "ref": "pattern:leave-hazard-zone",
+          "why": "The field hurts his own side as well, so friendly troops must give way at choke points he holds, and kills made in it earn him no veterancy."
+        },
+        {
+          "ref": "mobility-trait:deploy-anchor",
+          "why": "He must stay planted to keep the field strong; deployed he can neither move nor fire his cannon, and the field fades once he leaves."
+        },
+        {
+          "ref": "speed:medium",
+          "why": "He walks only at infantry pace, so enemy aircraft often pick him off before he reaches the massed infantry he is meant to melt."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Nothing he carries can reach aircraft, and Allied air support picks off Desolators on their way to the front."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Most vehicles shrug off the rad cannon; only long exposure to his field wears tanks down, and even stacked fields rarely beat heavier units."
+        },
+        {
+          "ref": "nature:uncrewed-machine",
+          "why": "A few machines are fully immune to radiation, so neither his cannon nor his field touches them."
+        },
+        {
+          "ref": "unit:ra2.allied.robot-tank",
+          "why": "The wiki names the Robot Tank as one of the units radiation cannot hurt."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "The cannon melts soldiers, and a Desolator deployed under a paradrop kills the whole squad before it fires a shot."
+        },
+        {
+          "ref": "role:transport",
+          "why": "Infantry carriers that unload into his field lose their riders and often take heavy damage themselves, as Allied NightHawk rushes do."
+        },
+        {
+          "ref": "role:logistics",
+          "why": "Yuri's Slaves die quickly in radiation, and the field reaches further than the Slave Miner's gun."
+        },
+        {
+          "ref": "mobility:naval-submerged",
+          "why": "His field reaches under water, forcing submarines up for a moment and quickly killing dolphins."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:ra2.iraq.desolator",
+          "why": "Fields from several Desolators deployed close together stack their damage and melt enemies faster."
+        },
+        {
+          "ref": "pattern:leave-hazard-zone",
+          "why": "Any overlapping radiation field adds to his, since the damage of overlapping fields stacks."
+        },
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "Inside a captured IFV he gives it a stronger, longer-reaching rad cannon and gets carried fast to massed infantry, though he dies if the IFV is destroyed."
+        },
+        {
+          "ref": "unit:ra2.allied.ifv",
+          "why": "The wiki suggests loading Desolators into captured Allied IFVs to deliver radiation into the middle of enemy infantry."
+        }
+      ],
+      "memorable": "A soldier who plants his gun in the ground and turns the earth around him into a radioactive zone that kills infantry of both sides.",
+      "as_player": "A T2 anti-infantry trooper. Left mouse fires a rad gun that melts soldiers but barely scratches vehicles and can't hit aircraft or buildings. Deploy to root in place and flood the ground around you with radiation that hurts everyone but you, teammates included; stay planted to keep it strong, and it fades slowly once you move.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF hosted by the Command & Conquer Wiki)",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "supports": ["tier"],
+          "note": "Printed page 17, the Soviet tech table: under the country-specific units, Iraq's Desolator needs the Barracks and a Radar Tower. Read in the PDF, since no wiki page copies the table; paraphrase checked by hand.",
+          "version": "Yuri's Revenge manual (2001)"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Desolator_(Red_Alert_2)",
+          "title": "Desolator (Red Alert 2), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": [
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "modes/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable",
+            "lineage"
+          ],
+          "note": "Its Official description box copies the Red Alert 2 manual's Iraqi Desolator entry (printed page 42, PDF page 22), and its first quote box copies the Iraq multiplayer loading screen, which is in-game text. The infobox gives price, tier, armour type, land speed, reach and Sight; the changelog gives the patch 1.004 change.",
+          "version": "Red Alert 2 1.006 and Yuri's Revenge 1.001"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_2_manual",
+          "title": "Command & Conquer: Red Alert 2 manual (transcript), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": [
+            "roles/secondary",
+            "body/size",
+            "body/notes",
+            "armour",
+            "abilities/0",
+            "modes/0",
+            "on_death",
+            "strengths/2"
+          ],
+          "note": "Transcribes the Red Alert 2 manual (Westwood, 2000). The Iraqi Desolator entry under Special Multiplayer Forces says his deploy makes ground impassable to infantry and light vehicles, that his suit protects him, and that the ground recovers slowly once he dies or undeploys."
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/DESO",
+          "title": "DESO, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["abilities/0", "modes/0", "armament/0"],
+          "note": "The game treats the Desolator's deploy specially: he refires his deployed weapon only when the radiation at his spot has dropped, and while deployed he can use only that weapon, not his cannon."
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/RadSiteWarhead",
+          "title": "RadSiteWarhead, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["abilities/0", "weaknesses/1"],
+          "note": "Radiation sites do not affect buildings in the unmodified game, and because a site keeps no owner, its kills give the Desolator no experience."
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Anti-infantry rests on the Iraq multiplayer loading screen (in-game text, copied on the Desolator page), which says his rad cannon can wipe out enemy troops; that is read as official strong-against text. The manual's entry names no target. The registry notes now count in-game text such as this loading screen as official (games-r1.md, RA2 official role lines). If that reading is reversed, step 4 finds no bonus and step 5 gives assault. The official site's Soviet unit profiles (sovietunits.jsp to sovietunits4.jsp on the Wayback Machine), which may hold a Desolator profile, could not be read, since web.archive.org reset every connection and the pages are not in the page cache."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No source says whether the shot travels or lands at once. ModEnc's IsRadBeam page (https://modenc.renegadeprojects.com/IsRadBeam) says the game draws a short-lived wave along the shot's path; the wiki speaks of beams of radiation, but nothing says the beam is held on the target. Projectile is the chemical family's default."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Naval is listed by the naval rule; no source says whether the cannon hurts ships. Ground vehicles are listed because the wiki calls it next to useless against most vehicles, which still means a little damage."
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "No source gives the cannon's hit an area or says it leaves radiation where it lands; the radiation field comes from the deploy."
+        },
+        {
+          "path": "armament/0",
+          "note": "In Yuri's Revenge 1.000 a Desolator inside an IFV turned it into a small radioactive suicide bomb; the wiki says that at 1.001 the IFV fires a stronger rad cannon instead. That is the IFV's passenger weapon, so it is only mentioned in combos."
+        },
+        {
+          "path": "abilities/0",
+          "note": "No page gives the field's size, strength or how long it lasts; the wiki calls it large. The registry note, citing the manual, says radiation hurts light vehicles, while the wiki says long exposure melts tanks; the summary gives both. The infobox's deployed line gives a reach equal to the Conscript rifle's, which seems to describe his deployed weapon firing at his own spot rather than the field's size."
+        },
+        {
+          "path": "modes/0",
+          "note": "No source says in so many words that he cannot walk while deployed; the wiki has him plunge the cannon into the ground, and the manual says the field fades once he undeploys."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "Deploy-anchor is coded because he must stop and plant himself to get his field and pack up to move; whether a hazard mode counts as the trait's stronger stationary mode is a judgement."
+        },
+        {
+          "path": "body/plan",
+          "note": "Power suit rests on the wiki's unit box, which calls his suit a nuclear battle suit. The manual calls it a protective suit against radiation, and no source says it is powered, so a sealed protective suit could also be read as humanoid (a rule problem in the batch report)."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "strengths/2",
+          "used": "class:infantry",
+          "wanted": "an immunity to radiation and toxic damage",
+          "note": "His suit makes him immune to radiation, his own field included. No link names the immunity, so the strength hangs on his class; our nature term organic marks him as vulnerable to toxic damage, and no armour model or flag records a damage immunity."
+        }
+      ],
+      "researched_by": "batch r1, agent J06-RA2",
+      "review": {
+        "status": "checked",
+        "checked_by": "batch r1 checker",
+        "checked_on": "2026-10-22",
+        "checked_paths": [
+          "tier/band",
+          "tier/gate",
+          "cost_band/band",
+          "cost_band/raw",
+          "class",
+          "roles/primary",
+          "roles/secondary",
+          "mobility/base",
+          "mobility/speed",
+          "mobility/speed_raw",
+          "mobility/traits",
+          "body/plan",
+          "body/size",
+          "armour/class",
+          "armour/models",
+          "sensors/sight",
+          "sensors/basis",
+          "sensors/traits",
+          "armament/0/family",
+          "armament/0/damage",
+          "armament/0/range",
+          "armament/0/can_target",
+          "armament/0/traits",
+          "armament/0/mount",
+          "armament/0/delivery",
+          "abilities/0/kind",
+          "abilities/0/source",
+          "abilities/0/cooldown",
+          "abilities/0/patterns",
+          "crew/model",
+          "on_death/outcomes",
+          "sources/0/supports",
+          "sources/1/supports",
+          "sources/2/supports",
+          "sources/3/supports",
+          "sources/4/supports"
+        ],
+        "wrong_paths": ["body/plan", "sources/2/supports"],
+        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. The wrong paths were fixed as the skeptic confirmed (0c3d4e2); sources/2/supports was unsupported rather than wrong."
+      }
+    },
+    {
+      "id": "ra2.soviet.boris",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "soviet",
+      "name": "Boris",
+      "flavour_affinity": ["soviet"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "unique",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["siege"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Battle Lab",
+        "basis": "Trained at the Soviet Barracks once a Battle Lab stands: the Yuri's Revenge manual's Soviet tech table lists him with those two buildings, and the wiki infobox gives tier 3. The archived official profile still names the Radar Tower, a launch-time line the registry says not to use. A player may have only one hero in play at a time, whether Boris, Tanya or Yuri Prime (YR manual, Gameplay Changes item 9), and with no Cloning Vats on the Soviet side in Yuri's Revenge he gets no free copies."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 1500,
+        "basis": "His list price sits exactly on the very-high threshold, about twice a main battle tank's, and an edge value takes the higher band. The archived profile gives an older, lower price."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1.25,
+        "notes": "A little faster than a Conscript in the wiki's game data. He is not amphibious, whereas Tanya and Yuri Prime are."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small"
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class steps decided: the infobox armour type flak maps to unarmoured, the same type the Conscript has. One health bar. As a hero he cannot be crushed by any vehicle except the Allied Battle Fortress (no term records this; see fit_notes). Elite rank adds self-healing, which belongs to veterancy and is left off."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Red Alert 2 has no fog of war, so the band is the medium proposal. His Sight figure, which only sets how far he lifts the shroud, is almost twice a Conscript's."
+      },
+      "armament": [
+        {
+          "name": "AKM",
+          "slot": "primary",
+          "family": "small-arms",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "summary": "A fast-firing, very accurate assault rifle. A single burst kills most soldiers, and it reaches a little under twice as far as the Conscript's rifle, enough to outrange Navy SEALs and Desolators. Despite its anti-infantry job it still does real damage to vehicles. He fires it at buildings only where the airstrike is not allowed, such as barrels, ammunition crates and a deployed Slave Miner. Elite rank adds reach, damage and fire rate. The official profile calls it a machine gun."
+        },
+        {
+          "name": "Laser designator (MiG airstrike)",
+          "slot": "secondary",
+          "family": "laser",
+          "damage": "energy",
+          "mount": "free-aim",
+          "delivery": "beam",
+          "range": "long",
+          "can_target": ["structure"],
+          "traits": [],
+          "summary": "Ordered to attack a building, he paints it with a laser from about three times the Conscript rifle's reach, further than any base defence but the French Grand Cannon. The beam itself does no damage. It calls two MiG jets (four once he is Elite) in from a random map edge, and they bomb the building, usually wrecking it in one run. He must keep the beam on until the bombs land and cannot fight meanwhile. If the beam stops for any reason, or he dies, the jets head home; if he aims again before they leave, they swing round to the new target. Jets shot down on the way are replaced by a fresh flight after a short wait, for as long as he keeps lasing. Patch 1.001 stopped soldiers entering or leaving a garrison from breaking the beam, and let him call strikes on occupied Tank Bunkers.",
+          "patterns": ["bombard-area"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "A single soldier. The MiGs he calls are not seats of his: they fly on their own, come only for the strike and then leave the map."
+      },
+      "abilities": [],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "Jets already on their way turn back when he dies. A new Boris can then be trained: a player may field just one of the three heroes (Tanya, Boris, Yuri Prime) at once, and the Soviets have no Cloning Vats in Yuri's Revenge, so there are no free copies. Patch 1.001 fixed a bug that kept the hero slot taken when he died inside a transport sunk at sea."
+      },
+      "strengths": [
+        {
+          "ref": "hits:infantry",
+          "why": "Official text calls him highly effective against infantry: one burst kills most soldiers, from beyond the reach of Navy SEALs and Desolators."
+        },
+        {
+          "ref": "pattern:bombard-area",
+          "why": "One MiG run usually levels a building, and he calls it from further away than almost every base defence can shoot."
+        },
+        {
+          "ref": "hits:ground-vehicle",
+          "why": "His rifle does real damage to vehicles; the wiki says it kills them quicker than a dug-in Guardian GI's anti-tank weapon."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Unlike ordinary soldiers, as a hero he cannot be mind-controlled, and no vehicle but the Battle Fortress can run him over."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "delivery:beam",
+          "why": "He must hold the laser on the target until the bombs land, unable to fight back, and the strike is called off if the beam breaks or he dies."
+        },
+        {
+          "ref": "weapon:laser",
+          "why": "The airstrike works only on buildings; against units he has only his rifle."
+        },
+        {
+          "ref": "tier:t3",
+          "why": "He needs a Battle Lab, sits in the top price band, and a player may field only one hero at a time."
+        },
+        {
+          "ref": "mobility:foot",
+          "why": "He cannot cross water, while the other two heroes, Tanya and Yuri Prime, can."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-air",
+          "why": "Anti-air fire can shoot his MiGs down before they reach the target; he calls replacements only while he keeps the beam on, exposed."
+        },
+        {
+          "ref": "unit:ra2.allied.battle-fortress",
+          "why": "The Yuri's Revenge manual names the Battle Fortress as the one vehicle that can crush heroes."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "He cuts soldiers down in single bursts from beyond the reach of most infantry, Navy SEALs and Desolators included."
+        },
+        {
+          "ref": "target:structure",
+          "why": "His airstrike destroys key buildings such as refineries and factories from outside nearly every defence's reach, setting the enemy's tech back."
+        },
+        {
+          "ref": "pattern:mind-control",
+          "why": "Heroes are immune to mind control, so Yuri's controllers cannot turn him against his own side."
+        }
+      ],
+      "combos": [],
+      "memorable": "A hero who points a laser at a building and keeps it there until a pair of jets streaks in from the map edge to flatten it.",
+      "as_player": "A T3 hero, one per team at a time. Left mouse fires a long-reaching rifle that cuts down soldiers and still hurts vehicles. Aim at a building and hold the laser on it: two jets (four once you are elite) fly in from the map edge to bomb it, but only while you keep the beam on, standing exposed and unable to shoot. Enemy anti-air can down them, and more come while you hold. Immune to mind control and being run over.",
+      "sources": [
+        {
+          "url": "https://web.archive.org/web/20071214201459/http://www.ea.com/official/cc/redalert2/english/newsovietinfo2.jsp",
+          "title": "New Soviet Units: Boris, official Red Alert 2 site (Wayback Machine copy)",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "supports": ["roles", "armament/0", "armament/1", "counters/1"],
+          "note": "EA's archived Yuri's Revenge unit profile. Its Application line (hero unit, psychically immune) names no role. It says the rifle is for ground units and his real strength is against structures, which a MiG strike, called in by his laser designator, destroys. Its price and building lines predate release and are not used. web.archive.org reset every connection from this session, so the page was read from the copy-check cache's copy of this snapshot (fetched 2026-10-20).",
+          "version": "Yuri's Revenge launch site (2001)"
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF hosted by the Command & Conquer Wiki)",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "supports": ["availability", "tier", "armour", "strengths/3", "countered_by/1", "counters/2", "on_death"],
+          "note": "Printed page 12, Tactical Update: Gameplay Changes, items 8 (heroes cannot be mind-controlled or crushed, except by the Battle Fortress) and 9 (one hero at a time), with item 18 (the Soviets lose the Cloning Vats); page 17, the Soviet tech table (Barracks plus Battle Lab); page 18, Boris's own entry. Read in the PDF, since no wiki page copies the Gameplay Changes or the table; paraphrase checked by hand.",
+          "version": "Yuri's Revenge manual (2001)"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Boris",
+          "title": "Boris, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": [
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "armament/1",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "counters",
+            "memorable"
+          ],
+          "note": "Its Official description box copies Boris's entry in the Yuri's Revenge manual (printed page 18). The infobox gives price, tier, armour type, land speed, reach and Sight; the changelog gives the patch 1.001 fixes.",
+          "version": "Yuri's Revenge 1.001"
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/MiG_(Yuri%27s_Revenge)",
+          "title": "MiG (Yuri's Revenge), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["armament/1", "strengths/1", "countered_by/0"],
+          "note": "The jets Boris calls: spawned off the map, only by him, with one load each; they turn back when the laser is called off and are replaced after a short delay when shot down. Patch 1.001 made them sturdier.",
+          "version": "Yuri's Revenge 1.001"
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/Airstrike",
+          "title": "Airstrike, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["armament/0", "armament/1", "weaknesses/0", "on_death"],
+          "note": "The airstrike warhead does no damage itself and is used only against buildings; the jets abort and go home if the guiding unit dies before the strike lands; a recharge time applies to jets after they return; Boris falls back to his rifle on a few building types."
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "armour/models",
+          "note": "The Yuri's Revenge manual (its Yuri Prime entry) says heroes regenerate on their own, while Boris's infobox lists self-healing only at Elite rank. The entry follows the infobox and gives no self-repair model.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/1/family",
+          "note": "Coded as the laser itself, the in-game weapon: ModEnc says its warhead deals no damage, so the damage is the laser family's default and the strike lives in the summary and bombard-area. The harm comes from the MiGs' ordnance, which the official profile calls iron bombs, the MiG page's prose laser-guided bombs and its infobox laser-guided missiles. Coding the bombs instead would give bombs with drop delivery, which our lists allow only on a flier.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/1/range",
+          "note": "Long, not off-screen: the call reaches well past his Sight figure, but Red Alert 2's sight band is a proposal with no figure, and no source says he needs spotters."
+        },
+        {
+          "path": "armament/0/family",
+          "note": "The official profile calls the gun an AKM machine gun and the wiki an assault rifle firing bursts; by the small-arms tie-break a rifle is small arms."
+        },
+        {
+          "path": "armament/0/damage",
+          "note": "Kinetic, the family default. The wiki credits the rifle with some anti-tank capacity, but no source calls it an anti-tank weapon or gives it a bonus against armour, so armour-piercing was not used and anti-armour is not among the secondary roles."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Structures come from can_target step 4 and from ModEnc's note that he fires the rifle at barrels, ammunition crates and a deployed Slave Miner; against other buildings he uses the airstrike. No source says whether the rifle hurts ships; naval follows the naval rule."
+        },
+        {
+          "path": "cost_band",
+          "note": "The archived official profile gives a lower price and the Radar Tower as his building, both from before release; the band and tier follow the infobox and the manual's tech table, as the registry says.",
+          "sources_disagree": true
+        },
+        {
+          "path": "countered_by/1",
+          "note": "The Battle Fortress page (https://cnc.fandom.com/wiki/Battle_Fortress) agrees that it crushes vehicles and walls; the hero exception itself rests on the Yuri's Revenge manual."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armament/1/damage",
+          "used": "energy",
+          "wanted": "explosive, from the called-in jets' bombs",
+          "note": "The laser does no damage; energy is only the laser family's default under damage step 2. What wrecks the building is the MiGs' ordnance, which no field of this weapon can show."
+        },
+        {
+          "path": "armament/1/traits",
+          "used": "none",
+          "wanted": "a designator trait: holding the beam calls a strike that lands only while the beam stays on",
+          "note": "The mark trait is closest, but it means the whole team sees the target and hits it harder for a time; here the beam summons the strike and aborts it when broken."
+        },
+        {
+          "path": "strengths/3",
+          "used": "class:infantry",
+          "wanted": "immunity to mind control and to being run over (only the Battle Fortress can)",
+          "note": "As a hero he cannot be mind-controlled, and no vehicle but the Battle Fortress can crush him. No link, armour model, mobility trait or other term records either immunity, so the strength that states both hangs on his class."
+        },
+        {
+          "path": "countered_by/1",
+          "used": "unit link alone",
+          "wanted": "a term for a vehicle that crushes heroes, vehicles and walls (the Yuri's Revenge omni-crusher)",
+          "note": "No word-list link names it: the crush trait covers every vehicle that runs soldiers over, and heroes resist all of them but the Battle Fortress, so the unit link stands without a word-list link beside it."
+        }
+      ],
+      "researched_by": "batch r1, agent J06-RA2",
+      "review": {
+        "status": "checked",
+        "checked_by": "batch r1 checker",
+        "checked_on": "2026-10-22",
+        "checked_paths": [
+          "tier/band",
+          "tier/gate",
+          "cost_band/band",
+          "cost_band/raw",
+          "class",
+          "roles/primary",
+          "roles/secondary",
+          "mobility/base",
+          "mobility/speed",
+          "mobility/speed_raw",
+          "mobility/traits",
+          "body/plan",
+          "body/size",
+          "armour/class",
+          "armour/models",
+          "sensors/sight",
+          "sensors/basis",
+          "sensors/traits",
+          "armament/0/family",
+          "armament/0/damage",
+          "armament/0/range",
+          "armament/0/can_target",
+          "armament/0/traits",
+          "armament/0/mount",
+          "armament/0/delivery",
+          "armament/1/family",
+          "armament/1/damage",
+          "armament/1/range",
+          "armament/1/can_target",
+          "armament/1/traits",
+          "armament/1/mount",
+          "armament/1/delivery",
+          "armament/1/patterns",
+          "abilities",
+          "crew/model",
+          "on_death/outcomes",
+          "sources/0/supports",
+          "sources/1/supports",
+          "sources/2/supports",
+          "sources/4/supports"
+        ],
+        "wrong_paths": [],
+        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. Nothing was found wrong. Checked, then changed after the check, so left out of checked_paths: sources/3/supports (combos/0 removed)."
+      }
+    },
+    {
+      "id": "ra2.soviet.siege-chopper",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "soviet",
+      "name": "Siege Chopper",
+      "flavour_affinity": ["soviet", "allied"],
+      "class": "aircraft",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["anti-air", "raider"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Battle Lab",
+        "basis": "Built at the Soviet War Factory once a Soviet Battle Lab stands: the Yuri's Revenge manual's Soviet tech table (PDF page 17) puts it in the War Factory and Battle Lab row, the wiki's infobox gives tier 3, and the wiki's Soviet war factory page lists it under tier 3. The official profile also names the Radar Tower among the buildings it needs; the band is the same, and the registry takes no tier from profile lines."
+      },
+      "cost_band": {
+        "band": "high",
+        "raw": 1100,
+        "basis": "At Yuri's Revenge patch 1.001 its list price (wiki infobox) sits exactly on the lowest price of the ra2 high band, and a value on an edge takes the higher band. Patch 1.001 cut it from its launch price, a little over a quarter higher and also in the high band; the official profile still shows the launch price. The Industrial Plant discount is ignored."
+      },
+      "mobility": {
+        "base": "rotor",
+        "handling": "strafe",
+        "traits": ["deploy-anchor"],
+        "speed": "very-fast",
+        "notes": "Hovering flight, very fast on every reading of its jumpjet value (see uncertain). Among the game's aircraft it flies on the same jumpjet value as the Rocketeer and the NightHawk transport, so it keeps pace with both, and on six times the Kirov's. Against the Harrier it is a little slower or far faster depending on the jumpjet value's unconfirmed unit. It hovers in place when it stops and touches down only on a deploy order (ModEnc DeployToLand); while landed it cannot move. Handling stays the hovering-flight default."
+      },
+      "body": {
+        "plan": "rotorcraft",
+        "size": "large",
+        "notes": "An attack helicopter airframe modelled on real Soviet and Russian gunships (wiki trivia), with its machine gun on a side mount. Landing brings a big howitzer out of the hull; the body plan stays the same. Large, as the size examples put attack helicopters."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class steps decided: the infobox armour type Light maps to light. One health bar. Service depots cannot repair it (game mechanics or an engine limit, the wiki says); an Allied IFV carrying an Engineer, or a captured Tech Machine Shop, can. The self-healing it gains at Elite rank comes with veterancy and is no armour model."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Red Alert 2 skirmish has no fog of war, so the band is the medium proposal the registry sets for every unit (sight_reference). Its Sight, how far it lifts the shroud, is a little under one and a half times the Conscript's."
+      },
+      "armament": [
+        {
+          "name": "Machine gun",
+          "slot": "primary",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "limited-arc",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "high-air", "structure", "naval"],
+          "traits": ["anti-air"],
+          "summary": "Its only weapon in flight: a chain gun firing small-arms rounds, the same type the game files give the NightHawk transport. The manual rates it effective against infantry. It harasses armour without hurting it much, though the wiki calls it an effective answer to the thin-skinned Prism Tank, and it can engage fliers: it holds its own against Rocketeers but lacks the punch for Floating Discs, Kirovs or Harriers. It reaches exactly half again as far as the Conscript's rifle. At Elite rank it hits a little harder with a stronger small-arms warhead. Silent while the chopper is landed."
+        },
+        {
+          "name": "160mm cannon",
+          "slot": "alternate",
+          "family": "cannon",
+          "damage": "armour-piercing",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "condition": "Only while landed in deployed mode, which the deploy order sets up; it replaces the machine gun until the chopper lifts off again.",
+          "summary": "A heavy howitzer that comes out once the chopper has landed. It reaches about three times as far as the Conscript's rifle, further than the chopper itself sees, and outranges most base defences; only France's Grand Cannon about matches it. It levels buildings fast and hits ground units hard, best when they stand still; fast movers often escape its shells. At Elite rank it fires two shots in quick succession. The official profile calls it a 155 mm cannon.",
+          "patterns": ["deploy-siege-mode"],
+          "mode": "deployed"
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "No player seats in the source; its voice lines speak for a helicopter crew, which changes nothing here. One player flies it, fires the machine gun and gives the landing order that brings the howitzer out."
+      },
+      "abilities": [
+        {
+          "name": "Deploy (land and take off)",
+          "kind": "deploy",
+          "source": "innate",
+          "summary": "The deploy order sets the chopper down and unfolds the howitzer in place of the machine gun; giving it again stows the gun and lifts off. Without the order it never lands: it hovers where it stops. It cannot move while landed, and both changes take a little while, so a landed group is slow to get away. No source gives a cooldown.",
+          "patterns": ["deploy-siege-mode"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "deployed",
+          "name": "Deployed (landed)",
+          "via": "deploy-siege-mode",
+          "summary": "Landed with the howitzer out, which replaces the machine gun. It cannot move until it takes off again. On the ground it is a ground target that ordinary ground weapons and fast tank hunters reach, and it loses the fliers' immunity to mind control."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "When shot down it crashes, as its voice lines announce, and is gone; no page read says the crash hurts anything nearby."
+      },
+      "strengths": [
+        {
+          "ref": "range:long",
+          "why": "Landed, its howitzer outranges most base defences, the French Grand Cannon being the main exception, and both official texts rate it highly against buildings and fortified positions."
+        },
+        {
+          "ref": "speed:very-fast",
+          "why": "Flies fast over any terrain, so it brings heavy firepower quickly to wherever the fight is."
+        },
+        {
+          "ref": "hits:infantry",
+          "why": "In flight its machine gun is effective against infantry, as the manual says."
+        },
+        {
+          "ref": "mobility:rotor",
+          "why": "While it flies it cannot be mind-controlled: the Yuri's Revenge manual makes every flying unit immune."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "mobility-trait:deploy-anchor",
+          "why": "Landed, it cannot move, and packing up and taking off take a while, so fast tank hunters catch a careless landing; on the ground mind control can take it too."
+        },
+        {
+          "ref": "weapon:machine-gun",
+          "why": "In the air the machine gun is all it has, so even lightly armoured anti-air vehicles beat it, and it lacks the punch for tough fliers such as Kirovs, Floating Discs and Harriers."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Thin armour: together with its slow take-off, it lets fast armour-piercing units destroy a landed chopper with little trouble."
+        },
+        {
+          "ref": "weapon:cannon",
+          "why": "The howitzer is accurate against parked targets but often misses units on the move."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "Service depots cannot repair it, so until it reaches Elite rank and heals itself, field repair needs an Allied IFV with an Engineer inside or a captured Machine Shop."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-air",
+          "why": "Anti-air vehicles, even thinly armoured ones, beat it in the air, where its machine gun is its only weapon."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Fast armour-piercing units such as Robot Tanks and IFVs reach a landed chopper before it can pack up, and its howitzer struggles to hit them."
+        },
+        {
+          "ref": "unit:ra2.allied.robot-tank",
+          "why": "The wiki names the Robot Tank as a fast armour-piercing unit that catches deployed choppers; the IFV does the same."
+        },
+        {
+          "ref": "pattern:mind-control",
+          "why": "Once landed it loses the fliers' immunity, so a mind-control unit that fights past its escort can take it over."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Its machine gun mows down infantry from the air, and once landed the howitzer can pound passing troop columns."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Landed, it wrecks buildings and defences quickly from beyond the reach of most of them."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Its machine gun tears up thinly armoured vehicles; the wiki calls it an effective answer to the Prism Tank."
+        },
+        {
+          "ref": "unit:ra2.allied.prism-tank",
+          "why": "The wiki names the Prism Tank as a vehicle its machine gun counters, because the tank's armour is weak."
+        },
+        {
+          "ref": "mobility:jetpack",
+          "why": "Its machine gun can take on Rocketeers in the air."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:ra2.soviet.siege-chopper",
+          "why": "Strongest massed: four or more landed together as one battery hold choke points or break bases, above all from high ground."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Needs a guard while landed: the official profile asks for a good escort, and the wiki wants fast tank hunters such as Robot Tanks and IFVs kept off the deployed choppers."
+        },
+        {
+          "ref": "unit:ra2.soviet.rhino-tank",
+          "why": "The wiki suggests a few Rhinos, or Conscripts in a garrison, to watch over deployed choppers."
+        }
+      ],
+      "memorable": "A gunship that lands and unfolds a long-range howitzer: it flies a heavy gun wherever it is wanted, then sits rooted and fragile while it shells bases from beyond most of their defences.",
+      "as_player": "A fast T3 gunship. In the air you fly and fire a side-mounted machine gun on left mouse that shreds infantry and thin-skinned vehicles but barely scratches heavy tanks. Press the deploy key to land: you can't move, but a long-range howitzer replaces the gun and fires shells at buildings and parked units from beyond most defences. Packing up and lifting off take a moment, so land behind an escort; anti-air in the sky and fast tank hunters on the ground are your worst enemies.",
+      "sources": [
+        {
+          "url": "https://web.archive.org/web/20071214201459/http://www.ea.com/official/cc/redalert2/english/newsovietinfo2.jsp",
+          "title": "New Soviet units (Boris, Siege Chopper, Spy Plane), official Red Alert 2 website on EA.com (archived by the Wayback Machine)",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge launch (2001); its price line predates patch 1.001",
+          "note": "EA's copy of the official site's Yuri's Revenge Soviet unit profiles, the registry's snapshot of 14 December 2007 (agent B read the same snapshot through its raw id_ form, which drops the Wayback banner). The Application line is the unit's designation and names anti-infantry and artillery. Its price, building and gun calibre lines date from release (registry note), so no band or tier rests on them.",
+          "supports": ["roles", "armament/0", "armament/1", "strengths/0", "combos/1", "memorable"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Siege_chopper",
+          "title": "Siege chopper, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge 1.001 (the changelog gives the 1.001 price cut)",
+          "note": "Its quote box copies the Siege Chopper entry of the Yuri's Revenge manual (PDF page 18). The infobox gives the game data: internal names for the airborne and deployed forms, armour type, tier, both prices, air speed, weapon damage, warheads and reach, sight and elite abilities. The prose, matchups and trivia are the wiki's own words.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "armament/1",
+            "abilities/0",
+            "modes/0",
+            "roles",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "on_death",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (English PDF), hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "note": "PDF page 17: the Soviet tech table lists the Siege Chopper in the War Factory and Battle Lab row. Page 18 holds its unit entry and page 20 the Yuri Clone entry, which the wiki's pages copy. The copy-check cannot read this PDF, so its paraphrases were checked by hand.",
+          "supports": ["tier"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_2_-_Yuri%27s_Revenge_manual",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (transcript), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Copies the manual's text: the Siege Chopper entry (PDF page 18: effective against infantry in the air; landed, a long-range gun for buildings and stationary targets) and the Yuri Clone entry (page 20), which names every flying unit among those immune to mind control.",
+          "supports": [
+            "roles/primary",
+            "armament/0",
+            "armament/1",
+            "strengths/2",
+            "strengths/3",
+            "counters/0",
+            "countered_by/3",
+            "modes/0"
+          ]
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/DeployToLand",
+          "title": "DeployToLand, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "A rules flag that makes a hovering unit land only when ordered to deploy, instead of whenever it stops; the page names the Siege Chopper as the unit that uses it.",
+          "supports": ["mobility", "abilities/0", "modes/0"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "The official Application line names two roles, anti-infantry and artillery (siege). Step 1's bonus test picks anti-infantry: the manual says the flying chopper is effective against infantry, read as a bonus in step 4's sense, while no official text gives the machine gun, the main weapon, an edge against buildings. Step 1 does not say what target siege is tested against. If official strong-against text did not count there, step 3 would not give siege either, since no source says the howitzer hits an area, and step 4 would give anti-infantry again."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "The Application line still names artillery, a siege alias, but siege is not a candidate: its coding rule binds roles.secondary as it does the primary, and since the merge pass recoded the deployed gun as a cannon fired straight at targets in view, with no source showing its shell hurting an area, none of the rule's weapon clauses is met (a long-range cannon alone is not siege). Step 2 adds no role either: no game data or source gives that cannon extra damage against armour or calls it strong against vehicles. Anti-air ranks at step 3 and rests on the wiki saying that, to a degree, the gun can serve as an anti-aircraft weapon against Rocketeers, while the same page says it lacks the firepower for Floating Discs, Kirovs and Harriers, so the role's description (bringing down jets and airships) fits only loosely; no official text calls air a weak point, so the drop rule does not apply. Raider ranks at step 4 (very fast with light armour). The profile says the gun harasses enemy units; that verb was not read as the alias harasser, which would move raider to step 1, ahead of anti-air."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "The infobox gives the machine gun no air-attack line, but the page's prose says it shreds aircraft, that the chopper was meant to fly and attack every kind of unit, and that it can take on Rocketeers while doing little to Floating Discs, Kirovs and Harriers. The Hind transport page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Hind_transport), a cut unit with the same gun, says that gun fires at ground and air units; the NightHawk transport page (https://cnc.fandom.com/wiki/NightHawk_transport) names the shared weapon and also leaves the air line empty. Low and high air are listed from the prose, an empty infobox line being read as silence. Listing high air also sets the anti-air trait, though the page calls the gun too weak for the high fliers."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No source says how the bullets travel; hitscan is the machine-gun family default."
+        },
+        {
+          "path": "armament/1/family",
+          "note": "Coded cannon, not artillery. The sources call the gun a howitzer and the unit an artillery helicopter, but the RA2 registry notes say the artillery tie-break never reads the Sight figure: with no fog nobody has to spot for a gun, so artillery needs a source showing shells lobbed over cover. None does (the profile and the manual speak of a cannon, and no source describes the shell's arc), so it counts as a gun fired straight at targets in view, with the cannon family's projectile delivery."
+        },
+        {
+          "path": "armament/1/damage",
+          "note": "Red Alert 2 has no damage map (the infobox names only the gun's own warhead), so damage step 5 keeps the cannon default, armour-piercing. The sources call it a howitzer that levels buildings, but none says its shell hurts an area, so the explosive exception does not apply, as for the Slave Miner's elite cannon."
+        },
+        {
+          "path": "armament/1/traits",
+          "note": "No source says whether a shell hurts an area around the impact or has a dead zone up close, so neither splash nor min-range is set; the wiki's talk of laying waste to bases and bombarding troop columns does not state an area."
+        },
+        {
+          "path": "armament/1/range",
+          "note": "Long, not off-screen: its reach is well past the chopper's own Sight figure, but Red Alert 2's sight band is a proposal with no figure (registry note on shroud and sight), and no source says the gun needs spotters."
+        },
+        {
+          "path": "armament/1/name",
+          "note": "The wiki's infobox calls it a 160mm cannon and its prose a 160 mm howitzer; the official profile calls it a 155 mm cannon. No code depends on it.",
+          "sources_disagree": true
+        },
+        {
+          "path": "mobility/speed",
+          "note": "It flies on the jumpjet value in its rules, not on the general speed the wiki's infobox shows (ModEnc's JumpjetSpeed page, https://modenc.renegadeprojects.com/JumpjetSpeed, and its Speed page for jumpjet settings, https://modenc.renegadeprojects.com/Speed/In_JumpjetControls), and no source says what unit that value is in, so no ratio is recorded. Read as a per-frame value it is about three times the Conscript's pace. Read on the Speed scale it is far more, and the infobox figure alone also gives about three times. Every reading is very fast, so the band does not hang on the unit. ModEnc's infantry speed factors are prone speeds and do not change the Conscript's walking pace. The jumpjet values come from Yuri's Revenge's rulesmd.ini, in the INI archive that the Command & Conquer Wiki's Rules.ini page links; the aircraft comparisons in mobility.notes use them."
+        },
+        {
+          "path": "modes/0",
+          "note": "The deployed form is its own unit type in the game files (the infobox names both internal units), but the infobox gives one armour type for the two, and no source says whether the landed form is tougher or weaker, so the mode keeps the unit's light class and flat-pool model."
+        },
+        {
+          "path": "counters/4",
+          "note": "The Rocketeer page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Rocketeer) says Rocketeers can fight Siege Choppers, while the Siege chopper page says the chopper can take Rocketeers on; the counter follows the chopper's own page."
+        },
+        {
+          "path": "on_death",
+          "note": "It crashes when shot down, as its voice lines announce; no page read says the crash damages anything, so the decision-3C default applies."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "modes/0/mobility",
+          "used": "left out (the landed form cannot move), and the mode's class stays aircraft",
+          "wanted": "a way for a mode to say the unit becomes a different kind of target (a landed flier turns into a ground target)",
+          "note": "Landed, the chopper sits on the ground, where ordinary ground weapons, tank hunters and mind control reach it as they cannot in flight. A mode that cannot move leaves out mobility and keeps the aircraft class, so the coded fields still make it a low-air target; only the mode's summary records the change."
+        }
+      ],
+      "review": {
+        "status": "checked",
+        "checked_by": "batch r1 checker",
+        "checked_on": "2026-10-22",
+        "checked_paths": [
+          "tier/band",
+          "tier/gate",
+          "cost_band/band",
+          "cost_band/raw",
+          "class",
+          "roles/primary",
+          "mobility/base",
+          "mobility/speed",
+          "mobility/speed_raw",
+          "mobility/traits",
+          "body/plan",
+          "body/size",
+          "armour/class",
+          "armour/models",
+          "sensors/sight",
+          "sensors/basis",
+          "sensors/traits",
+          "armament/0/family",
+          "armament/0/damage",
+          "armament/0/range",
+          "armament/0/can_target",
+          "armament/0/traits",
+          "armament/0/mount",
+          "armament/0/delivery",
+          "armament/1/range",
+          "armament/1/can_target",
+          "armament/1/traits",
+          "armament/1/mount",
+          "armament/1/patterns",
+          "abilities/0/kind",
+          "abilities/0/source",
+          "abilities/0/cooldown",
+          "abilities/0/patterns",
+          "crew/model",
+          "on_death/outcomes",
+          "sources/0/supports",
+          "sources/1/supports",
+          "sources/2/supports",
+          "sources/3/supports",
+          "sources/4/supports"
+        ],
+        "wrong_paths": [],
+        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. Nothing was found wrong. Checked, then changed after the check, so left out of checked_paths: armament/1/family (recoded from artillery to cannon in a3c4d6d); armament/1/delivery (lobbed became projectile in a3c4d6d); armament/1/damage (the final review set the cannon default, armour-piercing); roles/secondary (the final review took out siege, giving anti-air and raider)."
+      },
+      "researched_by": "batch r1, opening check (agents A and B, reconciled)"
+    },
+    {
+      "id": "ra2.yuri.mastermind",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "yuri",
+      "name": "Mastermind",
+      "lineage": "mastermind",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["assault"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Battle Lab",
+        "basis": "The Yuri's Revenge manual's tech table (printed page 19) lists the Master Mind under the War Factory with the Battle Lab as its extra building; the wiki's infobox and its Yuri war factory page both put it in tier 3. Battle Lab is a t3 gate in the registry."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 1750,
+        "basis": "Its list price is a little over twice the main battle tank anchor, the same as the Apocalypse Tank's, which puts it in the registry's very-high band."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": ["crush"],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "The wiki's land speed for it equals the Conscript's, so it only keeps pace with infantry and is clearly slower than the Grizzly and Rhino main battle tanks. The infobox says it is not amphibious. The wiki says it can try to run infantry over, hence crush. No text names its running gear: the tracks come from the voxel render and in-game picture on its wiki page. Pivot is the tracks default."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "large",
+        "notes": "A tracked tank hull carrying a big brain-like dome where a tank's turret would sit, with no gun; no source says whether the dome turns. The wiki files it among tanks and its in-game picture is tank-sized, so large; its trivia says only the concept art drew the brain twice a tank's size."
+      },
+      "armour": {
+        "class": "heavy",
+        "models": ["self-repair"],
+        "notes": "Step 1 of the armour-class steps decided: the infobox armour type heavy maps to heavy in the registry's armour map (the official profile also says heavy). The wiki says it soaks a surprising amount of fire. The infobox lists self-repair and the wiki likens its slow healing to the Apocalypse Tank's, so the model is self-repair. Immunity to mind control is not an armour model; see strengths."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Skirmish has no fog of war, so the band is the registry's medium proposal. Its Sight figure, how far it lifts the shroud, is nearly twice the Conscript's. The Yuri's Revenge manual says every psychic unit sees through Spy disguises, but no page about the Mastermind confirms it, so it gets no detector trait (see uncertain)."
+      },
+      "armament": [
+        {
+          "name": "Mind control",
+          "slot": "primary",
+          "family": "psionic",
+          "damage": "psionic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "naval"],
+          "traits": [],
+          "summary": "Its only weapon. A hit takes the target over at once and does no damage; the victim fights for Yuri until the Mastermind dies, when it goes back to its owner. Like every mind-control weapon in the game it fires by itself at any valid enemy in reach, one after another in quick succession, and unlike the Psychic Tower it keeps taking new victims past its safe limit of three; the player has no way to hold it back (see Brainwave overload). It reaches half again as far as the Conscript's rifle. It takes soldiers, ground vehicles and ships, but not buildings, aircraft or immune units: miners, attack dogs, heroes, Yuri Clones, other Masterminds, robots and drones such as the Robot Tank, Terror Drone and Chaos Drone, Brutes, Slaves, and units that someone already controls.",
+          "patterns": ["mind-control"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "No crew is described: the official profile calls it a cloned brain carried in a tank. One player drives it; the control weapon fires on its own."
+      },
+      "abilities": [
+        {
+          "name": "Brainwave overload",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Once it holds more than three captives it overloads: a voice line announces it, it rocks and sparks, and it loses health at short, regular intervals, faster the more units it holds. With four to six captives the loss is modest, with seven to ten it is heavy, and with eleven or more it wrecks the tank almost at once, unless an armour crate has halved it and outside repair (a captured Machine Shop, IFVs carrying Engineers) keeps up. The state ends as soon as it is back to three or fewer, whether captives die in battle or are fed to a Grinder or Bio Reactor. If it breaks down, every captive is freed. The Iron Curtain stops the loss while it lasts.",
+          "patterns": ["overload-past-cap"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "The sources show nothing special at its death, so the 3C default for a crewed machine applies. When it is destroyed, by enemies or by overload, every unit it controls returns to its owner (manual; the wiki's Mind control page)."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:mind-control",
+          "why": "Takes over every enemy soldier and vehicle that comes near, with no hard cap, so enemy armoured columns end up fighting each other; enemy mind control cannot take it in return."
+        },
+        {
+          "ref": "armour-class:heavy",
+          "why": "Heavy armour lets it absorb a surprising amount of fire while it closes in, so its approach alone forces the enemy to reorganise."
+        },
+        {
+          "ref": "armour-model:self-repair",
+          "why": "Slowly mends its own damage between fights, like the Apocalypse Tank."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "Can try to run over soldiers, its only way to hurt anything it cannot take over."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:psionic",
+          "why": "Mind control is its only weapon, so it cannot hurt aircraft, buildings or any immune unit (robots, drones, dogs, miners, heroes, psychic units) and is helpless against them alone."
+        },
+        {
+          "ref": "pattern:overload-past-cap",
+          "why": "It cannot stop taking captives: past three it overloads and damages itself, faster the more it holds, so a big crowd of enemies can make it destroy itself unless the player spends captives quickly."
+        },
+        {
+          "ref": "speed:medium",
+          "why": "Moves only at infantry pace, slower than the main battle tanks, so it struggles to close in or to escape."
+        },
+        {
+          "ref": "tier:t3",
+          "why": "Needs a Battle Lab and costs as much as the game's top super-units."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Fliers cannot be controlled and it has nothing that reaches them."
+        },
+        {
+          "ref": "nature:uncrewed-machine",
+          "why": "Robots and drones are immune to its control; the wiki names Robot Tanks and Terror Drones among the immune units making short work of an unescorted Mastermind."
+        },
+        {
+          "ref": "unit:ra2.allied.robot-tank",
+          "why": "An immune robot vehicle that destroys an unescorted Mastermind, as the wiki says."
+        },
+        {
+          "ref": "unit:ra2.soviet.terror-drone",
+          "why": "An immune drone that destroys an unescorted Mastermind, as the wiki says."
+        },
+        {
+          "ref": "tier:t1",
+          "why": "A rush of many cheap, expendable units (Conscripts, Flak Tracks, IFVs, free paratroopers) makes it take more captives than it can hold, so it overloads and wrecks itself."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Turns enemy tank columns against each other: every tank it takes fights for Yuri and thins out the rest."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Takes over soldiers as readily as vehicles, and can run over the ones it does not take."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "pattern:pull-target",
+          "why": "The Magnetron lifts enemy vehicles and drags them toward Yuri's mind-control units, so they can be taken without risk."
+        },
+        {
+          "ref": "unit:ra2.yuri.magnetron",
+          "why": "Its magnetic pull brings vehicles to the Mastermind, as its official profile and the wiki's Yuri page describe."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Lasher Tanks, the AI's usual escort for it, kill the immune robots and drones that would otherwise destroy it."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "Gattling Tanks, also in the AI's escorts, cover it against aircraft, which it can neither take nor hit."
+        },
+        {
+          "ref": "weapon:repair-tool",
+          "why": "Repair from outside, such as IFVs carrying Engineers, can keep it alive while it is overloaded."
+        }
+      ],
+      "memorable": "A slow brain-tank that seizes every enemy soldier and vehicle in reach with no limit and no way to stop, until holding too many burns it out.",
+      "as_player": "A slow, heavily armoured T3 brain-tank with no gun. Every enemy soldier, vehicle or boat that comes within reach is pulled to your side automatically, one after another, and you cannot switch it off. Three captives are safe; past that you lose health faster the more you hold, so spend captives in the fight and avoid big crowds. Aircraft, robots, drones and swarms of cheap units are what kill you; you heal slowly between fights.",
+      "sources": [
+        {
+          "url": "https://web.archive.org/web/20071214172119/http://www.ea.com/official/cc/redalert2/english/newunits-yuri3.jsp",
+          "title": "Yuri's new units 3 (Master Mind, Magnetron and others), Command & Conquer: Red Alert 2 official site, archived by the Wayback Machine",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge launch site (snapshot of December 2007)",
+          "supports": ["roles", "armour", "armament/0", "crew", "abilities/0", "strengths/0", "combos/0", "combos/1"],
+          "note": "Its Application line names the anti-vehicle and anti-infantry jobs, then calls it an assault unit. Its safe number of captives differs from the wiki's (see uncertain). The Wayback Machine reset connections from this session, so the page was read from the copy-check tool's cached copy of this snapshot, fetched the same day."
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF), hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge (2001)",
+          "supports": ["tier", "armament/0/can_target", "abilities/0", "on_death", "sensors", "weaknesses/1"],
+          "note": "Tech table on printed page 19; the Master Mind entry on page 21; the Yuri Clone entry's list of immune units on page 20; Gameplay Changes items 8 and 20 on pages 12 and 13."
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Mastermind_(Yuri%27s_Revenge)",
+          "title": "Mastermind (Yuri's Revenge), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge 1.001",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos/2",
+            "combos/3",
+            "combos/4",
+            "memorable"
+          ],
+          "note": "Infobox, the Counters and Overloaded sections and the AI behaviour lists. Its quote box copies the Yuri's Revenge manual entry (printed page 21)."
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/InfiniteMindControl",
+          "title": "InfiniteMindControl, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["armament/0", "abilities/0"],
+          "note": "How the Yuri's Revenge engine lets one unit control many: with this flag the weapon has no hard cap, and the controller takes damage in steps as its number of links passes the levels of its overload list."
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/MindControl",
+          "title": "MindControl, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["armament/0/delivery", "armament/0/can_target", "abilities/0"],
+          "note": "The control warhead takes the target at once, whether or not the shot hits; psionic-immune objects cannot be targeted, and buildings are immune by default."
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "abilities/0",
+          "note": "How many captives are safe: three by the wiki's Mastermind page, its Yuri war factory page (https://cnc.fandom.com/wiki/Yuri_war_factory) and CNCNZ's Yuri's units page (https://cncnz.com/games/yuris-revenge/yuris-units/); five by the official profile, written around release; the manual says only a large group. The entry follows the wiki, which gives game-data figures. The wiki's own conversion of the damage interval to seconds differs between its heading and its first bullet, so the exact pace is unsure.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0",
+          "note": "That the Iron Curtain stops overload damage rests on the wiki's Iron Curtain (Red Alert 2) page (https://cnc.fandom.com/wiki/Iron_Curtain_(Red_Alert_2)); the Iron Curtain is a side-wide power, so it is only mentioned."
+        },
+        {
+          "path": "abilities/0",
+          "note": "Recorded as its own passive because the wiki gives the overloaded state its own section and the game announces it, and it adds a mechanic. It could also be read as part of how the control weapon works and kept in that weapon's summary."
+        },
+        {
+          "path": "sensors/traits",
+          "note": "Yuri's Revenge manual, Gameplay Changes item 20, says every psychic unit and structure sees through the Allied Spy's disguise; no page about the Mastermind confirms that it does, so no detector trait is given, as the registry note asks. The Slave miner page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Slave_miner) recommends escorting that miner with Yuri Clones or Masterminds against Spies. That fits item 20, but the page does not say the Mastermind itself unmasks them.",
+          "sources_disagree": true
+        },
+        {
+          "path": "roles/primary",
+          "note": "The Application line names anti-vehicle and anti-infantry. Anti-armour is skipped because psionic damage fails its requires, which leaves anti-infantry as the one role the line names. If a line naming two roles must instead pass the bonus test first, neither target has a bonus and the steps run on to step 5, which gives assault."
+        },
+        {
+          "path": "mobility/base",
+          "note": "No text names its running gear. The voxel render and in-game picture on its wiki page show tracks, while a picture caption on the wiki's Yuri (faction) page (https://cnc.fandom.com/wiki/Yuri_(faction)) speaks of it as being on wheels, apparently as a figure of speech."
+        },
+        {
+          "path": "body/plan",
+          "note": "No source says whether its brain dome turns like a turret; hull-turret is the nearest shape for a tank hull with a dome on top."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Hitscan rests on ModEnc's MindControl page, which says the effect lands at once whether or not the shot hits. The lasting link to each captive could be read as a beam, the psionic family default."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "No source names ships for the Mastermind; the manual's Yuri Clone entry says every unit outside its immune list can be taken, and the naval coding rule adds naval to a weapon that hits ground vehicles. Buildings are left out: ModEnc's MindControl page says buildings are immune by default, and the wiki's Mind control page (https://cnc.fandom.com/wiki/Mind_control) names only Yuri Prime as taking structures in Yuri's Revenge. The Robot Tank, Terror Drone, Brute and Slave immunities come from the registry note, which cites those units' own pages; the Mastermind page names the first three as immune counters."
+        },
+        {
+          "path": "on_death",
+          "note": "That captives go back to their owners when the controller dies rests on the wiki's Mind control page (https://cnc.fandom.com/wiki/Mind_control) as well as the manual's note that a broken-down Master Mind frees its captives."
+        },
+        {
+          "path": "lineage",
+          "note": "The wiki's Mind control page describes the Scrin Mastermind of Tiberium Wars as a mind-control unit with the same name, so the lineage mastermind links the two; the two designs differ a great deal (that one is a commando on foot)."
+        },
+        {
+          "path": "countered_by/1",
+          "note": "The link names every uncrewed machine, but the wiki's point is about armed robots such as Robot Tanks and Terror Drones. An unarmed one such as the Chaos Drone is also immune to its control yet cannot hurt it: the Chaos drone page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Chaos_drone) gives the drone no weapon besides its gas and says Masterminds ignore that gas."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles",
+          "used": "anti-infantry, assault",
+          "wanted": "anti-armour",
+          "note": "The official Application line also names anti-vehicle, and the wiki says it wrecks enemy armoured columns, but anti-armour needs armour-piercing, energy, electric or EMP damage or the infest pattern, and its only weapon deals psionic damage."
+        },
+        {
+          "path": "body/plan",
+          "used": "hull-turret",
+          "wanted": "a tracked hull carrying an emitter dome and no gun",
+          "note": "No body plan describes a vehicle whose top is a psychic emitter rather than a gun turret."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J07-RA2"
+    },
+    {
+      "id": "ra2.yuri.magnetron",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "yuri",
+      "name": "Magnetron",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["disabler"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Psychic Radar",
+        "basis": "The Yuri's Revenge manual's tech table (PDF page 19) puts the Magnetron at the War Factory with a Psychic Radar as its extra building, and the wiki's infobox gives tier 2; the Psychic Radar is Yuri's tier-2 gate in the registry."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 1000,
+        "basis": "The infobox price at Yuri's Revenge 1.001 sits between the medium and high thresholds: a little more than a Rhino tank and well above Yuri's own Lasher tank."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1.25,
+        "notes": "A quarter faster than the Conscript by the wiki's land speed figures, but slower than every main battle tank in the cost anchor (the Grizzly and the Rhino, by the registry's speed notes). Not amphibious and does not crush infantry (Magnetron page). Handling is the tracks default."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "large",
+        "notes": "A tank-like artillery vehicle that carries its magnetic emitter on top. The Magnetic beam page calls it an EM tank, and the manual's Tank Bunker entry, which admits turreted vehicles, names the Magnetron as the one turreted vehicle it refuses. Coded large by the size list's tank and self-propelled gun examples, although the Amphibious Transport counts it as six slots, like the Apocalypse, the Battle Fortress and the MCV, where regular vehicles take three."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class order decided: the infobox armour type Light maps to light. Rank adds toughness at Veteran (game-wide veterancy)."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "No fog of war in skirmish, so the band is the medium proposal (registry sight_reference). Its Sight figure, how far it lifts the shroud, is twice the Conscript's."
+      },
+      "armament": [
+        {
+          "name": "Magnetic beam",
+          "slot": "primary",
+          "family": "magnetic",
+          "damage": "kinetic",
+          "mount": "slow-turret",
+          "delivery": "beam",
+          "range": "long",
+          "can_target": ["ground-vehicle", "naval", "structure"],
+          "traits": ["min-range", "root", "silence"],
+          "summary": "One attack order, two effects. Against a vehicle or ship it raises the target into the air and hauls it toward the Magnetron, then sets it down on a free spot nearby; while held, the victim can neither drive nor fire (riders firing from a Battle Fortress are the exception) and counts as an air unit, so anti-air weapons can hit it. Lifting itself hurts nothing: a vehicle set down on clear ground is unharmed. Cutting the beam drops the victim where it is, and with careful timing that kills it: a land vehicle that is not amphibious dies in water, a ship hauled onto land is wrecked, and a vehicle dropped onto a building or onto another vehicle can hurt or wreck whatever is underneath, and the Magnetron earns veterancy for such kills. It can also ferry vehicles across cliffs or walls. Against buildings the same beam does direct damage at long range, more slowly and weakly than other sides' artillery, and, unlike an attack from the air, anti-air fire cannot stop it. It holds one target at a time, cannot lift a vehicle that is too close, and cannot target infantry or aircraft in flight; landed aircraft can be lifted, and a Harrier or Black Eagle taken off its pad crashes if the beam is cut. Targeting a carrier makes its drones crash, and a ship lifted out of a Giant Squid's grip is released. In the game data the two effects are separate weapons with their own reach and rate of fire; the anti-vehicle one reaches a little further. Elite rank makes it stronger and faster-firing; patch 1.001 fixed vehicles falling through high bridges, a Magnetron repeatedly lifting and dropping one vehicle, and an elite Magnetron reaching less far than a standard one.",
+          "patterns": ["pull-target"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player drives and holds the beam. Its voice lines speak as a crew; they change nothing."
+      },
+      "abilities": [],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No source shows anything special when it dies, so the default for a crewed vehicle applies."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:pull-target",
+          "why": "A lifted vehicle cannot move or shoot, can be carried to the Magnetron's side, and dies if dropped into water or onto buildings and other vehicles."
+        },
+        {
+          "ref": "range:long",
+          "why": "The beam reaches about three times as far as a Conscript's rifle, so it works from well behind the front."
+        },
+        {
+          "ref": "hits:structure",
+          "why": "Its beam damages buildings and defences from range, fires over walls, and anti-air cannot intercept it."
+        },
+        {
+          "ref": "hits:naval",
+          "why": "It can pull ships out of the water, which wrecks them on land."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:magnetic",
+          "why": "Its only weapon works on vehicles, ships and buildings: it has no attack that reaches infantry or aircraft in flight, and no way to pull soldiers in."
+        },
+        {
+          "ref": "pattern:pull-target",
+          "why": "It holds one vehicle at a time, and lifting alone does no harm, so it needs water, a drop target or teammates to finish the victim."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Light armour, so anti-tank fire breaks it quickly."
+        },
+        {
+          "ref": "weapon-trait:min-range",
+          "why": "It cannot lift a vehicle that gets right up close."
+        },
+        {
+          "ref": "hits:structure",
+          "why": "Its damage to buildings comes slowly and is weak next to other artillery such as the Prism Tank or V3."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:infantry",
+          "why": "The manual calls it all but helpless against enemy soldiers: it cannot attack them or drag them in."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "The wiki singles out anti-tank soldiers, Guardian GIs and Tesla Troopers, as especially dangerous: they hit its light hull hard and cannot be lifted."
+        },
+        {
+          "ref": "unit:ra2.allied.guardian-gi",
+          "why": "Named by the wiki as a particular threat: an anti-tank soldier it can neither lift nor shoot."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "It cannot target aircraft in flight, so bombers and gunships attack it freely."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Massed tanks overwhelm it, because it holds a single vehicle at once while the others close in."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Lone vehicles are taken out of the fight while lifted, hauled toward Yuri's units, or dropped to their death over water or onto other units."
+        },
+        {
+          "ref": "class:naval",
+          "why": "Ships dragged onto land are wrecked, a carrier it targets loses its drones, and a ship held by a Giant Squid is freed."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Its beam wears down base defences from range, and anti-air cannot stop it as it stops air strikes."
+        },
+        {
+          "ref": "mobility:jet",
+          "why": "Harriers and Black Eagles parked on their pads can be lifted, and they crash if the beam is cut mid-lift."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "pattern:mind-control",
+          "why": "The manual's stated purpose: it hauls enemy vehicles toward Yuri's forces so they can be mind-controlled safely."
+        },
+        {
+          "ref": "unit:ra2.yuri.yuri-clone",
+          "why": "The Yuri faction page names Yuri Clones as one of the units it drags vehicles toward for capture."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "A lifted vehicle counts as an air unit, so anti-air teammates such as the Gattling Tank can shoot it while it hangs helpless."
+        },
+        {
+          "ref": "role:anti-infantry",
+          "why": "It cannot fight infantry, so it needs escorts that can; the AI sends it with Brutes and Gattling Tanks."
+        },
+        {
+          "ref": "unit:ra2.yuri.mastermind",
+          "why": "The Yuri faction page also names the Mastermind as a unit it hauls vehicles to for safe capture, and the AI sends Magnetrons out alongside Masterminds."
+        }
+      ],
+      "memorable": "A tractor-beam tank that plucks enemy vehicles off the ground, carries them toward its own lines and can drop them into the sea.",
+      "as_player": "A mid-tier support tank with no answer to soldiers. Hold fire on an enemy vehicle at long range to hoist it: while it hangs it cannot drive or shoot, your anti-air teammates can hit it, and releasing it over water, a cliff edge or a cluster of enemies wrecks it. On a building the same beam slowly shakes it apart from long range; keep an anti-infantry escort close.",
+      "sources": [
+        {
+          "url": "https://web.archive.org/web/20071214172119/http://www.ea.com/official/cc/redalert2/english/newunits-yuri3.jsp",
+          "title": "Yuri's new units 3 (Master Mind, Magnetron and others), Command & Conquer: Red Alert 2 official site, archived by the Wayback Machine",
+          "kind": "official",
+          "accessed": "2026-10-21",
+          "version": "Yuri's Revenge launch site (snapshot of December 2007)",
+          "note": "Application line: it pulls enemy units such as ships, tanks and planes toward itself, which names no role; the entry follows the wiki, under which only aircraft on the ground can be lifted. Its text presents it as Yuri's reply to long-range base defences and says it pulls vehicles close so Yuri's other units can take them over safely. Read from the copy-check cache's copy of this snapshot (fetched 2026-10-20); its cost, armour and weapon lines date from release and are not used.",
+          "supports": ["roles", "armament/0", "strengths/2", "counters/2", "combos/0"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Magnetron",
+          "title": "Magnetron, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge 1.001",
+          "note": "Its quote box copies the Magnetron entry of the Yuri's Revenge manual (PDF page 21). Infobox: cost, tier 2, Psychic Radar, armour type Light, land speed, sight, the two warheads with their reach, rate of fire and minimum range.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "armour",
+            "sensors",
+            "armament/0",
+            "roles",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Magnetic_beam",
+          "title": "Magnetic beam, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "The weapon's own page: it lifts ground vehicles and ships, drops them when the beam is cut, lifted vehicles count as air units, and it damages buildings; it calls the Magnetron an EM tank.",
+          "supports": ["armament/0", "body", "strengths/0", "strengths/3", "counters/1", "combos/2"]
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF), hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "note": "Tech table on PDF page 19 (War Factory plus Psychic Radar); Magnetron entry on page 21; Tank Bunker entry on page 23, which names the Magnetron as the one turreted vehicle the bunker refuses.",
+          "supports": ["tier", "roles", "body", "armament/0", "weaknesses/0", "countered_by/0", "combos/0"]
+        },
+        {
+          "url": "https://cncnz.com/games/yuris-revenge/yuris-units/",
+          "title": "Red Alert 2 - Yuri's Revenge: Yuri's Units, CNCNZ.com",
+          "kind": "guide",
+          "accessed": "2026-10-23",
+          "note": "A long-standing fan site's unit list, largely reworded from the manual, cited as the second site in place of a third Command & Conquer Wiki page. Its Magnetron entry: the magnetic force lifts an enemy vehicle, or a ship within reach, and drags it toward the Magnetron for its escorts to finish; the beam also hurts buildings; it has no useful weapon against soldiers and cannot run them over, and like other artillery it is thinly armoured. Read from the copy-check cache's copy (fetched 2026-10-20).",
+          "supports": ["armament/0", "weaknesses/0", "weaknesses/2", "countered_by/0"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Assault comes only from the step 5 fallback. Step 1: the official profile's Application line (newunits-yuri3.jsp, now cited and read from the copy-check cache) says only that it pulls enemy units toward itself, which names no role, as the registry note says, and the manual entry names none. The profile also presents it as Yuri's reply to long-range base defences, but structures match none of the anti roles. Step 3 gives no siege, because siege's coding rule needs a lobbed, dropped or deployed-area weapon or a structure-killing missile or rocket, and this is a straight beam. Step 4 gives nothing: no source gives the beam extra damage against a kind of target, and anti-armour's requires fail (its damage is kinetic and its pattern is not infest-vehicle)."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Disabler rests on the weapon's control pattern and its root and silence traits (a lifted vehicle cannot move or fire). Siege is left out by its coding rule although the wiki calls the Magnetron Yuri's artillery; the wiki's role field (support artillery vehicle) and the war factory page's line (anti-structural artillery vehicle) are the wiki's own words, not official text."
+        },
+        {
+          "path": "mobility/base",
+          "note": "No text source says whether it runs on tracks or wheels. Tracks follow from the Magnetic beam page calling it an EM tank and from its listing in the wiki's tanks navigation box."
+        },
+        {
+          "path": "body/plan",
+          "note": "Hull with turret rests on the manual's Tank Bunker entry, which treats the Magnetron as a turreted vehicle (the Tank bunker page on the Command & Conquer Wiki, https://cnc.fandom.com/wiki/Tank_bunker, lists the turretless vehicles and does not include it). A launcher rack carrying an exposed emitter would also be arguable for an artillery vehicle."
+        },
+        {
+          "path": "body/size",
+          "note": "Coded large by the size list's examples (tanks and self-propelled guns). The Amphibious transport (Red Alert 2) page on the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Amphibious_transport_(Red_Alert_2)) gives it six of the transport's twelve slots, like the Apocalypse and the MCV, where regular vehicles take three, which by measurement could point to huge."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "Long, not off-screen: its reach against vehicles exceeds its own Sight figure, but the off-screen test compares the reach with the figure the sight band uses, and a proposal band uses none (registry Shroud and sight note); no source says it needs spotters."
+        },
+        {
+          "path": "armament/0/damage",
+          "note": "The infobox gives the anti-vehicle warhead an enormous damage figure, but ModEnc's IsLocomotor page (https://modenc.renegadeprojects.com/IsLocomotor) explains that a locomotor warhead's damage figure only has to beat the target's size for the lift to work; the wiki says the Magnetron cannot harm units directly. The two warheads differ (LocomotorBeam against vehicles, MagneShakeWH against buildings), so damage step 5 gives the family default, kinetic, the only type the magnetic family allows."
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "Root and silence are coded from the wiki's statement that a vehicle held in the air can neither move nor fire; the vehicle is still moved by the beam, which the pull-target pattern covers, so root's 'cannot move' is read as 'cannot move by itself'."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Beam, the family default and the sources' word. ModEnc's IsMagBeam page (https://modenc.renegadeprojects.com/IsMagBeam) says the game draws a wave from the target to the Magnetron when it fires on vehicles and the other way for buildings, and that the warhead goes off when the wave arrives."
+        },
+        {
+          "path": "strengths/2",
+          "note": "Firing over walls rests on the Fortress walls (Red Alert 2) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Fortress_walls_(Red_Alert_2)), which also says it can lift vehicles over walls."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "The Iron Curtain (Red Alert 2) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Iron_Curtain_(Red_Alert_2)) says a vehicle under the Iron Curtain cannot be lifted; that is a side-wide power, so it is noted here only."
+        },
+        {
+          "path": "combos/1",
+          "note": "The Yuri (faction) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Yuri_(faction)) names Yuri Clones and Masterminds as the units it drags vehicles toward; the manual only says Yuri's forces."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparison with the main battle tanks uses the Grizzly's and Rhino's land speeds from the registry's research notes; the Lasher tank page on the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Lasher_tank) gives the Lasher a speed between those two, also above the Magnetron's."
+        },
+        {
+          "path": "combos/4",
+          "note": "The Yuri (faction) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Yuri_(faction)) names Masterminds, with Yuri Clones, as the units it drags vehicles toward; the Magnetron page's AI lists send it out with Masterminds, and the manual only says Yuri's forces."
+        },
+        {
+          "path": "weaknesses/4",
+          "note": "CNCNZ's Yuri's units page says the beam can do heavy damage to buildings, which is not cited for this weakness. The weakness follows the Magnetron page, which measures the damage against other sides' artillery; the two need not clash, since a beam can hurt buildings badly and still work more slowly than the Prism Tank or V3."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "The three patch 1.001 fixes in the summary, and a Giant Squid letting go of a ship the beam lifts (counters/1), also appear on the Yuri's Revenge patch 1.001 page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Yuri%27s_Revenge_patch_1.001), which is no longer cited, to keep five sources; the Magnetron page's changelog and prose give the same points."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "assault",
+          "wanted": "siege (or disabler)",
+          "note": "The sources present it as Yuri's artillery and a vehicle-lifting support unit, but its beam is neither lobbed nor a missile, and it fails anti-armour's requires, so the steps fall through to the generalist fallback. Assault's description (leads pushes, brawls up close) does not fit a fragile long-range support vehicle."
+        },
+        {
+          "path": "roles",
+          "used": "assault, disabler",
+          "wanted": "anti-armour",
+          "note": "Its job is taking enemy vehicles out of the fight, but anti-armour needs armour-piercing, energy, electric or EMP damage or the infest-vehicle pattern; a pull that kills by dropping the victim meets none of them."
+        },
+        {
+          "path": "armament/0/damage",
+          "used": "kinetic",
+          "wanted": "no damage against vehicles (a pure move effect), shaking damage against buildings",
+          "note": "Against vehicles the beam only moves the target; harm comes from where it is dropped. No damage type stands for that, and kinetic (bullets and slugs) describes neither effect well."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "armament/0/family",
+          "rule": "weapon-families:magnetic allowed.target-types structure",
+          "note": "The same magnetic beam that lifts vehicles also damages buildings directly (manual and wiki); our magnetic family reaches only vehicles, low fliers and ships."
+        }
+      ],
+      "researched_by": "batch r1, agent J08-RA2",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra2.yuri.chaos-drone",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "yuri",
+      "name": "Chaos Drone",
+      "flavour_affinity": ["allied"],
+      "class": "drone",
+      "nature": "uncrewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "disabler",
+        "secondary": ["raider"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "War Factory",
+        "basis": "The Yuri's Revenge manual's tech table (printed page 19) lists the Chaos Drone in the War Factory row with no further building, and its wiki infobox gives tier 1. The official profile and the wiki's Psychic radar page still tie it to the Psychic Radar (see uncertain)."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 1000,
+        "basis": "Patch 1.001 raised its price (the infobox gives both); the 1.001 price is about a third above the main battle tank anchor, in the registry's medium band. The launch price was in the medium band too."
+      },
+      "mobility": {
+        "base": "wheels",
+        "handling": "steer",
+        "traits": [],
+        "speed": "fast",
+        "speed_raw": 2,
+        "notes": "Its wiki land speed is twice the Conscript's, so it outruns the Grizzly and Rhino main battle tanks; the wiki calls it fast. No text names its running gear: the render and voxel images on its wiki page show four wheels. Steer is the wheels default."
+      },
+      "body": {
+        "plan": "micro-bot",
+        "size": "small",
+        "notes": "A small four-wheeled robot buggy with a dome on top (the manual calls it a small vehicle). The wiki says it is small enough to get inside a Battle Fortress, whose seats take infantry, so the game handles it like a soldier: small."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class steps decided: the infobox armour type light maps to light. The wiki calls it very lightly armoured. Its infobox lists immunity to mind control and to radiation, and the wiki's Yuri war factory page adds immunity to enemy chaos gas; none of these is an armour model."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Skirmish has no fog of war, so the band is the registry's medium proposal. It lifts the shroud a little further than the Conscript does."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "Uncrewed: the wiki says an artificial intelligence drives it and the official profile calls it a robotic unit. One player is the drone."
+      },
+      "abilities": [
+        {
+          "name": "Chaos gas (deploy)",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "spam",
+          "summary": "On the deploy key the drone vents a cloud of hallucinogenic gas around itself. Enemy units caught in it go berserk for several seconds, and touching the gas again starts the clock over. Their owner loses command of them; they fire faster than normal (the official profile says at double speed) and choose targets among their own side's units and buildings before Yuri's forces, since a berserk unit counts its friends as enemies; none of them will target a Chaos Drone. They still belong to their owner, so they earn no rank for those kills and the drone's side can still shoot them. Animals such as attack dogs, robots and drones, and strong psychic units (Yuri Clones, Yuri Prime, Masterminds) are immune, and only units are affected. It can backfire: a berserk enemy beside the drone's own troops turns its faster fire on them too. From patch 1.001 the owner of a berserk GI or Guardian GI cannot deploy or pack it up.",
+          "patterns": ["confuse-enemies"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal"
+      },
+      "strengths": [
+        {
+          "ref": "pattern:confuse-enemies",
+          "why": "One drone can break up a big enemy formation or a tank rush: the berserk units fire faster and shoot each other first."
+        },
+        {
+          "ref": "speed:fast",
+          "why": "Fast enough to slip into enemy bases and formations before they react."
+        },
+        {
+          "ref": "nature:uncrewed-machine",
+          "why": "A robot with no mind to take: immune to mind control, to enemy chaos gas and to radiation, which makes it unusually good against an enemy Yuri army."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:light",
+          "why": "Very lightly armoured, so base defences, missile units and aircraft destroy it quickly."
+        },
+        {
+          "ref": "pattern:confuse-enemies",
+          "why": "The gas is its only tool: no gun to defend itself, the effect is short, dogs, robots and psychic units ignore it, and berserk enemies near its own troops fire on them faster too."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "It cannot fight back against aircraft, which the wiki lists among its worst threats."
+        },
+        {
+          "ref": "weapon:rockets",
+          "why": "Missile-armed enemies, which the wiki lists with base defences among its worst threats, destroy its thin hull before it gets close enough to release its gas."
+        },
+        {
+          "ref": "nature:uncrewed-machine",
+          "why": "Robots and drones are immune to the gas, so they can hunt the defenceless drone freely."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Stops a massed tank rush: a whole armoured column turns its guns on itself for a while, and the official profile calls this its best use; enemy mind control cannot take it either, so it can drive into a Yuri army and set its tanks on each other, though Yuri's stronger psychic units ignore the gas."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:assault",
+          "why": "A follow-up attack exploits the short window while the enemy fights itself; the official profile advises using it to soften the enemy before an offensive."
+        },
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "Small enough to ride in a vehicle whose riders fire from inside, it can release its gas from within a Battle Fortress."
+        },
+        {
+          "ref": "unit:ra2.allied.battle-fortress",
+          "why": "The wiki names the Battle Fortress as a carrier it can gas from inside. The Fortress is an Allied unit, not part of Yuri's arsenal, so a Yuri player must first take one, for instance by mind control, which it has no protection against."
+        }
+      ],
+      "memorable": "An unarmed robot buggy whose gas makes enemy armies turn their guns on each other for a few seconds, firing faster than they normally do.",
+      "as_player": "A fast, fragile T1 buggy with no gun. Drive into an enemy group and press your key to vent gas: enemies caught in it go berserk for a few seconds, firing faster and shooting their own teammates first while ignoring you. Get out before it wears off and keep your own team clear of their boosted fire. Robots, dogs and psychic units shrug it off, and aircraft and turrets pick you off.",
+      "sources": [
+        {
+          "url": "https://web.archive.org/web/20071215011040/http://www.ea.com/official/cc/redalert2/english/newunits-yuri2.jsp",
+          "title": "Yuri's new units 2 (Lasher, Gattling Tank, Chaos Drone and others), Command & Conquer: Red Alert 2 official site, archived by the Wayback Machine",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge launch site (snapshot of December 2007)",
+          "supports": ["roles", "nature", "crew", "abilities/0", "strengths/0", "counters/0", "combos/0"],
+          "note": "Application line: good for stopping a tank rush, which names no role. Its price and its Psychic Radar requirement predate patch 1.001 and the final tech table (see uncertain)."
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF), hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge (2001)",
+          "supports": ["tier", "body", "abilities/0"],
+          "note": "Tech table on printed page 19; the Chaos Drone entry on pages 20 and 21."
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Chaos_drone",
+          "title": "Chaos drone, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge 1.001",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "nature",
+            "crew",
+            "abilities/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters/0",
+            "combos",
+            "memorable"
+          ],
+          "note": "Infobox, the Game unit section and the patch 1.001 changelog. Its Official description quote box copies the Yuri's Revenge manual entry (printed pages 20 and 21)."
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/Psychedelic",
+          "title": "Psychedelic, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["abilities/0"],
+          "note": "The chaos warhead flag: affected units go berserk for a set time, ignore orders and treat friendly units as enemies when looking for targets; psionic-immune units are immune, the firer's own units are not affected, and only units, not buildings, are."
+        },
+        {
+          "url": "https://cncnz.com/games/yuris-revenge/yuris-units/",
+          "title": "Red Alert 2 - Yuri's Revenge: Yuri's Units, CNCNZ.com",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "supports": ["armament", "abilities/0"],
+          "note": "A long-standing fan site's unit list, largely reworded from the manual: the drone has no conventional weapon, releases its gas when deployed, and the berserk timer restarts each time a unit touches the gas. Its price for the drone disagrees with the infobox (see uncertain)."
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "tier",
+          "note": "The manual's tech table and the wiki infobox put it at the War Factory alone (tier 1), and so does the wiki's Yuri war factory page (https://cnc.fandom.com/wiki/Yuri_war_factory); the official profile and the wiki's Psychic radar page (https://cnc.fandom.com/wiki/Psychic_radar) say it needs a Psychic Radar. The registry note follows the table.",
+          "sources_disagree": true
+        },
+        {
+          "path": "cost_band",
+          "note": "CNCNZ lists a lower price that would fall in the low band; the wiki infobox gives the 1.001 price and the launch price, and both, like the official profile's launch price, are in the medium band.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0/cooldown",
+          "note": "The only figure is the gas's rate of fire in the infobox, in game frames. The wiki converts frames to seconds at different rates on different pages (the Chaos drone and Mastermind pages disagree), but either way the wait is a few seconds at most, so spam."
+        },
+        {
+          "path": "abilities/0/kind",
+          "note": "The manual and CNCNZ say it releases the gas when deployed, so it is an ability and the armament is empty, although the infobox gives the gas as a ground attack. The wiki's Yuri (faction) page (https://cnc.fandom.com/wiki/Yuri_(faction)) says it can stay deployed for a long time or deploy again at will, which may make it a toggle; no page says whether it also vents gas on an attack order."
+        },
+        {
+          "path": "abilities/0",
+          "note": "How much faster berserk units fire: double speed by the official profile, greatly magnified attack power by the manual, a fire-rate boost by the wiki; no game figure was found.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0",
+          "note": "Why victims ignore the drone: the wiki says they never attack Chaos Drones, and ModEnc's BerserkFriendly page (https://modenc.renegadeprojects.com/BerserkFriendly) describes a flag that keeps berserk units from picking a unit type as a target; that the drone carries this flag is an inference. That they go for their own side first because they are usually surrounded by it, once friends count as enemies (ModEnc Psychedelic), is also an inference."
+        },
+        {
+          "path": "abilities/0",
+          "note": "Who the gas can hit besides enemies: ModEnc's Psychedelic page says the firer's own units are spared but, in a note marked as a tester's finding, that allied players' units can be affected (its AffectsAllies page, https://modenc.renegadeprojects.com/AffectsAllies, says this needs verification). The backfire in the summary follows the wiki: berserk enemies fire faster at the drone's own nearby troops. The Iron Curtain also protects units from it (the wiki's Iron Curtain (Red Alert 2) page)."
+        },
+        {
+          "path": "abilities/0",
+          "note": "The wiki's Yuri (faction) page says the gas drove enemy infantry berserk, while the official profile and the manual describe it against vehicles and tank rushes too; the entry follows the profile and the unit page, which cover all units."
+        },
+        {
+          "path": "mobility/base",
+          "note": "No text names its running gear; the wheels come from the render and voxel images on its wiki page."
+        },
+        {
+          "path": "body/size",
+          "note": "Small rests on the wiki's remark that it fits inside a Battle Fortress, whose seats take infantry; no source compares its size with a soldier's."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Raider enters only at roles.secondary step 4 (fast with light armour); the wiki's advice to use it in hit-and-run attacks supports it, but the drone deals no damage itself."
+        },
+        {
+          "path": "combos/2",
+          "note": "That a Yuri player can get a Battle Fortress by mind control rests on the Battle Fortress page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Battle_Fortress), which says Fortresses are open to mind control and that riders inside then follow the new owner."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J07-RA2"
+    },
+    {
+      "id": "ra2.yuri.slave-miner",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "yuri",
+      "name": "Slave Miner",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["logistics", "anti-infantry"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "War Factory",
+        "basis": "The Yuri's Revenge manual's tech table (PDF page 19) puts the Slave Miner in the War Factory row with no extra building, and the infobox gives tier 1. It can also be placed from the Construction Yard as an already deployed refinery once a Bio Reactor stands; that route is not on the registry's tier map and needs no tech step either."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 1750,
+        "basis": "Patch 1.001 raised its price from the launch figure; both prices sit at or above the very-high threshold, more than twice a Lasher tank's."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": ["deploy-anchor"],
+        "speed": "slow",
+        "speed_raw": 0.75,
+        "notes": "Slower than basic infantry and the Soviet War Miner, half as fast as the Rhino and slower still next to the Grizzly or Lasher; the wiki says its heavy armour costs it speed. Its deploy key sets it down as a refinery (see modes). Not amphibious: chronoshifted onto water it sinks. Handling is the tracks default."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "large",
+        "notes": "A whole ore refinery on a vehicle chassis: the manual says the entire structure drives to the ore and deploys. Too big for Yuri's Tank Bunker, which turns away ore miners (Tank bunker page). Its Slaves are separate infantry units (ra2.yuri.slave), not members of this unit: they walk after it, and its owner cannot order them."
+      },
+      "armour": {
+        "class": "heavy",
+        "models": ["self-repair"],
+        "notes": "Step 1 of the armour-class order decided: the infobox armour type Medium maps to heavy (the registry's map; ModEnc says only miners and the Kirov use that type). The wiki calls it far more heavily armoured than other miners, with very many hit points. Mobile, it mends itself; deployed, only an Engineer sent inside can repair it, since it cannot be repaired by hand like other structures, and a captured Machine Shop mends it only while it is mobile. Radiation does not hurt it, though it kills its Slaves."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "No fog of war in skirmish, so the band is the medium proposal (registry sight_reference). It lifts the shroud a little less far than the Conscript while mobile, and a little further once deployed."
+      },
+      "armament": [
+        {
+          "name": "20mm rapid machine gun",
+          "slot": "primary",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "summary": "It shares the Soviet War Miner's light machine gun, reaching about a third further than a Conscript's rifle. Enough to see off stray infantry and Terror Drones, but the wiki calls the miner a very weak attacker. It cannot fire at aircraft."
+        },
+        {
+          "name": "Cannon (elite)",
+          "slot": "acquired",
+          "family": "cannon",
+          "damage": "armour-piercing",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "condition": "Replaces the machine gun when the miner reaches Elite rank.",
+          "summary": "A tank gun firing high-explosive shells: slower-firing than the machine gun but heavier per shot, and by the War Miner page useful against armour and buildings as well as infantry. Like other units, the miner also gets the rank lifts its infobox lists (more strength, firepower and rate of fire); its page says it gets none, a claim noted in uncertain.",
+          "patterns": ["earn-veterancy"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player drives, fires the gun and deploys. Its voice lines are a foreman's; they change nothing. The Slaves are not seats or passengers."
+      },
+      "abilities": [
+        {
+          "name": "Deploy into refinery / pack up",
+          "kind": "deploy",
+          "source": "innate",
+          "summary": "Next to an ore field, the miner unfolds into a refinery building and sends out its Slaves, who dig the nearby ore and carry it back to be turned into money. Packing up turns it back into a vehicle, and the Slaves follow it on foot. If it travels far away its old Slaves can be stranded, and it cannot start mining again until they are gone (killed, or mutated into Brutes). Iron Curtain or Force Shield protection ends when it changes form.",
+          "patterns": ["deploy-siege-mode", "gather-resources"]
+        },
+        {
+          "name": "Slave replacement",
+          "kind": "triggered",
+          "source": "innate",
+          "summary": "Keeps up to five Slaves. Whenever one dies, the miner makes a new one after a delay, at no cost; mining slows until it arrives. The owner cannot build or command Slaves directly.",
+          "patterns": ["reinforce-squad"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "deployed",
+          "name": "Deployed refinery",
+          "via": "deploy-siege-mode",
+          "summary": "Cannot move. It becomes a structure that houses the Slaves' mining and processes their ore, and sees a little further. As a building it is safe from the Chronosphere, open to C4 like other structures, cannot be captured, and loses its self-repair: only an Engineer sent inside repairs it. Like any refinery it lets an enemy Spy who gets inside steal half its owner's money.",
+          "armour": {
+            "class": "heavy",
+            "models": ["flat-pool"]
+          }
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "When it is destroyed its Slaves are freed and join the player who destroyed it; since patch 1.001 that also holds when it is dropped into water, and before it they turned neutral. Freed Slaves can be ordered about and can fight with shovels, but can no longer mine, and the ore they carried is lost. If its owner recycles it in their own Grinder with the Slaves still out in the field, they turn neutral and attack anything nearby. The default for a crewed vehicle applies to the miner itself."
+      },
+      "strengths": [
+        {
+          "ref": "armour-class:heavy",
+          "why": "Far tougher than any other miner and unharmed by radiation; deployed, its huge health soaks fire while base defences work."
+        },
+        {
+          "ref": "armour-model:self-repair",
+          "why": "Mends itself while mobile, so it needs no repair building."
+        },
+        {
+          "ref": "size:large",
+          "why": "Partly because of its size, Terror Drones cannot get inside it, even while it drives, the only ground unit with that immunity."
+        },
+        {
+          "ref": "role:logistics",
+          "why": "Like every miner it cannot be mind-controlled."
+        },
+        {
+          "ref": "pattern:reinforce-squad",
+          "why": "Lost Slaves come back free, so harassment only slows its income."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "speed:slow",
+          "why": "Slower than infantry, so it takes a long time to reach a new ore field."
+        },
+        {
+          "ref": "weapon:machine-gun",
+          "why": "Its gun is weak and cannot fire at aircraft, leaving it helpless against air attack."
+        },
+        {
+          "ref": "pattern:gather-resources",
+          "why": "Its income depends on fragile Slaves on foot, who die quickly to anti-infantry fire and radiation."
+        },
+        {
+          "ref": "pattern:deploy-siege-mode",
+          "why": "Deployed, it cannot move or mend itself, only an Engineer can repair it, and it usually sits outside the Psychic Radar's cover, so Spies can slip in and steal money."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "It has no anti-air weapon; only its thick armour makes air strikes take several sorties."
+        },
+        {
+          "ref": "role:anti-infantry",
+          "why": "Viruses, Snipers, a Navy SEAL in an IFV or Iraqi Desolators kill the Slaves and stop the mining while replacements come."
+        },
+        {
+          "ref": "unit:ra2.yuri.virus",
+          "why": "Named by the wiki among the infantry killers that shut down its mining."
+        },
+        {
+          "ref": "role:infiltrator",
+          "why": "An Allied Spy that gets into the deployed refinery steals half the owner's money unless a psychic escort spots him."
+        },
+        {
+          "ref": "unit:ra2.allied.spy",
+          "why": "The Spy is the threat the wiki singles out, because the miner works away from the Psychic Radar's detection."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "pattern:infest-vehicle",
+          "why": "Terror Drones cannot get inside it, so it can shoot down stray drones that come at it."
+        },
+        {
+          "ref": "unit:ra2.soviet.terror-drone",
+          "why": "The drone the wiki names: it cannot infest the miner even while it drives, and the miner's gun picks it off."
+        },
+        {
+          "ref": "pattern:mind-control",
+          "why": "Yuri Clones, Masterminds and other mind-controllers cannot take it over."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "sensor:detector",
+          "why": "A Yuri Clone nearby sees through Spy disguises and guards the deployed refinery. The wiki also recommends Mastermind escorts, and the Yuri's Revenge manual credits every psychic unit with spotting Spies, though no page about the Mastermind confirms it."
+        },
+        {
+          "ref": "unit:ra2.yuri.yuri-clone",
+          "why": "Named by the wiki as the escort that stops Spies stealing from it; the AI also guards it with a Yuri Clone."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "It cannot fight aircraft, so the AI guards it with a Gattling Tank alongside two Lasher tanks."
+        }
+      ],
+      "memorable": "A refinery on tracks that parks beside the ore and puts five slaves to work, replacing each one that dies for free; destroy it and the slaves change sides.",
+      "as_player": "A slow, very tough economy vehicle for the team. Drive to an ore field and press deploy to become a refinery that sends five computer-run slaves out to dig money for your side; lost slaves return free after a while. Your machine gun only scares off stray soldiers and drones, so call for anti-air and spy-hunting escorts, and know that if you die your slaves join the enemy who killed you.",
+      "sources": [
+        {
+          "url": "https://web.archive.org/web/20080409151045/http://www.ea.com/official/cc/redalert2/english/newstructures-yuri.jsp",
+          "title": "Yuri's structures (Construction Yard, Slave Miner and others), Command & Conquer: Red Alert 2 official site, archived by the Wayback Machine",
+          "kind": "official",
+          "accessed": "2026-10-21",
+          "version": "Yuri's Revenge launch site (snapshot of April 2008)",
+          "note": "Application line: it turns ore into money, which names no role. Its text describes a mobile refinery that parks at an ore patch, becomes a refinery and sends out five Slaves, and replaces any Slave that is killed. Read from the copy-check cache's copy of this snapshot (fetched 2026-10-20); its cost and armour lines date from release and are not used.",
+          "supports": ["roles", "body", "abilities/0", "abilities/1"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Slave_miner",
+          "title": "Slave miner, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge 1.001",
+          "note": "Its quote box copies the Slave Miner entry of the Yuri's Revenge manual (PDF pages 22 and 23). Infobox: both prices, tier 1, armour type Medium, land speed, sight mobile and deployed, the gun and the elite cannon, up to five free Slaves, self-repair, mind-control immunity, engineer-only repair when deployed.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament",
+            "abilities",
+            "modes",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cncnz.com/games/yuris-revenge/yuris-units/",
+          "title": "Red Alert 2 - Yuri's Revenge: Yuri's Units, CNCNZ.com",
+          "kind": "guide",
+          "accessed": "2026-10-23",
+          "note": "A long-standing fan site's unit list, largely reworded from the manual, cited as the second site in place of a third Command & Conquer Wiki page. Its Slave Miner and Slave entries: the miner drives up to the ore and deploys, letting out up to five Slaves who dig with shovels and carry the ore back; it mends itself while mobile and needs an Engineer once deployed; dead Slaves are replaced free, their owner cannot command them, and when the miner is destroyed the surviving Slaves join whoever destroyed it as weak melee fighters. Read from the copy-check cache's copy (fetched 2026-10-20).",
+          "supports": ["body/notes", "abilities/0", "abilities/1", "on_death", "strengths/4"]
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF), hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "note": "Tech table on PDF page 19 (War Factory, no extra building); Slave Miner entry on pages 22 and 23; the Yuri Clone entry on page 20 lists miners among the units immune to mind control; the Spy list on page 14 (a Spy in a refinery steals half the money); Gameplay Changes item 20 on page 13 (every psychic unit and structure sees through a Spy's disguise).",
+          "supports": [
+            "tier",
+            "roles",
+            "armour",
+            "abilities/0",
+            "abilities/1",
+            "modes/0",
+            "strengths/3",
+            "counters/2",
+            "countered_by/3",
+            "combos/0"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/War_miner",
+          "title": "War miner, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "The Soviet miner whose gun the Slave Miner shares (Slave miner page): its machine gun is good for nothing but soldiers, and at Elite it becomes an auto-cannon firing high-explosive shells that also works against armour and buildings; an elite War Miner beats an elite Slave Miner.",
+          "supports": ["armament/0", "armament/1", "roles/secondary", "mobility"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Assault comes only from the step 5 fallback. Step 1 reads the designation first: the official profile's Application line (newstructures-yuri.jsp, now cited and read from the copy-check cache) says only that it turns ore into money, which names no role, as the registry note says. Step 2 does not apply because it fires its own gun, and step 4 finds no bonus: no source gives the gun extra damage against a kind of target, and the Slave Miner's own official text says nothing about its gun."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Logistics ranks at step 1 because the manual calls the unit the Slave Miner and sets it in place of Yuri's standard miner (miner is a logistics alias; RA2's official role-line notes count the unit's name). Anti-infantry ranks at step 3 and rests on the War miner page, which says the shared machine gun is useful only against soldiers."
+        },
+        {
+          "path": "mobility/base",
+          "note": "No text source says whether it runs on tracks or wheels; tracks is a judgement for a very heavy hauler."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "No source says whether it crushes infantry. The RA2 manual entry quoted on the War miner page says the War Miner does, as heavy vehicles do, but no page read says so for the Slave Miner, so crush is left out."
+        },
+        {
+          "path": "body/plan",
+          "note": "No source describes its shape beyond a refinery that drives, or says whether its gun sits on a turret. Hull with turret is the closest general vehicle body."
+        },
+        {
+          "path": "body/size",
+          "note": "Large is a judgement: no size example names a mining vehicle. The wiki ties its immunity to Terror Drones partly to its size, and the Tank bunker page on the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Tank_bunker) says ore miners are too big for the bunker; neither says it is twice a tank's size."
+        },
+        {
+          "path": "armament/0/mount",
+          "note": "No source says how the gun is mounted, so the machine-gun family default (free aim) is used."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Hitscan is the machine-gun family default; no source describes the shots."
+        },
+        {
+          "path": "armament/0",
+          "note": "No source says whether the gun still fires once the miner is deployed as a refinery; the weapon is recorded for the vehicle and the deployed mode's summary is silent on it."
+        },
+        {
+          "path": "armament/1/family",
+          "note": "The Slave miner page calls the elite weapon a tank gun and its infobox a cannon, while the War miner page calls the same weapon an auto-cannon; the infobox's slow rate of fire for it fits one heavy shell at a time, so cannon.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/1/damage",
+          "note": "The War miner page says the elite gun fires high-explosive shells, but no source says the hit hurts an area, so damage step 5 keeps the cannon default, armour-piercing, and no splash trait is set."
+        },
+        {
+          "path": "armament/1/summary",
+          "note": "The infobox's elite line lists more strength, firepower and rate of fire, the lifts every unit gets with rank, while the page's prose says the Slave Miner gets none of them, only the new gun, and so loses to an elite War Miner one-on-one. The summary follows the infobox, as the registry's RA2 veterancy note asks.",
+          "sources_disagree": true
+        },
+        {
+          "path": "modes/0/armour",
+          "note": "No source gives the deployed refinery's armour type; the class is kept, and only the loss of self-repair is recorded."
+        },
+        {
+          "path": "abilities/1/kind",
+          "note": "Triggered, because each Slave's death sets off one replacement; passive would also be arguable, since the miner keeps its count topped up all the time. ModEnc's SlaveRegenRate page (https://modenc.renegadeprojects.com/SlaveRegenRate) gives the delay as a rules setting but no figure for the Slave Miner, so no cooldown band is given."
+        },
+        {
+          "path": "strengths/3",
+          "note": "Mind-control immunity rests on the infobox and the manual's list of immune units, which names miners; the Yuri war factory page on the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Yuri_war_factory) repeats it."
+        },
+        {
+          "path": "abilities/0",
+          "note": "The loss of Iron Curtain or Force Shield protection on changing form rests on the Iron Curtain (Red Alert 2) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Iron_Curtain_(Red_Alert_2))."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparison with the War Miner uses the War miner page's land speed figure and the one with the Lasher the Lasher tank page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Lasher_tank); the Grizzly's and Rhino's speeds come from the registry's research notes."
+        },
+        {
+          "path": "on_death",
+          "note": "The two patch 1.001 changes used here, the price rise in cost_band and freed Slaves joining the player who freed them even when the miner is dropped into water, also appear on the Yuri's Revenge patch 1.001 page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Yuri%27s_Revenge_patch_1.001), which is no longer cited, to keep five sources; the Slave miner page's infobox and changelog give both. That freed Slaves can no longer mine and that the ore they were carrying is lost rests on the Slave (Yuri's Revenge) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Slave_(Yuri%27s_Revenge)), no longer cited since CNCNZ's Yuri's units page took its slot as a second site."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "assault",
+          "wanted": "logistics",
+          "note": "Its job is mining, but a designation that names no role and a gun fired by the unit itself send the role steps past step 2 to the generalist fallback. Logistics stays a secondary role."
+        },
+        {
+          "path": "body/plan",
+          "used": "hull-turret",
+          "wanted": "a body plan for a large hauler or mobile refinery",
+          "note": "No body plan covers a cargo or factory vehicle whose main body is its load rather than a gun turret or a passenger compartment."
+        },
+        {
+          "path": "on_death/outcomes",
+          "used": "bail-out",
+          "wanted": "minions defect to the killer",
+          "note": "What its death really does is free its worker units to the side that destroyed it; no on-death term describes followers changing sides."
+        },
+        {
+          "path": "modes/0",
+          "used": "no class or body change",
+          "wanted": "a structure class and body for a deployed building form",
+          "note": "Deployed it is a building, which no unit class or body plan describes, so the mode keeps the vehicle's class and body."
+        }
+      ],
+      "researched_by": "batch r1, agent J08-RA2",
+      "review": {
+        "status": "unchecked"
+      }
+    }
+  ]
+}

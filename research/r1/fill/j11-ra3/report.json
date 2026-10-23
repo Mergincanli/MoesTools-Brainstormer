@@ -1,0 +1,395 @@
+{
+ "label": "j11-ra3",
+ "game": "ra3",
+ "file_written": "data/units/ra3.json",
+ "units": [
+  "ra3.allied.tanya",
+  "ra3.allied.cryocopter"
+ ],
+ "validator_result": "OK. No errors, and no ATYPICAL lines for either new unit. The only warnings about them are the expected ones for planned patterns (throw-explosive on Tanya's C4; freeze-and-shatter on the Cryocopter). Guardian tank is now one of the 17 linked units not yet researched. The three samples are byte-identical to the originals.",
+ "copy_check_result": "Exit 0. Ran `node scripts/copy-check.mjs . --only \"Tanya_(Red_Alert_3)\" --only \"Boot_camp_(Red_Alert_3)\" --only \"Cryocopter\" --only \"S.H.R.I.N.K._beam\" --only \"RA3_Manual_-_PC.pdf\" --only \"Red_Alert_3/Allied_units\"`. It checked all 8 cited pages (all from cache, none fetched, none unchecked) and found no shared runs. One caveat: the manual PDF reaches the tool as raw PDF bytes, so its text is not really compared. I covered it with a local 6-word comparison using the tool's own words/grams functions. That compared every prose string of both units against text extracted from the RA3 and Uprising manual PDFs, and against every other page I read (cited or not). The first pass found two runs: the beam's dotted name and a short phrase about the unit doing no harm alone. I rewrote both, and the re-run is clean.",
+ "hesitations": [
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "roles/primary",
+   "chosen": "anti-infantry",
+   "alternatives": [
+    "anti-armour"
+   ],
+   "reason": "Step 4 gives both: the pistols can hit only infantry and official text praises them against infantry, while official text also says even the mightiest tanks fall to her charges. The largest bonus cannot be told, so I followed the step's fallback, the target official text names first; the profile and history name infantry (conscripts) first."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "roles/secondary",
+   "chosen": "[anti-armour]",
+   "alternatives": [
+    "infiltrator added",
+    "empty"
+   ],
+   "reason": "Anti-armour holds only because the C4 is coded armour-piercing (see armament/1/damage). I considered infiltrator for the buildings she blows up, but the infiltrator / anti-armour tie-break keeps infiltrator for spying, theft and sabotage from inside, and her charges are set from outside. Raider and scout fail their requires (she is medium speed). Recorded in uncertain."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "tier/gate",
+   "chosen": "Defense Bureau",
+   "alternatives": [
+    "Max Clearance"
+   ],
+   "reason": "Both are t3 gates in the tier_map and she needs both at 1.12. The RA3 note says only that she is t3 either way. The 'record the highest tech building' note is written for RA1/RA2. I picked the Defense Bureau because the registry suggestion gives it to the other units that need both, such as the FutureTank X-1. The Boot camp page lists only Max Clearance (uncertain, sources_disagree)."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "armour/class",
+   "chosen": "light",
+   "alternatives": [
+    "unarmoured"
+   ],
+   "reason": "Decided by the soldier rule. Her infobox names no armour set; one changelog line (beta 1.5) halves explosive damage to her, while the Conscript's set takes explosives in full. The rule does not say whether one known resistance, with the rest of her set unknown, counts as tougher armour than the basic rifle infantry."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "armament/1/damage",
+   "chosen": "armour-piercing",
+   "alternatives": [
+    "explosive (family default)"
+   ],
+   "reason": "There is no damage category, so step 5 applies. I took the armour-piercing exception because the sources present the charges as how she kills tanks and ships (official text; the patch 1.05 cursor over vehicles and ships). But the charges are just as much her anti-building tool, and the Boot camp line stresses buildings, which argues for the default. This choice also decides whether the anti-armour secondary role meets its requires."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "armament/1/range",
+   "chosen": "melee",
+   "alternatives": [
+    "short (explosives default)"
+   ],
+   "reason": "The source is clear that she must reach the target and plant the charge by hand. The melee coding rule and the melee/short tie-break speak of blows, leaps and latches, not of a placed charge."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "armament/1/can_target",
+   "chosen": "ground-vehicle, structure, naval",
+   "alternatives": [
+    "add infantry (can_target step 4)"
+   ],
+   "reason": "No source says the charges cannot be used on infantry, and step 4 fills unstated kinds. I left infantry out because every source pairs the charges with buildings, vehicles and ships, and the patch 1.05 C4 cursor shows only on vehicles and ships."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "armament/0/can_target",
+   "chosen": "infantry",
+   "alternatives": [
+    "infantry, ground-vehicle, structure, naval (step 4)"
+   ],
+   "reason": "Step 3 needs a label by target. The anti-infantry label sits on the Multigunner IFV's copy of her guns, which that page says has identical stats, not on her own weapon. StrategyWiki rules out aircraft."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "armament/0/delivery",
+   "chosen": "hitscan",
+   "alternatives": [
+    "projectile"
+   ],
+   "reason": "The rule was clear but the source was silent on how the shots travel, so I used the family default."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "abilities/0/patterns",
+   "chosen": "[] with fit_note rewind-self",
+   "alternatives": [
+    "heal-self",
+    "teleport",
+    "heal-self + teleport"
+   ],
+   "reason": "The Time Belt restores health and moves her, but only back to her own earlier state. Neither pattern gives the same counterplay (kill her inside the window, or camp the spot she returns to), so by the pattern-link test I linked neither."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "abilities/0/summary",
+   "chosen": "'several seconds', with the disagreement in uncertain",
+   "alternatives": [
+    "state the five-second or ten-second span"
+   ],
+   "reason": "The sources disagree: the wiki ability box gives half the span the manuals, StrategyWiki and the Time Belt page give. The figures rule does not list effect durations, so I wrote it as a comparison in words to be safe."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "countered_by/1",
+   "chosen": "damage:cryo",
+   "alternatives": [
+    "weapon:cryo",
+    "role:disabler"
+   ],
+   "reason": "Matchups rule 1. The Cryocopter page names a unit, so I used what makes it win. Weapon and kind of harm share one clause of the order, and I took the harm (freezing)."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "weaknesses/3",
+   "chosen": "tier:t3",
+   "alternatives": [
+    "leave the one-per-player/price weakness out"
+   ],
+   "reason": "There is no typed link kind for availability or cost, so the weakness about being one per player at a very high price can only hang on the tier."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "armament/1/patterns",
+   "chosen": "throw-explosive",
+   "alternatives": [
+    "no pattern"
+   ],
+   "reason": "The pattern summary says 'on a cooldown', but her C4 is on the attack order with no cooldown. I linked it because the registry notes table names Tanya's charge as the planted variant, the task asked for it, and throw-explosive is not on the Granularity mirroring list."
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "roles/primary",
+   "chosen": "disabler (step 2)",
+   "alternatives": [
+    "raider (step 5)"
+   ],
+   "reason": "Step 2 applies when 'its only weapon is a tool', and 'tool' is undefined. The profile says it carries no ordinary guns and can damage nothing, so I read the no-damage cryobeam as a tool. Read as an armed unit, steps 1, 3 and 4 give nothing (Special Weapons Support fails support's requires) and step 5 gives raider."
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "roles/secondary",
+   "chosen": "[]",
+   "alternatives": [
+    "[raider]"
+   ],
+   "reason": "Roles.secondary step 4 lists raider for a fast or very fast unit with light armour, but a candidate's description must also fit, and hit-and-run picking off of targets needs damage. Scout fails its tie-break. Recorded in uncertain."
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "armament/0/traits",
+   "chosen": "slow, root, silence",
+   "alternatives": [
+    "slow only (my first draft)",
+    "none (the cryo family and damage type already mean slow-then-freeze, as the IFV sample's Cryo Legionnaire beam is coded)"
+   ],
+   "reason": "Damage step 2 says to put a no-damage weapon's effect in traits. No trait names a full freeze, so root plus silence stand for it, as the EMP tie-break codes 'can do neither'. Recorded in a fit_note."
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "abilities/0",
+   "chosen": "targeted active ability, no weapon entry",
+   "alternatives": [
+    "alternate weapon plus toggle ability linking switch-weapon-mode"
+   ],
+   "reason": "The task asked me to cover switching between the beams, but no source describes a toggle. The Special ability page lists the shrink as a targeted ability and the infobox names it as the ability. The infobox also lists it among the guns with its own reach, and the manual calls the freeze ray the primary option. By the Weapons vs abilities convention, a shot from its own ability button is an ability."
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "body/size",
+   "chosen": "medium",
+   "alternatives": [
+    "large"
+   ],
+   "reason": "No dimensions are given. The manual calls it a light helicopter (the size list's medium example); large would follow if it were read as an attack helicopter."
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "armament/0/mount",
+   "chosen": "free-aim",
+   "alternatives": [
+    "body-aim"
+   ],
+   "reason": "The source does not say how the beam is mounted, so the family default fills in, per the aim tie-break's last line."
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "combos/0",
+   "chosen": "weapon:small-arms",
+   "alternatives": [
+    "damage:kinetic (my first draft)",
+    "weapon:shotgun"
+   ],
+   "reason": "Matchups rule 1 says name what the teammate fires when the source names a weapon. The Cryocopter page says even small-arms fire shatters frozen targets; the profile names a shotgun blast against buildings."
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "counters/0",
+   "chosen": "armour-class:>=heavy",
+   "alternatives": [
+    "class:vehicle",
+    "unit links to the Apocalypse tank or Dreadnought"
+   ],
+   "reason": "The Cryocopter page names Apocalypse tanks and Dreadnoughts, so I used what makes them the target: they are the heaviest units."
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "countered_by",
+   "chosen": "class:aircraft only",
+   "alternatives": [
+    "add role:anti-air"
+   ],
+   "reason": "Only StrategyWiki speaks to what beats it, and it names enemy aircraft. The list is shorter than the suggested two to five rather than resting a second link on nothing."
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "armament/0/can_target",
+   "chosen": "infantry, ground-vehicle, structure, naval",
+   "alternatives": [
+    "add low-air/high-air"
+   ],
+   "reason": "Under can_target step 1, list only what the sources name: surface targets, tanks, a war factory, Dreadnoughts, infantry. There is no airattack line. Naval follows its coding rule."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "abilities/0/patterns",
+   "used": "none",
+   "wanted": "rewind-self",
+   "note": "Time Belt: snap back to her own position and health from a few seconds earlier; teleport and heal-self each cover only half of it."
+  },
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "strengths",
+   "used": "no link",
+   "wanted": "pattern:rewind-self",
+   "note": "Her main survival tool has no link to hang a strength on."
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "abilities/0/patterns",
+   "used": "none",
+   "wanted": "shrink-target",
+   "note": "S.H.R.I.N.K. Beam: the target becomes faster but weaker, more fragile and crushable. mark-target and disable-machine do not match."
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "armament/0/traits",
+   "used": "slow, root, silence",
+   "wanted": "freeze",
+   "note": "No weapon trait names a full freeze (no moving, firing or abilities, then brittle)."
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "strengths",
+   "used": "no link",
+   "wanted": "pattern:shrink-target",
+   "note": "The shrink beam's strength has no link, so it lives only in the ability summary."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Tier gate when a unit needs two t3 gates",
+   "note": "Tanya needs both Max Clearance and the Defense Bureau. The 'record the highest tech building' note is written for RA1/RA2, and the RA3 notes say only that she is t3 either way, not which gate to write."
+  },
+  {
+   "topic": "Damage step 2 versus the cryo family",
+   "note": "Step 2 says to put a no-damage weapon's effect in traits, but the cryo family and the cryo damage type already mean slow-then-freeze. The IFV sample's Cryo Legionnaire beam has no slow, root or silence traits. Should a cryo weapon carry slow/root/silence or nothing?"
+  },
+  {
+   "topic": "Roles.primary step 2: 'its only weapon is a tool'",
+   "note": "'Tool' is not defined. A no-damage control beam such as the cryobeam is a weapon entry, yet an armed reading sends the Cryocopter to raider by step 5."
+  },
+  {
+   "topic": "Roles.secondary step 4 raider",
+   "note": "Step 4 lists raider for any fast or very fast unit with light armour, while candidates must also fit the role description. It is unclear which wins for a unit that does no damage."
+  },
+  {
+   "topic": "throw-explosive on a weapon with no cooldown",
+   "note": "The pattern summary says 'on a cooldown'. Tanya's C4 is on the attack order with no cooldown. The registry notes table still names it as the planted variant."
+  },
+  {
+   "topic": "Figures in text",
+   "note": "The figures rule lists prices, speeds, reaches, sight, cooldowns, damage and armour values. It does not say whether an effect's duration (the Time Belt's rewind span, the shrink's length) must also be written as a comparison."
+  },
+  {
+   "topic": "No typed link for availability or cost",
+   "note": "A weakness about being one per player or very expensive can only hang on tier:."
+  },
+  {
+   "topic": "Soldier rule with partial armour data",
+   "note": "Unclear whether a single known resistance (explosive damage halved by a patch) makes a soldier's armour tougher than the basic rifle infantry's when the rest of the set is unknown."
+  },
+  {
+   "topic": "Melee versus short for a placed charge",
+   "note": "The melee rule and the melee/short tie-break speak of blows, leaps and latches; a charge planted by hand at contact is not addressed."
+  }
+ ],
+ "new_mechanics": [
+  {
+   "unit": "ra3.allied.tanya",
+   "path": "abilities/0",
+   "proposed_id": "rewind-self",
+   "summary": "On a key, the unit snaps back to where it stood, at the health it had, a few seconds earlier, undoing damage and movement since, then waits out a recharge. Counterplay: burst it down inside the window or while the key recharges, freeze or disable it so it cannot use the key, or wait at the spot it will snap back to.",
+   "pages": [
+    {
+     "url": "https://cnc.fandom.com/wiki/Tanya_(Red_Alert_3)"
+    },
+    {
+     "url": "https://cnc.fandom.com/wiki/Tanya_(Red_Alert_3)/Profile"
+    },
+    {
+     "url": "https://cnc.fandom.com/wiki/Time_Belt"
+    },
+    {
+     "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/a/af/RA3_Manual_-_PC.pdf/revision/latest?cb=20220605033630"
+    },
+    {
+     "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Allied_units"
+    }
+   ]
+  },
+  {
+   "unit": "ra3.allied.cryocopter",
+   "path": "abilities/0",
+   "proposed_id": "shrink-target",
+   "summary": "On a key, shrink one enemy vehicle or ship for a time: it moves and fires faster but deals a fraction of its damage, reaches and sees less, takes double damage and can be crushed by any crushing vehicle (infantry are immune). Counterplay: pull the shrunk unit back until the effect wears off, keep crushers away from it, or shoot down the caster, which cannot fight back.",
+   "pages": [
+    {
+     "url": "https://cnc.fandom.com/wiki/S.H.R.I.N.K._beam"
+    },
+    {
+     "url": "https://cnc.fandom.com/wiki/Cryocopter"
+    },
+    {
+     "url": "https://cnc.fandom.com/wiki/Cryocopter/Profile"
+    },
+    {
+     "url": "https://cnc.fandom.com/wiki/Special_ability_(Red_Alert_3)"
+    },
+    {
+     "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Allied_Strategies"
+    }
+   ]
+  }
+ ],
+ "pages_read_not_cited": [
+  {
+   "url": "https://cnc.fandom.com/wiki/Advanced_aeronautics (its health and shroud boosts are mentioned in the Cryocopter's notes only)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Airbase"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Heightened_Clearance"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Red_Alert_3_beta_patch_1.3"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Red_Alert_3_beta_patch_1.5"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Red_Alert_3_patch_1.05"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Top_Secret_Protocol"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Veterancy"
+  },
+  {
+   "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert_3/Allied_Characters"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/File:CCRA3UP_pcMAN(EN_US).pdf (Uprising manual; mentioned in source notes as reprinting the base-game paragraphs)"
+  },
+  {
+   "title": "a Command & Conquer Wiki API search for Tanya (used to find titles, not a page)"
+  }
+ ],
+ "source_problems": "The session was cut off by the usage limit and resumed. I picked up from the drafts and cached pages I had saved inside the workspace under <workspace>/.j11-work. Before inserting the drafts I checked them again against the fields doc, the word lists, the ra3 registry entry and the registry notes. That folder (pages, the extracted manual text, both manual PDFs of about 9 MB, helper scripts) is still in the workspace. It is not part of data/; delete it if the merge should not see it.\n\nSource problems found:\n- How far back the Time Belt goes is disputed: the wiki's ability box on Tanya's page gives half the span that both manuals, StrategyWiki and the Time Belt page give (uncertain, sources_disagree).\n- The Boot camp (Red Alert 3) page omits the Defense Bureau requirement that patch 1.11 added, which her infobox, the Defense bureau page, the Max Clearance page and the patch notes all give (uncertain, sources_disagree).\n- The Cryocopter infobox lists the SHRINK beam both among its guns (with its own reach) and as its ability. Its health is given per version: the 1.12 value is lower, and Uprising keeps the older, higher one.\n- The official profiles were read only through the wiki's transcriptions. I did not open the archived originals on web.archive.org; the registry notes say it resets the connection from these sessions.\n- The copy-check cannot read the manual PDF's text, so I checked paraphrases of both manuals with a local 6-word comparison against the extracted text.\n- All 8 cited pages were served from the copy-check cache; nothing needed fetching."
+}

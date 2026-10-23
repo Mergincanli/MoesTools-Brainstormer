@@ -14,6 +14,7 @@ Next: step 3, the research run, starting with batch R1. The generator and the ap
 - [Samples](docs/samples.md): three researched units (RA3 Terror Drone, Hammer Tank, Multigunner IFV), three mechanic patterns and an example concept card.
 - [Vocabularies](docs/vocabularies.md): the fixed word lists every record uses (version 1.0.0, approved), with each term's coding rule and each list's tie-breaks.
 - [Fields](docs/fields.md): every field of every record type.
+- [Research runbook](docs/research-runbook.md): how a research batch runs step by step, its quality checks, and the night shift.
 
 ## Layout
 
@@ -23,7 +24,7 @@ Next: step 3, the research run, starting with batch R1. The generator and the ap
 | `schemas/` | JSON Schemas for every record type. |
 | `docs/` | Proposal, generated reference pages and the example concept card (`docs/examples/`). |
 | `scripts/` | Validator, docs builder, JSON formatter, copy-check, checker sampler, agreement measure, word-list diff and pattern sync. |
-| `research/` | Research working notes: `research/registry-notes/` has the notes for each research batch (games registry and patterns), `research/pilot/` the calibration pilot's record and report. |
+| `research/` | Research working notes: `research/registry-notes/` has the notes for each research batch (games registry and patterns), `research/pilot/` the calibration pilot's record and report, `research/r<N>/` each batch's record, `research/workflows/` the batch's workflow scripts. |
 | `tests/` | Tests for the scripts (`node:test`). |
 | `.github/workflows/` | CI, which runs `npm run check` on every push to `main` and every pull request. |
 
@@ -44,7 +45,7 @@ You need Node.js 22 or newer; `npm install` refuses older versions. Install once
 | `npm run docs:check` | Fails if a generated page is out of date. |
 | `npm test` | Runs the tests in `tests/`. |
 | `npm run copy-check` | Fetches every page the data cites and flags any run of six or more words that a record shares with a page it cites. Add `--also <folder>` to check notes too (see the options below). |
-| `npm run sample -- --seed <text>` | Picks what the research checker re-checks: 1 in 5 units per game (at least 3) and every proposed pattern. The same seed always gives the same pick; add `--game <id>` for one game and `--json` for output a script can read. |
+| `npm run sample -- --seed <text>` | Picks what the research checker re-checks: 1 in 5 units per game (at least 3) and 1 in 3 proposed patterns (at least 3). The same seed always gives the same pick; add `--game <id>` for one game, `--all-patterns` to list every proposed pattern (as batch R1 did) and `--json` for output a script can read. |
 | `npm run agreement -- <folder>` | Measures how often independent coders agree, field by field, on the same units: `<folder>` holds one folder of unit files per coder (folders with no unit files, such as notes, are skipped and named). Add `--reference <folder>` to compare each coder with other unit files (such as `data/units`), `--json` for output a script can read, or `--table <file>` for codings that are not units (whole numbers count as counts; for decimals the table can give a `tolerance` and a `step`, see the script's header). Used by the calibration pilot. |
 | `npm run vocab-diff -- <old> [<new>]` | Lists what changed in the word lists between two versions: each version is a folder of word lists or a git commit (its `data/vocab/`); `<new>` defaults to `data/vocab`. |
 | `npm run sync-patterns` | Fills in each pattern file's `source_units` from the units that link it (through abilities, weapons and modes). Research agents never run it and never edit an existing pattern file: they run `npm run validate`, which warns while a list is out of date (a new pattern they write gets its first list by hand). The merge pass runs it once, then `npm run docs`, then `npm run check:merge`. |

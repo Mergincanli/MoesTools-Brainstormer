@@ -1,0 +1,512 @@
+{
+ "label": "j08-ra2",
+ "game": "ra2",
+ "file_written": "data/units/ra2.json",
+ "units": [
+  "ra2.yuri.magnetron",
+  "ra2.yuri.slave-miner"
+ ],
+ "validator_result": "OK. The only ATYPICAL line about these units is 'weapon-families:magnetic allowed.target-types structure' on ra2.yuri.magnetron. It is recorded in that unit's atypical list at armament/0/family, with a note. The remaining WARN lines are the expected planned-pattern and unresearched-unit warnings.",
+ "copy_check_result": "Exit 0 ('OK: no shared runs'). I ran it with --only for all 8 cited URLs (the Magnetron, Magnetic_beam, YR manual transcript, YR patch 1.001, Slave_miner, Slave_(Yuri's_Revenge) and War_miner pages, plus the YR manual PDF), and all 8 were checked with none skipped. The first run exited 1 with 8 shared runs. I rewrote them all and it then passed. One gap: the copy-check caches the PDF as raw PDF bytes, so it does not really check wording against the manual. I checked that by hand instead, scanning both entries' prose against a text extract of the YR manual for 6-word runs, and found none.",
+ "hesitations": [
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "roles/primary",
+   "chosen": "assault",
+   "alternatives": [
+    "siege",
+    "disabler",
+    "anti-armour"
+   ],
+   "reason": "The rule is clear but the result fits badly. Step 1: the registry note says the Application line names no role (I could not read it myself, see source_problems). Step 3: siege's coding rule needs a lobbed, dropped or deployed-area weapon, or a missile or rocket built to destroy structures, and this is a straight beam. Step 4: no bonus, and anti-armour's requires fail (kinetic damage, and pull-target is not infest-vehicle). So step 5 gives assault, whose description does not fit this unit."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "roles/secondary",
+   "chosen": "[disabler]",
+   "alternatives": [
+    "siege",
+    "anti-armour",
+    "empty"
+   ],
+   "reason": "Disabler's requires are met by the pull-target pattern (category control) and by the root and silence traits. Siege's coding rule binds secondary roles too, and anti-armour fails its requires. The wiki's 'artillery' wording is the wiki's own, not official text."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "armament",
+   "chosen": "one entry (Magnetic beam)",
+   "alternatives": [
+    "two entries: the anti-vehicle LocomotorBeam and the anti-building MagneShakeWH"
+   ],
+   "reason": "The game data has two warheads with different reach and rate of fire. The wiki infobox and the Magnetic beam page treat them as one weapon. Weapon entries rule 1 (one in-game weapon) and rule 2 (one family on one attack order) both give one entry, but whether the 'in-game weapon' is the data pair or the sources' single beam was a judgement call."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "armament/0/family",
+   "chosen": "magnetic",
+   "alternatives": [
+    "a separate damaging family for the building attack"
+   ],
+   "reason": "Rule 1 codes the family as the weapon works against its main target, the one the sources name first (vehicles). Listing structures breaks the magnetic family's target list, so that is recorded as atypical."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "armament/0/damage",
+   "chosen": "kinetic",
+   "alternatives": [
+    "no damage type fits"
+   ],
+   "reason": "Damage step 5 gives the family default, because the weapon has different warheads against different targets. Kinetic is the only type magnetic allows, but it describes neither the lift (no real damage) nor the building shake. Recorded as a fit_note."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "armament/0/traits",
+   "chosen": "[min-range, root, silence]",
+   "alternatives": [
+    "[min-range]",
+    "[min-range, silence]"
+   ],
+   "reason": "The wiki says a lifted vehicle is immobilized and cannot fire. I borrowed the EMP tie-break's 'root and silence when they can do neither', which is written only for EMP. Root's wording (cannot move but can still fire) does not quite fit a target that is being dragged."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "armament/0/range",
+   "chosen": "long",
+   "alternatives": [
+    "off-screen"
+   ],
+   "reason": "Its reach exceeds its Sight figure, but sensors.basis is a proposal, so the first off-screen reason has no sight figure to compare against (registry Shroud and sight note), and no source mentions spotters."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "armament/0/delivery",
+   "chosen": "beam",
+   "alternatives": [
+    "projectile"
+   ],
+   "reason": "ModEnc IsMagBeam says a wave travels between target and firer before the warhead goes off. The sources describe a beam held on the target, and beam is the family default."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "armament/0/can_target",
+   "chosen": "[ground-vehicle, naval, structure]",
+   "alternatives": [
+    "add low-air"
+   ],
+   "reason": "Landed aircraft can be lifted, but a flier that can be hit only on the ground is not an air target (can_target rule). Infantry are left out because the manual says it cannot drag them and has no weapon against them."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "armament/0/mount",
+   "chosen": "slow-turret",
+   "alternatives": [
+    "free-aim"
+   ],
+   "reason": "Aim tie-break step 5: the main turret of a large ground unit. The turret itself is only implied by the manual's Tank Bunker line."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "body/plan",
+   "chosen": "hull-turret",
+   "alternatives": [
+    "launcher-rack"
+   ],
+   "reason": "The source is unclear. The manual implies a turret and the Magnetic beam page calls it an EM tank, but an artillery vehicle carrying an exposed emitter could be read as a launcher rack."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "body/size",
+   "chosen": "large",
+   "alternatives": [
+    "huge"
+   ],
+   "reason": "The size rule says examples win (tanks and self-propelled guns are large). The Amphibious Transport counts it at six slots, double a regular vehicle, which by measurement could mean huge, and huge also needs T3."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "mobility/base",
+   "chosen": "tracks",
+   "alternatives": [
+    "wheels"
+   ],
+   "reason": "No text source says which. Tracks rest on its being called an EM tank."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "abilities",
+   "chosen": "empty",
+   "alternatives": [
+    "a 'drop target' ability"
+   ],
+   "reason": "Dropping the victim is done with the stop or move orders, which are basic orders. The manual's 'when deployed against vehicles' means used against vehicles, not a deploy key."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "counters/0 and countered_by/4",
+   "chosen": "class:vehicle in both",
+   "alternatives": [
+    "only in counters"
+   ],
+   "reason": "Matchups rule 6 allows the same link in both lists when the situations differ: lone vehicles are lifted, while massed tanks overwhelm it because it holds one target at a time."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "combos/3",
+   "chosen": "role:anti-infantry",
+   "alternatives": [
+    "leave out"
+   ],
+   "reason": "This rests on the counters section of the Magnetron page plus its AI-behaviour section (Brute and Gattling escorts). No source states the combo outright."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "roles/primary",
+   "chosen": "assault",
+   "alternatives": [
+    "logistics"
+   ],
+   "reason": "The rule is clear but the result is odd. Step 1 reads the designation, which the registry says names no role, so the manual's 'miner' wording is not used there. Step 2 needs an unarmed unit or guns fired only from other seats, and the miner fires its own gun. Steps 3 and 4 give nothing, so step 5 gives assault."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "roles/secondary",
+   "chosen": "[logistics, anti-infantry]",
+   "alternatives": [
+    "[logistics]",
+    "[logistics, assault-like]"
+   ],
+   "reason": "Logistics ranks at step 1 by counting the unit's name ('Miner') in official text. The RA2 role-line notes count names, but the RA1 notes say names never count, so this is a judgement. Anti-infantry rests on the War miner page's words about the shared machine gun (small arms that do little to vehicles)."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "body/plan",
+   "chosen": "hull-turret",
+   "alternatives": [
+    "casemate",
+    "box-carrier",
+    "launcher-rack"
+   ],
+   "reason": "No source describes its shape or turret, and no body plan fits a mobile refinery. Recorded as a fit_note."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "body/size",
+   "chosen": "large",
+   "alternatives": [
+    "huge"
+   ],
+   "reason": "No size example covers mining vehicles. The wiki says its size partly explains its drone immunity, and it is too big for the Tank Bunker, but no source says it is twice a tank's size, and huge needs T3."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "mobility/base",
+   "chosen": "tracks",
+   "alternatives": [
+    "wheels"
+   ],
+   "reason": "No text source says which."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "mobility/traits",
+   "chosen": "[deploy-anchor]",
+   "alternatives": [
+    "[deploy-anchor, crush]",
+    "[]"
+   ],
+   "reason": "Deploy-anchor matches its deploy key and mode. Crush is left out because no source shows this unit crushing (the RA2 manual says it only for the War Miner and heavy vehicles generally)."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "armament/0/family",
+   "chosen": "machine-gun",
+   "alternatives": [
+    "autocannon"
+   ],
+   "reason": "It is named a '20mm rapid machine gun'. By the tie-break, what it fires decides, and the sources call it a machine gun, not shells."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "armament/0/mount",
+   "chosen": "free-aim",
+   "alternatives": [
+    "slow-turret"
+   ],
+   "reason": "No source describes the mount, so the family default fills in, as the aim tie-break's last sentence says. That sits awkwardly with the hull-turret body."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "armament/1/family",
+   "chosen": "cannon",
+   "alternatives": [
+    "autocannon"
+   ],
+   "reason": "The sources disagree: the Slave miner page says tank gun and cannon, the War miner page says auto-cannon. Its slow rate of fire fits one heavy shell at a time."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "armament/1/damage",
+   "chosen": "armour-piercing",
+   "alternatives": [
+    "explosive"
+   ],
+   "reason": "The War miner page says high-explosive shells, but step 5's explosive exception needs a source saying the hit hurts an area, and none does."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "abilities/0/patterns",
+   "chosen": "[deploy-siege-mode, gather-resources]",
+   "alternatives": [
+    "deploy-siege-mode only, plus a separate gather passive"
+   ],
+   "reason": "The abilities rule is one entry per button. Deploying is what sets the Slaves mining, so gather-resources goes on the same entry."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "abilities/1/kind",
+   "chosen": "triggered",
+   "alternatives": [
+    "passive"
+   ],
+   "reason": "Passive/triggered tie-break: each death causes one replacement, but the miner can also be read as keeping its count topped up all the time."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "abilities/1/patterns",
+   "chosen": "[reinforce-squad]",
+   "alternatives": [
+    "launch-drones",
+    "[] with a new pattern"
+   ],
+   "reason": "The interaction and counterplay match (bodies come back, and killing the source ends it), but the pattern speaks of a squad's own members, while the Slaves are separate units, replaced automatically and free. Launch-drones needs minions that fight and return or expire. Recorded as a fit_note."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "modes/0",
+   "chosen": "base form = vehicle; mode 'deployed' via deploy-siege-mode with armour {heavy, flat-pool}",
+   "alternatives": [
+    "base form = refinery",
+    "no mode armour"
+   ],
+   "reason": "It can be built in either form and both carry the name, so I took the vehicle as base (a 'miner'). The deployed armour type is not given anywhere; only the loss of self-repair is sourced."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "tier/gate",
+   "chosen": "War Factory",
+   "alternatives": [
+    "Construction Yard (with Bio Reactor)"
+   ],
+   "reason": "Only the War Factory is on the registry's tier map. The construction-yard route is named in the basis."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "on_death",
+   "chosen": "bail-out, proposal",
+   "alternatives": [
+    "an in-game outcome for the Slaves defecting"
+   ],
+   "reason": "No on-death term covers followers changing sides, so the 3C default applies and the defection goes in notes and a fit_note."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "strengths/2 and strengths/3",
+   "chosen": "size:large (Terror Drone immunity), role:logistics (mind-control immunity)",
+   "alternatives": [
+    "armour-class:heavy",
+    "nature:crewed-machine"
+   ],
+   "reason": "Matchups rule 1 says to hang a reason on the part behind it. The wiki ties drone immunity partly to size, and the manual ties mind-control immunity to miners as a class."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "armament/1/summary",
+   "chosen": "follow the page prose (no veterancy stat bonuses)",
+   "alternatives": [
+    "follow the infobox elite line"
+   ],
+   "reason": "The sources disagree. Recorded with sources_disagree."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "roles/primary",
+   "used": "assault",
+   "wanted": "siege (or disabler)",
+   "note": "A beam artillery vehicle cannot be siege under the coding rule, and the role steps fall through to the generalist fallback."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "roles",
+   "used": "assault, disabler",
+   "wanted": "anti-armour",
+   "note": "Its job is removing vehicles, but anti-armour's requires (AP, energy, electric or EMP damage, or infest-vehicle) do not cover killing by pull-and-drop."
+  },
+  {
+   "unit": "ra2.yuri.magnetron",
+   "path": "armament/0/damage",
+   "used": "kinetic",
+   "wanted": "no damage against vehicles (a pure move effect) and shaking damage against buildings",
+   "note": "No damage type stands for a weapon that only moves its target."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "roles/primary",
+   "used": "assault",
+   "wanted": "logistics",
+   "note": "An armed miner whose designation names no role falls through to assault."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "body/plan",
+   "used": "hull-turret",
+   "wanted": "a body plan for a large hauler or mobile refinery",
+   "note": "No body covers a cargo or factory vehicle."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "on_death/outcomes",
+   "used": "bail-out",
+   "wanted": "minions defect to the killer",
+   "note": "Its Slaves join whoever destroys it, and no term covers that."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "modes/0",
+   "used": "no class or body change",
+   "wanted": "a structure class and body for a deployed building form",
+   "note": "The deployed form is a building."
+  },
+  {
+   "unit": "ra2.yuri.slave-miner",
+   "path": "abilities/1/patterns",
+   "used": "reinforce-squad",
+   "wanted": "a pattern for worker minions that respawn at their master for free",
+   "note": "Loose fit: the Slaves are separate, uncontrollable units, replaced automatically and at no cost."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Siege coding rule and beam artillery",
+   "note": "The Magnetron is Yuri's anti-building artillery by every source's description, but siege needs a lobbed, dropped or deployed-area weapon, or a structure-killing missile or rocket. A straight beam cannot qualify, and with anti-armour also failing its requires, the unit falls to the assault fallback. Should a long-range weapon that the sources say exists mainly to hit buildings give siege, whatever its delivery?"
+  },
+  {
+   "topic": "Role steps for armed workers",
+   "note": "Roles step 2 covers only unarmed workers, or workers whose guns sit in other seats. A self-defence gun on a miner whose official designation names no role sends it to assault, while the War Miner and Chrono Miner get logistics only because they have no designation. Whether the unit's own name counts in roles.secondary step 1 is also unclear: the RA2 notes count names, the RA1 notes forbid them."
+  },
+  {
+   "topic": "Weapon entries: one sourced weapon vs two data weapons",
+   "note": "The game data gives the Magnetron two weapons (one per target kind, each with its own reach and rate of fire), while the wikis present one Magnetic beam. Rule 1 ('one in-game weapon') does not say whether the data or the sources' naming decides."
+  },
+  {
+   "topic": "Root and silence on a pulled target",
+   "note": "The EMP tie-break's 'root and silence when they can do neither' is written for EMP only. Root's description ('can still fire') and the pull-target pattern (which only moves the target) leave unclear how to code a pull that also stops the victim acting."
+  },
+  {
+   "topic": "Size: examples vs transport slots",
+   "note": "The size rule says examples win over measurements. The Magnetron takes as many transport slots as the Apocalypse or the MCV, but the self-propelled gun example puts it at large."
+  },
+  {
+   "topic": "Deployed building modes",
+   "note": "A vehicle that deploys into a structure has no class or body for that form, and no rule says how its armour is coded when the building's armour type is not given."
+  },
+  {
+   "topic": "Spawned helper units recorded separately",
+   "note": "The Slaves are separate units, but no field links the spawner to its spawns (no spawn or minion slot), and reinforce-squad is written for a squad's own members. It is unclear whether the free replacement of separately recorded minions should link reinforce-squad, launch-drones or a new pattern."
+  },
+  {
+   "topic": "Off-screen with a proposal sight band",
+   "note": "The Magnetron's reach exceeds its own Sight figure. The registry note says a proposal band uses no figure, so the weapon stays long. It is unclear whether that is intended for RA2, where Sight figures exist but no fog does."
+  },
+  {
+   "topic": "Veterancy multipliers vs elite weapon",
+   "note": "The Slave Miner gets the elite cannon but, per its page, none of the stat lifts. The infobox says the opposite. The registry's elite-weapon rule handles the weapon but not this conflict."
+  }
+ ],
+ "new_mechanics": [],
+ "pages_read_not_cited": [
+  {
+   "url": "https://cnc.fandom.com/wiki/Tank_bunker (named in uncertain entries of both units)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Amphibious_transport_(Red_Alert_2) (named in Magnetron uncertain body/size)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Fortress_walls_(Red_Alert_2) (named in Magnetron uncertain strengths/2)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Iron_Curtain_(Red_Alert_2) (named in uncertain entries of both units)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Yuri_(faction) (named in Magnetron uncertain combos/1)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Lasher_tank (named in uncertain entries of both units)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Yuri_war_factory (named in Slave Miner uncertain strengths/3)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Psychic_radar"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Mind_control"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Terror_Drone_(Red_Alert_2)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Gattling_tank_(Yuri%27s_Revenge)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Mastermind_(Yuri%27s_Revenge)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Robot_Tank"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Prism_tank_(Red_Alert_2)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Slave (disambiguation page)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Veterancy (Red Alert 2 section, from the shared cache)"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/IsLocomotor (named in Magnetron uncertain armament/0/damage)"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/IsMagBeam (named in Magnetron uncertain armament/0/delivery)"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/SlaveRegenRate (named in Slave Miner uncertain abilities/1/kind)"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Enslaves"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/SlavesNumber"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Slaved"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Harvester"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/ResourceGatherer"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Crusher"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Who_crushes_whom"
+  },
+  {
+   "url": "https://modenc.renegadeprojects.com/Magnetron and https://modenc.renegadeprojects.com/MagnetronLocomotor (both empty)"
+  }
+ ],
+ "source_problems": "1. The archived EA profiles could not be read. web.archive.org reset every connection from this session (curl error 35), and WebFetch refused the host. So newunits-yuri3.jsp (Magnetron) and newstructures-yuri.jsp (Slave Miner) were never opened. Their Application lines, which roles step 1 reads, come only from the registry note's statement that they name no role. Nothing in the entries rests on the profiles, and both units keep confidence high through the manual (the PDF plus the wiki's quote boxes and transcript).\n\n2. The copy-check cannot read the YR manual PDF: it caches it as raw PDF bytes. I hand-checked the paraphrases against a text extract of the PDF instead, and found no 6-word runs.\n\n3. Some codes rest on judgement because no text source covers them:\n- Neither unit's page says whether it runs on tracks or wheels.\n- No page describes the Slave Miner's shape, turret, crushing, or whether it fires while deployed.\n\n4. ModEnc's Magnetron and MagnetronLocomotor pages are empty. StrategyWiki has no page for either unit (its search found nothing), so every source but the manual is from the Command & Conquer Wiki.\n\n5. The Slave miner page's infobox (elite stat lifts) contradicts its prose (no veterancy multipliers). The Slave miner and War miner pages also disagree on what the elite weapon is (cannon vs auto-cannon). Both are recorded with sources_disagree."
+}

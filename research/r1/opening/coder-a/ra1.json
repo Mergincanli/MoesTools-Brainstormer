@@ -1,0 +1,327 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra1",
+  "units": [
+    {
+      "id": "ra1.soviet.mammoth-tank",
+      "game": "ra1",
+      "faction": "soviet",
+      "name": "Mammoth Tank",
+      "lineage": "mammoth-tank",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["anti-armour", "anti-air"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Tech Center",
+        "basis": "Built at the War Factory once a Soviet Tech Center stands; its infobox gives tier 3, and the manual's Tech Center entry names it among the high-tech units that building allows. The Service Depot requirement and the Allied side in the infobox apply only to Counterstrike's ant missions, which are left out."
+      },
+      "cost_band": {
+        "band": "high",
+        "raw": 1700,
+        "basis": "List price a little under twice the main-battle-tank anchor, which lands in high, just short of the very-high threshold. The Russian country discount is ignored, as the registry says."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": ["crush"],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "Its land speed equals the Rifle Infantry's, and the wiki says no vehicle in the game moves slower: half as fast as the Medium Tank and a little over half as fast as the Heavy Tank, the two main battle tanks. It runs over infantry (StrategyWiki, and the crusher flag in the game code); a force move sends it onto soldiers on purpose. Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "large",
+        "notes": "A tracked hull under one large turret with two cannon barrels. The code places the missile racks' firing point on the same turret line as the cannons, so both weapons turn together. The manual says no tank is bigger and the wiki calls it a super-heavy tank, but the code's size flag groups it with the Medium and Heavy Tanks (and the Ore Truck and MCV): vehicles drawn larger than one map cell but less than twice that. So it is coded large, a tank among tanks, not two tanks in size."
+      },
+      "armour": {
+        "class": "heavy",
+        "models": ["self-repair"],
+        "notes": "Step 1 decided: the infobox armour type Heavy maps to heavy, and the RA1 registry notes keep the Mammoth heavy. Check A does not apply, since the body is coded large. It has half again the health of the Medium and Heavy Tanks. It mends itself a little at a time whenever its health is at or below half, and the healing stops at half (wiki; the self-healing check in TECHNO.CPP). No source gives it facing armour. Side-wide powers stay off: the Soviet Iron Curtain can make it immune to damage for a while."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The infobox sight is exactly half again the Rifle Infantry's, a ratio on the edge, which goes to medium. It sees a little further than the Medium and Heavy Tanks. No sensor trait: it has no radar of its own and detects nothing hidden."
+      },
+      "armament": [
+        {
+          "name": "Twin 120mm cannons",
+          "slot": "primary",
+          "family": "cannon",
+          "damage": "armour-piercing",
+          "mount": "slow-turret",
+          "delivery": "projectile",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "naval"],
+          "traits": [],
+          "summary": "Two heavy guns fire a staggered pair of armour-piercing shells, a one-two blow that the wiki rates good against armour; because the shots come one after the other, the second often misses a target that keeps moving. Slow to fire, and unable to shoot aircraft. Reaches a little over one and a half times the Rifle Infantry's rifle. For each target the game compares how much this warhead and the missiles' warhead do to its armour type, and fires the better one, preferring a weapon already in range; only one of the two fires at a time."
+        },
+        {
+          "name": "Mammoth Tusk missiles",
+          "slot": "secondary",
+          "family": "rockets",
+          "damage": "explosive",
+          "mount": "slow-turret",
+          "delivery": "projectile",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure", "low-air", "high-air", "naval"],
+          "traits": ["anti-air", "magazine"],
+          "summary": "Two racks launch a pair of high-explosive missiles, then wait out a long reload. They hit targets on the ground and in the air: the manual says they make the tank good against infantry and aircraft, the wiki adds buildings, and both wikis say a soldier often dies to a single hit. They reach a bit further than the cannons, about two thirds again the rifle's range. The game uses them on every aircraft, which the cannons cannot hit, and on any ground target whose armour suffers more from their warhead. The wiki names the slow reload as the reason massed air attacks can overwhelm the tank."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player drives and fires both weapons. In the source only one weapon fires at a time, picked by the game for each target, and both sit on the one turret, so no gunner seat is proposed."
+      },
+      "abilities": [],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No page read shows what happens when it dies, so the 3C default applies. The game code may let one crewman, a rifleman with part of his health, run from a destroyed vehicle on an even chance if the rules mark the vehicle as crewed; no page read says whether the Mammoth is. Because it is so tough, its destruction also shakes the screen, which is only an effect."
+      },
+      "strengths": [
+        {
+          "ref": "armour-class:heavy",
+          "why": "Built to take a beating: heavy armour and half again the health of the main battle tanks."
+        },
+        {
+          "ref": "weapon:cannon",
+          "why": "The manual rates its twin cannons the most powerful guns on land; their quick one-two pair hits armour hard."
+        },
+        {
+          "ref": "weapon-trait:anti-air",
+          "why": "Unlike the main battle tanks it can fire back at aircraft: the missile racks reach every flier."
+        },
+        {
+          "ref": "damage:explosive",
+          "why": "The missiles often kill a soldier with one hit and also work well against buildings."
+        },
+        {
+          "ref": "armour-model:self-repair",
+          "why": "Mends itself without a trip to the Service Depot, as long as it has fallen to half health or below."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "speed:medium",
+          "why": "No other vehicle is slower; at half the Medium Tank's speed it cannot chase, and faster tanks can hit it and pull back."
+        },
+        {
+          "ref": "weapon-trait:magazine",
+          "why": "After each pair of missiles it reloads for a long time, which leaves it open to many aircraft at once."
+        },
+        {
+          "ref": "weapon:cannon",
+          "why": "Fires slowly, and the second shell of each pair tends to miss a target on the move."
+        },
+        {
+          "ref": "tier:t3",
+          "why": "Needs a Tech Center, costs about two main battle tanks and takes a long time to build."
+        },
+        {
+          "ref": "armour-model:self-repair",
+          "why": "The healing is slow and never lifts it above half health, so heavy damage still needs a depot."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:vehicle",
+          "why": "Cheaper basic tanks of either side, in numbers, can wear it down fairly easily, above all when they catch one alone with hit-and-run attacks it is too slow to answer."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "A concentrated air attack strikes while its missiles reload, and the cannons cannot fire upward at all."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "The missiles often kill a soldier in a single hit, and the tank can also roll over infantry."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "One against one it outguns any other tank: its twin cannons are the strongest guns on land."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "A lone aircraft or a small raid meets missiles that reach every flier, which the main battle tanks lack."
+        },
+        {
+          "ref": "target:structure",
+          "why": "The wiki calls the missiles effective against buildings, and StrategyWiki rates the tank strong against structures."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:vehicle",
+          "why": "The wiki warns it is most at risk when caught alone, so faster escort tanks that keep raiders off it suit it."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "Its missiles reload slowly, so extra anti-air cover helps against the massed air attacks the wiki warns about."
+        }
+      ],
+      "memorable": "Red Alert's biggest tank: twin cannons for armour, missile racks for infantry, buildings and even aircraft, and it mends itself, but only back up to half health.",
+      "as_player": "A slow T3 fortress. Left mouse fires the twin cannons, a staggered pair of anti-armour shells; right mouse fires the missile pair, which hits soldiers, buildings and aircraft and then reloads for a long while. The big turret turns slowly, so quick tanks can circle it. Below half health it slowly patches itself back to half, but no further, and it is too slow to escape a pack of faster tanks.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/File:Red_Alert_1_Manual.pdf",
+          "title": "Red Alert 1 Manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "1996 manual",
+          "note": "Westwood's printed manual, read in the PDF behind this file page; the Mammoth Tank entry is on PDF page 69 and the Technology Center entry a few pages earlier.",
+          "supports": [
+            "tier",
+            "roles/primary",
+            "roles/secondary",
+            "armament/0",
+            "armament/1",
+            "body",
+            "strengths/0",
+            "strengths/1",
+            "strengths/2",
+            "counters/0",
+            "counters/1",
+            "counters/2"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Mammoth_tank_(Red_Alert_1)",
+          "title": "Mammoth tank (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "Infobox for tier, price, health, armour type, land speed, sight, weapon reach and warheads; its quote box copies the manual paragraph.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable",
+            "lineage"
+          ]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Soviet_units",
+          "title": "Command & Conquer: Red Alert/Soviet units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "note": "Lists the two weapons one by one, with their targets, reach and warheads; names the cannons as anti-armour guns. Its Strong vs. lines are a guide's words, not official text.",
+          "supports": [
+            "armament/0",
+            "armament/1",
+            "roles/secondary",
+            "mobility/traits",
+            "armour/models",
+            "strengths/3",
+            "counters/0",
+            "counters/3"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UDATA.CPP",
+          "title": "REDALERT/UDATA.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The Mammoth's unit type (internal name 4TNK): crusher, turret, the firing points of both weapons along the turret line, and the large-unit size flag it shares with the Medium and Heavy Tanks.",
+          "supports": ["mobility/traits", "body", "armament/1/mount", "crew"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TECHNO.CPP",
+          "title": "REDALERT/TECHNO.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The self-healing check (one point at a time while health is at or below the yellow condition, half by default in RULES.CPP) and the routine that picks one of the two weapons for each target.",
+          "supports": ["armour/models", "armament/0", "armament/1", "crew"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "body/size",
+          "note": "Large or huge. The wiki's prose calls it a super-heavy tank and the manual says no tank is bigger, which points at huge's super-heavies; but its role line says heavy assault tank, the size rule treats a weight word as no size, and the code's size flag (explained in REDALERT/TYPE.H of the same source release) puts it in one class with the Medium and Heavy Tanks. Coded large. No page gives its footprint."
+        },
+        {
+          "path": "armour/class",
+          "note": "Heavy by step 1 and the RA1 registry notes. If the body were coded huge, check A (huge at t3) would make it super-heavy whatever the steps gave, so the class depends on the size call above."
+        },
+        {
+          "path": "armament/1/family",
+          "note": "Rockets, because no page read says the missiles steer or home in. The game rules file that names their projectile type is not in EA's source release, and the registry notes say the rules.ini downloads would not load; if those rules make the missiles homing, the family would be guided missiles with lock-on delivery."
+        },
+        {
+          "path": "armament/1/traits",
+          "note": "Magazine rests on the wiki naming the missiles' long reload as the reason air attacks can swamp the tank. The infobox and StrategyWiki give both weapons the same cooldown, so the reload may simply be the missiles' rate of fire after a two-missile burst."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "StrategyWiki names the cannons as anti-armour guns that target the ground, so can_target step 3 applies, and no page says the cannons damage buildings: structures are left out. StrategyWiki rates the tank as a whole strong against structures, and the wiki credits that to the missiles."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "The infobox gives one reach for ground and a slightly longer one for air without naming the weapons; StrategyWiki gives the shorter reach to the cannons and the longer one to the missiles. Both come out long either way, and neither reaches past the tank's own sight."
+        },
+        {
+          "path": "roles/primary",
+          "note": "Step 4 rests on the manual: the missiles make the unit good against infantry and air units, and the registry notes say text about a second weapon counts. No damage table was read, so the larger bonus cannot be told, and infantry, named first, wins. The cannon is the main weapon, but the manual's praise of it names no kind of target."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Anti-armour rests only on StrategyWiki's weapon heading, which calls the cannons anti-armour guns (roles.secondary: a source calls it an anti-tank weapon). The Command & Conquer Wiki only says their one-two shot works well against armour, which is words about what it is good at, and the manual's praise names no target. Without that heading anti-armour would stand on no step, and only anti-air would remain."
+        },
+        {
+          "path": "armour/models",
+          "note": "The wiki says the self-repair works only while the tank is not taking damage; the healing check in TECHNO.CPP tests only the health level, so it may also heal under fire. Self-repair is coded either way.",
+          "sources_disagree": true
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparisons with the main battle tanks (speed, health and sight, here and in armour.notes, sensors.notes and strengths) come from the infoboxes of the Heavy tank (Red Alert 1) and Medium tank (Red Alert 1) pages of the Command & Conquer Wiki, read but not cited."
+        },
+        {
+          "path": "on_death",
+          "note": "REDALERT/UNIT.CPP of the same source release gives a crewed vehicle without passenger seats an even chance of leaving one surviving rifleman, but whether the Mammoth carries the crewed flag is set in the rules file, which could not be read."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "anti-infantry",
+          "wanted": "assault",
+          "note": "By the written steps the manual's strong-against text decides, and it names infantry first, so the game's heaviest anti-armour cannon platform comes out primary anti-infantry. Assault cannot reach the secondary list either: RA1's rifle reach is so short that every tank gun bands long, and roles.secondary step 4 supports assault only with a short- or medium-range main weapon. The wiki's own role line calls it a heavy assault tank."
+        },
+        {
+          "path": "armour/models",
+          "used": "self-repair",
+          "wanted": "self-repair that stops at a health threshold",
+          "note": "The model says nothing about a cap; this tank heals only while at or below half health and never above it. The cap is in armour.notes."
+        }
+      ],
+      "researched_by": "batch r1, agent A",
+      "review": {
+        "status": "unchecked"
+      }
+    }
+  ]
+}

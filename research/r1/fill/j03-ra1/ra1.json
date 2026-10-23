@@ -1,0 +1,527 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra1",
+  "units": [
+    {
+      "id": "ra1.soviet.mad-tank",
+      "game": "ra1",
+      "introduced_in": "ra1-aftermath",
+      "faction": "soviet",
+      "name": "M.A.D. Tank",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": []
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Tech Center",
+        "basis": "Built at the Soviet War Factory once a Soviet Tech Center stands; its infobox gives tier 3, and the wiki's War Factory list files it under tier 3 as a unit of The Aftermath only. It counts as buildable in skirmish and in Aftermath-mode multiplayer, as the registry's version note says."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 2300,
+        "basis": "List price about two and a half times the main-battle-tank anchor, well past the very-high threshold, for a unit that is used up in a single blast. The Russian country discount is ignored."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": ["crush"],
+        "speed": "slow",
+        "speed_raw": 0.75,
+        "notes": "Built on the Mammoth Tank's chassis. Its land speed is three quarters of the Rifle Infantry's and of the Mammoth's, and well under half the Medium Tank's, so it is slower than both. It rolls over infantry (wiki; the crusher flag in the game code). Once its countdown starts it never moves again. Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
+      },
+      "body": {
+        "plan": "launcher-rack",
+        "size": "large",
+        "notes": "The wiki says it uses the Mammoth Tank's chassis and carries a large piston on its back that pumps faster as the charge builds; the code gives it no turret. Launcher-rack is the nearest body plan (an exposed device on a chassis with no passenger room), although the chassis is a heavy one, not a light one (see fit_notes). Coded large: it is a tank, and the code's sprite-size flag groups it with the Medium, Heavy and Mammoth Tanks."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the infobox armour type Heavy maps to heavy, and the RA1 registry notes step the M.A.D. Tank down to medium as a ground vehicle with less health than the main battle tanks. It has half the health of the Mammoth Tank whose chassis it uses, and the wiki stresses that it is far easier to destroy. The manual's Armor word (heavy) is a grade, not the class. The Soviet Iron Curtain, a side-wide power, can make it immune to damage for a while, which also holds back its countdown."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its sight is half again the Rifle Infantry's, exactly on the edge, which goes to medium; the Mammoth sees as far. No sensor trait. Its pulse reaches well past what it can see."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player drives and starts the countdown. In the source a single crewman climbs out when the countdown begins and runs off (wiki); the code makes him an unarmed civilian technician."
+      },
+      "abilities": [
+        {
+          "name": "Harmonic shock wave (activate)",
+          "kind": "active",
+          "cooldown": "per-life",
+          "source": "innate",
+          "patterns": ["self-destruct"],
+          "summary": "Clicking the selected tank on itself (in the Remastered Collection the Deploy key works too) sounds a siren and starts the charge. From then on the tank stays put and takes no more orders, and its lone crewman climbs out and runs. A piston on its back pumps faster and faster until the seismic pulse goes off and wrecks the tank itself. The charge cannot be called off: only destroying the tank first stops it, and then no pulse comes at all. While the Soviet Iron Curtain covers the tank, the charge cannot finish. The pulse reaches about as far as a nuclear blast, well beyond the tank's own sight. Every vehicle, ship and aircraft inside it, aircraft in flight included, loses a little under half of its own maximum health, and every building about two fifths, whichever side owns it and whatever its armour. Soldiers take no damage at all."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "in-game",
+        "notes": "The crewman gets out when the countdown starts, not at the moment of death; the tank then dies in its own pulse, which spares him. If enemies destroy the tank first, nothing explodes. The game code also gives a crewed vehicle without passenger seats an even chance of leaving one crewman when it is destroyed, if the rules mark it as crewed, which no page read shows for this tank."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:self-destruct",
+          "why": "One pulse strips a little under half of the maximum health from every vehicle, ship and aircraft in a very wide area, flying aircraft too, and a large share from every building; armour makes no difference, so the wiki notes that three pulses finish off anything that is not infantry."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "It runs over soldiers in its path, which the wiki says makes it dangerous to infantry even though its pulse leaves them unhurt."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:medium",
+          "why": "Far less armour than the Mammoth it is built on, with half its health, so focused fire can kill it before the countdown ends, and then the pulse never comes."
+        },
+        {
+          "ref": "pattern:self-destruct",
+          "why": "Once started it cannot be stopped or moved, its pulse hurts its own side's vehicles and buildings as much as the enemy's, and it does nothing to infantry, so the wiki calls it almost useless for defence."
+        },
+        {
+          "ref": "speed:slow",
+          "why": "Slower than the Rifle Infantry and the Mammoth, so it is slow to reach its target and easy to see coming."
+        },
+        {
+          "ref": "tier:t3",
+          "why": "Needs a Soviet Tech Center and costs about two and a half main battle tanks, all spent in one blast."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:infantry",
+          "why": "The pulse cannot hurt soldiers, so infantry can keep shooting it through the whole countdown; the wiki names infantry as its best counter."
+        },
+        {
+          "ref": "weapon:rockets",
+          "why": "The wiki singles out rocket infantry: soldiers the pulse cannot touch, carrying weapons that hurt vehicles."
+        },
+        {
+          "ref": "unit:ra1.shared.rocket-soldier",
+          "why": "Red Alert's own rocket infantry, the counter the wiki names: untouched by the pulse and armed against vehicles."
+        },
+        {
+          "ref": "pattern:become-invulnerable",
+          "why": "The charge cannot finish while the Soviet Iron Curtain covers the tank, and the game lets a Soviet player cast it on any vehicle, so an enemy Soviet player can stall it; anything under the curtain also shrugs off the pulse."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Every vehicle in the pulse loses the same large share of its maximum health whatever its armour, so a massed tank column is gutted at once."
+        },
+        {
+          "ref": "armour-class:heavy",
+          "why": "Damage by share of maximum health makes thick armour worthless: the toughest tanks lose as large a share as the lightest trucks."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Buildings in range lose a large share of their health to each pulse, and three pulses level any building, so a few of these tanks can break a base."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:ra1.soviet.mad-tank",
+          "why": "The wiki notes that three pulses in a row destroy any vehicle or building, provided the target gets no chance to repair in between."
+        },
+        {
+          "ref": "role:anti-infantry",
+          "why": "Soldiers are its counter and the pulse spares them, so escorts that clear infantry keep it alive through the countdown."
+        }
+      ],
+      "memorable": "A tank that is a countdown: once started, only its death stops the pulse that guts every vehicle and building around it, friend or foe, while soldiers walk away unhurt.",
+      "as_player": "A slow, unarmed T3 tank that is one big bomb. Drive into the enemy and press the key: the tank locks in place behind a siren and a long, loud charge, and when it ends every vehicle and building nearby, your team's too, loses a big share of its health. You hop out as a soldier when the charge starts and slip away, since the pulse spares soldiers. That same rule makes enemy infantry your hunters during the countdown.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/File:Red_Alert_-_The_Aftermath_-_English.pdf",
+          "title": "Red Alert: The Aftermath manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "1997 Aftermath manual",
+          "note": "Westwood's printed manual, read in the PDF behind this file page; the M.A.D. Tank entry is on PDF page 4. Its paragraph is the unit's official one-line description.",
+          "supports": ["roles/primary", "abilities/0", "weaknesses/1", "countered_by/0", "memorable"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/M.A.D._tank",
+          "title": "M.A.D. tank, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with The Aftermath",
+          "note": "Infobox for tier, price, health, armour type, land speed, sight and the Iron Curtain rule; its quote box copies the Aftermath manual paragraph. The prose gives the crewman, the share of health the pulse takes, its reach and the counters.",
+          "supports": [
+            "introduced_in",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "crew",
+            "abilities/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/War_factory_(Red_Alert_1)",
+          "title": "War factory (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "The Soviet tab lists it under tier 3, needing the Soviet Tech Center, marked as an Aftermath-only unit, with a one-line summary of the pulse.",
+          "supports": ["introduced_in", "tier", "abilities/0"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UNIT.CPP",
+          "title": "REDALERT/UNIT.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The M.A.D. Tank's countdown in the unload mission: an unarmed technician is placed next to the tank and sent away, the charge waits while the Iron Curtain lasts, mouse orders are ignored once the charge has begun, and at the end the tank is set to die and a local quake is started at its position.",
+          "supports": ["abilities/0", "on_death", "crew", "mobility", "countered_by/3"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/LOGIC.CPP",
+          "title": "REDALERT/LOGIC.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The quake loop: every object within the M.A.D. Tank's distance, whatever side owns it and aircraft included, takes damage equal to a set share of its own maximum health, buildings a different share and infantry none.",
+          "supports": ["abilities/0", "strengths/0", "weaknesses/1", "counters"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "abilities/0",
+          "note": "The pulse's sizes (a little under half of each vehicle's, ship's and aircraft's maximum health, about two fifths of each building's, over roughly a nuclear blast's area) come from the wiki's prose. The built-in defaults in REDALERT/RULES.CPP of EA's source release are different (half for units, a quarter for buildings, and a much wider reach), and the Aftermath rules file can override them; that file could not be read, so the entry follows the wiki."
+        },
+        {
+          "path": "abilities/0/kind",
+          "note": "Active or deploy. The Remastered Collection patch 735514 page (Command & Conquer Wiki, read, not cited) says the Deploy key starts it, and the tank never moves again once the charge starts, but it gains no mode: it only counts down to its own death. Coded active."
+        },
+        {
+          "path": "abilities/0/cooldown",
+          "note": "Per-life because the tank dies in its own pulse; no source gives a figure. No page gives the countdown's length either: in the code it is a delay from the rules (RULES.CPP default), scaled by the owner's fire-rate bonus, followed by the charging animation."
+        },
+        {
+          "path": "on_death",
+          "note": "Bail-out, basis in-game, because the cited wiki page shows the single crewman getting out on his own, as the registry notes ask. He leaves when the countdown starts rather than as the tank dies, and the code makes him an unarmed civilian technician, not a rifleman. Whether the rules also mark the tank as crewed, which would give an even chance of a survivor on an ordinary death, could not be checked."
+        },
+        {
+          "path": "body/plan",
+          "note": "REDALERT/UDATA.CPP of EA's source release (read, not cited) gives the tank no turret; the wiki describes the piston on its back. No body plan describes a heavy tank hull carrying a device instead of a gun; launcher-rack was taken as the nearest."
+        },
+        {
+          "path": "body/size",
+          "note": "Large as a tank on the Mammoth's chassis. REDALERT/UDATA.CPP gives it the sprite-size flag that REDALERT/TYPE.H explains (bigger than one cell but under two), which the Medium, Heavy and Mammoth Tanks share, while the Light Tank and the APC lack it."
+        },
+        {
+          "path": "mobility/base",
+          "note": "Tracks rests on the wiki's statement that it uses the Mammoth Tank's chassis; no page read names its drive outright."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "Crush rests on the wiki, which says it can crush infantry; REDALERT/UDATA.CPP's crusher flag and the registry's list of RA1 crushers agree."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The speed comparisons use the Mammoth tank (Red Alert 1) page of the Command & Conquer Wiki (read, not cited), whose infobox gives the Mammoth the Rifle Infantry's land speed and the same sight as this tank, and the Medium Tank's speed in the registry notes. The same page's health figure backs the health comparison in armour.notes."
+        },
+        {
+          "path": "countered_by/3",
+          "note": "REDALERT/HOUSE.CPP of EA's source release (read, not cited) lets the Iron Curtain be cast on any vehicle, building, ship or aircraft with no ownership check, and REDALERT/TECHNO.CPP skips all damage to an object while it is under the curtain. The wiki only says an enemy Soviet commander can exploit the rule."
+        },
+        {
+          "path": "armour/class",
+          "note": "The infobox type (Heavy) and the manual's grade (heavy) both say heavy; medium comes only from the registry notes' closed list of units stepped down, which names this tank."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "assault",
+          "wanted": "anti-armour or siege",
+          "note": "Its only job is the pulse, which hurts only vehicles, ships, aircraft and buildings. That pulse is an ability, not a weapon, so roles step 2 (unarmed) finds no listed role that fits, steps 3 and 4 have no main weapon to read, and anti-armour's and siege's requires, which read weapons, fail. Step 5 then gives assault for a slow unit with medium armour."
+        },
+        {
+          "path": "abilities/0/patterns",
+          "used": "self-destruct",
+          "wanted": "deal-percent-damage",
+          "note": "Self-destruct covers blowing itself up to hurt everything nearby. It misses that the pulse takes a fixed share of each target's maximum health instead of a set amount (so armour does not matter and a few pulses kill anything), and that it spares infantry altogether."
+        },
+        {
+          "path": "body/plan",
+          "used": "launcher-rack",
+          "wanted": "a heavy tank hull carrying a device instead of a gun, with no turret",
+          "note": "Hull-turret needs a turret and casemate a fixed gun, and launcher-rack speaks of a light chassis; this is a Mammoth chassis carrying a seismic piston."
+        },
+        {
+          "path": "on_death/outcomes",
+          "used": "bail-out",
+          "wanted": "crew that leave when a self-destruct starts",
+          "note": "Bail-out describes crew getting out as the vehicle dies; here the crewman leaves at the start of the countdown and the vehicle then dies by its own pulse."
+        }
+      ],
+      "researched_by": "batch r1, agent J03-RA1",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra1.allied.mobile-gap-generator",
+      "game": "ra1",
+      "faction": "allied",
+      "name": "Mobile Gap Generator",
+      "flavour_affinity": ["allied"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": []
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Tech Center",
+        "basis": "Built at the Allied War Factory once an Allied Tech Center stands; its infobox gives tier 3. The manual marks it as a multiplayer-only unit (it adds that such units may turn up in some single-player missions), so players build it only in skirmish and multiplayer; StrategyWiki says the same."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 600,
+        "basis": "List price a little over two thirds of the main-battle-tank anchor, inside low; StrategyWiki gives the same multiplayer price."
+      },
+      "mobility": {
+        "base": "wheels",
+        "handling": "steer",
+        "traits": ["crush"],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "The wiki calls it a gap generator mounted on a truck, on wheels. By the Command & Conquer Wiki's figure it moves at the Rifle Infantry's pace, half the Medium Tank's speed; StrategyWiki's figure is a little over twice that, slightly faster than the Medium Tank (see uncertain). It runs over infantry (the crusher flag in the game code). Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
+      },
+      "body": {
+        "plan": "launcher-rack",
+        "size": "large",
+        "notes": "A truck carrying the gap generator; the code gives it a rotating dish and no gun turret, which fits launcher-rack's chassis with an exposed mast or sensor gear. No size example names a truck, so it is measured against the main battle tank: the code's sprite-size flag puts it with the Medium and Heavy Tanks (drawn bigger than one cell), not with the APC, Light Tank or Radar Jammer, so it is coded large."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the infobox armour type Light maps to light, and StrategyWiki and the manual's grade agree. It has very little health."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its sight equals the Rifle Infantry's; StrategyWiki gives the same. No sensor trait: the gap field hides an area from the enemy, not just the truck, which neither stealth nor jammer describes (see fit_notes). The code does not make it a radar jammer, unlike the Radar Jammer truck, nor hide it from radar by itself."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player drives; there is nothing to fire. No page read names a crew."
+      },
+      "abilities": [
+        {
+          "name": "Shroud generator (gap field)",
+          "kind": "passive",
+          "source": "innate",
+          "patterns": [],
+          "summary": "Always on, with no button. The truck keeps a small patch of ground around itself under black shroud for its enemies and keeps renewing it, so the field travels with it; the truck and any units close by drop out of the enemy's view. An enemy unit that drives in uncovers only the ground within its own sight, and the shroud settles over that ground again once it moves on or dies. The field is smaller than the one the Gap Generator building casts. Computer opponents ignore shroud altogether, so it only fools human players. Remastered Collection patch 744746 fixed a bug that left its shroud on the map for good."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No page read shows anything special when it dies, so the 3C default applies. The game code may let one crewman out on an even chance if the rules mark the truck as crewed; since it has no weapon, he would be an unarmed technician. The code also takes its field away when it is destroyed."
+      },
+      "strengths": [
+        {
+          "ref": "body:launcher-rack",
+          "why": "Its gap dish keeps the ground around it black for the enemy, hiding the truck and every unit near it, so the enemy cannot see what is being sent against them."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "It can run over infantry, its only way of hurting anything."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:light",
+          "why": "Light armour and very little health, so it dies fast once found."
+        },
+        {
+          "ref": "body:launcher-rack",
+          "why": "It carries the gap dish instead of a gun, so it cannot fight back, and its field is smaller than the gap generator building's, so escorts must keep close. The dish's shroud also means nothing to the computer opponent, which ignores shroud, so it pays off only against human players."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:scout",
+          "why": "A scout that drives into the field uncovers the ground within its own sight and sees what hides there; the shroud only closes again after it leaves or is destroyed."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "It has no gun and light armour, so any armed vehicle that finds it can destroy it unopposed."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "role:scout",
+          "why": "Scouts and lookouts watching from outside the field see only shroud, so they cannot read the size or make-up of the force under it."
+        },
+        {
+          "ref": "role:siege",
+          "why": "Long-range guns that need others to spot for them find no targets under the field until their own units come close enough to uncover them."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:assault",
+          "why": "Driving with an attack group, it keeps the whole group under its field, so the enemy sees nothing of the push until it arrives; the wiki recalls enemy trucks hiding advancing attackers this way in a Soviet campaign mission."
+        }
+      ],
+      "memorable": "A truck with no gun that fights with darkness: the ground around it and its escorts stays black for the enemy, who sees only what his own units stand next to.",
+      "as_player": "An unarmed T3 support truck. You carry no gun: drive with your team and the ground around all of you stays dark for the enemy, so they cannot see what is coming. An enemy who drives in sees only what is next to him, and the dark closes again when he leaves. Light, fragile and with nothing to shoot back with, you die quickly once found, so stay inside your escort.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/File:Red_Alert_1_Manual.pdf",
+          "title": "Red Alert 1 Manual (scan), hosted on the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "1996 manual",
+          "note": "Westwood's printed manual, read in the PDF behind this file page. The Mobile Gap Generator entry on PDF page 51 carries the multiplayer-only mark; the Gap Generator building's entry on PDF page 43 says what enemies inside a gap see and that the shroud closes behind them.",
+          "supports": ["roles/primary", "tier", "abilities/0", "strengths/0", "countered_by/0", "counters/0", "combos/0"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Mobile_gap_generator",
+          "title": "Mobile gap generator, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "Infobox for tier, price, health, armour type, land speed and sight; its quote box copies the manual paragraph. The prose says the field follows the truck on the move, and the changelog names Remastered patch 744746.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "abilities/0",
+            "strengths/0",
+            "weaknesses",
+            "countered_by/1",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Gap_generator_(Red_Alert_1)",
+          "title": "Gap generator (Red Alert 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
+          "note": "The building the truck copies: a passing unit lifts the shroud only near itself and it returns behind it, the AI is not affected by shroud at all, and enemy trucks hide groups of attackers in a Soviet campaign mission.",
+          "supports": ["abilities/0", "weaknesses/1", "countered_by/0", "counters", "combos/0"]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Allied_units",
+          "title": "Command & Conquer: Red Alert/Allied units, StrategyWiki",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "note": "Its table gives the truck's multiplayer price, armour, health, sight and a speed that differs from the Command & Conquer Wiki's, and says it is normally kept to multiplayer.",
+          "supports": ["tier", "cost_band", "armour", "sensors", "mobility/notes"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UDATA.CPP",
+          "title": "REDALERT/UDATA.CPP, EA's Red Alert source code release on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Remastered Collection source release (2020)",
+          "note": "The truck's unit type (internal name MGG): crusher, rotating dish, no gun turret, the sprite-size flag it shares with the Medium and Heavy Tanks, the gap-generator flag, and no radar jamming or radar invisibility.",
+          "supports": ["mobility/traits", "body", "sensors"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "mobility/speed",
+          "note": "The Command & Conquer Wiki's infobox gives the Rifle Infantry's land speed (medium); StrategyWiki, on the same scale (its Rifle Infantry and Medium Tank match the C&C Wiki's), gives a little over twice that, which would be fast. The C&C Wiki's own Radar jammer page (read, not cited) gives that similar truck StrategyWiki's figure too. Banded from the C&C Wiki infobox, as the registry notes ask. This drops confidence to medium: the contradicted figure decides the speed band and, through roles step 5, the primary role.",
+          "sources_disagree": true
+        },
+        {
+          "path": "roles/primary",
+          "note": "Assault comes from roles step 5 on the C&C Wiki's speed. With StrategyWiki's speed the truck would be fast with light armour, and step 5 would give raider instead."
+        },
+        {
+          "path": "body/size",
+          "note": "The wiki calls it a truck, and trucks have no size example. Large rests on the code's sprite-size flag (REDALERT/TYPE.H of EA's source release, read, not cited, explains it as bigger than one cell but under two), which the Medium and Heavy Tanks share. If it were coded medium, the crush trait would break the trait's size rule."
+        },
+        {
+          "path": "mobility/base",
+          "note": "Wheels rests on the wiki's words (a truck-mounted generator, on wheels); no page read gives its drive, and the rules file that would say could not be read."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "Crush rests on the code's crusher flag and the registry's list of RA1 crushers; no wiki page says it crushes."
+        },
+        {
+          "path": "abilities/0",
+          "note": "REDALERT/UNIT.CPP of EA's source release (read, not cited) renews the field once a second while the truck stands still, at each new cell only for a truck the computer controls, and clears it when the truck dies; how a human player's truck updates the field while driving is not clear from the code, whose multiplayer path was rewritten for the Remastered Collection. The wiki says the field follows the truck on the move. That computer opponents ignore it rests on the Gap generator (Red Alert 1) page, which says so for the building; the manual says the truck works the same way."
+        },
+        {
+          "path": "counters/1",
+          "note": "No page names artillery as a victim of the field. The counter is reasoned from the Gap generator (Red Alert 1) page (a passing unit lifts the shroud only near itself) and the Fog of war page of the Command & Conquer Wiki (read, not cited), whose shroud section says a shrouded area hides the units in it and whose fog section pairs long-range units with spotters."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "assault",
+          "wanted": "support",
+          "note": "Its job is hiding teammates, which is team support, but support's requires (a repair tool, or a repair or resupply pattern) fail. Roles step 2 (unarmed) finds no listed role that fits: buffer is for making allies stronger and scout for finding enemies. Steps 3 and 4 have no main weapon to read, so step 5 gives the generalist default, assault, for a truck that never fights. The wiki's own role line calls it a support unit."
+        },
+        {
+          "path": "abilities/0/patterns",
+          "used": "none",
+          "wanted": "shroud-area",
+          "note": "No registry id fits a field that keeps the ground around the unit dark for the enemy, hiding it and nearby allies, while an enemy inside still sees around itself and the darkness closes behind it. Cloak's area variant breaks when the unit fires or meets a detector, lay-smoke blocks sight for both sides for a short time, and jam-sensors hides only from radar and locks."
+        },
+        {
+          "path": "sensors/traits",
+          "used": "none",
+          "wanted": "an always-on area shroud for the enemy, if shroud-area gets a sensor-trait twin",
+          "note": "The field is always on, so a term would be its natural home, but stealth hides only the unit itself and lets enemies see it up close, and jammer hides from radar and lock-ons, not from sight."
+        },
+        {
+          "path": "strengths/0",
+          "used": "body:launcher-rack",
+          "wanted": "pattern:shroud-area",
+          "note": "No link kind names the gap field, so its strength and one of its weaknesses hang on the body plan that carries the dish."
+        }
+      ],
+      "researched_by": "batch r1, agent J03-RA1",
+      "review": {
+        "status": "unchecked"
+      }
+    }
+  ]
+}

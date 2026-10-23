@@ -1,0 +1,574 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra2",
+  "units": [
+    {
+      "id": "ra2.yuri.mastermind",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "yuri",
+      "name": "Mastermind",
+      "lineage": "mastermind",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["assault"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Battle Lab",
+        "basis": "The Yuri's Revenge manual's tech table (printed page 19) lists the Master Mind under the War Factory with the Battle Lab as its extra building; the wiki's infobox and its Yuri war factory page both put it in tier 3. Battle Lab is a t3 gate in the registry."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 1750,
+        "basis": "Its list price is a little over twice the main battle tank anchor, the same as the Apocalypse Tank's, which puts it in the registry's very-high band."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": ["crush"],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "The wiki's land speed for it equals the Conscript's, so it only keeps pace with infantry and is clearly slower than the Grizzly and Rhino main battle tanks. The infobox says it is not amphibious. The wiki says it can try to run infantry over, hence crush. No text names its running gear: the tracks come from the voxel render and in-game picture on its wiki page. Pivot is the tracks default."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "large",
+        "notes": "A tracked tank hull carrying a big brain-like dome where a tank's turret would sit, with no gun; no source says whether the dome turns. The wiki files it among tanks and its in-game picture is tank-sized, so large; its trivia says only the concept art drew the brain twice a tank's size."
+      },
+      "armour": {
+        "class": "heavy",
+        "models": ["self-repair"],
+        "notes": "Step 1 of the armour-class steps decided: the infobox armour type heavy maps to heavy in the registry's armour map (the official profile also says heavy). The wiki says it soaks a surprising amount of fire. The infobox lists self-repair and the wiki likens its slow healing to the Apocalypse Tank's, so the model is self-repair. Immunity to mind control is not an armour model; see strengths."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Skirmish has no fog of war, so the band is the registry's medium proposal. Its Sight figure, how far it lifts the shroud, is nearly twice the Conscript's. The Yuri's Revenge manual says every psychic unit sees through Spy disguises, but no page about the Mastermind confirms it, so it gets no detector trait (see uncertain)."
+      },
+      "armament": [
+        {
+          "name": "Mind control",
+          "slot": "primary",
+          "family": "psionic",
+          "damage": "psionic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "naval"],
+          "traits": [],
+          "summary": "Its only weapon. A hit takes the target over at once and does no damage; the victim fights for Yuri until the Mastermind dies, when it goes back to its owner. Like every mind-control weapon in the game it fires by itself at any valid enemy in reach, one after another in quick succession, and unlike the Psychic Tower it keeps taking new victims past its safe limit of three; the player has no way to hold it back (see Brainwave overload). It reaches half again as far as the Conscript's rifle. It takes soldiers, ground vehicles and ships, but not buildings, aircraft or immune units: miners, attack dogs, heroes, Yuri Clones, other Masterminds, robots and drones such as the Robot Tank, Terror Drone and Chaos Drone, Brutes, Slaves, and units that someone already controls.",
+          "patterns": ["mind-control"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "No crew is described: the official profile calls it a cloned brain carried in a tank. One player drives it; the control weapon fires on its own."
+      },
+      "abilities": [
+        {
+          "name": "Brainwave overload",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Once it holds more than three captives it overloads: a voice line announces it, it rocks and sparks, and it loses health at short, regular intervals, faster the more units it holds. With four to six captives the loss is modest, with seven to ten it is heavy, and with eleven or more it wrecks the tank almost at once, unless an armour crate has halved it and outside repair (a captured Machine Shop, IFVs carrying Engineers) keeps up. The state ends as soon as it is back to three or fewer, whether captives die in battle or are fed to a Grinder or Bio Reactor. If it breaks down, every captive is freed. The Iron Curtain stops the loss while it lasts.",
+          "patterns": []
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "The sources show nothing special at its death, so the 3C default for a crewed machine applies. When it is destroyed, by enemies or by overload, every unit it controls returns to its owner (manual; the wiki's Mind control page)."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:mind-control",
+          "why": "Takes over every enemy soldier and vehicle that comes near, with no hard cap, so enemy armoured columns end up fighting each other; enemy mind control cannot take it in return."
+        },
+        {
+          "ref": "armour-class:heavy",
+          "why": "Heavy armour lets it absorb a surprising amount of fire while it closes in, so its approach alone forces the enemy to reorganise."
+        },
+        {
+          "ref": "armour-model:self-repair",
+          "why": "Slowly mends its own damage between fights, like the Apocalypse Tank."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "Can try to run over soldiers, its only way to hurt anything it cannot take over."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:psionic",
+          "why": "Mind control is its only weapon, so it cannot hurt aircraft, buildings or any immune unit (robots, drones, dogs, miners, heroes, psychic units) and is helpless against them alone."
+        },
+        {
+          "ref": "pattern:mind-control",
+          "why": "It cannot stop taking captives: past three it overloads and damages itself, faster the more it holds, so a big crowd of enemies can make it destroy itself unless the player spends captives quickly."
+        },
+        {
+          "ref": "speed:medium",
+          "why": "Moves only at infantry pace, slower than the main battle tanks, so it struggles to close in or to escape."
+        },
+        {
+          "ref": "tier:t3",
+          "why": "Needs a Battle Lab and costs as much as the game's top super-units."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Fliers cannot be controlled and it has nothing that reaches them."
+        },
+        {
+          "ref": "nature:uncrewed-machine",
+          "why": "Robots and drones are immune to its control; the wiki names Robot Tanks and Terror Drones among the immune units making short work of an unescorted Mastermind."
+        },
+        {
+          "ref": "unit:ra2.allied.robot-tank",
+          "why": "An immune robot vehicle that destroys an unescorted Mastermind, as the wiki says."
+        },
+        {
+          "ref": "unit:ra2.soviet.terror-drone",
+          "why": "An immune drone that destroys an unescorted Mastermind, as the wiki says."
+        },
+        {
+          "ref": "tier:t1",
+          "why": "A rush of many cheap, expendable units (Conscripts, Flak Tracks, IFVs, free paratroopers) makes it take more captives than it can hold, so it overloads and wrecks itself."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Turns enemy tank columns against each other: every tank it takes fights for Yuri and thins out the rest."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Takes over soldiers as readily as vehicles, and can run over the ones it does not take."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "pattern:pull-target",
+          "why": "The Magnetron lifts enemy vehicles and drags them toward Yuri's mind-control units, so they can be taken without risk."
+        },
+        {
+          "ref": "unit:ra2.yuri.magnetron",
+          "why": "Its magnetic pull brings vehicles to the Mastermind, as its official profile and the wiki's Yuri page describe."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Lasher Tanks, the AI's usual escort for it, kill the immune robots and drones that would otherwise destroy it."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "Gattling Tanks, also in the AI's escorts, cover it against aircraft, which it can neither take nor hit."
+        },
+        {
+          "ref": "weapon:repair-tool",
+          "why": "Repair from outside, such as IFVs carrying Engineers, can keep it alive while it is overloaded."
+        }
+      ],
+      "memorable": "A slow brain-tank that seizes every enemy soldier and vehicle in reach with no limit and no way to stop, until holding too many burns it out.",
+      "as_player": "A slow, heavily armoured T3 brain-tank with no gun. Every enemy soldier, vehicle or boat that comes within reach is pulled to your side automatically, one after another, and you cannot switch it off. Three captives are safe; past that you lose health faster the more you hold, so spend captives in the fight and avoid big crowds. Aircraft, robots, drones and swarms of cheap units are what kill you; you heal slowly between fights.",
+      "sources": [
+        {
+          "url": "https://web.archive.org/web/20071214172119/http://www.ea.com/official/cc/redalert2/english/newunits-yuri3.jsp",
+          "title": "Yuri's new units 3 (Master Mind, Magnetron and others), Command & Conquer: Red Alert 2 official site, archived by the Wayback Machine",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge launch site (snapshot of December 2007)",
+          "supports": ["roles", "armour", "armament/0", "crew", "abilities/0", "strengths/0", "combos/0", "combos/1"],
+          "note": "Its Application line names the anti-vehicle and anti-infantry jobs, then calls it an assault unit. Its safe number of captives differs from the wiki's (see uncertain). The Wayback Machine reset connections from this session, so the page was read from the copy-check tool's cached copy of this snapshot, fetched the same day."
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF), hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge (2001)",
+          "supports": ["tier", "armament/0/can_target", "abilities/0", "on_death", "sensors", "weaknesses/1"],
+          "note": "Tech table on printed page 19; the Master Mind entry on page 21; the Yuri Clone entry's list of immune units on page 20; Gameplay Changes items 8 and 20 on pages 12 and 13."
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Mastermind_(Yuri%27s_Revenge)",
+          "title": "Mastermind (Yuri's Revenge), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge 1.001",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos/2",
+            "combos/3",
+            "combos/4",
+            "memorable"
+          ],
+          "note": "Infobox, the Counters and Overloaded sections and the AI behaviour lists. Its quote box copies the Yuri's Revenge manual entry (printed page 21)."
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/InfiniteMindControl",
+          "title": "InfiniteMindControl, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["armament/0", "abilities/0"],
+          "note": "How the Yuri's Revenge engine lets one unit control many: with this flag the weapon has no hard cap, and the controller takes damage in steps as its number of links passes the levels of its overload list."
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/MindControl",
+          "title": "MindControl, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["armament/0/delivery", "armament/0/can_target", "abilities/0"],
+          "note": "The control warhead takes the target at once, whether or not the shot hits; psionic-immune objects cannot be targeted, and buildings are immune by default."
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "abilities/0",
+          "note": "How many captives are safe: three by the wiki's Mastermind page, its Yuri war factory page (https://cnc.fandom.com/wiki/Yuri_war_factory) and CNCNZ's Yuri's units page (https://cncnz.com/games/yuris-revenge/yuris-units/); five by the official profile, written around release; the manual says only a large group. The entry follows the wiki, which gives game-data figures. The wiki's own conversion of the damage interval to seconds differs between its heading and its first bullet, so the exact pace is unsure.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0",
+          "note": "That the Iron Curtain stops overload damage rests on the wiki's Iron Curtain (Red Alert 2) page (https://cnc.fandom.com/wiki/Iron_Curtain_(Red_Alert_2)); the Iron Curtain is a side-wide power, so it is only mentioned."
+        },
+        {
+          "path": "abilities/0",
+          "note": "Recorded as its own passive because the wiki gives the overloaded state its own section and the game announces it, and it adds a mechanic. It could also be read as part of how the control weapon works and kept in that weapon's summary."
+        },
+        {
+          "path": "sensors/traits",
+          "note": "Yuri's Revenge manual, Gameplay Changes item 20, says every psychic unit and structure sees through the Allied Spy's disguise; no page about the Mastermind confirms that it does, so no detector trait is given, as the registry note asks.",
+          "sources_disagree": true
+        },
+        {
+          "path": "roles/primary",
+          "note": "The Application line names anti-vehicle and anti-infantry. Anti-armour is skipped because psionic damage fails its requires, which leaves anti-infantry as the one role the line names. If a line naming two roles must instead pass the bonus test first, neither target has a bonus and the steps run on to step 5, which gives assault."
+        },
+        {
+          "path": "mobility/base",
+          "note": "No text names its running gear. The voxel render and in-game picture on its wiki page show tracks, while a picture caption on the wiki's Yuri (faction) page (https://cnc.fandom.com/wiki/Yuri_(faction)) speaks of it as being on wheels, apparently as a figure of speech.",
+          "sources_disagree": true
+        },
+        {
+          "path": "body/plan",
+          "note": "No source says whether its brain dome turns like a turret; hull-turret is the nearest shape for a tank hull with a dome on top."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Hitscan rests on ModEnc's MindControl page, which says the effect lands at once whether or not the shot hits. The lasting link to each captive could be read as a beam, the psionic family default."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "No source names ships for the Mastermind; the manual's Yuri Clone entry says every unit outside its immune list can be taken, and the naval coding rule adds naval to a weapon that hits ground vehicles. Buildings are left out: ModEnc's MindControl page says buildings are immune by default, and the wiki's Mind control page (https://cnc.fandom.com/wiki/Mind_control) names only Yuri Prime as taking structures in Yuri's Revenge. The Robot Tank, Terror Drone, Brute and Slave immunities come from the registry note, which cites those units' own pages; the Mastermind page names the first three as immune counters."
+        },
+        {
+          "path": "on_death",
+          "note": "That captives go back to their owners when the controller dies rests on the wiki's Mind control page (https://cnc.fandom.com/wiki/Mind_control) as well as the manual's note that a broken-down Master Mind frees its captives."
+        },
+        {
+          "path": "lineage",
+          "note": "The wiki's Mind control page describes the Scrin Mastermind of Tiberium Wars as a mind-control unit with the same name, so the lineage mastermind links the two; the two designs differ a great deal (that one is a commando on foot)."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "abilities/0/patterns",
+          "used": "none",
+          "wanted": "overload-past-cap",
+          "note": "A unit whose capture or summon has a safe limit but no hard cap and no off switch: past the limit it takes damage that grows with each extra captive, and it recovers only by losing captives. No registered pattern covers this self-damage past a soft cap."
+        },
+        {
+          "path": "armament/0/patterns",
+          "used": "mind-control",
+          "wanted": "a lasting variant of mind-control",
+          "note": "The mind-control summary speaks of control for a short time; here control lasts until the Mastermind or the captive dies, and many targets are held at once."
+        },
+        {
+          "path": "roles",
+          "used": "anti-infantry, assault",
+          "wanted": "anti-armour",
+          "note": "The official Application line also names anti-vehicle, and the wiki says it wrecks enemy armoured columns, but anti-armour needs armour-piercing, energy, electric or EMP damage or the infest pattern, and its only weapon deals psionic damage."
+        },
+        {
+          "path": "body/plan",
+          "used": "hull-turret",
+          "wanted": "a tracked hull carrying an emitter dome and no gun",
+          "note": "No body plan describes a vehicle whose top is a psychic emitter rather than a gun turret."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J07-RA2"
+    },
+    {
+      "id": "ra2.yuri.chaos-drone",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "yuri",
+      "name": "Chaos Drone",
+      "flavour_affinity": ["allied"],
+      "class": "drone",
+      "nature": "uncrewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "disabler",
+        "secondary": ["raider"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "War Factory",
+        "basis": "The Yuri's Revenge manual's tech table (printed page 19) lists the Chaos Drone in the War Factory row with no further building, and its wiki infobox gives tier 1. The official profile and the wiki's Psychic radar page still tie it to the Psychic Radar (see uncertain)."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 1000,
+        "basis": "Patch 1.001 raised its price (the infobox gives both); the 1.001 price is about a third above the main battle tank anchor, in the registry's medium band. The launch price was in the medium band too."
+      },
+      "mobility": {
+        "base": "wheels",
+        "handling": "steer",
+        "traits": [],
+        "speed": "fast",
+        "speed_raw": 2,
+        "notes": "Its wiki land speed is twice the Conscript's, so it outruns the Grizzly and Rhino main battle tanks; the wiki calls it fast. No text names its running gear: the render and voxel images on its wiki page show four wheels. Steer is the wheels default."
+      },
+      "body": {
+        "plan": "micro-bot",
+        "size": "small",
+        "notes": "A small four-wheeled robot buggy with a dome on top (the manual calls it a small vehicle). The wiki says it is small enough to get inside a Battle Fortress, whose seats take infantry, so the game handles it like a soldier: small."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class steps decided: the infobox armour type light maps to light. The wiki calls it very lightly armoured. Its infobox lists immunity to mind control and to radiation, and the wiki's Yuri war factory page adds immunity to enemy chaos gas; none of these is an armour model."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "Skirmish has no fog of war, so the band is the registry's medium proposal. Its Sight figure is a little larger than the Conscript's."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "Uncrewed: the wiki says an artificial intelligence drives it and the official profile calls it a robotic unit. One player is the drone."
+      },
+      "abilities": [
+        {
+          "name": "Chaos gas (deploy)",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "spam",
+          "summary": "On the deploy key the drone vents a cloud of hallucinogenic gas around itself. Enemy units caught in it go berserk for several seconds, and touching the gas again starts the clock over. Their owner loses command of them; they fire faster than normal (the official profile says at double speed) and choose targets among their own side's units and buildings before Yuri's forces, since a berserk unit counts its friends as enemies; none of them will target a Chaos Drone. They still belong to their owner, so they earn no rank for those kills and the drone's side can still shoot them. Animals such as attack dogs, robots and drones, and strong psychic units (Yuri Clones, Yuri Prime, Masterminds) are immune, and only units are affected. It can backfire: a berserk enemy beside the drone's own troops turns its faster fire on them too. From patch 1.001 the owner of a berserk GI or Guardian GI cannot deploy or pack it up.",
+          "patterns": ["confuse-enemies"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal"
+      },
+      "strengths": [
+        {
+          "ref": "pattern:confuse-enemies",
+          "why": "One drone can break up a big enemy formation or a tank rush: the berserk units fire faster and shoot each other first."
+        },
+        {
+          "ref": "speed:fast",
+          "why": "Fast enough to slip into enemy bases and formations before they react."
+        },
+        {
+          "ref": "nature:uncrewed-machine",
+          "why": "A robot with no mind to take: immune to mind control, to enemy chaos gas and to radiation, which makes it unusually good against an enemy Yuri army."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:light",
+          "why": "Very lightly armoured, so base defences, missile units and aircraft destroy it quickly."
+        },
+        {
+          "ref": "pattern:confuse-enemies",
+          "why": "The gas is its only tool: no gun to defend itself, the effect is short, dogs, robots and psychic units ignore it, and berserk enemies near its own troops fire on them faster too."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "It cannot fight back against aircraft, which the wiki lists among its worst threats."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Base defences pick it off before it gets close enough to release its gas."
+        },
+        {
+          "ref": "nature:uncrewed-machine",
+          "why": "Robots and drones are immune to the gas, so they can hunt the defenceless drone freely."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Stops a massed tank rush: a whole armoured column turns its guns on itself for a while, and the official profile calls this its best use."
+        },
+        {
+          "ref": "pattern:mind-control",
+          "why": "Enemy mind control cannot take it, so it can drive into an enemy Yuri force and throw it into disarray."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:assault",
+          "why": "A follow-up attack exploits the short window while the enemy fights itself; the official profile advises using it to soften the enemy before an offensive."
+        },
+        {
+          "ref": "role:transport",
+          "why": "It is small enough to ride inside a Battle Fortress and release its gas from in there."
+        },
+        {
+          "ref": "unit:ra2.allied.battle-fortress",
+          "why": "The wiki names the Battle Fortress as a carrier it can gas from inside."
+        }
+      ],
+      "memorable": "An unarmed robot buggy whose gas makes enemy armies turn their guns on each other for a few seconds, firing faster than they normally do.",
+      "as_player": "A fast, fragile T1 buggy with no gun. Drive into an enemy group and press your key to vent gas: enemies caught in it go berserk for a few seconds, firing faster and shooting their own teammates first while ignoring you. Get out before it wears off and keep your own team clear of their boosted fire. Robots, dogs and psychic units shrug it off, and aircraft and turrets pick you off.",
+      "sources": [
+        {
+          "url": "https://web.archive.org/web/20071215011040/http://www.ea.com/official/cc/redalert2/english/newunits-yuri2.jsp",
+          "title": "Yuri's new units 2 (Lasher, Gattling Tank, Chaos Drone and others), Command & Conquer: Red Alert 2 official site, archived by the Wayback Machine",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge launch site (snapshot of December 2007)",
+          "supports": ["roles", "nature", "crew", "abilities/0", "strengths/0", "counters/0", "combos/0"],
+          "note": "Application line: good for stopping a tank rush, which names no role. Its price and its Psychic Radar requirement predate patch 1.001 and the final tech table (see uncertain)."
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF), hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge (2001)",
+          "supports": ["tier", "body", "abilities/0"],
+          "note": "Tech table on printed page 19; the Chaos Drone entry on pages 20 and 21."
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Chaos_drone",
+          "title": "Chaos drone, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge 1.001",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "nature",
+            "crew",
+            "abilities/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters/1",
+            "combos",
+            "memorable"
+          ],
+          "note": "Infobox, the Game unit section and the patch 1.001 changelog. Its Official description quote box copies the Yuri's Revenge manual entry (printed pages 20 and 21)."
+        },
+        {
+          "url": "https://modenc.renegadeprojects.com/Psychedelic",
+          "title": "Psychedelic, ModEnc",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "supports": ["abilities/0"],
+          "note": "The chaos warhead flag: affected units go berserk for a set time, ignore orders and treat friendly units as enemies when looking for targets; psionic-immune units are immune, the firer's own units are not affected, and only units, not buildings, are."
+        },
+        {
+          "url": "https://cncnz.com/games/yuris-revenge/yuris-units/",
+          "title": "Red Alert 2 - Yuri's Revenge: Yuri's Units, CNCNZ.com",
+          "kind": "guide",
+          "accessed": "2026-10-20",
+          "supports": ["armament", "abilities/0"],
+          "note": "A long-standing fan site's unit list, largely reworded from the manual: the drone has no conventional weapon, releases its gas when deployed, and the berserk timer restarts each time a unit touches the gas. Its price for the drone disagrees with the infobox (see uncertain)."
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "tier",
+          "note": "The manual's tech table and the wiki infobox put it at the War Factory alone (tier 1), and so does the wiki's Yuri war factory page (https://cnc.fandom.com/wiki/Yuri_war_factory); the official profile and the wiki's Psychic radar page (https://cnc.fandom.com/wiki/Psychic_radar) say it needs a Psychic Radar. The registry note follows the table.",
+          "sources_disagree": true
+        },
+        {
+          "path": "cost_band",
+          "note": "CNCNZ lists a lower price that would fall in the low band; the wiki infobox gives the 1.001 price and the launch price, and both, like the official profile's launch price, are in the medium band.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0/cooldown",
+          "note": "The only figure is the gas's rate of fire in the infobox, in game frames. The wiki converts frames to seconds at different rates on different pages (the Chaos drone and Mastermind pages disagree), but either way the wait is a few seconds at most, so spam."
+        },
+        {
+          "path": "abilities/0/kind",
+          "note": "The manual and CNCNZ say it releases the gas when deployed, so it is an ability and the armament is empty, although the infobox gives the gas as a ground attack. The wiki's Yuri (faction) page (https://cnc.fandom.com/wiki/Yuri_(faction)) says it can stay deployed for a long time or deploy again at will, which may make it a toggle; no page says whether it also vents gas on an attack order."
+        },
+        {
+          "path": "abilities/0",
+          "note": "How much faster berserk units fire: double speed by the official profile, greatly magnified attack power by the manual, a fire-rate boost by the wiki; no game figure was found.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0",
+          "note": "Why victims ignore the drone: the wiki says they never attack Chaos Drones, and ModEnc's BerserkFriendly page (https://modenc.renegadeprojects.com/BerserkFriendly) describes a flag that keeps berserk units from picking a unit type as a target; that the drone carries this flag is an inference. That they go for their own side first because they are usually surrounded by it, once friends count as enemies (ModEnc Psychedelic), is also an inference."
+        },
+        {
+          "path": "abilities/0",
+          "note": "Who the gas can hit besides enemies: ModEnc's Psychedelic page says the firer's own units are spared but, in a note marked as a tester's finding, that allied players' units can be affected (its AffectsAllies page, https://modenc.renegadeprojects.com/AffectsAllies, says this needs verification). The backfire in the summary follows the wiki: berserk enemies fire faster at the drone's own nearby troops. The Iron Curtain also protects units from it (the wiki's Iron Curtain (Red Alert 2) page)."
+        },
+        {
+          "path": "abilities/0",
+          "note": "The wiki's Yuri (faction) page says the gas drove enemy infantry berserk, while the official profile and the manual describe it against vehicles and tank rushes too; the entry follows the profile and the unit page, which cover all units."
+        },
+        {
+          "path": "mobility/base",
+          "note": "No text names its running gear; the wheels come from the render and voxel images on its wiki page."
+        },
+        {
+          "path": "body/size",
+          "note": "Small rests on the wiki's remark that it fits inside a Battle Fortress, whose seats take infantry; no source compares its size with a soldier's."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Raider enters only at roles.secondary step 4 (fast with light armour); the wiki's advice to use it in hit-and-run attacks supports it, but the drone deals no damage itself."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r1, agent J07-RA2"
+    }
+  ]
+}

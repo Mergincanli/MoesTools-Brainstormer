@@ -36,11 +36,11 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 | Weapon | Slot | Family | Damage | Mount / delivery / range | Hits | Traits | What it does |
 |---|---|---|---|---|---|---|---|
 | Dismantler Claws | primary | Melee weapon | Melee | free aim / attach / melee | infantry, ground vehicles, naval | Damage over time | Closes to touching distance and strikes. Infantry die in one strike. A vehicle or ship (even a submerged one) gets the drone inside it and takes damage from within until it dies or the drone is removed. Aircraft can be infested only while landed. If its own damage destroys the host, the drone can escape (it parachutes down from an aircraft) and attack again. If anything else destroys the host first, the drone dies with it. *Pattern:* Infest a vehicle. |
-| Electro-Stasis Ray | alternate | EMP | EMP | free aim / beam / long | ground vehicles, naval | Root / pin | A long-range beam that pins a vehicle in place: it can't move, transform or deploy, but its guns still work. One documented exception, the Allied aircraft carrier, is shut down completely. *When:* In stasis mode, switched with the mode toggle. *Pattern:* Switch weapon mode (planned), Disable a machine (planned). |
+| Electro-Stasis Ray | alternate | EMP | EMP | free aim / beam / long | ground vehicles, naval | Root / pin | A long-range beam that pins a vehicle in place: it can't move, transform or deploy, but its guns still work. One documented exception, the Allied aircraft carrier, is shut down completely. *When:* In stasis mode, switched with the mode toggle. *Pattern:* Switch weapon mode, Disable a machine. |
 
 **Abilities**
 
-- **Electro-Stasis Ray / Dismantler Claws** (toggle / mode switch): Swaps between the claws and the stasis ray. It uses one at a time, so pinning and infesting the same target takes two drones. *Pattern:* Switch weapon mode (planned), Disable a machine (planned).
+- **Electro-Stasis Ray / Dismantler Claws** (toggle / mode switch): Swaps between the claws and the stasis ray. It uses one at a time, so pinning and infesting the same target takes two drones. *Pattern:* Switch weapon mode, Disable a machine.
 
 **Strengths**
 
@@ -55,7 +55,7 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 
 - Very little health: machine guns, snipers and electric weapons destroy it quickly. *[Light (armour)]*
 - The claws need touching distance, so it is exposed on the approach and can't reach aircraft. *[Melee (range)]*
-- One mode at a time, and the ray stops movement but not the target's guns. *[Switch weapon mode (planned pattern)]*
+- One mode at a time, and the ray stops movement but not the target's guns. *[Switch weapon mode (pattern)]*
 - Dies with the host if someone else destroys the vehicle first. *[Attach (delivery)]*
 - Electric weapons do many times normal damage, and normal repair can't heal it. *[Uncrewed machine (nature)]*
 
@@ -127,12 +127,12 @@ Contents: [Terror Drone](#ra3-soviet-terror-drone) · [Hammer Tank](#ra3-soviet-
 | Weapon | Slot | Family | Damage | Mount / delivery / range | Hits | Traits | What it does |
 |---|---|---|---|---|---|---|---|
 | 85 mm cannon | primary | Cannon | Armour-piercing | slow turret / projectile / medium | infantry, ground vehicles, naval | - | A fast-firing anti-vehicle gun. Poor against infantry and unable to hit aircraft. |
-| Leech Beam | alternate | Drain beam | Energy | slow turret / beam / long | ground vehicles, naval, structures | Heals on hit | Reaches about twice as far as the cannon. Deals modest damage that ignores armour type, and repairs the tank while it stays on target. A vehicle that dies in the beam can hand over its weapon if the tank has none yet. *When:* In leech mode. Since patch 1.11 the tank must stand still to use it. *Pattern:* Switch weapon mode (planned), Leech the weapon of what you destroy. |
+| Leech Beam | alternate | Drain beam | Energy | slow turret / beam / long | ground vehicles, naval, structures | Heals on hit | Reaches about twice as far as the cannon. Deals modest damage that ignores armour type, and repairs the tank while it stays on target. A vehicle that dies in the beam can hand over its weapon if the tank has none yet. *When:* In leech mode. Since patch 1.11 the tank must stand still to use it. *Pattern:* Switch weapon mode, Leech the weapon of what you destroy. |
 | Auxiliary weapon port | acquired | Adaptive | - | from the kill | from the kill | - | Empty when built. Holds one weapon taken from the dead vehicle, such as anti-air flak, an anti-infantry gun, a tesla coil or artillery. It fires alongside the cannon, one weapon at a time, and is silent in leech mode; a Sky Knight drone taken from an aircraft carrier is the one exception; a Multigunner IFV gives anti-air rockets whoever rides inside. *When:* Filled once, by a vehicle that dies in the leech beam; can't be swapped. It is kept for the life of the tank, except that losing a Sky Knight drone taken from an aircraft carrier frees the slot in the base game (not in Uprising). *Pattern:* Leech the weapon of what you destroy. |
 
 **Abilities**
 
-- **Leech Beam (mode switch)** (toggle / mode switch): Switches between the cannon and the leech beam. Leeching kills more slowly than the cannon; it is a choice to heal or to loot, not to deal more damage. *Pattern:* Switch weapon mode (planned), Leech the weapon of what you destroy.
+- **Leech Beam (mode switch)** (toggle / mode switch): Switches between the cannon and the leech beam. Leeching kills more slowly than the cannon; it is a choice to heal or to loot, not to deal more damage. *Pattern:* Switch weapon mode, Leech the weapon of what you destroy.
 - **Weapon salvage** (triggered): When a vehicle dies while held in the beam, whoever lands the kill, a tank with an empty port mounts that vehicle's weapon and can't swap it later. It works on friendly vehicles with force-fire. Structures give nothing, and neither do a few vehicles, among them the Grinder, the Mortar Cycle and some ships and submarines. *Pattern:* Leech the weapon of what you destroy.
 
 **Strengths**
@@ -460,7 +460,7 @@ The pattern itself is uncommon, so on a rolled card these variants appear from s
 - Countered by: Sustained anti-infantry fire stops a fragile infester before it connects. *[Machine gun (weapon)]*
 - Countered by: Repair tools pull the infester out of the host. *[Repair tool (weapon)]*
 - Countered by: Out of its reach: it can't latch onto or hit aircraft in flight, and they can shoot it freely. *[Aircraft (class)]*
-- Related: Disable a machine (planned; combos with), Hijack a vehicle (planned; often confused with).
+- Related: Disable a machine (combos with), Hijack a vehicle (planned; often confused with).
 
 **Open design questions**
 
@@ -607,7 +607,7 @@ The pattern itself is uncommon, so on a rolled card these variants appear from s
 - Countered by: Ground claimers usually can't reach aircraft or their wrecks, and have no anti-air until they gain some. *[Aircraft (class)]*
 - Countered by: Fast targets get away before they die near it, leaving nothing to claim. *[at least Fast (speed)]*
 - Countered by: Punishes it while it is busy claiming. *[Anti-armour (role)]*
-- Related: Drain health (planned; combos with), Hijack a vehicle (planned; often confused with), Infest a vehicle (combos with), Switch weapon mode (planned; combos with).
+- Related: Drain health (planned; combos with), Hijack a vehicle (planned; often confused with), Infest a vehicle (combos with), Switch weapon mode (combos with).
 
 **Open design questions**
 
@@ -754,7 +754,7 @@ The pattern itself is uncommon, so on a rolled card these variants appear from s
 - Counters: Brings whatever weapons its riders carry, or vehicle-sized versions of them, to soldiers who can't outrun it. *[Infantry (class)]*
 - Countered by: Its light hull falls fast to anti-armour, throwing everyone inside out hurt. *[Anti-armour (role)]*
 - Countered by: Splash and burst damage kill the light hull and then catch the hurt players it throws out. *[Splash (weapon trait)]*
-- Related: Switch weapon mode (planned; often confused with), Infest a vehicle (counters).
+- Related: Switch weapon mode (often confused with), Infest a vehicle (counters).
 
 **Open design questions**
 

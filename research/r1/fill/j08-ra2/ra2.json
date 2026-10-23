@@ -1,0 +1,714 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.0.0",
+  "game": "ra2",
+  "units": [
+    {
+      "id": "ra2.yuri.magnetron",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "yuri",
+      "name": "Magnetron",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["disabler"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Psychic Radar",
+        "basis": "The Yuri's Revenge manual's tech table (PDF page 19) puts the Magnetron at the War Factory with a Psychic Radar as its extra building, and the wiki's infobox gives tier 2; the Psychic Radar is Yuri's tier-2 gate in the registry."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 1000,
+        "basis": "The infobox price at Yuri's Revenge 1.001 sits between the medium and high thresholds: a little more than a Rhino tank and well above Yuri's own Lasher tank."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1.25,
+        "notes": "A quarter faster than the Conscript by the wiki's land speed figures, but slower than every main battle tank in the cost anchor (the Grizzly and the Rhino, by the registry's speed notes). Not amphibious and does not crush infantry (Magnetron page). Handling is the tracks default."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "large",
+        "notes": "A tank-like artillery vehicle that carries its magnetic emitter on top. The Magnetic beam page calls it an EM tank, and the manual's Tank Bunker entry, which admits turreted vehicles, names the Magnetron as the one turreted vehicle it refuses. Coded large by the size list's tank and self-propelled gun examples, although the Amphibious Transport counts it as six slots, like the Apocalypse, the Battle Fortress and the MCV, where regular vehicles take three."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class order decided: the infobox armour type Light maps to light. Rank adds toughness at Veteran (game-wide veterancy)."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "No fog of war in skirmish, so the band is the medium proposal (registry sight_reference). Its Sight figure, how far it lifts the shroud, is twice the Conscript's."
+      },
+      "armament": [
+        {
+          "name": "Magnetic beam",
+          "slot": "primary",
+          "family": "magnetic",
+          "damage": "kinetic",
+          "mount": "slow-turret",
+          "delivery": "beam",
+          "range": "long",
+          "can_target": ["ground-vehicle", "naval", "structure"],
+          "traits": ["min-range", "root", "silence"],
+          "summary": "One attack order, two effects. Against a vehicle or ship it raises the target into the air and hauls it toward the Magnetron, then sets it down on a free spot nearby; while held, the victim can neither drive nor fire (riders firing from a Battle Fortress are the exception) and counts as an air unit, so anti-air weapons can hit it. Lifting itself hurts nothing: a vehicle set down on clear ground is unharmed. Cutting the beam drops the victim where it is, and with careful timing that kills it: a land vehicle that is not amphibious dies in water, a ship hauled onto land is wrecked, and a vehicle dropped onto a building or onto another vehicle can hurt or wreck whatever is underneath, and the Magnetron earns veterancy for such kills. It can also ferry vehicles across cliffs or walls. Against buildings the same beam does direct damage at long range, more slowly and weakly than other sides' artillery, and, unlike an attack from the air, anti-air fire cannot stop it. It holds one target at a time, cannot lift a vehicle that is too close, and cannot target infantry or aircraft in flight; landed aircraft can be lifted, and a Harrier or Black Eagle taken off its pad crashes if the beam is cut. Targeting a carrier makes its drones crash, and a ship lifted out of a Giant Squid's grip is released. In the game data the two effects are separate weapons with their own reach and rate of fire; the anti-vehicle one reaches a little further. Elite rank makes it stronger and faster-firing; patch 1.001 fixed vehicles falling through high bridges, a Magnetron repeatedly lifting and dropping one vehicle, and an elite Magnetron reaching less far than a standard one.",
+          "patterns": ["pull-target"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player drives and holds the beam. Its voice lines speak as a crew; they change nothing."
+      },
+      "abilities": [],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No source shows anything special when it dies, so the default for a crewed vehicle applies."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:pull-target",
+          "why": "A lifted vehicle cannot move or shoot, can be carried to the Magnetron's side, and dies if dropped into water or onto buildings and other vehicles."
+        },
+        {
+          "ref": "range:long",
+          "why": "The beam reaches about three times as far as a Conscript's rifle, so it works from well behind the front."
+        },
+        {
+          "ref": "hits:structure",
+          "why": "Its beam damages buildings and defences from range, fires over walls, and anti-air cannot intercept it."
+        },
+        {
+          "ref": "hits:naval",
+          "why": "It can pull ships out of the water, which wrecks them on land."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:magnetic",
+          "why": "Its only weapon works on vehicles, ships and buildings: it has no attack that reaches infantry or aircraft in flight, and no way to pull soldiers in."
+        },
+        {
+          "ref": "pattern:pull-target",
+          "why": "It holds one vehicle at a time, and lifting alone does no harm, so it needs water, a drop target or teammates to finish the victim."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Light armour, so anti-tank fire breaks it quickly."
+        },
+        {
+          "ref": "weapon-trait:min-range",
+          "why": "It cannot lift a vehicle that gets right up close."
+        },
+        {
+          "ref": "hits:structure",
+          "why": "Its damage to buildings comes slowly and is weak next to other artillery such as the Prism Tank or V3."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:infantry",
+          "why": "The manual calls it all but helpless against enemy soldiers: it cannot attack them or drag them in."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "The wiki singles out anti-tank soldiers, Guardian GIs and Tesla Troopers, as especially dangerous: they hit its light hull hard and cannot be lifted."
+        },
+        {
+          "ref": "unit:ra2.allied.guardian-gi",
+          "why": "Named by the wiki as a particular threat: an anti-tank soldier it can neither lift nor shoot."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "It cannot target aircraft in flight, so bombers and gunships attack it freely."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Massed tanks overwhelm it, because it holds a single vehicle at once while the others close in."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Lone vehicles are taken out of the fight while lifted, hauled toward Yuri's units, or dropped to their death over water or onto other units."
+        },
+        {
+          "ref": "class:naval",
+          "why": "Ships dragged onto land are wrecked, a carrier it targets loses its drones, and a ship held by a Giant Squid is freed."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Its beam wears down base defences from range, and anti-air cannot stop it as it stops air strikes."
+        },
+        {
+          "ref": "mobility:jet",
+          "why": "Harriers and Black Eagles parked on their pads can be lifted, and they crash if the beam is cut mid-lift."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "pattern:mind-control",
+          "why": "The manual's stated purpose: it hauls enemy vehicles toward Yuri's forces so they can be mind-controlled safely."
+        },
+        {
+          "ref": "unit:ra2.yuri.yuri-clone",
+          "why": "The Yuri faction page names Yuri Clones and Masterminds as where it drags vehicles for capture."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "A lifted vehicle counts as an air unit, so anti-air teammates such as the Gattling Tank can shoot it while it hangs helpless."
+        },
+        {
+          "ref": "role:anti-infantry",
+          "why": "It cannot fight infantry, so it needs escorts that can; the AI sends it with Brutes and Gattling Tanks."
+        }
+      ],
+      "memorable": "A tractor-beam tank that plucks enemy vehicles off the ground, carries them toward its own lines and can drop them into the sea.",
+      "as_player": "A mid-tier support tank with no answer to soldiers. Hold fire on an enemy vehicle at long range to hoist it: while it hangs it cannot drive or shoot, your anti-air teammates can hit it, and releasing it over water, a cliff edge or a cluster of enemies wrecks it. On a building the same beam slowly shakes it apart from long range; keep an anti-infantry escort close.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Magnetron",
+          "title": "Magnetron, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge 1.001",
+          "note": "Its quote box copies the Magnetron entry of the Yuri's Revenge manual (PDF page 21). Infobox: cost, tier 2, Psychic Radar, armour type Light, land speed, sight, the two warheads with their reach, rate of fire and minimum range.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "armour",
+            "sensors",
+            "armament/0",
+            "roles",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Magnetic_beam",
+          "title": "Magnetic beam, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "The weapon's own page: it lifts ground vehicles and ships, drops them when the beam is cut, lifted vehicles count as air units, and it damages buildings; it calls the Magnetron an EM tank.",
+          "supports": ["armament/0", "body", "strengths/0", "strengths/3", "counters/1", "combos/2"]
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF), hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "note": "Tech table on PDF page 19 (War Factory plus Psychic Radar); Magnetron entry on page 21; Tank Bunker entry on page 23, which names the Magnetron as the one turreted vehicle the bunker refuses.",
+          "supports": ["tier", "roles", "body", "armament/0", "weaknesses/0", "countered_by/0", "combos/0"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_2_-_Yuri%27s_Revenge_manual",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (transcript), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "Transcribes the manual's unit and structure entries (the Magnetron and Tank Bunker entries used here); the original is the PDF cited above.",
+          "supports": ["roles", "body", "weaknesses/0", "countered_by/0", "combos/0"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Yuri%27s_Revenge_patch_1.001",
+          "title": "Yuri's Revenge patch 1.001, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge 1.001",
+          "note": "Lists the patch's changes: the bridge fix, the repeated lift-and-drop fix, the elite range fix, and a Giant Squid letting go of a lifted ship.",
+          "supports": ["armament/0", "counters/1"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Assault comes only from the step 5 fallback. Step 1: the registry note says the official site's Application line for the Magnetron names no role, and the manual entry names none; the archived profile (newunits-yuri3.jsp on web.archive.org) would not load from this session, so that line could not be read here. Step 3 gives no siege, because siege's coding rule needs a lobbed, dropped or deployed-area weapon or a structure-killing missile or rocket, and this is a straight beam. Step 4 gives nothing: no source gives the beam extra damage against a kind of target, and anti-armour's requires fail (its damage is kinetic and its pattern is not infest-vehicle)."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Disabler rests on the weapon's control pattern and its root and silence traits (a lifted vehicle cannot move or fire). Siege is left out by its coding rule although the wiki calls the Magnetron Yuri's artillery; the wiki's role field (support artillery vehicle) and the war factory page's line (anti-structural artillery vehicle) are the wiki's own words, not official text."
+        },
+        {
+          "path": "mobility/base",
+          "note": "No text source says whether it runs on tracks or wheels. Tracks follow from the Magnetic beam page calling it an EM tank and from its listing in the wiki's tanks navigation box."
+        },
+        {
+          "path": "body/plan",
+          "note": "Hull with turret rests on the manual's Tank Bunker entry, which treats the Magnetron as a turreted vehicle (the Tank bunker page on the Command & Conquer Wiki, https://cnc.fandom.com/wiki/Tank_bunker, lists the turretless vehicles and does not include it). A launcher rack carrying an exposed emitter would also be arguable for an artillery vehicle."
+        },
+        {
+          "path": "body/size",
+          "note": "Coded large by the size list's examples (tanks and self-propelled guns). The Amphibious transport (Red Alert 2) page on the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Amphibious_transport_(Red_Alert_2)) gives it six of the transport's twelve slots, like the Apocalypse and the MCV, where regular vehicles take three, which by measurement could point to huge."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "Long, not off-screen: its reach against vehicles exceeds its own Sight figure, but the off-screen test compares the reach with the figure the sight band uses, and a proposal band uses none (registry Shroud and sight note); no source says it needs spotters."
+        },
+        {
+          "path": "armament/0/damage",
+          "note": "The infobox gives the anti-vehicle warhead an enormous damage figure, but ModEnc's IsLocomotor page (https://modenc.renegadeprojects.com/IsLocomotor) explains that a locomotor warhead's damage figure only has to beat the target's size for the lift to work; the wiki says the Magnetron cannot harm units directly. The two warheads differ (LocomotorBeam against vehicles, MagneShakeWH against buildings), so damage step 5 gives the family default, kinetic, the only type the magnetic family allows."
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "Root and silence are coded from the wiki's statement that a vehicle held in the air can neither move nor fire; the vehicle is still moved by the beam, which the pull-target pattern covers, so root's 'cannot move' is read as 'cannot move by itself'."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Beam, the family default and the sources' word. ModEnc's IsMagBeam page (https://modenc.renegadeprojects.com/IsMagBeam) says the game draws a wave from the target to the Magnetron when it fires on vehicles and the other way for buildings, and that the warhead goes off when the wave arrives."
+        },
+        {
+          "path": "strengths/2",
+          "note": "Firing over walls rests on the Fortress walls (Red Alert 2) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Fortress_walls_(Red_Alert_2)), which also says it can lift vehicles over walls."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "The Iron Curtain (Red Alert 2) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Iron_Curtain_(Red_Alert_2)) says a vehicle under the Iron Curtain cannot be lifted; that is a side-wide power, so it is noted here only."
+        },
+        {
+          "path": "combos/1",
+          "note": "The Yuri (faction) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Yuri_(faction)) names Yuri Clones and Masterminds as the units it drags vehicles toward; the manual only says Yuri's forces."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparison with the main battle tanks uses the Grizzly's and Rhino's land speeds from the registry's research notes; the Lasher tank page on the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Lasher_tank) gives the Lasher a speed between those two, also above the Magnetron's."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "assault",
+          "wanted": "siege (or disabler)",
+          "note": "The sources present it as Yuri's artillery and a vehicle-lifting support unit, but its beam is neither lobbed nor a missile, and it fails anti-armour's requires, so the steps fall through to the generalist fallback. Assault's description (leads pushes, brawls up close) does not fit a fragile long-range support vehicle."
+        },
+        {
+          "path": "roles",
+          "used": "assault, disabler",
+          "wanted": "anti-armour",
+          "note": "Its job is taking enemy vehicles out of the fight, but anti-armour needs armour-piercing, energy, electric or EMP damage or the infest-vehicle pattern; a pull that kills by dropping the victim meets none of them."
+        },
+        {
+          "path": "armament/0/damage",
+          "used": "kinetic",
+          "wanted": "no damage against vehicles (a pure move effect), shaking damage against buildings",
+          "note": "Against vehicles the beam only moves the target; harm comes from where it is dropped. No damage type stands for that, and kinetic (bullets and slugs) describes neither effect well."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "armament/0/family",
+          "rule": "weapon-families:magnetic allowed.target-types structure",
+          "note": "The same magnetic beam that lifts vehicles also damages buildings directly (manual and wiki); our magnetic family reaches only vehicles, low fliers and ships."
+        }
+      ],
+      "researched_by": "batch r1, agent J08-RA2",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "ra2.yuri.slave-miner",
+      "game": "ra2",
+      "introduced_in": "ra2-yuris-revenge",
+      "faction": "yuri",
+      "name": "Slave Miner",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["logistics", "anti-infantry"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "War Factory",
+        "basis": "The Yuri's Revenge manual's tech table (PDF page 19) puts the Slave Miner in the War Factory row with no extra building, and the infobox gives tier 1. It can also be placed from the Construction Yard as an already deployed refinery once a Bio Reactor stands; that route is not on the registry's tier map and needs no tech step either."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 1750,
+        "basis": "Patch 1.001 raised its price from the launch figure; both prices sit at or above the very-high threshold, more than twice a Lasher tank's."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": ["deploy-anchor"],
+        "speed": "slow",
+        "speed_raw": 0.75,
+        "notes": "Slower than basic infantry and the Soviet War Miner, half as fast as the Rhino and slower still next to the Grizzly or Lasher; the wiki says its heavy armour costs it speed. Its deploy key sets it down as a refinery (see modes). Not amphibious: chronoshifted onto water it sinks. Handling is the tracks default."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "large",
+        "notes": "A whole ore refinery on a vehicle chassis: the manual says the entire structure drives to the ore and deploys. Too big for Yuri's Tank Bunker, which turns away ore miners (Tank bunker page). Its Slaves are separate infantry units (ra2.yuri.slave), not members of this unit: they walk after it, and its owner cannot order them."
+      },
+      "armour": {
+        "class": "heavy",
+        "models": ["self-repair"],
+        "notes": "Step 1 of the armour-class order decided: the infobox armour type Medium maps to heavy (the registry's map; ModEnc says only miners and the Kirov use that type). The wiki calls it far more heavily armoured than other miners, with very many hit points. Mobile, it mends itself; deployed, only an Engineer sent inside can repair it, since it cannot be repaired by hand like other structures, and a captured Machine Shop mends it only while it is mobile. Radiation does not hurt it, though it kills its Slaves."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "No fog of war in skirmish, so the band is the medium proposal (registry sight_reference). Its Sight figure is a little shorter than the Conscript's while mobile and a little longer once deployed."
+      },
+      "armament": [
+        {
+          "name": "20mm rapid machine gun",
+          "slot": "primary",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "summary": "It shares the Soviet War Miner's light machine gun, reaching about a third further than a Conscript's rifle. Enough to see off stray infantry and Terror Drones, but the wiki calls the miner a very weak attacker. It cannot fire at aircraft."
+        },
+        {
+          "name": "Cannon (elite)",
+          "slot": "acquired",
+          "family": "cannon",
+          "damage": "armour-piercing",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
+          "traits": [],
+          "condition": "Replaces the machine gun when the miner reaches Elite rank.",
+          "summary": "A tank gun firing high-explosive shells: slower-firing than the machine gun but heavier per shot, and by the War Miner page useful against armour and buildings as well as infantry. Because the Slave Miner gets none of veterancy's stat bonuses, it fires slower than an elite War Miner's gun, and an elite War Miner beats it one-on-one.",
+          "patterns": ["earn-veterancy"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player drives, fires the gun and deploys. Its voice lines are a foreman's; they change nothing. The Slaves are not seats or passengers."
+      },
+      "abilities": [
+        {
+          "name": "Deploy into refinery / pack up",
+          "kind": "deploy",
+          "source": "innate",
+          "summary": "Next to an ore field, the miner unfolds into a refinery building and sends out its Slaves, who dig the nearby ore and carry it back to be turned into money. Packing up turns it back into a vehicle, and the Slaves follow it on foot. If it travels far away its old Slaves can be stranded, and it cannot start mining again until they are gone (killed, or mutated into Brutes). Iron Curtain or Force Shield protection ends when it changes form.",
+          "patterns": ["deploy-siege-mode", "gather-resources"]
+        },
+        {
+          "name": "Slave replacement",
+          "kind": "triggered",
+          "source": "innate",
+          "summary": "Keeps up to five Slaves. Whenever one dies, the miner makes a new one after a delay, at no cost; mining slows until it arrives. The owner cannot build or command Slaves directly.",
+          "patterns": ["reinforce-squad"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "deployed",
+          "name": "Deployed refinery",
+          "via": "deploy-siege-mode",
+          "summary": "Cannot move. It becomes a structure that houses the Slaves' mining and processes their ore, and sees a little further. As a building it is safe from the Chronosphere, open to C4 like other structures, cannot be captured, and loses its self-repair: only an Engineer sent inside repairs it. Like any refinery it lets an enemy Spy who gets inside steal half its owner's money.",
+          "armour": {
+            "class": "heavy",
+            "models": ["flat-pool"]
+          }
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "When it is destroyed its Slaves are freed and join the player who destroyed it; since patch 1.001 that also holds when it is dropped into water, and before it they turned neutral. Freed Slaves can be ordered about and can fight with shovels, but can no longer mine, and the ore they carried is lost. If its owner recycles it in their own Grinder with the Slaves still out in the field, they turn neutral and attack anything nearby. The default for a crewed vehicle applies to the miner itself."
+      },
+      "strengths": [
+        {
+          "ref": "armour-class:heavy",
+          "why": "Far tougher than any other miner and unharmed by radiation; deployed, its huge health soaks fire while base defences work."
+        },
+        {
+          "ref": "armour-model:self-repair",
+          "why": "Mends itself while mobile, so it needs no repair building."
+        },
+        {
+          "ref": "size:large",
+          "why": "Partly because of its size, Terror Drones cannot get inside it, even while it drives, the only ground unit with that immunity."
+        },
+        {
+          "ref": "role:logistics",
+          "why": "Like every miner it cannot be mind-controlled."
+        },
+        {
+          "ref": "pattern:reinforce-squad",
+          "why": "Lost Slaves come back free, so harassment only slows its income."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "speed:slow",
+          "why": "Slower than infantry, so it takes a long time to reach a new ore field."
+        },
+        {
+          "ref": "weapon:machine-gun",
+          "why": "Its gun is weak and cannot fire at aircraft, leaving it helpless against air attack."
+        },
+        {
+          "ref": "pattern:gather-resources",
+          "why": "Its income depends on fragile Slaves on foot, who die quickly to anti-infantry fire and radiation."
+        },
+        {
+          "ref": "pattern:deploy-siege-mode",
+          "why": "Deployed, it cannot move or mend itself, only an Engineer can repair it, and it usually sits outside the Psychic Radar's cover, so Spies can slip in and steal money."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "It has no anti-air weapon; only its thick armour makes air strikes take several sorties."
+        },
+        {
+          "ref": "role:anti-infantry",
+          "why": "Viruses, Snipers, a Navy SEAL in an IFV or Iraqi Desolators kill the Slaves and stop the mining while replacements come."
+        },
+        {
+          "ref": "unit:ra2.yuri.virus",
+          "why": "Named by the wiki among the infantry killers that shut down its mining."
+        },
+        {
+          "ref": "role:infiltrator",
+          "why": "An Allied Spy that gets into the deployed refinery steals half the owner's money unless a psychic escort spots him."
+        },
+        {
+          "ref": "unit:ra2.allied.spy",
+          "why": "The Spy is the threat the wiki singles out, because the miner works away from the Psychic Radar's detection."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "pattern:infest-vehicle",
+          "why": "Terror Drones cannot get inside it, so it can shoot down stray drones that come at it."
+        },
+        {
+          "ref": "unit:ra2.soviet.terror-drone",
+          "why": "The drone the wiki names: it cannot infest the miner even while it drives, and the miner's gun picks it off."
+        },
+        {
+          "ref": "pattern:mind-control",
+          "why": "Yuri Clones, Masterminds and other mind-controllers cannot take it over."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "sensor:detector",
+          "why": "A Yuri Clone or Mastermind nearby sees through Spy disguises and guards the deployed refinery."
+        },
+        {
+          "ref": "unit:ra2.yuri.yuri-clone",
+          "why": "Named by the wiki as the escort that stops Spies stealing from it; the AI also guards it with a Yuri Clone."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "It cannot fight aircraft, so the AI guards it with a Gattling Tank alongside two Lasher tanks."
+        }
+      ],
+      "memorable": "A refinery on tracks that parks beside the ore and puts five slaves to work, replacing each one that dies for free; destroy it and the slaves change sides.",
+      "as_player": "A slow, very tough economy vehicle for the team. Drive to an ore field and press deploy to become a refinery that sends five computer-run slaves out to dig money for your side; lost slaves return free after a while. Your machine gun only scares off stray soldiers and drones, so call for anti-air and spy-hunting escorts, and know that if you die your slaves join the enemy who killed you.",
+      "sources": [
+        {
+          "url": "https://cnc.fandom.com/wiki/Slave_miner",
+          "title": "Slave miner, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge 1.001",
+          "note": "Its quote box copies the Slave Miner entry of the Yuri's Revenge manual (PDF pages 22 and 23). Infobox: both prices, tier 1, armour type Medium, land speed, sight mobile and deployed, the gun and the elite cannon, up to five free Slaves, self-repair, mind-control immunity, engineer-only repair when deployed.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament",
+            "abilities",
+            "modes",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Slave_(Yuri%27s_Revenge)",
+          "title": "Slave (Yuri's Revenge), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "The Slaves: up to five per miner, made automatically at no cost, follow the miner and mine once it deploys, cannot be ordered by their owner, and join whoever destroys their miner.",
+          "supports": ["body", "abilities/0", "abilities/1", "on_death", "weaknesses/2", "strengths/4"]
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/Red_Alert_2_-_Yuri%27s_Revenge_-_English.pdf/revision/latest",
+          "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF), hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-20",
+          "note": "Tech table on PDF page 19 (War Factory, no extra building); Slave Miner entry on pages 22 and 23; the Yuri Clone entry on page 20 lists miners among the units immune to mind control; the Spy list on page 14 (a Spy in a refinery steals half the money).",
+          "supports": [
+            "tier",
+            "roles",
+            "armour",
+            "abilities/0",
+            "abilities/1",
+            "modes/0",
+            "strengths/3",
+            "counters/2",
+            "countered_by/3"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Yuri%27s_Revenge_patch_1.001",
+          "title": "Yuri's Revenge patch 1.001, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "version": "Yuri's Revenge 1.001",
+          "note": "Lists the patch's changes: the Slave Miner's price rise, its build times, and freed Slaves joining their liberator when the miner is dropped into water.",
+          "supports": ["cost_band", "on_death"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/War_miner",
+          "title": "War miner, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-20",
+          "note": "The Soviet miner whose gun the Slave Miner shares (Slave miner page): its machine gun is good for nothing but soldiers, and at Elite it becomes an auto-cannon firing high-explosive shells that also works against armour and buildings; an elite War Miner beats an elite Slave Miner.",
+          "supports": ["armament/0", "armament/1", "roles/secondary", "mobility"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Assault comes only from the step 5 fallback. Step 1 reads the designation first, and the registry note says the official site's Application line for the Slave Miner names no role; the archived page (newstructures-yuri.jsp on web.archive.org) would not load from this session, so that line could not be read here. Step 2 does not apply because it fires its own gun, and step 4 finds no bonus: no source gives the gun extra damage against a kind of target, and the Slave Miner's own official text says nothing about its gun."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Logistics ranks at step 1 because the manual calls the unit the Slave Miner and sets it in place of Yuri's standard miner (miner is a logistics alias; RA2's official role-line notes count the unit's name). Anti-infantry ranks at step 3 and rests on the War miner page, which says the shared machine gun is useful only against soldiers."
+        },
+        {
+          "path": "mobility/base",
+          "note": "No text source says whether it runs on tracks or wheels; tracks is a judgement for a very heavy hauler."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "No source says whether it crushes infantry. The RA2 manual entry quoted on the War miner page says the War Miner does, as heavy vehicles do, but no page read says so for the Slave Miner, so crush is left out."
+        },
+        {
+          "path": "body/plan",
+          "note": "No source describes its shape beyond a refinery that drives, or says whether its gun sits on a turret. Hull with turret is the closest general vehicle body."
+        },
+        {
+          "path": "body/size",
+          "note": "Large is a judgement: no size example names a mining vehicle. The wiki ties its immunity to Terror Drones partly to its size, and the Tank bunker page on the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Tank_bunker) says ore miners are too big for the bunker; neither says it is twice a tank's size."
+        },
+        {
+          "path": "armament/0/mount",
+          "note": "No source says how the gun is mounted, so the machine-gun family default (free aim) is used."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Hitscan is the machine-gun family default; no source describes the shots."
+        },
+        {
+          "path": "armament/0",
+          "note": "No source says whether the gun still fires once the miner is deployed as a refinery; the weapon is recorded for the vehicle and the deployed mode's summary is silent on it."
+        },
+        {
+          "path": "armament/1/family",
+          "note": "The Slave miner page calls the elite weapon a tank gun and its infobox a cannon, while the War miner page calls the same weapon an auto-cannon; the infobox's slow rate of fire for it fits one heavy shell at a time, so cannon.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/1/damage",
+          "note": "The War miner page says the elite gun fires high-explosive shells, but no source says the hit hurts an area, so damage step 5 keeps the cannon default, armour-piercing, and no splash trait is set."
+        },
+        {
+          "path": "armament/1/summary",
+          "note": "The infobox's elite line lists more strength, firepower and rate of fire, while the page's prose says the Slave Miner gets no stat bonuses from veterancy and only the new gun. The summary follows the prose.",
+          "sources_disagree": true
+        },
+        {
+          "path": "modes/0/armour",
+          "note": "No source gives the deployed refinery's armour type; the class is kept, and only the loss of self-repair is recorded."
+        },
+        {
+          "path": "abilities/1/kind",
+          "note": "Triggered, because each Slave's death sets off one replacement; passive would also be arguable, since the miner keeps its count topped up all the time. ModEnc's SlaveRegenRate page (https://modenc.renegadeprojects.com/SlaveRegenRate) gives the delay as a rules setting but no figure for the Slave Miner, so no cooldown band is given."
+        },
+        {
+          "path": "strengths/3",
+          "note": "Mind-control immunity rests on the infobox and the manual's list of immune units, which names miners; the Yuri war factory page on the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Yuri_war_factory) repeats it."
+        },
+        {
+          "path": "abilities/0",
+          "note": "The loss of Iron Curtain or Force Shield protection on changing form rests on the Iron Curtain (Red Alert 2) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Iron_Curtain_(Red_Alert_2))."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The comparison with the War Miner uses the War miner page's land speed figure and the one with the Lasher the Lasher tank page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Lasher_tank); the Grizzly's and Rhino's speeds come from the registry's research notes."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "assault",
+          "wanted": "logistics",
+          "note": "Its job is mining, but a designation that names no role and a gun fired by the unit itself send the role steps past step 2 to the generalist fallback. Logistics stays a secondary role."
+        },
+        {
+          "path": "body/plan",
+          "used": "hull-turret",
+          "wanted": "a body plan for a large hauler or mobile refinery",
+          "note": "No body plan covers a cargo or factory vehicle whose main body is its load rather than a gun turret or a passenger compartment."
+        },
+        {
+          "path": "on_death/outcomes",
+          "used": "bail-out",
+          "wanted": "minions defect to the killer",
+          "note": "What its death really does is free its worker units to the side that destroyed it; no on-death term describes followers changing sides."
+        },
+        {
+          "path": "modes/0",
+          "used": "no class or body change",
+          "wanted": "a structure class and body for a deployed building form",
+          "note": "Deployed it is a building, which no unit class or body plan describes, so the mode keeps the vehicle's class and body."
+        },
+        {
+          "path": "abilities/1/patterns",
+          "used": "reinforce-squad",
+          "wanted": "a pattern for worker minions that respawn at their master for free",
+          "note": "The pattern is about replacing a squad's own members; the Slaves are separate, uncontrollable worker units tied to the miner, replaced automatically and free. The interaction and counterplay (kill the bodies to weaken it, kill the source to end it) match, but the fit is loose."
+        }
+      ],
+      "researched_by": "batch r1, agent J08-RA2",
+      "review": {
+        "status": "unchecked"
+      }
+    }
+  ]
+}

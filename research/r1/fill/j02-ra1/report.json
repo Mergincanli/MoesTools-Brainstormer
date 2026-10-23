@@ -1,0 +1,403 @@
+{
+ "label": "j02-ra1",
+ "game": "ra1",
+ "file_written": "data/units/ra1.json",
+ "units": [
+  "ra1.allied.field-mechanic",
+  "ra1.shared.minelayer"
+ ],
+ "validator_result": "OK. There are no errors and no ATYPICAL lines for either unit. The only warnings are the expected ones: the patterns repair-allies and lay-mines are planned but not written yet, and the unit links ra1.shared.ore-truck and ra1.soviet.yak point to units nobody has researched yet.",
+ "copy_check_result": "Exit 0. All 10 cited pages were checked and no runs of six or more words are shared. The two manual scans are cited as File: pages, and for those pages the wiki API returns only a licence template. So the manual wording was checked in two other ways: through the wiki quote boxes that copy the manual paragraphs (Field mechanic, Anti-tank minelayer, Anti-personnel minelayer), and by my own local six-word check against the text pulled from both PDFs. That local check also covered the uncited pages: Yak, the manual transcript, StrategyWiki's Soviet units page, and BDATA.CPP, UDATA.CPP, IDATA.CPP, RULES.CPP and FOOT.CPP. It found nothing.",
+ "hesitations": [
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "faction",
+   "chosen": "one shared entry (shared)",
+   "alternatives": [
+    "ra1.allied.anti-tank-minelayer plus ra1.soviet.anti-personnel-minelayer"
+   ],
+   "reason": "The task fixed the id, and the evidence supports one shared entry. UNIT.CPP has a single MNLY type that lays an anti-personnel mine for the USSR, Ukraine and the Soviet side and an anti-tank mine for everyone else. Both infoboxes give the same internal name, price, speed, sight and health. Against that: the manual prints two paragraphs, the wiki has two pages, registry choice 6 does not list the minelayer among RA1's shared units, and the research notes speak of 'both minelayers'. The Ids convention ('shared' is for units every side can field) does not say what to do when one shared type behaves differently per side."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "roles/secondary",
+   "chosen": "empty",
+   "alternatives": [
+    "anti-infantry",
+    "anti-armour"
+   ],
+   "reason": "roles.primary says to use only what every copy has, and the registry says a shared unit's official text counts only where every side's version carries it. The Allied copies' mines would support anti-armour, but anti-armour's requires need a damage type, which an ability cannot carry. The Soviet copies' mines would support anti-infantry, but only half the copies have them. The roles.secondary steps do not say how to rank a button whose effect differs by side. Recorded in fit_notes."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "roles/primary",
+   "chosen": "area-denial (step 2, unarmed, main action lays mines)",
+   "alternatives": [
+    "area-denial through step 1, since area denial's alias is minelayer"
+   ],
+   "reason": "The rule is clear: the unit's own name never counts (registry). Both paragraphs share only the sentence about carrying five mines and reloading at the depot, which names no role, so step 1 gives nothing and step 2 decides."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "abilities/0/cooldown",
+   "chosen": "per-life",
+   "alternatives": [
+    "no band (held back only by a stock)"
+   ],
+   "reason": "Cooldown bands say an ability that comes back only at a resupply point is per-life. They also say an ability held back only by a stock has no band. Five mines, refilled only at the Service Depot, fit both readings; per-life's own definition says 'one use'."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "armament",
+   "chosen": "empty; mines recorded as the lay-mines ability",
+   "alternatives": [
+    "an explosives weapon with place delivery (one per side's mine, or one entry)"
+   ],
+   "reason": "Under the weapons-vs-abilities rule, mine laying is a deploy/self action, not an attack order, and the abilities rule makes a mines menu one lay-mines entry. The cost is that the mines' damage type and targets have nowhere to go."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "abilities/0/kind",
+   "chosen": "active",
+   "alternatives": [
+    "deploy"
+   ],
+   "reason": "Laying a mine is a one-off action on the deploy key, not a stationary mode, so the toggle-or-deploy tie-break does not apply."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "mobility/base",
+   "chosen": "tracks",
+   "alternatives": [
+    "wheels"
+   ],
+   "reason": "The rule is clear but the source is not. The Tracked flag lives in rules.ini, which was not readable, and the code's default is wheels. Tracks rest on the Anti-personnel page's 'treads' and its APC-based design."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "mobility/traits",
+   "chosen": "none",
+   "alternatives": [
+    "crush"
+   ],
+   "reason": "The code (UDATA.CPP) and the registry make it a crusher, but crush is allowed only on large and huge units, and the registry says to use the trait only where its size rule allows. Recorded in fit_notes."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "body/plan",
+   "chosen": "box-carrier",
+   "alternatives": [
+    "launcher-rack",
+    "hull-turret"
+   ],
+   "reason": "No body plan covers an enclosed, turretless utility hull with no riders. Box-carrier is the nearest fit: an enclosed hull, APC-based for the Soviets, built around a hatch. Recorded in fit_notes."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "body/size",
+   "chosen": "medium",
+   "alternatives": [
+    "large"
+   ],
+   "reason": "The size examples put APCs at medium and carriers on a tank hull at large. The code calls it a 'mine laying truck' that reuses the APC's door routine, its 'gigundo' size flag is false, and it has a quarter of a tank's health."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "resources",
+   "chosen": "limited-ammo",
+   "alternatives": [
+    "none, with the stock described only in the ability"
+   ],
+   "reason": "The registry's Ammunition bullet says minelayers work the same way as armed aircraft (limited-ammo). The cooldown and resource rules overlap here."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "countered_by/1",
+   "chosen": "unit:ra1.soviet.yak next to class:aircraft",
+   "alternatives": [
+    "weapon:machine-gun",
+    "weapon-trait:splash"
+   ],
+   "reason": "Matchups rule 1 says that when the sources name only a unit, you use what makes it win. Here that is both being a flier (mines never touch it, and the minelayer has no gun) and force-firing guns at the ground. I took class:aircraft as the word-list link that rule 3 requires."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "countered_by/2",
+   "chosen": "class:infantry and class:vehicle in both counters and countered_by",
+   "alternatives": [
+    "drop the side-specific countered_by entries"
+   ],
+   "reason": "Matchups rule 6 allows the same enemy in both lists only when the reasons name different situations. Here the situations are the Allied version and the Soviet version, which is a by-side split that the rule does not foresee."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "sources",
+   "chosen": "StrategyWiki Allied units (guide) as the fifth source; the Yak page named in an uncertain entry",
+   "alternatives": [
+    "cite the Yak page",
+    "cite INFANTRY.CPP"
+   ],
+   "reason": "The sources rule says to cite another established site that covers the unit rather than a third page of the same site. It is unclear whether the manual scan counts as a cnc.fandom page (it is hosted as a File page), and whether a site the registry codes as a guide counts as 'established'."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "armour/class",
+   "chosen": "medium",
+   "alternatives": [
+    "heavy"
+   ],
+   "reason": "The rule is clear: the registry's closed step-down list names both minelayers. The source is not fully clear, because the Anti-tank page's armortype is blank and Heavy is taken from the Anti-personnel page, since both are one internal type."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "flavour_affinity",
+   "chosen": "[] (written out as an empty list)",
+   "alternatives": [
+    "leave the field out"
+   ],
+   "reason": "shared has no flavour. Soviet scores 1 (tracks) and Allied scores 1 (box-carrier), both under 2, so the list is empty. The only doubt was whether to write [] or omit the field."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "name",
+   "chosen": "Minelayer; ability name 'Mine deployment'",
+   "alternatives": [
+    "Mine Layer",
+    "Anti-Tank Minelayer / Anti-Personnel Minelayer",
+    "Deploy"
+   ],
+   "reason": "No source gives one in-game name for both sides. The manual says 'Mine Layer', the wiki pages use the side names, and the ability label comes from the infobox field."
+  },
+  {
+   "unit": "ra1.allied.field-mechanic",
+   "path": "armament",
+   "chosen": "one repair-tool weapon entry",
+   "alternatives": [
+    "empty armament with a repair ability (the brief says it has no weapon)"
+   ],
+   "reason": "Under the weapons-vs-abilities rule, anything fired with the attack order is a weapon, and the code runs the repair as an attack ('action-attack'). The registry maps the Mechanical warhead to repair and says to record a healing weapon as repair, and support's requires name a repair tool. 'No weapon' is recorded in the summary and the weaknesses."
+  },
+  {
+   "unit": "ra1.allied.field-mechanic",
+   "path": "armament/0/delivery",
+   "chosen": "beam (the family's default)",
+   "alternatives": [
+    "melee (atypical for repair-tool)",
+    "projectile"
+   ],
+   "reason": "The sources do not say how the wrench reaches the vehicle, so the delivery rule falls back to the family's default. A hand wrench suggests touching distance, but the family does not allow melee. Recorded in fit_notes."
+  },
+  {
+   "unit": "ra1.allied.field-mechanic",
+   "path": "armament/0/range",
+   "chosen": "short (the family's default)",
+   "alternatives": [
+    "melee"
+   ],
+   "reason": "No reach figure exists on any page read. The manual's 'Range: Short' is a grade that the registry says is not band data."
+  },
+  {
+   "unit": "ra1.allied.field-mechanic",
+   "path": "armament/0/can_target",
+   "chosen": "ground-vehicle only",
+   "alternatives": [
+    "add naval",
+    "add low-air"
+   ],
+   "reason": "can_target step 1 (a weapon that does no damage lists only what the sources name) conflicts with naval's coding rule (list naval wherever ground-vehicle is listed, unless the sources say it can't reach ships). INFANTRY.CPP shows that ships are never patients, so naval is out. The code accepts aircraft, but a flier treated only while landed is not an air target."
+  },
+  {
+   "unit": "ra1.allied.field-mechanic",
+   "path": "armament/0/name",
+   "chosen": "Socket Wrench (the manual's weapon line)",
+   "alternatives": [
+    "GoodWrench (the rules name, not read)",
+    "Vehicle repair (the infobox ability)"
+   ],
+   "reason": "No in-game name was found."
+  },
+  {
+   "unit": "ra1.allied.field-mechanic",
+   "path": "armour/class",
+   "chosen": "light",
+   "alternatives": [
+    "unarmoured"
+   ],
+   "reason": "Step 1 (the infobox gives Light) and the registry note say light, with an uncertain entry marked sources_disagree. The Aftermath manual grades him None, and the soldier rule makes infantry unarmoured unless step 1 gives more."
+  },
+  {
+   "unit": "ra1.allied.field-mechanic",
+   "path": "mobility/speed",
+   "chosen": "medium (speed_raw 1)",
+   "alternatives": [
+    "slow"
+   ],
+   "reason": "The rule is clear: the infobox speed equals the reference's, and speed words go in notes. The source is not clear: the official manual calls him slow, which is recorded with sources_disagree."
+  },
+  {
+   "unit": "ra1.allied.field-mechanic",
+   "path": "confidence",
+   "chosen": "high",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "Official text was cited. The High-or-Medium tie-break covers established sites contradicting each other with no official text to settle it. Here the official manual itself disagrees with the infobox on armour and speed, both of which decide coded terms, and the registry says the manual's grades are not band data."
+  },
+  {
+   "unit": "ra1.allied.field-mechanic",
+   "path": "counters/0",
+   "chosen": "class:vehicle (in a drawn-out tank fight)",
+   "alternatives": [
+    "role:anti-armour",
+    "a counter built only from the repair facts"
+   ],
+   "reason": "counters needs at least one entry, but no source names a matchup that this unarmed unit wins. The same class:vehicle also appears in countered_by (Soviet tanks kill him); I split the two by situation under matchups rule 6."
+  },
+  {
+   "unit": "ra1.allied.field-mechanic",
+   "path": "weaknesses/3",
+   "chosen": "tier:t2 carrying the high price",
+   "alternatives": [
+    "leave the price out"
+   ],
+   "reason": "The typed-link kinds have no cost kind, so the price weakness hangs on the tier link."
+  },
+  {
+   "unit": "ra1.allied.field-mechanic",
+   "path": "abilities",
+   "chosen": "none; the boarding rule goes in the weapon summary and crew.notes",
+   "alternatives": [
+    "a passive or triggered entry for 'repair a transport before boarding'"
+   ],
+   "reason": "Under Weapons vs abilities and the abilities rule, an effect that is part of how a weapon works stays in that weapon's summary, and entering is a universal key."
+  },
+  {
+   "unit": "ra1.allied.field-mechanic",
+   "path": "sensors/sight",
+   "chosen": "medium",
+   "alternatives": [
+    "short"
+   ],
+   "reason": "The rule is clear: a sight of 0.75 times the reference is inside medium. Noted only because it is close to the short edge."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "ra1.allied.field-mechanic",
+   "path": "armament/0/delivery",
+   "used": "beam",
+   "wanted": "touch or melee delivery for a repair tool",
+   "note": "A hand-worked wrench fits neither delivery the repair-tool family allows (beam, projectile)."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "roles",
+   "used": "area-denial alone",
+   "wanted": "anti-armour (Allied copies) and anti-infantry (Soviet copies)",
+   "note": "A shared entry cannot hold roles that only one side's copies earn, and an ability carries no damage type, so mines can never meet anti-armour's requires."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "mobility/traits",
+   "used": "none",
+   "wanted": "crush",
+   "note": "The code makes it a crusher, but the trait is allowed only on large and huge units."
+  },
+  {
+   "unit": "ra1.shared.minelayer",
+   "path": "body/plan",
+   "used": "box-carrier",
+   "wanted": "an enclosed utility or cargo hull with no troop compartment",
+   "note": "No body plan covers a turretless cargo or utility vehicle without riders."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Shared units whose stock parts differ by side",
+   "note": "The rules give no way for a shared entry to code a part that changes with the owner's side, such as the minelayer's mine type: the roles, the ability's effect, and matchups that only hold for one side. Registry choice 6 also does not list the minelayer as shared, while the brief fixes a shared id."
+  },
+  {
+   "topic": "Cooldown of a multi-charge stock refilled only at a resupply point",
+   "note": "'Comes back only at a resupply point' (per-life) and 'held back only by a stock' (no band) overlap. Per-life's own definition says 'one use'."
+  },
+  {
+   "topic": "can_target step 1 versus naval's coding rule",
+   "note": "For a weapon that does no damage, step 1 lists only the kinds the sources name, while naval's rule lists naval on every weapon that lists ground-vehicle. It is not said which rule wins for a repair tool."
+  },
+  {
+   "topic": "Official text that disagrees with the infobox, and confidence",
+   "note": "The confidence tie-break covers established sites that contradict each other with no official text to settle it. It does not say what happens when official manual grades (armour None, 'slow') contradict the infobox that the registry tells us to code from."
+  },
+  {
+   "topic": "Counters for a support unit that cannot fight",
+   "note": "counters requires at least one entry, so an unarmed repairer must get a derived entry that no source names."
+  },
+  {
+   "topic": "'Third page of the same site'",
+   "note": "It is unclear whether a manual scan hosted as a cnc.fandom File page counts as a page of that site, and whether a site the registry codes as kind guide (StrategyWiki) counts as an 'established site' for this rule."
+  },
+  {
+   "topic": "Crush on medium vehicles",
+   "note": "The registry lists crushers (APC, both minelayers, Radar Jammer and others) that the size rule then excludes from the trait. Neither the registry nor the trait says whether to record them through a fit_note."
+  },
+  {
+   "topic": "Weapon in the brief versus the field rules",
+   "note": "The brief says the Field Mechanic 'has no weapon', but the field rules (attack-order weapon, damage_map Mechanical to repair, support's requires) make his wrench a weapon entry."
+  }
+ ],
+ "new_mechanics": [],
+ "pages_read_not_cited": [
+  {
+   "url": "https://cnc.fandom.com/wiki/Yak (named in the minelayer's countered_by uncertain entry)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Command_%26_Conquer:_Red_Alert_manual (the wiki's manual transcript)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Medic_(Red_Alert_1)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/War_factory_(Red_Alert_1)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Allied_barracks_(Red_Alert_1)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Minelayer (disambiguation)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Mine (disambiguation)"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Stealth"
+  },
+  {
+   "url": "https://strategywiki.org/wiki/Command_%26_Conquer:_Red_Alert/Soviet_units"
+  },
+  {
+   "url": "https://cnc.fandom.com/wiki/Medium_tank_(Red_Alert_1), Heavy_tank_(Red_Alert_1) and Rifle_infantry (read from the workspace's copy-check cache, for speed, health and sight comparisons)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/BDATA.CPP (named in an uncertain entry)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/UDATA.CPP (named in an uncertain entry)"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/IDATA.CPP"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/RULES.CPP"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/BUILDING.CPP"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/FOOT.CPP, DRIVE.CPP, CELL.CPP, DEFINES.H"
+  },
+  {
+   "title": "INFANTRY.CPP and TECHNO.CPP are cited on the Field Mechanic and only named in an uncertain entry on the minelayer"
+  }
+ ],
+ "source_problems": "1. The manual scans can't be checked automatically. Through the wiki API, the File: pages for both manual scans return only a licence template, so the copy-check cannot compare paraphrases with the manuals. I read the PDFs themselves from static.wikia.nocookie.net instead.\n\n2. The game's rules.ini was not readable (the registry notes say the same). That leaves several facts unconfirmed:\n- the wrench's reach, rate and delivery;\n- the minelayer's Tracked flag;\n- the Crewed flag, which decides on_death;\n- the mine damage per armour type.\n\n3. Problems with the Field Mechanic page:\n- The infobox armortype (Light) conflicts with the manual's armour grade (None).\n- Its 'cooldown 25' cites IDATA.CPP line 1025. That line is the frame on which the projectile launches, not a cooldown.\n- The manual calls him slow, but the infobox speed equals the Rifle Infantry's.\n\n4. Problems with the minelayer pages:\n- The Anti-tank minelayer infobox has no armortype.\n- The Anti-personnel page says Soviet troops avoid their own mines, but the code applies that avoidance to both sides through a rules setting.\n\n5. Visibility of mines: no page read says whether enemy players can see laid mines. BDATA.CPP marks the mines as invisible to radar, unselectable and not a legal target.\n\n6. Uncertain version of the APC rule: the force-move exception that lets the mechanic board a damaged APC is in the 2020 source release. Whether the 1997-1999 game had it is unchecked.\n\nAll pages loaded; there were no 429s or fetch failures."
+}
