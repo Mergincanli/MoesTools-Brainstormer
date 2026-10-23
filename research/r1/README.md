@@ -8,7 +8,7 @@ R1 is the first of the six research batches of step 3 of the approved plan ([doc
 - **33 new pattern files,** 7 of them for mechanics no registry id covered. The pattern registry now has 63 ids.
 - **The word lists stay at 1.0.0.** The opening check (your decision 6C) found no field below 80% agreement.
 - **The checker passed every game.** It re-checked 1,828 fields of 9 sampled units and all 33 patterns. The confirmed error rate is 2.5% for RA1, 1.7% for RA2 and 0.8% for RA3, against the 15% line, and 3.6% for the patterns. All 58 confirmed fields are fixed.
-- **61 rule problems change the word lists or field rules.** Two of the batch's own turned out to need the word lists too, and by Mustafa's decision all of them go to a rule-fix round before R2. Of the 20 the batch could settle itself, 17 are settled and one waits for a source; 8 more were settled earlier. The units are coded by the current rules meanwhile (see [Rule problems](#rule-problems)).
+- **61 rule problems change the word lists or field rules.** By Mustafa's decision the 37 that recur (raised by more than one report or touching more than one unit) go to a rule-fix round before R2, joined by two of the batch's own that turned out to need the word lists; the 24 one-off cases wait until they come up again. Of the 20 the batch could settle itself, 17 are settled and one waits for a source; 8 more were settled earlier. The units are coded by the current rules meanwhile (see [Rule problems](#rule-problems)).
 - **Decisions:** eight were taken during the batch with the recommended option, and all can be reversed. On 22 October Mustafa took the recommendations on the rest. See [Decisions](#decisions).
 
 ## How it ran
@@ -108,7 +108,7 @@ The Multigunner IFV sample keeps its three ATYPICAL lines from step 2.
 
 The agents reported every place where a written rule was unclear, two rules conflicted, or a rule gave a result that looks wrong for the unit. [rule-problems.md](rule-problems.md) merges them into one list. Each entry gives the rule, what goes wrong, the units, a proposed fix and how many reports raised it.
 - **61 for Mustafa:** the fix changes the word lists, the field rules or the validator's checks. Grouped by theme (my grouping): roles 14, matchups 11, weapons 11, body and class 7, abilities 5, other 13. 37 were raised by more than one report or touch more than one unit; the other 24 are one-off cases.
-- **20 for the batch:** only the registry notes, the games registry, the pattern registry or the data would change. 17 are settled, with five units changed to match the new notes. Two turned out to need the word lists and join the rule-fix round. One, a frame rate for RA2, needs a source this session cannot reach: its network proxy blocks ModEnc.
+- **20 for the batch:** only the registry notes, the games registry, the pattern registry or the data would change. 17 are settled: seven units changed to match the new notes, and four more changed only in a note or a fit-note path. Two turned out to need the word lists and join the rule-fix round. One, a frame rate for RA2, needs a source this session cannot reach: its network proxy blocks ModEnc.
 - **8 settled** earlier in the batch, each with its commit.
 
 The ones that change the most visible results:
@@ -142,7 +142,8 @@ Every game is well under the 15% line. The skeptic refuted one flagged pattern f
 
 - Each research agent ran the copy-check on its own file before finishing, and each record was checked again when it was committed.
 - The offline copy-check of the fill folder finds no shared runs in its 714 cached pages; four pages are not cached yet. The checker record keeps no quoted evidence, and its copy-check finds no shared runs; nor does the rule-problems list's.
-- **The game manuals, by hand.** The copy-check cannot read PDFs, so the text of the six manuals (Red Alert 1, The Aftermath, Red Alert 2, Yuri's Revenge, Red Alert 3 and Uprising) was extracted and compared, six words at a time, with every prose string in the batch's units, patterns, registry, notes and record. One phrase from the Yuri's Revenge manual, in the mind-control pattern, was reworded (0c3d4e2). The only shared run left is a weapon's name, S.H.R.I.N.K. Beam.
+- **The game manuals, by hand.** The copy-check cannot read PDFs, so the text of the six manuals (Red Alert 1, The Aftermath, Red Alert 2, Yuri's Revenge, Red Alert 3 and Uprising) was extracted and compared, six words at a time, with every prose string in the batch's units, patterns, registry, notes and record. One phrase from the Yuri's Revenge manual, in the mind-control pattern, was reworded (0c3d4e2). The only shared run left is the Cryocopter's weapon name.
+- Four older phrases in the R4 and R5 game notes (games-r4.md and games-r5.md) shared six words with cached pages; they were reworded (fa06d5a), so the notes folder passes the copy-check.
 - The full online copy-check, in three parts, runs last, after the final review's fixes.
 
 ## Decisions
@@ -154,8 +155,8 @@ Every game is well under the 15% line. The skeptic refuted one flagged pattern f
 4. **The RA1 Attack Dog's charge at its target counts for its speed band,** as nothing limits it: fast.
 5. **RA1 ships sail at half speed,** read from the released code and stated as an inference. The Submarine becomes slow.
 6. **In-game text counts as official text** for roles, such as a country's loading screen in RA2. It decides the Desolator's main role.
-7. **The RA1 reference rules copy counts for every rules value,** not only speed: Rules.ini and aftrmath.ini from OpenRA's raclassic repository, which win over a wiki, with an uncertain entry. It changes eight units (b46b01c): on-death crew for both Minelayers, the Mobile Gap Generator, the Mammoth Tank and the Yak; the Mammoth's cannons hit structures and its missiles are guided; the Field Mechanic is unarmoured and his wrench lands at once; the M.A.D. Tank's pulse reaches about twice as far as the wiki says.
-8. **17 batch-level rule problems settled** in the registry notes and the data, each as [rule-problems.md](rule-problems.md) says. Five units changed to match: the Siege Chopper's howitzer is coded as a cannon; both Minelayers get the crush trait, recorded as atypical; Boris's one-hero limit is in tier.basis; the Spy's confidence rises to high and the Field Mechanic's falls to medium; and the Slave Miner gets the rank lifts its infobox lists.
+7. **The RA1 reference rules copy counts for every rules value,** not only speed: Rules.ini and aftrmath.ini from OpenRA's raclassic repository, which win over a wiki, with an uncertain entry. It changes eight units (b46b01c): on-death crew for both Minelayers, the Mobile Gap Generator, the Mammoth Tank and the Yak; the Mammoth's cannons hit structures and its missiles are guided; the Field Mechanic is unarmoured and his wrench lands at once; the M.A.D. Tank's pulse reaches about twice as far as the wiki says; and the Submarine's torpedo texts now follow the copy.
+8. **17 batch-level rule problems settled** in the registry notes and the data, each as [rule-problems.md](rule-problems.md) says; 15 took the proposed fix, item 1 a smaller one and item 8 a different one. Seven units changed to match: the Siege Chopper's howitzer is coded as a cannon; both Minelayers get the crush trait, recorded as atypical; Boris's one-hero limit is in tier.basis; the Spy's confidence rises to high and the Field Mechanic's falls to medium; and the Slave Miner gets the rank lifts its infobox lists. Four more changed only in a note or a fit-note path: the M.A.D. Tank's and Mobile Gap Generator's fit notes, and the Chrono Legionnaire's and Chaos Drone's sight notes.
 
 **Prep questions, settled with the recommended answers (your decision of 22 October 2026):**
 1. The RA1 Ore Truck, Destroyer and Cruiser keep the heavy armour class.
@@ -172,6 +173,8 @@ Every game is well under the 15% line. The skeptic refuted one flagged pattern f
    - C. Settle each problem one by one in this pull request.
 
    A was recommended because the recurring problems will come up in every batch, and fixing them before R2 keeps the recode small. R1 merges as coded, since its units follow the current rules; the finished set of rule changes comes back to you for approval as word lists 1.1.0.
+
+   Batch items 5 and 9 ([rule-problems.md](rule-problems.md), Open for the batch), found after this decision, recur too (3 and 2 reports) and join the round.
 2. **Decision 7 above stays** (the RA1 rules copy counts for every rules value): it replaced guesses with the game's own data on eight units.
 
 ## Files
@@ -182,6 +185,7 @@ Every game is well under the 15% line. The skeptic refuted one flagged pattern f
 | [opening/](opening/) | The opening check: both codings, the agreement report, the hesitations, and the reconciled entries with the reconcilers' reports (`final/`) |
 | `fill/<job>/` | Each fill job's unit file, as recorded before the merge pass, and its report |
 | [fill/hesitations.md](fill/hesitations.md) | Every hesitation, gap and unclear rule of the fill |
+| [rule-problems.md](rule-problems.md) | Every rule problem the agents raised: 61 for Mustafa, 20 for the batch with how each was settled, and 8 settled earlier |
 | [checker/](checker/) | The checker: the seed, the counts and rates, the confirmed fields and their fixes (`result.json`), and every field checked (`checks.json`) |
 | [review/](review/) | The final review's findings, each with its verdict and status |
 | [../registry-notes/games-r1.md](../registry-notes/games-r1.md) | The game-level notes for RA1, RA2 and RA3 |
