@@ -66,6 +66,7 @@ const SCRIPTS = {
   'final-review.js': { readOnly: true, agents: 4, args: { batch: BATCH, draft: 'd', dimensions: ['data', 'record'] } },
   'verify-fixes.js': { readOnly: true, agents: 6, args: { batch: BATCH, findings: 'f', since: 'abc', draft: 'd', angles: ['closure', 'claims', 'recheck'], previous: 'p', draftPrev: 'dp' } },
   'prep.js': { readOnly: true, agents: 3, args: { batch: BATCH, game: { id: 'g', name: 'G', scope: 's', want: 'w', notesTask: 't' } } },
+  'rule-fix.js': { readOnly: true, agents: 5, args: { round: { id: 'r9fix', after: 'r9', version: '9.9.9' }, problems: 'p', ws: '/scratch/r9/rulefix', groups: ['g1', 'g2'].map(label => ({ label, items: ['1'] })) } },
   'notes-and-trim.js': { readOnly: true, agents: 3, args: { batch: BATCH, dir: '/d', games: [{ id: 'g', name: 'G', existing: '' }, { id: 'h', name: 'H', existing: '' }], trim: true, keep: 'k' } },
 }
 // The lists a script returns next to its results (research/workflows/README.md, "What comes back"): failed names the
@@ -73,6 +74,7 @@ const SCRIPTS = {
 const LISTS = {
   'checker.js': ['failed', 'unverified'], 'code-units.js': ['failed'], 'reconcile.js': ['failed'],
   'patterns.js': ['failed', 'unverified'], 'final-review.js': ['failed', 'unverified'], 'verify-fixes.js': ['failed', 'unverified'],
+  'rule-fix.js': ['failed', 'unverified'],
 }
 
 describe('workflow scripts', () => {
