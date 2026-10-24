@@ -50,7 +50,7 @@ function prompt(j) {
   const indep = MODE === 'opening'
     ? `This is the opening check of batch ${B.id.toUpperCase()}: another research agent codes the same units in a separate workspace, and the two codings are compared field by field to test the word lists on fresh units before the rest of the batch. Do not open, list or search /home/user/MoesTools-Brainstormer or any folder outside your workspace, and do not look up Unit Forge data elsewhere. Code every field exactly as the written rules say; wherever they still leave you unsure, say so in your report instead of guessing silently.`
     : `Work only inside your workspace; do not open, list or search /home/user/MoesTools-Brainstormer or any other workspace. Code every field exactly as the written rules say; wherever they leave you unsure, say so in your report instead of guessing silently.`
-  return `You are research agent ${j.agent} in batch ${B.id.toUpperCase()} of Unit Forge's research run (step 3 of the plan). Unit Forge is a research database of real RTS and shooter units, coded with fixed word lists (version 1.0.0, approved), that feeds a generator of original unit concepts for Shamble Frontlines, a top-down team shooter where each player buys and becomes one unit.
+  return `You are research agent ${j.agent} in batch ${B.id.toUpperCase()} of Unit Forge's research run (step 3 of the plan). Unit Forge is a research database of real RTS and shooter units, coded with fixed word lists (version 1.1.0, approved), that feeds a generator of original unit concepts for Shamble Frontlines, a top-down team shooter where each player buys and becomes one unit.
 
 ## Your workspace
 ${j.ws}, a copy of the Unit Forge repository (no git history). Run every command from it.
@@ -62,7 +62,7 @@ ${saving(`${j.ws}/.progress/code`, j.ws)}
 Research and fill in these units, using exactly these unit ids:
 ${j.units.map(u => `- \`${u.id}\`: ${u.brief}`).join('\n')}
 
-If data/units/${j.game}.json already exists, add your units after the units in it and leave those exactly as they are. Otherwise create it with this header: {"$schema": "../../schemas/source-unit.schema.json", "schema_version": "1.0.0", "vocab_version": "1.0.0", "game": "${j.game}", "units": [ ... ]}.
+If data/units/${j.game}.json already exists, add your units after the units in it and leave those exactly as they are. Otherwise create it with this header: {"$schema": "../../schemas/source-unit.schema.json", "schema_version": "1.0.0", "vocab_version": "1.1.0", "game": "${j.game}", "units": [ ... ]}.
 Fill every field the schema allows that applies to the unit, as the real research run does: the required fields, plus every optional field the unit's facts call for.
 
 ## Read first, fully

@@ -130,6 +130,18 @@ describe('docs builder', () => {
     assert.doesNotMatch(readDocs(dir)['docs/vocabularies.md'], /classes: all/)
   })
 
+  it("names a research-only class that a term allows after 'classes: all'", () => {
+    const dir = copyRepo()
+    const file = path.join(dir, 'data/vocab/sensor-traits.json')
+    const v = JSON.parse(fs.readFileSync(file, 'utf8'))
+    const radar = v.terms.find(t => t.id === 'radar')
+    radar.classes = [...radar.classes.filter(c => c !== 'naval'), 'naval']
+    fs.writeFileSync(file, JSON.stringify(v, null, 2))
+    assert.equal(run('--root', dir).status, 0)
+    const row = readDocs(dir)['docs/vocabularies.md'].split('\n').find(l => l.startsWith('| `radar` |'))
+    assert.match(row, /classes: all, plus Naval \(research only\)/)
+  })
+
   it("takes the example card's key allowance and balance flags from the data", () => {
     const dir = copyRepo()
     const cardFile = path.join(dir, 'docs/examples/concept-card.example.json')

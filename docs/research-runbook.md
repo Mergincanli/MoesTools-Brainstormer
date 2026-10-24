@@ -1,6 +1,6 @@
 # Research runbook: how a batch runs, and the night shift
 
-This is how a research batch of step 3 runs, step by step, at the quality the day sessions keep. Any agent that continues the research run follows it, and the night shift follows it without waiting for Mustafa. The plan it carries out is [docs/proposal.md](proposal.md), section 2.2. The rules every record follows are [docs/fields.md](fields.md) and [docs/vocabularies.md](vocabularies.md) (word lists 1.0.0, approved).
+This is how a research batch of step 3 runs, step by step, at the quality the day sessions keep. Any agent that continues the research run follows it, and the night shift follows it without waiting for Mustafa. The plan it carries out is [docs/proposal.md](proposal.md), section 2.2. The rules every record follows are [docs/fields.md](fields.md) and [docs/vocabularies.md](vocabularies.md) (word lists 1.1.0, approved).
 
 ## The quality bar
 
@@ -226,6 +226,8 @@ The pilot used this shape (research/pilot/README.md, Final review).
 
 **The claims check runs last.** After the last change to either text (log both in the night log), run `verify-fixes.js` with only the claims angle. It returns `checked`: every number and factual claim in both texts, each with the command or file it was recomputed from and the value found. A number missing from `checked` has not been checked. Post only when every entry holds.
 
+**Then the recheck.** Fix what the claims check's skeptic confirms. Then run `verify-fixes.js` with only the recheck angle: `since` is the README commit the claims run read, `previous` its result, and `draftPrev` a copy of the draft as it read it. The recheck reads both diffs and checks only the sentences that changed, so the claims the full run checked carry over; a second full run costs about twice as much. Fix what the recheck confirms in the same way. A fix that only writes in figures the recheck computed itself needs no further run. Log each run, and the README commit and draft it read, in the night log.
+
 ### 9. Merge and the next batch
 
 **A batch is done only when every check below passes on the same wake-up.** Save each check's output in the night log.
@@ -236,7 +238,7 @@ The pilot used this shape (research/pilot/README.md, Final review).
 5. `research/r<N>/checker/result.json` gives every game a rate of 0.15 or less.
 6. In `research/r<N>/review/findings.json`, every finding marked real is `fixed` (with its commit) or `answered` (with the reason).
 7. `research/r<N>/README.md` exists. The pull-request description starts with `## TL;DR`, and neither text says "work in progress", "running now" or "Next:".
-8. The claims check ran after the last change to either text: the README's last commit and the last edit of `r<N>/pr-body.md`, both in the night log.
+8. The claims check, or its recheck, ran after the last change to either text, other than a fix that only writes in the recheck's own figures: the README's last commit and the last edit of `r<N>/pr-body.md`, both in the night log.
 9. `pull_request_read` with `get_review_comments` shows no unresolved thread, and `get_comments` and `get_reviews` show no comment or review since the last report without the Claude Code footer. A comment without it may be Mustafa's: answer it first. Mustafa and the session use the same GitHub account, so the footer is the only way to tell them apart.
 10. No "Decisions needed" item is a change to the word lists or field rules (see Decisions).
 
@@ -244,8 +246,16 @@ The pilot used this shape (research/pilot/README.md, Final review).
 1. Merge with `merge_pull_request`, `merge_method: merge` (never a squash, so that the commit hashes the record cites stay reachable) and `expectedHeadSha` set to the checked head. Never push to main.
 2. Run `git fetch origin`. Then `git log -1 --format=%P origin/main` must show two parents, the second being the merged head; otherwise stop and report. If CI on the merge commit is still running, end the turn and check it on the next wake-up; if it failed, stop and report.
 3. Restart the branch, only when `git status --porcelain` and `git log origin/main..HEAD` both print nothing: `git checkout -B claude/quirky-cray-tih1w4 origin/main && git push origin claude/quirky-cray-tih1w4`. After a merge commit this is a fast-forward; no force is ever needed.
-4. Start the next batch's prep. Open its pull request from the prep commit (section 1, step 4), because GitHub refuses a pull request that has no commits.
+4. Start the next batch's prep, or first a rule-fix round when Mustafa chose one for this batch's rule problems (section 10). Open its pull request from its first commit (section 1, step 4), because GitHub refuses a pull request that has no commits.
 5. After R6 is merged, the night shift stops. Plan step 4 waits for Mustafa.
+
+### 10. A rule-fix round between batches
+
+When Mustafa sends a batch's rule problems to a rule-fix round (after R1 he chose one, before R2's fill), it runs after that batch's merge and before the next batch's prep, in a pull request of its own.
+1. **Scope and groups.** Take the items his decision names. Group them by theme, a handful per group, and save the groups in the state file.
+2. **Run `rule-fix.js`** with the round (`id`, `after`: the batch, `version`: the next word-list version), the rule-problems file, the groups, `ws: <scratchpad>/r<N>/rulefix` and `progress: <scratchpad>/r<N>/progress/rule-fix`. Each group's analyst drafts the exact edits and the units they recode; its skeptic applies them in a scratch copy and runs the checks; one reviewer applies the whole confirmed set together. Count what came back (the quality bar). Nothing in the repository changes.
+3. **The proposal.** In `research/r<N>/rule-fix/`, write for Mustafa, per item: the rule now, the change in plain words, the units it recodes and the recommendation; and save the whole set as one patch, made from the scratch copy that holds it. The pull request puts the set under "Decisions needed". The word lists, field rules and validator checks stay as they are until he approves, by day and by night (see Decisions).
+4. **After his approval:** apply the patch, set the new version on the word lists it changes, run `npm run vocab-diff -- origin/main` and `npm run docs`, recode the units the set lists (a script for a plain value change; an agent where the new rule needs the sources read again), and run `npm run check:merge` and the copy-check. Commit with his approval in the message. Then merge by the gates of section 9 that apply to a round: 1 to 3 and 9, and 6 to 8 for the round's own record.
 
 ## Decisions
 

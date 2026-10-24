@@ -2,16 +2,16 @@
   "$schema": "../../schemas/vocabulary.schema.json",
   "id": "roles",
   "label": "Roles",
-  "description": "What the unit is for: its job or the targets it is best against, never how it does it (mechanics are patterns). A card has one primary role and up to two secondary roles. Requires says what a unit needs before it can claim a role. A source unit never claims a role whose requires it fails. If such a role still fits, leave it out and record it in fit_notes (path roles, wanted: that role). Meeting the requires is not enough: the role description must fit too. Official text means words the game or its makers wrote: the in-game role line, tooltip or production text, the manual, the official unit profile and patch notes. It still counts when read through a page that copies it. A wiki's own words (its infobox labels, prose and tables), strategy guides and internal file names are not official text; the registry notes say which infobox fields copy in-game text. For a unit recorded once for several sides, official text counts only when every side's version carries it. Official words name a role only through the role's whole label or one of its aliases; each half of a slash label (Artillery / siege) counts as a label. One word of a longer label is not enough: 'Assault' alone does not name Frontline assault, so a Purpose such as 'Tank/Structure Assault' names no role. These words name no role: main battle tank; light, medium or heavy tank; core or line infantry; multipurpose; general-purpose; attack (as in attack helicopter); support when it means firepower (combat support, fire support, artillery support, close air support); control in mind control or a control point; and aura in a healing or repair aura (that job is support). How to pick the primary and secondary roles is under roles in docs/fields.md. The tie-breaks settle close calls.",
+  "description": "What the unit is for: its job or the targets it is best against, never how it does it (mechanics are patterns). A card has one primary role and up to two secondary roles. Requires says what a unit needs before it can claim a role. A source unit never claims a role whose requires it fails. If such a role still fits, leave it out and record it in fit_notes (path roles, wanted: that role). Meeting the requires is not enough: the role description must fit too. Official text means words the game or its makers wrote: the in-game role line, tooltip or production text, the manual, the official unit profile and patch notes. It still counts when read through a page that copies it. A wiki's own words (its infobox labels, prose and tables), strategy guides and internal file names are not official text; the registry notes say which infobox fields copy in-game text. For a unit recorded once for several sides, official text counts only when every side's version carries it. Official words name a role only through the role's whole label or one of its aliases, in any word form (harasses for harasser, scouting for scout, Infiltration for Infiltrator), and only when they describe the unit's own job; each half of a slash label (Artillery / siege) counts as a label. One word of a longer label is not enough: 'Assault' alone does not name Frontline assault, so a Purpose such as 'Tank/Structure Assault' names no role. The unit's own name counts only when it names the unit's job (Engineer, Spy, Tank Destroyer, Slave Miner). These words name no role: main battle tank; light, medium or heavy tank; core or line infantry; multipurpose; general-purpose; attack (as in attack helicopter); support when it means firepower (combat support, fire support, artillery support, close air support); control in mind control or a control point; and aura in a healing or repair aura (that job is support). Words that would give a role do not count when they hedge whether the unit or weapon does that job at all (to some extent, up to a point, can serve as); words that hedge only how much it destroys (potentially, at times) still count. How to pick the primary and secondary roles is under roles in docs/fields.md. The tie-breaks settle close calls.",
   "group": "core",
   "status": "approved",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "terms": [
     {
       "id": "assault",
       "label": "Frontline assault",
       "description": "Leads pushes, soaks damage and brawls at short to medium range.",
-      "source_rule": "As primary: any generalist that is not fast with light or no armour (step 5 of roles.primary)."
+      "source_rule": "As primary: any generalist that is not fast with light or no armour (step 5 of roles.primary), or the closest fit for a unit that no earlier step reaches (step 6). As secondary: a main weapon that reaches no further than the main guns of the game's main battle tanks counts as short to medium range here (roles.secondary step 4)."
     },
     {
       "id": "anti-armour",
@@ -113,7 +113,7 @@
       "description": "Hits and runs, picking off isolated targets: fast flankers, gunships that make attack runs.",
       "aliases": ["hit-and-run", "flanker", "harasser"],
       "requires": [["speed:>=fast"]],
-      "source_rule": "As primary: a fast or very fast generalist with light or no armour (step 5 of roles.primary). As secondary: see roles.secondary."
+      "source_rule": "Needs a weapon that is not a tool (roles.primary step 2): a unit that harms nothing cannot hit and run. As primary: a fast or very fast generalist with light or no armour (step 5 of roles.primary). As secondary: see roles.secondary."
     },
     {
       "id": "area-denial",

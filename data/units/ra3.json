@@ -1,7 +1,7 @@
 {
   "$schema": "../../schemas/source-unit.schema.json",
   "schema_version": "1.0.0",
-  "vocab_version": "1.0.0",
+  "vocab_version": "1.1.0",
   "game": "ra3",
   "units": [
     {
@@ -121,7 +121,7 @@
           "why": "The stasis ray outranges most guns."
         },
         {
-          "ref": "tier:t1",
+          "ref": "cost:low",
           "why": "Cheap and quick to build, so losing one costs little."
         }
       ],
@@ -341,7 +341,7 @@
           "mount": "slow-turret",
           "delivery": "projectile",
           "range": "medium",
-          "can_target": ["infantry", "ground-vehicle", "naval"],
+          "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
           "traits": [],
           "summary": "A fast-firing anti-vehicle gun. Poor against infantry and unable to hit aircraft."
         },
@@ -534,7 +534,7 @@
         },
         {
           "path": "armament/0/can_target",
-          "note": "The sources call the cannon an anti-vehicle weapon and say it is poor against infantry; none says it damages buildings, so structures are left out under can_target step 3."
+          "note": "The sources call the cannon an anti-vehicle weapon and say it is poor against infantry, so can_target step 3 lists ground vehicles and infantry. The infobox's ground attack line names the cannon, which counts as the sources saying it damages buildings, so structures are listed."
         },
         {
           "path": "armament/0/delivery",
@@ -634,7 +634,7 @@
           "mount": "free-aim",
           "delivery": "beam",
           "range": "short",
-          "can_target": ["ground-vehicle", "naval"],
+          "can_target": ["ground-vehicle"],
           "affects": "allies",
           "traits": [],
           "condition": "An engineer of any faction rides inside.",
@@ -748,7 +748,7 @@
           "delivery": "beam",
           "range": "medium",
           "can_target": ["infantry", "ground-vehicle", "low-air", "high-air", "structure", "naval"],
-          "traits": ["anti-air"],
+          "traits": ["anti-air", "slow", "root", "silence"],
           "condition": "An Allied Cryo Legionnaire rides inside (Uprising only).",
           "summary": "A single freezing beam that can also freeze aircraft, which then fall and shatter. It reaches further than the Cryo Legionnaire on foot or the Cryocopter.",
           "patterns": ["passenger-sets-weapon"]
@@ -979,7 +979,7 @@
       ],
       "countered_by": [
         {
-          "ref": "class:vehicle",
+          "ref": "armour-class:heavy",
           "why": "Tanks shrug off its light missiles unless an anti-armour passenger rides along."
         },
         {
@@ -1183,6 +1183,10 @@
         {
           "path": "countered_by",
           "note": "The Hammer tank and Terror Drone entries under 'Countered by', and the repair drones and repair stations in the infesting-drone entry, rest on those units' own cited pages (the Hammer tank page and the Terror drone page); none of this unit's three sources covers them."
+        },
+        {
+          "path": "armament/8/traits",
+          "note": "Slow, root and silence rest on the Cryo page of the Command & Conquer Wiki, which describes the freeze for every cryo weapon; the IFV pages say only that the beam freezes and downs aircraft."
         }
       ],
       "atypical": [
@@ -1212,7 +1216,7 @@
       "game": "ra3",
       "faction": "empire",
       "name": "Mecha Tengu",
-      "flavour_affinity": ["empire", "allied"],
+      "flavour_affinity": ["empire"],
       "class": "hover",
       "nature": "crewed-machine",
       "availability": "open",
@@ -1246,7 +1250,7 @@
       "armour": {
         "class": "medium",
         "models": ["directional"],
-        "notes": "Step 4 of the armour-class order decided: RA3 has no armour map, its armour set's name is not a plain armour word, and a light walker bigger than a soldier is medium. Its alloy shrugs off small arms: rifle-type gun damage does a quarter of normal since patch 1.11 (half before that, and still half in Uprising), and sniper and melee hits do nothing; cannon, prism and tesla hits do well over normal. Directional by the Uprising manual's armour-facing rule for armoured vehicles; its page gives no side or rear figures. The profile says current models are lighter and less sturdy than older ones. The jet form uses an aircraft armour set (see modes)."
+        "notes": "Step 4 of the armour-class order decided: RA3 has no armour map, its armour set's name is not a plain armour word, and a light mech bigger than a soldier, hovering ones too, is medium. Its alloy shrugs off small arms: rifle-type gun damage does a quarter of normal since patch 1.11 (half before that, and still half in Uprising), and sniper and melee hits do nothing; cannon, prism and tesla hits do well over normal. Directional by the Uprising manual's armour-facing rule for armoured vehicles; its page gives no side or rear figures. The profile says current models are lighter and less sturdy than older ones. The jet form uses an aircraft armour set (see modes)."
       },
       "sensors": {
         "sight": "medium",
@@ -1490,7 +1494,7 @@
         },
         {
           "path": "armour/class",
-          "note": "Medium by step 4 as a light walker bigger than a soldier. Light is arguable: as a hovercraft its kind is named in no class description; its health is close to that of the light Multigunner IFV (Multigunner IFV page); and StrategyWiki calls its armour poor. But small arms hurt it less than they hurt the Hammer tank (Hammer tank page), and the Riptide ACV, an APC and so medium by kind, uses the same armour set (Riptide ACV page, Command & Conquer Wiki)."
+          "note": "Medium by step 4 as a light mech bigger than a soldier that hovers. Light is arguable: its health is close to that of the light Multigunner IFV (Multigunner IFV page), and StrategyWiki calls its armour poor. But small arms hurt it less than they hurt the Hammer tank (Hammer tank page), and the Riptide ACV, an APC and so medium by kind, uses the same armour set (Riptide ACV page, Command & Conquer Wiki)."
         },
         {
           "path": "armour/models",
@@ -1632,7 +1636,7 @@
       "game": "ra3",
       "faction": "empire",
       "name": "Sudden Transport",
-      "flavour_affinity": ["empire", "allied"],
+      "flavour_affinity": ["empire"],
       "class": "hover",
       "nature": "crewed-machine",
       "availability": "open",
@@ -1723,7 +1727,7 @@
           "why": "Outpaces main battle tanks, so it puts troops in place quickly."
         },
         {
-          "ref": "tier:t1",
+          "ref": "cost:low",
           "why": "Cheap and available from the start, so a few of them dressed as stronger vehicles make a convincing decoy group."
         }
       ],
@@ -2628,7 +2632,7 @@
           "why": "Her pistols are outranged by most infantry rifles (StrategyWiki)."
         },
         {
-          "ref": "tier:t3",
+          "ref": "availability:unique",
           "why": "One per player, at a very high price, behind Max Clearance and, since patch 1.11, a Defense Bureau as well."
         }
       ],
@@ -2764,7 +2768,7 @@
         },
         {
           "path": "armour/class",
-          "note": "Light rests on one changelog line (beta patch 1.5 halved her vulnerability to explosive damage) set against the Conscript's armour set on the Conscript (Red Alert 3) page of the Command & Conquer Wiki, which takes explosives in full. Her own infobox names no armour set, so her other resistances are unknown."
+          "note": "Light rests on one changelog line (beta patch 1.5 halved her vulnerability to explosive damage) set against the Conscript's armour set on the Conscript (Red Alert 3) page of the Command & Conquer Wiki, which takes explosives in full. Her own infobox names no armour set, so her other resistances are unknown; the soldier rule judges partial game data by the part it gives."
         },
         {
           "path": "tier/gate",
@@ -3080,10 +3084,6 @@
           "note": "The infobox gives only a ground attack line and the profile says surface targets, so no air layer is listed. Naval follows the rule for games with ships; the Cryocopter page names Dreadnought battleships as targets."
         },
         {
-          "path": "roles/primary",
-          "note": "Roles step 2 was applied although the unit has a weapon: the profile says it has no weapons in the usual sense and cannot harm any target, so the cryobeam is read as a tool. Read strictly as an armed unit, step 1 gives nothing (Special Weapons Support names support, whose requires it fails), steps 3 and 4 give nothing, and step 5 would make it a raider, since it is very fast and light."
-        },
-        {
           "path": "body/size",
           "note": "No source gives its size. Medium is coded because the manual calls it a light helicopter, the size list's medium example for helicopters; large would follow if it were judged an attack or transport helicopter."
         },
@@ -3101,7 +3101,7 @@
         },
         {
           "path": "roles/secondary",
-          "note": "Left empty. Roles.secondary step 4 would offer raider for a very fast unit with light armour, but raider's description (hit and run, picking off isolated targets) needs damage, and the profile says it can do no harm to anything by itself, so raider is not a candidate. Scout fails the raider or scout tie-break: speed alone makes a scout only when official text calls the unit one."
+          "note": "Left empty. Raider's coding rule needs a weapon that is not a tool, and the cryobeam is one. Scout fails the raider or scout tie-break: speed alone makes a scout only when official text calls the unit one."
         }
       ],
       "fit_notes": [
