@@ -57,10 +57,11 @@ The three reference pages (`samples.md`, `vocabularies.md` and `fields.md`) were
 | Now | **This proposal.** | Plan, fields, word lists, 3 units, 3 patterns, example card. | This one |
 | 1 | **Foundations.** Turn the temporary checks used for this draft into real scripts: the validator, the docs builder and a copy-check. Set up CI (automatic checks that run on every change). Fill the games registry for the whole starting scope, and grow the pattern registry to about 50 pattern names so every research agent uses the same ones. | Repo tooling and CI; `data/games.json` complete. | 1 |
 | 2 | **Calibration pilot.** Three agents fill in the same three RA3 units without seeing each other's work, plus three units from games whose tiers and prices work differently from RA3: StarCraft II (two resources), Company of Heroes (three resources and tier buildings) and Battlefield (no prices or tiers). Any field they agree on less than about 80% of the time gets a sharper rule or a merged term, plus tie-break rules (rules that settle which of two similar terms to use). Then the word lists are frozen as version 1.0. You see the changes from 0.3 to 1.0, and batch R1 starts only after you OK them. | Word lists 1.0, tie-break rules. | Part of step 1 |
-| 3 | **Research run.** Six batches (below), each in its own pull request. Per batch: research agents, then a separate checker, then the validator. | Units and proposed patterns, with a short report per batch. | 6 |
+| 3 | **Research run.** Batches R1, R3 and R4 (below), each in its own pull request. Per batch: research agents, then a separate checker, then the validator. Since the plan change of 24 October 2026 (section 2.2), R2 is paused and the other games are shelved until after step 6. | Units and proposed patterns, with a short report per batch. | 3, plus R2's paused record |
 | 4 | **Pattern consolidation.** Merge duplicate patterns, set the generator rules, write the coverage report and the top-30 list. | `docs/research/coverage.md`, `docs/research/top-30-patterns.md`. | 1 |
 | 5 | **Generator.** A pure TypeScript module: seeded rolls (each roll has a seed, a short code that rebuilds it exactly), lock and reroll, spice, rules, balance hints, text templates and original names, with full tests. | `src/core/`. | 2-3 |
 | 6 | **App.** Generator view, library, board, compare, duplicate and edit, remix, export and import, then polish (light and dark mode, keyboard) and deployment to GitHub Pages. | `src/app/`, a public link. | 4-6 |
+| Later | **The shelved games.** After the app, the shelved games come back in new batches, starting with R2 from its paused prep, building on what the generator and the app show. | More units and patterns. | One per batch |
 
 How the steps map to the brief: this proposal is its first step (section 7); steps 1-4 are Phase 1, the research; step 5 is Phase 2, the generator; and step 6 is Phase 3, the app.
 
@@ -70,26 +71,31 @@ Every pull request stays small, runs the schema checks and tests in CI, and ends
 
 **Batches**, one research agent per franchise inside each:
 
-| Batch | Games |
-|---|---|
-| R1 | Red Alert 1, 2 (with Yuri's Revenge) and 3 (with Uprising) |
-| R2 | C&C Tiberian Dawn, Tiberian Sun, Tiberium Wars (with Kane's Wrath), Renegade |
-| R3 | C&C Generals (with Zero Hour), Tempest Rising, Iron Harvest |
-| R4 | Company of Heroes 1-3, World in Conflict, Wargame, Broken Arrow |
-| R5 | Supreme Commander, Planetary Annihilation, StarCraft II, Halo Wars 2, Dawn of War 1-2 |
-| R6 | Battlefield (vehicle archetypes), PlanetSide 2, Foxhole, WARDOGS, Arc Raiders, MechWarrior/BattleTech |
+| Batch | Games | Status |
+|---|---|---|
+| R1 | Red Alert 1, 2 (with Yuri's Revenge) and 3 (with Uprising) | Merged on 23 October 2026 |
+| R2 | C&C Tiberian Dawn, Tiberian Sun, Tiberium Wars (with Kane's Wrath), Renegade | Paused during its prep, with the prep of three games kept in `research/r2/` |
+| R3 | C&C Generals (with Zero Hour), Tempest Rising, Iron Harvest | Next |
+| R4 | StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech | After R3 |
+| Shelved | Company of Heroes 1-3, World in Conflict, Wargame, Broken Arrow, Supreme Commander, Dawn of War 1-2, Battlefield (vehicle archetypes), PlanetSide 2, Foxhole, WARDOGS, Arc Raiders | After step 6 |
+
+**Plan change of 24 October 2026.** The research run was taking too long before anything could be seen, so you narrowed it: finish R3, run one new batch R4, then go on to steps 4 to 6, and bring the shelved games back afterwards, building on what the app shows. This replaces the six batches planned before (R4 was Company of Heroes 1-3, World in Conflict, Wargame and Broken Arrow; R5 Supreme Commander, Planetary Annihilation, StarCraft II, Halo Wars 2 and Dawn of War 1-2; R6 the shooters and MechWarrior/BattleTech). Your answers that day:
+- **R2:** its prep stops after Tiberian Dawn, Tiberian Sun and Tiberium Wars (Renegade's was never started), and their prep results are kept in `research/r2/`, so that R2 can go on from there later.
+- **StarCraft II:** only Legacy of the Void, as one game: its multiplayer units (the base game, Archon mode included, with no custom or modded content), plus units found only in the Legacy of the Void campaign or in co-op missions (Allied Commanders), across all three races. About 15 units, 5 per race.
+- **Halo Wars** (2009) is new to the research: R4's prep adds its registry entry first.
+- **Rule fixes:** the rule problems of R3 and R4 go to one rule-fix round after R4, before step 4, unless one of them blocks R4. With no rule change between R3 and R4, R4 needs no opening check.
 
 **How a batch runs:**
 
 1. **Before the agents start,** I check each game's registry entry (filled in step 1: factions, expansions, tech tiers, price bands, speed reference) and share the pattern registry, so every agent uses the same pattern ids.
 2. **Each agent proposes candidate units for each game** that teach something: a distinct mechanic, an iconic counter or a memorable twist, about half again as many as the size you pick in decision 8. I trim the list to that size and remove repeats, then the agent fills the entries, using this step's three units as worked examples. New mechanics are added to the pattern registry and written up as *proposed* patterns, one file each.
-3. **A separate checker** re-opens the sources for at least one unit in five per game (at least three), plus one new pattern in three (at least three). Batch R1 checked every new pattern; from R2 the checker samples them, because each pattern already gets its own skeptic when it is written (your decision of 22 October 2026). It focuses on tier, cost and abilities, and records which fields it checked and which were wrong. A batch with more than 15% wrong fields is redone.
+3. **A separate checker** re-opens the sources for at least one unit in five per game (at least three), plus one new pattern in three (at least three). Batch R1 checked every new pattern; later batches sample them, because each pattern already gets its own skeptic when it is written (your decision of 22 October 2026). It focuses on tier, cost and abilities, and records which fields it checked and which were wrong. A batch with more than 15% wrong fields is redone.
 4. **The validator** must pass: schemas, word lists, links between files and combination rules (any rule a real unit breaks must be recorded in its "atypical" list). A copy-check flags any run of six or more words shared with a cited page, and image links are rejected.
 5. **The pull request report** lists coverage gained, units that break our rules, and places where no term fitted (the "vocabulary gaps" that feed the next word-list version).
 
 **Games added beyond the starting scope** need a reason: the new mechanic they teach and the patterns that justify them. They are listed in the registry and in the final report. This draft already cites three such games (Titanfall, Halo and Mega Man), only as shooter examples in the patterns and as 'seen in' examples in a few word lists, with no researched units.
 
-**Size target:** about 250 units and 80-100 patterns after merging. See decision 8.
+**Size target:** about 100 units before the generator (R1, R3 and R4), with the patterns they link. Decision 8's target, about 250 units and 80-100 patterns after merging, applies once the shelved games are back.
 
 **Coverage report:** games × classes, units per franchise, patterns per category, patterns by how many franchises use them, units without tiers or prices, rule breaks, and vocabulary gaps.
 

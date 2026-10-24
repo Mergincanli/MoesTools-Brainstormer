@@ -114,7 +114,7 @@ After every workflow, before you use any result:
 
 ### 2. Opening check (only when the rules changed)
 
-**When to run it:** when `git log <commit of the last agreement report>..HEAD -- data/vocab schemas scripts/build-docs.mjs scripts/validate.mjs` prints a commit. The last agreement report is R1's `research/r1/opening/agreement.md`, at ef62f3a. Rules never change at night, so at night this check never runs.
+**When to run it:** when `git log <commit of the last agreement report>..HEAD -- data/vocab schemas scripts/build-docs.mjs scripts/validate.mjs` prints a commit. The last agreement report is the newest `research/r<N>/opening/agreement.md`: R1's, at ef62f3a, until R3 has one. Rules never change at night, so at night this check never runs.
 
 When it runs:
 1. Two agents code the same two units, each in its own copy of the repository (`code-units.js`, mode `opening`).
@@ -247,11 +247,11 @@ The pilot used this shape (research/pilot/README.md, Final review).
 2. Run `git fetch origin`. Then `git log -1 --format=%P origin/main` must show two parents, the second being the merged head; otherwise stop and report. If CI on the merge commit is still running, end the turn and check it on the next wake-up; if it failed, stop and report.
 3. Restart the branch, only when `git status --porcelain` and `git log origin/main..HEAD` both print nothing: `git checkout -B claude/quirky-cray-tih1w4 origin/main && git push origin claude/quirky-cray-tih1w4`. After a merge commit this is a fast-forward; no force is ever needed.
 4. Start the next batch's prep, or first a rule-fix round when Mustafa chose one for this batch's rule problems (section 10). Open its pull request from its first commit (section 1, step 4), because GitHub refuses a pull request that has no commits.
-5. After R6 is merged, the night shift stops. Plan step 4 waits for Mustafa.
+5. The batches run in the order of the table in `docs/proposal.md`, section 2.2: R3, then R4 (plan change of 24 October 2026). R2 stays paused and the shelved games are not started. After R4 is merged, the night shift runs the rule-fix round Mustafa chose for the rule problems of R3 and R4 (section 10) and stops after it. Plan step 4 waits for Mustafa.
 
 ### 10. A rule-fix round between batches
 
-When Mustafa sends a batch's rule problems to a rule-fix round (after R1 he chose one, before R2's fill), it runs after that batch's merge and before the next batch's prep, in a pull request of its own.
+When Mustafa sends a batch's rule problems to a rule-fix round, it runs after that batch's merge and before the next batch's prep, in a pull request of its own. After R1 he chose one. For R3 and R4 he chose one round for both, after R4's merge and before plan step 4, unless a rule problem blocks R4 (24 October 2026).
 1. **Scope and groups.** Take the items his decision names. Group them by theme, a handful per group, and save the groups in the state file.
 2. **Run `rule-fix.js`** with the round (`id`, `after`: the batch, `version`: the next word-list version), the rule-problems file, the groups, `ws: <scratchpad>/r<N>/rulefix` and `progress: <scratchpad>/r<N>/progress/rule-fix`. Each group's analyst drafts the exact edits and the units they recode; its skeptic applies them in a scratch copy and runs the checks; one reviewer applies the whole confirmed set together. Count what came back (the quality bar). Nothing in the repository changes.
 3. **The proposal.** In `research/r<N>/rule-fix/`, write for Mustafa, per item: the rule now, the change in plain words, the units it recodes and the recommendation; and save the whole set as one patch, made from the scratch copy that holds it. The pull request puts the set under "Decisions needed". The word lists, field rules and validator checks stay as they are until he approves, by day and by night (see Decisions).

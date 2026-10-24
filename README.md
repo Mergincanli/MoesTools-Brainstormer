@@ -10,7 +10,9 @@ A creativity tool for designing units for **Shamble Frontlines**, a browser team
 
 **Step 3, Research run: in progress.** Batch R1 (Red Alert 1, 2 and 3: 25 units and 33 pattern files) was merged on 23 October 2026 ([research/r1/](research/r1/README.md)). The rule-fix round after it took up 40 of R1's rule problems and turned 39 of them into word lists 1.1.0 (one was dropped), approved on 24 October 2026, and recoded 23 of the 25 R1 units to match ([research/r1/rule-fix/](research/r1/rule-fix/README.md)).
 
-Next: batch R2. The generator and the app have not started.
+On 24 October 2026, Mustafa narrowed the research run to reach the generator sooner: batch R3 (Generals with Zero Hour, Tempest Rising, Iron Harvest), then a new batch R4 (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech), then steps 4 to 6. Batch R2 is paused during its prep, and the other games are shelved until after the app ([proposal, section 2.2](docs/proposal.md#22-the-research-run)).
+
+Now: batch R3's prep. The generator and the app have not started.
 
 - [Proposal](docs/proposal.md): the plan, repository structure, decisions needed. Start here. Its counts (37 word lists at version 0.3.0, 23 planned patterns) are as they were when it was approved.
 - [Samples](docs/samples.md): three researched units (RA3 Terror Drone, Hammer Tank, Multigunner IFV), three mechanic patterns and an example concept card.

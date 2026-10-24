@@ -484,7 +484,7 @@ One entry in the games registry, `data/games.json`. Schema: `schemas/game.schema
 | `developer` | text |  |  |  |
 | `franchise` | text | yes |  |  |
 | `control` | one of `commanded`, `piloted`, `both` | yes |  | commanded = the player orders units (RTS); piloted = the player is the unit (shooter); both. |
-| `research_bucket` | id | yes |  | The research batch this game belongs to: r1 Red Alert; r2 Tiberium series and Renegade; r3 Generals, Tempest Rising, Iron Harvest; r4 Company of Heroes, World in Conflict, Wargame, Broken Arrow; r5 Supreme Commander, Planetary Annihilation, StarCraft II, Halo Wars 2, Dawn of War; r6 shooters and hybrids (Battlefield, PlanetSide 2, Foxhole, WARDOGS, Arc Raiders, MechWarrior/BattleTech). |
+| `research_bucket` | id | yes |  | The research batch this game belongs to, as planned on 24 October 2026: r1 Red Alert; r2 Tiberium series and Renegade (paused); r3 Generals, Tempest Rising, Iron Harvest; r4 StarCraft II, Halo Wars 2, Planetary Annihilation, MechWarrior/BattleTech (and Halo Wars, once added); later: the games shelved until after the app (Company of Heroes, World in Conflict, Wargame, Broken Arrow, Supreme Commander, Dawn of War, Battlefield, PlanetSide 2, Foxhole, WARDOGS, Arc Raiders). |
 | `version_researched` | text |  |  | Patch, edition or date the research describes. For a series, name the lead titles newest first, any title used for an archetype it adds, and any title that is the source for one kind of fact; facts from its other titles do not fill fields. |
 | `expansions[]` | list of groups |  |  |  |
 | `expansions[].id` | id | yes |  | Expansion id, e.g. 'ra3-uprising'. |

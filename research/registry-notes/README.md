@@ -17,3 +17,5 @@ Each game's note has a section Game-wide mechanics, written before any unit of t
 | [patterns.md](patterns.md) | The 26 pattern ids added in step 1, with example units to research |
 
 The data files (`data/games.json`, `data/pattern-registry.json`) are the reference; these notes are context.
+
+**Plan change of 24 October 2026.** The files keep the batches of step 1. The new batch R4 (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech) takes its games' notes from games-r5.md and games-r6.md; its prep gathers them into a new games-r4.md, and the current games-r4.md is renamed then. Halo Wars has no notes yet. The other games of games-r4.md, games-r5.md and games-r6.md are shelved, and R2 is paused ([proposal, section 2.2](../../docs/proposal.md#22-the-research-run)).
