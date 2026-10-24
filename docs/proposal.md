@@ -81,7 +81,7 @@ Every pull request stays small, runs the schema checks and tests in CI, and ends
 
 **Plan change of 24 October 2026.** The research run was taking too long before anything could be seen, so you narrowed it: finish R3, run one new batch R4, then go on to steps 4 to 6, and bring the shelved games back afterwards, building on what the app shows. This replaces the six batches planned before (R4 was Company of Heroes 1-3, World in Conflict, Wargame and Broken Arrow; R5 Supreme Commander, Planetary Annihilation, StarCraft II, Halo Wars 2 and Dawn of War 1-2; R6 the shooters and MechWarrior/BattleTech). Your answers that day:
 - **R2:** its prep stops after Tiberian Dawn, Tiberian Sun and Tiberium Wars (Renegade's was never started), and their prep results are kept in `research/r2/`, so that R2 can go on from there later.
-- **StarCraft II:** only Legacy of the Void, as one game: its multiplayer units (the base game, Archon mode included, with no custom or modded content), plus units found only in the Legacy of the Void campaign or in co-op missions (Allied Commanders), across all three races. About 15 units, 5 per race.
+- **StarCraft II:** only Legacy of the Void, as one game: its multiplayer units (the base game, Archon mode included, with no custom or modded content), plus units that only its campaign or its co-op missions (Allied Commanders) have, across all three races. About 15 units, 5 per race.
 - **Halo Wars** (2009) is new to the research: R4's prep adds its registry entry first.
 - **Rule fixes:** the rule problems of R3 and R4 go to one rule-fix round after R4, before step 4, unless one of them blocks R4. With no rule change between R3 and R4, R4 needs no opening check.
 

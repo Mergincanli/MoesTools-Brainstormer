@@ -9,10 +9,10 @@
 //
 // --also <folder> (repeatable) also checks notes that cite no page, such as research notes: every string in
 // the .json files (outside keys such as url, title and name) and every paragraph, list item, table row and
-// heading in the .md files under that folder, against every page in the cache, every page the data cites
-// and every page those notes link to. A run that also appears in our own wording (any string in data/ or
-// schemas/, or any text in research/registry-notes/, leaving out files under an --also folder) is ignored:
-// that is our own text quoted back, not a copy.
+// heading in the .md files under that folder, with link targets and bare web addresses dropped, against
+// every page in the cache, every page the data cites and every page those notes link to. A run that also
+// appears in our own wording (any string in data/ or schemas/, or any text in research/registry-notes/,
+// leaving out files under an --also folder) is ignored: that is our own text quoted back, not a copy.
 //
 // Pages come from MediaWiki sites (Fandom, wiki.gg, StrategyWiki, Halopedia, Wikipedia and others) as
 // wikitext through the site's api.php (action=parse), and from other sites as HTML turned into text.
@@ -365,6 +365,8 @@ const URL_RE = /https?:\/\/(?:[^\s<>()[\]"'`|]|'(?=[\w%-])|\([^\s<>()]*\))+/g
 export function urlsIn(text) {
   return [...String(text).matchAll(URL_RE)].map(m => m[0].replace(/[.,;:!?*_]+$/, '')).filter(u => !/\/api\.php(?:[?#]|$)/i.test(u))
 }
+/** Note text as the check reads it: Markdown link targets and bare web addresses are dropped, in .md and .json notes alike. */
+const withoutLinks = text => String(text).replace(/\]\((?:[^()\s]|\([^()\s]*\))*\)/g, ']').replace(URL_RE, ' ')
 
 // A Markdown line that starts a new block: a heading, a list item or a table row.
 const BLOCK_START = /^\s{0,3}(#{1,6}\s|[-*+]\s|\d+[.)]\s|\|)/
@@ -378,7 +380,7 @@ export function markdownBlocks(md) {
   let cur = null
   md.split(/\r?\n/).forEach((line, i) => {
     if (!line.trim()) { cur = null; return }
-    const text = line.replace(/\]\((?:[^()\s]|\([^()\s]*\))*\)/g, ']').replace(URL_RE, ' ')
+    const text = withoutLinks(line)
     if (!cur || BLOCK_START.test(line)) { cur = []; blocks.push(cur) }
     cur.push([i + 1, text])
     if (/^\s{0,3}#{1,6}\s/.test(line)) cur = null // a heading is one line
@@ -404,7 +406,7 @@ export function noteTexts(file) {
   }
   let value
   try { value = JSON.parse(raw) } catch (e) { throw new BadNoteError(`--also: ${file} is not valid JSON (${e.message})`) }
-  const texts = proseStrings(value).map(([p, s]) => ({ ws: words(s), at: () => p }))
+  const texts = proseStrings(value).map(([p, s]) => ({ ws: words(withoutLinks(s)), at: () => p }))
   const urls = [...citedUrls(value), ...allStrings(value).flatMap(urlsIn)].filter(u => /^https?:\/\//.test(u)) // not a file path
   return { texts, names: nameStrings(value), urls: [...new Set(urls)] }
 }
