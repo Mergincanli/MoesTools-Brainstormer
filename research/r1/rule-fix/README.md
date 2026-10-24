@@ -1,6 +1,6 @@
-# Rule-fix round after R1: word lists 1.1.0 (proposal)
+# Rule-fix round after R1: word lists 1.1.0
 
-You chose this round on 22 October 2026 (option A): before R2's fill, the rule problems that recur are turned into exact rule changes, checked against the R1 codings and brought to you for approval as word lists 1.1.0. Nothing below is applied yet. The word lists, field rules and validator change only after you approve, as the runbook asks (Decisions; section 10).
+You chose this round on 22 October 2026 (option A): before R2's fill, the rule problems that recur are turned into exact rule changes, checked against the R1 codings and brought to you for approval as word lists 1.1.0. You approved the set on 24 October 2026 (option A, with the first option of each smaller choice), and it is applied in 9fda853: every word list is now at version 1.1.0, and the units below are recoded. [word-list-changes.md](word-list-changes.md) lists every word-list change against 1.0.0.
 
 ## TL;DR
 
@@ -10,7 +10,7 @@ You chose this round on 22 October 2026 (option A): before R2's fill, the rule p
 - **Where the changes go:** 27 in the field rules (the schemas and the conventions in `scripts/build-docs.mjs`), 10 in the word lists (`data/vocab`) and 2 in the validator; the test count rises from 284 to 296, and six items also adjust the RA1 to RA3 game notes.
 - **What it changes in the data:** 23 R1 units, the three step-1 samples and one pattern, in 142 recodes: 59 change a coded value or a matchup entry, and 83 change notes, reasons, sources or review records. The largest: the Mammoth Tank becomes an assault unit with super-heavy armour, the Gap Generator a buffer of medium size, the Siege Chopper loses anti-air, six units lose a second faction flavour, and price, availability and immunity reasons get their own link kinds.
 
-## Decision needed
+## Decision (approved on 24 October 2026: A)
 
 **Approve the set as word lists 1.1.0?**
 - **A. Approve all of it** (39 changes, item 10 dropped). Then the three patches here are applied, the changed word lists get version 1.1.0, the word-list diff and the docs are regenerated, everything is checked again, and the pull request merges with your approval in the commit message.
@@ -19,7 +19,7 @@ You chose this round on 22 October 2026 (option A): before R2's fill, the rule p
 
 **Recommended: A.** Every item was tested on its own (the 9 corrected ones in the form their skeptic gave, as its fix of what it found), and the whole set passes together. With B, R2 would be coded while those 9 problems stay open.
 
-**Three smaller choices inside the set** (the set uses the first option unless you say otherwise):
+**Three smaller choices inside the set** (the first option of each was applied):
 1. Item 21 (a stock button such as anti-tank mines can count toward a second role) changes no R1 value. Keep it, or drop it.
 2. With super-heavy armour (item 33), the Mammoth's crush trait would also run over light vehicles, which RA1 does not do. The set records this as a fit note on the Mammoth. The other way is to change the crush description in the word list.
 3. The Mastermind keeps ships among its targets because the Yuri's Revenge manual says Yuri's mind control works on every unit outside a short immune list. If you do not accept that reading, ships come off.
@@ -93,8 +93,9 @@ Each line gives the item number from [../rule-problems.md](../rule-problems.md),
 |---|---|
 | [items.json](items.json) | All 40 items in group order: title, where the change goes, the recommendation, whether the skeptic confirmed or corrected it, the reason, the exact edits and the recodes |
 | [merged-recodes.json](merged-recodes.json) | Every recode as applied, with the items behind it |
+| [word-list-changes.md](word-list-changes.md) | Every word-list change from 1.0.0 to 1.1.0 (`npm run vocab-diff -- origin/main`, run before the merge) |
 | [rules.patch](rules.patch) | The changes to the word lists, schemas, docs builder, validator and tests |
 | [docs.patch](docs.patch) | The regenerated `docs/` pages, for reading the new rules in place |
 | [data.patch](data.patch) | The recoded units, the pattern and the RA1 to RA3 game notes |
 
-All three apply cleanly to this branch with `git apply`.
+All three were applied in 9fda853.

@@ -8,7 +8,9 @@ A creativity tool for designing units for **Shamble Frontlines**, a browser team
 
 **Step 2, Calibration pilot: done.** Three independent coders per unit coded six units in round 1 and four new units in round 2, and a speed test tried both ways of banding speed. Where the coders split, the word lists and field rules got sharper rules and tie-breaks. The result is word lists 1.0.0, approved on 20 October 2026 with the recommended answers to its six decisions: speed is banded against the game's soldier (1A); an ability's cost per use is not a resource (2A); a unit cites up to five sources (3B); faction flavour is computed from the unit's parts, and infiltrator is a favoured Allied role instead of a Soviet one (4A); a matchup about something the unit lacks keeps today's workaround (5A); and the lists are frozen now, with batch R1 opening with two units coded twice to test the last changes (6C). The report is in [research/pilot/](research/pilot/README.md).
 
-Next: step 3, the research run, starting with batch R1. The generator and the app have not started.
+**Step 3, Research run: in progress.** Batch R1 (Red Alert 1, 2 and 3: 25 units and 33 pattern files) was merged on 23 October 2026 ([research/r1/](research/r1/README.md)). The rule-fix round after it turned 40 of R1's rule problems into word lists 1.1.0, approved on 24 October 2026, and recoded the R1 units to match ([research/r1/rule-fix/](research/r1/rule-fix/README.md)).
+
+Next: batch R2. The generator and the app have not started.
 
 - [Proposal](docs/proposal.md): the plan, repository structure, decisions needed. Start here. Its counts (37 word lists at version 0.3.0, 23 planned patterns) are as they were when it was approved.
 - [Samples](docs/samples.md): three researched units (RA3 Terror Drone, Hammer Tank, Multigunner IFV), three mechanic patterns and an example concept card.

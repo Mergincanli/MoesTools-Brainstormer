@@ -1,6 +1,6 @@
 # Batch R1: Red Alert 1, 2 and 3 (step 3 of the plan)
 
-R1 is the first of the six research batches of step 3 of the approved plan ([docs/proposal.md](../../docs/proposal.md), section 2.2). It covers Red Alert 1 (with The Aftermath), Red Alert 2 with Yuri's Revenge and Red Alert 3 with Uprising. It ran by [docs/research-runbook.md](../../docs/research-runbook.md), partly at night, and was merged on 23 October 2026 (76ec0a8).
+R1 is the first of the six research batches of step 3 of the approved plan ([docs/proposal.md](../../docs/proposal.md), section 2.2). It covers Red Alert 1 (with The Aftermath), Red Alert 2 with Yuri's Revenge and Red Alert 3 with Uprising. It ran by [docs/research-runbook.md](../../docs/research-runbook.md), partly at night, and was merged on 23 October 2026 (76ec0a8). This report describes R1 as merged: since the rule-fix round that followed (word lists 1.1.0, approved on 24 October 2026), 23 of its units are recoded to the new rules, and [rule-fix/](rule-fix/README.md) lists every change.
 
 ## TL;DR
 
