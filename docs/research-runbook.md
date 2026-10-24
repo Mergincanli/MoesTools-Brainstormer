@@ -1,6 +1,6 @@
 # Research runbook: how a batch runs, and the night shift
 
-This is how a research batch of step 3 runs, step by step, at the quality the day sessions keep. Any agent that continues the research run follows it, and the night shift follows it without waiting for Mustafa. The plan it carries out is [docs/proposal.md](proposal.md), section 2.2. The rules every record follows are [docs/fields.md](fields.md) and [docs/vocabularies.md](vocabularies.md) (word lists 1.0.0, approved).
+This is how a research batch of step 3 runs, step by step, at the quality the day sessions keep. Any agent that continues the research run follows it, and the night shift follows it without waiting for Mustafa. The plan it carries out is [docs/proposal.md](proposal.md), section 2.2. The rules every record follows are [docs/fields.md](fields.md) and [docs/vocabularies.md](vocabularies.md) (word lists 1.1.0, approved).
 
 ## The quality bar
 

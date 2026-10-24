@@ -15,11 +15,14 @@
 // 2) Cross-references: unique game, faction and unit ids; patterns <-> units, the pattern registry, games and
 //    factions, typed links. A pattern's source_units that differ from the units linking it only warn: research
 //    agents never edit an existing pattern file (a new pattern gets its first list by hand), and the merge pass keeps
-//    source_units up to date with npm run sync-patterns.
+//    source_units up to date with npm run sync-patterns. A unit link to a unit not researched yet only warns (one
+//    warning lists them all, for a reviewer to check their slugs), but its game and faction must be registered.
 // 3) Combination rules: every term's classes, min_tier, allowed, excluded and requires. A unit or card is read as
 //    unit-wide parts (UNIT_PARTS) and, per weapon, weapon parts (WEAPON_PARTS). A weapon term's maps are compared
 //    with that weapon's own parts and with the unit-wide parts; a unit-wide term's maps with the unit-wide parts and
-//    with every weapon's parts. Requires links are always matched against the whole unit or card. Two exemptions,
+//    with every weapon's parts. Requires links are always matched against the whole unit or card. A weapon that
+//    works only in a mode is read in that mode: its terms' classes and requires see the class, mobility and target
+//    kind the mode gives, where it gives them, instead of the base form's. Two exemptions,
 //    stated in the word lists' prose: a weapon with the 'anti-air' trait may reach high air when its family reaches low
 //    air (its delivery still binds it: lobbed, dropped, placed and melee shots never hit high fliers), and an 'adaptive' weapon has no fixed
 //    family, so no list of allowed weapon families binds it.
@@ -42,6 +45,7 @@
 //      a proposal death outcome is the 3C default (bail-out for a crewed machine that is not infantry, respawn for
 //      the rest); solo_fallback only on multi-seat crew models; a squad has body.count 2 or more;
 //    - an ability with no pattern has a fit_note at abilities/<i>/patterns that says what is wanted;
+//    - counters may be empty only when every weapon, if any, only repairs (whether an ability harms is not checked);
 //    - a unit with the transform mobility trait records its second form in modes;
 //    - warnings: handling other than the mobility default with nothing in mobility.notes (a tiny or small unit on
 //      legs may strafe with no note, since its size and mobility show why), and fit_notes, uncertain and
@@ -309,9 +313,24 @@ export function validate(root = REPO_ROOT) {
     if (cmp && !spec.ranked) err(`${where}: ${ref} uses a comparator on an unranked kind`)
     if (kind === 'passengers') { if (!/^\d+$/.test(id)) err(`${where}: ${ref} needs a number`); return }
     if (kind === 'pattern') { patternKnown(where, id, 'pattern'); return }
+    // An immunity names a damage type, a mobility trait (crush) or a pattern.
+    if (kind === 'immune') {
+      if (vocab['damage-types']?.has(id) || vocab['mobility-traits']?.has(id)) return
+      if (patternById[id] || registryById[id]) patternKnown(where, id, 'pattern')
+      else err(`${where}: ${ref} names no damage type, mobility trait or pattern`)
+      return
+    }
     if (kind === 'unit') {
       if (onCard) err(`${where}: ${ref} -> real unit names may not appear in a card's matchups`)
-      else if (!unitIds.has(id)) missingUnits.add(id)
+      else if (!unitIds.has(id)) {
+        // Not researched yet: only the slug is left to the reviewer, so the game and faction must be registered.
+        const [game, faction, slug, ...rest] = id.split('.')
+        const factions = gameById[game]?.factions
+        if (!slug || rest.length) err(`${where}: ${ref} is not a unit id (<game>.<faction>.<slug>)`)
+        else if (!factions) err(`${where}: ${ref} names game '${game}', which is not in ${GAMES}`)
+        else if (!factions.some(x => x.id === faction)) err(`${where}: ${ref} names faction '${faction}', which ${game} does not have in ${GAMES}`)
+        else missingUnits.add(id)
+      }
       return
     }
     if (!vocab[spec.vocab]?.has(id)) err(`${where}: ${ref} does not resolve in '${spec.vocab}'`)
@@ -346,8 +365,9 @@ export function validate(root = REPO_ROOT) {
   // A profile is the flat set of parts that typed links and combination rules are matched against.
   const isKey = kind => terms['ability-kinds']?.[kind]?.uses_key === true
   // What kind of target a unit is, from its mobility: a flier is 'low-air' (jetpack, hovering flight) or
-  // 'high-air' (jet, airship), and a tiny or small ground unit counts as infantry.
+  // 'high-air' (jet, airship), and a tiny or small ground unit counts as infantry. A mode may say it outright.
   function targetType(p) {
+    if (p.target) return p.target
     const tt = terms.mobility?.[p.mobility]?.target_type
     if (tt === 'ground-vehicle' && (rank('sizes', p.size) ?? 9) <= 2) return 'infantry'
     return tt
@@ -356,7 +376,7 @@ export function validate(root = REPO_ROOT) {
     const weapons = u.armament || []
     const abil = u.abilities || []
     return {
-      class: u.class, tier: u.tier.band, nature: u.nature, availability: u.availability,
+      class: u.class, tier: u.tier.band, cost: u.cost_band.band, nature: u.nature, availability: u.availability,
       roles: [u.roles.primary, ...(u.roles.secondary || [])],
       mobility: u.mobility.base, handling: u.mobility.handling, traits: u.mobility.traits || [], speed: u.mobility.speed,
       body: u.body.plan, size: u.body.size, armour: u.armour.class, armourModels: u.armour.models || [],
@@ -364,6 +384,7 @@ export function validate(root = REPO_ROOT) {
       crew: u.crew.model, passengers: u.crew.passengers?.seats || 0, resources: u.resources || [],
       abilityKinds: abil.map(a => a.kind), onDeath: u.on_death?.outcomes || [],
       weapons, patterns: [...new Set([...abil.flatMap(a => a.patterns || []), ...weapons.flatMap(w => w.patterns || [])])],
+      modes: u.modes || [],
     }
   }
   function cardProfile(c) {
@@ -371,7 +392,7 @@ export function validate(root = REPO_ROOT) {
     const weapons = [p.armament.primary, p.armament.secondary, ...(p.armament.conditional || []).map(x => x.weapon)].filter(Boolean)
     const abil = [p.signature, ...(p.abilities || [])]
     return {
-      class: p.class, tier: p.tier, nature: p.nature, availability: p.availability,
+      class: p.class, tier: p.tier, cost: c.balance.cost_band, nature: p.nature, availability: p.availability,
       roles: [p.roles.primary, ...(p.roles.secondary || [])],
       mobility: p.mobility.base, handling: p.mobility.handling, traits: p.mobility.traits || [], speed: p.mobility.speed,
       body: p.body.plan, size: p.body.size, armour: p.armour.class, armourModels: p.armour.models || [],
@@ -395,6 +416,8 @@ export function validate(root = REPO_ROOT) {
       case 'class': return P.class === id
       case 'role': return P.roles.includes(id)
       case 'tier': return cmpRank('tiers', P.tier, cmp, id)
+      case 'cost': return cmpRank('cost-bands', P.cost, cmp, id)
+      case 'availability': return P.availability === id
       case 'damage': return W.some(w => w.damage === id)
       case 'armour-class': return cmpRank('armour-classes', P.armour, cmp, id)
       case 'armour-model': return P.armourModels.includes(id)
@@ -436,6 +459,14 @@ export function validate(root = REPO_ROOT) {
     if (k === 'weapon-families' && x === 'adaptive') return true
     return false
   }
+  // A weapon that works only in a mode is read in that mode: the class, mobility and target kind the mode gives,
+  // where it gives them, replace the base form's.
+  function modeProfile(P, modeId) {
+    const m = modeId ? (P.modes || []).find(x => x.id === modeId) : null
+    if (!m) return P
+    const mob = m.mobility || {}
+    return { ...P, class: m.class ?? P.class, mobility: mob.base ?? P.mobility, handling: mob.handling ?? P.handling, speed: mob.speed ?? P.speed, target: m.target }
+  }
   // Combination rules: returns a list of { rule, msg } problems for a profile (rule strings as in the header).
   function combinationProblems(P) {
     const out = []
@@ -444,12 +475,12 @@ export function validate(root = REPO_ROOT) {
     const allWeapons = Object.fromEntries(Object.keys(WEAPON_PARTS).map(k => [k, [...new Set(perWeapon.flatMap(W => W[k]))]]))
     const tierRank = rank('tiers', P.tier)
     // Checks one term's rules; has(k) gives the parts its allowed and excluded maps are compared with.
-    function checkTerm(vid, id, has, w) {
+    function checkTerm(vid, id, has, w, Q = P) {
       const t = terms[vid]?.[id]
       if (!t) return
       const name = w ? `weapon '${w.name || w.family}': ${WEAPON_PART_NAME[vid]} '${id}'` : `${vid} '${id}'`
       const add = (rule, msg) => out.push({ rule: `${vid}:${id} ${rule}`, msg: `${name} ${msg}` })
-      if (t.classes && !t.classes.includes(P.class)) add(`classes ${P.class}`, `is not for class '${P.class}'`)
+      if (t.classes && !t.classes.includes(Q.class)) add(`classes ${Q.class}`, `is not for class '${Q.class}'`)
       if (t.min_tier && tierRank < rank('tiers', t.min_tier)) add(`min_tier ${t.min_tier}`, `needs tier ${t.min_tier} or higher`)
       for (const [k, list] of Object.entries(t.allowed || {})) {
         for (const x of has(k)) if (!list.includes(x) && !exempt(vid, k, x, w)) add(`allowed.${k} ${x}`, `doesn't combine with ${k} '${x}'`)
@@ -457,12 +488,12 @@ export function validate(root = REPO_ROOT) {
       for (const [k, list] of Object.entries(t.excluded || {})) {
         for (const x of has(k)) if (list.includes(x)) add(`excluded.${k} ${x}`, `excludes ${k} '${x}'`)
       }
-      for (const g of t.requires || []) if (!g.some(r => matches(r, P))) add(`requires ${g.join('|')}`, `requires one of [${g.join(', ')}]`)
+      for (const g of t.requires || []) if (!g.some(r => matches(r, Q))) add(`requires ${g.join('|')}`, `requires one of [${g.join(', ')}]`)
     }
     for (const vid of Object.keys(UNIT_PARTS)) for (const id of U[vid]) checkTerm(vid, id, k => U[k] || allWeapons[k] || [])
     P.weapons.forEach((w, i) => {
-      const W = perWeapon[i]
-      for (const vid of Object.keys(WEAPON_PARTS)) for (const id of W[vid]) checkTerm(vid, id, k => W[k] || U[k] || [], w)
+      const W = perWeapon[i], Q = modeProfile(P, w.mode), UQ = Q === P ? U : partsOf(UNIT_PARTS, Q)
+      for (const vid of Object.keys(WEAPON_PARTS)) for (const id of W[vid]) checkTerm(vid, id, k => W[k] || UQ[k] || [], w, Q)
     })
     return out
   }
@@ -554,6 +585,13 @@ export function validate(root = REPO_ROOT) {
     const smallOnLegs = ['tiny', 'small'].includes(u.body.size) && String(u.mobility.base).startsWith('legs')
     if (def && u.mobility.handling !== def && !(smallOnLegs && u.mobility.handling === 'strafe') && !u.mobility.notes?.trim()) {
       warn(`${w}: handling '${u.mobility.handling}' is not the '${u.mobility.base}' default '${def}': say why the handling differs in mobility.notes`)
+    }
+
+    // Counters may be empty only on a unit that harms no enemy (Matchups rule 5). Only its weapons are read here: none,
+    // or only repair tools; an ability that harms is left to the coder.
+    const harmful = u.armament.find(x => x.damage !== 'repair')
+    if (!u.counters.length && harmful) {
+      err(`${w}: counters is empty, but ${weaponName(harmful)} can harm enemies: only a unit that harms no enemy may leave counters empty`)
     }
 
     // An ability with no pattern keeps its place, and a fit_note says which mechanic is wanted.
@@ -653,7 +691,7 @@ export function validate(root = REPO_ROOT) {
     unitFieldRules(u, w, g)
     const P = unitProfile(u)
     for (const r of [...u.strengths, ...u.weaknesses]) {
-      if (!['unit', 'pattern'].includes(parseRef(r.ref).kind) && !matches(r.ref, P)) {
+      if (!['unit', 'pattern', 'immune'].includes(parseRef(r.ref).kind) && !matches(r.ref, P)) {
         warn(`${w}: strength/weakness link ${r.ref} doesn't describe this unit's own parts`)
       }
     }

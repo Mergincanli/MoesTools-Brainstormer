@@ -64,7 +64,8 @@ function recordedWeapon(u, rulePrefix) {
 // the Hammer Tank takes that role. Returns what a case needs to link the planned pattern.
 function categoryRole(dir) {
   const d = load(dir, UNITS), c = load(dir, CARD), reg = load(dir, REGISTRY).patterns
-  const used = new Set([...d.units.flatMap(u => [u.roles.primary, ...(u.roles.secondary || [])]), c.parts.roles.primary, ...c.parts.roles.secondary])
+  const all = fs.readdirSync(path.join(dir, 'data/units')).flatMap(f => load(dir, `data/units/${f}`).units)
+  const used = new Set([...all.flatMap(u => [u.roles.primary, ...(u.roles.secondary || [])]), c.parts.roles.primary, ...c.parts.roles.secondary])
   const roles = load(dir, VOCAB('roles'))
   const role = roles.terms.find(t => !t.requires && !t.classes && !used.has(t.id)) ?? assert.fail('no free role without rules')
   const u = unit(d, 'hammer-tank')
@@ -90,6 +91,19 @@ const cases = [
     const planned = load(dir, REGISTRY).patterns.find(p => !fs.existsSync(path.join(dir, PATTERN(p.id))) && !linked.includes(p.id))
     assert.ok(planned, 'the registry has no planned pattern to link')
     linked.push(planned.id); dump(dir, UNITS, d)
+  }],
+  // A unit not researched yet only warns, but its game and faction must be registered; the reviewer checks the slug.
+  ['unit links an unresearched unit of a game not in the registry', "names game 'ra9', which is not in data/games.json", 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.countered_by[0].ref = 'unit:ra9.soviet.not-yet-coded' })
+  }],
+  ['unit links an unresearched unit of a faction its game does not have', "names faction 'yuri', which ra3 does not have", 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.countered_by[0].ref = 'unit:ra3.yuri.not-yet-coded' })
+  }],
+  ['unit links an id that is not game, faction and slug', 'is not a unit id', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.countered_by[0].ref = 'unit:ra3.not-yet-coded' })
+  }],
+  ['unit links an unresearched unit of a registered game and faction (warn only)', 'point to units not researched yet', 'warn', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.countered_by[0].ref = 'unit:ra3.soviet.not-yet-coded' })
   }],
   ['written pattern missing from registry', 'is not in data/pattern-registry.json', 'error', dir => {
     const r = load(dir, REGISTRY); r.patterns = r.patterns.filter(p => p.id !== 'infest-vehicle'); dump(dir, REGISTRY, r)
@@ -124,6 +138,13 @@ const cases = [
   }],
   ['unit without combos', "must have required property 'combos'", 'error', dir => {
     const d = load(dir, UNITS); delete unit(d, 'hammer-tank').combos; dump(dir, UNITS, d)
+  }],
+  // Counters may be an empty list only when no weapon can harm an enemy: none, or only repair tools.
+  ['unit: empty counters on a unit with a weapon that harms', 'counters is empty, but', 'error', dir => {
+    editUnit(dir, 'hammer-tank', u => { u.counters = [] })
+  }],
+  ['unit: empty counters on a unit with no weapon', '', 'ok', dir => {
+    editUnit(dir, 'sudden-transport', u => { u.counters = [] })
   }],
   ['card: wrong class for a part', 'is not for class', 'error', dir => {
     const c = load(dir, CARD); c.parts.mobility.base = 'jet'; dump(dir, CARD, c)
@@ -237,6 +258,26 @@ const cases = [
   ['unit: a flier link on a ground unit (warn only)', "link target:low-air doesn't describe this unit's own parts", 'warn', dir => {
     // A walking drone is a ground target (infantry-sized), not a low flier.
     const d = load(dir, UNITS); unit(d, 'terror-drone').strengths.push({ ref: 'target:low-air', why: 'test' }); dump(dir, UNITS, d)
+  }],
+  // Price, a cap on numbers and an immunity have link kinds of their own. No profile records immunities, so an immune
+  // link is checked only against the word lists and the pattern registry.
+  ['unit: cost, availability and immune links', "doesn't describe this unit's own parts", 'no-warn', dir => {
+    const d = load(dir, UNITS); const u = unit(d, 'terror-drone')
+    u.strengths.push({ ref: `cost:${u.cost_band.band}`, why: 'test' }, { ref: `availability:${u.availability}`, why: 'test' },
+      { ref: 'immune:toxic', why: 'test' }, { ref: 'immune:mind-control', why: 'test' }, { ref: 'immune:crush', why: 'test' })
+    dump(dir, UNITS, d)
+  }],
+  ['unit: a cost band it is not in (warn only)', "link cost:very-high doesn't describe this unit's own parts", 'warn', dir => {
+    const d = load(dir, UNITS); const u = unit(d, 'terror-drone'); assert.notEqual(u.cost_band.band, 'very-high')
+    u.weaknesses.push({ ref: 'cost:very-high', why: 'test' }); dump(dir, UNITS, d)
+  }],
+  ['unit: an immunity no word list or pattern names', 'immune:made-up names no damage type, mobility trait or pattern', 'error', dir => {
+    const d = load(dir, UNITS); unit(d, 'terror-drone').strengths.push({ ref: 'immune:made-up', why: 'test' }); dump(dir, UNITS, d)
+  }],
+  ['card: cost and availability strengths it has', '', 'ok', dir => {
+    const c = load(dir, CARD)
+    c.matchups.strengths.push({ ref: `cost:${c.balance.cost_band}`, why: 'test', paired_with: 0 }, { ref: `availability:${c.parts.availability}`, why: 'test', paired_with: 1 })
+    dump(dir, CARD, c)
   }],
 
   // Only an anti-air weapon reaches high air outside the anti-air families (decision 6C, review fix).
@@ -725,6 +766,27 @@ describe('validator', () => {
     const units = load(REPO_ROOT, UNITS).units
     for (const u of units) for (const a of u.atypical || []) assert.ok(printed.has(a.rule), `'${a.rule}' is not printed`)
     for (const r of printed) assert.match(r, /^[a-z0-9-]+:[a-z0-9-]+ (classes|min_tier|requires|(allowed|excluded)\.[a-z0-9-]+) \S+$/)
+  })
+
+  it('reads a weapon that works only in a mode with the class, mobility and target kind that mode gives', () => {
+    // The Mecha Tengu's jet guns work only in its jet mode, which gives the aircraft class and jet mobility; it hovers.
+    const dir = freshCopy()
+    const d = load(dir, UNITS), u = unit(d, 'mecha-tengu')
+    const i = u.armament.findIndex(w => w.mode), m = (u.modes || []).find(x => x.id === u.armament[i]?.mode)
+    assert.ok(m?.class && m.class !== u.class && m.mobility, 'the case needs a mode weapon whose mode gives a class and a mobility')
+    const lines = () => validate(dir).atypical.filter(a => a.includes(u.id) && a.includes(`weapon '${u.armament[i].name}'`))
+    // Bombs leave out the hover class and a drop needs a flier, but in its mode the weapon flies on an aircraft.
+    Object.assign(u.armament[i], { family: 'bombs', damage: 'explosive', delivery: 'drop', can_target: ['infantry'], traits: [] })
+    dump(dir, UNITS, d)
+    assert.deepEqual(lines(), [])
+    // Artillery suits a hover unit but not the aircraft the mode makes it.
+    Object.assign(u.armament[i], { family: 'artillery', delivery: 'lobbed' }); dump(dir, UNITS, d)
+    assert.ok(lines().some(a => a.endsWith(`(rule 'weapon-families:artillery classes ${m.class}')`)), lines().join('\n'))
+    // A mode that gives no mobility leaves the base form's target kind, unless it gives a target of its own.
+    Object.assign(u.armament[i], { family: 'bombs', delivery: 'drop' }); delete m.mobility; dump(dir, UNITS, d)
+    assert.ok(lines().some(a => a.endsWith("(rule 'weapon-delivery:drop requires target:low-air|target:high-air')")), lines().join('\n'))
+    m.target = 'low-air'; dump(dir, UNITS, d)
+    assert.deepEqual(lines(), [])
   })
 
   describe('negative cases: one break each', () => {

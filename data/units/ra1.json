@@ -1,7 +1,7 @@
 {
   "$schema": "../../schemas/source-unit.schema.json",
   "schema_version": "1.0.0",
-  "vocab_version": "1.0.0",
+  "vocab_version": "1.1.0",
   "game": "ra1",
   "units": [
     {
@@ -143,6 +143,10 @@
       ],
       "counters": [
         {
+          "ref": "target:structure",
+          "why": "Sent into an enemy building, it lays bare what the building does: a Radar Dome shares the enemy's view, factories show what they are building, power plants and refineries give away power and stored ore, and a fake building is shown up."
+        },
+        {
           "ref": "mobility:naval-submerged",
           "why": "The Sonar Pulse it earns briefly exposes every enemy submarine, wherever it lurks, so ships can hunt them."
         },
@@ -178,6 +182,7 @@
             "strengths",
             "weaknesses",
             "countered_by",
+            "counters/0",
             "memorable"
           ]
         },
@@ -195,7 +200,7 @@
           "kind": "wiki",
           "accessed": "2026-10-20",
           "note": "Its quote box copies the Sonar Pulse paragraph of the Red Alert manual, which says a Spy in an enemy Sub Pen earns it.",
-          "supports": ["abilities/2", "strengths/3", "counters", "roles/secondary"]
+          "supports": ["abilities/2", "strengths/3", "counters/1", "counters/2", "roles/secondary"]
         },
         {
           "url": "https://cnc.fandom.com/wiki/Parabombs",
@@ -330,7 +335,7 @@
           "why": "The only unit that sees through spies, and it goes after them on its own."
         },
         {
-          "ref": "tier:t1",
+          "ref": "cost:very-low",
           "why": "Cheap and early: twice a rifleman's price, from a Kennel that needs only the barracks."
         }
       ],
@@ -460,7 +465,7 @@
         },
         {
           "path": "sensors/traits",
-          "note": "The detector term reveals disguised enemies for the whole team; the sources only say the dog itself sees through spies and attacks them, and the code still draws a spy as a friendly rifleman to everyone else. The Kennel page's production list also says dogs detect Thieves; no other page read says so."
+          "note": "The sources only say the dog itself sees through spies and attacks them, and the code still draws a spy as a friendly rifleman to everyone else; the detector's coding rule covers a unit that sees through them only itself. The Kennel page's production list also says dogs detect Thieves; no other page read says so."
         },
         {
           "path": "mobility/speed",
@@ -477,14 +482,6 @@
         {
           "path": "counters/4",
           "note": "Rests on the same prose as counters/3."
-        }
-      ],
-      "fit_notes": [
-        {
-          "path": "sensors/traits",
-          "used": "detector",
-          "wanted": "a detector that sees through disguises for itself and attacks, without unmasking them for the team",
-          "note": "The dog sees through the Spy's disguise and attacks it, but nothing shows teammates seeing the spy for what it is."
         }
       ],
       "review": {
@@ -591,7 +588,7 @@
           "why": "Walks at a rifleman's pace, which the manual calls slow, so the faster tanks he serves leave him behind."
         },
         {
-          "ref": "tier:t2",
+          "ref": "cost:medium",
           "why": "Needs a Service Depot first and costs a little more than a Medium Tank, a steep price for a soldier who cannot fight."
         }
       ],
@@ -605,12 +602,7 @@
           "why": "The manual also names Soviet tanks: their guns kill him quickly, and he cannot answer them."
         }
       ],
-      "counters": [
-        {
-          "ref": "class:vehicle",
-          "why": "In a long tank fight the side he serves keeps its tanks topped up in the field, while the enemy's tanks must leave for a depot and pay for repairs."
-        }
-      ],
+      "counters": [],
       "combos": [
         {
           "ref": "class:vehicle",
@@ -676,7 +668,7 @@
           "accessed": "2026-10-20",
           "version": "Red Alert 3.03 with Counterstrike and The Aftermath",
           "note": "The depot repairs vehicles driven onto its pad for a fee and unlocks the Field Mechanic at the barracks; its quote box copies the Red Alert manual's depot paragraph.",
-          "supports": ["tier", "armament/0", "strengths/0", "counters/0"]
+          "supports": ["tier", "armament/0", "strengths/0"]
         },
         {
           "url": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/INFANTRY.CPP",
@@ -727,10 +719,6 @@
         {
           "path": "crew/notes",
           "note": "The force-move exception for a damaged APC is in the 2020 source release; whether the 1997 to 1999 game already had it is unchecked. The wiki describes only the rule that he repairs the carrier first."
-        },
-        {
-          "path": "counters",
-          "note": "No page names a matchup he wins; the counter is drawn from the repair facts (free field repair against depot repair that costs credits)."
         }
       ],
       "atypical": [
@@ -838,7 +826,7 @@
           "why": "Slower than the Rifle Infantry and the Mammoth, so it is slow to reach its target and easy to see coming."
         },
         {
-          "ref": "tier:t3",
+          "ref": "cost:very-high",
           "why": "Needs a Soviet Tech Center and costs about two and a half main battle tanks, all spent in one blast."
         }
       ],
@@ -849,7 +837,7 @@
         },
         {
           "ref": "weapon:rockets",
-          "why": "The wiki singles out rocket infantry: soldiers the pulse cannot touch, carrying weapons that hurt vehicles."
+          "why": "Rocket weapons are made to hurt vehicles; the wiki names rocket infantry as the best counter."
         },
         {
           "ref": "unit:ra1.shared.rocket-soldier",
@@ -862,7 +850,7 @@
           "why": "Every vehicle in the pulse loses the same large share of its maximum health whatever its armour, so a massed tank column is gutted at once."
         },
         {
-          "ref": "armour-class:heavy",
+          "ref": "armour-class:>=heavy",
           "why": "Damage by share of maximum health makes thick armour worthless: the toughest tanks lose as large a share as the lightest trucks."
         },
         {
@@ -996,6 +984,14 @@
         {
           "path": "armour/class",
           "note": "The infobox type (Heavy) and the manual's grade (heavy) both say heavy; medium comes only from the registry notes' closed list of units stepped down, which names this tank."
+        },
+        {
+          "path": "combos/1",
+          "note": "Reasoned, not named by a page: the wiki calls infantry, rocket infantry above all, its best counter and says the pulse leaves soldiers unhurt, so an escort that clears infantry follows from those facts."
+        },
+        {
+          "path": "counters/1",
+          "note": "Reasoned, not named by a page: the pulse takes a share of each vehicle's maximum health whatever its armour (the wiki; REDALERT/LOGIC.CPP), so heavy and super-heavy tanks lose as large a share as light ones. No page singles out the heaviest tanks."
         }
       ],
       "fit_notes": [
@@ -1003,7 +999,7 @@
           "path": "roles",
           "used": "assault",
           "wanted": "anti-armour or siege",
-          "note": "Its only job is the pulse, which hurts only vehicles, ships, aircraft and buildings. That pulse is an ability, not a weapon, so roles step 2 (unarmed) finds no listed role that fits, steps 3 and 4 have no main weapon to read, and anti-armour's and siege's requires, which read weapons, fail. Step 5 then gives assault for a slow unit with medium armour."
+          "note": "Its only job is the pulse, which hurts only vehicles, ships, aircraft and buildings. That pulse is an ability, not a weapon, so roles step 2 (unarmed) finds no listed role that fits, steps 3 and 4 have no main weapon to read, and anti-armour's and siege's requires, which read weapons, fail. Step 5 needs a weapon, so step 6 gives assault, the closest role whose requires it meets."
         },
         {
           "path": "body/plan",
@@ -1033,7 +1029,7 @@
       "nature": "crewed-machine",
       "availability": "open",
       "roles": {
-        "primary": "raider",
+        "primary": "buffer",
         "secondary": []
       },
       "tier": {
@@ -1052,12 +1048,12 @@
         "traits": ["crush"],
         "speed": "fast",
         "speed_raw": 1.64,
-        "notes": "The wiki calls it a gap generator mounted on a truck, on wheels. By the rules file's figure, the one the game reads, it moves about two thirds faster than the Rifle Infantry and a little slower than the Medium Tank; the C&C Wiki's infobox figure would make it much slower (see uncertain). It runs over infantry (the crusher flag in the game code). Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
+        "notes": "The wiki calls it a gap generator mounted on a truck, on wheels. By the rules file's figure, the one the game reads, it moves about two thirds faster than the Rifle Infantry and a little slower than the Medium Tank; the C&C Wiki's infobox figure would make it much slower (see uncertain). It runs over infantry (the crusher flag in the game code), though the crush trait is kept for large and huge units (see atypical). Like every damaged vehicle it slows down at half health or less (game-wide), which the band ignores."
       },
       "body": {
         "plan": "launcher-rack",
-        "size": "large",
-        "notes": "A truck carrying the gap generator; the code gives it a rotating dish and no gun turret, which fits launcher-rack's chassis with an exposed mast or sensor gear. No size example names a truck, so it is measured against the main battle tank: the code's sprite-size flag puts it with the Medium and Heavy Tanks (drawn bigger than one cell), not with the APC, Light Tank or Radar Jammer, so it is coded large."
+        "size": "medium",
+        "notes": "A truck carrying the gap generator; the code gives it a rotating dish and no gun turret, which fits launcher-rack's chassis with an exposed mast or sensor gear. Medium, as the size list puts trucks; the code's sprite-size flag, which groups it with the Medium and Heavy Tanks (drawn bigger than one cell), counts only for a unit that no example covers."
       },
       "armour": {
         "class": "light",
@@ -1209,12 +1205,8 @@
           "sources_disagree": true
         },
         {
-          "path": "roles/primary",
-          "note": "Raider comes from roles step 5 on the rules file's speed. On the C&C Wiki's figure the truck would be slow and step 5 would give assault."
-        },
-        {
           "path": "body/size",
-          "note": "The wiki calls it a truck, and trucks have no size example. Large rests on the code's sprite-size flag (REDALERT/TYPE.H of EA's source release, read, not cited, explains it as bigger than one cell but under two), which the Medium and Heavy Tanks share. If it were coded medium, the crush trait would break the trait's size rule."
+          "note": "Medium by the size list's truck example, as the wiki calls it a truck. The code's sprite-size flag (REDALERT/TYPE.H of EA's source release, read, not cited, explains it as bigger than one cell but under two) groups it with the Medium and Heavy Tanks, which by measurement alone would give large; examples win."
         },
         {
           "path": "mobility/base",
@@ -1222,7 +1214,7 @@
         },
         {
           "path": "mobility/traits",
-          "note": "Crush rests on the code's crusher flag and the registry's list of RA1 crushers; no wiki page says it crushes."
+          "note": "Crush rests on the code's crusher flag and the registry's list of RA1 crushers; no wiki page says it crushes. Being medium, it breaks the trait's size rule (see atypical)."
         },
         {
           "path": "abilities/0",
@@ -1244,15 +1236,22 @@
       "fit_notes": [
         {
           "path": "roles",
-          "used": "raider",
+          "used": "buffer",
           "wanted": "support",
-          "note": "Its job is hiding teammates, which is team support, but support's requires (a repair tool, or a repair or resupply pattern) fail. Roles step 2 (unarmed) finds no listed role that fits: buffer is for making allies stronger and scout for finding enemies. Steps 3 and 4 have no main weapon to read, so step 5 gives raider, the default for a fast generalist with light armour, for a truck that never fights. The wiki's own role line calls it a support unit."
+          "note": "Its job is hiding teammates, which is team support, but support's requires (a repair tool, or a repair or resupply pattern) fail. Roles step 2 (unarmed) finds no listed role that fits: buffer is for making allies stronger and scout for finding enemies. Steps 3 to 5 need a weapon, so step 6 gives buffer, the closest role whose requires it meets: the field covers nearby teammates like an aura, though it hides them rather than making them stronger. The wiki's own role line calls it a support unit."
         },
         {
           "path": "sensors/traits",
           "used": "none",
           "wanted": "an always-on area shroud for the enemy, if shroud-area gets a sensor-trait twin",
           "note": "The field is always on, so a term would be its natural home, but stealth hides only the unit itself and lets enemies see it up close, and jammer hides from radar and lock-ons, not from sight."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "mobility/traits",
+          "rule": "mobility-traits:crush allowed.sizes medium",
+          "note": "The code and the registry's list of RA1 crushers make the truck run over infantry, but the crush trait is allowed only on large and huge units and the truck is medium. Coded as the real unit is, as the registry's RA1 Crushing note asks."
         }
       ],
       "researched_by": "batch r1, agent J03-RA1",
@@ -1266,7 +1265,6 @@
           "cost_band/band",
           "cost_band/raw",
           "class",
-          "roles/primary",
           "roles/secondary",
           "mobility/speed",
           "mobility/speed_raw",
@@ -1288,7 +1286,6 @@
           "crew/basis",
           "on_death/outcomes",
           "body/plan",
-          "body/size",
           "availability",
           "confidence",
           "counters/1",
@@ -1299,7 +1296,7 @@
           "sources/4/supports"
         ],
         "wrong_paths": ["sources/1/supports"],
-        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. The wrong paths were fixed as the skeptic confirmed (b46b01c). Checked, then changed after the check, so left out of checked_paths: on_death/notes (the final review gave the crewman his feeble pistol); sources/2/supports (the final review split weaknesses/1, so the building page now backs weaknesses/2); crew/notes and on_death/basis (b46b01c, decision 7: the reference rules copy marks the truck as crewed, so the basis became in-game)."
+        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. The wrong paths were fixed as the skeptic confirmed (b46b01c). Checked, then changed after the check, so left out of checked_paths: on_death/notes (the final review gave the crewman his feeble pistol); sources/2/supports (the final review split weaknesses/1, so the building page now backs weaknesses/2); crew/notes and on_death/basis (b46b01c, decision 7: the reference rules copy marks the truck as crewed, so the basis became in-game); body/size (large became medium in the rule-fix round after R1, by the size list's new truck example); roles/primary (raider became buffer in the rule-fix round after R1: roles step 5 now needs a weapon that is not a tool, and the new step 6 gives buffer)."
       }
     },
     {
@@ -1496,16 +1493,8 @@
       "confidence": "high",
       "uncertain": [
         {
-          "path": "faction",
-          "note": "Recorded per side, as the manual prints two paragraphs, the wiki has two pages and the registry's RA1 shared list leaves the minelayer out; the Soviet copy is ra1.soviet.minelayer. Against that, UNIT.CPP has a single minelayer type whose mine follows the owner's side, and both infoboxes give one internal name with the same figures."
-        },
-        {
           "path": "roles/secondary",
-          "note": "Left empty: the anti-tank mines would support anti-armour, but its requires cannot be met through an ability, which carries no damage type. See fit_notes."
-        },
-        {
-          "path": "abilities/0/cooldown",
-          "note": "Per-life, because the mines come back only at the Service Depot, a resupply point. The other reading is no band at all, since five uses are held back by a stock rather than a timer."
+          "note": "Left empty: the mine button supports anti-armour (roles.secondary step 2), and a button may meet the role's requires, but these mines fail them: the cited UNIT.CPP hurts the vehicle with the HE warhead, which the RA1 damage map reads as explosive. See fit_notes."
         },
         {
           "path": "abilities/0/summary",
@@ -1546,7 +1535,7 @@
           "path": "roles",
           "used": "area-denial alone",
           "wanted": "anti-armour",
-          "note": "An ability cannot meet anti-armour's need for armour-piercing, energy, electric or EMP damage, so the anti-tank mines alone never give it."
+          "note": "The mine button supports anti-armour at roles.secondary step 2 and may meet its requires, but these mines fail them: the game code hurts the vehicle with the HE warhead, which the RA1 damage map reads as explosive, not armour-piercing, energy, electric or EMP damage."
         },
         {
           "path": "body/plan",
@@ -1796,16 +1785,8 @@
       "confidence": "high",
       "uncertain": [
         {
-          "path": "faction",
-          "note": "Recorded per side, as the manual prints two paragraphs, the wiki has two pages and the registry's RA1 shared list leaves the minelayer out; the Allied copy is ra1.allied.minelayer. Against that, UNIT.CPP has a single minelayer type whose mine follows the owner's side, and both infoboxes give one internal name with the same figures."
-        },
-        {
           "path": "roles/primary",
-          "note": "Area denial by roles step 2, as an unarmed unit whose main action lays mines. The manual paragraph calls its mines Anti-Personnel, an alias of anti-infantry; that is read as the mine's name, like the unit's own name, which never counts, so step 1 gives no role. A reading that counts it would make anti-infantry the primary role. Anti-infantry enters roles.secondary through the mine button (step 2), which harms soldiers and barely scratches vehicles."
-        },
-        {
-          "path": "abilities/0/cooldown",
-          "note": "Per-life, because the mines come back only at the Service Depot, a resupply point. The other reading is no band at all, since five uses are held back by a stock rather than a timer."
+          "note": "Area denial by roles step 1: the manual calls the unit the AP mine layer, a form of the alias minelayer, and the name names its job. If the paragraph's Anti-Personnel Mines are read as naming its job too (anti-personnel is an alias of anti-infantry), step 1 has two roles, neither wins the bonus test with no main weapon, and step 2 (an unarmed unit whose main action lays mines) gives area denial all the same. Anti-infantry enters roles.secondary through the mine button (step 2, or step 1 if Anti-Personnel counts), which harms soldiers and barely scratches vehicles."
         },
         {
           "path": "abilities/0/summary",
@@ -1864,8 +1845,8 @@
       "nature": "crewed-machine",
       "availability": "open",
       "roles": {
-        "primary": "anti-infantry",
-        "secondary": ["anti-armour", "anti-air"]
+        "primary": "assault",
+        "secondary": ["anti-armour", "anti-infantry"]
       },
       "tier": {
         "band": "t3",
@@ -1891,9 +1872,9 @@
         "notes": "A tracked hull under one large turret that carries both the twin cannons and the two missile packs: the game code sets both weapons' firing points along the turret's facing, so they turn together. The manual says no tank is bigger and calls it the largest land weapons platform, and the wiki's prose calls it a super-heavy tank. But the code's size flag puts it in one group with the Medium and Heavy Tanks (and the Ore Truck and MCV): vehicles drawn larger than one map cell but under two cells across. No page says it is twice a tank's size, so it is coded large, a tank among tanks."
       },
       "armour": {
-        "class": "heavy",
+        "class": "super-heavy",
         "models": ["self-repair"],
-        "notes": "Step 1 of the armour-class steps decided: the infobox armour type Heavy maps to heavy, and the RA1 registry notes keep the Mammoth heavy. Check A does not lift it, since the body is coded large. It has half again the health of the Soviet Heavy Tank and the Allied Medium Tank. Self-repair: once at half health or below it slowly mends itself, and the healing stops at half (infobox; the self-healing check in TECHNO.CPP). A full repair needs the Service Depot, which is game-wide. No source gives it facing armour, and no armour upgrade exists. Side-wide powers stay off: the Soviet Iron Curtain can make it immune to damage for a while."
+        "notes": "Check A decided: step 1 maps the infobox armour type Heavy to heavy, but the RA1 registry notes make the Mammoth super-heavy, the game's top tank, set apart from its battle tanks. It has half again the health of the Soviet Heavy Tank and the Allied Medium Tank. Self-repair: once at half health or below it slowly mends itself, and the healing stops at half (infobox; the self-healing check in TECHNO.CPP). A full repair needs the Service Depot, which is game-wide. No source gives it facing armour, and no armour upgrade exists. Side-wide powers stay off: the Soviet Iron Curtain can make it immune to damage for a while."
       },
       "sensors": {
         "sight": "medium",
@@ -1923,7 +1904,7 @@
           "delivery": "lock-on",
           "range": "long",
           "can_target": ["infantry", "ground-vehicle", "structure", "low-air", "high-air", "naval"],
-          "traits": ["anti-air", "magazine"],
+          "traits": ["anti-air"],
           "summary": "Two missile packs on the same turret launch a pair of high-explosive homing missiles at ground or air targets, then wait out a long reload. The manual says they make the tank good against infantry and aircraft, the wiki adds buildings, and both wikis say a soldier often dies to a single hit. They are the tank's only weapon that reaches aircraft, and the wiki names the slow reload as the reason massed air attacks can overwhelm it. They reach a bit further than the cannons, about two thirds again the rifle's range. The game uses them on every aircraft and on any ground target whose armour suffers more from their warhead."
         }
       ],
@@ -1940,7 +1921,7 @@
       },
       "strengths": [
         {
-          "ref": "armour-class:heavy",
+          "ref": "armour-class:super-heavy",
           "why": "The biggest tank in the game, with half again the health of the main battle tanks: the manual says it can both take and deal heavy punishment."
         },
         {
@@ -1966,7 +1947,7 @@
           "why": "Among the slowest vehicles: a little slower than a rifleman and about half the main battle tanks' pace (the wiki calls it the slowest, though the Aftermath's M.A.D. Tank on its chassis is slower), so it cannot chase, and faster tanks can hit it and pull back."
         },
         {
-          "ref": "weapon-trait:magazine",
+          "ref": "weapon:guided-missiles",
           "why": "After each pair of missiles it waits out a long reload, which leaves it open to a concentrated air attack."
         },
         {
@@ -1974,7 +1955,7 @@
           "why": "Its guns fire slowly, and the second shell of each pair is more likely to miss a target on the move."
         },
         {
-          "ref": "tier:t3",
+          "ref": "cost:high",
           "why": "Needs a Tech Center, costs nearly twice a main battle tank and takes a long time to build."
         },
         {
@@ -2012,6 +1993,10 @@
         {
           "ref": "target:structure",
           "why": "StrategyWiki rates it strong against structures, and the wiki says its missiles also work well on buildings."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "One against one it outguns any tank: the manual rates its twin cannons the most powerful guns on land, and StrategyWiki rates it strong against vehicles. Several cheaper tanks beat it (countered by)."
         }
       ],
       "combos": [
@@ -2046,7 +2031,8 @@
             "strengths/1",
             "strengths/2",
             "counters/0",
-            "counters/1"
+            "counters/1",
+            "counters/3"
           ]
         },
         {
@@ -2092,7 +2078,8 @@
             "strengths/3",
             "weaknesses/0",
             "counters/0",
-            "counters/2"
+            "counters/2",
+            "counters/3"
           ]
         },
         {
@@ -2118,19 +2105,15 @@
       "uncertain": [
         {
           "path": "roles/primary",
-          "note": "Step 1 finds no role label in the manual paragraph. Step 4 reads its line that the missiles make the tank good against infantry and air units, and the registry notes say text about a second weapon counts (their own Mammoth example). The warhead table in the reference copy of the rules file gives no warhead more than full damage against any armour type, so it adds no bonus to weigh, and infantry, named first, wins; the missiles' warhead also does more to unarmoured soldiers than to any aircraft. The cannon is the main weapon, but the manual's praise of it, unmatched on land, names no kind of target. Both coders reached anti-infantry by these steps; a reading that takes only main-weapon text would give anti-armour."
+          "note": "Step 1 finds no role label in the manual paragraph. Step 4 reads only the main weapon: the manual's praise of the missiles counts at roles.secondary step 3, its words on the cannons (unmatched on land) name no kind of target, and the rules file's warhead table gives no bonus. Step 5 gives assault (slow, heavy armour)."
         },
         {
           "path": "roles/secondary",
-          "note": "Anti-armour rests only on StrategyWiki, a guide, heading the cannons as anti-armour cannons (roles.secondary: a source calls it an anti-tank weapon). The C&C Wiki's prose only says their paired shots work well against armour, which is words about what they are good at, and the manual says only that they are unmatched on land. The registry bars StrategyWiki from roles step 4 and the drop rule but not from this clause; without the heading only anti-air would remain. Assault, the job the wiki's role line gives it, cannot enter: step 4 supports it only with a short- or medium-range main weapon, and RA1's short rifle reach bands every tank gun long."
+          "note": "Anti-armour (StrategyWiki heading the cannons as anti-armour cannons), anti-infantry and anti-air (the manual's missile line) all rank at step 3, and the roles list order keeps anti-armour and anti-infantry; anti-air is third. Anti-armour rests only on that guide heading, a label under roles.secondary; without it the list would be anti-infantry and anti-air."
         },
         {
           "path": "body/size",
-          "note": "Large or huge. The wiki's prose calls it a super-heavy tank and the manual the biggest tank, which points at huge's super-heavies; but its infobox role line says heavy assault tank, the size rule treats a weight word as no size, and the code's size flag (explained in REDALERT/TYPE.H of the same source release, https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TYPE.H) puts it in one class with the Medium and Heavy Tanks. No page compares its footprint with a tank's. Coded large."
-        },
-        {
-          "path": "armour/class",
-          "note": "Heavy by step 1 and the RA1 registry notes. If the body were coded huge, check A (huge at t3) would make it super-heavy whatever the steps gave, so the class depends on the size call above."
+          "note": "Large. The wiki's prose calls it a super-heavy tank and the manual the biggest tank, but super-heavy is a weight word, not a size, and the code's size flag (explained in REDALERT/TYPE.H of the same source release, https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/REDALERT/TYPE.H) puts it in one class with the Medium and Heavy Tanks. No page compares its footprint with a tank's, or says it is twice a tank's size."
         },
         {
           "path": "mobility/base",
@@ -2158,7 +2141,7 @@
         },
         {
           "path": "armament/1/traits",
-          "note": "Magazine rests on the wiki naming the missiles' long reload as the reason massed air attacks can swamp the tank. The infobox and StrategyWiki give both weapons the same wait between pairs of shots, so the reload may simply be the missiles' rate of fire after a two-missile burst; the cannons get no magazine only because no source names their reload."
+          "note": "No magazine: the pair of missiles repeats at the normal rate of fire, which is the wait the wiki calls a reload."
         },
         {
           "path": "armament/1/mount",
@@ -2189,20 +2172,18 @@
           "path": "weaknesses/0",
           "note": "The Mammoth tank (Red Alert 1) page calls it the slowest vehicle, but the infobox on the M.A.D. tank page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/M.A.D._tank; read, not cited) gives that Aftermath tank three quarters of the Mammoth's land speed. The same correction is made in mobility.notes.",
           "sources_disagree": true
+        },
+        {
+          "path": "combos",
+          "note": "Both combos are reasoned, not named by a page: no page read pairs the tank with a teammate. They follow from the C&C Wiki's warnings that it is in most danger when caught alone and that massed aircraft can catch it during its slow missile reload."
         }
       ],
       "fit_notes": [
         {
-          "path": "roles/primary",
-          "used": "anti-infantry",
-          "wanted": "assault or anti-armour",
-          "note": "The written steps make the game's heaviest cannon tank an infantry hunter: step 4 takes the manual's strong-against words about its secondary missiles, while its headline cannons give no anti role there (the manual says only that they are unmatched on land). Assault cannot reach the secondary list either: RA1's rifle reach is so short that every tank gun bands long, and roles.secondary step 4 supports assault only with a short- or medium-range main weapon. The wiki's own role line calls it a heavy assault tank."
-        },
-        {
-          "path": "armour/class",
-          "used": "heavy",
-          "wanted": "super-heavy",
-          "note": "The Mammoth is the game's top heavyweight, set apart from its battle tanks (t3, half again their health, called super-heavy by the wiki), which is what super-heavy describes. Check A keeps super-heavy for units two tanks in size or more, and the registry keeps it heavy, so heavy is used."
+          "path": "mobility/traits",
+          "used": "crush",
+          "wanted": "crush that runs over infantry only",
+          "note": "The crush term lets super-heavy units also crush light vehicles, but in Red Alert vehicles never crush each other (manual), so the Mammoth, now super-heavy, runs over infantry only."
         },
         {
           "path": "armour/models",
@@ -2221,7 +2202,7 @@
       "game": "ra1",
       "faction": "soviet",
       "name": "Yak",
-      "flavour_affinity": ["soviet", "allied"],
+      "flavour_affinity": ["soviet"],
       "class": "aircraft",
       "nature": "crewed-machine",
       "availability": "open",
@@ -2314,11 +2295,7 @@
         },
         {
           "ref": "armour-class:light",
-          "why": "Light armour and little health: the wiki warns it will not last long against an AA gun that is still firing."
-        },
-        {
-          "ref": "speed:very-fast",
-          "why": "Quick next to ground units but slower than the MiG; the manual says that makes it easy prey for Rocket Soldiers who live through its first pass."
+          "why": "Light armour and little health, and slower than the MiG, so it stays in reach: the wiki warns it will not last long against an AA gun that is still firing, and the manual says Rocket Soldiers who live through its first pass make easy prey of it."
         }
       ],
       "countered_by": [
@@ -2339,6 +2316,14 @@
         {
           "ref": "pattern:lay-mines",
           "why": "Minefields do not stop it: a force-fire order on the mined ground destroys the mines from the air (wiki)."
+        },
+        {
+          "ref": "unit:ra1.allied.minelayer",
+          "why": "Only Minelayers lay mines, so the minefields the wiki says it clears from the air are the Allied Minelayer's anti-tank fields."
+        },
+        {
+          "ref": "unit:ra1.soviet.minelayer",
+          "why": "A rival Soviet player's Minelayer lays anti-personnel fields instead, and a force-fire order clears those the same way."
         }
       ],
       "combos": [
@@ -2370,7 +2355,7 @@
             "on_death",
             "strengths/0",
             "weaknesses/1",
-            "weaknesses/3",
+            "weaknesses/2",
             "countered_by/0",
             "countered_by/1",
             "counters/0",
@@ -2398,6 +2383,8 @@
             "weaknesses/2",
             "countered_by/0",
             "counters/1",
+            "counters/2",
+            "counters/3",
             "combos/0",
             "combos/1"
           ]
@@ -2516,14 +2503,12 @@
           "countered_by/0",
           "combos/0",
           "combos/1",
-          "sources/0/supports",
-          "sources/1/supports",
           "sources/2/supports",
           "sources/3/supports",
           "sources/4/supports"
         ],
         "wrong_paths": ["uncertain/6"],
-        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. The wrong paths were fixed as the skeptic confirmed (b46b01c). Checked, then changed after the check, so left out of checked_paths: crew/notes (b46b01c, decision 7). on_death/basis became in-game with the skeptic's fix of uncertain/6 once the lead accepted the copy, so it is kept."
+        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. The wrong paths were fixed as the skeptic confirmed (b46b01c). Checked, then changed after the check, so left out of checked_paths: crew/notes (b46b01c, decision 7); sources/0/supports (the rule-fix round after R1 merged weaknesses/3 into weaknesses/2); sources/1/supports (the rule-fix round after R1 added counters/2 and counters/3, the two Minelayers). on_death/basis became in-game with the skeptic's fix of uncertain/6 once the lead accepted the copy, so it is kept."
       }
     },
     {
@@ -2560,7 +2545,7 @@
       "body": {
         "plan": "ship",
         "size": "large",
-        "notes": "A teardrop-hulled attack submarine. No page gives its footprint; it is coded large, about one tank in size, by the size rule's comparison with the main battle tank."
+        "notes": "A teardrop-hulled attack submarine. Large, as the size list puts submarines; no page gives its footprint."
       },
       "armour": {
         "class": "light",
@@ -2641,7 +2626,7 @@
       "countered_by": [
         {
           "ref": "sensor:detector",
-          "why": "Destroyers and Gunboats find submerged subs, and their depth charges fire at any sub they detect (manual)."
+          "why": "Destroyers, and Gunboats in numbers, find submerged subs, and their depth charges fire at any sub they detect (manual)."
         },
         {
           "ref": "unit:ra1.allied.destroyer",
@@ -2659,7 +2644,7 @@
       "counters": [
         {
           "ref": "class:naval",
-          "why": "It strikes ships from hiding and from afar; ships without depth charges have no way to answer it (manual, StrategyWiki)."
+          "why": "It strikes ships from hiding and from afar; ships without depth charges have no way to answer it (manual, StrategyWiki), and even a Gunboat, which has them, loses one against one."
         },
         {
           "ref": "unit:ra1.allied.cruiser",
@@ -2787,7 +2772,7 @@
         },
         {
           "path": "body/size",
-          "note": "No page gives the hull's footprint. Large is a judgement against the main battle tank; medium would hold if the hull is clearly smaller than a tank."
+          "note": "Large by the size list's submarine example. No page gives the hull's footprint, so the example cannot be checked against a measurement."
         },
         {
           "path": "mobility/speed",
@@ -2800,6 +2785,10 @@
         {
           "path": "roles/primary",
           "note": "The manual's paragraph names ships, which match none of the three anti roles (registry notes), and the torpedoes hit nothing an anti role covers, so step 4 gives nothing and step 5 gives assault: slow, not fast (at the full-rate reading it would be fast and step 5 would give raider)."
+        },
+        {
+          "path": "counters/0",
+          "note": "That one Gunboat loses to it while several win (countered_by/0) rests on the Gunboat (Red Alert 1) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Gunboat_(Red_Alert_1)), read but not cited."
         }
       ],
       "fit_notes": [
@@ -2820,13 +2809,6 @@
           "used": "none",
           "wanted": "burrow, as an automatic dive",
           "note": "The sub dives and surfaces by itself, with no key, and naval-submerged already says it moves under water and surfaces to act. The burrow trait is a key, and its class list leaves out naval, so it is not coded; the passive ability carries the burrow pattern."
-        }
-      ],
-      "atypical": [
-        {
-          "path": "sensors/traits",
-          "rule": "sensor-traits:detector classes naval",
-          "note": "The detector trait's classes are the generator's six, which leave out the research-only naval class, but the sources say this sub finds other submerged submarines."
         }
       ],
       "researched_by": "batch r1, agent J04-RA1",

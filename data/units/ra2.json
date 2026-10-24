@@ -1,7 +1,7 @@
 {
   "$schema": "../../schemas/source-unit.schema.json",
   "schema_version": "1.0.0",
-  "vocab_version": "1.0.0",
+  "vocab_version": "1.1.0",
   "game": "ra2",
   "units": [
     {
@@ -95,7 +95,7 @@
           "why": "Jumps straight to wherever it is sent, so it reaches the rear of an army or a base without crossing the ground between."
         },
         {
-          "ref": "class:infantry",
+          "ref": "immune:crush",
           "why": "Unlike most soldiers it can't be crushed: tanks that run infantry over can't do that to it."
         },
         {
@@ -121,7 +121,7 @@
           "why": "Its beam can't reach aircraft in flight, so it has no answer to air attack."
         },
         {
-          "ref": "tier:t3",
+          "ref": "cost:very-high",
           "why": "Needs a Battle Lab and costs a little over twice a Grizzly, a lot for a soldier this fragile."
         }
       ],
@@ -143,6 +143,10 @@
         {
           "ref": "target:structure",
           "why": "Erases enemy buildings one by one without leaving ruins."
+        },
+        {
+          "ref": "role:anti-infantry",
+          "why": "One against one it still wins: by the wiki, a well-handled legionnaire beats any ground unit it fights alone, anti-infantry troops included. Only groups of them overwhelm it (countered by)."
         }
       ],
       "combos": [
@@ -270,12 +274,6 @@
           "used": "root, silence",
           "wanted": "a stasis trait: the target can't act and can't be hurt while held",
           "note": "Root and silence together say the frozen target can neither move nor fire, as the EMP tie-break pairs them, but neither says the target is also untouchable; the lock-in-stasis pattern carries that."
-        },
-        {
-          "path": "strengths/2",
-          "used": "class:infantry",
-          "wanted": "uncrushable: vehicles cannot run it over",
-          "note": "No link names the immunity to crushing, so the strength hangs on its class, the part that makes other soldiers crushable."
         }
       ],
       "atypical": [
@@ -346,7 +344,7 @@
           "mount": "slow-turret",
           "delivery": "projectile",
           "range": "medium",
-          "can_target": ["ground-vehicle", "infantry", "naval"],
+          "can_target": ["ground-vehicle", "infantry", "structure", "naval"],
           "traits": [],
           "summary": "An armour-piercing anti-tank gun with a reach a little beyond the Conscript's rifle, close to the Grizzly's gun in punch per the wiki. Good against vehicles, poor against infantry (worst against soldiers it can't run over), and it can't fire at aircraft. The official site's early text called it short-range rocket pods; the game gives it a cannon."
         }
@@ -527,7 +525,7 @@
         },
         {
           "path": "armament/0/can_target",
-          "note": "The wiki calls it an anti-tank gun, so can_target step 3 lists ground vehicles plus infantry, which the same page says it struggles against. No page read says the gun damages buildings, so structures are left out, though the game surely lets it fire at them. Ships are listed by the naval rule."
+          "note": "The wiki calls it an anti-tank gun, so can_target step 3 lists ground vehicles plus infantry, which the same page says it struggles against. The infobox's ground attack line belongs to its only weapon and names its armour-piercing warhead, which counts as the sources saying the gun damages buildings, so structures are listed. Ships are listed by the naval rule."
         },
         {
           "path": "armament/0/delivery",
@@ -680,7 +678,7 @@
           "why": "Deployed, he wipes out infantry rushes and whole paratrooper drops that land on his field, and transports that unload into it get badly hurt too."
         },
         {
-          "ref": "class:infantry",
+          "ref": "immune:toxic",
           "why": "Unlike other soldiers he is immune to radiation, his own field included, so he can stand in the middle of the zone he creates."
         },
         {
@@ -870,14 +868,11 @@
         {
           "path": "body/plan",
           "note": "Power suit rests on the wiki's unit box, which calls his suit a nuclear battle suit. The manual calls it a protective suit against radiation, and no source says it is powered, so a sealed protective suit could also be read as humanoid (a rule problem in the batch report)."
-        }
-      ],
-      "fit_notes": [
+        },
         {
-          "path": "strengths/2",
-          "used": "class:infantry",
-          "wanted": "an immunity to radiation and toxic damage",
-          "note": "His suit makes him immune to radiation, his own field included. No link names the immunity, so the strength hangs on his class; our nature term organic marks him as vulnerable to toxic damage, and no armour model or flag records a damage immunity."
+          "path": "countered_by",
+          "note": "No entry names Navy SEALs, because the pages disagree on who wins: the Desolator (Red Alert 2) page says a SEAL can kill him with one hit, so he should lay his field before SEALs are unloaded, while the Navy SEAL (Red Alert 2) page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Navy_SEAL_(Red_Alert_2)), read but not cited, says Desolators outrange SEALs.",
+          "sources_disagree": true
         }
       ],
       "researched_by": "batch r1, agent J06-RA2",
@@ -1026,8 +1021,12 @@
           "why": "His rifle does real damage to vehicles; the wiki says it kills them quicker than a dug-in Guardian GI's anti-tank weapon."
         },
         {
-          "ref": "class:infantry",
-          "why": "Unlike ordinary soldiers, as a hero he cannot be mind-controlled, and no vehicle but the Battle Fortress can run him over."
+          "ref": "immune:mind-control",
+          "why": "Unlike ordinary soldiers, as a hero he cannot be mind-controlled."
+        },
+        {
+          "ref": "immune:crush",
+          "why": "No vehicle but the Battle Fortress can run him over."
         }
       ],
       "weaknesses": [
@@ -1040,8 +1039,8 @@
           "why": "The airstrike works only on buildings; against units he has only his rifle."
         },
         {
-          "ref": "tier:t3",
-          "why": "He needs a Battle Lab, sits in the top price band, and a player may field only one hero at a time."
+          "ref": "availability:unique",
+          "why": "A player may field only one hero at a time, and he needs a Battle Lab and sits in the top price band."
         },
         {
           "ref": "mobility:foot",
@@ -1090,7 +1089,16 @@
           "title": "Command & Conquer: Red Alert 2 - Yuri's Revenge manual (PDF hosted by the Command & Conquer Wiki)",
           "kind": "official",
           "accessed": "2026-10-20",
-          "supports": ["availability", "tier", "armour", "strengths/3", "countered_by/1", "counters/2", "on_death"],
+          "supports": [
+            "availability",
+            "tier",
+            "armour",
+            "strengths/3",
+            "strengths/4",
+            "countered_by/1",
+            "counters/2",
+            "on_death"
+          ],
           "note": "Printed page 12, Tactical Update: Gameplay Changes, items 8 (heroes cannot be mind-controlled or crushed, except by the Battle Fortress) and 9 (one hero at a time), with item 18 (the Soviets lose the Cloning Vats); page 17, the Soviet tech table (Barracks plus Battle Lab); page 18, Boris's own entry. Read in the PDF, since no wiki page copies the Gameplay Changes or the table; paraphrase checked by hand.",
           "version": "Yuri's Revenge manual (2001)"
         },
@@ -1188,12 +1196,6 @@
           "note": "The mark trait is closest, but it means the whole team sees the target and hits it harder for a time; here the beam summons the strike and aborts it when broken."
         },
         {
-          "path": "strengths/3",
-          "used": "class:infantry",
-          "wanted": "immunity to mind control and to being run over (only the Battle Fortress can)",
-          "note": "As a hero he cannot be mind-controlled, and no vehicle but the Battle Fortress can crush him. No link, armour model, mobility trait or other term records either immunity, so the strength that states both hangs on his class."
-        },
-        {
           "path": "countered_by/1",
           "used": "unit link alone",
           "wanted": "a term for a vehicle that crushes heroes, vehicles and walls (the Yuri's Revenge omni-crusher)",
@@ -1243,12 +1245,11 @@
           "crew/model",
           "on_death/outcomes",
           "sources/0/supports",
-          "sources/1/supports",
           "sources/2/supports",
           "sources/4/supports"
         ],
         "wrong_paths": [],
-        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. Nothing was found wrong. Checked, then changed after the check, so left out of checked_paths: sources/3/supports (combos/0 removed)."
+        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. Nothing was found wrong. Checked, then changed after the check, so left out of checked_paths: sources/3/supports (combos/0 removed); sources/1/supports (the rule-fix round after R1 split the two immunities of strengths/3, adding strengths/4)."
       }
     },
     {
@@ -1257,13 +1258,13 @@
       "introduced_in": "ra2-yuris-revenge",
       "faction": "soviet",
       "name": "Siege Chopper",
-      "flavour_affinity": ["soviet", "allied"],
+      "flavour_affinity": ["soviet"],
       "class": "aircraft",
       "nature": "crewed-machine",
       "availability": "open",
       "roles": {
         "primary": "anti-infantry",
-        "secondary": ["anti-air", "raider"]
+        "secondary": ["raider"]
       },
       "tier": {
         "band": "t3",
@@ -1304,7 +1305,7 @@
           "slot": "primary",
           "family": "machine-gun",
           "damage": "kinetic",
-          "mount": "limited-arc",
+          "mount": "free-aim",
           "delivery": "hitscan",
           "range": "medium",
           "can_target": ["infantry", "ground-vehicle", "low-air", "high-air", "structure", "naval"],
@@ -1346,6 +1347,7 @@
           "id": "deployed",
           "name": "Deployed (landed)",
           "via": "deploy-siege-mode",
+          "target": "ground-vehicle",
           "summary": "Landed with the howitzer out, which replaces the machine gun. It cannot move until it takes off again. On the ground it is a ground target that ordinary ground weapons and fast tank hunters reach, and it loses the fliers' immunity to mind control."
         }
       ],
@@ -1368,7 +1370,7 @@
           "why": "In flight its machine gun is effective against infantry, as the manual says."
         },
         {
-          "ref": "mobility:rotor",
+          "ref": "immune:mind-control",
           "why": "While it flies it cannot be mind-controlled: the Yuri's Revenge manual makes every flying unit immune."
         }
       ],
@@ -1401,7 +1403,7 @@
         },
         {
           "ref": "damage:armour-piercing",
-          "why": "Fast armour-piercing units such as Robot Tanks and IFVs reach a landed chopper before it can pack up, and its howitzer struggles to hit them."
+          "why": "Armour-piercing units such as Robot Tanks and IFVs destroy a landed chopper easily, since its armour is weak."
         },
         {
           "ref": "unit:ra2.allied.robot-tank",
@@ -1410,6 +1412,10 @@
         {
           "ref": "pattern:mind-control",
           "why": "Once landed it loses the fliers' immunity, so a mind-control unit that fights past its escort can take it over."
+        },
+        {
+          "ref": "speed:>=fast",
+          "why": "Fast units reach a landed chopper before it can pack up, and its howitzer struggles to hit targets on the move."
         }
       ],
       "counters": [
@@ -1449,7 +1455,7 @@
         }
       ],
       "memorable": "A gunship that lands and unfolds a long-range howitzer: it flies a heavy gun wherever it is wanted, then sits rooted and fragile while it shells bases from beyond most of their defences.",
-      "as_player": "A fast T3 gunship. In the air you fly and fire a side-mounted machine gun on left mouse that shreds infantry and thin-skinned vehicles but barely scratches heavy tanks. Press the deploy key to land: you can't move, but a long-range howitzer replaces the gun and fires shells at buildings and parked units from beyond most defences. Packing up and lifting off take a moment, so land behind an escort; anti-air in the sky and fast tank hunters on the ground are your worst enemies.",
+      "as_player": "A fast T3 gunship. In the air you fly and fire a machine gun on left mouse that shreds infantry and thin-skinned vehicles but barely scratches heavy tanks. Press the deploy key to land: you can't move, but a long-range howitzer replaces the gun and fires shells at buildings and parked units from beyond most defences. Packing up and lifting off take a moment, so land behind an escort; anti-air in the sky and fast tank hunters on the ground are your worst enemies.",
       "sources": [
         {
           "url": "https://web.archive.org/web/20071214201459/http://www.ea.com/official/cc/redalert2/english/newsovietinfo2.jsp",
@@ -1526,11 +1532,11 @@
       "uncertain": [
         {
           "path": "roles/primary",
-          "note": "The official Application line names two roles, anti-infantry and artillery (siege). Step 1's bonus test picks anti-infantry: the manual says the flying chopper is effective against infantry, read as a bonus in step 4's sense, while no official text gives the machine gun, the main weapon, an edge against buildings. Step 1 does not say what target siege is tested against. If official strong-against text did not count there, step 3 would not give siege either, since no source says the howitzer hits an area, and step 4 would give anti-infantry again."
+          "note": "The official Application line names anti-infantry and artillery (siege). Siege, a role with no target, cannot win step 1's bonus test, and anti-infantry wins it on the manual's line that the flying chopper is effective against infantry."
         },
         {
           "path": "roles/secondary",
-          "note": "The Application line still names artillery, a siege alias, but siege is not a candidate: its coding rule binds roles.secondary as it does the primary, and since the merge pass recoded the deployed gun as a cannon fired straight at targets in view, with no source showing its shell hurting an area, none of the rule's weapon clauses is met (a long-range cannon alone is not siege). Step 2 adds no role either: no game data or source gives that cannon extra damage against armour or calls it strong against vehicles. Anti-air ranks at step 3 and rests on the wiki saying that, to a degree, the gun can serve as an anti-aircraft weapon against Rocketeers, while the same page says it lacks the firepower for Floating Discs, Kirovs and Harriers, so the role's description (bringing down jets and airships) fits only loosely; no official text calls air a weak point, so the drop rule does not apply. Raider ranks at step 4 (very fast with light armour). The profile says the gun harasses enemy units; that verb was not read as the alias harasser, which would move raider to step 1, ahead of anti-air."
+          "note": "The Application line still names artillery, a siege alias, but siege is not a candidate: its coding rule binds roles.secondary as it does the primary, and since the merge pass recoded the deployed gun as a cannon fired straight at targets in view, with no source showing its shell hurting an area, none of the rule's weapon clauses is met (a long-range cannon alone is not siege). Step 2 adds no role either: no game data or source gives that cannon extra damage against armour or calls it strong against vehicles. Anti-air is not a candidate: its only support is the wiki's line that the gun can, up to a point, serve against aircraft, a hedge on whether it works against them at all, which the roles word list does not count. Raider ranks at step 1: the profile has the gun harass enemy units, a word form of the alias harasser."
         },
         {
           "path": "armament/0/can_target",
@@ -1578,14 +1584,6 @@
           "note": "It crashes when shot down, as its voice lines announce; no page read says the crash damages anything, so the decision-3C default applies."
         }
       ],
-      "fit_notes": [
-        {
-          "path": "modes/0/mobility",
-          "used": "left out (the landed form cannot move), and the mode's class stays aircraft",
-          "wanted": "a way for a mode to say the unit becomes a different kind of target (a landed flier turns into a ground target)",
-          "note": "Landed, the chopper sits on the ground, where ordinary ground weapons, tank hunters and mind control reach it as they cannot in flight. A mode that cannot move leaves out mobility and keeps the aircraft class, so the coded fields still make it a low-air target; only the mode's summary records the change."
-        }
-      ],
       "review": {
         "status": "checked",
         "checked_by": "batch r1 checker",
@@ -1613,7 +1611,6 @@
           "armament/0/range",
           "armament/0/can_target",
           "armament/0/traits",
-          "armament/0/mount",
           "armament/0/delivery",
           "armament/1/range",
           "armament/1/can_target",
@@ -1633,7 +1630,7 @@
           "sources/4/supports"
         ],
         "wrong_paths": [],
-        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. Nothing was found wrong. Checked, then changed after the check, so left out of checked_paths: armament/1/family (recoded from artillery to cannon in a3c4d6d); armament/1/delivery (lobbed became projectile in a3c4d6d); armament/1/damage (the final review set the cannon default, armour-piercing); roles/secondary (the final review took out siege, giving anti-air and raider)."
+        "notes": "Sampled by the batch r1 checker (seed r1-2026-10-22) and re-checked field by field against its sources; research/r1/checker/checks.json lists every field and verdict. Nothing was found wrong. Checked, then changed after the check, so left out of checked_paths: armament/1/family (recoded from artillery to cannon in a3c4d6d); armament/1/delivery (lobbed became projectile in a3c4d6d); armament/1/damage (the final review set the cannon default, armour-piercing); roles/secondary (the final review took out siege, giving anti-air and raider; the rule-fix round after R1 took out anti-air); armament/0/mount (limited-arc became free-aim in the rule-fix round after R1, since design trivia no longer says how a gun is mounted)."
       },
       "researched_by": "batch r1, opening check (agents A and B, reconciled)"
     },
@@ -1644,7 +1641,7 @@
       "faction": "yuri",
       "name": "Mastermind",
       "lineage": "mastermind",
-      "flavour_affinity": ["soviet"],
+      "flavour_affinity": [],
       "class": "vehicle",
       "nature": "crewed-machine",
       "availability": "open",
@@ -1692,7 +1689,7 @@
           "slot": "primary",
           "family": "psionic",
           "damage": "psionic",
-          "mount": "free-aim",
+          "mount": "slow-turret",
           "delivery": "hitscan",
           "range": "medium",
           "can_target": ["infantry", "ground-vehicle", "naval"],
@@ -1723,7 +1720,7 @@
       "strengths": [
         {
           "ref": "pattern:mind-control",
-          "why": "Takes over every enemy soldier and vehicle that comes near, with no hard cap, so enemy armoured columns end up fighting each other; enemy mind control cannot take it in return."
+          "why": "Takes over every enemy soldier and vehicle that comes near, with no hard cap, so enemy armoured columns end up fighting each other."
         },
         {
           "ref": "armour-class:heavy",
@@ -1736,6 +1733,10 @@
         {
           "ref": "mobility-trait:crush",
           "why": "Can try to run over soldiers, its only way to hurt anything it cannot take over."
+        },
+        {
+          "ref": "immune:mind-control",
+          "why": "Enemy mind control cannot take it over."
         }
       ],
       "weaknesses": [
@@ -1752,7 +1753,7 @@
           "why": "Moves only at infantry pace, slower than the main battle tanks, so it struggles to close in or to escape."
         },
         {
-          "ref": "tier:t3",
+          "ref": "cost:very-high",
           "why": "Needs a Battle Lab and costs as much as the game's top super-units."
         }
       ],
@@ -1774,7 +1775,7 @@
           "why": "An immune drone that destroys an unescorted Mastermind, as the wiki says."
         },
         {
-          "ref": "tier:t1",
+          "ref": "cost:<=low",
           "why": "A rush of many cheap, expendable units (Conscripts, Flak Tracks, IFVs, free paratroopers) makes it take more captives than it can hold, so it overloads and wrecks itself."
         }
       ],
@@ -1886,17 +1887,9 @@
           "note": "That the Iron Curtain stops overload damage rests on the wiki's Iron Curtain (Red Alert 2) page (https://cnc.fandom.com/wiki/Iron_Curtain_(Red_Alert_2)); the Iron Curtain is a side-wide power, so it is only mentioned."
         },
         {
-          "path": "abilities/0",
-          "note": "Recorded as its own passive because the wiki gives the overloaded state its own section and the game announces it, and it adds a mechanic. It could also be read as part of how the control weapon works and kept in that weapon's summary."
-        },
-        {
           "path": "sensors/traits",
           "note": "Yuri's Revenge manual, Gameplay Changes item 20, says every psychic unit and structure sees through the Allied Spy's disguise; no page about the Mastermind confirms that it does, so no detector trait is given, as the registry note asks. The Slave miner page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Slave_miner) recommends escorting that miner with Yuri Clones or Masterminds against Spies. That fits item 20, but the page does not say the Mastermind itself unmasks them.",
           "sources_disagree": true
-        },
-        {
-          "path": "roles/primary",
-          "note": "The Application line names anti-vehicle and anti-infantry. Anti-armour is skipped because psionic damage fails its requires, which leaves anti-infantry as the one role the line names. If a line naming two roles must instead pass the bonus test first, neither target has a bonus and the steps run on to step 5, which gives assault."
         },
         {
           "path": "mobility/base",
@@ -1912,7 +1905,7 @@
         },
         {
           "path": "armament/0/can_target",
-          "note": "No source names ships for the Mastermind; the manual's Yuri Clone entry says every unit outside its immune list can be taken, and the naval coding rule adds naval to a weapon that hits ground vehicles. Buildings are left out: ModEnc's MindControl page says buildings are immune by default, and the wiki's Mind control page (https://cnc.fandom.com/wiki/Mind_control) names only Yuri Prime as taking structures in Yuri's Revenge. The Robot Tank, Terror Drone, Brute and Slave immunities come from the registry note, which cites those units' own pages; the Mastermind page names the first three as immune counters."
+          "note": "No source names ships for the Mastermind; naval rests on the manual's Yuri Clone entry, which says every unit outside its immune list can be taken, read as saying Yuri's mind control works on every unit (can_target step 1 lists naval only on such a line). Buildings are left out: ModEnc's MindControl page says buildings are immune by default, and the wiki's Mind control page (https://cnc.fandom.com/wiki/Mind_control) names only Yuri Prime as taking structures in Yuri's Revenge. The Robot Tank, Terror Drone, Brute and Slave immunities come from the registry note, which cites those units' own pages; the Mastermind page names the first three as immune counters."
         },
         {
           "path": "on_death",
@@ -2067,7 +2060,7 @@
         },
         {
           "ref": "role:anti-armour",
-          "why": "The wiki singles out anti-tank soldiers, Guardian GIs and Tesla Troopers, as especially dangerous: they hit its light hull hard and cannot be lifted."
+          "why": "The wiki singles out anti-tank soldiers, Guardian GIs and Tesla Troopers, as especially dangerous: they hit its light hull hard."
         },
         {
           "ref": "unit:ra2.allied.guardian-gi",
@@ -2287,13 +2280,13 @@
       "introduced_in": "ra2-yuris-revenge",
       "faction": "yuri",
       "name": "Chaos Drone",
-      "flavour_affinity": ["allied"],
+      "flavour_affinity": [],
       "class": "drone",
       "nature": "uncrewed-machine",
       "availability": "open",
       "roles": {
         "primary": "disabler",
-        "secondary": ["raider"]
+        "secondary": []
       },
       "tier": {
         "band": "t1",
@@ -2385,6 +2378,10 @@
         {
           "ref": "nature:uncrewed-machine",
           "why": "Robots and drones are immune to the gas, so they can hunt the defenceless drone freely."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Base defences, first among the worst threats the wiki lists for it, destroy its thin hull before it gets close enough to release its gas."
         }
       ],
       "counters": [
@@ -2517,7 +2514,7 @@
         },
         {
           "path": "roles/secondary",
-          "note": "Raider enters only at roles.secondary step 4 (fast with light armour); the wiki's advice to use it in hit-and-run attacks supports it, but the drone deals no damage itself."
+          "note": "Left empty: raider needs a weapon that is not a tool, and the drone has none; the wiki's advice to use it for hit-and-run attacks does not change that."
         },
         {
           "path": "combos/2",
@@ -2583,7 +2580,7 @@
           "slot": "primary",
           "family": "machine-gun",
           "damage": "kinetic",
-          "mount": "free-aim",
+          "mount": "slow-turret",
           "delivery": "hitscan",
           "range": "medium",
           "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
@@ -2595,7 +2592,7 @@
           "slot": "acquired",
           "family": "cannon",
           "damage": "armour-piercing",
-          "mount": "free-aim",
+          "mount": "slow-turret",
           "delivery": "projectile",
           "range": "medium",
           "can_target": ["infantry", "ground-vehicle", "structure", "naval"],
@@ -2631,6 +2628,7 @@
           "id": "deployed",
           "name": "Deployed refinery",
           "via": "deploy-siege-mode",
+          "target": "structure",
           "summary": "Cannot move. It becomes a structure that houses the Slaves' mining and processes their ore, and sees a little further. As a building it is safe from the Chronosphere, open to C4 like other structures, cannot be captured, and loses its self-repair: only an Engineer sent inside repairs it. Like any refinery it lets an enemy Spy who gets inside steal half its owner's money.",
           "armour": {
             "class": "heavy",
@@ -2646,23 +2644,27 @@
       "strengths": [
         {
           "ref": "armour-class:heavy",
-          "why": "Far tougher than any other miner and unharmed by radiation; deployed, its huge health soaks fire while base defences work."
+          "why": "Far tougher than any other miner; deployed, its huge health soaks fire while base defences work."
         },
         {
           "ref": "armour-model:self-repair",
           "why": "Mends itself while mobile, so it needs no repair building."
         },
         {
-          "ref": "size:large",
+          "ref": "immune:infest-vehicle",
           "why": "Partly because of its size, Terror Drones cannot get inside it, even while it drives, the only ground unit with that immunity."
         },
         {
-          "ref": "role:logistics",
+          "ref": "immune:mind-control",
           "why": "Like every miner it cannot be mind-controlled."
         },
         {
           "ref": "pattern:reinforce-squad",
           "why": "Lost Slaves come back free, so harassment only slows its income."
+        },
+        {
+          "ref": "immune:toxic",
+          "why": "Radiation does not hurt it, unlike the Slaves it carries."
         }
       ],
       "weaknesses": [
@@ -2831,11 +2833,11 @@
         },
         {
           "path": "body/size",
-          "note": "Large is a judgement: no size example names a mining vehicle. The wiki ties its immunity to Terror Drones partly to its size, and the Tank bunker page on the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Tank_bunker) says ore miners are too big for the bunker; neither says it is twice a tank's size."
+          "note": "Large by the size list's mobile-refinery example. The wiki ties its immunity to Terror Drones partly to its size, and the Tank bunker page on the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Tank_bunker) says ore miners are too big for the bunker; neither says it is twice a tank's size."
         },
         {
           "path": "armament/0/mount",
-          "note": "No source says how the gun is mounted, so the machine-gun family default (free aim) is used."
+          "note": "No source says how the gun is mounted, so the hull-turret body puts it on the main turret (slow turret), and the elite cannon that replaces it takes the same mount."
         },
         {
           "path": "armament/0/delivery",

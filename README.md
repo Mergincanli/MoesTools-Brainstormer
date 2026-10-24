@@ -12,7 +12,7 @@ Next: step 3, the research run, starting with batch R1. The generator and the ap
 
 - [Proposal](docs/proposal.md): the plan, repository structure, decisions needed. Start here. Its counts (37 word lists at version 0.3.0, 23 planned patterns) are as they were when it was approved.
 - [Samples](docs/samples.md): three researched units (RA3 Terror Drone, Hammer Tank, Multigunner IFV), three mechanic patterns and an example concept card.
-- [Vocabularies](docs/vocabularies.md): the fixed word lists every record uses (version 1.0.0, approved), with each term's coding rule and each list's tie-breaks.
+- [Vocabularies](docs/vocabularies.md): the fixed word lists every record uses (version 1.1.0, approved), with each term's coding rule and each list's tie-breaks.
 - [Fields](docs/fields.md): every field of every record type.
 - [Research runbook](docs/research-runbook.md): how a research batch runs step by step, its quality checks, and the night shift.
 

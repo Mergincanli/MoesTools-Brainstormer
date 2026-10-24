@@ -28,7 +28,7 @@ A usage limit can cut you off part way, and you would then be started again with
 Pages fetched before are cached in ${root}/.cache/sources/<site>/ (one JSON file per page, named after its path; the raw field holds the page text): look there before fetching a page. Read long files and pages in parts, by searching for the section you need.`
 
 function prompt(u) {
-  return `Unit Forge is a research database of real RTS and shooter units, coded with fixed word lists (version 1.0.0, approved) and field rules, that feeds a generator of original unit concepts for a top-down team shooter. In batch ${B.id.toUpperCase()}'s opening check, two research agents coded \`${u.id}\` independently. They agreed on every measured field${u.diff ? ` except: ${u.diff}` : ''}. Your job is to produce the one final entry.
+  return `Unit Forge is a research database of real RTS and shooter units, coded with fixed word lists (version 1.1.0, approved) and field rules, that feeds a generator of original unit concepts for a top-down team shooter. In batch ${B.id.toUpperCase()}'s opening check, two research agents coded \`${u.id}\` independently. They agreed on every measured field${u.diff ? ` except: ${u.diff}` : ''}. Your job is to produce the one final entry.
 
 ## Your workspace
 ${u.ws}, a copy of the repository (no git history). Work only there.
@@ -41,7 +41,7 @@ ${saving(`${u.ws}/.progress/reconcile`, u.ws)}
 - The rules: docs/fields.md (Conventions and the Source unit section), docs/vocabularies.md, data/games.json (the \`${u.game}\` entry), ${NOTES_FILE} (this game's official role lines, game-wide mechanics and research notes), and data/units/ as worked examples.
 
 ## Task
-1. Start from the coding whose text is clearer and better sourced, and write the unit into data/units/${u.game}.json in your workspace (add it after any units already there; header for a new file: {"$schema": "../../schemas/source-unit.schema.json", "schema_version": "1.0.0", "vocab_version": "1.0.0", "game": "${u.game}", "units": [ ... ]}).
+1. Start from the coding whose text is clearer and better sourced, and write the unit into data/units/${u.game}.json in your workspace (add it after any units already there; header for a new file: {"$schema": "../../schemas/source-unit.schema.json", "schema_version": "1.0.0", "vocab_version": "1.1.0", "game": "${u.game}", "units": [ ... ]}).
 2. Every field where A and B differ: decide by the written rules and the sources. Fetch the pages yourself where needed (wikis through their API, two seconds apart, retry after a 429). Record each decision.
 3. Text fields (summaries, notes, uncertain, fit_notes, matchups): merge the best of both. Keep every uncertain point either coder raised that still holds, and the pages a code rests on (cited, up to five, or named in uncertain). Matchups are open choices: keep the strongest and best-sourced from both, within the schema's limits.
 4. researched_by: "batch ${B.id}, opening check (agents A and B, reconciled)"; review: {"status": "unchecked"}.

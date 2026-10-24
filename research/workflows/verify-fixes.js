@@ -42,7 +42,7 @@ A usage limit can cut you off part way, and you would then be started again with
 - When the work is done, add a last line DONE, then give your answer.
 Pages fetched before are cached in ${root}/.cache/sources/<site>/ (one JSON file per page, named after its path; the raw field holds the page text): look there before fetching a page. Read long files and pages in parts, by searching for the section you need.`
 
-const COMMON = `Unit Forge (repo ${REPO}; read only for you, do not edit anything) is a research database of real RTS and shooter units, coded with fixed word lists (version 1.0.0, approved), that feeds a generator of original unit concepts for a top-down team shooter. The branch checked out is research batch ${B.id.toUpperCase()} (${B.scope}). A final review found problems; they were fixed after commit ${args.since}. docs/research-runbook.md is the procedure. House rules: plain words, paraphrase only (never six or more words copied from a cited page), mechanics over numbers. npm run check:merge runs every check.`
+const COMMON = `Unit Forge (repo ${REPO}; read only for you, do not edit anything) is a research database of real RTS and shooter units, coded with fixed word lists (version 1.1.0, approved), that feeds a generator of original unit concepts for a top-down team shooter. The branch checked out is research batch ${B.id.toUpperCase()} (${B.scope}). A final review found problems; they were fixed after commit ${args.since}. docs/research-runbook.md is the procedure. House rules: plain words, paraphrase only (never six or more words copied from a cited page), mechanics over numbers. npm run check:merge runs every check.`
 
 const out = await pipeline(
   args.angles || ['closure', 'regression'],
