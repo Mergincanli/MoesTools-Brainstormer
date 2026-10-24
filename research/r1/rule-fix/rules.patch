@@ -1,0 +1,696 @@
+--- a/data/vocab/aim-models.json
++++ b/data/vocab/aim-models.json
+@@ -50,7 +50,7 @@
+   "tie_breaks": [
+     {
+       "terms": ["radial", "auto-target", "limited-arc", "free-aim", "slow-turret", "body-aim"],
+-      "rule": "Go down this list and take the first that fits. (1) It hits all around the unit at once, like an aura or a pulse: radial. (2) It fires by itself while the unit's player does something else (point-defence guns that fire at units, a deployed sentry gun, or launched drones that act on their own): auto-target. In a commanded game every weapon picks targets for itself, so there (2) needs one of those kinds; a turret carried on the unit (an add-on or a roof gun) goes on to the later steps, even when it picks its own targets while the unit is idle. (3) The source shows it covering only part of the circle: a gun on the side or front of a hull, a door gun, a tail gun, a mech torso that twists only partway, or a soldiers' heavy weapon that must be set up and then covers only an arc (a machine-gun team, a field gun): limited-arc. A gun that turns only a little either side of the nose (a tank destroyer) counts as fixed; see (6). If the source doesn't say how far a turret turns, treat it as a full turret. (4) A soldier or creature carries it, or it is built into a tiny or small body: free-aim. A squad's weapons all take the leader's mount. (5) It sits on a full turret, or on a torso that turns all the way round: slow-turret for the main turret (the one holding the main weapon) of a large or huge unit that moves on the ground (tracks, wheels, legs or hover), free-aim for any other turret (on a medium vehicle, a roof gun, a chin gun, a turret holding only another seat's weapon, any aircraft turret). A gun that turns with the main gun takes the same mount. (6) It is fixed and fires where the unit faces (no turret, wing pods, forward launchers, bombs): body-aim. If a seat other than the driver fires it, use free-aim instead, because that seat cannot turn the unit. The family's default mount only fills in when the source says nothing about how the weapon is mounted."
++      "rule": "Go down this list and take the first that fits. (1) It hits all around the unit at once, like an aura or a pulse: radial. (2) It fires by itself while the unit's player does something else (point-defence guns that fire at units, a deployed sentry gun, or launched drones that act on their own): auto-target. In a commanded game every weapon picks targets for itself, so there (2) needs one of those kinds; a turret carried on the unit (an add-on or a roof gun) goes on to the later steps, even when it picks its own targets while the unit is idle. (3) The source shows it covering only part of the circle: a gun on the side or front of a hull, a door gun, a tail gun, a mech torso that twists only partway, or a soldiers' heavy weapon that must be set up and then covers only an arc (a machine-gun team, a field gun): limited-arc. A gun that turns only a little either side of the nose (a tank destroyer) counts as fixed; see (6). If the source doesn't say how far a turret turns, treat it as a full turret. A gun the source places on the side or at the tail of a hull, or in a door, without saying how far it turns is limited-arc; one in the nose or the front of a hull is fixed; see (6). (4) A soldier or creature carries it, or it is built into a tiny or small body: free-aim. A squad's weapons all take the leader's mount. (5) It sits on a full turret, or on a torso that turns all the way round: slow-turret for the main turret (the one holding the main weapon) of a large or huge unit that moves on the ground (tracks, wheels, legs or hover), free-aim for any other turret (on a medium vehicle, a roof gun, a chin gun, a turret holding only another seat's weapon, any aircraft turret). A gun that turns with the main gun takes the same mount. When the source does not say how the main weapon is mounted, a body plan with a turret (hull-turret, multi-turret) puts it, and any weapon that takes its place, on the main turret. (6) It is fixed and fires where the unit faces (no turret, wing pods, forward launchers, bombs): body-aim. If a seat other than the driver fires it, use free-aim instead, because that seat cannot turn the unit. Game code or data that places a weapon (a firing point on the turret) counts as the source saying how it is mounted; design trivia that ties the model to a real vehicle (a side gun based on a real helicopter's) does not. The family's default mount only fills in when the source says nothing about how the weapon is mounted and the body plan gives it no turret (5)."
+     }
+   ]
+ }
+--- a/data/vocab/armour-classes.json
++++ b/data/vocab/armour-classes.json
+@@ -25,7 +25,7 @@
+     {
+       "id": "medium",
+       "label": "Medium",
+-      "description": "Shrugs off most light weapons but is weaker than a battle tank: IFVs, APCs, half-tracks and armoured cars, light tanks, suits bigger than a soldier, and light walkers bigger than a soldier.",
++      "description": "Shrugs off most light weapons but is weaker than a battle tank: IFVs, APCs, half-tracks and armoured cars, light tanks, suits bigger than a soldier, and light walkers and light mechs bigger than a soldier, hovering ones too.",
+       "rank": 3,
+       "allowed": {
+         "sizes": ["small", "medium", "large"]
+@@ -58,7 +58,7 @@
+     },
+     {
+       "terms": ["unarmoured", "light", "medium"],
+-      "rule": "A soldier or animal is unarmoured, unless step 1 or 2 gives more, or its game data gives it tougher armour than the game's basic rifle infantry: a tougher infantry armour type or attribute, or body armour its registry notes name. Then it is light. A power suit worn by one soldier (body size small) is light, unless step 1 or 2 gives another class (by the dow1 armour map the Space Marine Squad is light and Terminators are medium). Where neither step decides, the game's basic rifle infantry (the speed reference in data/games.json) stays unarmoured whatever it wears (the StarCraft II Marine). A suit bigger than a soldier (body size medium or more) is medium. Protection every soldier of the game can get, such as cover, veterancy ranks or the retreat bonus, never lifts the class; mention it in armour.notes."
++      "rule": "A soldier or animal is unarmoured, unless step 1 or 2 gives more, or its game data gives it tougher armour than the game's basic rifle infantry: a tougher infantry armour type or attribute, or body armour its registry notes name. Then it is light. Where the game data gives only part of its armour (one resistance, but no armour type or set), judge by that part. A power suit worn by one soldier (body size small) is light, unless step 1 or 2 gives another class (by the dow1 armour map the Space Marine Squad is light and Terminators are medium). Where neither step decides, the game's basic rifle infantry (the speed reference in data/games.json) stays unarmoured whatever it wears (the StarCraft II Marine). A suit bigger than a soldier (body size medium or more) is medium. Protection every soldier of the game can get, such as cover, veterancy ranks or the retreat bonus, never lifts the class; mention it in armour.notes."
+     }
+   ]
+ }
+--- a/data/vocab/cooldown-bands.json
++++ b/data/vocab/cooldown-bands.json
+@@ -2,7 +2,7 @@
+   "$schema": "../../schemas/vocabulary.schema.json",
+   "id": "cooldown-bands",
+   "label": "Cooldown bands",
+-  "description": "How often an ability can be used: the wait from one use until it can be used again. Band the source's cooldown figure alone; do not add the time the effect lasts. Use real seconds at the game's normal multiplayer speed (StarCraft II: Faster). Where the source gives a span (\"8 to 12 seconds\", \"up to 15 seconds\"), band its largest value. For an ability with charges, band the time to regain one charge. Edges are exact, and a value on an edge takes the higher band. An ability that comes back only at a resupply point or on respawn is per-life, with or without a figure. An ability with no wait has no band: leave cooldown out. That covers instant orders such as unloading, and mode switches that only take time to finish; say in the summary, in words, how long the switch takes. An ability held back only by a stock, such as Company of Heroes munitions or the unit's energy, has no band unless the source also gives a cooldown. A boost's own fuel tank, which only that ability burns and which refills by itself, is its cooldown, not a stock: band the time it takes to refill from empty. An energy pool stays a stock even on a unit with only one ability that spends it (the StarCraft II Medivac's Heal).",
++  "description": "How often an ability can be used: the wait from one use until it can be used again. Band the source's cooldown figure alone; do not add the time the effect lasts. Use real seconds at the game's normal multiplayer speed (StarCraft II: Faster). Where the source gives a span (\"8 to 12 seconds\", \"up to 15 seconds\"), band its largest value. For an ability with charges, band the time to regain one charge. Edges are exact, and a value on an edge takes the higher band. An ability whose uses come back only at a resupply point or on respawn is per-life, with or without a figure, however many uses its stock holds (a Red Alert minelayer's five mines, reloaded only at a depot, which are also its limited-ammo resource). So is an action that uses up the unit, such as a self-destruct or a spy that is lost when it enters a building. An ability with no wait has no band: leave cooldown out. That covers instant orders that can be repeated, such as unloading, and mode switches that only take time to finish; say in the summary, in words, how long the switch takes. An ability held back only by another kind of stock, such as one that refills by itself or from income (Company of Heroes munitions, the unit's energy), has no band unless the source also gives a cooldown. A boost's own fuel tank, which only that ability burns and which refills by itself, is its cooldown, not a stock: band the time it takes to refill from empty. An energy pool stays a stock even on a unit with only one ability that spends it (the StarCraft II Medivac's Heal).",
+   "group": "supporting",
+   "status": "approved",
+   "version": "1.0.0",
+@@ -33,8 +33,8 @@
+     },
+     {
+       "id": "per-life",
+-      "label": "Once per life",
+-      "description": "One use per life or purchase, restocked only at a resupply point or on respawn.",
++      "label": "Per life",
++      "description": "Uses that come back only at a resupply point or on respawn, however many the stock holds (often one per life or purchase), or an action that uses up the unit.",
+       "rank": 5
+     }
+   ]
+--- a/data/vocab/roles.json
++++ b/data/vocab/roles.json
+@@ -2,7 +2,7 @@
+   "$schema": "../../schemas/vocabulary.schema.json",
+   "id": "roles",
+   "label": "Roles",
+-  "description": "What the unit is for: its job or the targets it is best against, never how it does it (mechanics are patterns). A card has one primary role and up to two secondary roles. Requires says what a unit needs before it can claim a role. A source unit never claims a role whose requires it fails. If such a role still fits, leave it out and record it in fit_notes (path roles, wanted: that role). Meeting the requires is not enough: the role description must fit too. Official text means words the game or its makers wrote: the in-game role line, tooltip or production text, the manual, the official unit profile and patch notes. It still counts when read through a page that copies it. A wiki's own words (its infobox labels, prose and tables), strategy guides and internal file names are not official text; the registry notes say which infobox fields copy in-game text. For a unit recorded once for several sides, official text counts only when every side's version carries it. Official words name a role only through the role's whole label or one of its aliases; each half of a slash label (Artillery / siege) counts as a label. One word of a longer label is not enough: 'Assault' alone does not name Frontline assault, so a Purpose such as 'Tank/Structure Assault' names no role. These words name no role: main battle tank; light, medium or heavy tank; core or line infantry; multipurpose; general-purpose; attack (as in attack helicopter); support when it means firepower (combat support, fire support, artillery support, close air support); control in mind control or a control point; and aura in a healing or repair aura (that job is support). How to pick the primary and secondary roles is under roles in docs/fields.md. The tie-breaks settle close calls.",
++  "description": "What the unit is for: its job or the targets it is best against, never how it does it (mechanics are patterns). A card has one primary role and up to two secondary roles. Requires says what a unit needs before it can claim a role. A source unit never claims a role whose requires it fails. If such a role still fits, leave it out and record it in fit_notes (path roles, wanted: that role). Meeting the requires is not enough: the role description must fit too. Official text means words the game or its makers wrote: the in-game role line, tooltip or production text, the manual, the official unit profile and patch notes. It still counts when read through a page that copies it. A wiki's own words (its infobox labels, prose and tables), strategy guides and internal file names are not official text; the registry notes say which infobox fields copy in-game text. For a unit recorded once for several sides, official text counts only when every side's version carries it. Official words name a role only through the role's whole label or one of its aliases, in any word form (harasses for harasser, scouting for scout, Infiltration for Infiltrator), and only when they describe the unit's own job; each half of a slash label (Artillery / siege) counts as a label. One word of a longer label is not enough: 'Assault' alone does not name Frontline assault, so a Purpose such as 'Tank/Structure Assault' names no role. The unit's own name counts only when it names the unit's job (Engineer, Spy, Tank Destroyer, Slave Miner). These words name no role: main battle tank; light, medium or heavy tank; core or line infantry; multipurpose; general-purpose; attack (as in attack helicopter); support when it means firepower (combat support, fire support, artillery support, close air support); control in mind control or a control point; and aura in a healing or repair aura (that job is support). Words that would give a role do not count when they hedge whether the unit or weapon does that job at all (to some extent, up to a point, can serve as); words that hedge only how much it destroys (potentially, at times) still count. How to pick the primary and secondary roles is under roles in docs/fields.md. The tie-breaks settle close calls.",
+   "group": "core",
+   "status": "approved",
+   "version": "1.0.0",
+@@ -11,7 +11,7 @@
+       "id": "assault",
+       "label": "Frontline assault",
+       "description": "Leads pushes, soaks damage and brawls at short to medium range.",
+-      "source_rule": "As primary: any generalist that is not fast with light or no armour (step 5 of roles.primary)."
++      "source_rule": "As primary: any generalist that is not fast with light or no armour (step 5 of roles.primary), or the closest fit for a unit that no earlier step reaches (step 6). As secondary: a main weapon that reaches no further than the main guns of the game's main battle tanks counts as short to medium range here (roles.secondary step 4)."
+     },
+     {
+       "id": "anti-armour",
+@@ -113,7 +113,7 @@
+       "description": "Hits and runs, picking off isolated targets: fast flankers, gunships that make attack runs.",
+       "aliases": ["hit-and-run", "flanker", "harasser"],
+       "requires": [["speed:>=fast"]],
+-      "source_rule": "As primary: a fast or very fast generalist with light or no armour (step 5 of roles.primary). As secondary: see roles.secondary."
++      "source_rule": "Needs a weapon that is not a tool (roles.primary step 2): a unit that harms nothing cannot hit and run. As primary: a fast or very fast generalist with light or no armour (step 5 of roles.primary). As secondary: see roles.secondary."
+     },
+     {
+       "id": "area-denial",
+--- a/data/vocab/sensor-traits.json
++++ b/data/vocab/sensor-traits.json
+@@ -22,7 +22,8 @@
+       "label": "Detector",
+       "description": "Reveals stealthy, cloaked, burrowed and disguised enemies close to it, for the whole team.",
+       "rarity": "uncommon",
+-      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"]
++      "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone", "naval"],
++      "source_rule": "Code it also for a unit that sees through them only itself, such as a dog that picks out a disguised spy and attacks it; say in sensors.notes whether its team sees them too."
+     },
+     {
+       "id": "stealth",
+--- a/data/vocab/sizes.json
++++ b/data/vocab/sizes.json
+@@ -2,7 +2,7 @@
+   "$schema": "../../schemas/vocabulary.schema.json",
+   "id": "sizes",
+   "label": "Sizes",
+-  "description": "Footprint seen from above, which sets the hitbox. Pick the band whose examples name what the unit is. Examples win over measurements, because strategy games draw soldiers oversized. A weight word in the unit's type (light, medium or heavy tank or mech) is not a size. Count the hull, fuselage and wings, not a rotor disc or a gun barrel. Only for a unit that no example covers, measure. Compare it with the same game's foot soldier: one soldier is small, two to three soldier-widths is medium. When it is wider than that, or the game has no foot soldiers, compare it with the game's main battle tank: clearly smaller is medium, about the same is large, twice or more is huge.",
++  "description": "Footprint seen from above, which sets the hitbox. Pick the band whose examples name what the unit is. Examples win over measurements, because strategy games draw soldiers oversized. A weight word in the unit's type (light, medium, heavy or super-heavy tank or mech) is not a size. Count the hull, fuselage and wings, not a rotor disc or a gun barrel. Only for a unit that no example covers, measure. Compare it with the same game's foot soldier: one soldier is small, two to three soldier-widths is medium. When it is wider than that, or the game has no foot soldiers, compare it with the game's main battle tank: clearly smaller is medium, about the same is large, twice or more is huge. Where no source gives the footprint of a unit that no example covers, these stand in for it, in this order: the vehicle whose hull or chassis it is built on, whose size it takes; then the game's own size data, set against the same data for its main battle tank, such as a size group in the code or rules (the tank's group is about the same, a smaller group clearly smaller) or the room it takes in a transport (twice the tank's room or more is twice or more).",
+   "group": "supporting",
+   "status": "approved",
+   "version": "1.0.0",
+@@ -22,19 +22,19 @@
+     {
+       "id": "medium",
+       "label": "Medium",
+-      "description": "About two to three soldier-widths: buggies, cars, armoured cars, APCs and IFVs, light mechs and light walkers, light scout helicopters.",
++      "description": "About two to three soldier-widths: buggies, cars, trucks, armoured cars, APCs and IFVs, light mechs and light walkers, light scout helicopters.",
+       "rank": 3
+     },
+     {
+       "id": "large",
+       "label": "Large",
+-      "description": "Tanks of every weight (light, medium and heavy tanks, tank destroyers, self-propelled guns), carriers built on a tank hull, medium to assault mechs, attack and transport helicopters, jets.",
++      "description": "Tanks of every weight (light, medium and heavy tanks, tank destroyers, self-propelled guns), carriers built on a tank hull, harvesters (ore trucks included) and mobile refineries, medium to assault mechs, attack and transport helicopters, jets, submarines.",
+       "rank": 4
+     },
+     {
+       "id": "huge",
+       "label": "Huge",
+-      "description": "Two tanks or more: super-heavies, giant mechs, airships.",
++      "description": "Two tanks or more: tanks at least twice a battle tank's size, giant mechs, airships.",
+       "rank": 5,
+       "min_tier": "t3"
+     }
+--- a/data/vocab/target-types.json
++++ b/data/vocab/target-types.json
+@@ -38,7 +38,7 @@
+       "label": "Naval",
+       "description": "Ships, boats and submarines. Research only.",
+       "source_only": true,
+-      "source_rule": "On a weapon: in a game with ships or boats, list naval on every weapon that lists ground-vehicle, unless the sources say it cannot reach ships. In a game without ships or boats, never list it."
++      "source_rule": "On a weapon: in a game with ships or boats, list naval on every weapon that lists ground-vehicle, unless the sources say it cannot reach ships. A weapon under can_target step 1 (one that does no damage, latches on, drains or takes over minds) lists naval only when a source names ships among its targets or says it works on every unit. In a game without ships or boats, never list it."
+     }
+   ]
+ }
+--- a/data/vocab/weapon-families.json
++++ b/data/vocab/weapon-families.json
+@@ -280,7 +280,8 @@
+         "damage-types": ["cryo"],
+         "weapon-delivery": ["beam", "projectile", "lobbed"],
+         "target-types": ["infantry", "ground-vehicle", "low-air", "structure", "naval"]
+-      }
++      },
++      "notes": "What the freeze stops is coded with weapon traits from the weapon's own sources (slow, root, silence), as for any family: neither the family nor cryo damage brings them."
+     },
+     {
+       "id": "plasma",
+--- a/data/vocab/weapon-traits.json
++++ b/data/vocab/weapon-traits.json
+@@ -60,7 +60,7 @@
+       "excluded": {
+         "weapon-traits": ["overheat"]
+       },
+-      "source_rule": "Set it only when the sources show the reload as part of how this weapon fights: they describe it firing a burst or salvo and then stopping to reload, name its reload or clip as a strength or weakness of this weapon, or say its ammo runs out and comes back on its own. A reload time in a stats table, a passing mention, or a comparison of how often two guns reload does not count. A weapon that holds one shot per reload (a single-shot launcher or cannon) never gets it for that reload: its reload is its rate of fire, so say in the summary, in words, how long it takes."
++      "source_rule": "Set it only when the sources show the reload as part of how this weapon fights: they describe it firing a burst or salvo and then stopping to reload, name its reload or clip as a strength or weakness of this weapon, or say its ammo runs out and comes back on its own. A reload time in a stats table, a passing mention, or a comparison of how often two guns reload does not count. A weapon that holds one shot per reload (a single-shot launcher or cannon) never gets it for that reload: its reload is its rate of fire, so say in the summary, in words, how long it takes. The same holds for a fixed burst that the game repeats at its normal rate of fire (a pair of shells or missiles, then a wait), even when a source calls the wait a reload: only a clip or an ammunition count in the sources (so many shots, then a reload of their own) makes it a magazine."
+     },
+     {
+       "id": "homing",
+@@ -81,12 +81,14 @@
+     {
+       "id": "root",
+       "label": "Root / pin",
+-      "description": "The target can't move but can still fire and use abilities."
++      "description": "The target can't move but can still fire and use abilities.",
++      "source_rule": "Set it on any weapon whose sources say it stops the target moving for a time, whatever its family (a stasis ray, a magnetic lift, a freeze). When they say the target can neither move nor fire, set root and silence together. A stop of only a moment is stun. No family or damage type brings it by itself: a cryo weapon gets it only when its sources say the frozen target cannot move."
+     },
+     {
+       "id": "silence",
+       "label": "Silence / disarm",
+-      "description": "The target can move but can't fire or use abilities."
++      "description": "The target can move but can't fire or use abilities.",
++      "source_rule": "Set it on any weapon whose sources say it stops the target firing or using abilities for a time, whatever its family; with root when the target can neither move nor fire (see root). No family or damage type brings it by itself."
+     },
+     {
+       "id": "stun",
+--- a/schemas/common.schema.json
++++ b/schemas/common.schema.json
+@@ -17,6 +17,15 @@
+       "means": "is this tier",
+       "ranked": true
+     },
++    "cost": {
++      "vocab": "cost-bands",
++      "means": "is in this cost band",
++      "ranked": true
++    },
++    "availability": {
++      "vocab": "availability",
++      "means": "has this availability (open, limited or unique)"
++    },
+     "damage": {
+       "vocab": "damage-types",
+       "means": "has a weapon that deals this damage"
+@@ -119,6 +128,10 @@
+       "vocab": null,
+       "means": "has this mechanic pattern (an id in data/patterns)"
+     },
++    "immune": {
++      "vocab": null,
++      "means": "is immune to this damage type, or to this pattern or mobility trait used on it (an id in damage-types, data/patterns or mobility-traits)"
++    },
+     "unit": {
+       "vocab": null,
+       "means": "is this source unit (research data only; never on a generated card)"
+@@ -136,9 +149,9 @@
+       "pattern": "^[a-z0-9]+(-[a-z0-9]+)*\\.[a-z0-9]+(-[a-z0-9]+)*\\.[a-z0-9]+(-[a-z0-9]+)*$"
+     },
+     "ref": {
+-      "description": "Typed link `<kind>:<id>`, e.g. `role:anti-air`, `size:<=small` or `hits:high-air`. A link always describes a unit. In strengths, weaknesses, requires, excludes and implies it describes this unit; in counters, the unit this one beats; in countered_by, the unit that beats this one; in combos, the teammate it works well with. Kinds are listed under Conventions in docs/fields.md; ranked kinds accept `<=` and `>=`.",
++      "description": "Typed link `<kind>:<id>`, e.g. `role:anti-air`, `size:<=small` or `hits:high-air`. A link always describes a unit. In strengths, weaknesses, requires, excludes and implies it describes this unit; in counters, the unit this one beats; in countered_by, the unit that beats this one; in combos, the teammate it works well with. The one exception is `target:structure` in counters and countered_by, which names enemy buildings. Kinds are listed under Conventions in docs/fields.md; ranked kinds accept `<=` and `>=`.",
+       "type": "string",
+-      "pattern": "^(class|role|tier|damage|armour-class|armour-model|weapon|mobility|mobility-trait|handling|body|size|speed|crew|passengers|mount|delivery|range|weapon-trait|target|hits|sight|sensor|nature|category|resource|pattern|unit):(<=|>=)?[a-z0-9]+([.-][a-z0-9]+)*$"
++      "pattern": "^(class|role|tier|cost|availability|damage|armour-class|armour-model|weapon|mobility|mobility-trait|handling|body|size|speed|crew|passengers|mount|delivery|range|weapon-trait|target|hits|sight|sensor|nature|category|resource|pattern|immune|unit):(<=|>=)?[a-z0-9]+([.-][a-z0-9]+)*$"
+     },
+     "relation": {
+       "description": "A typed link plus a plain-words reason.",
+--- a/schemas/source-unit.schema.json
++++ b/schemas/source-unit.schema.json
+@@ -84,7 +84,7 @@
+           "type": "string"
+         },
+         "flavour_affinity": {
+-          "description": "Which of our flavours this design would sit in. 1. Start from the faction's flavours in data/games.json; a subfaction with none takes its parent's. Drop one if any weapon in the primary, secondary or alternate slot, or the body plan, is on that flavour's avoided list. 2. Score each other flavour, leaving out any whose avoided list holds one of those weapons' families or the body plan, as in step 1: one point for each of these four that its favoured lists hold: the primary role; the family of any weapon in the primary, secondary or alternate slot (one point at most, however many weapons match); the mobility; the body plan. 3. Add the top-scoring other flavour if it scores 2 or more and at least as much as each flavour from step 1. If two tie at the top, add both, in word-list order, but only if there is room for both. A faction with no flavour starts empty, so step 3 uses the scores alone. At most two flavours in all; an empty list is fine.",
++          "description": "Which of our flavours this design would sit in. 1. Start from the faction's flavours in data/games.json; a subfaction with none takes its parent's. Drop one if any weapon in the primary, secondary or alternate slot, or the body plan, is on that flavour's avoided list. 2. Score each other flavour, leaving out any whose avoided list holds one of those weapons' families or the body plan, as in step 1: one point for each of these two that its favoured lists hold: the primary role; the family of any weapon in the primary, secondary or alternate slot (one point at most, however many weapons match). The mobility and the body plan only break ties: each that its favoured lists hold is one tie point. 3. Add the top-scoring other flavour if it scores 2 and has at least as many tie points as any flavour from step 1 that scores 2 too. If two tie at the top, add the one with more tie points; if their tie points are equal too, add both, in word-list order, but only if there is room for both. A faction with no flavour starts empty, so step 3 has no flavour from step 1 to compare with. At most two flavours in all; an empty list is fine.",
+           "type": "array",
+           "maxItems": 2,
+           "items": {
+@@ -112,12 +112,12 @@
+           "required": ["primary"],
+           "properties": {
+             "primary": {
+-              "description": "The unit's main job. Go through the steps in order and stop at the first one that gives a role. Use only what every copy has: weapons in the primary, secondary and alternate slots, and innate buttons. Passengers, upgrades, doctrines, option weapons and proposal fields never count; the default choice of a loadout group counts, because it holds the primary or secondary slot. 1. Official role line. Read the unit's designation (its type line). If it has none, read its official one-line description. If that line names one of our roles, use it. If it names two, use the one whose target the main weapon has a bonus against. If neither has a bonus, go on. Skip a role whose requires the unit's stock parts fail (what every copy has), even when an option or upgrade weapon would meet them. 2. Not a fighter. If the unit is unarmed, or its only weapon is a tool, or it is built to carry, supply, build or spy and its guns are fired only from gunner or passenger seats (a transport helicopter's door guns), use the role whose description fits its main button or main action and whose requires the stock unit meets: transport, support, engineer, logistics, infiltrator, scout, disabler, buffer or area denial. A combat vehicle whose main gun is fired from a gunner seat (a Foxhole light tank) goes on to step 3. 3. Reach. Siege if the main weapon is lobbed and reaches long or further, if it is bombs dropped from the air, if the unit deploys into a mode whose gun reaches long or further and hits an area, or if the main weapon is a long-range missile or rocket that the sources say is built mainly to destroy structures (see siege's coding rule). Marksman if the main weapon is a sniper weapon that reaches long or further. 4. Bonus. Anti-armour, anti-air or anti-infantry if the game data gives the main weapon extra damage against that target, if official text says the unit is strong against it, or if the main weapon can hit nothing else (as roles.secondary defines it). Doing little damage to other targets is not a bonus. Extra damage that the game data writes on the target's side counts as the weapon's bonus: a resist or armour table in which a kind of target takes more than full damage from the weapon's damage type (a negative resistance). Full damage to one kind and less to the rest is still no bonus. When this step gives more than one target, skip any whose role's requires the unit's stock parts fail, then take the one with the largest bonus or, if that cannot be told, the one official text names first. 5. Generalist. Raider if the unit is fast or very fast with light or no armour. Otherwise assault.",
++              "description": "The unit's main job. Go through the steps in order and stop at the first one that gives a role. Use only what every copy has: weapons in the primary, secondary and alternate slots, and innate buttons. Passengers, upgrades, doctrines, option weapons and proposal fields never count; the default choice of a loadout group counts, because it holds the primary or secondary slot. 1. Official role line. Read the unit's designation (its type line). If it has none, read its official one-line description. Take the roles that line names and skip any whose requires the unit's stock parts fail (what every copy has), even when an option or upgrade weapon would meet them. If one is left, use it. If more are left, use the one whose target the main weapon has a bonus against, with bonuses read and ranked as in step 4; a role with no target (siege, transport) never wins this test and waits for roles.secondary step 1. If none has a bonus, go on. 2. Not a fighter. If the unit is unarmed, or its only weapon is a tool (a weapon that does no damage and does not destroy, erase or take over its target: it repairs, heals, stuns, freezes, slows, marks or disguises), or it is built to carry, supply, build or spy and its guns are fired only from gunner or passenger seats (a transport helicopter's door guns), use the role whose description fits its main button or main action and whose requires the stock unit meets: transport, support, engineer, logistics, infiltrator, scout, disabler, buffer or area denial. A combat vehicle whose main gun is fired from a gunner seat (a Foxhole light tank) goes on to step 3. 3. Reach. Siege if the main weapon is lobbed and reaches long or further, if it is bombs dropped from the air, if the unit deploys into a mode whose gun reaches long or further and hits an area, or if the main weapon is a long-range missile or rocket that the sources say is built mainly to destroy structures (see siege's coding rule). Marksman if the main weapon is a sniper weapon that reaches long or further. 4. Bonus. Anti-armour, anti-air or anti-infantry if the game data gives the main weapon extra damage against that target, if official text says the unit is strong against it, or if the main weapon can hit nothing else (as roles.secondary defines it). Official text that ties the strength to another of its weapons (the Mammoth Tank's missiles) does not count here; it counts for that weapon at roles.secondary step 3. Doing little damage to other targets is not a bonus. Extra damage that the game data writes on the target's side counts as the weapon's bonus: a resist or armour table in which a kind of target takes more than full damage from the weapon's damage type (a negative resistance). Full damage to one kind and less to the rest is still no bonus. When this step gives more than one target, skip any whose role's requires the unit's stock parts fail, then take the one with the largest bonus or, if that cannot be told, the one official text names first. 5. Generalist, for a unit with a weapon that is not a tool. Raider if the unit is fast or very fast with light or no armour. Otherwise assault. 6. Closest fit. A unit that no step has given a role (unarmed or armed only with tools, and step 2 found no role for its main button or main action) takes the role whose description comes closest to that button or action and whose requires the stock unit meets, with a fit_note that names the role wanted.",
+               "type": "string",
+               "x-vocab": "roles"
+             },
+             "secondary": {
+-              "description": "Up to two more jobs, written in rank order. A candidate is any role, other than the primary, whose requires the unit meets and whose description fits a sourced part of the unit. Proposal fields never count (a proposed sensor, mount or seat). Drop any role whose target official text calls a weak or limited point of the unit, whatever step would give it, upgrades included. A role's coding rule binds here as for the primary, unless it says As primary. How a weapon gives a role (a bonus is read as in roles.primary step 4): anti-armour or anti-air if it has a bonus against that target, official text says it is strong against it, a source calls it an anti-tank or anti-aircraft weapon, or it can hit nothing else: the sources say, or the game data shows, that it cannot attack the other kinds of target the game has. A target list that is short only because can_target step 2 lists what a lock-on weapon locks onto, or because the title the entry follows for play has almost nothing else to shoot at (MechWarrior Online's 'Mechs), does not count. Anti-infantry for any of those, for a splash weapon, or for small arms (rifles, pistols, machine guns, shotguns) that do little to vehicles. Any other role whose requires the weapon itself meets; a role with no requires (assault, buffer, infiltrator, engineer, logistics) is never given by a weapon this way. Each candidate ranks at the first of these steps that supports it. Keep the first two. Inside a step, follow the order of the roles list. 1. Official text calls the unit by the role label or one of its aliases. 2. A button or mode that every copy has, and the alternate weapon it switches to. A button that gives extra damage against one kind of target supports that target's anti role. 3. Its weapons in the primary and secondary slots. 4. Speed, armour or senses alone. Raider: fast or very fast with light or no armour. Assault: medium or heavier armour and a short- or medium-range main weapon. Scout: long sight, a sensor trait or stealth, with an in-game basis. 5. Passengers, upgrades, doctrines, option weapons and acquired weapons. Rank these roles by how many of the options give them. A role that enters here may meet its requires through the part that gives it (an anti-air option gun meets anti-air's need to hit high air). Leave a slot empty rather than fill it with a role that rests on none of these.",
++              "description": "Up to two more jobs, written in rank order. A candidate is any role, other than the primary, whose requires the unit meets and whose description fits a sourced part of the unit. Proposal fields never count (a proposed sensor, mount or seat). Drop any role whose target official text calls a weak or limited point of the unit, whatever step would give it, upgrades included. A role's coding rule binds here as for the primary, unless it says As primary. How a weapon gives a role (a bonus is read as in roles.primary step 4): anti-armour or anti-air if it has a bonus against that target, official text says it is strong against it, a source labels it anti-tank or anti-aircraft (a label as can_target step 3 defines it), or it can hit nothing else: the sources say, or the game data shows, that it cannot attack the other kinds of target the game has. A target list that is short only because can_target step 2 lists what a lock-on weapon locks onto, or because the title the entry follows for play has almost nothing else to shoot at (MechWarrior Online's 'Mechs), does not count. Anti-infantry for any of those, for a splash weapon, or for small arms (rifles, pistols, machine guns, shotguns) that do little to vehicles. Any other role whose requires the weapon itself meets; a role with no requires (assault, buffer, infiltrator, engineer, logistics) is never given by a weapon this way. Each candidate ranks at the first of these steps that supports it. Keep the first two. Inside a step, follow the order of the roles list. 1. Official text calls the unit by the role label or one of its aliases. 2. A button or mode that every copy has, and the alternate weapon it switches to. A button that gives extra damage against one kind of target supports that target's anti role, and so does a button that harms only one kind of target or that a source labels anti-tank or anti-aircraft, as can_target step 3 defines a label (anti-tank mines that only vehicles set off). That anti role may meet its requires through the button's damage and targets, read as for a weapon, as at step 5; the validator reads requires only from weapons and patterns, so record the role in atypical. 3. Its weapons in the primary and secondary slots. 4. Speed, armour or senses alone. Raider: fast or very fast with light or no armour. Assault: medium or heavier armour and a main weapon that is short- or medium-range or reaches no further than the main guns of the game's main battle tanks (the tanks its cost bands are anchored on). Scout: long sight, a sensor trait or stealth, with an in-game basis. 5. Passengers, upgrades, doctrines, option weapons and acquired weapons. Rank these roles by how many of the options give them. A role that enters here may meet its requires through the part that gives it (an anti-air option gun meets anti-air's need to hit high air). Leave a slot empty rather than fill it with a role that rests on none of these.",
+               "type": "array",
+               "maxItems": 2,
+               "items": {
+@@ -345,7 +345,7 @@
+           }
+         },
+         "abilities": {
+-          "description": "One entry per button the unit has in the source, with these rules. Two buttons that undo each other (siege and unsiege, land and take off) are one entry. Each choice for one loadout button is its own entry, and the choices share an exclusive_group (flares, ECM or extinguisher). A build or call-in menu is one entry per pattern its items serve (all cover pieces are one build-cover entry, mines one lay-mines entry), plus one entry for all the items that no pattern fits; name them in its summary. Two separate buttons that use the same pattern for different jobs (a grenade and a sticky bomb) stay two entries. A button that only changes the view (a zoom) is left out. A button that boosts the unit for a time is kept, even when the boost is only numbers: it links dash when it adds only speed and costs nothing else, otherwise overclock-self, the generic stat-buff pattern (see Granularity). Add a passive or triggered entry only when Paired entries asks for one, or when the source names the effect (as an ability, perk, upgrade or loadout pick) and it adds a mechanic, not just numbers. If a word-list term says the same, use the term instead (an always-on scanner is a sensor trait). Leave out passives that only change numbers (more armour, faster reload, less sway), and note them in the matching field's notes. A pick, upgrade or perk that changes how one of the unit's other abilities works (a boost that refills faster and can also steer sideways) is not an entry of its own either: say what it changes, and that it is a pick or upgrade, in that ability's summary. The act of buying an upgrade is never an ability: record what it adds (a weapon, an ability with source upgrade, or a term). An ability that changes something else, such as turning a building into a barracks, is still an ability. Shared mechanics, universal keys and side-wide powers are left out (see Conventions).",
++          "description": "One entry per button the unit has in the source, with these rules. Two buttons that undo each other (siege and unsiege, land and take off) are one entry. Each choice for one loadout button is its own entry, and the choices share an exclusive_group (flares, ECM or extinguisher). A build or call-in menu is one entry per pattern its items serve (all cover pieces are one build-cover entry, mines one lay-mines entry), plus one entry for all the items that no pattern fits; name them in its summary. Two separate buttons that use the same pattern for different jobs (a grenade and a sticky bomb) stay two entries. A button that only changes the view (a zoom) is left out. A button that boosts the unit for a time is kept, even when the boost is only numbers: it links dash when it adds only speed and costs nothing else, otherwise overclock-self, the generic stat-buff pattern (see Granularity). Add a passive or triggered entry only when Paired entries asks for one, or when a source describes the effect as a distinct state or behaviour (such as naming it as an ability, perk, upgrade or loadout pick, or giving it a section or announcement of its own) and it adds a mechanic, not just numbers, that no word-list term covers. If a word-list term says the same, use the term instead (an always-on scanner is a sensor trait). Leave out passives that only change numbers (more armour, faster reload, less sway), and note them in the matching field's notes. A pick, upgrade or perk that changes how one of the unit's other abilities works (a boost that refills faster and can also steer sideways) is not an entry of its own either: say what it changes, and that it is a pick or upgrade, in that ability's summary. The act of buying an upgrade is never an ability: record what it adds (a weapon, an ability with source upgrade, or a term). An ability that changes something else, such as turning a building into a barracks, is still an ability. Shared mechanics, universal keys and side-wide powers are left out (see Conventions).",
+           "type": "array",
+           "items": {
+             "$ref": "#/$defs/ability"
+@@ -416,9 +416,8 @@
+           }
+         },
+         "counters": {
+-          "description": "What it beats; links describe the enemy. See Matchups under Conventions.",
++          "description": "What it beats; links describe the enemy. Required, but an empty list is allowed for a unit that harms no enemy and whose sources name nothing it slips past or foils. See Matchups under Conventions.",
+           "type": "array",
+-          "minItems": 1,
+           "items": {
+             "$ref": "common.schema.json#/$defs/relation"
+           }
+@@ -442,7 +441,7 @@
+           "x-provenance": "proposal"
+         },
+         "sources": {
+-          "description": "The pages this entry rests on. Wherever a field rule says the sources, it means these cited pages together with every other page read for this unit that an uncertain entry names (title and site, or its URL) and says what it shows; every rule reads that same set, and a code that rests only on such an uncited page gets an uncertain entry at its own path. An uncited page may carry a code only when it is of kind official, wiki or database; a guide, video or community page must be cited to count. Confidence counts only the cited pages. Before coding, read the unit's own page on each wiki the entry uses, with every tab or sub-page, and the page of each weapon and ability the entry records, where the site has one; picks that only change numbers need no page. Fill the slots in this order: an official page about the unit, when one was read (see Source kinds); the page that lists the unit's weapons one by one, when its weapons change by passenger, mode or loadout; then the pages most of the entry rests on, a mechanic's own page first when it gives a figure the entry uses. When another established site covers the unit, cite it rather than a third page of the same site. Where a registry note says a rule needs a page (a damage page for step 4, a weapon's own page), naming it in an uncertain entry meets that.",
++          "description": "The pages this entry rests on. Wherever a field rule says the sources, it means these cited pages together with every other page read for this unit that an uncertain entry names (title and site, or its URL) and says what it shows; every rule reads that same set, and a code that rests only on such an uncited page gets an uncertain entry at its own path. An uncited page may carry a code only when it is of kind official, wiki or database; a guide, video or community page must be cited to count. Confidence counts only the cited pages. Before coding, read the unit's own page on each wiki the entry uses, with every tab or sub-page, and the page of each weapon and ability the entry records, where the site has one; picks that only change numbers need no page. Choose the pages for the five slots in this order of priority: an official page about the unit, when one was read (see Source kinds); the page that lists the unit's weapons one by one, when its weapons change by passenger, mode or loadout; then the pages most of the entry rests on, a mechanic's own page first when it gives a figure the entry uses. The order of the list itself is free. When another established site covers the unit, cite it rather than a third page of the same site. Where a registry note says a rule needs a page (a damage page for step 4, a weapon's own page), naming it in an uncertain entry meets that.",
+           "type": "array",
+           "minItems": 1,
+           "maxItems": 5,
+@@ -528,7 +527,7 @@
+           "x-vocab": "weapon-families"
+         },
+         "damage": {
+-          "description": "What a hit does to the target. Decide in this order and stop at the first step that fits. 1. It restores health to its target: repair. A weapon that hurts its target and heals its user, such as a drain beam, is not this step. 2. It does no damage at all (it only stuns, pins, slows or marks): its family's default damage. Put the effect in traits and say in the summary that it does no damage. 3. The game's registry note tells you to record this kind of weapon as a damage type: that type. 4. The game has a damage_map in data/games.json, and the sources give this weapon one game damage category that the map lists: the mapped type. The same name written out in words counts. Use it even when the family's list leaves it out, and record that break in atypical. Never change the family to make the damage fit. 5. Anything else (no map, no category given for this weapon on this unit, a category the map leaves out, or different categories against different targets): the family's default damage, with two exceptions. Check them in this order, and use one only when the family allows the type. Armour-piercing when the sources call the weapon anti-tank or anti-armour, say it is built to kill vehicles, or give it a bonus against armoured targets. Explosive when it is built mainly to bring down aircraft, or its hit is a blast that hurts an area. Area damage is also the splash trait, so a shell can be armour-piercing and splash at once.",
++          "description": "What a hit does to the target. Decide in this order and stop at the first step that fits. 1. It restores health to its target: repair. A weapon that hurts its target and heals its user, such as a drain beam, is not this step. 2. It does no damage at all (it only stuns, pins, slows or marks): its family's default damage. Put the effect in traits and say in the summary that it does no damage. A weapon that destroys or removes its target (erases it, sends it out of the game) does damage, even when no health bar falls. 3. The game's registry note tells you to record this kind of weapon as a damage type: that type. 4. The game has a damage_map in data/games.json, and the sources give this weapon one game damage category that the map lists: the mapped type. The same name written out in words counts. Use it even when the family's list leaves it out, and record that break in atypical. Never change the family to make the damage fit. 5. Anything else (no map, no category given for this weapon on this unit, a category the map leaves out, or different categories against different targets): the family's default damage, with two exceptions. Check them in this order, and use one only when the family allows the type. Armour-piercing when the sources call the weapon anti-tank or anti-armour, say it is built to kill vehicles, or give it a bonus against armoured targets. Explosive when it is built mainly to bring down aircraft, or its hit is a blast that hurts an area. Area damage is also the splash trait, so a shell can be armour-piercing and splash at once.",
+           "type": "string",
+           "x-vocab": "damage-types",
+           "x-required-unless": "family is adaptive"
+@@ -553,7 +552,7 @@
+           "x-required-unless": "family is adaptive"
+         },
+         "can_target": {
+-          "description": "Every kind of target the weapon can be fired at and hurt in the source, even a little: weak, poor or not effective still count. Leave a kind out when the sources say the weapon cannot attack it or does no damage to it, or when the game has no such targets. Then, in this order: 1. A weapon that does no damage (it repairs, stuns, pins or marks), or that latches on, drains or takes over minds, lists only the kinds the sources name. 2. A lock-on weapon lists only what it can lock onto, unless the sources say it can also fire without a lock. If they do not say what it locks onto, an anti-tank one lists ground vehicles and an anti-air one low air and high air. 3. Commanded games only: a weapon the sources label by its targets (anti-infantry, anti-vehicle, anti-air) or say hits only some kinds lists those kinds, plus any kind another source says it hurts. Words about what it is good at (effective against, good against, strong against) are not a label: go on to step 4. Words such as anything else name every kind. A label on the unit, such as its role, does not count. 4. Any other weapon lists every ground kind its family allows: infantry, ground vehicles and structures. Step 4 fills in only kinds the sources say nothing about. A kind the sources show the weapon hurting, even a little, is listed even when its family leaves it out (a flak gun whose direct hits scratch vehicles); the validator then lists the break as atypical, and the summary says how little it does. A source that says ground or surface means these. Structures: under steps 1 and 3, and for a family that leaves them out, list them only when the sources say the weapon damages buildings; a mention of a base is not enough. Air: in a commanded game, list low air and high air only when the sources say the weapon attacks air units, unless the game splits its fliers and the weapon reaches only some. In a piloted game (control piloted or both in data/games.json), a weapon the player aims also lists low air when its family allows it. High air and naval follow their coding rules in Target types. A flier that can be hit only while it stands on the ground is not an air target.",
++          "description": "Every kind of target the weapon can be fired at and hurt in the source, even a little: weak, poor or not effective still count. Leave a kind out when the sources say the weapon cannot attack it or does no damage to it, or when the game has no such targets. Then, in this order: 1. A weapon that does no damage (it repairs, stuns, pins or marks; one that destroys or removes its target does damage, as damage step 2 says), or that latches on, drains or takes over minds, lists only the kinds the sources name; it lists naval only when a source names ships among its targets or says it works on every unit. 2. A lock-on weapon lists only what it can lock onto, unless the sources say it can also fire without a lock. If they do not say what it locks onto, an anti-tank one lists ground vehicles and an anti-air one low air and high air. 3. Commanded games only: a weapon the sources label by its targets (anti-infantry, anti-vehicle, anti-air) or say hits only some kinds lists those kinds, plus any kind another source says it hurts. A label is any wording in any source, guides included, that names the weapon by its job or its targets: a heading such as anti-armour cannons, a wiki's anti-tank gun, a target line such as Target: Naval. Words about what it is good at (effective against, good against, strong against) are not a label: go on to step 4. Words such as anything else name every kind. A label on the unit, such as its role, does not count, and neither does a label on another unit's copy of the weapon unless a source says that copy has the same stats. Saying only what the weapon cannot hit (it cannot attack aircraft) is not saying it hits only some kinds: leave that kind out and go on to step 4. 4. Any other weapon lists every ground kind its family allows: infantry, ground vehicles and structures. Step 4 fills in only kinds the sources say nothing about. A kind the sources show the weapon hurting, even a little, is listed even when its family leaves it out (a flak gun whose direct hits scratch vehicles); the validator then lists the break as atypical, and the summary says how little it does. A source that says ground or surface means these. Structures: under steps 1 and 3, and for a family that leaves them out, list them only when the sources say the weapon damages buildings; a mention of a base is not enough. Under step 3, for a family that allows them, wording of the weapon's own that says ground or surface counts as saying so: a label such as anti-surface, a guide's Target: Ground, or an infobox's ground attack line or entry that is the weapon's own because it names the weapon or its warhead or the unit has no other weapon (that line gives no other kind by itself). A label that names only other kinds (anti-armour, anti-infantry) does not. Air: in a commanded game, list low air and high air only when the sources say the weapon attacks air units, unless the game splits its fliers and the weapon reaches only some. In a piloted game (control piloted or both in data/games.json), a weapon the player aims also lists low air when its family allows it. High air and naval follow their coding rules in Target types. A flier that can be hit only while it stands on the ground is not an air target.",
+           "type": "array",
+           "items": {
+             "type": "string",
+@@ -562,7 +561,7 @@
+           "x-required-unless": "family is adaptive"
+         },
+         "affects": {
+-          "description": "Default: enemies. Repair and buff tools affect allies.",
++          "description": "Who the weapon is meant for. Default: enemies. Repair and buff tools affect allies. Both is for a weapon that the sources also use on purpose on friends to help them, beside its use on enemies (a beam that shields a friend from harm). Harm that spills onto friends near the target, at full or reduced strength, is the friendly-fire trait, not both.",
+           "enum": ["enemies", "allies", "both"]
+         },
+         "traits": {
+@@ -683,7 +682,7 @@
+           "x-vocab": "classes"
+         },
+         "mobility": {
+-          "description": "Only when the mode moves differently from the base form: a new base, handling or speed. Leave it out when the mode keeps the unit's movement or cannot move at all; when it cannot move, say so in the mode's summary. Its handling follows the Handling tie-break from the mode's own mobility type.",
++          "description": "Only when the mode moves differently from the base form: a new base, handling or speed. Leave it out when the mode keeps the unit's movement or cannot move at all; when it cannot move, say so in the mode's summary, and give target if the mode changes what kind of target the unit is. Its handling follows the Handling tie-break from the mode's own mobility type.",
+           "type": "object",
+           "additionalProperties": false,
+           "required": ["base"],
+@@ -702,6 +701,11 @@
+             }
+           }
+         },
++        "target": {
++          "description": "Only when the mode changes what kind of target the unit is and gives no mobility that says so: a flier that lands, or a vehicle that deploys into a building. The kind it is in this mode, by the Target types rules (a large landed helicopter is a ground vehicle, a deployed refinery a structure).",
++          "type": "string",
++          "x-vocab": "target-types"
++        },
+         "summary": {
+           "type": "string",
+           "description": "What changes in this mode."
+--- a/scripts/build-docs.mjs
++++ b/scripts/build-docs.mjs
+@@ -303,7 +303,9 @@
+   if (given(t, 'classes')) {
+     const cl = t.classes
+     const set = new Set(cl)
+-    parts.push('classes: ' + (generatorClasses().every(c => set.has(c)) ? 'all' : lab('classes', cl)))
++    const extra = cl.filter(c => !generatorClasses().includes(c)) // research-only classes, which 'all' leaves out
++    const all = 'all' + (extra.length ? ', plus ' + lab('classes', extra) : '')
++    parts.push('classes: ' + (generatorClasses().every(c => set.has(c)) ? all : lab('classes', cl)))
+   }
+   if (given(t, 'class_rarity')) parts.push(classRarityText(t.class_rarity))
+   for (const [k, h] of [['default_damage', ['damage-types', 'default damage']], ['default_aim', ['aim-models', 'default mount']],
+@@ -350,7 +352,7 @@
+     '- **Core** lists are the ten the brief asks for. **Supporting** lists make them usable: scales, aim, traits, seats and so on.',
+     "- **Rules** say which terms can go together. They bind generated cards (so the generator can't roll tracks on an aircraft). " +
+     "Real units that break them are recorded as they are and listed as 'atypical'. Real games breaking our rules is useful spice material, and evidence for relaxing a rule. " +
+-    "A term's classes are every class it is physically possible for; a class left out is a hard ban.",
++    "A term's classes are every class it is physically possible for; a class left out is a hard ban. 'All' means every generator class; naval, kept for research, counts only where a term names it.",
+     '- **Rarity** feeds the spice control: common terms appear at every spice level, rare ones only when spice is turned up. ' +
+     "A part that is possible but unusual for a class has its own rarity there ('rare on: Aircraft' in the rules), so cross-overs such as a flamethrower on an aircraft appear only at high spice.",
+     "- **Typed links** such as 'at most Small (size)' or 'can hit high air' point at other terms; see [fields](fields.md).",
+@@ -552,28 +554,41 @@
+     '**Vocabulary** names the fixed word list a field draws from (see [vocabularies](vocabularies.md)).\n',
+     '## Conventions\n',
+     '- **Ids.** Lower-case, ASCII, words joined by dashes; apostrophes and full stops dropped, `&` becomes `and`, numbers and roman numerals kept (`mammoth-mk-ii`, `v4-rocket-launcher`). Unit ids are `<game>.<faction>.<slug>`. The slug is the in-game name by these rules, with a final word such as Squad or Team dropped (Riflemen Squad -> `riflemen`). ' +
+-    'Pattern ids are generic English, verb first (`infest-vehicle`). Expansions are never game ids. The faction id `shared` is reserved for units every side can field. ' +
++    'Pattern ids are generic English, verb first (`infest-vehicle`). Expansions are never game ids. The faction id `shared` is reserved for units every side can field. A type whose stock parts differ by side gets one entry per side instead (a minelayer that lays anti-tank mines for one side and anti-personnel mines for the other). ' +
+     'A link to a unit not yet researched (a rider, a rival in matchups) uses the id its entry would get, and a lineage uses that slug.',
+-    '- **Typed links** are written `kind:id`, such as `role:anti-air`, `size:<=small` or `hits:high-air`. A link always describes a unit: in strengths, weaknesses and pattern requirements it describes the unit itself; in *counters* the unit it beats; in *countered by* the unit that beats it; in combos the teammate. Ranked kinds accept `<=` and `>=`. ' +
++    '- **Typed links** are written `kind:id`, such as `role:anti-air`, `size:<=small` or `hits:high-air`. A link always describes a unit: in strengths, weaknesses and pattern requirements it describes the unit itself; in *counters* the unit it beats; in *countered by* the unit that beats it; in combos the teammate. The one exception is `target:structure` in counters and countered by, which names enemy buildings (see Matchups). Ranked kinds accept `<=` and `>=`. ' +
++    'Price, a cap on numbers and an immunity have kinds of their own: `cost:` (`cost:high`), `availability:` (`availability:unique` for a hero) and `immune:`, which names the damage type, pattern or mobility trait the unit shrugs off (`immune:toxic` for radiation, `immune:mind-control`, `immune:crush` for a soldier vehicles cannot run over). When the word lists already make one of its parts immune (an uncrewed machine to psionic and toxic attacks), link that part instead. Keep `tier:` for reasons about the tech a unit needs. ' +
+     f`Kinds: ${kinds}.`,
+     '- **Matchups.** Write the reason first, then pick the link that names the part behind it. ' +
+-    '(1) Name the other unit the way the sources do: by its job (`role:anti-armour`, `role:anti-air`) when they name a job; by what it fires when they name a weapon (`weapon:machine-gun`) or a kind of harm (`damage:electric`); by what it is (`class:aircraft`, `class:infantry`, `armour-class:heavy`) when they name a kind of unit. When they name only a unit, use the same order for what makes that unit win. When one phrase names the enemy two ways at once (rocket-armed infantry), take the first that fits in this order. ' +
++    "In counters, countered by and combos, each entry either rests on a source that names the matchup or pairing (a group the game's AI sends out together counts), or is reasoned from facts the sources give (an escort for a weakness a page names). " +
++    'A reasoned entry names those facts in its reason and gets an uncertain entry saying it is reasoned, at its path or, when one note covers several entries, at the list. ' +
++    'An entry that only restates a sourced gap or immunity as a matchup counts as named: the enemy rule 5 puts in countered by, or `pattern:mind-control` in counters for a unit the sources call immune. ' +
++    'When neither holds, leave the entry out, so combos may stay empty. ' +
++    '(1) Name the other unit the way the sources do: by its job (`role:anti-armour`, `role:anti-air`) when they name a job; by what it fires when they name a weapon (`weapon:machine-gun`) or a kind of harm (`damage:electric`); by what it is (`class:aircraft`, `class:infantry`, `armour-class:heavy`) when they name a kind of unit. Tanks in general are `class:vehicle`; use `armour-class:heavy` when the sources say heavy tanks or set tanks apart from lighter vehicles. When they name only a unit, use the same order for what decides the matchup: in countered by, what makes that unit win; in counters, what makes it lose to this one (Rocketeers caught in the air: `mobility:jetpack`); in combos, what it brings to the pair (a Rhino escort: `role:anti-armour`). If the sources leave that open and the unit is not coded yet, use the job they give it, or else its class. When one phrase names the enemy two ways at once (rocket-armed infantry), take the first that fits in this order. If that link alone drops half the point or covers units the reason is false for, and the other half is a matchup of its own, give that half a second entry (fast armour-piercing units: `damage:armour-piercing` and `speed:>=fast`), and let each reason give only its half. ' +
+     '(2) For fliers, use `class:aircraft` when the sources mean air units in general; use `target:low-air` or `target:high-air` only when the point holds for one layer. ' +
+-    '(3) Prefer word-list and pattern links. Add a `unit:` link only for a same-game partner or rival the sources name, next to a word-list or pattern link for the same reason. A link to the unit itself is fine in combos when the sources say it works best in numbers. ' +
+-    "(4) In strengths and weaknesses, give the unit's own value with no `<=` or `>=` (`range:long`, not `range:>=long`; `passengers:1`, not `passengers:>=1`). Use comparators only in counters, countered by and combos, for a group of units. A link may name a proposal field (a mount, a handling) when the reason itself is sourced. " +
++    'For buildings, use `target:structure`; when the point holds only for some buildings, name them by their job in the reason (base defences, factories, a Radar Dome). ' +
++    'When the sources name units and buildings together by one job (anti-aircraft guns and anti-air troops), give one entry with the `role:` link for that job and name the buildings in its reason. ' +
++    '(3) Prefer word-list and pattern links. Add a `unit:` link only for a same-game partner or rival the sources name, next to a word-list or pattern link for the same reason. A source that names something only one kind of unit makes (minefields, which only Minelayers lay) names that unit. A `unit:` link may stand alone only when every word-list and pattern link would be false for most of the units it covers, and its reason says so (the Battle Fortress, the one vehicle that can crush heroes); a link false for only a few of the units it covers stays. A link to the unit itself is fine in combos when the sources say it works best in numbers. ' +
++    "(4) In strengths and weaknesses, give the unit's own value with no `<=` or `>=` (`range:long`, not `range:>=long`; `passengers:1`, not `passengers:>=1`). Use comparators only in counters, countered by and combos, for a group of units. When a weakness compares the unit with others of its own kind and its own value reads the other way (a very fast plane that is slow for a plane), hang it on the part that exposes it (its armour or health) and give the comparison in the reason. A link may name a proposal field (a mount, a handling) when the reason itself is sourced. " +
+     '(5) Something the unit lacks (no weapon reaches aircraft) is not a link of its own: put the enemy that exploits it in countered by (`class:aircraft`), and if you also list it as a weakness, hang it on the part that causes it and name the gap in the reason. ' +
+-    '(6) The same enemy may sit in counters and in countered by only when the two reasons name different situations. Otherwise put it where the head-on fight at equal cost ends, and give the tactic that turns it in the reason. ' +
+-    '(7) Most important first; keep each list short, about two to five. A link to a planned pattern is fine; its warning clears when the pattern is written. ' +
++    'A unit with no weapon at all hangs the lack of a weapon on the part it carries instead (a device on its body plan, the ability that is its only tool), or else on its class or armour class. ' +
++    'A unit that harms no enemy with a weapon or an ability (a repairer, a transport) lists in counters only what it slips past or foils by itself (base defences its disguise fools), and leaves counters empty when the sources name nothing; what it makes possible for teammates goes in combos. ' +
++    '(6) The same enemy may sit in counters and in countered by only when the two reasons name different situations. ' +
++    'One against one and one against several cheaper enemies are different situations: when the sources give both outcomes (one Gunboat loses to the Submarine, several win), put the enemy in both lists and let each reason say which. ' +
++    'Otherwise put it where the head-on fight at equal cost ends, judging the cost from the prices when the sources give no numbers, and give the tactic that turns it in the reason. ' +
++    'When the sources disagree on who wins (one page has Navy SEALs kill the Desolator at once, another has him outrange them), leave the enemy out, unless rule 5 places it, and add an uncertain entry with sources_disagree. ' +
++    '(7) Most important first; keep each list short, about two to five. That is a guide, not a cap: one entry is enough when the sources give only one, and a sixth may stay when it is sourced and gives a reason no other entry gives. ' +
++    'A link to a planned pattern is fine; its warning clears when the pattern is written. ' +
+     '(8) A `unit:` link to a unit not yet researched uses the id its entry would get (see Ids).',
+     "- **Proposals vs facts.** Fields marked *proposal* (handling, weapon mount, flavour affinity and 'as a player'), weapon and ability seats unless crew.basis is in-game, crew and on-death wherever their basis says 'proposal', and the sight band where sensors.basis says 'proposal', are our design suggestions for a player version. The checker skips them and confidence covers only sourced facts.",
+     '- **Weapons vs abilities.** Anything fired with an attack button is a weapon. A shot fired from its own ability button (a grenade, a rocket volley on a cooldown) is an ability, not a weapon. Abilities are counted by the rule under `abilities[]` below. ' +
+-    'A passive or triggered effect is its own ability only when that rule asks for one: Paired entries asks for it, or the source names the effect and it adds a mechanic. ' +
+-    "An effect that is part of how a weapon works (an infester hidden inside its host, or escaping when the host dies) stays in that weapon's summary and patterns. " +
++    'A passive or triggered effect is its own ability only when that rule asks for one: Paired entries asks for it, or a source describes the effect as a distinct state or behaviour and it adds a mechanic that no word-list term covers. ' +
++    "An effect that is part of how a weapon works (an infester hidden inside its host, or escaping when the host dies) stays in that weapon's summary and patterns; a state the unit falls into by overusing its weapon (an overload past a safe number of captives) is its own passive when it meets that rule. " +
+     'A swap is an ability only when the source lists it as an ability or command with its own name (Electro-Stasis Ray, Leech Beam, special-ammo commands). ' +
+     "Switching a seat's weapons with number keys or a scroll wheel, as in shooters, is not: each weapon is its own primary, secondary or option entry. " +
+     "A weapon may link a pattern whose generator lists only ability kinds (the drone's claws link `infest-vehicle`). The generator makes that an ability on a card, so do not add one to the source unit. Unarmed units have an empty weapon list.",
+     '- **Weapon entries.** Count weapon entries by these rules. ' +
+-    '(1) One in-game weapon is one entry, even when it acts differently against different targets. Code its family and traits as it works against its main target: the target its primary role is about, or else the one the source names first. ' +
++    '(1) One in-game weapon is one entry, even when it acts differently against different targets. What the sources name and present as one weapon is one entry, even when the game data splits it into one weapon per kind of target (the Magnetron beam). But when a mode changes what the weapon can hit, the version for that mode is an alternate entry with that mode (see Paired entries), as for the Mecha Tengu in jet form. Code its family and traits as it works against its main target: the target its primary role is about, or else the one the source names first. ' +
+     'Its damage and delivery follow their own rules (`armament[].damage` step 5 when its damage category differs by target; the order under `armament[].delivery`). List every target it can hit, and put the other behaviour in the summary. ' +
+     "(2) Among the fixed weapons of one seat, make one entry per family. Copies of one gun are one entry (twin cannons, a squad's five rifles). " +
+     "So are different guns of one family that the seat uses on the same attack order, at once or each against its own kind of target (a stock sergeant's carbine with the squad's rifles, a ground battery with an air battery). " +
+@@ -630,7 +645,7 @@
+     "- **Bands with numbers.** Ratio bands (speed, sight, range) compare a unit with its own game's reference unit, named in the games registry. A ratio exactly on an edge goes to the band nearer medium. " +
+     'Threshold bands (price, cooldown) give each band\'s lowest value, so a value exactly on an edge takes the higher band. Divide the figures as the sources give them and round only the result. ' +
+     'Only `cost_band.raw` and `mobility.speed_raw` hold stat figures. ' +
+-    'Every text field of a unit (basis, notes, summaries, uncertain notes and source notes) gives prices, speeds, reaches, sight, cooldowns, damage and armour values as comparisons in words ("about twice the rifle\'s reach", "takes a few seconds", "a little more from behind"), never as figures. ' +
++    'Every text field of a unit (basis, notes, summaries, uncertain notes and source notes) gives prices, speeds, reaches, sight, cooldowns, effect durations, damage and armour values as comparisons in words ("about twice the rifle\'s reach", "takes a few seconds", "a little more from behind"), never as figures. A zero has nothing to compare with, so write it as none ("sees nothing in flight"). ' +
+     'Names, patch numbers, dates and counts (seats, missiles) are fine.',
+     '- **Stock values.** Every band describes the stock unit at the version researched: no researched or bought upgrades, no veterancy, no temporary buffs, in its default mode. ' +
+     'Put what upgrades change in notes, and what another mode changes in modes. ' +
+--- a/scripts/validate.mjs
++++ b/scripts/validate.mjs
+@@ -15,11 +15,14 @@
+ // 2) Cross-references: unique game, faction and unit ids; patterns <-> units, the pattern registry, games and
+ //    factions, typed links. A pattern's source_units that differ from the units linking it only warn: research
+ //    agents never edit an existing pattern file (a new pattern gets its first list by hand), and the merge pass keeps
+-//    source_units up to date with npm run sync-patterns.
++//    source_units up to date with npm run sync-patterns. A unit link to a unit not researched yet only warns (one
++//    warning lists them all, for a reviewer to check their slugs), but its game and faction must be registered.
+ // 3) Combination rules: every term's classes, min_tier, allowed, excluded and requires. A unit or card is read as
+ //    unit-wide parts (UNIT_PARTS) and, per weapon, weapon parts (WEAPON_PARTS). A weapon term's maps are compared
+ //    with that weapon's own parts and with the unit-wide parts; a unit-wide term's maps with the unit-wide parts and
+-//    with every weapon's parts. Requires links are always matched against the whole unit or card. Two exemptions,
++//    with every weapon's parts. Requires links are always matched against the whole unit or card. A weapon that
++//    works only in a mode is read in that mode: its terms' classes and requires see the class, mobility and target
++//    kind the mode gives, where it gives them, instead of the base form's. Two exemptions,
+ //    stated in the word lists' prose: a weapon with the 'anti-air' trait may reach high air when its family reaches low
+ //    air (its delivery still binds it: lobbed, dropped, placed and melee shots never hit high fliers), and an 'adaptive' weapon has no fixed
+ //    family, so no list of allowed weapon families binds it.
+@@ -42,6 +45,7 @@
+ //      a proposal death outcome is the 3C default (bail-out for a crewed machine that is not infantry, respawn for
+ //      the rest); solo_fallback only on multi-seat crew models; a squad has body.count 2 or more;
+ //    - an ability with no pattern has a fit_note at abilities/<i>/patterns that says what is wanted;
++//    - counters may be empty only when every weapon, if any, only repairs (whether an ability harms is not checked);
+ //    - a unit with the transform mobility trait records its second form in modes;
+ //    - warnings: handling other than the mobility default with nothing in mobility.notes (a tiny or small unit on
+ //      legs may strafe with no note, since its size and mobility show why), and fit_notes, uncertain and
+@@ -309,9 +313,24 @@
+     if (cmp && !spec.ranked) err(`${where}: ${ref} uses a comparator on an unranked kind`)
+     if (kind === 'passengers') { if (!/^\d+$/.test(id)) err(`${where}: ${ref} needs a number`); return }
+     if (kind === 'pattern') { patternKnown(where, id, 'pattern'); return }
++    // An immunity names a damage type, a mobility trait (crush) or a pattern.
++    if (kind === 'immune') {
++      if (vocab['damage-types']?.has(id) || vocab['mobility-traits']?.has(id)) return
++      if (patternById[id] || registryById[id]) patternKnown(where, id, 'pattern')
++      else err(`${where}: ${ref} names no damage type, mobility trait or pattern`)
++      return
++    }
+     if (kind === 'unit') {
+       if (onCard) err(`${where}: ${ref} -> real unit names may not appear in a card's matchups`)
+-      else if (!unitIds.has(id)) missingUnits.add(id)
++      else if (!unitIds.has(id)) {
++        // Not researched yet: only the slug is left to the reviewer, so the game and faction must be registered.
++        const [game, faction, slug, ...rest] = id.split('.')
++        const factions = gameById[game]?.factions
++        if (!slug || rest.length) err(`${where}: ${ref} is not a unit id (<game>.<faction>.<slug>)`)
++        else if (!factions) err(`${where}: ${ref} names game '${game}', which is not in ${GAMES}`)
++        else if (!factions.some(x => x.id === faction)) err(`${where}: ${ref} names faction '${faction}', which ${game} does not have in ${GAMES}`)
++        else missingUnits.add(id)
++      }
+       return
+     }
+     if (!vocab[spec.vocab]?.has(id)) err(`${where}: ${ref} does not resolve in '${spec.vocab}'`)
+@@ -346,8 +365,9 @@
+   // A profile is the flat set of parts that typed links and combination rules are matched against.
+   const isKey = kind => terms['ability-kinds']?.[kind]?.uses_key === true
+   // What kind of target a unit is, from its mobility: a flier is 'low-air' (jetpack, hovering flight) or
+-  // 'high-air' (jet, airship), and a tiny or small ground unit counts as infantry.
++  // 'high-air' (jet, airship), and a tiny or small ground unit counts as infantry. A mode may say it outright.
+   function targetType(p) {
++    if (p.target) return p.target
+     const tt = terms.mobility?.[p.mobility]?.target_type
+     if (tt === 'ground-vehicle' && (rank('sizes', p.size) ?? 9) <= 2) return 'infantry'
+     return tt
+@@ -356,7 +376,7 @@
+     const weapons = u.armament || []
+     const abil = u.abilities || []
+     return {
+-      class: u.class, tier: u.tier.band, nature: u.nature, availability: u.availability,
++      class: u.class, tier: u.tier.band, cost: u.cost_band.band, nature: u.nature, availability: u.availability,
+       roles: [u.roles.primary, ...(u.roles.secondary || [])],
+       mobility: u.mobility.base, handling: u.mobility.handling, traits: u.mobility.traits || [], speed: u.mobility.speed,
+       body: u.body.plan, size: u.body.size, armour: u.armour.class, armourModels: u.armour.models || [],
+@@ -364,6 +384,7 @@
+       crew: u.crew.model, passengers: u.crew.passengers?.seats || 0, resources: u.resources || [],
+       abilityKinds: abil.map(a => a.kind), onDeath: u.on_death?.outcomes || [],
+       weapons, patterns: [...new Set([...abil.flatMap(a => a.patterns || []), ...weapons.flatMap(w => w.patterns || [])])],
++      modes: u.modes || [],
+     }
+   }
+   function cardProfile(c) {
+@@ -371,7 +392,7 @@
+     const weapons = [p.armament.primary, p.armament.secondary, ...(p.armament.conditional || []).map(x => x.weapon)].filter(Boolean)
+     const abil = [p.signature, ...(p.abilities || [])]
+     return {
+-      class: p.class, tier: p.tier, nature: p.nature, availability: p.availability,
++      class: p.class, tier: p.tier, cost: c.balance.cost_band, nature: p.nature, availability: p.availability,
+       roles: [p.roles.primary, ...(p.roles.secondary || [])],
+       mobility: p.mobility.base, handling: p.mobility.handling, traits: p.mobility.traits || [], speed: p.mobility.speed,
+       body: p.body.plan, size: p.body.size, armour: p.armour.class, armourModels: p.armour.models || [],
+@@ -395,6 +416,8 @@
+       case 'class': return P.class === id
+       case 'role': return P.roles.includes(id)
+       case 'tier': return cmpRank('tiers', P.tier, cmp, id)
++      case 'cost': return cmpRank('cost-bands', P.cost, cmp, id)
++      case 'availability': return P.availability === id
+       case 'damage': return W.some(w => w.damage === id)
+       case 'armour-class': return cmpRank('armour-classes', P.armour, cmp, id)
+       case 'armour-model': return P.armourModels.includes(id)
+@@ -436,6 +459,14 @@
+     if (k === 'weapon-families' && x === 'adaptive') return true
+     return false
+   }
++  // A weapon that works only in a mode is read in that mode: the class, mobility and target kind the mode gives,
++  // where it gives them, replace the base form's.
++  function modeProfile(P, modeId) {
++    const m = modeId ? (P.modes || []).find(x => x.id === modeId) : null
++    if (!m) return P
++    const mob = m.mobility || {}
++    return { ...P, class: m.class ?? P.class, mobility: mob.base ?? P.mobility, handling: mob.handling ?? P.handling, speed: mob.speed ?? P.speed, target: m.target }
++  }
+   // Combination rules: returns a list of { rule, msg } problems for a profile (rule strings as in the header).
+   function combinationProblems(P) {
+     const out = []
+@@ -444,12 +475,12 @@
+     const allWeapons = Object.fromEntries(Object.keys(WEAPON_PARTS).map(k => [k, [...new Set(perWeapon.flatMap(W => W[k]))]]))
+     const tierRank = rank('tiers', P.tier)
+     // Checks one term's rules; has(k) gives the parts its allowed and excluded maps are compared with.
+-    function checkTerm(vid, id, has, w) {
++    function checkTerm(vid, id, has, w, Q = P) {
+       const t = terms[vid]?.[id]
+       if (!t) return
+       const name = w ? `weapon '${w.name || w.family}': ${WEAPON_PART_NAME[vid]} '${id}'` : `${vid} '${id}'`
+       const add = (rule, msg) => out.push({ rule: `${vid}:${id} ${rule}`, msg: `${name} ${msg}` })
+-      if (t.classes && !t.classes.includes(P.class)) add(`classes ${P.class}`, `is not for class '${P.class}'`)
++      if (t.classes && !t.classes.includes(Q.class)) add(`classes ${Q.class}`, `is not for class '${Q.class}'`)
+       if (t.min_tier && tierRank < rank('tiers', t.min_tier)) add(`min_tier ${t.min_tier}`, `needs tier ${t.min_tier} or higher`)
+       for (const [k, list] of Object.entries(t.allowed || {})) {
+         for (const x of has(k)) if (!list.includes(x) && !exempt(vid, k, x, w)) add(`allowed.${k} ${x}`, `doesn't combine with ${k} '${x}'`)
+@@ -457,12 +488,12 @@
+       for (const [k, list] of Object.entries(t.excluded || {})) {
+         for (const x of has(k)) if (list.includes(x)) add(`excluded.${k} ${x}`, `excludes ${k} '${x}'`)
+       }
+-      for (const g of t.requires || []) if (!g.some(r => matches(r, P))) add(`requires ${g.join('|')}`, `requires one of [${g.join(', ')}]`)
++      for (const g of t.requires || []) if (!g.some(r => matches(r, Q))) add(`requires ${g.join('|')}`, `requires one of [${g.join(', ')}]`)
+     }
+     for (const vid of Object.keys(UNIT_PARTS)) for (const id of U[vid]) checkTerm(vid, id, k => U[k] || allWeapons[k] || [])
+     P.weapons.forEach((w, i) => {
+-      const W = perWeapon[i]
+-      for (const vid of Object.keys(WEAPON_PARTS)) for (const id of W[vid]) checkTerm(vid, id, k => W[k] || U[k] || [], w)
++      const W = perWeapon[i], Q = modeProfile(P, w.mode), UQ = Q === P ? U : partsOf(UNIT_PARTS, Q)
++      for (const vid of Object.keys(WEAPON_PARTS)) for (const id of W[vid]) checkTerm(vid, id, k => W[k] || UQ[k] || [], w, Q)
+     })
+     return out
+   }
+@@ -556,6 +587,13 @@
+       warn(`${w}: handling '${u.mobility.handling}' is not the '${u.mobility.base}' default '${def}': say why the handling differs in mobility.notes`)
+     }
+ 
++    // Counters may be empty only on a unit that harms no enemy (Matchups rule 5). Only its weapons are read here: none,
++    // or only repair tools; an ability that harms is left to the coder.
++    const harmful = u.armament.find(x => x.damage !== 'repair')
++    if (!u.counters.length && harmful) {
++      err(`${w}: counters is empty, but ${weaponName(harmful)} can harm enemies: only a unit that harms no enemy may leave counters empty`)
++    }
++
+     // An ability with no pattern keeps its place, and a fit_note says which mechanic is wanted.
+     u.abilities.forEach((a, i) => {
+       if ((a.patterns || []).length) return
+@@ -653,7 +691,7 @@
+     unitFieldRules(u, w, g)
+     const P = unitProfile(u)
+     for (const r of [...u.strengths, ...u.weaknesses]) {
+-      if (!['unit', 'pattern'].includes(parseRef(r.ref).kind) && !matches(r.ref, P)) {
++      if (!['unit', 'pattern', 'immune'].includes(parseRef(r.ref).kind) && !matches(r.ref, P)) {
+         warn(`${w}: strength/weakness link ${r.ref} doesn't describe this unit's own parts`)
+       }
+     }
+--- a/tests/docs.test.mjs
++++ b/tests/docs.test.mjs
+@@ -130,6 +130,18 @@
+     assert.doesNotMatch(readDocs(dir)['docs/vocabularies.md'], /classes: all/)
+   })
+ 
++  it("names a research-only class that a term allows after 'classes: all'", () => {
++    const dir = copyRepo()
++    const file = path.join(dir, 'data/vocab/sensor-traits.json')
++    const v = JSON.parse(fs.readFileSync(file, 'utf8'))
++    const radar = v.terms.find(t => t.id === 'radar')
++    radar.classes = [...radar.classes.filter(c => c !== 'naval'), 'naval']
++    fs.writeFileSync(file, JSON.stringify(v, null, 2))
++    assert.equal(run('--root', dir).status, 0)
++    const row = readDocs(dir)['docs/vocabularies.md'].split('\n').find(l => l.startsWith('| `radar` |'))
++    assert.match(row, /classes: all, plus Naval \(research only\)/)
++  })
++
+   it("takes the example card's key allowance and balance flags from the data", () => {
+     const dir = copyRepo()
+     const cardFile = path.join(dir, 'docs/examples/concept-card.example.json')
+--- a/tests/validate.test.mjs
++++ b/tests/validate.test.mjs
+@@ -64,7 +64,8 @@
+ // the Hammer Tank takes that role. Returns what a case needs to link the planned pattern.
+ function categoryRole(dir) {
+   const d = load(dir, UNITS), c = load(dir, CARD), reg = load(dir, REGISTRY).patterns
+-  const used = new Set([...d.units.flatMap(u => [u.roles.primary, ...(u.roles.secondary || [])]), c.parts.roles.primary, ...c.parts.roles.secondary])
++  const all = fs.readdirSync(path.join(dir, 'data/units')).flatMap(f => load(dir, `data/units/${f}`).units)
++  const used = new Set([...all.flatMap(u => [u.roles.primary, ...(u.roles.secondary || [])]), c.parts.roles.primary, ...c.parts.roles.secondary])
+   const roles = load(dir, VOCAB('roles'))
+   const role = roles.terms.find(t => !t.requires && !t.classes && !used.has(t.id)) ?? assert.fail('no free role without rules')
+   const u = unit(d, 'hammer-tank')
+@@ -91,6 +92,19 @@
+     assert.ok(planned, 'the registry has no planned pattern to link')
+     linked.push(planned.id); dump(dir, UNITS, d)
+   }],
++  // A unit not researched yet only warns, but its game and faction must be registered; the reviewer checks the slug.
++  ['unit links an unresearched unit of a game not in the registry', "names game 'ra9', which is not in data/games.json", 'error', dir => {
++    editUnit(dir, 'hammer-tank', u => { u.countered_by[0].ref = 'unit:ra9.soviet.not-yet-coded' })
++  }],
++  ['unit links an unresearched unit of a faction its game does not have', "names faction 'yuri', which ra3 does not have", 'error', dir => {
++    editUnit(dir, 'hammer-tank', u => { u.countered_by[0].ref = 'unit:ra3.yuri.not-yet-coded' })
++  }],
++  ['unit links an id that is not game, faction and slug', 'is not a unit id', 'error', dir => {
++    editUnit(dir, 'hammer-tank', u => { u.countered_by[0].ref = 'unit:ra3.not-yet-coded' })
++  }],
++  ['unit links an unresearched unit of a registered game and faction (warn only)', 'point to units not researched yet', 'warn', dir => {
++    editUnit(dir, 'hammer-tank', u => { u.countered_by[0].ref = 'unit:ra3.soviet.not-yet-coded' })
++  }],
+   ['written pattern missing from registry', 'is not in data/pattern-registry.json', 'error', dir => {
+     const r = load(dir, REGISTRY); r.patterns = r.patterns.filter(p => p.id !== 'infest-vehicle'); dump(dir, REGISTRY, r)
+   }],
+@@ -125,6 +139,13 @@
+   ['unit without combos', "must have required property 'combos'", 'error', dir => {
+     const d = load(dir, UNITS); delete unit(d, 'hammer-tank').combos; dump(dir, UNITS, d)
+   }],
++  // Counters may be an empty list only when no weapon can harm an enemy: none, or only repair tools.
++  ['unit: empty counters on a unit with a weapon that harms', 'counters is empty, but', 'error', dir => {
++    editUnit(dir, 'hammer-tank', u => { u.counters = [] })
++  }],
++  ['unit: empty counters on a unit with no weapon', '', 'ok', dir => {
++    editUnit(dir, 'sudden-transport', u => { u.counters = [] })
++  }],
+   ['card: wrong class for a part', 'is not for class', 'error', dir => {
+     const c = load(dir, CARD); c.parts.mobility.base = 'jet'; dump(dir, CARD, c)
+   }],
+@@ -238,6 +259,26 @@
+     // A walking drone is a ground target (infantry-sized), not a low flier.
+     const d = load(dir, UNITS); unit(d, 'terror-drone').strengths.push({ ref: 'target:low-air', why: 'test' }); dump(dir, UNITS, d)
+   }],
++  // Price, a cap on numbers and an immunity have link kinds of their own. No profile records immunities, so an immune
++  // link is checked only against the word lists and the pattern registry.
++  ['unit: cost, availability and immune links', "doesn't describe this unit's own parts", 'no-warn', dir => {
++    const d = load(dir, UNITS); const u = unit(d, 'terror-drone')
++    u.strengths.push({ ref: `cost:${u.cost_band.band}`, why: 'test' }, { ref: `availability:${u.availability}`, why: 'test' },
++      { ref: 'immune:toxic', why: 'test' }, { ref: 'immune:mind-control', why: 'test' }, { ref: 'immune:crush', why: 'test' })
++    dump(dir, UNITS, d)
++  }],
++  ['unit: a cost band it is not in (warn only)', "link cost:very-high doesn't describe this unit's own parts", 'warn', dir => {
++    const d = load(dir, UNITS); const u = unit(d, 'terror-drone'); assert.notEqual(u.cost_band.band, 'very-high')
++    u.weaknesses.push({ ref: 'cost:very-high', why: 'test' }); dump(dir, UNITS, d)
++  }],
++  ['unit: an immunity no word list or pattern names', 'immune:made-up names no damage type, mobility trait or pattern', 'error', dir => {
++    const d = load(dir, UNITS); unit(d, 'terror-drone').strengths.push({ ref: 'immune:made-up', why: 'test' }); dump(dir, UNITS, d)
++  }],
++  ['card: cost and availability strengths it has', '', 'ok', dir => {
++    const c = load(dir, CARD)
++    c.matchups.strengths.push({ ref: `cost:${c.balance.cost_band}`, why: 'test', paired_with: 0 }, { ref: `availability:${c.parts.availability}`, why: 'test', paired_with: 1 })
++    dump(dir, CARD, c)
++  }],
+ 
+   // Only an anti-air weapon reaches high air outside the anti-air families (decision 6C, review fix).
+   ['unit: high air on a family without it needs an atypical entry', "but 'atypical' has no entry with rule 'weapon-families:rockets allowed.target-types high-air'", 'error', dir => {
+@@ -727,6 +768,27 @@
+     for (const r of printed) assert.match(r, /^[a-z0-9-]+:[a-z0-9-]+ (classes|min_tier|requires|(allowed|excluded)\.[a-z0-9-]+) \S+$/)
+   })
+ 
++  it('reads a weapon that works only in a mode with the class, mobility and target kind that mode gives', () => {
++    // The Mecha Tengu's jet guns work only in its jet mode, which gives the aircraft class and jet mobility; it hovers.
++    const dir = freshCopy()
++    const d = load(dir, UNITS), u = unit(d, 'mecha-tengu')
++    const i = u.armament.findIndex(w => w.mode), m = (u.modes || []).find(x => x.id === u.armament[i]?.mode)
++    assert.ok(m?.class && m.class !== u.class && m.mobility, 'the case needs a mode weapon whose mode gives a class and a mobility')
++    const lines = () => validate(dir).atypical.filter(a => a.includes(u.id) && a.includes(`weapon '${u.armament[i].name}'`))
++    // Bombs leave out the hover class and a drop needs a flier, but in its mode the weapon flies on an aircraft.
++    Object.assign(u.armament[i], { family: 'bombs', damage: 'explosive', delivery: 'drop', can_target: ['infantry'], traits: [] })
++    dump(dir, UNITS, d)
++    assert.deepEqual(lines(), [])
++    // Artillery suits a hover unit but not the aircraft the mode makes it.
++    Object.assign(u.armament[i], { family: 'artillery', delivery: 'lobbed' }); dump(dir, UNITS, d)
++    assert.ok(lines().some(a => a.endsWith(`(rule 'weapon-families:artillery classes ${m.class}')`)), lines().join('\n'))
++    // A mode that gives no mobility leaves the base form's target kind, unless it gives a target of its own.
++    Object.assign(u.armament[i], { family: 'bombs', delivery: 'drop' }); delete m.mobility; dump(dir, UNITS, d)
++    assert.ok(lines().some(a => a.endsWith("(rule 'weapon-delivery:drop requires target:low-air|target:high-air')")), lines().join('\n'))
++    m.target = 'low-air'; dump(dir, UNITS, d)
++    assert.deepEqual(lines(), [])
++  })
++
+   describe('negative cases: one break each', () => {
+     let baseline, baselineWarnings
+     before(() => {
