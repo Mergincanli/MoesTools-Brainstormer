@@ -1,0 +1,1072 @@
+{
+ "game": "cnc3",
+ "notes": {
+  "role_line": "### Tiberium Wars with Kane's Wrath (`cnc3`)\n\nWritten in batch R2 preparation, before any `cnc3` unit is coded, for Kane's Wrath patch 1.02, from the Tiberium Wars, Kane's Wrath and Ultimate Collection manuals, the wiki's transcript of the in-game Intelligence Database, a 2006 report of the interface, and EA's released Kane's Wrath XML (electronicarts/CnC_Modding_Support, folder `Kanes Wrath/Xml`, read from raw.githubusercontent.com; see the research notes).\n\n- **The in-game role line cannot be read.** Each unit's data names a type-line string and a description string for the build tooltip and the selection panel (the `TypeDescription` and `Description` keys in EA's XML, such as `Type:GDIRiflemanSquad`), but the words live in the game's compiled string file, which EA's release leaves out, and no page read copies them. So there is no readable designation, and whether the tooltips carry strong-against or weak-against lines is unchecked.\n  - The selection panel also shows a \"combat chain\": a green icon for the unit's weapon type and what it beats, a red one for the unit's own type and the weapons that beat it (WorthPlaying's report of EA's interface reveal, 17 October 2006: https://worthplaying.com/article/2006/10/17/news/37076-command-conquer-tiberium-wars-user-interface-details-screens/). They are pictures and no source lists them per unit, so roles step 4 cannot read them.\n  - The UnitBox `role` field (Basic infantry, Deployable artillery walker) may echo that hidden type line, but no page says so: treat it as the wiki's words.\n- **Official text 1: the manuals.** One paragraph per unit, then Requirements, Abilities and Upgrades lines; no strong-against or weak-against lines. Units have no readable designation, so the paragraph is the official one-line description for roles step 1.\n  - Tiberium Wars manual (2007), https://static.wikia.nocookie.net/cnc_gamepedia_en/images/5/51/Command_and_Conquer_3_Tiberium_Wars_Manual.pdf/revision/latest. A scan with no text layer: read the page images (each PDF page is a printed spread). GDI units are on PDF pages 16 and 17 (printed 28 to 30), Nod units on 20 and 21 (printed 36 to 38), Scrin units on 24 and 25 (printed 44 to 46). The wiki's transcript, https://cnc.fandom.com/wiki/Command_%26_Conquer_3:_Tiberium_Wars_manual, stops after the GDI infantry. The Kane Edition reprint (https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/77/TW_Kane_Manual.pdf/revision/latest) has the same paragraphs behind an unusable OCR layer.\n  - Kane's Wrath manual (2008), https://static.wikia.nocookie.net/cnc_gamepedia_en/images/1/19/CC3KWpcMANfinal.pdf/revision/latest, with a text layer. Its section New Units, Structures, and Powers (printed pages 13 to 28) covers every unit the expansion added, by faction and subfaction (the Rocket Harvester is the one KW unit not found in it). A unit it leaves out keeps its Tiberium Wars paragraph. The wiki's transcript, https://cnc.fandom.com/wiki/Command_%26_Conquer_3:_Kane%27s_Wrath_manual, stops after GDI.\n  - Ultimate Collection manual (English, never shipped; both games in one, with a text layer): https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8b/CCUC-CNC3-pcMANOLeUS.pdf/revision/latest. It reprints both sets of paragraphs and is the easiest to search, but rewrites a few (its Seeker is suited to scouting and skirmishing, with discs good against vehicles and aircraft; the 2007 manual only says it seems built for scouting) and gets some Requirements wrong (Tech Lab, a Nod building, for the Annihilator Tripod and Devastator Warship). Read the shipped manuals first; extra role or matchup words in the reprint count as official text too, with an uncertain entry naming both versions.\n  - Requirements lines predate the patches. The 2007 manual puts the Beam Cannon behind the Tech Lab and the Stealth Tank behind the Operations Center; in Kane's Wrath 1.02 it is the other way round (EA's XML `GameDependency`; the infoboxes agree), and the Stealth Tank already needed the Tech Lab in Tiberium Wars 1.09. Take tiers from the infobox and the XML, never from a manual.\n  - Cite a manual as kind official. The copy-check cannot read PDFs, so check paraphrases of them by hand.\n- **Official text 2: the Intelligence Database**, the in-game entries unlocked in the campaigns, transcribed on https://cnc.fandom.com/wiki/Intelligence_Database. Cite that page as kind wiki, with a note that it copies the in-game database and the entry's name; the copy-check can read it. Its texts were written for the 2007 and 2008 releases: take role words and matchups from them, never numbers.\n  - Entries exist for most Tiberium Wars GDI and Nod units (GDI tab Weapons, Tactics and Systems: Riflemen, Missile Squad, Engineer, MCV, APC, Grenadier, Sniper Team, Orca, Commando, Predator, Zone Troopers, Firehawk, Surveyor, Rig; Nod tab Kane's Arsenal: Militants and Rocket Troopers, Fanatics, Saboteur, Shadow Team, Venom, flame weapons, Vertigo, Stealth Tank, Commando, Avatar, Beam Cannon; the GDI InOps tab adds entries on Nod aircraft, the Flame Tank and Avatar, and the Scrin Tripod and Mastermind) and for most units Kane's Wrath added (Nod tab Weaponry; not the Titan, Wolverine, Mobile Repair Transport, Zone Shatterer, ZOCOM Orca, Reckoner, Mantis, Ravager or Mechapede). Other Scrin units of Tiberium Wars have none.\n  - Roles step 1 reads the manual paragraph. A database entry counts as official text for step 4, for roles.secondary step 1 (a label in it) and for the drop rule.\n- **Roles step 1, what the paragraphs name.** A paragraph names a role only through a label or alias that describes the unit's own job, in any word form; the unit's name counts when it names that job. Each role is still subject to its requires.\n  - Name a role: scout, the Pitbull (its paragraph makes it GDI's chief scout vehicle), the Attack Bike (Nod's ultimate scout), the Orca (scouting is the first of the roles its paragraph lists) and, unless the lead reads it as a hedge, the Seeker (the 2007 paragraph says it seems built for scouting; the reprint calls it well suited to scouting); scout through recon, the Sniper Team (trained in reconnaissance); siege, the Juggernaut (walking artillery and a siege weapon), the Specter (a stealth artillery tank) and the Behemoth (long-range artillery; \"support\" there means firepower and names nothing); anti-armour, the Missile Squad (heavy anti-vehicle weapons; the label sits on its only weapon, so it describes the unit's job); anti-air, the Mantis (a dedicated anti-air vehicle); anti-infantry and anti-air, the Shard Walker (among the strongest of both; the bonus test picks anti-air, from its double damage to aircraft); raider, the Ravager (hit-and-run attacks); transport, the APC and the Reckoner (armoured personnel carrier, \"the Reckoner APC\"); support, the Mobile Repair Transport (repairs nearby vehicles); engineer, the Engineer and Combat Engineer; infiltrator, the Saboteur (its name); logistics, every harvester.\n  - Name no role: the Rifleman Squad (mainstay of the ground forces), Predator (an armour-piercing cannon is a weapon, not a job), Mammoth Tank, Titan, Grenadier Squad (close-assault infantry: assault alone names nothing), Commando, Zone Trooper, Zone Raider, Scorpion Tank, Stealth Tank, Flame Tank, Avatar, Black Hand, Militant squads, Venom (a patrol craft), Stormrider (a fast-attack aircraft), Annihilator Tripod, Devourer, Gun Walker, the Awakened and Enlightened, the Confessor Cabal and Purifier (they lift nearby troops: buffer has no alias, so step 1 gives nothing).\n  - A label on one of several weapons is not the unit's job and counts only for that weapon at roles.secondary step 3: the Zone Raider's anti-air rockets beside its sonic shells.\n- **Strong against and weak against (roles step 4 and the roles.secondary drop rule).** No separate lines anywhere readable; read the manual paragraph and the database entry.\n  - Strong, naming a kind of target: the Commando (infantry), Raider Buggy (infantry and light targets), Zone Trooper (infantry and vehicles, infantry first), Militant Rocket Squad (aircraft and armoured vehicles), Attack Bike and Slingshot (aircraft), Venom (infantry, then aircraft and some vehicles), Gun Walker (infantry and aircraft), Reaper Tripod (the toughest armour), ZOCOM Orca (vehicles and structures), Shatterer (buildings and slow vehicles), Stormrider (ground and air forces: ground matches no anti role, air gives anti-air); database entries: Missile Squad (vehicles and aircraft), Predator (any vehicle or structure), Riflemen (trained for anti-infantry fighting, which is also a label for roles.secondary step 1). Text tied to one of two weapons counts only for that weapon at roles.secondary step 3 (the Firehawk's air-to-air missiles; its bombs are the other load).\n  - Weak: the Predator (poor against infantry, exposed to aircraft), Beam Cannon (not meant for attacks on armour), Riflemen (database: never against heavy armour). The Pitbull's too-light-for-a-straight-fight names no target; the Orca's database line that it cannot engage aircraft is a can_target fact, not weak text.\n  - Target words: vehicles, armour, tanks and armoured or light vehicles mean armour; infantry, soldiers, troops and squads mean infantry; aircraft and air mean air. Structures, buildings, bases, installations and garrisons match none of the three anti roles. Ground, land and surface targets match none either.\n- **Step 4 bonus from the game data: yes, from weapon damage scalars.** A weapon's damage can carry its own multiplier against a kind of target (`DamageScalarDetails` in `GlobalData/Weapon.xml`; the infoboxes show it as, for example, a 200% scalar against aircraft). Stock weapons with one above full damage against a whole kind: the Raider Buggy's gun, the Gun Walker and the Shard Walker (double against aircraft), the Pitbull's and Stealth Tank's rockets (half again against aircraft), the Mechapede's disc segment (four times against aircraft), the Ravager's shards (more than double against vehicles; the same shards arm the Mechapede's shard segment and the Eradicator's Ravager hardpoint). The Attack Bike's rockets reach a bonus against aircraft only with Tiberium Core Missiles. Bonuses against civilian buildings (most Scrin weapons) and structures (flamethrowers) match no anti role.\n  - Target-side shares above full damage exist too (`GlobalData/Armor.xml`), but only for a few armour sets: Gun does half again to Missile Squad and Militant Rocket soldiers and double to Fanatics; Cannon does half again to the Shatterer, Zone Shatterer, Slingshot and Flame Tank and a little more to the Titan, Attack Bike and Seeker; Rocket does a little more to the Attack Bike. Proposal for the lead: these are counters to those units, not a bonus against infantry or armour as a kind (the reference rifle soldier and the Predator take full damage at most), so they give no step 4 role; use them in matchups. Read literally, every Gun weapon would turn anti-infantry and every Cannon weapon anti-armour.\n  - Shares below full damage (several machine guns do three quarters to infantry) are never a bonus.\n- **Subfaction copies.** A copy shares its base unit's paragraph unless the Kane's Wrath manual gives it its own (the Steel Talons, ZOCOM, Black Hand, Marked of Kane, Reaper-17 and Traveler-59 sections). The base paragraph counts for a copy only where the copy keeps the part it describes: the Black Hand Commando has no stealth, and the Black Hand Specter does not cloak (the KW manual's own note).\n- **Not official.** The UnitBox `role`, `useguns` and `usearmor` fields and the prose; StrategyWiki's Tiberium Wars unit pages (role fields and Counters sections; kind guide); CNCNZ's unit pages, which reword the manual and add their own lines (kind guide); EVA and unit voice lines quoted on unit pages (the Predator page's EVA line about Nod vehicles and structures is mission dialogue, not a unit description).\n- **Official site.** Whether EA's 2007 site had unit profiles is unchecked: web.archive.org reset every connection from this session, and archive.org's lookup found no snapshot of the address tried (commandandconquer.com/cnc3). GameSpot's designer diaries answered 403.",
+  "game_wide": "### Tiberium Wars with Kane's Wrath (`cnc3`)\n\nWritten in batch R2 preparation, before any `cnc3` unit is coded, for Kane's Wrath patch 1.02 in skirmish and multiplayer. Sources: the Tiberium Wars manual (gameplay pages: PDF pages 8 to 11, printed 12 to 19; link under Official role lines) and the Kane's Wrath manual (Complete Controls, printed page 2, and its unit sections); the Command & Conquer Wiki pages named below (https://cnc.fandom.com/wiki/<Title>, read through the API); and EA's released Kane's Wrath XML (https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/<path>), which matches patch 1.02 on every value checked (see the research notes).\n\n- **Basic orders** (no pattern): every unit. Move and attack by right-click, attack move, assault move (also attacks buildings on the way), reverse move (backs up; the manual pairs it with armour facing), force move (drives through enemies, so tanks run over infantry), force attack, formation move (the group keeps to its slowest member), stop, scatter, waypoints, planning mode (queued orders and patrols), rally points, and four stances: aggressive, guard (the default), hold ground and hold fire; a production building's stance passes to what it builds (Tiberium Wars manual, PDF pages 9 and 11; Kane's Wrath manual, Complete Controls; [Stance](https://cnc.fandom.com/wiki/Stance); XML `GlobalData/Stances.xml`). No retreat or reinforce order. The ability buttons (Ctrl with A, S, D or F) belong to each unit: record them on it.\n- **Veterancy** (`earn-veterancy`): every unit that fights, except those below. Three ranks, veteran, elite and heroic, earned from the value of the damage a unit deals rather than from kills; crates can also promote ([Veterancy](https://cnc.fandom.com/wiki/Veterancy), Tiberium Wars section; Tiberium Wars manual, Unit Veterancy, PDF page 9).\n  - What ranks add (XML `GlobalData/AttributeModifier.xml`): more damage and more health at each rank (patch 1.02 raised the elite step to a quarter more damage and two fifths more health; [Kane's Wrath patch 1.02](https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02)); at heroic, double the firing rate and steady self-healing (`BaseObjects/BaseVehicle.xml` and `BaseInfantry.xml`, switched on by the heroic rank), with red tracers (manual). The Veterancy page also claims more speed, and more range at heroic; the 1.02 modifiers give neither, so leave both out. Bands use the unranked unit; no armour model, no ability.\n  - **Cannot rank up** (no levels in `GlobalData/ExperienceLevels.xml`): the Nod and Scrin harvesters (subfaction ones included), the three MCVs, Surveyor, Emissary, Explorer, the GDI and ZOCOM Engineers, the Assimilator, Fanatics and Traveler-59 Cultists, and the Ox and Carryall. The GDI side's harvesters do rank up (the armed GDI and ZOCOM Rocket Harvesters, and the Steel Talons Heavy Harvester with its garrison pod). Fanatics and Cultists say so in weaknesses; the unarmed ones only in notes.\n  - **Built ranked**: Black Hand flame units arrive veteran (Veterancy page) and Black Hand Commandos heroic ([Black Hand](https://cnc.fandom.com/wiki/Black_Hand)); units summoned by powers arrive veteran (GDI Airborne by the Armory page; Zone Raider drop pods and Shock Pods by the Kane's Wrath manual). Stock values exclude veterancy: band the unranked unit and say in notes how it arrives.\n- **Infantry squads** (no pattern): most infantry are bought and commanded as one squad. The squad moves at its own speed, and each member's figure is a little higher so the group keeps formation (XML locomotor sets). Lost members are not replaced, except by the GDI Armory (repair, below).\n- **Infantry suppression and cover** (no pattern, not an armour model): human infantry under heavy fire go prone, crawling at about a quarter of their speed but taking less damage, and force move stands them up; stronger weapons suppress more ([Infantry Suppression](https://cnc.fandom.com/wiki/Infantry_Suppression); manual PDF page 11; XML modifier `Modifier_Test_Suppression`). Never suppressed: Marked of Kane cyborgs, Fanatics and Scrin infantry (page and manual); the XML gives no suppression to Zone Troopers and Zone Raiders either. The manual calls Grenadiers hard to suppress. Infantry next to civilian buildings or big obstacles kneel in cover, tougher and almost impossible to suppress (manual). Leave all of it off; mention it in armour.notes where it matters. The Confessor Cabal and the Purifier suppress nearby enemy infantry and lift their own (page; Kane's Wrath manual): record that on those two. The Voice of Kane statue does the same and stays off.\n- **Garrisons** (`carry-passengers`, recorded on the building, which is not researched): infantry squads can enter civilian buildings, up to three squads, and fire out with protection and extra reach; a badly damaged building throws them out, and a garrisoned building cannot be repaired ([Garrisoning](https://cnc.fandom.com/wiki/Garrisoning), Tiberium Wars section; manual PDF page 9; Intelligence Database, Garrisoning). Range bands use the soldier in the open.\n  - Cannot garrison: Zone Troopers and Zone Raiders; Scrin infantry, apart from Buzzers (which enter a building to attack those inside) and Cultists. Say so in weaknesses where it matters.\n  - Clearing a garrison belongs to the weapon that does it; name it in that weapon's summary. In the XML these clear garrisons: the Grenadier's grenades, the Black Hand's and Black Disciple's flamethrowers, the Flame Tank, the Avatar's upgraded flamer, the Purifier, the Redeemer's flame and Tiberium turrets, the MARV's grenadier hardpoint, the Firehawk's bombs, Buzzers, the Corrupter, the Tiberium Trooper, and the Saboteur's booby trap.\n  - Riflemen dig their own foxholes (Dig In): their ability.\n- **Transports** (universal keys: get in, get out, Evacuate; one seat passive per carrier, see Paired entries):\n  - One squad: the APC, Mobile Repair Transport, Hammerhead, Behemoth and Heavy Harvester; two, three once deployed into a bunker: the Reckoner (XML `HordeTransportContain`; Garrisoning page; Kane's Wrath manual). Riders fire out of the APC (manual; the database adds that a Missile Squad inside gives it missiles), the Hammerhead and the deployed Reckoner (Garrisoning page): passenger-firing seats, `passenger-sets-weapon`. Check the others on their pages.\n  - Riders die with the vehicle, except in the Reckoner (XML `KillPassengersOnDeath`): on_death.notes.\n  - The epic units take infantry for good, each squad adding a weapon hardpoint, and cannot let them out: the MARV four squads, the Redeemer two, the Eradicator three (Garrisoning page; [Epic unit](https://cnc.fandom.com/wiki/Epic_unit); Kane's Wrath manual): `passenger-sets-weapon`.\n  - Whether a seat is a squad or a soldier is open (research notes).\n- **Call for transport** (no pattern; leave off): GDI (all three versions), Nod and Marked of Kane infantry and light and medium vehicles can summon a V-35 Ox or a Carryall that lifts them anywhere on the map, for a fee and on a long recharge, once an Airfield or Air Tower stands ([Call for transport](https://cnc.fandom.com/wiki/Call_for_transport); Intelligence Database; XML `SpecialPowerTemplates.xml`). Not: Black Hand (no Air Tower), the Scrin (they teleport), and the heavy units (Mammoth, Juggernaut, Behemoth, Titan, Avatar, Purifier, Flame and Stealth Tanks, Reckoner, Rig, epic units), harvesters, MCVs and aircraft; `GlobalData/LogicCommandSet.xml` lists exactly who has the button. A unit without it needs nothing. The Ox and Carryall come only this way and are not researched.\n- **Repair, healing and rearming** (no pattern; leave off):\n  - Every vehicle factory (War Factory, Warp Sphere, Reclamator Hub, Redeemer Engineering Facility, Warp Chasm) and aircraft building (Airfield, Air Tower, Gravity Stabilizer) keeps three repair drones that mend nearby vehicles or aircraft; Scrin drones also heal infantry; the Scrin Reconstruction Drones power drops more for a while ([Repair drone (Tiberium Wars)](https://cnc.fandom.com/wiki/Repair_drone_(Tiberium_Wars)); [Reconstruction drones](https://cnc.fandom.com/wiki/Reconstruction_drones)). The Rig's Battle Base and the Mobile Repair Transport carry drones of their own: `repair-allies` on those two.\n  - The GDI and ZOCOM Armory heals squads sent inside and replaces lost members, the only thing in the game that restores members ([Armory](https://cnc.fandom.com/wiki/Armory)). Steel Talons have no Armory.\n  - Buildings are repaired in repair mode; engineers repair buildings and bridges (their own ability).\n  - The Orca, ZOCOM Orca, Firehawk and Vertigo reload their weapons only at an Airfield or Air Tower (XML weapons that reload at base; Kane's Wrath adds smaller pads that rearm and repair but do not build, the GDI Combat Support Airfield and the Nod Air Support Tower): resource `limited-ammo`, and leave the trip off. The Hammerhead never needs to (Kane's Wrath manual); the Venom and the Scrin aircraft reload by themselves (XML). Most aircraft also need a free landing pad on their building before they can be built (infobox `req`; an Airfield keeps four aircraft, Intelligence Database), so how many fly grows with buildings: availability stays open.\n- **Husks** (on_death `wreck`): the Juggernaut, Behemoth, Avatar, Purifier, Annihilator Tripod and Reaper Tripod leave a husk when destroyed. An Engineer, Combat Engineer, Saboteur or Assimilator of either side can bring it back into the fight; left alone it falls apart, and heavy and epic units can crush it ([Husk](https://cnc.fandom.com/wiki/Husk); the four engineers' pages; manual PDF page 10). The Titan, Gun Walker, Redeemer and Eradicator leave none. The engineers' capture ability links `recover-wreck` beside `capture-structure`; the Saboteur's booby trap on a husk is its own ability.\n- **Crushing** (mobility trait `crush`, not an ability): a unit runs over another when its crusher level is above the other's crushable level (XML `CrusherInfo`; many infoboxes give both as crush and crushable; the manual's force move). Ordinary vehicles crush basic infantry and can themselves be crushed by the heavy crushers below (`BaseObjects/BaseVehicle.xml`).\n  - Not crushers: the APC, Pitbull, Wolverine, Mobile Repair Transport, Attack Bike, Raider Buggy, Beam Cannon, Seeker, Explorer and Scrin harvester.\n  - Heavy crushers, which also run over heavy infantry and light vehicles: the Mammoth, Juggernaut, Behemoth, Titan, Avatar, Purifier and both Tripods (the manual says so for the Mammoth and Tripod, the Kane's Wrath manual for the Titan). The MARV, Eradicator and Redeemer (its infobox gives the same top level) crush every non-epic unit.\n  - Heavy infantry escape ordinary vehicles (Zone Troopers, Zone Raiders, the Enlightened, Shock Troopers, Ravagers); both Commandos, the Mastermind, Prodigy and Buzzers can be crushed only by epic units. Proposal: `immune:crush` in strengths only for that second group, with the epic exception in the reason; for the first group, say in armour.notes which vehicles can still crush them. A crusher smaller than large still gets the trait, with the size break in atypical.\n- **Armour facing** (armour model `directional`): tanks and other armoured vehicles take more damage from the side and much more from behind (manual, Armour Facing, PDF page 11). The XML (`GlobalData/Armor.xml`, side and rear scalars) gives it, a tenth more from the side and half again from behind, to the Predator, Mammoth, Juggernaut, Behemoth, Pitbull, APC, Mobile Repair Transport, Shatterer, Zone Shatterer, Slingshot, Rig, GDI MCV, Surveyor, Avatar and its subfaction copies, Beam Cannon, Scorpion, Specter, Reckoner, Flame Tank, Raider Buggy, Stealth Tank, Devourer, Explorer, Eradicator and Redeemer, with a smaller rear step on the Titan and MARV. Code directional on each, citing its armour set. The Seeker, Gun Walker, Shard Walker, both Tripods, Corrupter, Wolverine, Attack Bike, harvesters, aircraft and infantry have none. The data also gives facing to the Nod Commando and the Saboteur: code it there with an uncertain entry, since the manual speaks only of vehicles.\n- **Tiberium** (map hazard; leave off): standing in a Tiberium field hurts infantry (XML `TiberiumCrystalWeapon`), except Scrin infantry, Zone Troopers and Zone Raiders, and Marked of Kane Tiberium Troopers (its exclusion list): `immune:toxic` in strengths for those. Upgrades protect Militants, Confessors and Fanatics (Tiberium Infusion) and ZOCOM infantry (Tiberium Field Suits): notes only. Scrin infantry and harvesters heal near Tiberium (XML `HEALED_BY_TIBERIUM`; both manuals): armour.notes, not self-repair. Blue Tiberium is worth more (manual). The Scrin Infestation power and Overlord's Wrath seed hurting fields: off.\n- **Upgrades** (see Paired entries): researched at a building, an upgrade reaches every unit of its type at once, those already fighting included (manual, Upgrading Technology, PDF page 8). So a weapon or ability an upgrade adds links `upgrade-in-field`; an upgrade that only changes numbers goes in notes. A swapped weapon (railguns, laser capacitors, shard launchers, Tiberium Core Missiles, charged particle beams) is an acquired weapon only when its family or damage changes; otherwise name it in the stock weapon's summary.\n- **Side-wide powers and buildings** (left off every unit; none gives a named unit type a new button, so no ability has source commander-power):\n  - GDI: Ion Cannon, Orbital Strike, Shockwave Artillery, Radar Scan, Sonic Repulsion Field, Supersonic Air Strike, Railgun Accelerator (Steel Talons; faster fire with self-damage for railgun units in an area: a number change, so name it in their railgun summaries); call-ins GDI Airborne, Zone Trooper and Zone Raider drop pods, Orca strike, Bloodhounds, Sharpshooter Team.\n  - Nod: Nuclear Missile, Cloaking Field (cloaks vehicles and buildings in an area, not infantry), Decoy Army, Radar Jamming Missile, Catalyst Missile, Tiberium Vapour Bomb, Seed Tiberium, Mine Drop, Master Computer Countermeasures (ends EMP), Laser Fencing, Power Signature Scan, Decoy Temple, Magnetic Mines, Tiberium Vein Detonation, the Voice of Kane statue; call-ins Shadow Strike Team and Redemption (fallen Militants rise as Awakened).\n  - Scrin: Rift, Wormhole, Temporal Wormhole, Lightning Spike, The Swarm, Tiberium Vibration Scan, Stasis Shield, Phase Field, Ichor Seed, Infestation, Overlord's Wrath, Reconstruction Drones; call-in Shock Pods.\n  - Sources: the wiki's support-power categories for both games (https://cnc.fandom.com/wiki/Category:Tiberium_Wars_support_powers and the Kane's Wrath one), [Railgun accelerator](https://cnc.fandom.com/wiki/Railgun_accelerator), [Master computer countermeasures](https://cnc.fandom.com/wiki/Master_computer_countermeasures), the Kane's Wrath manual. Mention an effect in notes where it shapes a matchup. Call-in units are not researched.\n- **Stealth and detection** (per unit): code each unit's own cloak and detection with `cloak` and the stealth and detector traits ([Stealth](https://cnc.fandom.com/wiki/Stealth), Tiberium Wars section, lists both sides). Units hidden only by the Cloaking Field, a Disruption Tower or Disruption Pods get no cloak of their own; the Vertigo records its pods. Many base defences detect, which belongs to no unit. Detection bought with an upgrade (Scanner Packs) is notes.\n- **EMP** (no pattern for the state): EMP grenades (a Grenadier upgrade), the Raider Buggy's EMP Burst and the EMP Blast of the Awakened and Enlightened stop vehicles and buildings for a while; a building hit by EMP stops counting as a prerequisite until it recovers (manual PDF page 10; Kane's Wrath manual). The Steel Talons' Adaptive Armor and the Scrin's Attenuated Forcefields protect against it (Kane's Wrath manual). Record each EMP on the unit that fires it; protection bought by upgrade goes in notes.\n- **Mind control**: since patch 1.02 the Mastermind, Prodigy and Cultists cannot take over epic units or commandos (Kane's Wrath patch 1.02 page): `immune:mind-control` in their strengths.\n- **Damaged vehicles slow down** (no pattern): most vehicle locomotors fall to three quarters of their speed when badly damaged, a few to half (XML `MaxSpeedDamaged`). Speed bands use full health.\n- **Crates** (a multiplayer option; picking one up is a universal key): only good effects; random ones in skirmish and multiplayer give money, a rank, a damage or armour boost or healing, never units ([Crate](https://cnc.fandom.com/wiki/Crate), Tiberium Wars section; manual PDF page 10). Leave them off. Barrels on maps explode when shot (manual).\n- **Fog, radar and power** (no pattern): fog of war is always on in skirmish, and support powers cannot be aimed into it ([Fog of war](https://cnc.fandom.com/wiki/Fog_of_war)); low power takes the radar and base defences off line and slows building (manual, PDF page 8). Repair drones vanish while their building lacks power (Repair drone page). No unit depends on power, so nothing is `depend-on-relay`.\n- **Engineers and capture**: not game-wide. The Engineer, Combat Engineer, Saboteur and Assimilator capture enemy buildings and husks and repair friendly buildings and bridges (manual; Intelligence Database; their pages): `capture-structure`, with `recover-wreck` for husks. Taking a neutral tech building (Tiberium Spike, EMP Control Center) is not `capture-structure`: name it in the summary; what it gives its owner is side-wide.\n- **Build limits** (availability `unique`; say so in tier.basis): one at a time for the GDI Commando, Nod Commando (Black Hand: two), Mastermind, Prodigy and Mothership, and one epic unit per player, the MARV, Redeemer or Eradicator (XML `MaxSimultaneousOfType`; Epic unit page; Black Hand page; [Mothership](https://cnc.fandom.com/wiki/Mothership)).",
+  "registry_findings": [
+   {
+    "path": "cost_thresholds/basis",
+    "severity": "wrong",
+    "current": "Anchor: the GDI Predator tank, 1,100 credits. Nod's Scorpion (700) is cheaper, and the Scrin have no tier 1 main battle tank (Seeker 800; Devourer 1,600, tier 2). Thresholds at about 0.5, 0.9, 1.4 and 2 times the anchor, rounded to the nearest 50.",
+    "proposed": "\"Anchor: the GDI Predator tank, 1,100 credits. Nod's Scorpion (800 in the Kane's Wrath 1.02 game data; the wiki infobox's 700 is wrong) is cheaper, and the Scrin have no tier 1 main battle tank (Seeker 800; Devourer 1,600, tier 2). Thresholds at about 0.5, 0.9, 1.4 and 2 times the anchor, rounded to the nearest 50.\" The anchor and the four thresholds stay as they are.",
+    "evidence": "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/NOD/Units/NODRaiderTank.xml (NODRaiderTank is the Scorpion: Nod War Factory, no requirement, Scorpion command set) has BuildCost 800 and BuildTime 8, and the Tiberium Wars 1.09 file (.../Tiberium%20Wars/Xml/NOD/Units/NODRaiderTank.xml) has the same. That Kane's Wrath data carries every patch 1.02 change checked (harvesters 1600, Specter 1500, Shard Walker 800, elite rank +25% damage and +40% health, Mammoth health 11500, Hammerhead reach 300, Avatar 375, Devourer 340; https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02), and its Predator 1100, Seeker 800 and Devourer 1600 match the basis. https://cnc.fandom.com/wiki/Scorpion_tank_(Tiberium_Wars) gives $700 and 0:07; its changelog (patch 1.05 only) changes no price, and no patch page read (Tiberium Wars patches, 1.05, 1.09; Kane's Wrath 1.01, 1.02) changes it. CNCNZ disagrees with itself: https://cncnz.com/games/tiberium-wars/nod-units/ gives $800, https://cncnz.com/games/kanes-wrath/nod-units/ $700. The Scorpion stays in the low band at either price, so only the text is wrong."
+   },
+   {
+    "path": "speed_reference",
+    "severity": "unclear",
+    "current": "Rifleman squad (GDI basic infantry): speed 57 in the wiki's unit data, against 60 for the Predator tank; compare only speeds from the same patch, since patch 1.05 made all infantry about 20% faster",
+    "proposed": "\"Rifleman squad (GDI basic infantry): speed 57, against 60 for the Predator tank (wiki infoboxes; EA's Kane's Wrath XML). 57 is the squad's own locomotor speed, the speed the squad moves at; each rifleman's own figure (62) is higher only so the members keep formation. Every infantry land speed on the wiki is such a squad figure, the same in the Kane's Wrath 1.02 and Tiberium Wars 1.09 data for every squad both games share except the Shadow Team, so all of them already include patch 1.05's faster infantry. Use full-health, unsuppressed speeds: most vehicles fall to three quarters of their speed when badly damaged, and suppressed infantry crawl.\"",
+    "evidence": "Kane's Wrath XML: .../Kanes%20Wrath/Xml/GDI/Units/GDIRifleSoldierSquad.xml has LocomotorSet NormalRangedSquadLocomotor with Speed 57; GDIRifleSoldier.xml HumanLocomotor Speed 62; GDIPredator.xml Speed 60. In GlobalData/Locomotor.xml the squad locomotor has WaitForFormation true and HORDE appearance, and locomotor templates carry no speed of their own; GlobalData/GlobalDefines.xml defines a squad-member speed adjustment of 5 (Militant squad 43, militant 48; Black Hand squad 50, trooper 55). The Kane's Wrath and Tiberium Wars 1.09 files agree squad by squad (Rifleman 57, Missile 55, Engineer 36, Grenadier 48, Sniper 55, Zone Trooper 55, GDI Commando 60, APC 72, Militant 43, Militant Rocket 43, Saboteur 36, Black Hand 50, Nod Commando 60, Fanatics 70, Assimilator 36, Disintegrators 65, Shock Troopers 65); only the Shadow Team differs (KW 90 on foot and 120 gliding, TW 80 and 100; https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02 made that change). https://cnc.fandom.com/wiki/Tiberium_Wars_patch_1.05 sped up named infantry and the APC and left out the Nod Commando, Zone Troopers, Fanatics, Shock Troopers and Shadow Team, so 'all infantry' is inexact; the 57 against 43 gap the batch note found odd is in both files and is design. Slowdowns: 39 locomotors in GlobalData/Locomotor.xml have MaxSpeedDamaged 75% and three 50%; the suppression modifier in GlobalData/AttributeModifier.xml sets SPEED 25% (https://cnc.fandom.com/wiki/Infantry_Suppression)."
+   },
+   {
+    "path": "sight_reference",
+    "severity": "unclear",
+    "current": "Rifleman squad: vision 350, shroud clearing 400 (Command & Conquer Wiki infobox). Use the shroud-clearing figure when the unit lists one; compare a unit that lists a single sight figure with the vision figure (350).",
+    "proposed": "\"Rifleman squad: shroud clearing 400, vision 350 (wiki infobox; ShroudClearingRange and VisionRange in EA's Kane's Wrath XML). Band every unit on its shroud-clearing figure, the one that clears the fog: the infobox's shroud-clearing line, or ShroudClearingRange from the XML where the infobox gives none. Never use the vision figure; it can sit well above or below the shroud-clearing figure (Juggernaut 600 against 400, Beam Cannon 600 against 300, Specter 850 against 525, Mastermind 250 against 200).\"",
+    "evidence": "Of the 90 unit pages read, 69 infoboxes give both figures, none gives a single number, 20 give none (Missile squad, Grenadier squad, GDI MCV, Venom, Carryall, Gun walker, Seeker, Scrin harvester, Devourer tank, Corrupter, Mechapede, Annihilator tripod, Eradicator hexapod, Explorer, Shard walker, Shielded harvester, Reaper tripod, Drone ship, Mothership, Invader fighter) and the Vertigo's says only Far. So the single-figure clause never applies, while the missing figures exist in the XML (every unit file has both keys; GDIRifleSoldierSquad.xml VisionRange 350, ShroudClearingRange 400). The sight-bands list (data/vocab/sight-bands.json) asks for the figure that clears the fog. The two figures part on long-range units: https://cnc.fandom.com/wiki/Juggernaut_(Tiberium_Wars) 600/400, https://cnc.fandom.com/wiki/Beam_cannon_(Tiberium_Wars) 600/300, https://cnc.fandom.com/wiki/Specter_(Kane%27s_Wrath) 850/525, https://cnc.fandom.com/wiki/Devastator_warship 630/400, https://cnc.fandom.com/wiki/Mastermind_(Tiberium_Wars) 250/200; banding one unit on vision against 350 and the next on fog clearing against 400 mixes two measures."
+   },
+   {
+    "path": "version_researched",
+    "severity": "unclear",
+    "current": "Kane's Wrath patch 1.02 for all nine factions (the three main factions and six subfactions), with Tiberium Wars patch 1.09 values only where the wiki gives no Kane's Wrath value, as the Command & Conquer Wiki describes them in October 2026",
+    "proposed": "\"Kane's Wrath patch 1.02 in skirmish and multiplayer, for all nine factions (the three main factions and six subfactions), as the Command & Conquer Wiki and EA's released Kane's Wrath XML (electronicarts/CnC_Modding_Support, the 1.02 game data) describe them in October 2026; where the wiki gives no value, take the XML's, and where the two disagree, the XML's, with an uncertain entry. Tiberium Wars 1.09 values are not used.\"",
+    "evidence": "The Kane's Wrath XML holds the 1.02 values (see the cost_thresholds/basis finding) and gives every figure the infoboxes lack (sight, reach, speed, requirements). Tiberium Wars 1.09 differs from Kane's Wrath 1.02 on many units, so the current fallback would code wrong figures; in EA's two data sets the Devourer costs 1400 against 1600, the Raider Buggy 400 against 500, the Stealth Tank 1500 against 1800, harvesters 1400 against 1600; the Attack Bike's speed is 140 against 160, the Mammoth's 40 against 45, the Corrupter's 60 against 70, the Shadow Team's 80 against 90; the Beam Cannon needs the Tech Lab in 1.09 and the Operations Center in Kane's Wrath. The infoboxes give the Kane's Wrath figure in every case checked (https://cnc.fandom.com/wiki/Devourer_tank, https://cnc.fandom.com/wiki/Raider_buggy_(Tiberium_Wars), https://cnc.fandom.com/wiki/Stealth_tank_(Tiberium_Wars), https://cnc.fandom.com/wiki/Attack_bike_(Tiberium_Wars), https://cnc.fandom.com/wiki/Mammoth_tank_(Tiberium_Wars), https://cnc.fandom.com/wiki/Corrupter, https://cnc.fandom.com/wiki/Beam_cannon_(Tiberium_Wars)). Naming the mode keeps Global Conquest, Kane's Wrath's turn-based campaign mode, out."
+   },
+   {
+    "path": "sources",
+    "severity": "missing",
+    "current": "Four wiki sources (Tier; GDI war factory (Tiberium Wars); Predator tank (Tiberium Wars); Rifleman squad (Tiberium Wars)). Nothing cited backs the squad speed, the fog-clearing figure or a game-data price, and the cited wiki infoboxes give the Scorpion's price wrong.",
+    "proposed": "Add two sources: {\"url\": \"https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GDI/Units/GDIRifleSoldierSquad.xml\", \"title\": \"GDIRifleSoldierSquad.xml, Kane's Wrath XML, EA's CnC_Modding_Support (GitHub)\", \"kind\": \"official\", \"accessed\": \"2026-10-24\", \"version\": \"Kane's Wrath 1.02\", \"supports\": [\"speed_reference\", \"sight_reference\"], \"note\": \"EA's released Kane's Wrath game data. The Rifleman squad moves at its own locomotor speed, 57 (each soldier 62 in GDIRifleSoldier.xml); VisionRange 350, ShroudClearingRange 400. The rifle's AttackRange, 260, is in GlobalData/Weapon.xml (GDIRifleSoldierRifle).\"} and {\"url\": \"https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/NOD/Units/NODRaiderTank.xml\", \"title\": \"NODRaiderTank.xml (Scorpion tank), Kane's Wrath XML, EA's CnC_Modding_Support (GitHub)\", \"kind\": \"official\", \"accessed\": \"2026-10-24\", \"version\": \"Kane's Wrath 1.02\", \"supports\": [\"cost_thresholds\"], \"note\": \"The Scorpion's BuildCost is 800, not the wiki's 700; the Tiberium Wars 1.09 file gives the same.\"}",
+    "evidence": "Both files fetched on 2026-10-24 from raw.githubusercontent.com (EA's repository https://github.com/electronicarts/CnC_Modding_Support); values as quoted. EA publishing its own game data makes it kind official. Other entries in data/games.json carry five to seven sources, so four is no cap."
+   }
+  ],
+  "other_notes": "- **Version and mode.** Code every unit as Kane's Wrath patch 1.02 plays in skirmish and multiplayer, for all nine factions. Global Conquest (Kane's Wrath's turn-based mode, with strike forces and meta-unit hardpoints) is out of scope; leave its effects out (the Redeemer's unrest bonus there, for one).\n- **EA's Kane's Wrath XML is the 1.02 game data; use it.** EA's modding release https://github.com/electronicarts/CnC_Modding_Support holds the game's XML. Unit files are at `Kanes Wrath/Xml/<faction folder>/Units/<file>.xml` (folders GDI, NOD, Alien, SteelTalons, ZOCOM, BlackHand, MarkedOfKane, Reaper17, Traveler59); shared data is in `GlobalData/` (Weapon.xml, Armor.xml, Locomotor.xml, ExperienceLevels.xml, AttributeModifier.xml, SpecialPowerTemplates.xml, LogicCommandSet.xml, upgrade.xml) and defaults in `BaseObjects/`. Read files through https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/<path>; github.com folder pages opened only through WebFetch. `Tiberium Wars/Xml/` in the same repository is the Tiberium Wars 1.09 data.\n  - Why it is 1.02: every 1.02 change checked is in it (all harvesters, the Specter and the Shard Walker at their 1.02 prices; the elite rank's 1.02 bonus; the Mammoth's 1.02 health; the Hammerhead's, Avatar's and Devourer's 1.02 reach; the Shadow Team's 1.02 speeds), and `GlobalData/TheVersion.xml` reads 114.\n  - Cite a file by its raw URL as kind official (EA's own release of its data), with a note naming the keys read; the copy-check can read it. Proposal: where it and the wiki disagree, the XML wins, with an uncertain entry marked sources_disagree. The only disagreement found so far is the Scorpion's price.\n  - Where things are: price and build time in the `GameObject` attributes `BuildCost` and `BuildTime`; speed in the `LocomotorSet` with condition NORMAL; sight in `VisionRange` and `ShroudClearingRange`; reach in the weapon's `AttackRange` (Weapon.xml); damage category and per-target scalars in the weapon's nuggets; armour in the unit's `ArmorSet` and Armor.xml (per-category shares, side and rear scalars); requirements in `GameDependency`; build limits in `MaxSimultaneousOfType`; crushing in `CrusherInfo`; carried squads in the `*Contain` modules.\n  - Internal names that differ from the game's: NODRaiderTank is the Scorpion Tank and NODScorpionBuggy the Raider Buggy; NODMobileArtillery the Specter; NODBunkerTruck the Reckoner; NODTechAssemblyPlant the Tech Lab; GDIAAScout the Slingshot; GDISonicTank the Shatterer and ZOCOMImprovedSonicTank the Zone Shatterer; GDIMedicalBay the Armory, GDIArmory the Tech Center and GDIAirTower the Airfield; SteelTalonsRepairAPC the Mobile Repair Transport; MOKCyborgInfantry the Awakened and MarkedOfKaneImprovedCyborgInfantry the Enlightened; BlackHandCustomWarmech the Purifier; AlienStalker the Ravager; AlienRazorDrones the Disintegrators; AlienBlinkMastermind the Prodigy; AlienMillipede the Mechapede; AlienMCV the Drone Ship; AlienControlCenter the Nerve Center; AlienStatisChamber the Stasis Chamber; AlienReactor, as a requirement, the Technology Assembler.\n  - The data also holds files a subfaction never fields in skirmish (SteelTalonsPredator, SteelTalonsZoneTrooperSquad, ZOCOMJuggernaught, BlackHandCyborgInfantrySquad, MarkedOfKaneMilitantSquad, among others). Take who builds what from the subfaction pages and the Kane's Wrath manual, not from the XML.\n- **Settled: infantry speeds and versions.** The infobox `landspeed` of every infantry squad is the squad's own speed in the data (its `LocomotorSet`, for example the Rifleman squad 57 and the Militant squad 43), and the Kane's Wrath 1.02 and Tiberium Wars 1.09 files give the same figure for every squad both games share, apart from the Shadow Team (Kane's Wrath 90 on foot and 120 gliding, after patch 1.02; Tiberium Wars 80 and 100). Each soldier's own figure is a little higher (rifleman 62, militant 48) so the squad keeps formation. So no wiki infantry figure belongs to another version, and the Rifleman-Militant gap is design, not a patch mix: Militants are simply slower. Patch 1.05 sped up named infantry and the APC by about a fifth (the Black Hand slightly more, the Disintegrators slightly less) and left out the Nod Commando, Zone Troopers, Fanatics, Shock Troopers and Shadow Team ([Tiberium Wars patch 1.05](https://cnc.fandom.com/wiki/Tiberium_Wars_patch_1.05)); although Kane's Wrath was built on the code from before that patch ([Kane's Wrath patch 1.01](https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.01)), its data carries the faster figures.\n- **Settled: the Devourer's price.** 1,600 credits is right for Kane's Wrath: the Kane's Wrath XML gives 1600 (build time 16), the Tiberium Wars 1.09 file 1400 (14), and CNCNZ's pages agree with each (https://cncnz.com/games/tiberium-wars/scrin-units/ and https://cncnz.com/games/kanes-wrath/scrin-units/). The change came with the expansion itself: neither Kane's Wrath patch touches the price; 1.02 only shortened its reach a little (the changelog on the [Devourer tank](https://cnc.fandom.com/wiki/Devourer_tank) page; the [patch 1.02 page](https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02)).\n- **Settled: what Kane's Wrath 1.02 changed in costs and upgrades** (Kane's Wrath patch 1.02 page; every price below is also in the XML):\n  - Unit prices: every harvester 1,600 (build 16 seconds), Specter 1,500 (15), Shard Walker 800 (8); the Obelisk of Light, a building, 2,000.\n  - Ability prices: Orca sensor pod 100, APC minefield 300, Vertigo disruption pod 300, Saboteur booby trap 100.\n  - GDI upgrades: Pitbull mortar 1,000; AP Ammo 2,000 with a longer 60-second research; Hardpoints 60 seconds; Scanner Packs 500 and 15 seconds, range bonus doubled to a fifth; Autoinjectors 1,000 and 30 seconds; Stratofighter boosters 1,000 and 30 seconds; Composite Armor 1,500 and 45 seconds; Tiberium Field Suits 1,000 and 30 seconds; Railguns 4,000; Adaptive Armor 1,000.\n  - Nod upgrades: Tiberium Infusion 1,000 and 30 seconds; Laser Capacitors 2,500 and 75 seconds; Black Disciples 1,000 and 30 seconds; Tiberium Core Missiles raised to 2,500 and 75 seconds; Supercharged Particle Beams 3,000; Dozer Blades armour bonus cut from a quarter to 15 percent.\n  - Scrin upgrades: Advanced Articulators 1,000 and 30 seconds, with a larger speed bonus; Traveler Engines 1,500, larger speed bonus; Reaper-17 forcefields 2,000 and 60 seconds; Shard Launchers 2,500 and 75 seconds; Plasma Disc Launchers 1,500 and 45 seconds; Blink Packs 500 and 15 seconds; Forcefield Generator 4,000; Blue Shards 2,000 and 60 seconds; Attenuated Forcefields 60 seconds.\n  - Powers (not researched): Railgun Accelerator, Orbital Strike, Supersonic Air Strike, Cloaking Field (less damage to infantry), Power Signature Scan, Decoy Temple, Redemption, Radar Jamming Missile, Tiberium Vibration Scan, Infestation.\n  - Global: the elite rank's bonus rose (now a quarter more damage and two fifths more health). Also in 1.02: mind control no longer works on epic units and commandos.\n  - For history only: patch 1.01 had set harvesters to 2,000 (1.02 lowered them), the Shatterer to 1,500, Zone Shatterer to 1,600 and ZOCOM Orca to 1,500, and raised the Confessor Cabal's price by a third (Kane's Wrath patch 1.01 page).\n- **The wiki's unit figures are Kane's Wrath figures; never fill a gap with Tiberium Wars 1.09.** Tiberium Wars 1.09 differs on many units, for example (XML of each): Devourer 1,400 against 1,600; Raider Buggy 400 against 500; Stealth Tank 1,500 against 1,800; harvesters 1,400 against 1,600; Attack Bike speed 140 against 160; Mammoth 40 against 45; Corrupter 60 against 70; Shadow Team, above. Where the wiki gives no figure, read the Kane's Wrath XML (see the registry finding on version_researched).\n- **Price trap: the Scorpion Tank costs 800, not the infobox's 700.** `NOD/Units/NODRaiderTank.xml` gives 800 (build 8) in both games' data; no patch page changes it; CNCNZ's Tiberium Wars page says 800 and its Kane's Wrath page 700. Code 800 with an uncertain entry (sources_disagree) naming the infobox. Both prices fall in the low band, so the band does not move.\n- **Speed bands.** speed_raw = the unit's NORMAL locomotor speed (the infobox `landspeed` or `airspeed`) ÷ 57, at full health, unsuppressed, before upgrades (Advanced Articulators, Traveler Engines, Cybernetic Legs and the like). Squads use the squad figure. Aircraft use their air speed; the Shadow Team's glider, Zone Trooper and Zone Raider jump jets, blink packs and teleports are abilities, not speeds.\n- **Sight bands.** Use the shroud-clearing figure against the Rifleman squad's 400: the infobox's second sight line, or `ShroudClearingRange` in the XML when the infobox has none (the Missile and Grenadier squads, Venom, Gun Walker, Seeker, Devourer, Corrupter, Annihilator and Reaper Tripods, Eradicator, Mechapede, Shard Walker and others). Never the vision figure (see the registry finding). The Vertigo's infobox says only far; take its XML figure.\n- **Range bands.** Reach is the weapon's `AttackRange` (the infobox `range`); the reference rifle reaches 260. The off-screen test compares a weapon with the unit's own shroud-clearing figure. Artillery outranges its own sight and needs spotters (Sniper Teams for the Juggernaut, the Shadow Team's beacon for the Specter): name that in the weapon summary.\n- **Damage categories: the batch note's named exceptions are too few (proposal for the lead).** The note names only the Avatar, Obelisk and Tripod lasers, the Shatterer's sonic beam and flamethrowers. Many other lasers, beams, plasma, sonic and Tiberium weapons carry a plain category in their infoboxes, so step 4 would map them as: the Nod Commando's laser pistols Sniper (kinetic); the Redeemer's and Purifier's lasers, the Devourer's laser cannon, the Awakened's and Enlightened's particle beams, the Invader fighters' and the Eradicator's plasma, and the Zone Raider's and MARV's sonic shells Cannon (armour-piercing); the Beam Cannon's particle beam Grenade (explosive); the Venom's and Raider Buggy's upgrade lasers and the Gun Walker's plasma Gun (kinetic); the Seeker's discs, the Shock Trooper's proton cannon, the Stormrider's plasma and the Disintegrators' plasma cutter Rocket (armour-piercing); the Devastator's plasma discs Grenade (explosive); the Tiberium Trooper's and Corrupter's Tiberium sprays Grenade (explosive). Proposal for step 3: every laser, particle beam, proton or disintegrator beam and plasma weapon is energy; every sonic weapon (Shatterer and Zone Shatterer, the Zone Raider's and ZOCOM Orca's sonic shells, the MARV's cannon) is sonic; every flamethrower is fire; the Tiberium sprays are toxic. The Corrupter's spray also heals Scrin units (Grenade plus Healing), so it falls to step 5 anyway. The lead decides.\n- **Squads and passenger seats (for the lead).** Every transport carries whole squads: the APC one squad (a Rifleman squad is six soldiers, a Militant squad eight), the Reckoner two. Transport's requires asks for two or more seats, and no rule says whether a seat is a squad or a soldier. Proposal: a seat is one squad (a squad is one selectable unit, as one player would be), so the APC, Hammerhead, Mobile Repair Transport, Behemoth and Heavy Harvester fail transport's requires and the Reckoner passes; say in crew.notes how many soldiers fit. The other reading (count soldiers) passes them all.\n- **Role traps.**\n  - Raider Buggy: official text says infantry and light targets, the data doubles its damage against aircraft. Step 4 has two targets and the sizes cannot be compared, so the rule's last clause gives the one official text names first: anti-infantry, with anti-air for roles.secondary.\n  - Stealth Tank: no official strength, but its rockets do half again against aircraft, so step 4 gives anti-air.\n  - Gun Walker and Shard Walker: text and data agree on aircraft (the Shard Walker's paragraph names anti-infantry and anti-air; the bonus test picks anti-air).\n  - Pitbull and Attack Bike: step 1 gives scout (both detect stealth, which meets scout's requires).\n  - Seeker: the 2007 manual only says it seems built for scouting, the Ultimate Collection reprint calls it well suited to scouting and good against vehicles and aircraft; record both in uncertain.\n  - The Juggernaut, Behemoth and Specter are siege already at step 1 (artillery in their paragraphs).\n- **Subfaction availability** (subfaction pages: [Steel Talons](https://cnc.fandom.com/wiki/Steel_Talons), [Zone Operations Command](https://cnc.fandom.com/wiki/Zone_Operations_Command), [Black Hand](https://cnc.fandom.com/wiki/Black_Hand), [Marked of Kane](https://cnc.fandom.com/wiki/Marked_of_Kane), [Reaper-17](https://cnc.fandom.com/wiki/Reaper-17), [Traveler-59](https://cnc.fandom.com/wiki/Traveler-59); Kane's Wrath manual).\n  - Steel Talons: Combat Engineer instead of the Engineer, Mobile Repair Transport instead of the APC, Titan instead of the Predator, Behemoth instead of the Juggernaut, Heavy Harvester, Wolverine; no Sniper Team, Zone Trooper, Commando or Shatterer, and no Armory.\n  - ZOCOM: Zone Raiders replace the Zone Troopers; it also has the Rocket Harvester, Zone Shatterer and ZOCOM Orca, but no Juggernaut and no railgun upgrades.\n  - Black Hand: Confessor Cabal instead of Militants, Purifier instead of the Avatar, Mantis instead of the Stealth Tank; no Shadow Team, no Air Tower and so no aircraft or Call for transport; two Commandos at a time, built heroic and without stealth; the Specter and harvester do not cloak.\n  - Marked of Kane: Tiberium Troopers instead of Black Hand troopers, Awakened and Enlightened cyborgs. Reaper-17: no mind control and no aircraft (Kane's Wrath manual), Shard Walker, Reaper Tripod, Shielded Harvester. Traveler-59: Cultists and Prodigy, no forcefield generators.\n  - A copy whose stock parts differ from its base unit is its own entry with `variant_of` (fields.md); one that differs only in upgrades shares the base entry, with the difference in notes.\n- **Tier traps.**\n  - Wiki tier labels disagree with the tier_map for gates it maps lower: the Shadow Team and the Enlightened say tier 3 but need only a Secret Shrine (t2); the epic units, Planetary Assault Carrier and Mothership say tier 4 (t3). Take the band from the gate and mention the label in the basis.\n  - Units with no requirement take their factory's tier: the Titan, Wolverine, Mobile Repair Transport, Gun Walker and Shard Walker are t1 (XML; infoboxes say tier 1).\n  - The Reclamator Hub, Redeemer Engineering Facility and Warp Chasm also build ordinary vehicles; a unit's gate is its own requirement, not the building it rolls out of.\n  - The Confessor (Nod Militant squads) and Black Disciple (Black Hand) are squad members added by upgrades, not units of their own: record them as upgrades of the squads.\n- **Page titles** (all checked: no redirects). With `(Tiberium Wars)`: APC, Attack bike, Avatar, Beam cannon, Black Hand, Carryall, Confessor, Engineer, Fanatics, Firehawk, Flame tank, GDI commando, GDI harvester, GDI MCV, Juggernaut, Mammoth tank, Mastermind, Militant rocket squad, Militant squad, Missile squad, Nod commando, Nod harvester, Nod MCV, Orca, Pitbull, Predator tank, Raider buggy, Rifleman squad, Saboteur, Scorpion tank, Scrin harvester, Shock trooper, Sniper team, Stealth tank, Venom, Vertigo, Zone trooper. With `(Kane's Wrath)`: Combat engineer, Cultists, Enlightened, Hammerhead, Mantis, Reckoner, Specter, Titan, Wolverine, Zone raider. No suffix: Annihilator tripod, Assimilator, Awakened, Behemoth, Black Disciple, Buzzers, Confessor cabal, Corrupter, Devastator warship, Devourer tank, Disintegrator, Drone ship, Emissary, Eradicator hexapod, Explorer, Grenadier squad, Gun walker, Heavy harvester, Invader fighter, Mammoth Armored Reclamation Vehicle, Mechapede, Mobile Repair Transport, Mothership, Planetary assault carrier, Prodigy, Purifier, Ravager, Reaper tripod, Redeemer, Rig, Rocket harvester, Seeker, Shadow team, Shard walker, Shatterer, Shielded harvester, Slingshot, Stormrider, Surveyor, Tiberium trooper, V-35 Ox, ZOCOM Orca, Zone Shatterer.\n- **Access.** The wiki API answered throughout. web.archive.org reset every connection; GameSpot answered 403. raw.githubusercontent.com and static.wikia.nocookie.net (manual PDFs) worked; github.com folder pages opened only through WebFetch.",
+  "pages_read": [
+   "https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02",
+   "https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.01",
+   "https://cnc.fandom.com/wiki/Tiberium_Wars_patches",
+   "https://cnc.fandom.com/wiki/Tiberium_Wars_patch_1.05",
+   "https://cnc.fandom.com/wiki/Tiberium_Wars_patch_1.09",
+   "https://cnc.fandom.com/wiki/Intelligence_Database",
+   "https://cnc.fandom.com/wiki/Call_for_transport",
+   "https://cnc.fandom.com/wiki/Veterancy",
+   "https://cnc.fandom.com/wiki/Crate",
+   "https://cnc.fandom.com/wiki/Garrisoning",
+   "https://cnc.fandom.com/wiki/Husk",
+   "https://cnc.fandom.com/wiki/Stealth",
+   "https://cnc.fandom.com/wiki/Stance",
+   "https://cnc.fandom.com/wiki/Armory",
+   "https://cnc.fandom.com/wiki/Repair_drone_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Reconstruction_drones",
+   "https://cnc.fandom.com/wiki/Infantry_Suppression",
+   "https://cnc.fandom.com/wiki/Epic_unit",
+   "https://cnc.fandom.com/wiki/Fog_of_war",
+   "https://cnc.fandom.com/wiki/Sidebar",
+   "https://cnc.fandom.com/wiki/Ion_storm",
+   "https://cnc.fandom.com/wiki/Tier",
+   "https://cnc.fandom.com/wiki/Tiberium",
+   "https://cnc.fandom.com/wiki/Support_power",
+   "https://cnc.fandom.com/wiki/Railgun_accelerator",
+   "https://cnc.fandom.com/wiki/Master_computer_countermeasures",
+   "https://cnc.fandom.com/wiki/Infestation",
+   "https://cnc.fandom.com/wiki/Redemption",
+   "https://cnc.fandom.com/wiki/Overlord%27s_Wrath",
+   "https://cnc.fandom.com/wiki/Temporal_wormhole",
+   "https://cnc.fandom.com/wiki/Phase_field",
+   "https://cnc.fandom.com/wiki/Black_Hand",
+   "https://cnc.fandom.com/wiki/Steel_Talons",
+   "https://cnc.fandom.com/wiki/Zone_Operations_Command",
+   "https://cnc.fandom.com/wiki/Marked_of_Kane",
+   "https://cnc.fandom.com/wiki/Reaper-17",
+   "https://cnc.fandom.com/wiki/Traveler-59",
+   "https://cnc.fandom.com/wiki/Command_%26_Conquer_3:_Tiberium_Wars_manual",
+   "https://cnc.fandom.com/wiki/Command_%26_Conquer_3:_Kane%27s_Wrath_manual",
+   "https://cnc.fandom.com/wiki/Command_%26_Conquer_3:_Tiberium_Wars",
+   "https://cnc.fandom.com/wiki/Command_%26_Conquer_3:_Kane%27s_Wrath",
+   "https://cnc.fandom.com/wiki/Category:Tiberium_Wars_support_powers",
+   "https://cnc.fandom.com/wiki/Category:Kane%27s_Wrath_support_powers",
+   "https://cnc.fandom.com/wiki/Category:Tiberium_Wars_GDI_support_powers",
+   "https://cnc.fandom.com/wiki/Category:Tiberium_Wars_Nod_support_powers",
+   "https://cnc.fandom.com/wiki/Category:Tiberium_Wars_Scrin_support_powers",
+   "https://cnc.fandom.com/wiki/Category:Kane%27s_Wrath_GDI_support_powers",
+   "https://cnc.fandom.com/wiki/Category:Kane%27s_Wrath_Nod_support_powers",
+   "https://cnc.fandom.com/wiki/Category:Kane%27s_Wrath_Scrin_support_powers",
+   "https://cnc.fandom.com/wiki/Rifleman_squad_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Missile_squad_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Engineer_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Grenadier_squad",
+   "https://cnc.fandom.com/wiki/Sniper_team_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Zone_trooper_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/GDI_commando_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Combat_engineer_(Kane%27s_Wrath)",
+   "https://cnc.fandom.com/wiki/Zone_raider_(Kane%27s_Wrath)",
+   "https://cnc.fandom.com/wiki/Pitbull_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/APC_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Predator_tank_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/GDI_harvester_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/GDI_MCV_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Shatterer",
+   "https://cnc.fandom.com/wiki/Slingshot",
+   "https://cnc.fandom.com/wiki/Rig",
+   "https://cnc.fandom.com/wiki/Mammoth_tank_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Juggernaut_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Mammoth_Armored_Reclamation_Vehicle",
+   "https://cnc.fandom.com/wiki/Surveyor",
+   "https://cnc.fandom.com/wiki/Mobile_Repair_Transport",
+   "https://cnc.fandom.com/wiki/Titan_(Kane%27s_Wrath)",
+   "https://cnc.fandom.com/wiki/Heavy_harvester",
+   "https://cnc.fandom.com/wiki/Wolverine_(Kane%27s_Wrath)",
+   "https://cnc.fandom.com/wiki/Behemoth",
+   "https://cnc.fandom.com/wiki/Rocket_harvester",
+   "https://cnc.fandom.com/wiki/Zone_Shatterer",
+   "https://cnc.fandom.com/wiki/Orca_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Hammerhead_(Kane%27s_Wrath)",
+   "https://cnc.fandom.com/wiki/Firehawk_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/V-35_Ox",
+   "https://cnc.fandom.com/wiki/ZOCOM_Orca",
+   "https://cnc.fandom.com/wiki/Militant_squad_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Militant_rocket_squad_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Saboteur_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Fanatics_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Shadow_team",
+   "https://cnc.fandom.com/wiki/Black_Hand_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Nod_commando_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Confessor_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Awakened",
+   "https://cnc.fandom.com/wiki/Confessor_cabal",
+   "https://cnc.fandom.com/wiki/Black_Disciple",
+   "https://cnc.fandom.com/wiki/Tiberium_trooper",
+   "https://cnc.fandom.com/wiki/Enlightened_(Kane%27s_Wrath)",
+   "https://cnc.fandom.com/wiki/Attack_bike_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Raider_buggy_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Scorpion_tank_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Nod_harvester_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Nod_MCV_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Flame_tank_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Specter_(Kane%27s_Wrath)",
+   "https://cnc.fandom.com/wiki/Reckoner_(Kane%27s_Wrath)",
+   "https://cnc.fandom.com/wiki/Beam_cannon_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Stealth_tank_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Avatar_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Redeemer",
+   "https://cnc.fandom.com/wiki/Emissary",
+   "https://cnc.fandom.com/wiki/Mantis_(Kane%27s_Wrath)",
+   "https://cnc.fandom.com/wiki/Purifier",
+   "https://cnc.fandom.com/wiki/Venom_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Vertigo_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Carryall_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Buzzers",
+   "https://cnc.fandom.com/wiki/Disintegrator",
+   "https://cnc.fandom.com/wiki/Assimilator",
+   "https://cnc.fandom.com/wiki/Shock_trooper_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Ravager",
+   "https://cnc.fandom.com/wiki/Mastermind_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Cultists_(Kane%27s_Wrath)",
+   "https://cnc.fandom.com/wiki/Prodigy",
+   "https://cnc.fandom.com/wiki/Gun_walker",
+   "https://cnc.fandom.com/wiki/Seeker",
+   "https://cnc.fandom.com/wiki/Scrin_harvester_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Devourer_tank",
+   "https://cnc.fandom.com/wiki/Corrupter",
+   "https://cnc.fandom.com/wiki/Mechapede",
+   "https://cnc.fandom.com/wiki/Annihilator_tripod",
+   "https://cnc.fandom.com/wiki/Eradicator_hexapod",
+   "https://cnc.fandom.com/wiki/Explorer",
+   "https://cnc.fandom.com/wiki/Shard_walker",
+   "https://cnc.fandom.com/wiki/Shielded_harvester",
+   "https://cnc.fandom.com/wiki/Reaper_tripod",
+   "https://cnc.fandom.com/wiki/Stormrider",
+   "https://cnc.fandom.com/wiki/Devastator_warship",
+   "https://cnc.fandom.com/wiki/Planetary_assault_carrier",
+   "https://cnc.fandom.com/wiki/Drone_ship",
+   "https://cnc.fandom.com/wiki/Mothership",
+   "https://cnc.fandom.com/wiki/Invader_fighter",
+   "https://cnc.fandom.com/wiki/Barracks_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Hand_of_Nod_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Portal",
+   "https://cnc.fandom.com/wiki/GDI_war_factory_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Nod_war_factory_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Warp_sphere",
+   "https://cnc.fandom.com/wiki/Airfield_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Air_tower",
+   "https://cnc.fandom.com/wiki/Gravity_stabilizer",
+   "https://cnc.fandom.com/wiki/Command_post",
+   "https://cnc.fandom.com/wiki/Operations_center",
+   "https://cnc.fandom.com/wiki/Nerve_center",
+   "https://cnc.fandom.com/wiki/Secret_shrine",
+   "https://cnc.fandom.com/wiki/Stasis_chamber",
+   "https://cnc.fandom.com/wiki/Tech_center_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Tech_lab_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Technology_assembler",
+   "https://cnc.fandom.com/wiki/Signal_transmitter",
+   "https://cnc.fandom.com/wiki/Reclamator_hub",
+   "https://cnc.fandom.com/wiki/Redeemer_engineering_facility",
+   "https://cnc.fandom.com/wiki/Warp_chasm",
+   "https://cnc.fandom.com/wiki/Space_command_uplink",
+   "https://cnc.fandom.com/wiki/Temple_of_Nod_(Tiberium_Wars)",
+   "https://cnc.fandom.com/wiki/Drone_platform",
+   "https://cnc.fandom.com/wiki/Crane",
+   "https://cnc.fandom.com/wiki/Foundry",
+   "https://cnc.fandom.com/wiki/Combat_support_airfield",
+   "https://cnc.fandom.com/wiki/Air_support_tower",
+   "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/5/51/Command_and_Conquer_3_Tiberium_Wars_Manual.pdf/revision/latest",
+   "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/77/TW_Kane_Manual.pdf/revision/latest",
+   "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/1/19/CC3KWpcMANfinal.pdf/revision/latest",
+   "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8b/CCUC-CNC3-pcMANOLeUS.pdf/revision/latest",
+   "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/0/09/TW_Techtree.pdf/revision/latest",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/Weapon.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/Armor.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/AttributeModifier.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/ExperienceLevels.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/Locomotor.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/LogicCommand.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/LogicCommandSet.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/SpecialPowerTemplates.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/PlayerPowerButtonTemplates.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/GlobalDefines.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/upgrade.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/Stances.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/TheVersion.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GlobalData/UnitTypeIcons.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/BaseObjects/BaseVehicle.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/BaseObjects/BaseInfantry.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/BaseObjects/BaseSquad.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/Tiberium/TiberiumCrystal.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/Tiberium/TiberiumCrystalBlue.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/Tiberium/TiberiumField.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/IntelDB.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GDI/Units/GDIRifleSoldierSquad.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GDI/Units/GDIRifleSoldier.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GDI/Units/GDIPredator.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GDI/Units/GDIAPC.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GDI/Units/GDIHammerhead.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GDI/Units/GDIMARV.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GDI/Units/GDIMammoth.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GDI/Units/GDIHarvester.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GDI/Units/GDIV35Ox.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GDI/Units/GDISniperSquad.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/GDI/Units/GDIZoneTrooper.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/NOD/Units/NODRaiderTank.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/NOD/Units/NODScorpionBuggy.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/NOD/Units/NODStealthTank.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/NOD/Units/NODAttackBike.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/NOD/Units/NODMilitantSquad.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/NOD/Units/NODMilitant.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/NOD/Units/NODMobileArtillery.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/NOD/Units/NODBunkerTruck.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/NOD/Units/NODCarryall.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/NOD/Units/NODBeamCannon.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/NOD/Units/NODShadowSquad.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/Alien/Units/AlienDevourerTank.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/Alien/Units/AlienSeekerTank.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/Alien/Units/AlienCorrupter.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/Alien/Units/AlienEradicatorHexapod.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/Alien/Units/AlienStalker.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/Alien/Units/AlienGunWalker.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/Alien/Units/AlienBuzzers.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/Reaper17/Units/Reaper17ShardWalker.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/SteelTalons/Units/SteelTalonsBehemoth.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/SteelTalons/Units/SteelTalonsRepairAPC.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/SteelTalons/Units/SteelTalonsHeavyHarvester.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/SteelTalons/Units/SteelTalonsTitan.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Kanes%20Wrath/Xml/BlackHand/Units/BlackHandFlameTank.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Tiberium%20Wars/Xml/GDI/Units/GDIRifleSoldierSquad.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Tiberium%20Wars/Xml/GDI/Units/GDIRifleSoldier.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Tiberium%20Wars/Xml/GDI/Units/GDIHarvester.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Tiberium%20Wars/Xml/NOD/Units/NODRaiderTank.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Tiberium%20Wars/Xml/NOD/Units/NODScorpionBuggy.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Tiberium%20Wars/Xml/NOD/Units/NODStealthTank.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Tiberium%20Wars/Xml/NOD/Units/NODAttackBike.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Tiberium%20Wars/Xml/NOD/Units/NODMilitantSquad.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Tiberium%20Wars/Xml/NOD/Units/NODShadowSquad.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Tiberium%20Wars/Xml/NOD/Units/NODBeamCannon.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Tiberium%20Wars/Xml/GDI/Units/GDIMammoth.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Tiberium%20Wars/Xml/Alien/Units/AlienDevourerTank.xml",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Modding_Support/main/Tiberium%20Wars/Xml/Alien/Units/AlienCorrupter.xml",
+   "https://github.com/electronicarts/CnC_Modding_Support/tree/main/Kanes%20Wrath",
+   "https://github.com/electronicarts/CnC_Modding_Support/tree/main/Kanes%20Wrath/Xml",
+   "https://github.com/electronicarts/CnC_Modding_Support/tree/main/Kanes%20Wrath/Xml/BaseObjects",
+   "https://github.com/electronicarts/CnC_Modding_Support/tree/main/Kanes%20Wrath/Xml/Tiberium",
+   "https://worthplaying.com/article/2006/10/17/news/37076-command-conquer-tiberium-wars-user-interface-details-screens/",
+   "https://cncnz.com/games/tiberium-wars/gdi-units/",
+   "https://cncnz.com/games/tiberium-wars/nod-units/",
+   "https://cncnz.com/games/tiberium-wars/scrin-units/",
+   "https://cncnz.com/games/kanes-wrath/nod-units/",
+   "https://cncnz.com/games/kanes-wrath/scrin-units/",
+   "https://strategywiki.org/wiki/Command_%26_Conquer_3:_Tiberium_Wars/GDI_Units"
+  ]
+ },
+ "verdicts": {
+  "verdicts": [
+   {
+    "claim": "Role line: each unit's XML names a type-line and a description string (TypeDescription/Description, e.g. Type:GDIRiflemanSquad) whose words sit in a compiled string file EA's release leaves out, so no designation is readable",
+    "real": true,
+    "reason": "The keys exist and the release holds no Kane's Wrath string file.",
+    "evidence": "EA CnC_Modding_Support main (3aad8e4), Kanes Wrath/Xml/GDI/Units/GDIRifleSoldierSquad.xml: Description=Desc:GDIRiflemanSquad, TypeDescription=Type:GDIRiflemanSquad. The repository has no .csf or .str for Kane's Wrath; the only .str is an E3 demo map file."
+   },
+   {
+    "claim": "The combat chain icons (WorthPlaying, 17 Oct 2006) are pictures that no source lists per unit",
+    "real": false,
+    "reason": "WorthPlaying's description is paraphrased correctly. But EA's data does list the two middle icons per unit. Only the what-beats-what mapping is missing from the data, so the conclusion for step 4 still holds.",
+    "evidence": "WorthPlaying page: the green part shows the unit's weapon and the unit types it beats; the red part shows its own type and the weapons it is weak to. Every unit file carries UnitCategory (INFANTRY/VEHICLE/AIRCRAFT/STRUCTURE) and WeaponCategory (GUN/BLAST/CANNON/MISSILE/LIGHTNING); GDIRifleSoldierSquad.xml has INFANTRY and GUN. GlobalData/UnitAITargetChooser.xml has only an empty TargetingCombatChainCompare (DefaultCombatChainCompare), with no table.",
+    "correction": "The panel's combat chain shows the unit's weapon category and its own unit category. EA's XML gives both for every unit (WeaponCategory, UnitCategory). Which categories each one beats or loses to is engine code, not in data or any manual, so roles step 4 still cannot read strong-against text from it."
+   },
+   {
+    "claim": "The UnitBox role field (Basic infantry, Deployable artillery walker) is the wiki's own wording, not official",
+    "real": true,
+    "reason": "Both example values are confirmed.",
+    "evidence": "https://cnc.fandom.com/wiki/Rifleman_squad_(Tiberium_Wars) role = Basic infantry; https://cnc.fandom.com/wiki/Juggernaut_(Tiberium_Wars) role = Deployable artillery walker (API wikitext)."
+   },
+   {
+    "claim": "Manuals: one paragraph per unit plus Requirements/Abilities/Upgrades lines, with no strong- or weak-against lines. The 2007 TW manual is an image-only scan of spreads (GDI on PDF 16-17, printed 28-30; Nod 20-21, printed 36-38; Scrin 24-25, printed 44-46). The wiki transcript stops after the GDI infantry. The Kane Edition OCR is unusable. The KW manual has a text layer; its New Units section (printed 13-28) covers every KW unit except the Rocket Harvester, and its wiki transcript stops after GDI.",
+    "real": true,
+    "reason": "All of it is confirmed.",
+    "evidence": "pdftotext of the 2007 PDF gives no text; rendered page images 16/17/20/21/24/25 were viewed. The TW_Kane_Manual text layer is scrambled (for example 'thePitbull-GDl's vehicle---can'). The CC3KWpcMANfinal.pdf text covers pages 13-28 and has no Rocket Harvester. The wiki transcripts' section headings end at the GDI sections."
+   },
+   {
+    "claim": "The Ultimate Collection manual is English and never shipped. It rewrites the Seeker (scouting and skirmishing; discs good against vehicles and aircraft) and wrongly gives the Annihilator Tripod and Devastator a Tech Lab requirement.",
+    "real": true,
+    "reason": "All confirmed.",
+    "evidence": "https://cnc.fandom.com/api.php?action=parse&page=File:CCUC-CNC3-pcMANOLeUS.pdf: summary says these are previously unreleased Ultimate Collection manuals from EA PR archives. The UC text has the Seeker paragraph, and both Scrin units list Requirements: Tech Lab."
+   },
+   {
+    "claim": "Requirements lines predate the patches. The 2007 manual puts the Beam Cannon behind the Tech Lab and the Stealth Tank behind the Operations Center; KW 1.02 reverses this; the Stealth Tank already needed the Tech Lab in TW 1.09.",
+    "real": true,
+    "reason": "Confirmed in both data sets.",
+    "evidence": "UC/TW manual Nod pages. Kanes Wrath/Xml/NOD/Units/NODBeamCannon.xml GameDependency NODOperationsCenter; NODStealthTank.xml NODTechAssemblyPlant. In Tiberium Wars/Xml both units require NODTechAssemblyPlant.",
+    "correction": "Add that in TW 1.09 the Beam Cannon also needed the Tech Lab; only Kane's Wrath moved it to the Operations Center."
+   },
+   {
+    "claim": "Intelligence Database: the wiki transcribes it; the tabs and entries are as listed; there are no KW entries for the Titan, Wolverine, MRT, Zone Shatterer, ZOCOM Orca, Reckoner, Mantis, Ravager or Mechapede; the other TW Scrin units have no entries",
+    "real": true,
+    "reason": "Entry lists confirmed. But the entries carry more role labels and strength lines than the notes use (see the step 1, strong-against and Stealth Tank verdicts).",
+    "evidence": "https://cnc.fandom.com/wiki/Intelligence_Database (API wikitext), sections checked one by one."
+   },
+   {
+    "claim": "Roles step 1: the list of paragraphs that name a role is complete (Pitbull, Attack Bike, Orca, Seeker, Sniper Team, Juggernaut, Specter, Behemoth, Missile Squad, Mantis, Shard Walker, Ravager, APC, Reckoner, MRT, engineers, Saboteur, harvesters)",
+    "real": false,
+    "reason": "Several paragraphs and names that carry a label or alias are left out.",
+    "evidence": "UC text = TW manual PDF 17: the Rig is called a heavy support vehicle and carries repair drones. KW manual p.16 calls the Wolverine a perfect scout unit. The Vertigo Bomber's name (TW manual PDF 21) contains 'bomber', a siege alias in data/vocab/roles.json. The Sniper Team's name contains 'sniper', a marksman alias.",
+    "correction": "Add: support for the Rig (heavy support vehicle with repair drones); scout for the Wolverine (KW manual; subject to scout's requires); siege for the Vertigo Bomber (its name, and the Intel DB calls it a stealth bomber; its bombs meet siege's drop requirement); marksman for the Sniper Team (its name)."
+   },
+   {
+    "claim": "The Sniper Team names scout at step 1 through 'trained in reconnaissance'",
+    "real": false,
+    "reason": "The unit names two roles, not one. Neither has a target, so step 1 gives nothing; step 3 then gives marksman for its long-range sniper rifle. The same paragraph also calls it deadly against infantry, which the strong-against list omits.",
+    "evidence": "UC text (= TW PDF 16): the Sniper Team paragraph (kills most infantry from long range; reconnaissance; artillery target spotting). data/vocab/roles.json: marksman aliases sniper, sharpshooter; scout aliases recon, reconnaissance, spotter. docs/fields.md roles.primary step 1: if no remaining role has a bonus, go on.",
+    "correction": "Sniper Team: its name names marksman, and its paragraph names scout (reconnaissance, spotting). No target, so step 1 gives nothing and step 3 gives marksman. Its paragraph and its Intel DB entry also make it strong against infantry."
+   },
+   {
+    "claim": "The APC and the Reckoner name transport ('armoured personnel carrier', 'the Reckoner APC')",
+    "real": false,
+    "reason": "The APC's manual paragraph never says personnel carrier: it only says infantry ride it safely and fire from inside. 'Armored Personnel Carrier' appears only in its Intel DB entry and as the meaning of its abbreviated name. Transport's aliases do not include 'APC', so reading 'APC' as 'personnel carrier' is a judgment for the lead. Both units stay subject to passengers >= 2, and the APC holds one squad.",
+    "evidence": "UC text, APC paragraph (= TW PDF 17). KW manual p.18, Reckoner paragraph. Intel DB APC entry. data/vocab/roles.json transport aliases: troop transport, troop carrier, personnel carrier.",
+    "correction": "Transport: the Reckoner ('Reckoner APC') and the APC, the latter only through its name and its Intel DB entry, if the lead lets the abbreviation count. Both are subject to passengers >= 2."
+   },
+   {
+    "claim": "The Ravager names raider (hit-and-run attacks)",
+    "real": true,
+    "reason": "The KW paragraph does name hit-and-run. But raider requires speed >= fast, and the Ravager squad moves at 75, which is 1.32 times the reference 57 and so in the medium band. Step 1 therefore skips raider.",
+    "evidence": "KW manual p.24, Ravager paragraph. Kanes Wrath/Xml/Alien/Units/AlienStalkerSquad.xml speed 75 (member 80). Wiki Ravager landspeed 75. data/vocab/speed-bands.json: fast means over 1.5 times the reference.",
+    "correction": "The Ravager's paragraph names raider, but raider's requires fail (speed 75 = 1.32x, medium), so step 1 gives nothing for it."
+   },
+   {
+    "claim": "Step 1 also names support for the MRT, engineer for the Engineer and Combat Engineer, infiltrator for the Saboteur and logistics for every harvester",
+    "real": true,
+    "reason": "Confirmed, with two cautions. The MRT's name contains 'Transport' and its paragraph mentions standard APC functionality, so under the count-soldiers seat reading transport also survives and step 1 goes on. The Engineer's, Saboteur's and Assimilator's paragraphs also say they repair buildings ('repair' is a support alias). That is skipped only if building repair fails support's requires (repair-allies: repair vehicles or heal soldiers).",
+    "evidence": "KW manual p.16 (MRT). UC text: Engineer, Saboteur and Assimilator paragraphs. data/pattern-registry.json repair-allies summary."
+   },
+   {
+    "claim": "These paragraphs name no role: Rifleman Squad, Predator, Mammoth, Titan, Grenadier, Commando, Zone Trooper, Zone Raider, Scorpion, Stealth Tank, Flame Tank, Avatar, Black Hand, Militants, Venom, Stormrider, Annihilator, Devourer, Gun Walker, Awakened, Enlightened, Confessor Cabal, Purifier (buffer has no alias)",
+    "real": true,
+    "reason": "The manual paragraphs carry no label or alias, and buffer has no aliases. However, the Intel DB gives several of these units labels that count at roles.secondary step 1, and the notes miss them.",
+    "evidence": "UC and KW manual paragraphs; data/vocab/roles.json buffer. Intel DB: the InOps Nod Aircraft entry calls the Venom a VTOL scout; the New Nod Flame Tank entry calls it a classic anti-infantry weapon system; the Flame Weapons entry calls flamethrowers anti-infantry weapons; the GDI Zone Raider entry says its role became a first-response scouting unit for Red Zones; the GDI Hammerhead entry calls it an assault/transport hybrid.",
+    "correction": "Keep the list for step 1. For roles.secondary step 1 add the Intel DB labels: Venom scout, Flame Tank (and Black Hand flamers) anti-infantry, Zone Raider scout, Hammerhead transport (subject to passengers >= 2)."
+   },
+   {
+    "claim": "Strong-against list (Commando, Raider Buggy, Zone Trooper, Militant Rocket Squad, Attack Bike, Slingshot, Venom, Gun Walker, Reaper Tripod, ZOCOM Orca, Shatterer, Stormrider; database: Missile Squad, Predator, Riflemen), with the Firehawk's air-to-air missiles counting only for that weapon",
+    "real": false,
+    "reason": "Every listed item is confirmed, but many official strong lines are missing.",
+    "evidence": "UC text (= the 2007 paragraphs): the Sniper Team kills most infantry; Black Hand flamethrowers incinerate enemy squads; Buzzers cut through flesh and light armour; Disintegrators decimate vehicles; Shock Troopers can attack armoured vehicles head-on; the Corrupter is devastating to humans. KW manual p.16: the Combat Engineer is good at taking down enemy Engineers. Intel DB: the Stealth Tank's missiles work against vehicles and structures; the Avatar's base laser does great harm to vehicles and buildings; the Sniper Team entry says it kills infantry with precision; the GDI Slingshot entry calls it an exclusively anti-air vehicle. TW manual PDF 19 (Mortars upgrade): the Pitbull's main jobs are scouting and shooting at aircraft.",
+    "correction": "Add strong vs infantry: Sniper Team, Black Hand, Corrupter (humans), Combat Engineer (enemy Engineers). Strong vs armour: Disintegrators, Shock Troopers, Stealth Tank (DB), Avatar (DB). Strong vs infantry and light armour: Buzzers. Anti-air labels: Pitbull (Mortars text) and Slingshot (DB)."
+   },
+   {
+    "claim": "Weak-against list: Predator (infantry, aircraft), Beam Cannon (armour), Riflemen (DB: heavy armour). The Pitbull's 'too light for direct combat' names no target, and the Orca's DB line is a can_target fact.",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "UC text: Predator, Beam Cannon and Pitbull paragraphs. Intel DB: Riflemen and Orca entries."
+   },
+   {
+    "claim": "Role trap: the Stealth Tank has no official strength, so step 4 gives anti-air from its rockets' 150% against aircraft",
+    "real": false,
+    "reason": "The Intel DB Stealth Tank entry (Kane's Arsenal tab) says its missiles work against vehicles and structures. So step 4 has two targets: armour from official text and air from the data scalar. If the lead finds the two sizes incomparable, the tie rule takes the one official text names first, which is anti-armour.",
+    "evidence": "https://cnc.fandom.com/wiki/Intelligence_Database, section Stealth Tank. https://cnc.fandom.com/wiki/Stealth_tank_(Tiberium_Wars) airattack +150% vs aircraft. docs/fields.md roles.primary step 4, last sentence.",
+    "correction": "Stealth Tank: official text (Intel DB) says strong against vehicles; data gives 150% against aircraft. By the tie rule, anti-armour primary with anti-air for secondary, plus an uncertain entry; or the lead rules on comparing a text strength with a data bonus."
+   },
+   {
+    "claim": "Step 4 data bonuses: Buggy, Gun Walker and Shard Walker 200% vs aircraft; Pitbull and Stealth Tank 150%; the Mechapede's stock disc segment 400%; Ravager shards 225% vs vehicles (also the Mechapede shard segment and the Eradicator hardpoint); the Attack Bike only with Tiberium Core Missiles; flamethrowers have a bonus against structures",
+    "real": false,
+    "reason": "The figures are right, but: (1) the Mantis rockets also do 150% vs aircraft (200% with Tiberium Core Missiles) and are missing; (2) Mechapede segments are bought one at a time through its Add Weapon Segment ability, so the disc segment is not stock; (3) the 150% vs structures sits only on the Flame Tank's flamers (and the Avatar's flamer once upgraded), not on the Black Hand troopers' or the Purifier's flamers; (4) the Redeemer's rocket hardpoint (150% vs aircraft) matches the Eradicator hardpoint the notes do list.",
+    "evidence": "GlobalData/Weapon.xml: BlackHandTankTankRocketWarhead 150% AIRCRAFT, BlackHandTankTankRocketTibCoreWarhead 200%, NODWarmechRocketWarhead 150%. Wiki infoboxes: Mantis airattack +150%; Flame tank +150% vs buildings; Black Hand and Purifier have no structure scalar; Redeemer rocket turret +150% vs aircraft. KW manual pp.24 and 27: Add Weapon Segment(s).",
+    "correction": "Add the Mantis (150%, 200% with TCM). Call the Mechapede's segments bought parts, not stock. Limit the structure bonus to the Flame Tank family's flamers."
+   },
+   {
+    "claim": "Target-side shares above 100% exist only for a few armour sets (Gun vs Missile and Militant Rocket soldiers and Fanatics; Cannon vs the Shatterer family, Slingshot, Flame Tank, Titan, Attack Bike, Seeker; Rocket vs the Attack Bike)",
+    "real": true,
+    "reason": "The list matches the data exactly.",
+    "evidence": "GlobalData/Armor.xml: missile and rocket-militant sets GUN 150, Fanatic GUN 200, GDISonicTankArmor and FlameTank CANNON 150, Titan CANNON 110, AttackBike CANNON 110 and ROCKET 110, Seeker CANNON 110."
+   },
+   {
+    "claim": "Subfaction copies: the Black Hand Commando has no stealth and the Black Hand Specter does not cloak (KW manual's note)",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "KW manual p.18-19 (Specter note: no stealth for Black Hand). https://cnc.fandom.com/wiki/Black_Hand: Commando limit 2, built heroic, no stealth; Specter and harvester unstealthed."
+   },
+   {
+    "claim": "Not official: the UnitBox fields, StrategyWiki, CNCNZ, and EVA or voice lines; the Predator page's EVA line is mission dialogue",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "https://cnc.fandom.com/wiki/Predator_tank_(Tiberium_Wars): the EVA quote is attributed to The White House (GDI mission)."
+   },
+   {
+    "claim": "Official site unchecked: web.archive.org reset every connection, archive.org's lookup found no snapshot of commandandconquer.com/cnc3, and GameSpot answered 403",
+    "real": false,
+    "reason": "Only partly confirmable. From this session web.archive.org also reset, and the researcher's saved GameSpot page is a bot challenge. But archive.org's availability API answered 429 four times, so the no-snapshot result could not be confirmed.",
+    "evidence": "curl web.archive.org: connection reset (proxy reported ws_closed_mid_exchange). archive.org/wayback/available: HTTP 429 four times, spaced apart. r2/prep-cnc3/dl-web/gamespot-diary3.txt is a 'Just a moment' challenge page.",
+    "correction": "Unchecked: web.archive.org resets connections from this environment, archive.org's lookup API rate-limits (429), and GameSpot serves a bot challenge."
+   },
+   {
+    "claim": "Basic orders: right-click move and attack, attack move, assault move (also hits buildings), reverse, force move (tanks overrun infantry), force attack, formation move (slowest member), stop, scatter, waypoints, planning mode and patrols, rally points; four stances with Guard as default, inherited from the factory; no retreat or reinforce order",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "UC text (= TW PDF 9-11): Advanced Move Orders, Stances, Planning Mode. https://cnc.fandom.com/wiki/Stance: four stances, factory stance inherited, Guard default. KW manual Complete Controls."
+   },
+   {
+    "claim": "Veterancy: three ranks earned from the value of damage dealt, crates can promote; the 1.02 elite step is +25% damage and +40% health",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "https://cnc.fandom.com/wiki/Veterancy (Tiberium Wars section). https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02 (level 2 veterancy raised to 25/40). GlobalData/AttributeModifier.xml Unit_Elite DAMAGE_MULT 125, HEALTH_MULT 140."
+   },
+   {
+    "claim": "Ranks add more damage and more health at each rank; heroic adds double fire rate and self-healing",
+    "real": false,
+    "reason": "In the 1.02 data heroic adds no damage over elite. It adds health, fire rate and suppression resistance. The manual says heroic units hit harder than elite, so the manual and the data disagree.",
+    "evidence": "GlobalData/AttributeModifier.xml: Unit_Veteran 115/120; Unit_Elite 125/140; Unit_Heroic DAMAGE_MULT 125, HEALTH_MULT 150, RATE_OF_FIRE 200, SUPPRESSABILITY 300. BaseObjects BaseVehicle/BaseInfantry heroic AutoHeal. UC text, veterancy bullets.",
+    "correction": "Veteran +15% damage +20% health; elite +25%/+40% (1.02); heroic keeps the elite damage, +50% health, double fire rate, three times harder to suppress, self-healing, red tracers. The manual's extra heroic damage is not in the 1.02 data: uncertain entry, sources_disagree."
+   },
+   {
+    "claim": "Cannot rank up (no ExperienceLevels): Nod and Scrin harvesters, MCVs, Surveyor, Emissary, Explorer, GDI and ZOCOM Engineers, Assimilator, Fanatics, T59 Cultists, Ox, Carryall; GDI-side harvesters rank. Built ranked: Black Hand flame units veteran, Black Hand Commandos heroic, power call-ins veteran.",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "GlobalData/ExperienceLevels.xml (max rank 1 entries). Veterancy page. Black Hand page. https://cnc.fandom.com/wiki/Armory (GDI Airborne veteran). KW manual: Zone Raider Drop Pods and Shock Pods bring veteran squads."
+   },
+   {
+    "claim": "Infantry squads move at the squad's own speed, members are a little faster so the group keeps formation, and lost members are replaced only by the GDI Armory",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "GDIRifleSoldierSquad 57 vs GDIRifleSoldier 62, NODMilitantSquad 43 vs NODMilitant 48 (KW XML). https://cnc.fandom.com/wiki/Armory: no other building or unit in TW/KW refills squads. Repair drone page: Scrin drones cannot restore members."
+   },
+   {
+    "claim": "Suppression: never suppressed are Marked of Kane cyborgs, Fanatics and Scrin infantry ('page and manual'); the XML also gives none to Zone Troopers and Zone Raiders",
+    "real": false,
+    "reason": "The prone, quarter-speed, less-damage and cover mechanics are right, but the immunity list is wrong in three ways. (1) The manual names only Fanatics as impossible to suppress (and Grenadiers as hard); the KW manual never mentions suppression. (2) The XML gives the Fanatic a SuppressionUpdate with Suppressability 1000, the same as the Grenadier, so the page and the data disagree. (3) The XML gives no suppression to the Confessor (Militant squad leader) or the Confessor Cabal members, which the notes miss.",
+    "evidence": "https://cnc.fandom.com/wiki/Infantry_Suppression. UC text (= TW PDF 11 and the Fanatic paragraph). Kanes Wrath/Xml/NOD/Units/NODFanatic.xml SuppressionUpdate Suppressability 1000 (GDIGrenadeSoldier.xml also 1000). NODConfessor.xml and BlackHandConfessor.xml (inherits it) have no SuppressionUpdate; nor do ZT, ZR, MoK cyborgs, Scrin infantry or Cultists. GlobalData/AttributeModifier.xml Modifier_Test_Suppression ARMOR 75%, SPEED 25%.",
+    "correction": "Never suppressed (no SuppressionUpdate in the XML): Zone Troopers, Zone Raiders, the Awakened and Enlightened, all Scrin infantry including Cultists, and the Confessor and Confessor Cabal members. Fanatics: the page and their manual paragraph say never, the XML says hard but possible. Record an uncertain entry (sources_disagree)."
+   },
+   {
+    "claim": "Garrisons: up to three squads in civilian buildings, fire out with protection and extra reach, thrown out when the building is badly damaged, no repair while garrisoned; Zone Troopers, Zone Raiders and Scrin infantry other than Buzzers and Cultists cannot garrison; the listed weapons clear garrisons",
+    "real": true,
+    "reason": "This matches the Garrisoning page and the manual, and the clearer list matches the XML. But the XML garrison filter excludes only Zone Troopers, Zone Raiders, Shock Troopers, Disintegrators and Ravagers, so the Mastermind, Prodigy and Assimilator are not barred in data; that disagreement is missed.",
+    "evidence": "https://cnc.fandom.com/wiki/Garrisoning (Tiberium Wars section). UC text, Garrisoning Infantry. BaseObjects/BaseCivilianStructure.xml HordeGarrisonContain ContainMax 3 with exactly those ExcludeThing entries. AlienAssimilator KindOf includes STEALTH_GARRISON; Mastermind and Assimilator carry SKIRMISH_AI_DONT_GARRISON (an AI flag only).",
+    "correction": "Add: the data does not bar the Mastermind, Prodigy or Assimilator from civilian garrisons (the wiki says Scrin do not garrison), so record an uncertain entry where it matters."
+   },
+   {
+    "claim": "Transports: one squad in the APC, MRT, Hammerhead, Behemoth and Heavy Harvester; the Reckoner holds two, three once deployed; riders fire out of the APC, the Hammerhead and the deployed Reckoner, and 'check the others'",
+    "real": false,
+    "reason": "The capacities are right, but the passenger-firing set is incomplete: all five one-squad carriers let riders fire.",
+    "evidence": "XML HordeTransportContain: APC, Hammerhead, MRT, Heavy Harvester and Behemoth each have 1 slot with contained status CAN_ATTACK. NODBunkerTruck.xml has 2 slots plus 1 after Upgrade_DeployNODBunkerTruck, CAN_ATTACK only after the deploy upgrade. Wiki infoboxes of the Behemoth, Heavy harvester and Mobile Repair Transport say the garrisoned squad can attack.",
+    "correction": "Riders fire out of the APC, MRT, Hammerhead, Behemoth and Heavy Harvester, and out of the Reckoner only once deployed: passenger-sets-weapon for all six."
+   },
+   {
+    "claim": "Riders die with the vehicle, except in the Reckoner (XML KillPassengersOnDeath)",
+    "real": false,
+    "reason": "The sources disagree, and the notes give only the XML side. The Reckoner is one object in both forms with KillPassengersOnDeath=false. The wiki says the first time its truck form is destroyed it turns into the bunker, and if the bunker is destroyed its occupants die.",
+    "evidence": "Kanes Wrath/Xml/NOD/Units/NODBunkerTruck.xml: HordeTransportContain KillPassengersOnDeath=false, deploy by upgrade on the same object. https://cnc.fandom.com/wiki/Reckoner_(Kane%27s_Wrath) game-unit section.",
+    "correction": "Riders die with the APC, MRT, Hammerhead, Behemoth and Heavy Harvester. The Reckoner turns into its bunker when first destroyed. Whether riders survive the bunker's destruction is disputed (XML says they survive, wiki says they die): uncertain entry."
+   },
+   {
+    "claim": "Epic units take infantry permanently, each squad adding a hardpoint: MARV four, Redeemer two, Eradicator three",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "XML contain modules (MARV ContainMax 4, Redeemer 2, Eradicator 3). Garrisoning page (no exit). KW manual MARV and Eradicator paragraphs."
+   },
+   {
+    "claim": "Call for transport: GDI (all three), Nod and Marked of Kane infantry and light and medium vehicles; not Black Hand, Scrin, heavy units, harvesters, MCVs or aircraft; for a fee and on a long recharge",
+    "real": false,
+    "reason": "The fee and recharge are confirmed (200 credits, 120 s), but two exceptions are missed. (1) The Shadow Team (Nod and MoK) has no Call for transport button in the XML and is absent from the wiki's list, although the 2007 manual lists the ability for it. (2) The KW manual lists Call for transport for the Heavy Harvester, but its command set lacks it.",
+    "evidence": "GlobalData/LogicCommandSet.xml: NODShadowSquadCommandSet has glider, charges, beacon and attack move only; SteelTalonsHarvesterCommandSet has return, evacuate and attack move; GDISurveyorCommandSet and NODEmissaryCommandSet do have it. SpecialPowerTemplates.xml SpecialPowerCallForTransportGDI/NOD: ReloadTime 120s, Money -200. https://cnc.fandom.com/wiki/Call_for_transport (lists Surveyor and Emissary, not the Shadow Team). UC text Shadow Team abilities. KW manual p.16 Heavy Harvester abilities.",
+    "correction": "Add: not the Shadow Team (no button in KW data; the 2007 manual lists one); the Heavy Harvester has none in the data although the KW manual lists it (uncertain entry); the Surveyor and Emissary do have it."
+   },
+   {
+    "claim": "Repair and rearming: three drones per vehicle or air factory (Scrin drones also heal infantry); Reconstruction Drones; drones on the Battle Base and MRT; the Armory heals and restores members; Steel Talons have no Armory; the Orca, ZOCOM Orca, Firehawk and Vertigo reload only at base, the Hammerhead never needs to, and the Venom and Scrin aircraft reload themselves; KW adds rearm pads; aircraft need free pads and an Airfield keeps four",
+    "real": true,
+    "reason": "Confirmed. Detail: the Battle Base has three drones and the MRT one.",
+    "evidence": "https://cnc.fandom.com/wiki/Repair_drone_(Tiberium_Wars). Armory page. ST command set has no MedicalBay. Weapon.xml AutoReloadsClip=RETURN_TO_BASE only for GDIOrcaRocketWeapon, GDIFirehawk missile and bomb loads, NODVertigoBomb and OrcaEchoCannon (ZOCOM Orca). KW manual p.13-14 (Hammerhead; Combat Support Airfield, Nod version not for Black Hand). TW manual PDF 18 and Intel DB: an Airfield keeps up to four aircraft."
+   },
+   {
+    "claim": "Husks: the Juggernaut, Behemoth, Avatar, Purifier, Annihilator and Reaper Tripod leave husks that any side's engineer-type unit can recover; they decay, and heavy or epic units can crush them (cited partly to manual PDF page 10); the Titan, Gun Walker, Redeemer and Eradicator leave none",
+    "real": true,
+    "reason": "The mechanic is confirmed, but the manual citation is wrong. The 2007 manual's page 10 (Beware of Engineers box) has no husk line; only the unreleased UC reprint adds one.",
+    "evidence": "https://cnc.fandom.com/wiki/Husk. The engineer, Combat engineer, Saboteur and Assimilator pages (capture walker husks). XML husk OCLs. TW manual page images PDF 10, 16 and 24.",
+    "correction": "Cite the Engineer paragraph (PDF 16) and the Assimilator paragraph (PDF 24) of the 2007 manual, not PDF 10."
+   },
+   {
+    "claim": "Crushing: the listed non-crushers; heavy crushers also run over heavy infantry and light vehicles; the MARV, Eradicator and Redeemer crush every non-epic unit; heavy infantry escape ordinary vehicles; Commandos, Mastermind, Prodigy and Buzzers are crushable only by epic units",
+    "real": false,
+    "reason": "The levels are right, but: (1) heavy crushers (level 3) run over every ordinary vehicle (crushable 2), the Predator and Scorpion included, not only light ones; (2) the Mechapede (0/2) is missing from the non-crushers; (3) Dozer Blades raise the Scorpion's and Reckoner's crusher level to 2, so upgraded they crush heavy infantry; (4) the Titan slows down while crushing vehicles, and since KW 1.01 Titans cannot crush Titans.",
+    "evidence": "XML CrusherInfo: BaseVehicle 1/2; Mammoth, Juggernaut, Behemoth, Titan, Avatar, Purifier and both Tripods 3/3; epic units 4/4; AlienCustomizableVehicle 0/2. Wiki: Mammoth tank and Titan pages say they crush most tier 1 and 2 vehicles; Titan page mentions the crushing slowdown; Scorpion and Reckoner infoboxes give crush 1, or 2 with dozer blades. https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.01 (Titan crushable level raised).",
+    "correction": "Heavy crushers run over heavy infantry and every ordinary vehicle. Add the Mechapede to the non-crushers. Note in notes that Dozer Blades give the Scorpion and Reckoner level 2, and the Titan's crushing slowdown."
+   },
+   {
+    "claim": "Armour facing: the XML gives side 110 / rear 150 to the listed vehicles (smaller rear step on the Titan and MARV); the Seeker, Gun Walker, Shard Walker, both Tripods, Corrupter, Wolverine, Attack Bike, harvesters, aircraft and infantry have none; the Nod Commando and Saboteur also get it",
+    "real": false,
+    "reason": "The Gun Walker and Shard Walker (AlienGunWalkerArmor) and both Tripods (AlienAnnihilatorTripodArmor) do have facing, 110 side and 150 rear. The Mantis (BlackHandStealthTankArmor, 110/150) is missing from the list. The rest is confirmed.",
+    "evidence": "GlobalData/Armor.xml: AlienGunWalkerArmor and AlienAnnihilatorTripodArmor SideDamageScalar 110, RearDamageScalar 150; BlackHandStealthTankArmor 110/150; AlienSeekerTankArmor 100/100; SteelTalonsTitanArmor 110/120; GDIMARVArmor 100/125. buildable.txt: Gun Walker, Shard Walker, Annihilator and Reaper Tripod use those sets.",
+    "correction": "Add directional to the Gun Walker, Shard Walker, Annihilator Tripod, Reaper Tripod and Mantis. Units without facing: Seeker, Corrupter, Wolverine, Attack Bike, harvesters, aircraft and infantry other than the Nod Commando and Saboteur."
+   },
+   {
+    "claim": "Tiberium: fields hurt infantry except Scrin infantry, Zone Troopers and Zone Raiders and Tiberium Troopers; Tiberium Infusion and Field Suits protect; Scrin infantry and harvesters heal near Tiberium; blue Tiberium is worth more",
+    "real": true,
+    "reason": "Confirmed. Detail: the manual lists Tiberium Infusion for Fanatics, Militant Squads and Militant Rocket Squads (Confessors only as squad members).",
+    "evidence": "XML TiberiumCrystalWeapon exclusions. UC text: Tiberium Infusion; Scrin intro (healed by Tiberium); Scrin harvester self-repairs. KW manual p.17 Tiberium Field Suits (Riflemen, Rocket Soldiers, Grenadiers). TW manual PDF 8 Blue Tiberium."
+   },
+   {
+    "claim": "An upgrade applies at once to every unit of the type, those already fighting too",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "UC text Upgrading Technology (= TW PDF 8), and the note that researched upgrades apply instantly."
+   },
+   {
+    "claim": "Side-wide powers per faction (no Mothership listed) and 'call-in units are not researched'",
+    "real": false,
+    "reason": "The listed powers check out against the manuals, but the Mothership is itself a Scrin support power: it is summoned at the Signal Transmitter for 5,000 credits on a 2:30 cooldown, one at a time. The notes list it nowhere among the Scrin powers and treat it as a built unit.",
+    "evidence": "UC text Scrin Support Powers: the Mothership is summoned with a power enabled at the Signal Transmitter. https://cnc.fandom.com/wiki/Mothership (infobox: a $5000 support power on a two-and-a-half-minute cooldown, made at the Signal Transmitter, one at a time; the page sits in the Scrin support-power category).",
+    "correction": "Add the Mothership to the Scrin powers as a call-in summoned at the Signal Transmitter. The lead decides whether it is researched; if it is, its gate is the Signal Transmitter (t3) and it is unique."
+   },
+   {
+    "claim": "EMP: EMP grenades (Grenadier upgrade), the Raider Buggy's EMP Burst and the Awakened's and Enlightened's EMP Blast disable vehicles and buildings, a disabled building stops counting as a prerequisite, and Adaptive Armor and Attenuated Forcefields protect",
+    "real": true,
+    "reason": "Confirmed. Detail: the Buggy's EMP Burst needs the EMP Coils upgrade, and EMP Grenades are not available to Steel Talons.",
+    "evidence": "KW manual p.15 (EMP Grenades, not Steel Talons), p.17 (Adaptive Armor: EMP immunity), p.24 (EMP Blast), p.26 (Attenuated Forcefields absorb one EMP blast, not Traveler-59). UC text: EMP Coils, EMP Burst, Disabled Buildings."
+   },
+   {
+    "claim": "Since 1.02 mind control cannot take epic units or commandos",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02. XML SpecialPower_ManipulateObject excludes METAUNIT and the commandos."
+   },
+   {
+    "claim": "Damaged vehicles slow down: most locomotors to three quarters, a few to half",
+    "real": false,
+    "reason": "The three-quarters rule is right for ground vehicles (except the Wolverine and Mechapede, which do not slow). But the three half-speed locomotors are the Drone Ship's unpacking form, LargeShip and Hovercraft, so no playable combat unit drops to half.",
+    "evidence": "GlobalData/Locomotor.xml: 39 MaxSpeedDamaged=75%; 50% only on AlienMCVUnpackingLocomotor, LargeShipLocomotor and HovercraftLocomotor.",
+    "correction": "Ground vehicles drop to 75% speed when badly damaged (the Wolverine and Mechapede do not); aircraft and infantry do not slow."
+   },
+   {
+    "claim": "Crates: a multiplayer option with only good effects; random ones give money, a rank, a damage or armour boost or healing, never units; barrels explode",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "https://cnc.fandom.com/wiki/Crate (Tiberium Wars section). UC text: the game setup has an option that turns random crates on or off; Crates; Barrels."
+   },
+   {
+    "claim": "Fog of war is always on in skirmish and support powers cannot be aimed into it; low power takes the radar and defences off line and slows building",
+    "real": false,
+    "reason": "Missing the exception: superweapons can be aimed into fog. The rest is confirmed.",
+    "evidence": "https://cnc.fandom.com/wiki/Fog_of_war (superweapons are not blocked by fog and lift it briefly). UC text Powering Your Base (= TW PDF 8).",
+    "correction": "Support powers cannot be aimed into fog, except superweapons."
+   },
+   {
+    "claim": "Engineers and capture: Engineer, Combat Engineer, Saboteur and Assimilator capture buildings and husks and repair buildings and bridges; neutral tech buildings are not capture-structure",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "UC text Engineer, Saboteur and Assimilator paragraphs. Their wiki pages (capture structures and walker husks). Intel DB engineer entry."
+   },
+   {
+    "claim": "Build limits: one GDI or Nod Commando (two for Black Hand), one Mastermind, Prodigy and Mothership, one epic unit",
+    "real": true,
+    "reason": "Confirmed. The Mothership limit comes through its power.",
+    "evidence": "XML MaxSimultaneousOfType (GDI/Nod Commando 1, BlackHandCommando 2, Mastermind 1, Prodigy 1, MARV/Redeemer/Eradicator 1). Mothership page (one deployed at a time). Black Hand page. Epic unit page."
+   },
+   {
+    "claim": "Registry finding cost_thresholds/basis: the Scorpion costs 800 in the KW 1.02 data (wiki 700); the anchor and thresholds stay",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "Kanes Wrath/Xml/NOD/Units/NODRaiderTank.xml and Tiberium Wars/Xml/NOD/Units/NODRaiderTank.xml: BuildCost 800, BuildTime 8. https://cnc.fandom.com/wiki/Scorpion_tank_(Tiberium_Wars): $700, 0:07, changelog only 1.05 with no price change. CNCNZ TW Nod page $800, KW Nod page $700. Predator 1100, Seeker 800, Devourer 1600 in KW XML."
+   },
+   {
+    "claim": "Registry finding speed_reference: 57 is the Rifleman squad's own locomotor speed (member 62, Predator 60); KW and TW 1.09 squad speeds agree except the Shadow Team; patch 1.05 sped up named infantry only; use full-health, unsuppressed speeds",
+    "real": true,
+    "reason": "Confirmed, with two small caveats. The defines in GlobalDefines.xml (SQUAD_MEMBER_SPEED_ADJUSTMENT 5, and unused NOD_*_SQUAD_SPEED values of 30, 40 and 25) are not referenced by any KW XML file. The 'squad by squad' list mixes in single infantry (Engineer, Commandos, Saboteur, Assimilator) and the APC.",
+    "evidence": "KW and TW XML NORMAL locomotor speeds compared unit by unit (Rifleman 57/62, Militant 43/48, Black Hand 50/55, Shadow Team KW 90/120 vs TW 80/100). Wiki landspeed equals the squad figure for every squad checked. https://cnc.fandom.com/wiki/Tiberium_Wars_patch_1.05 speed lines. Locomotor.xml WaitForFormation=true, Appearance HORDE. AttributeModifier.xml suppression SPEED 25%."
+   },
+   {
+    "claim": "Registry finding sight_reference: of 90 unit pages, 69 give both figures, none a single number, and 20 give none (including the Missile squad and GDI MCV); band on shroud clearing from the infobox or the XML",
+    "real": false,
+    "reason": "The proposal is sound, but the evidence miscounts: the Missile squad (350/400) and the GDI MCV (100/200) infoboxes do give both figures, so it is 71 with both, 18 with none, and the Vertigo's 'Far'. The proposal also ignores two wiki-versus-XML conflicts: the Stormrider (wiki shroud 500, XML 400) and the Ravager (wiki 300/320 is the member's figure; the squad object has 350/400).",
+    "evidence": "API wikitext: Missile squad (Tiberium Wars) sight 350/400; GDI MCV (Tiberium Wars) 100/200; Stormrider 350/500. Kanes Wrath/Xml/Alien/Units/AlienStormrider.xml VisionRange 350, ShroudClearingRange 400. AlienStalker 300/320 vs AlienStalkerSquad 350/400.",
+    "correction": "Keep 'band on the shroud-clearing figure'. Add: for squads read the squad object's figure; where the infobox and the XML differ (Stormrider, Ravager), use the XML with an uncertain entry. Fix the counts to 71/18/1."
+   },
+   {
+    "claim": "Registry finding version_researched: name skirmish and multiplayer, use the KW 1.02 XML where the wiki is silent or disagrees, and never TW 1.09",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "XML comparison: Devourer 1600 vs 1400, Buggy 500 vs 400, Stealth Tank 1800 vs 1500, harvesters 1600 vs 1400, Attack Bike 160 vs 140, Mammoth 45 vs 40, Corrupter 70 vs 60, Shadow Team 90 vs 80; Beam Cannon Ops Center in KW vs Tech Lab in TW. The infoboxes give the KW figure in each case. TheVersion.xml KW 114."
+   },
+   {
+    "claim": "Registry finding sources: nothing cited backs the squad speed or the fog-clearing figure; add the two EA XML files as kind official; four sources is no cap",
+    "real": false,
+    "reason": "Overstated. The cited Rifleman squad page already backs speed 57 and the 350/400 sight figures; its infobox and the registry note say so. What lacks a source is the squad-versus-member point and the Scorpion's 800. Adding both files and the no-cap point are fine: the game schema has no maxItems, and other entries carry 3 to 7 sources.",
+    "evidence": "data/games.json cnc3 sources[3] note (land speed 57; vision 350 and shroud clearing 400; rifle range 260). schemas/game.schema.json sources has no maxItems. Source counts per game in data/games.json range from 3 to 7.",
+    "correction": "The cited Rifleman page backs the figures 57 and 400, but not that 57 is the squad's own locomotor speed or that the Scorpion costs 800; add the two XML files for those points."
+   },
+   {
+    "claim": "EA's KW XML (main branch) is the 1.02 data: file layout, how to cite it, and the internal-name list",
+    "real": false,
+    "reason": "The 1.02 identification is confirmed, but the internal-name list misses traps and has one wrong name. There is no AlienMillipede object: the Mechapede is built as AlienCustomizableVehicle, with AlienMillipedeBody and Head as its parts. Missing names: BlackHandStealthTank is the Mantis, NODMetaUnit the Redeemer, Reaper17AnnihilatorTripod the Reaper Tripod, AlienGateway the Warp Sphere, AlienWarpBeacon the Gravity Stabilizer (it also builds the Drone Ship), NODDropZone the War Factory, NODHangar the Air Tower. The notes also do not warn that the repository has unreleased proposed-patch branches.",
+    "evidence": "Production lists from the XML command sets (AlienWarpBeacon builds AlienMCV and AlienStormRider; BlackHandDropZone builds BlackHandStealthTank). Alien/Units has AlienCustomizableVehicle.xml, AlienMillipedeBody.xml and AlienMillipedeHead.xml. git branches origin/proposed_kw_1.03 (af82415, 2025-05-08, 117 files) and origin/proposed_tw_1.10 (2d0be8c).",
+    "correction": "Add the missing internal names, call the Mechapede AlienCustomizableVehicle, and say: read only the main branch; proposed_kw_1.03 and proposed_tw_1.10 hold unreleased patch proposals."
+   },
+   {
+    "claim": "The only disagreement between the XML and the wiki found so far is the Scorpion's price",
+    "real": false,
+    "reason": "There are several more.",
+    "evidence": "Stormrider shroud: wiki 500, XML 400. Ravager sight: wiki gives the member's 300/320, squad object 350/400. Reckoner riders: XML survive, wiki die. Heavy Harvester Call for transport: KW manual yes, XML no. Shadow Team Call for transport: 2007 manual yes, XML and wiki no. Fanatic suppression: page and manual never, XML possible. Scrin garrisons: page says only Buzzers and Cultists, XML bars only the Shock Trooper, Disintegrator and Ravager squads. Heroic damage: manual more, XML equal to elite. Tiberium Core Missiles: KW manual lists SAM, Stealth Tank and Mantis, but the data and wiki also give the Attack Bike an upgraded missile.",
+    "correction": "List these disagreements and treat each with an uncertain entry (sources_disagree), the XML winning per the proposal."
+   },
+   {
+    "claim": "Settled points: infantry speeds (wiki squad figures are KW figures; Militants are simply slower); the Devourer costs 1,600; KW 1.02's cost and upgrade changes and the 1.01 history; never fill gaps with TW 1.09",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "XML KW vs TW comparison. https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02 and https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.01 (including its note that KW was built on pre-1.05 TW). Devourer tank changelog. CNCNZ TW and KW Scrin pages."
+   },
+   {
+    "claim": "Speed bands: the NORMAL locomotor speed divided by 57, at full health, unsuppressed, before upgrades; squads use the squad figure; aircraft use air speed",
+    "real": true,
+    "reason": "Consistent with the data and data/vocab/speed-bands.json.",
+    "evidence": "Locomotor sets in the KW XML; speed-bands.json thresholds (medium up to 1.5 times, fast up to 2.5 times)."
+   },
+   {
+    "claim": "Sight bands: use shroud clearing; the XML is needed where the infobox has none, for example the Missile and Grenadier squads, Venom, Gun Walker, Seeker, Devourer, Corrupter, Tripods, Eradicator, Mechapede, Shard Walker",
+    "real": false,
+    "reason": "The Missile squad's infobox does give 350/400. The rest of the list is right. The squad-versus-member choice (Ravager) is not addressed.",
+    "evidence": "https://cnc.fandom.com/wiki/Missile_squad_(Tiberium_Wars) infobox: sees 350 and clears the shroud to 400. Infobox parse of every unit page.",
+    "correction": "Drop the Missile squad from the list; for squads read the squad object (for example AlienStalkerSquad 350/400, not the member's 300/320)."
+   },
+   {
+    "claim": "Range bands: reach is the weapon's AttackRange; the reference rifle reaches 260; artillery outranges its own sight and needs spotters",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "GlobalData/Weapon.xml GDIRifleSoldierRifle AttackRange 260.0. Rifleman infobox range 260. UC text: Bombard Target (Sniper Team) and the Shadow Team beacon for the Specter (KW manual p.20)."
+   },
+   {
+    "claim": "Damage categories: the infobox categories of the named weapons, including 'the Awakened's and Enlightened's particle beams Cannon'",
+    "real": false,
+    "reason": "All the named categories match the infoboxes except the Awakened. Its stock weapon is chainguns, category Gun. Particle beams (Cannon) come only from Black Hand's Charged Particle Beams upgrade, which works for the Marked of Kane only through a captured Black Hand tech building.",
+    "evidence": "https://cnc.fandom.com/wiki/Awakened: useguns are chainguns, with charged particle beams as an upgrade; groundattack 18 (x3) Gun, 150 Cannon (upgrade). Other infoboxes checked: Nod Commando Sniper; Redeemer, Purifier, Devourer, Enlightened, Invader, Eradicator, Zone Raider and MARV Cannon; Beam Cannon Grenade; Venom and Buggy upgrades and Gun Walker Gun; Seeker, Shock Trooper, Stormrider and Disintegrator Rocket; Devastator, Tiberium Trooper and Corrupter Grenade (the Corrupter also heals Scrin units, 150 per second).",
+    "correction": "The Awakened's stock chainguns are Gun (kinetic). Only the Enlightened's particle beams are stock Cannon."
+   },
+   {
+    "claim": "Squads and seats: a Rifleman squad is six soldiers and a Militant squad eight; the APC holds one squad, the Reckoner two",
+    "real": false,
+    "reason": "A Militant squad has nine soldiers (ten with a Confessor). The Rifleman page's prose saying eight is a wiki inconsistency.",
+    "evidence": "Kanes Wrath/Xml/NOD/Units/NODMilitantSquad.xml and the Tiberium Wars file: InitialPayload NODMilitant Count 9. https://cnc.fandom.com/wiki/Militant_squad_(Tiberium_Wars) squadsize 9 (10 with Confessor). The Rifleman squad page prose says 8.",
+    "correction": "A Rifleman squad is six soldiers, a Militant squad nine (ten with the Confessor upgrade)."
+   },
+   {
+    "claim": "Role traps: the Raider Buggy (text infantry first, data air) is anti-infantry with anti-air secondary; the Gun Walker and Shard Walker go anti-air; the Pitbull and Attack Bike get scout via stealth detection; the Seeker is uncertain; the Juggernaut, Behemoth and Specter are siege at step 1",
+    "real": true,
+    "reason": "Confirmed. The Stealth Tank trap is wrong and is covered separately.",
+    "evidence": "UC text Raider Buggy, Gun Walker and Pitbull paragraphs; infobox scalars. XML StealthDetectorUpdate present in GDIPitbull.xml, NODAttackBike.xml, AlienSeekerTank.xml and NODVenom.xml. KW manual Shard Walker, Behemoth and Specter paragraphs."
+   },
+   {
+    "claim": "Subfaction availability: Steel Talons, ZOCOM and Black Hand as listed; Marked of Kane has Tiberium Troopers instead of Black Hand troopers plus the Awakened and Enlightened; Reaper-17 has no mind control and no aircraft (KW manual); Traveler-59 has Cultists and the Prodigy and no forcefield generators",
+    "real": false,
+    "reason": "Steel Talons, ZOCOM and Black Hand are confirmed. But: Reaper-17 does field the Stormrider (the KW manual's 'no aerial combat' line is flavour; it lacks the Devastator, Planetary Assault Carrier and Invader). Marked of Kane also loses the Militant squad (the Awakened replace it) and the Flame Tank. Traveler-59 lacks the Devourer.",
+    "evidence": "XML production lists: Reaper17WarpBeacon builds Reaper17MCV and Reaper17StormRider; MarkedOfKaneHandOfNOD has no Militant squad and no Black Hand squad; MarkedOfKaneDropZone has no Flame Tank; Traveler59Gateway has no Devourer. https://cnc.fandom.com/wiki/Reaper-17 (no Mastermind, PAC, Invader or Devastator). https://cnc.fandom.com/wiki/Stormrider (lists Reaper-17).",
+    "correction": "Reaper-17: no Mastermind, Devastator or Planetary Assault Carrier, but it keeps the Stormrider. Marked of Kane: the Awakened replace the Militant squad, and it has no Black Hand squad and no Flame Tank. Traveler-59: no Devourer."
+   },
+   {
+    "claim": "Tier traps: the Shadow Team and Enlightened are labelled tier 3 but need only the Secret Shrine (t2); epic units, PAC and Mothership are labelled tier 4 (t3); the Titan, Wolverine, MRT, Gun Walker and Shard Walker have no requirement (t1); the epic factories also build ordinary vehicles; the Confessor and Black Disciple are upgrade squad members",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "Infobox tier and req fields (Shadow team and Enlightened tier 3, req Secret shrine; MARV, Redeemer, Eradicator, PAC and Mothership tier 4; the five t1 units tier 1 with no req). XML GameDependency. Production lists of MG_*_ReclamatorHub, WarmechFacility and Hive. UC text Confessor upgrade; KW manual Black Disciples."
+   },
+   {
+    "claim": "Page titles all resolve without redirects",
+    "real": true,
+    "reason": "Confirmed for every title in the list.",
+    "evidence": "All 166 listed pages fetched through https://cnc.fandom.com/api.php?action=parse&prop=wikitext with no error and no redirect (wiki-fetch.log)."
+   },
+   {
+    "claim": "House rule: no run of six or more words copied from a page",
+    "real": true,
+    "reason": "Only one title-only run was found.",
+    "evidence": "A six-gram check (lower-cased, punctuation stripped, British/American spellings merged, our own wording in data/, schemas/ and research/registry-notes excluded) ran on the researcher's final drafts (r2/progress/prep/notes-cnc3/draft-*.md and draft-findings.json; eight sentences spot-matched to the task text). It compared them with 1,569 source texts: all fetched wiki pages, the repository cache's cnc.fandom.com, cncnz.com and strategywiki.org pages, the KW, UC, Kane Edition, keymap and techtree PDF texts, the CNCNZ, StrategyWiki and WorthPlaying pages. One hit only: a run made of a page title and the word before it."
+   }
+  ],
+  "missing": [
+   "Registry: tier_map has no gate for the harvesters' only requirement, the Refinery (GDI and Nod) or the Extractor (Scrin). The validator rejects any unit gate not in tier_map (scripts/validate.mjs line 652). Evidence: infoboxes give GDI and Nod harvester req Tiberium refinery and Scrin harvester req Extractor; XML GDIHarvester depends on GDIRefinery and AlienHarvester on AlienTiberiumTower. Add Refinery and Extractor as t1, or tell coders to record the factory as the gate.",
+   "The Mothership is a Scrin support power, not a built unit: summoned at the Signal Transmitter for $5000 on a 2:30 cooldown, one at a time (UC manual Scrin Support Powers; https://cnc.fandom.com/wiki/Mothership, which the wiki files among the Scrin support powers). It belongs in the powers list as a call-in.",
+   "Official role labels in the Intelligence Database that count at roles.secondary step 1, all missed (https://cnc.fandom.com/wiki/Intelligence_Database): the Venom is called a VTOL scout (InOps Nod Aircraft); the Zone Raider's role became a first-response scouting unit; the Beam Cannon is called an artillery system and Nod's long-range artillery platform (Beam Cannon and Obelisk entries); the Flame Tank is a classic anti-infantry weapon system and flamethrowers are anti-infantry weapons (Flame Weapons entry); the Slingshot is an exclusively anti-air vehicle; the Hammerhead is an assault/transport hybrid; the Vertigo is a stealth bomber; the Sniper Team carries a spotter. In the 2007 manual's Mortars upgrade text (PDF 19), the Pitbull's main jobs are scouting and shooting at aircraft.",
+   "Official strong-against text missed (matters for step 4 and the drop rule): the Stealth Tank's DB entry (missiles good against vehicles and structures) contradicts the notes' 'no official strength'; the Avatar's DB entry (its laser does great harm to vehicles and buildings); the Sniper Team (kills most infantry); the Black Hand (incinerates enemy squads); Buzzers (flesh and light armour); Disintegrators (vehicles); Shock Troopers (armoured vehicles head-on); the Corrupter (humans); the Combat Engineer (enemy Engineers). Sources: UC/TW manual paragraphs, KW manual p.16, Intel DB.",
+   "XML-versus-wiki/manual disagreements beyond the Scorpion, each needing an uncertain entry: Stormrider shroud (wiki 500, XML 400); Ravager sight (wiki gives the member's 300/320, the squad object has 350/400); Reckoner riders on death; Heavy Harvester Call for transport (KW manual yes, XML no); Shadow Team Call for transport (2007 manual yes, KW XML and wiki no); Fanatic suppression (page and manual never, XML Suppressability 1000); Scrin garrisons (BaseCivilianStructure.xml bars only Shock Trooper, Disintegrator and Ravager squads, so the Mastermind, Prodigy and Assimilator are not barred); heroic damage (manual more, AttributeModifier.xml equal to elite); Tiberium Core Missiles (KW manual lists SAM, Stealth Tank and Mantis, but the wiki and XML also give the Attack Bike an upgraded missile).",
+   "EA's CnC_Modding_Support repository also holds unreleased branches proposed_kw_1.03 (af82415, 2025-05-08, 117 files changed) and proposed_tw_1.10 (2d0be8c). The notes should say to read main (Kane's Wrath 1.02, TheVersion 114) only, since github.com folder views can land on another branch.",
+   "Suppression details missed: the XML gives no suppression to the Confessor (Militant squad leader) or the Confessor Cabal members (NODConfessor.xml and BlackHandConfessor.xml have no SuppressionUpdate). The heroic rank makes infantry three times harder to suppress (Unit_Heroic SUPPRESSABILITY 300). A separate modifier, Modifier_Test_Suppression_ForceMove (ARMOR 125%), seems to make suppressed infantry that are force-moved take more damage; its meaning is not documented on any page.",
+   "Crush upgrades and limits missed: Dozer Blades raise the Scorpion's and Reckoner's crusher level from 1 to 2, so they then crush heavy infantry (wiki infoboxes). The Titan slows while crushing vehicles (Titan page), and since KW 1.01 Titans cannot crush Titans (KW patch 1.01 page). Heavy crushers run over every ordinary vehicle, not just light ones (Mammoth tank and Titan pages: most tier 1 and 2 vehicles). The Mechapede (AlienCustomizableVehicle, crusher 0) is not a crusher.",
+   "Armour facing on walkers: AlienGunWalkerArmor (Gun Walker, Shard Walker), AlienAnnihilatorTripodArmor (Annihilator and Reaper Tripod) and BlackHandStealthTankArmor (Mantis) all have side 110 / rear 150 in GlobalData/Armor.xml, though the notes call the walkers and Tripods directionless.",
+   "Squad-versus-member sight is not ruled on: the sight band text should say to read the squad object (for example AlienStalkerSquad 350/400), because the wiki sometimes gives the member's figure (AlienStalker 300/320). Thirty infantry objects, the reference Rifleman squad among them, also carry height-based vision bonus keys (MaxVisionBonusPercent 300, VisionBonusTestRadius 200, VisionBonusPercentPerFoot 1) that no page documents; mention them as unverified rather than banding on them.",
+   "Fog of war exception missed: superweapons can be aimed into fog (https://cnc.fandom.com/wiki/Fog_of_war).",
+   "Speed band consequence missed: the Ravager squad moves 75 (1.32 times 57, medium), so raider's requires fail despite its hit-and-run paragraph. Use the infantry squad figure, not the KW manual's 'fastest infantry' line."
+  ]
+ },
+ "candidates": {
+  "candidates": [
+   {
+    "id": "cnc3.gdi.sniper",
+    "name": "Sniper Team",
+    "faction": "gdi",
+    "class": "infantry",
+    "role_guess": "marksman; secondary scout (hidden while still, detects stealth)",
+    "teaches": "Camouflage that depends on standing still, plus a spotter link. The two-man team (sniper and spotter) cannot be seen while it does not move, holds its fire by default until enemies detect it, outranges riflemen by far and sees cloaked units. Anything in its sight can be hit by the Juggernaut's long-range Bombard, so one cheap scout becomes the eyes of a teammate's artillery walker. Since KW 1.02, spotting for a Bombard no longer reveals it.",
+    "patterns": [
+     "cloak"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Sniper_team_(Tiberium_Wars)",
+     "https://cnc.fandom.com/wiki/Juggernaut_(Tiberium_Wars)",
+     "https://cnc.fandom.com/wiki/Armory",
+     "https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02"
+    ],
+    "skirmish": "Yes, in skirmish and multiplayer for GDI and ZOCOM (Steel Talons lack it). Gate: Armory (t2). Cost $1000 (medium band). A minor extra, Call for Transport ($200), needs an Airfield.",
+    "shooter_note": "Stand still to vanish and pick your moment for very long shots. Whatever you can see, a teammate in an artillery walker can shell, so two players make a spotter-and-gun pair.",
+    "repeats": "No unit in data/units links cloak yet, and none plays a passive spotter. The spotting is passive, so it belongs in sensors, combos and the spotter team-play hook rather than a pattern. It shares cloak with the Shadow Team, which teaches the glider instead."
+   },
+   {
+    "id": "cnc3.gdi.rig",
+    "name": "Rig",
+    "faction": "gdi",
+    "class": "vehicle",
+    "role_guess": "support (infobox: support vehicle); secondary area-denial once deployed",
+    "teaches": "A deployable forward base. While driving, the Rig is unarmed and fragile. On flat open ground it unfolds into a Battle Base with twin cannons, an anti-air launcher, three drones that repair nearby vehicles, stealth detection and self-repair, and it can pack up again (KW 1.01 sped up both). The lesson is a support player who becomes the team's frontline repair station.",
+    "patterns": [
+     "deploy-siege-mode",
+     "repair-allies"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Rig",
+     "https://cnc.fandom.com/wiki/Battle_base",
+     "https://cnc.fandom.com/wiki/Command_post",
+     "https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.01",
+     "https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02"
+    ],
+    "skirmish": "Yes, in skirmish and multiplayer for GDI, Steel Talons and ZOCOM. Gate: Command Post (t2). Cost $2000 (high band). In KW, GDI and Steel Talons get a railgun upgrade for the Battle Base.",
+    "shooter_note": "Drive a defenceless truck to a chokepoint, unfold it into a fortified post whose drones mend teammates' vehicles, and pack up when the front moves. A strong anchor that needs an escort while it moves.",
+    "repeats": "In data/units, deploy-siege-mode is linked by the RA2 Desolator, Siege Chopper and Slave Miner. The twist here is that the deployed form is a small base with repair drones and both ground and air guns."
+   },
+   {
+    "id": "cnc3.gdi.orca",
+    "name": "Orca",
+    "faction": "gdi",
+    "class": "aircraft",
+    "role_guess": "anti-armour (infobox: ground attack aircraft); secondary scout",
+    "teaches": "Detection you can stick onto things. Pulse Scan reveals stealth around the Orca on a key (1 min cooldown). Sensor Pods (a Command Post upgrade, $100 each) can be fired onto the ground, a structure or an enemy vehicle and reveal hidden units around them for two minutes, so a pod on an enemy tank keeps exposing cloaked units around it as it drives. The Orca also carries few rockets (6, or 9 with KW Hardpoints) and must rearm at its pad.",
+    "patterns": [
+     "reveal-area"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Orca_(Tiberium_Wars)",
+     "https://cnc.fandom.com/wiki/Sensor_pods",
+     "https://cnc.fandom.com/wiki/Airfield_(Tiberium_Wars)"
+    ],
+    "skirmish": "Yes, in skirmish and multiplayer for GDI and Steel Talons. Gate: Airfield (t2). Cost $1100 (medium band). The pages disagree on the Sensor Pod cooldown: the Sensor pods page gives 60 s, the Orca page gives none.",
+    "shooter_note": "A strike VTOL with a few heavy rockets that must fly home to rearm. It tags enemy vehicles or ground with sensors that keep hidden enemies visible to the whole team.",
+    "repeats": "In data/units, reveal-area is linked only by the RA1 Spy's one-shot Sonar Pulse. The twist here is a sensor that rides on a moving enemy. Rearming at a pad echoes the RA1 Yak."
+   },
+   {
+    "id": "cnc3.zocom.zone-shatterer",
+    "name": "Zone Shatterer",
+    "faction": "zocom",
+    "class": "hover",
+    "role_guess": "anti-infantry (a guess: the infobox says support vehicle, but it has no support parts)",
+    "teaches": "A power shot paid for with a self-stun. Overload Beam fires a stronger sonic blast with a little more reach, then leaves the hovertank disabled and unable to move for about 6 seconds. Its normal weapon is a forward-fixed sonic emitter that hits every unit along its line and fires through or over buildings, so the hull has to turn to aim and cannot shoot on the move.",
+    "patterns": [
+     "fire-power-shot"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Zone_Shatterer",
+     "https://cnc.fandom.com/wiki/Shatterer",
+     "https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.01",
+     "https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02"
+    ],
+    "skirmish": "Yes, in Kane's Wrath skirmish and multiplayer, ZOCOM only. GDI and Steel Talons build the plain Shatterer ($1500), which lacks Overload. Gate: Command Post (t2). Cost $1600 (high band; KW 1.01 price). It would probably be coded variant_of cnc3.gdi.shatterer.",
+    "shooter_note": "A drifting hovertank whose forward-fixed sonic cannon pierces lines of enemies and walls. The Overload key trades six helpless seconds for one big blast.",
+    "repeats": "No unit in data/units links fire-power-shot. The class is hover because of its HoverTech drive, but whether it can cross water is unchecked; if it cannot, class it as a vehicle."
+   },
+   {
+    "id": "cnc3.nod.saboteur",
+    "name": "Saboteur",
+    "faction": "nod",
+    "class": "infantry",
+    "role_guess": "engineer (infobox: support unit)",
+    "teaches": "Trapping what the enemy wants to use. The unarmed Saboteur captures buildings and revives walker husks (the registry's example for recover-wreck). Its Booby Trap ($100, 20 s cooldown) rigs neutral buildings, husks, tech structures and bridges to explode when an enemy garrisons, captures or uses them, killing the engineer who tries.",
+    "patterns": [
+     "capture-structure",
+     "recover-wreck"
+    ],
+    "new_mechanics": [
+     {
+      "id": "booby-trap-object",
+      "summary": "Rig a building, wreck, bridge or capture point so it explodes on the first enemy who enters, captures or uses it."
+     }
+    ],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Saboteur_(Tiberium_Wars)",
+     "https://cnc.fandom.com/wiki/Husk",
+     "https://cnc.fandom.com/wiki/Hand_of_Nod_(Tiberium_Wars)"
+    ],
+    "skirmish": "Yes, in skirmish and multiplayer for Nod; the Black Hand subfaction builds it too, as does the Marked of Kane (MoK cybernetic legs double its speed). Gate: Hand of Nod (t1). Cost $500 (very-low band).",
+    "shooter_note": "An unarmed objective player who steals buildings and revives dead walkers for the team, and booby-traps points and wrecks so the enemy's own engineer sets them off.",
+    "repeats": "In data/units, the RA1 Spy links capture-structure. recover-wreck and the booby trap are new there. Boundary: lay-mines plants a mine on open ground, while the trap sits on an object the enemy will use."
+   },
+   {
+    "id": "cnc3.nod.shadow",
+    "name": "Shadow Team",
+    "faction": "nod",
+    "class": "infantry",
+    "role_guess": "infiltrator (infobox: infiltration infantry)",
+    "teaches": "Infantry with a flight mode. On a key the squad opens gliders, travels as low fliers and lands again (since KW 1.01, airborne teams cannot force-fire at the ground). It is hidden while not attacking and plants explosive charges on structures (30 s cooldown). In KW it can also drop an Artillery Beacon: for two minutes, Specters can shell anything inside its radius.",
+    "patterns": [
+     "cloak",
+     "transform",
+     "throw-explosive",
+     "bombard-area"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Shadow_team",
+     "https://cnc.fandom.com/wiki/Specter_(Kane%27s_Wrath)",
+     "https://cnc.fandom.com/wiki/Secret_shrine",
+     "https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.01"
+    ],
+    "skirmish": "Yes, in skirmish and multiplayer for Nod, and for its Marked of Kane subfaction. Gate: Secret Shrine (t2 in the tier map; the infobox says tier 3). Cost $800 (low band). The Artillery Beacon is Kane's Wrath only and needs Specters.",
+    "shooter_note": "A cloaked commando who switches to a glider to sail over walls into the enemy rear, plants charges, and drops a beacon that a teammate's artillery can fire on.",
+    "repeats": "In data/units, transform is linked by the RA3 Mecha Tengu, throw-explosive by RA3 Tanya, and bombard-area by the RA1 Spy and RA2 Boris. The twist here is personal gliding wings as the second form (mobility jetpack / wings), and a bombardment that a teammate fires."
+   },
+   {
+    "id": "cnc3.nod.beam-cannon",
+    "name": "Beam Cannon",
+    "faction": "nod",
+    "class": "vehicle",
+    "role_guess": "siege (infobox: light artillery vehicle; long-range direct laser)",
+    "teaches": "Beams that team up. When several Beam Cannons hit one target, their beams merge and the damage grows with the square of their number. Reflector Beam (Nod and MoK only) bounces the beam off a stationary Venom nearby to reach distant targets, aircraft included. Charge Defenses lets up to four of them raise an Obelisk of Light's fire rate, sight and range.",
+    "patterns": [
+     "rally-allies"
+    ],
+    "new_mechanics": [
+     {
+      "id": "merge-beams",
+      "summary": "Beams from several units of one type on the same target fuse into one beam whose damage grows faster than their number."
+     },
+     {
+      "id": "relay-off-ally",
+      "summary": "Bounce your shot off a stationary friendly unit to reach targets beyond your own range, including fliers your weapon could not otherwise hit."
+     }
+    ],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Beam_cannon_(Tiberium_Wars)",
+     "https://cnc.fandom.com/wiki/Venom_(Tiberium_Wars)",
+     "https://cnc.fandom.com/wiki/Obelisk_of_Light_(Tiberium_Wars)",
+     "https://cnc.fandom.com/wiki/Operations_center"
+    ],
+    "skirmish": "Yes, in skirmish and multiplayer for Nod; the Black Hand subfaction builds it too, as does the Marked of Kane. Gate: Operations Center (t2). Cost $1000 (medium band). Only Nod and MoK get Reflector Beam, since Black Hand has no Venom.",
+    "shooter_note": "A fragile long-range laser vehicle that wants company: several players' stacked beams melt one target, a hovering teammate becomes a mirror for anti-air shots, and it can overcharge a friendly turret.",
+    "repeats": "No unit in data/units links rally-allies, and none merges or relays beams. merge-beams fits the swarm team-play hook, so the trim could keep it as a hook or a weapon trait rather than a new pattern."
+   },
+   {
+    "id": "cnc3.nod.avatar",
+    "name": "Avatar",
+    "faction": "nod",
+    "class": "walker",
+    "role_guess": "assault (infobox: heavy assault walker)",
+    "teaches": "A walker that grows by absorbing other units. Commandeer Technology destroys a chosen Nod unit to add a fixed part: a Beam Cannon gives a second laser, a Flame Tank a flamethrower that clears garrisons, an Attack Bike stealth detection, and a Stealth Tank stealth while not firing. It also works on enemy Nod vehicles, and for a few seconds on the wreck of a targeted vehicle. Its lasers fire only while it stands still, and it leaves a husk that any side's engineers can revive.",
+    "patterns": [
+     "leech-weapon-on-kill",
+     "cloak"
+    ],
+    "new_mechanics": [
+     {
+      "id": "absorb-ally-part",
+      "summary": "Consume a friendly unit or its fresh wreck to permanently gain a part tied to that unit type, such as its weapon, stealth or detector."
+     }
+    ],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Avatar_(Tiberium_Wars)",
+     "https://cnc.fandom.com/wiki/Husk",
+     "https://cnc.fandom.com/wiki/Tech_lab_(Tiberium_Wars)",
+     "https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02"
+    ],
+    "skirmish": "Yes, in skirmish and multiplayer for Nod, and for its Marked of Kane subfaction (Black Hand gets the Purifier instead). Gate: Tech Lab (t3). Cost $2200 (very-high band). The wiki has no Commandeer Technology page, so cite the unit page.",
+    "shooter_note": "A big walker that builds its own loadout by eating wrecks or willing allies (flamer, stealth, detector, second laser), and has to plant its feet to fire.",
+    "repeats": "In data/units, leech-weapon-on-kill is the RA3 Hammer Tank's. The twist here is friendly donors, one fixed part per donor type, and parts that are abilities (stealth, detection) as well as weapons."
+   },
+   {
+    "id": "cnc3.black-hand.purifier",
+    "name": "Purifier",
+    "faction": "black-hand",
+    "class": "walker",
+    "role_guess": "assault (infobox: heavy assault walker); secondary buffer",
+    "teaches": "A walking morale aura. Friendly infantry squads near the Purifier fire 50% faster, gain 25% armour and are harder to suppress. Garrisoned troops do not get the boost, and several Purifiers do not stack. It is the Avatar chassis with a built-in flamethrower that clears garrisons, but it cannot commandeer, has no anti-air and leaves a revivable husk.",
+    "patterns": [
+     "rally-allies"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Purifier",
+     "https://cnc.fandom.com/wiki/Black_Hand",
+     "https://cnc.fandom.com/wiki/Purifying_flame",
+     "https://cnc.fandom.com/wiki/Husk"
+    ],
+    "skirmish": "Yes, in Kane's Wrath skirmish and multiplayer, Black Hand only. Gate: Tech Lab (t3). Cost $3000 (very-high band). Its Purifying Flame upgrade comes from the Black Hand Secret Shrine.",
+    "shooter_note": "A slow flame-and-laser walker that acts as the infantry's banner: foot soldiers near it shoot faster and shrug off hits. It leads pushes but needs an anti-air escort.",
+    "repeats": "It shares the Avatar's chassis and could be coded variant_of cnc3.nod.avatar, so keep only one of the two if the trim needs room. No unit in data/units links rally-allies yet, and this aura is its cleanest example on the list."
+   },
+   {
+    "id": "cnc3.scrin.buzzers",
+    "name": "Buzzers",
+    "faction": "scrin",
+    "class": "drone",
+    "role_guess": "anti-infantry (infobox: anti-infantry unit)",
+    "teaches": "Riding on a teammate. Combine with Vehicle attaches the swarm to a friendly Scrin ground vehicle, where it cannot be harmed and attacks nearby infantry on its own until ordered off or the host dies. On its own it is a cheap, fragile swarm of airborne blades that only hurts infantry, clears garrisons, can shelter in buildings but not fire from them, and heals in Tiberium.",
+    "patterns": [],
+    "new_mechanics": [
+     {
+      "id": "attach-to-ally",
+      "summary": "Latch onto a friendly vehicle, immune while riding it, and keep fighting from it until you let go or the host dies."
+     }
+    ],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Buzzers",
+     "https://cnc.fandom.com/wiki/Portal",
+     "https://cnc.fandom.com/wiki/Devourer_tank",
+     "https://cnc.fandom.com/wiki/Corrupter"
+    ],
+    "skirmish": "Yes, in skirmish and multiplayer for Scrin, Reaper-17 and Traveler-59. Gate: Portal (t1). Cost $200 (very-low band). Buzzers released by Buzzer Hive defences cannot be controlled.",
+    "shooter_note": "A tiny, cheap swarm player that shreds soldiers and clears buildings, and can latch onto a teammate's vehicle to ride along untouchable as its anti-infantry guard.",
+    "repeats": "The RA3 Terror Drone (infest-vehicle) latches onto enemies; Buzzers latch onto allies. Boundary: passenger-sets-weapon's fire-ports variant covers riders who fire from inside a vehicle, while Buzzers ride outside and keep their own attack. The wiki calls them the Scrin basic infantry; drone follows our rule for small uncrewed units."
+   },
+   {
+    "id": "cnc3.scrin.ravager",
+    "name": "Ravager",
+    "faction": "scrin",
+    "class": "infantry",
+    "role_guess": "assault (infobox: assault infantry); secondary anti-armour (its shards do bonus damage to vehicles)",
+    "teaches": "A counter keyed to the target's cargo. Tiberium Agitation (45 s cooldown) hurts anything holding Tiberium, more the more it carries (up to double) and half on empty ones. That punishes harvesters, refineries, silos and Tiberium-fed units, Scrin ones included. The three-alien squad fires shards, resists gunfire and heals in Tiberium.",
+    "patterns": [],
+    "new_mechanics": [
+     {
+      "id": "detonate-cargo",
+      "summary": "On a key, set off the resource an enemy is carrying, so the hit grows with how full it is."
+     }
+    ],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Ravager",
+     "https://cnc.fandom.com/wiki/Stasis_chamber",
+     "https://cnc.fandom.com/wiki/Nerve_center"
+    ],
+    "skirmish": "Yes, in Kane's Wrath skirmish and multiplayer for all three Scrin factions (upgrades: Blue Shards for R17, Advanced Articulators for T59). Gates: Stasis Chamber and Nerve Center (t2). Cost $1200 (medium band).",
+    "shooter_note": "A tough shard-gun trooper whose blast reads the enemy's load: harvesters, loot carriers and resource-powered vehicles take extra, so it hunts the economy.",
+    "repeats": "Nothing in data/units scales damage with what the target carries. deal-percent-damage (RA1 MAD Tank) scales with the target's health, not its cargo."
+   },
+   {
+    "id": "cnc3.scrin.devourer-tank",
+    "name": "Devourer Tank",
+    "faction": "scrin",
+    "class": "vehicle",
+    "role_guess": "anti-armour (a guess; infobox: medium tank; weak against infantry, no anti-air)",
+    "teaches": "Ammunition drawn from the economy. Conversion Beam drains a nearby Tiberium field or an allied Extractor or Refinery to fill a store of supercharged shots: $100 of Tiberium fills it and each shot spends $10, so 10 shots (20 with the Reaper-17 Conversion Reserves upgrade). Its hull moves in any direction like a turret, it outranges every other non-artillery unit, and Buzzers can ride on it.",
+    "patterns": [],
+    "new_mechanics": [
+     {
+      "id": "charge-from-resource",
+      "summary": "Draw from a resource node or a friendly refinery to load a limited stock of stronger shots, each shot spending some of it."
+     }
+    ],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Devourer_tank",
+     "https://cnc.fandom.com/wiki/Conversion_reserves",
+     "https://cnc.fandom.com/wiki/Nerve_center",
+     "https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02"
+    ],
+    "skirmish": "Yes, in skirmish and multiplayer for Scrin and Reaper-17 (Traveler-59 lacks it). Gate: Nerve Center (t2). Cost $1600 (high band). KW 1.02 cut its range.",
+    "shooter_note": "A strafing energy tank that refills supercharged shots at a resource node or friendly refinery, so it fights near the economy and outranges other tanks.",
+    "repeats": "gather-resources (RA2 Slave Miner) banks resources, while this unit spends them as ammo. The Reaper-17 Reaper tripod has the same Conversion Beam."
+   },
+   {
+    "id": "cnc3.scrin.mechapede",
+    "name": "Mechapede",
+    "faction": "scrin",
+    "class": "walker",
+    "role_guess": "assault (a guess; infobox: customizable support walker)",
+    "teaches": "A body built segment by segment in the field. The head can buy up to 8 segments, each taking about a second, of four kinds: shards against infantry and vehicles; a Tiberium spray that hurts infantry and heals Scrin units, itself included; a disintegrator against armour; and discs, its only anti-air. Each segment has its own health. Losing one drops every segment behind it, and killing the head kills them all. It is very fast, cannot reverse, fires in any direction and sees stealth.",
+    "patterns": [
+     "upgrade-in-field",
+     "repair-allies"
+    ],
+    "new_mechanics": [
+     {
+      "id": "grow-segments",
+      "summary": "Add body segments mid-life, each with its own weapon and health; losing one also loses every segment behind it."
+     }
+    ],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Mechapede",
+     "https://cnc.fandom.com/wiki/Technology_assembler",
+     "https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.01",
+     "https://cnc.fandom.com/wiki/Kane%27s_Wrath_patch_1.02"
+    ],
+    "skirmish": "Yes, in Kane's Wrath skirmish and multiplayer for Scrin, Reaper-17 and Traveler-59. Gate: Technology Assembler (t3). Cost $1400 for the head (medium band) plus $100 per segment.",
+    "shooter_note": "A snake-like walker whose loadout is its length. Buy segments mid-fight to mix anti-infantry, anti-armour, anti-air and healing, and guard the tail, because each lost segment cuts off the rest.",
+    "repeats": "No unit in data/units links upgrade-in-field yet, and the segment chain is new. Its healing spray is the Corrupter's weapon, so the Corrupter is left off the list."
+   },
+   {
+    "id": "cnc3.scrin.planetary-assault-carrier",
+    "name": "Planetary Assault Carrier",
+    "faction": "scrin",
+    "class": "aircraft",
+    "role_guess": "assault (a guess; infobox: heavy capital ship)",
+    "teaches": "A carrier with no gun of its own: its swarm is the weapon, and it can call up a weather zone. Up to 8 Invader fighters hit air and ground, are replaced for free over time and die with the carrier (weapon family drone-launcher, not the launch-drones pattern, which covers only the version on a key). Ion Storm works only while the carrier is parked, ends if it moves and has a 1 min cooldown: the local storm makes Scrin aircraft deal more damage, take less and heal, while lightning strikes nearby enemies. Forcefield Generators add a recharging shield.",
+    "patterns": [
+     "rally-allies",
+     "repair-allies",
+     "leave-hazard-zone"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Planetary_assault_carrier",
+     "https://cnc.fandom.com/wiki/Invader_fighter",
+     "https://cnc.fandom.com/wiki/Ion_storm",
+     "https://cnc.fandom.com/wiki/Forcefield_generators",
+     "https://cnc.fandom.com/wiki/Signal_transmitter"
+    ],
+    "skirmish": "Yes, in skirmish and multiplayer for Scrin and Traveler-59 (Reaper-17 lacks it). Gate: Signal Transmitter (t3 in the tier map; the wiki says tier 4). Cost $3000 (very-high band). Forcefield Generators are Scrin only; Traveler-59's Traveler Engines make it faster.",
+    "shooter_note": "A slow flying mothership: your fighters do the shooting and come back on their own, and parking calls a storm that buffs and heals friendly fliers and zaps nearby enemies.",
+    "repeats": "In data/units, leave-hazard-zone is linked by the RA2 Desolator. The twist here is one zone that is home ground for allies and a hazard for enemies, raised only while parked. The Invader swarm belongs with the drone-launcher family (the RA2 Aircraft Carrier, not yet researched)."
+   }
+  ],
+  "coverage_note": "This is 14 candidates for a batch that keeps about 9. By faction: GDI 4 (Sniper Team, Rig, Orca, ZOCOM Zone Shatterer), Nod 5 (Saboteur, Shadow Team, Beam Cannon, Avatar, Black Hand Purifier), Scrin 5 (Buzzers, Ravager, Devourer Tank, Mechapede, Planetary Assault Carrier). Four are Kane's Wrath units (Zone Shatterer and Purifier are subfaction-only; Ravager and Mechapede are new to KW), and Kane's Wrath abilities appear on the Shadow Team, Orca and Beam Cannon.\n\nSpread:\n- Classes: infantry 4, vehicle 3, walker 3, aircraft 2, hover 1, drone 1. Tiberium Wars has no ships.\n- Price bands: very-low 2, low 1, medium 5, high 3, very-high 3.\n- Tiers: t1 2, t2 8, t3 4.\n- Roles: marksman, support, anti-armour, anti-infantry, engineer, infiltrator, siege and assault, plus buffer as a secondary.\n\nMechanics: the list links five registry ids that no unit in data/units has yet (cloak, fire-power-shot, recover-wreck, rally-allies, upgrade-in-field). It proposes eight new ids: booby-trap-object, merge-beams, relay-off-ally, absorb-ally-part, attach-to-ally, detonate-cargo, charge-from-resource and grow-segments. It also covers the team-play hooks spotter (Sniper, Orca, Shadow), swarm (Beam Cannon) and protector (Rig, Purifier, Buzzers).\n\nOverlaps to weigh in the trim:\n- Avatar and Purifier share a chassis.\n- Sniper Team and Shadow Team both cloak; the Sniper teaches spotting, the Shadow the glider.\n- rally-allies appears three times; the Purifier's aura is the cleanest example.\n\nLeft out on purpose:\n- Steel Talons Titan: Adaptive Armor is a textbook case of brace, an id no researched unit has. It is the best swap if the trim wants a Steel Talons-only unit.\n- Reaper-17 Reaper tripod: the same Conversion Beam as the Devourer, plus a passive EMP on its target.\n- Traveler-59 Prodigy and Cultists: their teleport and mind control repeat the Chrono Legionnaire and Mastermind.\n- Marked of Kane Awakened and Enlightened: their EMP is disable-machine, already taught by the Terror Drone. The Tiberium trooper's slowing spray is minor.\n- MARV and Eradicator hexapod: one-per-player epics. The MARV harvests by driving over Tiberium; the hexapod's aura refunds part of the cost of enemies killed near it, which fits the share-spoils hook.\n- Redeemer: its Rage Generator is confuse-enemies, already taught by the Chaos Drone.\n- Vertigo: its cloaking pods are an area variant of cloak.\n- Venom: its Signature Generator shows fake units on radar, a good alternate for spawn-decoy or jam-sensors.\n- Stealth tank: plain cloak.\n- Reckoner: a one-way bunker that also becomes one the first time it is destroyed.\n- Rifleman squad: its Dig In foxhole is build-cover.\n- Firehawk: loadout swapped only on the pad, and a Stratofighter boost that flies it anywhere on the map.\n- Juggernaut and Specter: the artillery halves of the spotter pairs.\n- Corrupter: its spray is on the Mechapede.\n- Mantis, Zone raider, Behemoth, Mobile Repair Transport and Wolverine repeat other units. Shard walker and Shielded harvester only add Reaper-17's regenerating forcefields, which is an armour model, not a pattern.\n\nPage notes:\n- Each main page resolved with one API request. MARV redirects to Mammoth Armored Reclamation Vehicle and Walker husk to Husk; there are no pages for Commandeer Technology or Glider pack.\n- The Sensor Pod cooldown differs between the Orca and Sensor pods pages.\n- The infoboxes put the Shadow Team at tier 3 and the carrier at tier 4, against t2 and t3 in the tier map.\n- Prices are the Kane's Wrath infobox values. The sibling notes-cnc3 run found EA's CnC_Modding_Support XML with KW 1.02 values, which can settle doubts; that run also has the Scorpion at 800, not the 700 in the cost-anchor note.\n- Apostrophes in URLs are written %27, as in data/units.\n\nProgress notes: <scratch>/r2/progress/prep/candidates-cnc3/progress.md"
+ }
+}
