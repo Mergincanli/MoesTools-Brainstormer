@@ -1362,7 +1362,7 @@
         "very-high": 1500
       },
       "speed_reference": "Ranger (USA basic rifle infantry, land speed 20 in the wiki's game data; the GLA Rebel is also 20 and the Chinese Red Guard 25)",
-      "sight_reference": "Ranger: sight 100-400 in the wiki infobox. Most units list two figures this way; read them as Red Alert 3's vision and shroud-clearing pair and use the second (400). Compare a unit that lists one figure with 100",
+      "sight_reference": "Ranger: sight 100-400 in the wiki infobox, which are the VisionRange (100) and ShroudClearingRange (400) of its object in the unedited 1.04 files. The engine clears the fog of war out to ShroudClearingRange; VisionRange clears no fog (it is how far the unit targets and, for a detector with no detection range of its own, how far it reveals stealthed units). So use 400, and the second figure of every unit that lists two. Where the infobox lists one figure, read ShroudClearingRange in the unit's 1.04 Object file; an object without one clears the fog to its VisionRange",
       "range_reference": "Ranger's M16 rifle: range 100 (its flash-bang grenades reach 175, but only after an upgrade)",
       "damage_map": {
         "SMALL_ARMS": "kinetic",
@@ -1433,6 +1433,23 @@
           "accessed": "2026-10-18",
           "supports": ["speed_reference", "sight_reference", "range_reference"],
           "note": "Infobox: land speed 20 (10 when badly wounded), costs $225. Sight 100-400; M16 range 100, flash-bangs 175."
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AmericaInfantry.ini",
+          "title": "AmericaInfantry.ini, unedited Zero Hour 1.04 game files, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-24",
+          "version": "Zero Hour 1.04",
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "The Ranger's object: locomotor BasicHumanLocomotor, VisionRange 100, ShroudClearingRange 400, BuildCost 225, main weapon RangerAdvancedCombatRifle. In the same folder, Locomotor.ini gives that locomotor Speed 20 and SpeedDamaged 10 (the Rebel uses it too; the Red Guard's own locomotor is 25), and Weapon.ini gives the rifle AttackRange 100 and the flash-bang weapon 175."
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Object.cpp",
+          "title": "Object.cpp, Command & Conquer: Generals - Zero Hour source code, Electronic Arts on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-24",
+          "supports": ["speed_reference", "sight_reference"],
+          "note": "A new object whose ShroudClearingRange is unset takes its VisionRange instead. The look routine lifts the fog of war for the owner and its allies out to the shroud-clearing figure; the vision figure is how far the object counts as a target or a threat, not a fog figure. Riders in transports and tunnels do not look. Other files of the same release: Source/GameLogic/Object/Update/StealthDetectorUpdate.cpp (a detector with no DetectionRange of its own detects out to its VisionRange); Source/Common/INI/INI.cpp with Include/Common/GameCommon.h (a Speed in the INI files is a distance per second, turned into a step per logic frame at 30 frames a second); Source/GameLogic/Object/Locomotor.cpp (a walking soldier speeds up to its Speed, slowing only to turn or stop, and moves at SpeedDamaged once ActiveBody.cpp finds its health at or below GameData.ini's UnitReallyDamagedThreshold, 0.35); Source/GameLogic/Object/Update/PhysicsUpdate.cpp (no forward friction acts while a unit drives itself, so the listed Speed is its real top speed)."
         }
       ]
     },
@@ -1445,7 +1462,7 @@
       "franchise": "Tempest Rising",
       "control": "commanded",
       "research_bucket": "r3",
-      "version_researched": "Patch 2.0.1+60808 (7 October 2026), the first version with the Veti in skirmish and multiplayer; multiplayer values, not campaign ones, as described by the Tempest Rising Wiki and the official patch notes in October 2026",
+      "version_researched": "Patch 2.0.1+60808 (7 October 2026), a bug-fix hotfix on patch 2.0.0+60710 (29 September 2026), the first full release with the Veti in skirmish and multiplayer; multiplayer values, not campaign ones, as described by the Tempest Rising Wiki and the official patch notes in October 2026",
       "expansions": [
         {
           "id": "tempest-rising-vetis-wrath",
@@ -1611,6 +1628,11 @@
           "gate": "Corral",
           "band": "t3",
           "faction": "veti"
+        },
+        {
+          "gate": "Corral with Initial, Elevated or Transcendent Awakening",
+          "band": "t3",
+          "faction": "veti"
         }
       ],
       "cost_thresholds": {
@@ -1770,7 +1792,7 @@
       },
       "speed_reference": "Rifle squads (Polanian Riflemen, Saxon Stormtroopers, Rusviet Vanguards, Usonian Volunteers; movement speed 5 in the wiki's stat boxes)",
       "sight_reference": "None: the wiki's stat boxes give no sight figures, so every sight band is a medium proposal",
-      "range_reference": "Polanian Riflemen's rifle: maximum range 26 in the wiki's stat box. The other rifle squads reach less (Usonian Volunteers 23, Saxon Stormtroopers 20, Rusviet Vanguards 16), but every weapon is compared with the 26",
+      "range_reference": "Usonian Volunteers' bolt rifle: maximum range 23 (metres) in the wiki's stat box, entered in August 2021; no later post changes that rifle. The Polanian Riflemen's 26 is not used: it has stood since 2019, and patch 0.11.5 (August 2020) lengthened their rifle without giving the new reach. The Saxon Stormtroopers' 20 and the Rusviet Vanguards' 16 date from August 2019. Every weapon is compared with the 23",
       "armour_map": {
         "Unarmored": "unarmoured",
         "Light": "medium",
@@ -1786,7 +1808,7 @@
           "kind": "wiki",
           "accessed": "2026-10-18",
           "supports": ["tier_map"],
-          "note": "Infantry come from the Barracks and mechs from the Workshop; the stronger ones need the Advanced Barracks or Advanced Workshop upgrade. In skirmish and multiplayer each player picks one hero, built at the Headquarters. Weapon systems use the same designs for every faction."
+          "note": "Infantry come from the Barracks and mechs from the Workshop; the stronger ones need the Advanced Barracks or Advanced Workshop upgrade. Weapon systems use the same designs for every faction. The page has heroes produced at the Headquarters, which is where the reserves are called from: in skirmish and multiplayer each player picks one hero before the match and calls it in with a reserve (DevBlog #27), so the Headquarters is never a hero's gate."
         },
         {
           "url": "https://kingart-games.com/article/90-iron-harvest-devblog-30-september-2020",
@@ -1810,7 +1832,7 @@
           "kind": "official",
           "accessed": "2026-10-18",
           "supports": ["tier_map"],
-          "note": "Reserve rework: Reserve II used to need an advanced building plus a basic one; from this patch either a single advanced building or a pair of basic buildings will do. No source gives the condition for Reserve I. A unit that can also be built normally takes its production gate, so the Reserve gates are only for units that cannot be built any other way; Reserve II stays t2 for those by judgement, even though two basic buildings also open it."
+          "note": "Reserve rework: Reserve II used to need an advanced building plus a basic one; from this patch either a single advanced building or a pair of basic buildings will do. Reserve I's condition, a Barracks or a Workshop, comes from DevBlog #27, and no later post changes it. A unit that can also be built normally takes its production gate, so the Reserve gates are only for units that cannot be built any other way, which in skirmish and multiplayer means the heroes. Reserve II stays t2 for them by judgement, since KING Art calls the heroes that need it tier 2 (Change Log #04, patch 0.11.5), even though two basic buildings also open it."
         },
         {
           "url": "https://iron-harvest.fandom.com/wiki/Saxon_Stormtrooper",
@@ -1821,12 +1843,20 @@
           "note": "Infobox: movement speed 5, unarmoured. The Polanian Rifleman, Rusviet Vanguards and Usonian Volunteer pages give the same speed. The armour_map keys are the four unit armour classes on the wiki's Armor page. It gives no sight figure; its submachine gun reaches 20."
         },
         {
-          "url": "https://iron-harvest.fandom.com/wiki/Polanian_Rifleman",
-          "title": "Polanian Rifleman, Iron Harvest Wiki",
+          "url": "https://iron-harvest.fandom.com/wiki/Usonian_Volunteer",
+          "title": "Usonian Volunteer, Iron Harvest Wiki",
           "kind": "wiki",
-          "accessed": "2026-10-19",
-          "supports": ["range_reference"],
-          "note": "Infobox: movement speed 5; rifle maximum range 26. The Usonian Volunteer and Rusviet Vanguards pages give 23 (bolt rifle) and 16 (shotgun)."
+          "accessed": "2026-10-25",
+          "supports": ["range_reference", "speed_reference"],
+          "note": "Infobox, entered in August 2021: movement speed 5 (metres per second); bolt rifle maximum range 23 (metres). It replaces the Polanian Rifleman page as the range source: that page's 26 has stood since 2019, and patch 0.11.5 (August 2020) lengthened the Polanian rifle without a figure; its price (200 iron) and its Headquarters are out of date too (Change Log #17)."
+        },
+        {
+          "url": "https://kingart-games.com/article/81-iron-harvest-devblog-27-july-2020",
+          "title": "Iron Harvest DevBlog #27 - July 2020, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-25",
+          "supports": ["tier_map"],
+          "note": "Brings in the reserves and the hero pick for skirmish and multiplayer. Reserves are called in from the Headquarters: the first once the player has a Barracks or a Workshop, the second after one of them is upgraded (changed later; see DevBlog #35). The hero, picked with the faction, takes the field through a reserve."
         }
       ]
     },
