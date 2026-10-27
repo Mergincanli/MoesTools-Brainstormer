@@ -1,0 +1,369 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "generals",
+  "units": [
+    {
+      "id": "generals.gla.jarmen-kell",
+      "game": "generals",
+      "faction": "gla",
+      "name": "Jarmen Kell",
+      "flavour_affinity": [],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "unique",
+      "roles": {
+        "primary": "marksman",
+        "secondary": ["scout", "infiltrator"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Palace",
+        "basis": "Trained at the GLA Barracks once the player owns a Palace, the GLA's single tech building, which the tier map puts at t3 (wiki infobox, CNCNZ and the prerequisites in his 1.04 object). All three GLA generals field him: the Stealth and Toxin Generals' copies match the main one in their 1.04 files, and the Zero Hour manual lets the Toxin and Demolition Generals keep his camouflage although they give up other stealth. Only the Demolition General's version adds buttons, timed and remote demolition charges for buildings and a detonator, left out because this entry follows the main GLA version. A player may field one at a time: the cap is in his 1.04 object, and the wiki and CNCNZ say so too."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 1500,
+        "basis": "His list price, the same in the wiki infobox, on CNCNZ and as the build cost in his 1.04 object, sits exactly on the very-high threshold, about twice the mean price of the three anchor tanks; a value on the edge takes the higher band."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1.5,
+        "notes": "His land speed in the wiki infobox is half again the Ranger's (and the Rebel's), a ratio exactly on the edge between medium and fast, which goes to medium; the wiki calls him quick for a soldier. Like most units he slows down when badly hurt, here to the Ranger's normal pace, a game-wide rule. He walks only on open ground and rubble, so unlike Colonel Burton he cannot climb cliffs; a Combat Cycle carries him over rough terrain instead."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small"
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the wiki's armour type is the Human set, and his 1.04 object wears Human Armor, the Ranger's own set, which the armour map makes unarmoured; the soldier rule keeps him there, since the set is no tougher than the basic rifle infantry's. He has a little more health than a Ranger. The set doubles what sniper fire and crushing do to him, but only the Overlord and the Emperor can run him over. One health bar; the self-healing of Elite and Heroic ranks belongs to veterancy. No armour upgrade reaches the main version (the wiki's Chemical Suits are for the Boss General's copy only)."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "His fog-clearing figure, the second sight figure in the infobox (the one the registry uses), equals the Ranger's, so medium. His first figure, which sets how far he picks targets and lifts no fog, is twice the Ranger's; the wiki's remark that his sight is better than most fits that one. Zero Hour patch 1.03 took away his stealth detection, so he has no detector trait and can walk into mines, traps and hidden units. His camouflage is the cloak pattern on a passive ability, not the stealth trait, as the Generals notes ask."
+      },
+      "armament": [
+        {
+          "name": "Sniper rifle",
+          "slot": "primary",
+          "family": "sniper",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "long",
+          "can_target": ["infantry", "structure"],
+          "traits": [],
+          "summary": "His attack-button weapon: precise single shots, one after another at a steady pace, that land as soon as he fires and reach a little over twice as far as a Ranger's rifle. The wiki infobox gives them the game's Sniper damage category, which soldiers' armour takes double, so a single hit drops a basic rifleman. Vehicles, aircraft and almost every building take nothing from it, so he cannot even aim at them; the Fire Base is the exception the wiki names (the 1.04 armour data adds the Stinger Site), and soldiers sheltering in a civilian building are out of its reach. The Armor-Piercing Bullets upgrade from the Black Market adds a quarter more damage. Each shot gives his position away for a moment."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One soldier. He can ride a Combat Cycle, which then fires his rifle and snipe and stays hidden (recorded on the cycle); he dies with it if it is destroyed. Like other infantry he can garrison civilian buildings, a game-wide mechanic, and stays unseen inside, though he cannot snipe crews from there. He may also climb into a vehicle he has emptied, the game-wide takeover."
+      },
+      "abilities": [
+        {
+          "name": "Sniper Attack",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "medium",
+          "summary": "His one special button, aimed at a single crewed enemy ground vehicle within his rifle's reach; the shot does no damage. It kills the crew at once whatever the vehicle's armour or health, from a supply truck to an Overlord: the unharmed hull halts, turns grey as a neutral object and runs no one over, and the first infantry unit of any side to climb in takes it, a game-wide takeover that lets his own soldiers steal it. Riders of a sniped transport are pushed out within his rifle's reach, a sniped Combat Cycle loses its rider (or is wrecked if it was moving), and a terrorist's car bomb blows up. A construction dozer taken this way gives the GLA the enemy's buildings. Soldiers, aircraft and uncrewed machines such as the Sentry Drone are unaffected. Using it reveals him like any attack, it cannot be fired from inside a garrisoned building, and it then needs about half a minute to come back.",
+          "patterns": ["hijack-vehicle"]
+        },
+        {
+          "name": "Camouflage (innate stealth)",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Always on, with no button. Enemies can neither see nor target him, standing or moving, until he attacks with the rifle or the snipe or comes close to an enemy stealth detector; a couple of seconds after he stops attacking he vanishes again. Each time he is revealed the enemy hears a warning and its idle units in reach are ordered to attack him. He can enter a civilian building and hold it unseen, sniping soldiers from inside (official tooltip, Garrisoning page). Pathfinders, Sentry Drones, Listening Outposts and several base defences can find him.",
+          "patterns": ["cloak"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "He is simply gone, with no blast or remains; a new one can be trained once he is dead. The Demolition General's Demolitions upgrade, a side-wide upgrade, gives that general's version a self-detonate button and a blast whenever he dies."
+      },
+      "strengths": [
+        {
+          "ref": "hits:infantry",
+          "why": "Official text rates him strong against infantry: one rifle hit drops a basic rifleman, and campaign text has him taking soldiers out from long range."
+        },
+        {
+          "ref": "pattern:hijack-vehicle",
+          "why": "One snipe empties any crewed ground vehicle whatever its armour, from a truck to an Overlord, and leaves it for his side's infantry to take (manual, tooltip, wiki)."
+        },
+        {
+          "ref": "pattern:cloak",
+          "why": "Enemies cannot see or target him until he attacks or a detector comes near, and he can hold a civilian building unseen while sniping soldiers from it (tooltip, manual)."
+        },
+        {
+          "ref": "range:long",
+          "why": "His rifle reaches a little over twice as far as a Ranger's, so he can pick soldiers off at a distance and slip away."
+        },
+        {
+          "ref": "immune:crush",
+          "why": "Enemy vehicles cannot run him over, apart from the Overlord and the Emperor, the only crushers heavy enough for a hero."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:sniper",
+          "why": "His rifle does nothing to vehicles, aircraft or almost any building and cannot reach soldiers inside a civilian building, so against armour he has only the snipe."
+        },
+        {
+          "ref": "pattern:hijack-vehicle",
+          "why": "The snipe needs about half a minute to come back, so it handles one vehicle at a time, and the enemy's own infantry can re-crew an emptied vehicle if his side is slow to claim it (wiki)."
+        },
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "He wears an ordinary soldier's armour with only a little more health than a Ranger, so once firing or a detector reveals him he dies quickly, and idle enemies close by are sent after him."
+        },
+        {
+          "ref": "availability:unique",
+          "why": "Only one at a time per player, at a very high price, and only once a Palace stands."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:scout",
+          "why": "The official tooltip names scouts as his weak point; the wiki explains that scouting units such as Pathfinders and Sentry Drones see through his camouflage and are deadly to soldiers."
+        },
+        {
+          "ref": "sensor:detector",
+          "why": "Any unit or base defence that detects stealth exposes him, and once seen he is a lone, fragile soldier for the rest of the enemy to shoot (wiki; hints on Sentry Drones and Listening Outposts)."
+        },
+        {
+          "ref": "immune:hijack-vehicle",
+          "why": "A Sentry Drone has no crew, so his snipe does nothing to it and his rifle cannot hurt it, while it spots him, outruns him and keeps shooting him even on a Combat Cycle (wiki)."
+        },
+        {
+          "ref": "unit:generals.usa.sentry-drone",
+          "why": "The same reason: the wiki names the armed Sentry Drone as his worst danger, an uncrewed and faster stealth detector."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "Nothing he carries can attack aircraft, so once he is revealed fliers can hit him freely (wiki)."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "In a group: his snipe takes one vehicle per long recharge and his rifle cannot hurt vehicles, so the rest of the group can shoot him down once he is revealed (wiki)."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "His rifle picks soldiers off from long range, Workers at GLA supply sites included, and the official tooltip rates him strong against infantry."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "One at a time: any crewed ground vehicle loses its crew to a single snipe, whatever its armour, and is left for his infantry to steal; the official tooltip rates him strong against vehicles."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Stinger Sites, the GLA's anti-air defences: his rifle picks off their soldiers, silencing them until other troops close in to destroy them (wiki); it also hurts a Fire Base and the troops inside it."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:infantry",
+          "why": "Any GLA soldier can climb into a vehicle he has emptied and take it; the manual and the wiki pair him with plain infantry to steal isolated vehicles."
+        },
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "Riding a Combat Cycle, whose rider sets its weapon, he keeps sniping crews and soldiers and stays hidden while gaining speed and rough-terrain reach (official hint, wiki)."
+        },
+        {
+          "ref": "unit:generals.gla.combat-cycle",
+          "why": "The same reason: the Combat Cycle is the bike he can ride, though the wiki warns that he dies with it and that it draws anti-armour fire."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "He has nothing against aircraft, so the wiki wants anti-air fire close by when the enemy holds the skies."
+        },
+        {
+          "ref": "pattern:reveal-area",
+          "why": "A Radar Van with its Radar Scan upgrade can sweep his route for mines and hidden units, which he cannot detect himself (wiki)."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "While his snipe recharges, anti-vehicle units can destroy the detecting scout vehicles that would otherwise expose him (wiki)."
+        }
+      ],
+      "memorable": "A camouflaged mercenary sniper who picks off soldiers from afar and, with one scoped shot, kills a tank's crew so his infantry can drive the tank away.",
+      "as_player": "The team's one sniper hero at T3: invisible while you move, seen only for a moment after each shot. Left mouse fires a precise long-range rifle that drops a soldier per hit but does nothing to vehicles or aircraft. Q (Sniper Attack) kills the crew of one enemy vehicle: it stalls and goes neutral until someone on foot climbs in, ideally a teammate, and then you wait about half a minute. Detectors, drones and aircraft are what hunt you.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b8/Command_and_Conquer_-_Generals_-_UK_Manual_-_PC.pdf/revision/latest",
+          "title": "Command & Conquer: Generals manual (UK, PC), scan hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-26",
+          "version": "Base-game manual (2003)",
+          "note": "EA's printed manual; the Command & Conquer Wiki hosts the scan. The GLA unit table on printed page 40 gives his Purpose as Scout and Base Infiltration and describes a stealthy sniper who can hold a building unseen and shoot drivers out of vehicles so that GLA infantry can take them. The same table names the Armor-Piercing Bullets upgrade. Paraphrases were checked by hand against a pdftotext dump, since the copy-check cannot read a PDF.",
+          "supports": ["roles", "abilities/0", "abilities/1", "combos/0", "memorable"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Jarmen_Kell",
+          "title": "Jarmen Kell, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-26",
+          "version": "Generals and Zero Hour",
+          "note": "Infobox: the Human armour set and health, price, build time, GLA Barracks with a Palace, rifle damage in the Sniper category, the snipe's Kill Pilot category and recharge, land speed, both sight figures and the rifle's reach. Prose on the snipe, the camouflage, the one-at-a-time cap, counters and tactics; changelog entries for Generals patch 1.02 and Zero Hour patch 1.03. Its Strong vs. and Weak vs. bullets match the 1.04 tooltip, the registry note says. Read from the page cache's copy (fetched 2026-10-19).",
+          "supports": [
+            "tier",
+            "cost_band",
+            "availability",
+            "mobility",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "abilities/1",
+            "crew",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable",
+            "uncertain"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/a65f341431e95e926fca3ad7bbdce32bc6912d6d/Patch104pZH/GameFilesEdited/Data/generals.str",
+          "title": "generals.str, first plain-text copy of the Zero Hour 1.04 English string table, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-26",
+          "version": "Zero Hour 1.04",
+          "note": "Copies the in-game text: the registry note found every build tooltip in this first version identical to the binary original. His build tooltip says he is camouflaged, can hide in civilian buildings to shoot soldiers and can kill vehicle crews so the vehicles can be captured, then Strong vs. infantry and vehicles and Weak vs. scouts. Also the Sniper Attack button and its tooltip, the AP Bullets tooltip, hints that Sentry Drones and Listening Outposts find camouflaged units and that he keeps his snipe while riding a Combat Cycle, and a campaign line on his long-range shooting. Read from the page cache's copy (fetched 2026-10-20).",
+          "supports": [
+            "roles",
+            "abilities/0",
+            "abilities/1",
+            "strengths/0",
+            "strengths/1",
+            "strengths/2",
+            "countered_by/0",
+            "countered_by/1",
+            "counters/0",
+            "counters/1",
+            "combos/1",
+            "combos/2"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/GLAInfantry.ini",
+          "title": "GLAInfantry.ini, unedited Zero Hour 1.04 game files, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-26",
+          "version": "Zero Hour 1.04",
+          "note": "His object: the display name, a cap of one at a time, the rifle as primary weapon and a vehicle-pilot sniper rifle in the secondary slot that only its button fires, Human Armor, both sight figures, the Barracks and Palace prerequisites, the build cost, his crushable level, the hero and stealth-garrison kinds, his health, a locomotor of his own, and a stealth module that hides him except while he attacks, hides him again after a short delay and sends idle enemies at him when he is revealed.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "availability",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "abilities/1",
+            "strengths/4"
+          ]
+        },
+        {
+          "url": "https://cncnz.com/games/generals/gla-units/",
+          "title": "Command & Conquer: Generals – GLA Units, CNCNZ",
+          "kind": "guide",
+          "accessed": "2026-10-26",
+          "note": "A long-standing fan site's unit list, cited as the second site in place of a third page of TheSuperHackers' repository. Its Kell entry agrees on the price, the Palace, camouflage while he holds fire, unseen garrisoning, the one-per-player cap and a snipe after which any infantry may take the vehicle. It gives the snipe an instant cooldown and lists the demolition charges without naming the Demolition General (see uncertain). Read from the page cache's copy (fetched 2026-10-19).",
+          "supports": ["tier", "cost_band", "availability", "abilities/0", "abilities/1", "uncertain"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "abilities/0/cooldown",
+          "note": "The wiki infobox gives the snipe a recharge of about half a minute, and Weapon.ini in the 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini) agrees: the pilot-sniper rifle holds one shot and reloads it in that time. CNCNZ lists the cooldown as instant. Its cooldown field matches the reload times of special powers in the 1.04 SpecialPower.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/SpecialPower.ini), such as the Radar Scan and the Rebel's capture, while the snipe is a weapon button with no special power behind it, which may explain the gap. No official text gives the figure, so the band follows the wiki and the game data, and the confidence tie-break drops the entry to medium.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities",
+          "note": "CNCNZ lists timed and remote demolition charges and a detonator among Kell's abilities on its GLA page. The wiki gives them only to the Demolition General's Kell, and the 1.04 files agree: the main command set in CommandSet.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini) holds only the Sniper Attack beside the basic orders, and only the Demolition General's object in DemoGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/DemoGeneral.ini) carries the charge abilities. The charges are left out and named in tier.basis.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0",
+          "note": "Details beyond the sources' own description rest on EA's released Zero Hour code and on the 1.04 files. Weapon.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini) gives the pilot-sniper rifle the same reach as his rifle. ActiveBody.cpp (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Body/ActiveBody.cpp) leaves the hull unharmed, makes the vehicle neutral and stops it, and for a Combat Cycle kills the rider if the bike stands still or destroys the bike if it is moving. Object.cpp (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Object.cpp) blows up a sniped car bomb and lets no emptied vehicle crush soldiers. Armor.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Armor.ini) lets every ground-vehicle set take the pilot-kill damage and none of the soldier, aircraft, building or Sentry Drone sets."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Structures rest on the wiki's note that the Fire Base is the one building his rifle can hurt, its occupants included. Armor.ini in the 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Armor.ini) also gives the Stinger Site's own set full sniper damage, which the wiki's only-the-Fire-Base wording leaves out, though the wiki praises him against Stinger Sites. Vehicle and aircraft sets take none, so those kinds are left out; the wiki's changelog adds that Generals patch 1.02 ended his one-shot kills of aircraft, without saying which weapon.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No cited page says how the shots travel, so hitscan is the sniper family's default; Weapon.ini in the 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini) agrees, giving the rifle no projectile and a speed that makes the hit effectively instant."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "That one hit drops a Ranger is worked out, not stated: the wiki's rifle damage, the Human set's doubling of sniper damage in Armor.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Armor.ini) and the Ranger's health in AmericaInfantry.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AmericaInfantry.ini). CNCNZ says the AP Bullets upgrade lets him kill enemy heroes in one shot."
+        },
+        {
+          "path": "strengths/4",
+          "note": "That only the Overlord and the Emperor can crush him rests on his crushable level in the 1.04 object and on their higher crusher levels in ChinaVehicle.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/ChinaVehicle.ini) and TankGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/TankGeneral.ini), read with the engine rule the Generals game-wide notes give. The wiki says only that, being a commando, he is safe from enemy vehicles running him over."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Infiltrator rests on the manual's Base Infiltration and on the snipe, which leaves enemy vehicles for his side to steal. The roles tie-break keeps infiltrator for spying, theft or sabotage from inside; Kell sets the theft up from outside, and another soldier finishes it by climbing in. Anti-infantry (his rifle) and anti-armour (the snipe button, which harms only vehicles) rank below the two roles the Purpose names, so neither is kept."
+        },
+        {
+          "path": "countered_by/0",
+          "note": "The official Weak vs. line names scouts without saying which units it means; the reason follows the wiki, which singles out Pathfinders and armed Sentry Drones because they see stealthed units."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "No climb trait: his own locomotor in the 1.04 Locomotor.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Locomotor.ini) moves only on ground and rubble, unlike the cliff locomotors the Generals notes give Colonel Burton and the Saboteur, and the wiki says a Combat Cycle lets him cross terrain he could not cross on foot."
+        },
+        {
+          "path": "armour/class",
+          "note": "The soldier rule compares his set with the Ranger's, which AmericaInfantry.ini in the 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AmericaInfantry.ini) shows is the same Human Armor."
+        },
+        {
+          "path": "abilities/1",
+          "note": "The garrison details rest also on the wiki's Garrisoning page (https://cnc.fandom.com/wiki/Garrisoning): stealthy units such as Kell can enter a building unnoticed, and soldiers inside a standing building are safe from his and the Pathfinder's sniping. The wiki's Stealth page (https://cnc.fandom.com/wiki/Stealth) lists the detectors, base defences among them, and says he lost his own detection in Zero Hour patch 1.03. The warning on discovery is the announcer line in the string table."
+        },
+        {
+          "path": "tier",
+          "note": "The generals' versions in tier.basis rest on StealthGeneral.ini, ChemicalGeneral.ini and DemoGeneral.ini in the 1.04 Object folder (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/StealthGeneral.ini and the files beside it) and on the Zero Hour manual scan (https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b1/CNC_Generals_Zero_Hour_Manual_2015.pdf/revision/latest), whose Toxin and Demolition General pages keep Kell's camouflage."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "abilities/0/patterns",
+          "used": "hijack-vehicle",
+          "wanted": "a crew-kill variant: kill a vehicle's crew from range and leave the empty hull neutral for anyone to claim",
+          "note": "The registry folds this snipe into hijack-vehicle, whose summary has the attacker take the vehicle over by removing its crew. Kell never takes it himself: the hull goes neutral, and the first soldier of either side to climb in gets it, so the victim's own infantry can win it back."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "armament/0/family",
+          "rule": "weapon-families:sniper allowed.target-types structure",
+          "note": "The wiki says his rifle can hurt the Fire Base and the soldiers inside it, the one building whose armour takes sniper damage in full, and the 1.04 armour data gives the Stinger Site the same; our sniper family leaves structures out."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent A"
+    }
+  ]
+}

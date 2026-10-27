@@ -1,0 +1,127 @@
+{
+ "id": "generals.gla.jarmen-kell",
+ "file_written": "data/units/generals.json",
+ "decisions": [
+  {
+   "path": "(base coding)",
+   "a": "coder A",
+   "b": "coder B",
+   "chosen": "Started from A. A follows the sources rule, citing CNCNZ as the second site, and names every uncited page with its URL. B's clearer passages were merged in: armour values, Combat Cycle outcome, string-table labels, roles/primary note.",
+   "why": "Task step 1 (clearer and better sourced). A is the better-sourced coding under fields.md sources[]: the second-site rule, plus uncited pages named in uncertain."
+  },
+  {
+   "path": "confidence",
+   "a": "medium",
+   "b": "high",
+   "chosen": "medium, with a new uncertain entry at confidence",
+   "why": "vocabularies.md Confidence levels, tie-break 'High or Medium'. The cited CNCNZ page says the snipe's cooldown is instant. The wiki infobox (and the 1.04 Weapon.ini) give about half a minute. That point decides a band (abilities/0/cooldown). No official text gives the figure: the manual and the tooltips in generals.str give none. So the entry drops to medium. B's high came only from leaving CNCNZ uncited ('Confidence counts only the cited pages'), but the sources rule requires CNCNZ to be cited here (next decision). Reported as rule problem 1."
+  },
+  {
+   "path": "sources",
+   "a": "manual PDF, wiki Jarmen_Kell, generals.str, GLAInfantry.ini, CNCNZ GLA units (guide)",
+   "b": "manual PDF, wiki, generals.str, GLAInfantry.ini, Weapon.ini",
+   "chosen": "A's five. Weapon.ini is named in uncertain entries instead (it is kind database, so it may still carry a code).",
+   "why": "fields.md sources[]: 'When another established site covers the unit, cite it rather than a third page of the same site.' games-r1.md: 'CNCNZ is that other site … though its kind stays guide.' Weapon.ini would be a third page of TheSuperHackers' repository. The snipe's reload figure that B wanted it for is already in the cited wiki infobox. Precedent: the ra2 Magnetron, Slave Miner and Chaos Drone entries cite CNCNZ the same way. The source notes were merged and corrected: the manual names AP Bullets in the GLA upgrade list on printed page 43, not in the unit table as A said."
+  },
+  {
+   "path": "uncertain armament/0/can_target",
+   "a": "sources_disagree: Armor.ini gives the Stinger Site full sniper damage, against the wiki's Fire-Base-only trivia",
+   "b": "no disagreement: the Stinger Site set only lets snipers hit its soldiers",
+   "chosen": "B's reading. The entry is merged and sources_disagree is dropped.",
+   "why": "I read Armor.ini (1.04). The comment on StingerSiteArmor says its SNIPER value exists only so that snipers can attack and kill the Stinger soldiers, and that the value itself does not matter. That fits the wiki trivia (the Fire Base is the only vulnerable building) and its praise of him against Stinger Sites. can_target [infantry, structure] stays on the Fire Base (FireBaseArmor takes sniper damage in full). A sentence was added that structure rests on that one building."
+  },
+  {
+   "path": "abilities/0/summary (Combat Cycle)",
+   "a": "a sniped cycle loses its rider, or is wrecked if it was moving",
+   "b": "the cycle is lost either way: blown up if moving, scuttled once its rider is shot if parked",
+   "chosen": "B's wording",
+   "why": "EA's ActiveBody.cpp, KILLPILOT case: a moving bike is killed; a parked one has its rider pulled out and killed, and the bike then scuttles."
+  },
+  {
+   "path": "armament/0/summary (rate of fire)",
+   "a": "precise single shots at a steady pace",
+   "b": "one slow, deliberate shot at a time",
+   "chosen": "single shots at a quick, steady pace",
+   "why": "The wiki prose calls his shots rapid. In 1.04 Weapon.ini he fires twice as often as the Pathfinder's sniper rifle. B's 'slow' (also in its as_player) has no source."
+  },
+  {
+   "path": "abilities/1/summary (announcer warning)",
+   "a": "each time he is revealed the enemy hears a warning",
+   "b": "not mentioned",
+   "chosen": "When a detector uncovers him, both sides' announcers report it",
+   "why": "GLAInfantry.ini's StealthUpdate names an EnemyDetectionEvaEvent and an OwnDetectionEvaEvent, and generals.str holds both lines. Nothing ties the warning to every reveal by firing."
+  },
+  {
+   "path": "abilities/1/name",
+   "a": "Camouflage (innate stealth)",
+   "b": "Camouflage",
+   "chosen": "Camouflage",
+   "why": "There is no in-game name; the name field is for reference only. 'Camouflaged' is the build tooltip's own word."
+  },
+  {
+   "path": "tier/basis and on_death/notes (Demolition General's charges)",
+   "a": "charges in tier.basis; Demolitions upgrade in on_death.notes",
+   "b": "charges and upgrade both in on_death.notes",
+   "chosen": "A's placement. The uncertain entry at abilities merges B's DemoGeneral.ini details: the charges take several seconds to plant and reveal him (checked: UnpackTime, LoseStealthOnTrigger).",
+   "why": "games-r3.md research notes: name the generals in tier.basis, and put a version's differences 'in the notes of the fields it would change'. Abilities have no notes field, and the charges have nothing to do with death. The game-wide note says on_death.notes must name the Demolitions upgrade. CommandSet.ini confirms that only the Demo General's command set adds the charges. Reported as rule problem 2."
+  },
+  {
+   "path": "strengths",
+   "a": "5 entries, with range:long",
+   "b": "4 entries",
+   "chosen": "A's 5, reasons merged",
+   "why": "Matchups rule 7 (about two to five). range:long is sourced (wiki infobox reach against the Ranger's; the wiki's long-range hit-and-run) and gives a distinct reason."
+  },
+  {
+   "path": "countered_by",
+   "a": "scout, detector, immune:hijack-vehicle, unit:sentry-drone, aircraft, class:vehicle (in a group)",
+   "b": "same, but weapon:sniper (enemy snipers) instead of class:vehicle",
+   "chosen": "A's six, reasons merged",
+   "why": "Rule 7 allows a sixth entry only when it is sourced and distinct, so a seventh would go past it. class:vehicle is named by the wiki (the long cooldown leaves him exposed to groups), and rule 6 pairs it with counters class:vehicle (one at a time). B's weapon:sniper was partly reasoned (B's own uncertain at countered_by/5). Its facts were kept elsewhere: double sniper damage in weaknesses/2, cover from counter-snipers in combos/1, and the Pathfinder's longer reach in countered_by/0, with an uncertain entry naming Weapon.ini. countered_by/2 was reworded to give the wiki's reasoning, because other drones are unchecked."
+  },
+  {
+   "path": "counters",
+   "a": "infantry, vehicle, target:structure",
+   "b": "infantry, vehicle, role:transport, target:structure",
+   "chosen": "B's four",
+   "why": "role:transport is sourced: the wiki says riders thrown out of a sniped transport are easy prey for his rifle. It is distinct and within rule 7. B's 'hides again between shots' was corrected: he fires every second and re-hides only a couple of seconds after he stops."
+  },
+  {
+   "path": "combos",
+   "a": "6 entries, with pattern:reveal-area (Radar Van) and role:anti-armour",
+   "b": "4 entries",
+   "chosen": "A's six",
+   "why": "Both extra entries come from the wiki's tactics section and give reasons no other entry gives, so rule 7 allows a sixth."
+  },
+  {
+   "path": "fit_notes / uncertain abilities/0/patterns",
+   "a": "fit_note: a crew-kill variant of hijack-vehicle is wanted",
+   "b": "uncertain entry instead (execute-target weighed)",
+   "chosen": "Both kept",
+   "why": "fit_notes: 'Every gap goes here, in the unit file' (the gap report reads only the files). B's note is an uncertain point that still holds."
+  },
+  {
+   "path": "uncertain (overall)",
+   "a": "13 entries",
+   "b": "13 entries",
+   "chosen": "18 merged entries",
+   "why": "Task step 3: every point either coder raised that still holds is kept. Only B's countered_by/5 went, with its entry. A's CNCNZ remark (AP Bullets lets him one-shot commandos) is kept with a data caveat: by the 1.04 figures a stock hit already seems to kill Colonel Burton. URLs are kept for every uncited page a code rests on."
+  },
+  {
+   "path": "text fields (tier/basis, cost_band/basis, mobility, armour and sensors notes, summaries, crew/notes, memorable, as_player)",
+   "a": "A's wording",
+   "b": "B's wording",
+   "chosen": "Merged",
+   "why": "Facts were checked against the pages: GLAInfantry.ini, Weapon.ini, Armor.ini, Locomotor.ini, CommandSet.ini, the three GLA general files, ActiveBody.cpp, Object.cpp, the manual (pdftotext) and the Zero Hour manual. B's Human Armor values were confirmed. The wiki trivia on retraining him in Zero Hour was kept. A wiki phrase was reworded where it would have made a six-word run."
+  }
+ ],
+ "validator_result": "Passed: node scripts/validate.mjs . exits 0 with 0 errors, ending in OK. The lines about this unit are WARNs that the patterns hijack-vehicle and cloak are planned but not written yet (including 'linked by Sniper Attack' and 'linked by Camouflage'). generals.gla.combat-cycle and generals.usa.sentry-drone appear in the list of unit links not researched yet. There is exactly one ATYPICAL line: weapon 'Sniper rifle', rule 'weapon-families:sniper allowed.target-types structure'. It is recorded in the unit's atypical list at armament/0/family with a note. node scripts/format-json.mjs data/units/generals.json rewrote the file once; --check now reports it formatted.",
+ "copy_check_result": "Passed (exit 0). Command: node scripts/copy-check.mjs . --only Generals_-_UK_Manual --only wiki/Jarmen_Kell --only GameFilesEdited/Data/generals.str --only Object/GLAInfantry.ini --only cncnz.com/games/generals/gla-units. It checked 5 pages, all from the cache (I had fetched GLAInfantry.ini into it), and printed 'OK: no shared runs'. The cached manual PDF is binary, so the copy-check cannot really read it. I also ran a six-word check by hand with copy-check's own words, grams and sharedRuns functions (a small script in its notes folder; a planted phrase is caught). It covered pdftotext dumps (layout and flow) of both manuals and 14 uncited pages: Weapon, Armor, Locomotor, CommandSet, CommandButton, AmericaInfantry, ChemicalGeneral, DemoGeneral and StealthGeneral .ini, ActiveBody.cpp, Object.cpp, StealthUpdate.cpp, and the wiki's Garrisoning and Stealth pages. It found 0 runs.",
+ "rule_problems": [
+  "1. Confidence and a guide used as the second site. Rules: vocabularies.md High or Medium tie-break ('When established sites, or pages of one site, contradict each other on a point the entry uses and no official text settles it … Drop to medium only when a contradicted point decides a term the entry codes, such as … a band'); fields.md sources[] ('Confidence counts only the cited pages … When another established site covers the unit, cite it rather than a third page of the same site'); games-r1.md ('CNCNZ is that other site … though its kind stays guide'). Result: one slip on CNCNZ (the snipe's cooldown given as instant) drops an entry that has cited official text, and whose wiki and game data agree, to medium. The level also depends only on whether the coder cites the guide: A cited it and got medium, B did not and got high. I kept medium and added an uncertain entry at confidence. Proposed fix: let the unedited game files the registry names (kind database) settle a contradicted figure as official text does. Or let a guide-kind page's contradiction lower confidence only when no official or game-data page settles the point. Also state that the tie-break reads the same page set as confidence.",
+  "2. A general's version with extra buttons. Rule: games-r3.md research notes ('a general's version that differs … goes in the notes of the fields it would change, never in on_death outcomes or traits'). abilities[] has no notes field, so the Demolition General's timed charge, remote charge and detonator ended up in tier.basis (A) or on_death.notes (B), neither of which concerns them. I kept tier.basis plus an uncertain entry at abilities. Proposed fix: name tier.basis, which already lists the generals' versions, as the place for a version's extra or missing buttons, or add an optional abilities[].notes field.",
+  "3. Infiltrator from an official label. Rules: roles.secondary step 1 ('Official text calls the unit by the role label or one of its aliases'), but the roles tie-breaks say 'Infiltrator needs spying, theft or sabotage from inside' and 'Infiltrator is for spying, theft and sabotage from inside, or for passing as the enemy'. The manual's 'Base Infiltration' keeps infiltrator, yet the main version never gets inside enemy units or buildings: he empties a vehicle from range and another soldier takes it. Both coders kept it; I kept it with an uncertain entry at roles/secondary. Proposed fix: say whether a role that official text names at secondary step 1 must still pass that role's tie-break. If it must, Kell's second slot would go to anti-armour from the Sniper Attack button (step 2, recorded in atypical).",
+  "4. hijack-vehicle covers only half of the snipe. Rules: fields.md Pattern links ('Link a pattern when the ability … gives the player the same interaction and the enemy the same counterplay as the pattern's summary … When research/registry-notes/patterns.md disagrees with a pattern's summary, the summary wins'). patterns.md maps 'Snipe a vehicle's crew' to hijack-vehicle, but that summary ('Take over an enemy vehicle by throwing out or killing its crew') has the attacker take the vehicle. Kell never does: the hull goes neutral for either side to claim. Both coders linked it; I kept the link with A's fit_note and B's uncertain entry. Proposed fix: when hijack-vehicle is written, add a ranged crew-kill variant that empties the vehicle so that either side can claim it, or widen the summary to 'take over, or empty for capture'. Also say in Pattern links that a summary covering half the interaction gets the link plus a fit_note.",
+  "5. can_target lists structure because of one building type. Rules: armament[].can_target ('Every kind of target the weapon can be fired at and hurt in the source, even a little' … 'for a family that leaves them out, list them only when the sources say the weapon damages buildings'). The Fire Base alone (with its occupants) makes an anti-infantry rifle list structure and puts the sniper family in atypical, which a generator could read as a sniper that attacks buildings. Both coders listed it; I kept [infantry, structure] and added to the can_target uncertain entry that structure rests on that one building and the rifle in practice works only against soldiers. Proposed fix: list a kind only when the weapon can hurt that kind in general, and name a lone exception such as one building type in the summary instead."
+ ]
+}

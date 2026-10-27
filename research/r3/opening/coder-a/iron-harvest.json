@@ -1,0 +1,380 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "iron-harvest",
+  "units": [
+    {
+      "id": "iron-harvest.saxony.kaiser",
+      "game": "iron-harvest",
+      "faction": "saxony",
+      "name": "SKS 300 \"Kaiser\"",
+      "flavour_affinity": ["soviet"],
+      "class": "walker",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["anti-armour", "anti-infantry"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Advanced Workshop and Advanced Barracks",
+        "basis": "Built at the Advanced Saxon Workshop, by the wiki's infobox. DevBlog #30 (September 2020) took the three mega mechs, the Kaiser among them, off the Reserve and made them need an Advanced Barracks on top of an Advanced Workshop. Change Log #04 lifted the barracks need, but only in campaign and challenge missions, so skirmish and multiplayer still ask for both. That pair of advanced buildings is the t3 gate of the tier_map."
+      },
+      "cost_band": {
+        "band": "high",
+        "raw": 1320,
+        "basis": "DevBlog #43 (December 2021) set the iron and oil price that the wiki's infobox now shows, and no later post changes it. Counted as iron plus three times the oil, it comes to about one and a half times the anchor line mechs' price: high, and the dearest of the mega mechs. Its population cost, among the largest in the game, is a cap and is left out."
+      },
+      "mobility": {
+        "base": "legs-multi",
+        "handling": "pivot",
+        "traits": ["deploy-anchor"],
+        "speed": "very-slow",
+        "speed_raw": 0.45,
+        "notes": "Its infobox movement figure is a little under half the rifle squads' (the registry's reference), so very slow, and the Kaiser page counts it among the very slowest units. It is slower than the Wotan, Saxony's tier 2 line mech, and about as quick as the Tur. Pivot is the many-legs default, kept because the unit is huge and no source gives a reason to change it. Like the other mega mechs it strides through brick and stone buildings and over cover, sandbags and wire, which is game-wide terrain breaking, not the crush trait. The deploy-anchor trait stands for Entrench, which it gains at its first veterancy rank."
+      },
+      "body": {
+        "plan": "spider-frame",
+        "size": "huge",
+        "notes": "A boxy walker on four legs that the wiki likens to an armour-plated bunker. Its cannon sits on the roof in a housing of its own that looks like a turret but is locked facing forward, so the whole mech turns to aim it. Each of its four sides carries a machine gun in a ball mount. Entrenching lifts the cannon housing and bares rocket batteries at the front and on both flanks. The wiki's trivia calls it much more compact than the Tur, though both are mega mechs."
+      },
+      "armour": {
+        "class": "super-heavy",
+        "models": ["directional"],
+        "notes": "Step 1 reads the infobox's Heavy class as heavy through the armour_map, but the registry notes put the mega mechs at super-heavy, and check A agrees for a huge unit at t3. Its health is above that of every other mega mech and of the Samson, and the wiki ranks only one other unit as tougher. By the Armor page, heavy armour all but ignores light weapons, leaving field cannons and anti-mech weapons to do the damage. Directional: like almost every mech it has a weak rear, where hits do about double (Armor page), and the Kaiser page says it takes extra damage from behind. Veterancy ranks raise its health and repair at the base is game-wide; neither changes the class."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "No source gives sight figures for Iron Harvest units (the registry's sight reference), so the band is the medium proposal. No source gives it radar, a detector or stealth."
+      },
+      "armament": [
+        {
+          "name": "Main Cannon",
+          "slot": "primary",
+          "family": "cannon",
+          "damage": "armour-piercing",
+          "mount": "body-aim",
+          "delivery": "projectile",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["splash"],
+          "summary": "A heavy cannon in a roof housing locked facing forward: it fires one shell, then waits several seconds, and the mech must turn to aim it. The infobox gives it a heavy hit on every armour class, most on light and medium armour, about the same on infantry and heavy armour and half that on buildings, plus a small blast. The wiki rates it effective against everything but short of the splash needed to clear infantry well, and calls it the Kaiser's main anti-armour weapon. It reaches about three quarters again as far as the reference rifle. While entrenched it can fire only into a narrow arc ahead."
+        },
+        {
+          "name": "Side Machine Gun",
+          "slot": "secondary",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "limited-arc",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "summary": "Four heavy machine guns in ball mounts, one on each side of the hull, so that together they watch every direction, and they keep firing while the mech walks. Each fires bursts with short pauses and reaches a little less far than the reference rifle. The infobox shows them doing little to any armour and next to nothing to heavy armour or buildings, so they are for infantry and light mechs."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "No player seats: RTS units are ordered, not driven. One player walks it, aims the forward cannon by turning the body and fires the side guns. The side machine guns sit on mounts of their own and fire on the move, but no source says they fire at the same moment as the cannon, so by the crew rule they take turns and the proposal stays solo. A two-seat version could give the side guns and the rockets to a gunner. It has no passenger seats. No source names its crew, so the walker class makes it a crewed machine."
+      },
+      "abilities": [
+        {
+          "name": "Entrench",
+          "kind": "deploy",
+          "summary": "Unlocked at the Kaiser's first veterancy rank (the wiki; patch 0.11.2 made the mega mechs rank up a little faster). It locks itself in place and can neither move nor turn; the cannon housing rises and bares rocket batteries of six tubes facing the front and both flanks, none to the rear. They fire long salvos of small rockets with a modest blast, hardest on infantry, softer on light and medium armour and weakest on heavy armour, with some harm to buildings, and reach about two fifths further than the reference rifle. The cannon keeps only a narrow arc ahead, and the moment spent locking down leaves it exposed. No source gives a cooldown or how long the change takes. DevBlog #24 describes the deploy that lets the rockets fire.",
+          "patterns": ["deploy-siege-mode"],
+          "source": "veterancy"
+        }
+      ],
+      "modes": [
+        {
+          "id": "entrenched",
+          "name": "Entrench",
+          "via": "deploy-siege-mode",
+          "summary": "Locked in place: it cannot move or turn. Rocket batteries open on the front and both flanks and add their salvos (see abilities/0); the raised cannon covers only a narrow arc ahead; no source says the side machine guns change. The wiki says it is more open to field cannons and artillery in this state."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["wreck"],
+        "basis": "in-game",
+        "notes": "Every destroyed mech leaves a wreck that nearly any infantry squad can recycle, the way it collects a stockpile of resources, for a little iron and oil, the same whatever the mech; since Change Log #04 allies get the haul too. A mech or exosuit walking over the wreck, an explosion, or a death too close to a live mech removes it, and the wreck gives no cover."
+      },
+      "strengths": [
+        {
+          "ref": "armour-class:super-heavy",
+          "why": "Its health tops every other mega mech's and the Samson's, and its heavy armour shrugs off small arms, so only field cannons and anti-mech weapons do it real harm; the wiki calls it the toughest unit but one."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Its long-reaching main cannon hits every armour class hard, so it can duel and destroy any other mech one on one, the other mega mechs included."
+        },
+        {
+          "ref": "weapon:machine-gun",
+          "why": "Four machine guns, at the front, the back and both flanks, watch every direction and keep firing on the move, so infantry closing in from anywhere are cut down."
+        },
+        {
+          "ref": "size:huge",
+          "why": "Like the other mega mechs it walks straight through brick and stone buildings, cover, sandbags and wire, so terrain rarely stops it or shields its targets."
+        },
+        {
+          "ref": "pattern:deploy-siege-mode",
+          "why": "Once veteran it can entrench to open rocket batteries that add salvos to its front and both flanks, which the wiki favours for holding a line."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "speed:very-slow",
+          "why": "Among the slowest units Iron Harvest has: it cannot chase, and agile units easily flank, kite or outmanoeuvre it."
+        },
+        {
+          "ref": "armour-model:directional",
+          "why": "Hits from behind do about double damage, and neither its cannon nor its rockets can fire to the rear, leaving a single machine gun to answer there."
+        },
+        {
+          "ref": "mount:body-aim",
+          "why": "The cannon is locked facing forward, so the whole slow mech must turn before its anti-armour gun can bear on a target to the side."
+        },
+        {
+          "ref": "pattern:deploy-siege-mode",
+          "why": "Entrenched, it cannot move or turn and its cannon covers only a narrow arc ahead, and locking down leaves it open for a moment; field cannons and artillery punish it most then."
+        },
+        {
+          "ref": "weapon:cannon",
+          "why": "The cannon fires slowly with a small blast, so alone it does little against soft targets, and groups of light units suit the Tur or the Gulyay-Gorod better."
+        },
+        {
+          "ref": "cost:high",
+          "why": "The most expensive Saxon unit, and its large population cost keeps the number in the field low."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:siege",
+          "why": "Artillery is the bane of the slow heavy mechs (Unit page), and the Kaiser page calls it vulnerable to artillery, worst while entrenched."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Heavy armour is hurt in earnest only by field cannons and by mechs carrying anti-mech guns (Armor page), and the Kaiser page names massed field cannons as a way to wear it down."
+        },
+        {
+          "ref": "unit:iron-harvest.shared.field-cannon",
+          "why": "Named on the Kaiser page: field cannons in numbers and in good positions grind it down, above all while it is entrenched."
+        },
+        {
+          "ref": "speed:>=fast",
+          "why": "Agile units kite it and slip round to its sides and rear, where it takes double damage and only a machine gun can reply (Kaiser page)."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:walker",
+          "why": "The wiki says it can duel and destroy any other mech one on one, the other super-heavy mechs included."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Machine guns on all four sides let it deal with infantry coming from any direction, even while it walks."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:anti-armour",
+          "why": "It soaks the fire while mech destroyers add damage against armour, the pairing the Kaiser page suggests for the attack."
+        },
+        {
+          "ref": "unit:iron-harvest.saxony.wotan",
+          "why": "The Wotan page says the fragile Wotan does well behind a Kaiser that takes the hits while the Wotans add firepower."
+        },
+        {
+          "ref": "role:siege",
+          "why": "The Kaiser page pairs it with artillery on the attack, and the Saxony page's formation can add the long-range Erlkönig."
+        },
+        {
+          "ref": "role:anti-infantry",
+          "why": "Anti-infantry backup covers its gaps on the attack (Kaiser page); the Saxony page's formation brings a Grimbart for this."
+        },
+        {
+          "ref": "unit:iron-harvest.saxony.kaiser",
+          "why": "The Kaiser page advises fielding at least two together, and a pair dug in makes a nearly unbreakable line, as in the Saxony page's formation."
+        }
+      ],
+      "memorable": "Saxony's walking fortress: a forward-locked cannon that out-duels any mech, a machine gun on every side, and, once veteran, an entrenched rocket barrage.",
+      "as_player": "A late, costly walking fortress. Left mouse fires the forward-locked cannon, a slow heavy shot that hurts any armour, so you aim by turning your whole lumbering body, while four side guns shred infantry around you even on the move. Once veteran, Q entrenches you: rocket pods open on your front and flanks, but you cannot move or turn and the cannon covers only a narrow cone. Guard your back, where hits do double, and let teammates stop flankers and artillery.",
+      "sources": [
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/SKS_300_%22Kaiser%22",
+          "title": "SKS 300 \"Kaiser\", Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-26",
+          "version": "Last edited 10 January 2022 (price from DevBlog #43); weapon figures entered April 2020, health September 2020, speed May 2021",
+          "note": "Read through the API; marked beta. Infobox: health, armour class Heavy, movement speed, Advanced Saxon Workshop, price and population, and three weapon slots (Main Cannon, Side Machine Gun, and the Entrench rockets marked as an ability) with reach, burst, cooldown, damage per armour class and blast radius. The prose gives the fixed forward cannon, the four ball-mounted guns, Entrench as the veteran ability, the rear weakness and the matchups. Its italic opening line, Lore quote, unit type and Pros and Cons are the wiki's own words, not official text.",
+          "supports": [
+            "class",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "armament",
+            "abilities/0",
+            "modes/0",
+            "roles/primary",
+            "roles/secondary",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Armor",
+          "title": "Armor, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-26",
+          "note": "The game's unit armour classes, with heavy armour hurt in earnest only by field cannons and anti-mech weapons, and the weak rear spots of many mechs, where damage is doubled.",
+          "supports": ["armour/models", "armour/notes", "strengths/0", "weaknesses/1", "countered_by/1", "countered_by/3"]
+        },
+        {
+          "url": "https://kingart-games.com/article/77",
+          "title": "Iron Harvest DevBlog #24 - April 2020, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-26",
+          "version": "Backer beta, April 2020",
+          "note": "Its patch highlights bring in the Kaiser as a high-end Saxon mech with a cannon and several machine guns, which can deploy so that its rocket launchers fire, and make the wrecks of destroyed mechs harvestable. It predates release; the wiki adds that the deploy comes with the first veterancy rank.",
+          "supports": ["name", "armament/0", "armament/1", "abilities/0", "modes/0", "mobility/traits", "on_death"]
+        },
+        {
+          "url": "https://kingart-games.com/article/90",
+          "title": "Iron Harvest DevBlog #30 - September 2020, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-26",
+          "version": "Patch notes, September 2020",
+          "note": "Its balance changes take the three mega mechs (Kaiser, Tur and Gulyay-Gorod) out of the Reserve and make each need an Advanced Barracks on top of an Advanced Workshop.",
+          "supports": ["tier"]
+        },
+        {
+          "url": "https://kingart-games.com/article/119",
+          "title": "Iron Harvest DevBlog #43 - December 2021, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-26",
+          "version": "Changelog 25, December 2021",
+          "note": "The mech cost rebalance labels the Kaiser a Mega Mech and sets its iron and oil price, which the wiki's infobox matches; no later post changes it.",
+          "supports": ["cost_band", "roles/primary"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Step 1 finds no role: the newest post label, Mega Mech (DevBlog #43), names none, and DevBlog #24's older Gunfort heading is superseded and names none either. Step 4 finds no official strong-against text: the Kaiser page's Lore quote calls it effective against infantry and mechs, but no page says where the quote comes from (perhaps the in-game Codex, which the wiki shows only as a picture), so it is read as the wiki's words, like its italic opening line. Step 5 gives assault: very slow and super-heavy."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Anti-armour rests on the Kaiser page's prose calling the cannon its main anti-armor firepower, read as a label that names the weapon by its job (can_target step 3); without it the list would be anti-infantry alone. Anti-infantry comes from the cannon's blast and from the machine guns, small arms that do little to mechs. Entrench is a veteran button that not every copy has, so it gives nothing at step 2."
+        },
+        {
+          "path": "tier",
+          "note": "The Advanced Saxon Workshop page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Advanced_Saxon_Workshop) lists the Kaiser among the units it builds, and Change Log #04 (https://kingart-games.com/article/92) keeps the barracks need for skirmish and multiplayer; both read, not cited."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The infobox speed was changed in May 2021 by an edit that names no source, from a slightly lower figure entered in April 2020; no KING Art post from DevBlog #20 to #47 changes the Kaiser's speed. Both figures give very slow. The comparisons in mobility.notes use the infobox speeds on the SKS 156 \"Wotan\" and PZM-24 \"Tur\" pages of the Iron Harvest Wiki (read, not cited)."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "Deploy-anchor stands for Entrench, which a Kaiser gains only at its first veterancy rank; an unranked Kaiser cannot deploy. It is kept because the button and its mode are recorded, as on the Red Alert 2 deploy units."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "Walking through buildings and over cover rests on the Unit page (heavy and mega mechs walk through houses of brick or stone without trouble), the Mech page (the biggest mechs trudge through large structures) and the Sandbags page (mechs flatten sandbags by stepping on them), all on the Iron Harvest Wiki, read, not cited."
+        },
+        {
+          "path": "strengths/3",
+          "note": "Rests only on the Unit, Mech and Sandbags pages of the Iron Harvest Wiki (read, not cited; see mobility/notes) and the registry's note on mechs breaking terrain; the Kaiser page itself says nothing of buildings."
+        },
+        {
+          "path": "body/plan",
+          "note": "Spider-frame, the body plan for a walker on several visible legs, as for Red Alert 3's Sickle. The Kaiser's main gun is fixed facing forward, which the casemate or hull-turret tie-break would call a fixed-gun hull, but casemate is not for walkers or legs; hull-turret needs a turning main turret, and multi-turret two or more big turrets, which four ball-mounted machine guns are not. See fit_notes."
+        },
+        {
+          "path": "body/size",
+          "note": "Huge, from the game's Mega Mech label (a giant mech in our size examples) and the Unit page, which calls the heavy and mega mechs the biggest mechs. No source gives its footprint, and the Kaiser page's trivia calls it much more compact than the Tur; if mega mechs were only the size of assault mechs, it would be large."
+        },
+        {
+          "path": "armour/class",
+          "note": "The armour_map alone gives heavy (infobox Heavy); super-heavy comes from the registry notes on mega mechs and from check A for a huge unit at t3. The health comparison in armour.notes and strengths/0 uses the infobox figures on the PZM-24 \"Tur\", SHM-70 \"Gulay-Gorod\" and ZR-25 \"Samson\" pages of the Iron Harvest Wiki (read, not cited)."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "No air targets are listed on either weapon. The Kaiser page's Pros suggest, with a hedge, that it can even shoot at airships, but they name no weapon, and no page read says which Kaiser weapon reaches aircraft; the Gunship page's claim that every unit can attack it is too broad (registry). The SHM-70 \"Gulay-Gorod\" page says that mech's machine guns fire at flying units, which may hold for the Kaiser's guns too."
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "Splash comes from the infobox's blast radius, which counts as saying the hit hurts an area. The Kaiser page calls the splash damage low and says the gun lacks the splash to clear infantry well, but it never calls the area tiny."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "The infobox weapon figures (reaches, damage, bursts and pauses) were entered in April 2020, during the backer beta, and no later KING Art post changes the Kaiser's weapons, so they are read as current. The comparisons use the registry's reference rifle."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Projectile is the cannon family's default; no source says how the shell travels."
+        },
+        {
+          "path": "armament/1/mount",
+          "note": "Limited-arc: each machine gun sits in a ball mount on one side of the hull, and no source says how far it turns (aim tie-break step 3). By that step the front gun alone would be fixed; the one entry takes the side guns' mount."
+        },
+        {
+          "path": "crew",
+          "note": "Solo because no source says the machine guns fire at the same moment as the cannon; the Kaiser page says only that they fire on the move and cover every side. If they do fire together, the proposal would be driver-gunner, with the side guns on the gunner seat."
+        },
+        {
+          "path": "abilities/0",
+          "note": "Its unlock at the first rank rests on the Kaiser page's Weapons section and on the Veterancy page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Veterancy, read, not cited), which says the first rank opens each unit's veteran ability; DevBlog #24, from the backer beta, describes the deploy with no rank. Patch 0.11.2 (https://kingart-games.com/article/83, read, not cited) made the mega mechs rank up a little faster. The rocket figures date from April 2020."
+        },
+        {
+          "path": "on_death",
+          "note": "The wreck rests on DevBlog #24, which made mech wrecks harvestable, and on the Recycling Wrecks page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Recycling_Wrecks, read, not cited), which gives who can recycle a wreck and what removes it; Change Log #04 (https://kingart-games.com/article/92, read, not cited) shares the haul with allies. The Kaiser page says nothing of its wreck."
+        },
+        {
+          "path": "countered_by",
+          "note": "Artillery also rests on the Unit page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Unit, read, not cited), which calls the heavy and mega mechs slow and vulnerable to artillery. Whether aircraft beat it is left open, since no source says which of its weapons reach fliers; DevBlog #45 (https://kingart-games.com/article/121, read, not cited) says the game lists the Gunship as effective against heavy armour."
+        },
+        {
+          "path": "counters",
+          "note": "The Kaiser page says it can kill any other mech and the carried weapons too, but its own Cons call it vulnerable to field cannons, so the weapon systems stay out of counters and field cannons sit in countered by.",
+          "sources_disagree": true
+        },
+        {
+          "path": "combos",
+          "note": "The Wotan, Erlkönig and Grimbart parts rest on the Saxony Empire page (its Great Wall formation: a pair of Kaisers backed by a Wotan or a Stiefmutter, a Grimbart, sometimes a field cannon, and at times the Erlkönig) and on the SKS 156 \"Wotan\" page (Wotans do well behind a Kaiser that soaks damage), both on the Iron Harvest Wiki, read, not cited."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent A",
+      "fit_notes": [
+        {
+          "path": "body/plan",
+          "used": "spider-frame",
+          "wanted": "a fixed-gun hull on legs: casemate allowed for walkers on many legs and at huge size",
+          "note": "The Kaiser's upper body is a boxy hull whose main gun is fixed facing forward in a housing of its own, which is the casemate shape, but casemate is only for vehicles and hovercraft on wheels, tracks or hover, at medium or large size. Spider-frame says nothing of the fixed gun, which shows only in the cannon's body-aim mount."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "mobility/base",
+          "rule": "mobility:legs-multi allowed.speed-bands very-slow",
+          "note": "Among the slowest walkers in Iron Harvest, at a little under half the rifle squads' pace, on four legs; the many-legs type allows no very slow band."
+        }
+      ]
+    }
+  ]
+}
