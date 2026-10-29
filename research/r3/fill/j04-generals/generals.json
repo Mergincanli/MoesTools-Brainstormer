@@ -1,0 +1,694 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "generals",
+  "units": [
+    {
+      "id": "generals.usa.aurora-bomber",
+      "game": "generals",
+      "faction": "usa",
+      "name": "Aurora Bomber",
+      "flavour_affinity": ["allied"],
+      "class": "aircraft",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "siege",
+        "secondary": ["anti-infantry", "raider"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Strategy Center",
+        "basis": "Built at the USA Air Field once a Strategy Center stands: its 1.04 Object file lists both buildings as prerequisites, the wiki infobox and CNCNZ name the Strategy Center, and the base-game manual tags it as a unit that building unlocks. The Strategy Center is the USA's single tech building, which the tier map puts at t3. Like every plane it also needs a free landing pad at the Air Field before it can be built (wiki; game-wide). Of the Zero Hour generals, the Laser General fields the same Aurora, and the Air Force General (Malcolm Granger) fields a cheaper, tougher one with a point-defence laser that shoots down incoming missiles and adds no button; both keep the plain Aurora Bomber name and the standard bomb (1.04 files, wiki). The string table also holds a Fuel-Air Aurora Bomber name under a label for Granger's object, but no object uses it: his fuel-air Aurora was cut before release (wiki trivia), and only unused fuel-air bomb objects remain in his file. The Superweapon General (Alexis Alexander) lacks it: his Air Field builds the Aurora Alpha Bomber instead, a unit of its own whose fuel-air bomb bursts twice, the second blast the larger (see uncertain)."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 2500,
+        "basis": "Its list price, the same in the wiki infobox, on CNCNZ and as the build cost in its 1.04 Object file, is far above the very-high threshold and a little over three times the mean price of the three anchor tanks; the wiki says no unit in the game costs more. The Air Force General's version costs a fifth less and still bands very high (1.04 file, wiki)."
+      },
+      "mobility": {
+        "base": "jet",
+        "handling": "forward-only",
+        "traits": [],
+        "speed": "very-fast",
+        "speed_raw": 9,
+        "notes": "Its normal flying speed, in the wiki infobox and its 1.04 locomotor, is nine times the Ranger's land speed, so very fast. Among the game's planes it cruises a shade faster than the Raptor and the Stealth Fighter and half again as fast as the Comanche helicopter. On an attack run it switches to a supersonic locomotor more than two and a half times its cruise, nearly three times the Raptor's speed; once the bomb is away it slows at once and flies home on a sluggish locomotor a little slower than its cruise, the Chinook's pace (wiki infobox; 1.04 files). Its build tooltip says instead that its speed drops to half after the attack (see uncertain). Badly damaged it flies a third slower, a game-wide rule the band leaves out. A fixed-wing jet that cannot hover and lands only on an Air Field pad, so it attacks in passes, and the jet's default handling stands."
+      },
+      "body": {
+        "plan": "fixed-wing",
+        "size": "large",
+        "notes": "A delta-winged jet bomber; planes are large by the size examples (jets)."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class steps decided: its set is Airplane Armor (wiki infobox; 1.04 Object file), which the armour_map makes light. Its health is low: half a Raptor's, two thirds of a Stealth Fighter's and less than half a Ranger's (1.04 files). The set takes a fifth more than full damage from small arms, gattling guns and infantry missiles, a quarter from jet missiles, poison and radiation, and nothing from lasers, sniper fire or crew-killing shots (1.04 Armor.ini). One health bar; the self-healing of Elite and Heroic ranks belongs to veterancy and stays off. The Countermeasures upgrade, bought once at the Air Field for every USA aircraft (side-wide), gives it a set that takes less from gunfire and blasts and fires flares that divert part of the missiles aimed at it (the wiki says half of them; see uncertain). The Air Force General's version has half again the health and a point-defence laser that shoots incoming missiles down, the interceptor model on that version only."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its fog-clearing figure, the second sight figure in the wiki infobox and its 1.04 ShroudClearingRange, is exactly half again the Ranger's, on the edge between medium and long, which goes to medium; the registry's Generals notes name it among the farthest-seeing units any factory builds. Its first figure, the distance at which it picks targets, clears no fog. No sensor trait: it neither detects hidden units nor hides from view."
+      },
+      "armament": [
+        {
+          "name": "Aurora bomb",
+          "slot": "primary",
+          "family": "bombs",
+          "damage": "explosive",
+          "mount": "body-aim",
+          "delivery": "drop",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["splash"],
+          "summary": "One heavy bomb per sortie, let go on the supersonic attack run from about three times a rifle's reach short of the target and carried on ahead onto the target point; a comment in the 1.04 weapon file says the reach is set high because the plane flies so fast. Its blast hurts everything in a wide area (wiki; the infobox gives a radius and the Aurora Bomb damage name), and the wiki ranks it among the most destructive single weapons in the game. Being no missile, it cannot be jammed or shot down in flight, but it falls where it was aimed and does not follow a target that keeps moving, so a fast vehicle can drive out of the blast; it suits buildings, vehicles that have stopped or bunched up, and slow tanks such as the Overlord (wiki). It cannot attack aircraft. The 1.04 weapon file also lets the blast hurt friendly units, which only that file says, so no friendly-fire trait is set. After the drop the plane flies back to its Air Field and reloads the bomb on its pad in a few seconds (the limited-ammo resource). Granger's version carries the same bomb; the wiki's prose calls it a fuel-air bomb, while its infobox lists a single conventional bomb, and the two-stage fuel-air bomb belongs to Alexander's Aurora Alpha Bomber (see uncertain)."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One plane with a pilot, who parachutes out once it holds a rank (see on_death); a player version is a lone pilot who flies and bombs."
+      },
+      "abilities": [
+        {
+          "name": "Supersonic attack",
+          "kind": "triggered",
+          "source": "innate",
+          "summary": "No button: every attack run switches it to supersonic flight, more than two and a half times its cruising speed, and for that run enemy fire cannot touch it (build tooltip, manual, CNCNZ). In the 1.04 files attackers aim at a point behind it and miss, and it stays untargetable for a couple of seconds after the bomb is away, so its strike all but surely lands (wiki). Only a wide blast going off right beside it, such as an EMP missile bursting nearby, can still hurt it on the run (wiki), and the manual warns that ground fire can reach Auroras flying in a large group. The price comes at once: with the bomb released it slows down and heads home at its sluggish speed, below its cruise, open to every kind of anti-air fire and to fighters (tooltip, manual, wiki). Coded as become-invulnerable; the trip home and the reload stay under the limited-ammo resource, as the registry's Generals ammunition note asks.",
+          "patterns": ["become-invulnerable"]
+        }
+      ],
+      "resources": ["limited-ammo"],
+      "on_death": {
+        "outcomes": ["pilot-eject"],
+        "basis": "in-game",
+        "notes": "From Veteran rank up, a Pilot gets out when it is destroyed: by parachute if it is shot down in flight, or beside the wreck if it dies on the ground, and he can take that rank into another USA vehicle (1.04 Object file; CNCNZ's Pilot entry; the registry's Generals pilots note). A plane without a rank leaves nobody behind. The Advanced Training upgrade at the Strategy Center, bought once for the whole side, doubles how fast it earns ranks (wiki, CNCNZ). Its crash effects in the 1.04 file are for show only."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:become-invulnerable",
+          "why": "On its supersonic attack run enemy fire cannot touch it (build tooltip, manual, CNCNZ), so anti-air defences cannot stop the bomb from landing; only a wide blast bursting right beside it can catch it (wiki)."
+        },
+        {
+          "ref": "hits:structure",
+          "why": "Its build tooltip rates it strong against buildings: two Auroras together destroy most buildings, Auroras can pick off isolated base defences, and several can be thrown at a superweapon that is about to fire (wiki)."
+        },
+        {
+          "ref": "weapon:bombs",
+          "why": "Its one bomb is among the deadliest single weapons in the game and, being no missile, cannot be jammed or shot down, so missile jammers and point-defence lasers are no help against it (wiki)."
+        },
+        {
+          "ref": "weapon-trait:splash",
+          "why": "The blast covers a wide area, wrecking a cluster of stopped vehicles or a slow Overlord in one strike (wiki)."
+        },
+        {
+          "ref": "speed:very-fast",
+          "why": "Even cruising it is about as fast as the Raptor, so it reaches distant targets in moments and suits quick follow-up strikes on a base whose power is down and whose defences are offline (wiki)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "resource:limited-ammo",
+          "why": "It carries a single bomb, then must fly back to an Air Field pad to reload it, so each strike is followed by a long round trip; it also needs a free pad to be built at all (wiki; registry ammunition note)."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Once the bomb is away it slows at once and flies home slower than it cruises; with thin armour and half a Raptor's health it then falls fast to any anti-air or fighter that catches it (manual, tooltip, wiki), and ground fire can reach Auroras flying in a large group (manual)."
+        },
+        {
+          "ref": "delivery:drop",
+          "why": "The bomb falls on the point it was aimed at and does not track, so a vehicle that keeps moving can escape the blast (wiki), and a dropped bomb can never hit aircraft."
+        },
+        {
+          "ref": "mobility:jet",
+          "why": "It depends on its Air Field: it is defenceless while parked there and needs a free pad to land and rearm (wiki)."
+        },
+        {
+          "ref": "cost:very-high",
+          "why": "No unit in the game costs more, so losing one is a crippling blow (wiki)."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-air",
+          "why": "Its build tooltip names anti-air units as a weakness, and after the release every kind of anti-air weapon can hit it; the wiki warns that laser and massed gunfire anti-air often kill it as it turns away from its target."
+        },
+        {
+          "ref": "target:high-air",
+          "why": "Its build tooltip also names fighters: enemy fighter jets can catch it on its slow flight home (manual, wiki)."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "target:structure",
+          "why": "Buildings, by its build tooltip's strong line: two Auroras destroy most of them, Auroras pick off isolated base defences, and several can kill a superweapon about to fire, or fewer with help from a General's Power (wiki)."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Vehicles that have stopped or bunched together, and slow ones: the wide blast wrecks them, though it misses a vehicle that keeps moving (wiki)."
+        },
+        {
+          "ref": "unit:generals.china.overlord",
+          "why": "The same reason: the wiki names the slow Overlord as a fitting target."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:generals.usa.aurora-bomber",
+          "why": "Best in numbers: two together destroy most buildings, and a superweapon about to fire takes several of them (wiki)."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "Its tooltip names fighters as its weakness, so friendly fighters or other anti-air covering its slow way home keep it alive to strike again (reasoned; see uncertain)."
+        }
+      ],
+      "memorable": "A supersonic jet that no gun can touch on its bombing run: one huge bomb nothing can jam or shoot down, then a slow, exposed flight home to rearm.",
+      "as_player": "A T3 strike bomber with one big bomb per sortie. Left mouse picks a target: you go supersonic and untouchable for the run, release the bomb well short of it, then crawl home to rearm on a pad while fighters and anti-air hunt you. No other keys; aim at buildings and parked or slow vehicles, since the bomb follows nothing that moves.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b8/Command_and_Conquer_-_Generals_-_UK_Manual_-_PC.pdf/revision/latest",
+          "title": "Command & Conquer: Generals manual (UK, PC), scan hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "Base-game manual (2003)",
+          "note": "EA's printed manual; the Command & Conquer Wiki hosts the scan. The Aurora Bomber's row in the USA aircraft table, printed page 29: Purpose Base Assault, the Structure Upgrade tag, and a description of supersonic attack runs that AA fire cannot touch, a slow subsonic return to base, and exposure to ground fire on the way back or in large groups. Read in a layout text dump of the PDF; paraphrases checked by hand, since the copy-check cannot read it.",
+          "supports": [
+            "roles",
+            "tier",
+            "abilities/0",
+            "strengths/0",
+            "weaknesses/1",
+            "countered_by/0",
+            "countered_by/1",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Aurora",
+          "title": "Aurora, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Generals and Zero Hour",
+          "note": "Read through the MediaWiki API, from the page cache's copy (fetched 2026-10-27). Infobox: price for the main and Air Force General versions, health, Airplane Armor and the countermeasure set, Air Field with Strategy Center and a free pad, the bomb's reach, radius and Aurora Bomb damage name, reload on the pad, sight figures and the normal, supersonic and sluggish air speeds. A quote box copies the base-game manual's description. Prose: immune on the run, exposed after the drop, counters (only wide blasts on the run, all anti-air afterwards, the Air Field, the price), game use (a bomb that no jammer or interceptor stops and that does not track; buildings, stopped vehicles, Overlords; two Auroras; laser and gunfire anti-air; follow-up strikes on unpowered bases; superweapon strikes), the generals' versions, the Countermeasures and Advanced Training upgrades, changelog entries for Generals patch 1.03 and Zero Hour patch 1.03, and trivia on the cut fuel-air Aurora for Granger.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable",
+            "uncertain"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/a65f341431e95e926fca3ad7bbdce32bc6912d6d/Patch104pZH/GameFilesEdited/Data/generals.str",
+          "title": "generals.str, first plain-text copy of the Zero Hour 1.04 English string table, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-28",
+          "version": "Zero Hour 1.04 (the file's first version, which matches the binary original)",
+          "note": "Copies the in-game text, as the registry note says; read from the page cache's copy (fetched 2026-10-20). The main and Air Force General's Aurora build buttons in the unedited 1.04 CommandButton.ini point to CONTROLBAR:ToolTipUSABuildAurora and CONTROLBAR:AirF_ToolTipUSABuildAurora, whose English text is the same: the supersonic attack makes it immune to enemy fire and its speed drops afterwards, strong against buildings, weak against fighters and anti-air units. OBJECT:Aurora gives the in-game name Aurora Bomber; OBJECT:AirF_Aurora (Fuel-Air Aurora Bomber) and OBJECT:SupW_Aurora (Aurora Alpha Bomber) name the other versions, with the Alpha's tooltip CONTROLBAR:ToolTipUSABuildFuelAirAurora and hint HELP:AuroraAlpha-01. The unit descriptions UnitDescriptXUSA009, UnitDescriptXChina008 and UnitDescriptXGLA009 list the Aurora beside the Stealth Fighter as a plane that Bunker Busters upgrade.",
+          "supports": [
+            "roles",
+            "tier",
+            "abilities/0",
+            "strengths/0",
+            "strengths/1",
+            "weaknesses/1",
+            "countered_by/0",
+            "countered_by/1",
+            "counters/0",
+            "combos/1",
+            "uncertain"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AmericaAir.ini",
+          "title": "AmericaAir.ini, unedited Zero Hour 1.04 game files, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-28",
+          "version": "Zero Hour 1.04",
+          "note": "The Aurora's object, AmericaJetAurora: display name, not transportable, the vision and fog-clearing figures, the Air Field and Strategy Center as prerequisites, price and build time, the bomb as its only weapon, Airplane Armor and the countermeasure set, ranks (IsTrainable), a pilot who ejects from Veteran up (on the ground or by parachute, never from a hijacked plane), health, and its jet AI: a supersonic locomotor on attack runs, attackers who aim behind it and miss until a couple of seconds after each attack, a sluggish locomotor when it returns for ammunition, damage over time when it has no ammunition and nowhere to land, and a return to base when idle. Also the Countermeasures flares module, the Advanced Training bonus and crash effects that only show. The Raptor and Stealth Fighter objects in the same file lack the supersonic, miss and sluggish settings, so they are the Aurora's own.",
+          "supports": [
+            "availability",
+            "tier",
+            "cost_band",
+            "mobility",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "resources",
+            "crew",
+            "on_death"
+          ]
+        },
+        {
+          "url": "https://cncnz.com/games/zero-hour/usa-units/",
+          "title": "Command & Conquer: Generals - Zero Hour - USA Units, CNCNZ",
+          "kind": "guide",
+          "accessed": "2026-10-28",
+          "version": "Zero Hour",
+          "note": "A long-standing fan site's unit list, cited as the second site, as the sources rule and the registry's CNCNZ note ask. Its Aurora entry agrees on the price, the Strategy Center, immunity to anti-aircraft fire on supersonic attack runs and a slower, subsonic flight home; its upgrades are Countermeasures (flares that help it evade missiles) and Advanced Training. Its Pilot entry has a pilot escape from a destroyed USA vehicle or aircraft with some experience and carry it into another vehicle. Fetched and read 2026-10-28.",
+          "supports": ["tier", "cost_band", "armour", "abilities/0", "strengths/0", "on_death"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "The base-game manual's Purpose entry for the Aurora Bomber reads Base Assault, which the registry lists among the entries that name no role, so step 1 goes on, and step 3 gives siege because the main weapon is a bomb dropped from the air. The Air Force General's build button shares the main tooltip; the Laser General's points at the Microwave Tank's tooltip, a slip in the 1.04 files (CommandButton.ini, https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandButton.ini, read, not cited), which the registry reads as neither carrying nor lacking the Aurora's lines."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Anti-infantry ranks at roles.secondary step 3 only because the bomb's blast covers an area, which makes it a splash weapon; no official text names soldiers among its targets, and the wiki aims it at buildings and vehicles. Raider ranks at step 4 (very fast, light armour) and fits loosely: it makes one bombing run and flies home rather than harassing. The tooltip's weak line names fighters and anti-air units, which would drop anti-air, a role it could not claim anyway."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "Long by its reach, three times the Ranger rifle's in the wiki infobox and in Weapon.ini of the 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini, read, not cited), although bombs default to short. A comment there says the reach is set high because the plane moves so fast: the bomb is let go well before the target and flies on, and the bomb object in WeaponObjects.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/WeaponObjects.ini, read, not cited) has a fast locomotor of its own and does not follow its target. The reach stays well inside its fog-clearing sight, so it is not off-screen."
+        },
+        {
+          "path": "armament/0",
+          "note": "The wiki infobox and Weapon.ini (address under armament/0/range) give one blast with a modest radius, while the wiki's changelog says Zero Hour patch 1.03 raised the bomb's damage and radius to far larger figures. The old figures match the second blast of the Aurora Alpha's fuel-air bomb on its own wiki page (https://cnc.fandom.com/wiki/Aurora_Alpha, read, not cited) and the new ones the unused fuel-air detonation weapon in the Air Force General's file (Object/AirforceGeneral.ini, https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AirforceGeneral.ini, read, not cited), so the changelog may describe the fuel-air bombs. The wiki's prose also calls the Aurora's bomb fuel-air, where its infobox lists a single conventional bomb. The splash trait and the explosive damage hold either way.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "No friendly-fire: only Weapon.ini (address under armament/0/range) lets the blast hurt allies, and the registry's Generals note says a term that only those files would set is not set. No homing: the wiki says the bomb will not follow a target on the move, and its bomb object (address under armament/0/range) does not follow its target."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "Three official unit descriptions in the cited string table list the Aurora beside the Stealth Fighter as a plane that Bunker Busters upgrade. The wiki's Bunker Busters page (https://cnc.fandom.com/wiki/Bunker_Busters, read, not cited) gives it to the Stealth Fighter only and says the Aurora's upgrade voice lines are leftovers of an earlier plan, and the Aurora's 1.04 object has no upgraded weapon set. Left off.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0/patterns",
+          "note": "become-invulnerable: for the run enemy fire cannot touch it, paid for by a slow, exposed trip home, and the counterplay is to let the bomb fall and strike the plane afterwards, as the pattern's summary has it. The immunity is not complete: the cited Object file makes attackers aim behind it and miss for a couple of seconds after each attack rather than ignoring damage, so a wide blast bursting beside it still hurts it (wiki), and the manual says ground fire can reach a large group. overclock-self was weighed for the speed burst and the slump afterwards, but the speeds alone are numbers, and the sources describe the immunity as the state; the slump is in the summary. See fit_notes."
+        },
+        {
+          "path": "abilities/0/summary",
+          "note": "The build tooltip says its speed falls to half after the attack. The wiki infobox's sluggish speed, which matches Locomotor.ini of the 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Locomotor.ini, read, not cited), is only a little below its cruise, and the wiki's changelog says Generals patch 1.03 raised the after-bomb speed from half its cruise, so the tooltip seems to describe the game before that patch; the changelog's raised figure is in turn lower than the infobox's. No band depends on it.",
+          "sources_disagree": true
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparisons with the Raptor, Stealth Fighter, Comanche and Chinook use their locomotors in Locomotor.ini (address under abilities/0/summary), read, not cited; the badly damaged speed comes from the wiki infobox."
+        },
+        {
+          "path": "armour/notes",
+          "note": "The health comparisons and the set's values rest on the cited AmericaAir.ini and on AmericaInfantry.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AmericaInfantry.ini) and Armor.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Armor.ini) of the 1.04 files, read, not cited. The wiki gives the Countermeasures flares a half chance to negate a missile attack, while the cited Object file's flare module diverts a smaller share of the missiles; CNCNZ says only that the flares help it evade missiles. The upgrade is side-wide either way.",
+          "sources_disagree": true
+        },
+        {
+          "path": "tier",
+          "note": "The generals' versions rest on uncited 1.04 files: Object/AirforceGeneral.ini (address under armament/0) gives Granger's Aurora the plain Aurora Bomber name, the standard bomb, a lower price, half again the health and a point-defence laser; Object/LaserGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/LaserGeneral.ini) matches the main object; Object/SuperWeaponGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/SuperWeaponGeneral.ini) holds Alexander's Aurora Alpha Bomber with a fuel-air bomb weapon, the only Aurora his Air Field builds in CommandSet.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini). The string table's Fuel-Air Aurora Bomber name, under a label for Granger's object, is used by none of them. The wiki's Aurora Alpha page (address under armament/0) has the Alpha slow only in turns and fly home supersonic, while its 1.04 object keeps the Aurora's sluggish return; that point belongs to the Alpha's own entry.",
+          "sources_disagree": true
+        },
+        {
+          "path": "countered_by/1",
+          "note": "Fighters: the tooltip's weak line names them, and fighters are jets, which fly in the high-air layer, so the entry names that layer rather than all aircraft."
+        },
+        {
+          "path": "combos/1",
+          "note": "Reasoned, not sourced as a pairing: it rests on the tooltip naming fighters as a weakness and on the manual and wiki saying it is exposed on its slow way home."
+        },
+        {
+          "path": "on_death/notes",
+          "note": "That the crash is only for show: the cited Object file's death modules call a list in ObjectCreationList.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/ObjectCreationList.ini, read, not cited) that throws out a hulk and nothing else, and no page says the crash hurts anything nearby, so no death blast. The pilot's parachute and ground lists are in the same file."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "abilities/0/patterns",
+          "used": "become-invulnerable",
+          "wanted": "an attack-run variant of become-invulnerable: aimed fire misses a very fast plane during its run and a moment after, while area blasts still hurt it, and it is slowed afterwards",
+          "note": "The registry's summary makes the user immune to damage for a moment at a cost. The Aurora's immunity comes with every attack order rather than a chosen moment, works by making aimed shots miss, and is paid for by a slow trip home rather than a cooldown."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J04-GENERALS"
+    },
+    {
+      "id": "generals.usa.sentry-drone",
+      "game": "generals",
+      "introduced_in": "generals-zero-hour",
+      "faction": "usa",
+      "name": "Sentry Drone",
+      "flavour_affinity": ["allied"],
+      "class": "drone",
+      "nature": "uncrewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "scout",
+        "secondary": ["raider", "anti-infantry"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "War Factory",
+        "basis": "Built at the USA War Factory with nothing else needed: its 1.04 Object file lists only that building, and the wiki infobox gives tier 1; the War Factory is basic production, t1 in the tier map. A Zero Hour addition (wiki; the Zero Hour manual lists it among the new USA units). Every USA side fields it from its own War Factory, with the gun upgrade sold there too (1.04 command sets): the Laser General's copy matches the main one, while the Air Force General's costs a little more and the Superweapon General's a quarter more, with the same body and modules (see cost_band). It has no button of its own beyond the basic orders."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 800,
+        "basis": "Its list price, the same in the wiki infobox, on CNCNZ and as the build cost in its 1.04 Object file, is a little above the medium threshold and about the mean price of the three anchor tanks. Granger's version costs a little more and Alexander's a quarter more; both stay medium (wiki, 1.04 files). The gun and armour upgrades, each bought once for every drone, are left out."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": [],
+        "speed": "very-fast",
+        "speed_raw": 3,
+        "notes": "Its land speed in the wiki infobox and its 1.04 locomotor is three times the Ranger's, so very fast: the same as the Humvee's and twice the Crusader's, the USA main battle tank, and the wiki stresses how quick it is. It runs on treads (its 1.04 object leaves track debris, and the wiki compares it to an enlarged TALON robot), so tracks, a mobility whose speed list stops at fast; the validator records the break as atypical. The wiki notes a short delay before it obeys move orders: like the Nuke Cannon and the Listening Outpost it unpacks before its gun can fire and packs up before it can move, about a second each way in the 1.04 file, while attack orders within its reach are carried out at once. Badly damaged it slows a little, a game-wide rule. It crushes nothing (wiki; crusher level zero in the 1.04 file). The tracks' default handling stands."
+      },
+      "body": {
+        "plan": "micro-bot",
+        "size": "small",
+        "notes": "A small tracked robot; the gun upgrade adds a machine gun in its nose (manual) on a small turret (1.04 file). Size small: in transports the game handles it like a soldier, taking one slot as an infantryman does (wiki; 1.04 file), though it cannot ride in a Humvee's infantry seats (wiki). An uncrewed machine of that size is a drone."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided, through the registry's exception for one-off sets: its own Sentry Drone Armor (wiki infobox; 1.04 Object file) maps by what the unit is, and a drone no bigger than a soldier is light. Its health is a quarter more than a Humvee's and about five eighths of a Crusader's (1.04 files). The set halves damage from small arms, gattling and vulcan guns, infantry missiles, flame and crushing, lets through under a third of jet missile damage, and takes nothing from poison, lasers, sniper fire, microwaves or crew-killing shots (1.04 Armor.ini). One health bar, and no self-healing, since it never ranks. Drone Armor (CNCNZ calls it Scout Armour), bought once at the Strategy Center for every USA drone, adds a quarter to its health and, since Zero Hour patch 1.03, reaches the Sentry Drone too; the wiki says it then matches a Scorpion tank's toughness."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": ["detector"],
+        "basis": "in-game",
+        "notes": "Its fog-clearing figure, the second sight figure in the wiki infobox and its 1.04 ShroudClearingRange, is a little under the Ranger's, so medium. Detector: it uncovers camouflaged enemy units near it (its tooltip's opening line, a hint and the official unit descriptions), mines and GLA demo traps included (a campaign line), out to a little under two thirds of its fog-clearing sight (the wiki's detection figure; DetectionRange in the 1.04 file); the wiki has it expose them for nearby allies, so the team sees them too. Its own hiding is the cloak passive (abilities/0), as the registry's Generals stealth note asks, not the stealth trait."
+      },
+      "armament": [
+        {
+          "name": "Sentry Drone Gun",
+          "slot": "acquired",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "condition": "Added by the Sentry Drone Gun upgrade, bought once at the War Factory for every Sentry Drone, those already in the field included (wiki, CNCNZ, 1.04 files); a stock drone is unarmed.",
+          "summary": "A 20mm machine gun in the drone's nose, which the upgrade fits to every drone (manual; upgrade tooltip): rapid shots that reach half again as far as the Ranger's rifle. The Zero Hour manual aims it at infantry and small vehicles, and the build tooltip rates the drone strong against infantry and weak against tanks; the wiki says it tears through soldiers and thin-skinned vehicles but does little to medium or heavy armour, and it cannot fire at aircraft. Its damage name, Comanche Vulcan (wiki infobox), is kinetic by the damage map. It fires only after the drone has stopped and unpacked, and each burst shows the drone to the enemy (abilities/0); since Zero Hour patch 1.03 a hidden drone no longer opens fire by itself (wiki changelog). The wiki's own page for the upgrade calls it a 20mm autocannon (see uncertain).",
+          "patterns": ["upgrade-in-field"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "No crew: the wiki calls it an autonomous robot in its background and a remotely controlled, unmanned machine in its game section, and no operator stands on the field, so solo rather than remote. One player is the drone."
+      },
+      "abilities": [
+        {
+          "name": "Stealth while still",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Always on, with no button: while it neither moves nor fires, enemies can neither see nor target it (manual, official unit descriptions, wiki, CNCNZ). Moving or firing shows it, and it hides again a couple of seconds after it stops (1.04 file). An enemy detector close by uncovers it, and once it is found, idle enemies within their reach are sent after it (1.04 file). Since Zero Hour patch 1.03 an armed drone holds its fire while hidden until it is ordered to shoot, so it stays hidden (wiki changelog). Coded as one passive with the cloak pattern, as the registry's Generals stealth note asks.",
+          "patterns": ["cloak"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "In the sources it is simply gone: it cannot rank, so no Pilot gets out (registry note; its 1.04 object has no pilot module), and nothing it leaves can be repaired or recrewed. Respawn is the default for an uncrewed machine."
+      },
+      "strengths": [
+        {
+          "ref": "sensor:detector",
+          "why": "Reveals camouflaged enemies close by for the whole team, mines and GLA demo traps included: its tooltip's opening line, a hint and the campaign briefing that introduces it all say so, and the wiki has it expose hidden units for nearby allies to kill."
+        },
+        {
+          "ref": "pattern:cloak",
+          "why": "Unseen whenever it stands still and holds its fire, so a parked drone can watch a road or a base edge for as long as needed and, once armed, ambush what passes (manual, official unit descriptions, wiki)."
+        },
+        {
+          "ref": "immune:hijack-vehicle",
+          "why": "With no crew aboard it is immune to Jarmen Kell's crew-killing snipe, to Hijackers and to the Nuke Cannon's neutron shells and neutron mines, all of which empty or steal crewed vehicles (wiki); its armour set takes nothing from crew-kill damage (1.04 file)."
+        },
+        {
+          "ref": "speed:very-fast",
+          "why": "Three times a Ranger's pace and as quick as a Humvee, so it can rush to a key spot and keep watch there (wiki)."
+        },
+        {
+          "ref": "hits:infantry",
+          "why": "Once the gun is bought, the build tooltip rates it strong against infantry and an official description says it troubles foot soldiers; the wiki calls armed drones fine counter-snipers that find, chase and kill snipers."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:light",
+          "why": "Fragile: its main defence is not being seen, and once its own movement or firing or an enemy detector gives it away it cannot take much punishment (wiki), while idle enemies close by are sent straight at it (1.04 file)."
+        },
+        {
+          "ref": "weapon:machine-gun",
+          "why": "Its only weapon comes with an upgrade bought at the War Factory, so a stock drone cannot shoot at all; even armed, the tooltip names tanks as its weakness, an official description calls it no match for tanks, and the gun cannot fire at aircraft (wiki)."
+        },
+        {
+          "ref": "nature:uncrewed-machine",
+          "why": "A machine that never gains veterancy (wiki; its 1.04 object cannot rank), so it never fires faster, gets tougher or heals itself as ranked units do, and leaves no Pilot behind."
+        },
+        {
+          "ref": "role:scout",
+          "why": "As a scout it is let down by a short delay before it obeys move orders, which the wiki calls its biggest drawback and the reason the Humvee scouts better."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "sensor:detector",
+          "why": "An enemy detector close by, a unit or a base defence, takes away its hiding, and once seen it is a fragile machine that soon goes down (wiki; reasoned, see uncertain)."
+        },
+        {
+          "ref": "armour-class:>=medium",
+          "why": "Tanks: the tooltip's weak line names them and an official description calls the drone no match for them; the wiki adds that even its gun does little to medium or heavy armour."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "Its gun cannot fire at aircraft (wiki), so fliers can hunt it freely once it is seen."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "pattern:cloak",
+          "why": "Hidden units: it uncovers camouflaged enemies near it (tooltip, hint), and once armed it can find, chase and kill hidden snipers quickly, which the wiki says makes it a fine counter-sniper."
+        },
+        {
+          "ref": "pattern:hijack-vehicle",
+          "why": "Units whose trick is killing a vehicle's crew or stealing the vehicle get nothing from it: Jarmen Kell's snipe, Hijackers and the Nuke Cannon's neutron shells (wiki)."
+        },
+        {
+          "ref": "unit:generals.gla.jarmen-kell",
+          "why": "Named by the wiki: neither his snipe nor his rifle can hurt it, it uncovers his camouflage, and once armed it can run him down."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Once armed, its build tooltip rates it strong against infantry, and an official description says it causes foot soldiers trouble."
+        },
+        {
+          "ref": "role:logistics",
+          "why": "Armed and hidden, it can slip in among enemy resource gatherers and shred the thin-skinned Chinese and GLA ones (wiki); it cannot touch the flying Chinooks of the USA."
+        },
+        {
+          "ref": "role:siege",
+          "why": "A few armed drones lying in wait can destroy a group of thin-skinned artillery units before their guards get back (wiki)."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:transport",
+          "why": "It takes only one soldier's room in the transport slots of aircraft, so an air transport can carry it to where it is needed, though it cannot ride in a Humvee (wiki)."
+        }
+      ],
+      "memorable": "A small robot on treads that vanishes whenever it parks, uncovers hidden snipers and mines for its team, and shrugs off crew snipes and hijackers because nobody is inside.",
+      "as_player": "A cheap T1 scout on treads: very fast, invisible whenever you stop and hold fire, and it reveals cloaked enemies, mines and traps near you for the whole team. You spawn unarmed; once the gun upgrade is bought, left mouse fires a nose machine gun that shreds infantry and light vehicles, but you must stop to fire and firing gives you away. No other keys; tanks and aircraft are your enemies, while crew snipes and hijacks do nothing to you.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b1/CNC_Generals_Zero_Hour_Manual_2015.pdf/revision/latest",
+          "title": "Command & Conquer: Generals - Zero Hour manual (2015 scan), hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "Zero Hour manual",
+          "note": "EA's manual; the Command & Conquer Wiki hosts the scan. New USA units, printed page 9: the Sentry Drone as a stealthed vehicle that gives a forward view with little supervision, and its upgraded nose gun aimed at infantry and small vehicles; the note there that airborne drones draw anti-air fire leaves it out. New USA upgrades, printed page 10: the Sentry Drone Gun gives it a machine gun. Tactics, printed pages 36 and 37: it may be a cheaper recon platform than a Humvee with a spy drone. Read in a layout text dump of the PDF; paraphrases checked by hand, since the copy-check cannot read it.",
+          "supports": ["introduced_in", "roles", "body", "armament/0", "abilities/0", "strengths/1", "memorable"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Sentry_drone",
+          "title": "Sentry drone, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Zero Hour",
+          "note": "Read through the MediaWiki API, from the page cache's copy (fetched 2026-10-27). Infobox: Sentry Drone Armor, prices for the main, Air Force and Superweapon versions, health with and without Drone Armor, one transport slot, the War Factory, tier 1, land speed, sight and detection figures, the gun's reach and Comanche Vulcan damage name, the two upgrades, and notes (hidden when still, detects stealth, no veterancy, no crushing, immune to crew-killing weapons, a delay on move orders). A quote box copies the Zero Hour manual's description. Prose: scouting and detection, aircraft transport slots but no Humvee seats, ambushes with the gun on gatherers and artillery, immunity to Kell, Hijackers and neutron weapons, counter-sniping, counters (fragile once seen, revealed by firing, weak against medium and heavy armour, no anti-air, no veterancy, no crushing, the order delay), the upgrades, the changelog of patch 1.03 for Zero Hour, and trivia on the unpack step.",
+          "supports": [
+            "introduced_in",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "crew",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable",
+            "uncertain"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/a65f341431e95e926fca3ad7bbdce32bc6912d6d/Patch104pZH/GameFilesEdited/Data/generals.str",
+          "title": "generals.str, first plain-text copy of the Zero Hour 1.04 English string table, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-28",
+          "version": "Zero Hour 1.04 (the file's first version, which matches the binary original)",
+          "note": "Copies the in-game text, as the registry note says; read from the page cache's copy (fetched 2026-10-20). Every Sentry Drone build button in the unedited 1.04 CommandButton.ini (main, Laser, Air Force and Superweapon Generals) points to CONTROLBAR:ToolTipUSABuildSentryDrone: it detects stealth, strong against infantry, weak against tanks. OBJECT:SentryDrone gives the name. CONTROLBAR:TooltipUSAUpgradeSentryDroneGun: drones gain a machine gun. Hints HELP:SentryDrone-01 (detects camouflaged units) and HELP:SentryDrone-02 (buy the gun at the Strategy Center). Unit descriptions UnitDescriptXUSA001 (tracks enemies, camouflaged ones too; hidden when still; upgradable with a gun it calls anti-personnel, sold at the Strategy Center), UnitDescriptXChina001 (early-warning detector, invisible when still, no match for tanks, trouble for foot soldiers) and UnitDescriptXGLA001 (sees stealthed units, often armed); campaign line MisUSA02xEva03Subtitle (undetectable while still, spots stealthed units and GLA demo traps). UnitDescriptXUSA017 and UnitDescriptXChina016 on the ECM Tank's drone jamming.",
+          "supports": [
+            "roles",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "strengths/0",
+            "strengths/4",
+            "weaknesses/1",
+            "countered_by/1",
+            "counters/0",
+            "counters/3",
+            "uncertain"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AmericaVehicle.ini",
+          "title": "AmericaVehicle.ini, unedited Zero Hour 1.04 game files, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-28",
+          "version": "Zero Hour 1.04",
+          "note": "The Sentry Drone's object, AmericaVehicleSentryDrone: display name, one transport slot, no weapon until the gun upgrade swaps in the Sentry Drone Gun, its own armour set, price and build time, the vision and fog-clearing figures, the War Factory as its only prerequisite, no ranks (IsTrainable off), a crusher level of zero, the DRONE kind, health and the Drone Armor bonus, a turret that works only once deployed with short pack and unpack times and that does not pick targets by itself while hidden, a tracked locomotor with track debris, innate stealth broken by moving or firing and restored after a short delay, idle enemies sent at it when it is revealed, a stealth detector with its own range, and death effects with no pilot. The Humvee and Crusader objects in the same file give the health and transport-slot comparisons.",
+          "supports": [
+            "availability",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "crew",
+            "on_death",
+            "strengths/2",
+            "weaknesses/0",
+            "weaknesses/2"
+          ]
+        },
+        {
+          "url": "https://cncnz.com/games/zero-hour/usa-units/",
+          "title": "Command & Conquer: Generals - Zero Hour - USA Units, CNCNZ",
+          "kind": "guide",
+          "accessed": "2026-10-28",
+          "version": "Zero Hour",
+          "note": "A long-standing fan site's unit list, cited as the second site, as the sources rule and the registry's CNCNZ note ask. Its Sentry Drone entry agrees on the price and on a stealthed, unmanned vehicle meant for scouting and for finding stealthed units, whose upgrade adds a 20mm nose gun used on infantry and lighter vehicles. It gives the gun upgrade a lower price than the wiki (see uncertain) and calls the armour upgrade Scout Armour. Fetched and read 2026-10-28.",
+          "supports": ["tier", "cost_band", "armour", "armament/0", "abilities/0", "uncertain"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "The Zero Hour unit has no Purpose entry, and its build tooltip's opening line, that it detects stealth, names no role (registry). Step 2 applies because the stock drone is unarmed (its gun comes only with an upgrade), and its main action, watching unseen and uncovering hidden enemies, gives scout, whose requires it meets three ways: very fast, the cloak passive's stealth category and the detector trait. Official text points the same way: the Zero Hour manual's tactics name it as a cheaper recon option, and a campaign line has it spotting stealthed units."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Raider ranks at step 4 (very fast, light armour); its coding rule's need for a weapon that harms is met only by the upgrade gun. Anti-infantry ranks at step 5 from that gun (the tooltip's strong line names infantry, and it is a machine gun that does little to tanks). An official description calls the gun anti-personnel, an alias of anti-infantry, but it names the upgrade gun, not the unit, so it is not read as step 1; read that way, anti-infantry would come first. The tooltip's weak line names tanks, which drops anti-armour."
+        },
+        {
+          "path": "armament/0/family",
+          "note": "Machine gun, as the Zero Hour manual, the upgrade tooltip and the official unit descriptions call it, and as the wiki's own infobox and CNCNZ do. The wiki's Sentry drone gun page (https://cnc.fandom.com/wiki/Sentry_drone_gun, read, not cited) calls it a 20mm autocannon, and the Sentry drone page's trivia calls it an auto cannon. The registry leaves its damage name to what the sources say the gun fires, and official text settles on a machine gun.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Hitscan is the machine-gun family's default, since no cited page says how the shots travel. Weapon.ini of the 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini, read, not cited) gives the gun no projectile object but a travel speed, a fact only those files give, so the registry's note leaves it unset. The same file confirms its Comanche Vulcan damage name and that it hits one target at a time."
+        },
+        {
+          "path": "armament/0/condition",
+          "note": "Where the gun is bought: the wiki, CNCNZ and the 1.04 command sets (CommandSet.ini, https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini, read, not cited) put it at the War Factory, while an in-game hint and an official unit description in the cited string table say the Strategy Center; the Strategy Center sets in CommandSet.ini still hold the button, commented out, so those lines seem to predate a move. CNCNZ also gives the upgrade a lower price than the wiki, whose figure Upgrade.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Upgrade.ini, read, not cited) backs, and the wiki's gun page (address under armament/0/family) a shorter research time than Upgrade.ini. No term depends on either.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Can_target step 3: an official unit description labels the gun anti-personnel, which gives infantry; the manual (small vehicles), CNCNZ (lighter vehicles) and the wiki (light vehicles, gatherers, artillery) add ground vehicles; and the wiki infobox's ground attack line belongs to the gun, the drone's only weapon, which counts as saying it hits structures. The wiki says it cannot fire at aircraft."
+        },
+        {
+          "path": "body/size",
+          "note": "Small because the game handles it like a soldier in a transport: one slot, as an infantryman takes (wiki; the cited Object file). The wiki adds that it does not fit the infantry-only seats of ground vehicles such as the Humvee, so the game does not treat it as infantry everywhere."
+        },
+        {
+          "path": "crew/model",
+          "note": "The wiki calls it purely autonomous in its background and remotely controlled in its game section; neither puts an operator on the field, so the remote model's rule does not apply either way.",
+          "sources_disagree": true
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The delay on move orders: the wiki's trivia says the unpack step delays the drone by a few seconds on a move order, while the cited Object file sets about a second to pack and another to unpack. The comparison with the Humvee and the Crusader uses their locomotors in Locomotor.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Locomotor.ini, read, not cited), which also gives the drone's own locomotor a tread appearance.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armour/notes",
+          "note": "The set's values rest on Armor.ini of the 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Armor.ini, read, not cited), the health comparisons on the cited Object file; Upgrade.ini (address under armament/0/condition) names the armour upgrade Drone Armor, as the wiki does."
+        },
+        {
+          "path": "strengths/2",
+          "note": "The wiki names Kell's snipe, Hijackers, neutron shells and neutron mines; that the drone's set takes nothing from crew-kill damage is in Armor.ini (address under armour/notes). How the neutron shells and mines spare it was not traced in the files."
+        },
+        {
+          "path": "countered_by/0",
+          "note": "Reasoned from the wiki's counters section, which says its main defence is not being seen and that once exposed it soon goes down, and from the registry's Generals stealth note, by which a detector nearby uncovers a hidden unit; the wiki's Stealth page (https://cnc.fandom.com/wiki/Stealth, read, not cited) lists the Generals detectors, base defences such as the Gattling Cannon, Stinger Site and Tunnel Network among them. No page names detectors as its counter in so many words."
+        },
+        {
+          "path": "countered_by",
+          "note": "Left out: official descriptions of China's ECM Tank in the cited string table say its jamming field disables all drones near it, but in the 1.04 files that field deals a damage type the Sentry Drone's set ignores (ChinaVehicle.ini, https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/ChinaVehicle.ini, with Weapon.ini and Armor.ini, read, not cited); only the tank's aimed disabler stops it, as it stops any vehicle.",
+          "sources_disagree": true
+        },
+        {
+          "path": "counters",
+          "note": "The Kell, gatherer and artillery entries rest on the cited Sentry drone page; the wiki's gun page (address under armament/0/family) adds that neither Black Lotus nor Kell can harm an armed drone hunting them."
+        },
+        {
+          "path": "on_death/notes",
+          "note": "The cited Object file's death list in ObjectCreationList.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/ObjectCreationList.ini, read, not cited) leaves only a hulk and debris for show; no page says it can be repaired, recrewed or salvaged, or that its end hurts anything nearby."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "mobility/traits",
+          "used": "none",
+          "wanted": "an automatic deploy step: the unit stops and unpacks before its weapon can fire and packs up before it moves, with no button",
+          "note": "deploy-anchor needs a key and a stronger stationary mode; the Sentry Drone's unpacking happens by itself on every attack and only delays its next move order, which the wiki counts as its biggest drawback."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "mobility/base",
+          "rule": "mobility:tracks allowed.speed-bands very-fast",
+          "note": "A small tracked robot that the wiki infobox and its 1.04 locomotor give three times the Ranger's land speed, as fast as the Humvee on its wheels; our tracks type stops at fast, but its locomotor runs on treads, so tracks stays and the band follows the figure."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J04-GENERALS"
+    }
+  ]
+}

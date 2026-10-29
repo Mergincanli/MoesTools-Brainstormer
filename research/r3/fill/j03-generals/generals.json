@@ -1,0 +1,711 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "generals",
+  "units": [
+    {
+      "id": "generals.china.red-guard",
+      "game": "generals",
+      "faction": "china",
+      "name": "Red Guard",
+      "flavour_affinity": ["soviet"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["engineer"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Barracks",
+        "basis": "Trained at the Chinese Barracks with no other building: its 1.04 Object file lists only the Barracks as a prerequisite, the wiki infobox names no requirement, CNCNZ lists none, and the base-game manual counts it among the infantry the Barracks turns out. The Barracks is basic production, which the tier map puts at t1. The main Chinese side and the Nuke and Tank Generals field it, and their copies match the main one except for a higher price and a slightly longer training time. The Infantry General, Shin Fai, has no Red Guard: his Barracks trains the Mini-Gunner in its place, a unit of its own (generals.china-infantry.mini-gunner) that carries a rotary gun, also fires at aircraft and comes one per purchase (wiki, 1.04 command sets)."
+      },
+      "cost_band": {
+        "band": "very-low",
+        "raw": 300,
+        "basis": "One purchase brings a pair of soldiers for well under half the anchor tanks' mean price and below the low threshold, so very low; the wiki infobox, CNCNZ (which gives the price per pair) and the 1.04 Object file agree on the list price. The Nuke and Tank Generals pay a little more for their pair, which is still very low."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1.25,
+        "notes": "Its land speed in the wiki infobox, from a locomotor of its own in the 1.04 files, is a quarter higher than that of the Ranger and the Rebel, the speed reference, so medium. The wiki warns that it outpaces Tank Hunters, so mixed groups drift apart on the move. Like most units it slows down when badly hurt, a game-wide rule the band leaves out."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "count": 2,
+        "notes": "Each purchase brings two riflemen, who leave the Barracks one after the other and then move and fight as separate units (1.04 Barracks production module, wiki, CNCNZ). Each takes one transport seat, and a Troop Crawler arrives with eight of them aboard."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class steps decided: its set is Human Armor (1.04 Object file; the wiki infobox writes HumanArmor), the set the Ranger and the Rebel wear as well, which the armour_map makes unarmoured, and the soldier rule keeps it there. It has two thirds of a Ranger's health. The set takes double damage from crushing and sniper fire, half again from flame and particle beams and only a tenth from tank shells and infantry missiles, and it gives no protection against toxins or radiation (wiki). One health bar; the healing of Elite and Heroic ranks belongs to veterancy. Red Guard Training, a one-star General's Promotion, makes every new Red Guard start as a Veteran; it is a side-wide power and stays off the bands."
+      },
+      "sensors": {
+        "sight": "short",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its fog-clearing figure, the second sight figure in the wiki infobox and the one the registry uses, is half the Ranger's, so short, as the registry's Generals notes also list. Its first figure, how far it picks targets, equals its rifle's reach. It detects nothing hidden."
+      },
+      "armament": [
+        {
+          "name": "Bolt-action rifle",
+          "slot": "primary",
+          "family": "small-arms",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "summary": "Its one weapon: single rifle shots with a long pause between them, each hitting harder than a round from the Ranger's or the Rebel's assault rifle (wiki), and reaching exactly as far as the Ranger's rifle. Its Small Arms damage (wiki infobox) does full harm to soldiers but only a quarter to tanks and half to trucks and buildings, and it cannot be aimed at aircraft. While the horde bonus is active it fires half again as fast (abilities/0). From inside a garrisoned building it reaches further and hits harder, a game-wide bonus left off the band. The base-game manual promises a bayonet for close fighting, but it never made it into the game (see uncertain)."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "Bought in pairs, but the two riflemen act as separate units from then on, which the squad coding rule makes solo: one player is one rifleman."
+      },
+      "abilities": [
+        {
+          "name": "Horde bonus",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Always on, with no button. When at least four other allied foot soldiers that carry the horde bonus themselves (Red Guards, Tank Hunters, or the Infantry General's Mini-Gunners) stand close around it, it fires half again as fast, and a red star appears beneath it. A Red Guard a little further out shares the bonus while it stays near one in the thick of the group. Other soldiers do not count, and Battlemasters horde only with each other. Troops who walk into a building keep the bonus they had on entering but cannot gain it inside. Nationalism, a side-wide upgrade bought at the Propaganda Center, raises it further.",
+          "patterns": []
+        },
+        {
+          "name": "Capture Building",
+          "kind": "channel",
+          "source": "upgrade",
+          "cooldown": "medium",
+          "summary": "Every Red Guard gains this button, those already in the field included, once its side researches Capture Building at a Barracks. Sent at an enemy building or a neutral tech building, the Red Guard walks right up to it, unpacks a red flag and slowly raises it; if he finishes, the building and its function pass to his side, but moving him away or killing him first ends the attempt. The raise lasts longer than the button's own recharge, which runs after he is trained, after a capture and after a capture he abandons. Some structures cannot be taken, among them Palaces, Internet Centers, bunkers, Gattling Cannons, Fire Bases, Tunnel Networks, Stinger Sites, Patriot batteries and demo traps, and tech buildings can be captured only with this upgrade. A booby-trapped building explodes on him, and minefields around Chinese structures often foil captures (wiki).",
+          "patterns": ["capture-structure", "upgrade-in-field"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "In the sources it is simply gone: its 1.04 Object file has only death animations and no blast, so the infantry default applies."
+      },
+      "strengths": [
+        {
+          "ref": "hits:infantry",
+          "why": "Its build tooltip rates it strong against infantry and the manual's Purpose line calls it anti-infantry; each rifle shot hits harder than a Ranger's or Rebel's, and pairs trained quickly wear enemy infantry down early (wiki)."
+        },
+        {
+          "ref": "cost:very-low",
+          "why": "One cheap, quick purchase gives two soldiers, so China can field them in numbers from the opening minutes (wiki, CNCNZ)."
+        },
+        {
+          "ref": "weapon:small-arms",
+          "why": "Packed together with four or more other horde soldiers, each rifle fires half again as fast (tooltip, manual, wiki), and Nationalism raises that further."
+        },
+        {
+          "ref": "pattern:capture-structure",
+          "why": "Once the Barracks upgrade is bought, Red Guards take over enemy buildings and neutral tech buildings; cheap, available early and unlimited in number, they can take over many more buildings at the same time than China's single Black Lotus (wiki)."
+        },
+        {
+          "ref": "hits:structure",
+          "why": "In large horded groups they bring buildings down surprisingly fast for riflemen, a cheap stand-in when no Tank Hunters are at hand (wiki)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "An ordinary soldier's armour with two thirds of a Ranger's health, so one Red Guard is a poor match for another side's infantryman (wiki); it has no protection from toxins or radiation, and fire hurts it extra."
+        },
+        {
+          "ref": "weapon:small-arms",
+          "why": "Its rifle cannot be aimed at aircraft and does only a quarter of its damage to tanks, which is why its build tooltip names vehicles as its weak point."
+        },
+        {
+          "ref": "sight:short",
+          "why": "It clears the fog only half as far as a Ranger (wiki infobox, game data)."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:vehicle",
+          "why": "Its build tooltip names vehicles as its weak point: the rifle does only a quarter of its damage to tanks, and any enemy vehicle can run a rank-and-file soldier over."
+        },
+        {
+          "ref": "weapon-trait:splash",
+          "why": "Red Guards bunch up to keep their horde bonus, so area weapons such as the Ranger's flash-bang grenades dispatch them easily (wiki)."
+        },
+        {
+          "ref": "unit:generals.usa.ranger",
+          "why": "The wiki singles out the Ranger's flash-bang grenades, which tear through Red Guards bunched for their horde bonus."
+        },
+        {
+          "ref": "role:anti-infantry",
+          "why": "Anti-infantry weapons cut them down quickly; the wiki names the Quad Cannon, the Gattling Tank and the Humvee."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "It cannot fire at aircraft, so gunships such as the Comanche beat it from the air (wiki)."
+        },
+        {
+          "ref": "damage:toxic",
+          "why": "With no protection against toxins or radiation, chemical and nuclear weapons take a heavy toll on it (wiki)."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Strong against infantry by its build tooltip: massed early, cheap pairs overwhelm enemy foot soldiers by attrition, and they are the wiki's answer to GLA Terrorist rushes before China has a War Factory."
+        },
+        {
+          "ref": "unit:generals.gla.terrorist",
+          "why": "Named by the wiki: massed Red Guards stop Terrorist rushes, which China cannot otherwise answer well until it has a War Factory."
+        },
+        {
+          "ref": "target:structure",
+          "why": "With the Capture Building upgrade, Red Guards take enemy buildings over instead of destroying them, and in large horded groups they also bring buildings down quickly (wiki)."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:generals.china.red-guard",
+          "why": "It works best in large groups (manual): with four or more other horde soldiers close by, each fires half again as fast (tooltip, wiki)."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Red Guards count toward the Tank Hunters' horde bonus, a cheap way to keep it going and to hide the Tank Hunters in a crowd, while the Tank Hunters handle the vehicles the Red Guards cannot (wiki)."
+        },
+        {
+          "ref": "unit:generals.china.tank-hunter",
+          "why": "The partner the wiki names: mixed with Red Guards, Tank Hunters keep their horde bonus and are harder to single out, though the faster Red Guards must not be allowed to run ahead."
+        },
+        {
+          "ref": "role:transport",
+          "why": "The Troop Crawler comes with eight Red Guards aboard and, loaded, suits a quick grab of key structures (manual, tooltip)."
+        },
+        {
+          "ref": "unit:generals.china.troop-crawler",
+          "why": "The transport the manual and the tooltip pair with it: it is sold with eight Red Guards inside."
+        }
+      ],
+      "memorable": "China's cheapest soldier comes two to a purchase, shoots faster the more horde comrades crowd around him, and after one Barracks upgrade can raise a red flag over an enemy building.",
+      "as_player": "A cheap rifleman with slow, heavy single shots that drop soldiers but barely dent vehicles and never reach aircraft. You fire half again as fast while four or more teammates on horde units stand close around you, so Red Guard players win by moving as a crowd and lose to grenades and flamers that punish crowds. Once the team buys Capture Building, holding Q at an enemy structure raises your flag over a long, exposed channel.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b8/Command_and_Conquer_-_Generals_-_UK_Manual_-_PC.pdf/revision/latest",
+          "title": "Command & Conquer: Generals manual (UK, PC), scan hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Base-game manual (2003)",
+          "note": "EA's printed manual; the Command & Conquer Wiki hosts the scan. China unit table, printed page 34: the Red Guard's row gives Purpose Anti-Infantry and Urban Terrain Acquisition and describes a front-line rifleman who does best in large groups, can capture enemy facilities and can switch to a bayonet up close; the page's opening note says the Red Guard and the Battlemaster fire faster in large groups, shown by a red star and raised by Nationalism. Page 35 has the Troop Crawler carrying eight Red Guards for quick captures. Printed pages 15 and 26 explain the Capture Building upgrade bought at the Barracks, page 23 the Red Guard Training promotion, page 37 Nationalism and page 38 the Barracks that trains it. Read in a layout text dump of the PDF; paraphrases checked by hand, since the copy-check cannot read it.",
+          "supports": [
+            "roles",
+            "tier",
+            "armament/0",
+            "abilities/0",
+            "abilities/1",
+            "strengths/2",
+            "combos/0",
+            "combos/3",
+            "combos/4",
+            "memorable",
+            "uncertain"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Red_Guard_(Generals_1)",
+          "title": "Red Guard (Generals 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Generals and Zero Hour",
+          "note": "Read through the MediaWiki API. Infobox: the China, Nuke and Tank factions, health, the HumanArmor set, the three prices, training time, the Barracks, the rifle's damage with its Small Arms name and its reach, land speed, both sight figures, the Capture Building ability and the Red Guard Training, Capture Building and Nationalism upgrades. Prose: trained in pairs, eight to a Troop Crawler, the horde bonus at five or more, the Mini-Gunner in Shin Fai's army; strategy (attrition against infantry and Terrorist rushes, horde partner for Tank Hunters, outpacing them, structures, many captures at once) and counters (anti-infantry weapons, flash-bangs on bunched troops, toxins and radiation, no anti-air, the Comanche). Trivia: the bayonet attack planned but never implemented. Its Strong vs and Weak vs bullets are the wiki's own words (registry note).",
+          "supports": [
+            "faction",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "abilities/1",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos/1",
+            "combos/2",
+            "memorable",
+            "uncertain"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/a65f341431e95e926fca3ad7bbdce32bc6912d6d/Patch104pZH/GameFilesEdited/Data/generals.str",
+          "title": "generals.str, first plain-text copy of the Zero Hour 1.04 English string table, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour 1.04 (the file's first version, which matches the binary original)",
+          "note": "Copies the in-game text, as the registry note says; read from the page cache's copy. The Red Guard build buttons of the main, Nuke and Tank Generals in the unedited 1.04 CommandButton.ini of the same repository all point to CONTROLBAR:ToolTipChinaBuildRedguard: it earns the Horde bonus once five or more stand together, and its last two lines name infantry as its strength and vehicles as its weakness. Also read: OBJECT:Redguard (the in-game name); the Capture Building button and its tooltip (CONTROLBAR:CaptureBuilding, CONTROLBAR:ToolTipChinaRedGuardCaptureBuilding); the upgrade's tooltip (CONTROLBAR:ToolTipChinaUpgradeRedGuardCaptureBuilding, enemy and tech buildings); the Nationalism tooltip (a boost to the Horde bonus of Red Guards, Tank Hunters and Battlemasters); the Red Guard Training tooltip (new ones start as veterans); the Troop Crawler's tooltip (eight Red Guards inside); and the campaign hints MAP:CHI01xTechBldgHint (Red Guards capture buildings) and MAP:CHI01xGarrisonHint (garrisoned Red Guards gain firepower and reach).",
+          "supports": [
+            "name",
+            "roles",
+            "armament/0",
+            "abilities/0",
+            "abilities/1",
+            "strengths/0",
+            "strengths/2",
+            "weaknesses/1",
+            "countered_by/0",
+            "counters/0",
+            "combos/0",
+            "combos/3",
+            "combos/4"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/ChinaInfantry.ini",
+          "title": "ChinaInfantry.ini, unedited Zero Hour 1.04 game files, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour 1.04",
+          "note": "The Red Guard's object, ChinaInfantryRedguard: display name, one transport slot, the rifle as its only weapon, Human Armor, the vision and fog-clearing figures, the Barracks as sole prerequisite, price and training time, the ranks it can earn, a Veteran start with the Red Guard Training science, its own locomotor, the horde module (which allied soldiers count, how many, how close, and a wider reach for sharing the bonus), the squish module of rank-and-file infantry, the capture ability that the Capture Building upgrade unpauses (reach, set-up, raise and pack-up times, experience for triggering it), and death animations with no blast.",
+          "supports": [
+            "name",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "abilities/1",
+            "crew",
+            "on_death",
+            "countered_by/0"
+          ]
+        },
+        {
+          "url": "https://cncnz.com/games/generals/china-units/",
+          "title": "Command & Conquer: Generals – China Units, CNCNZ",
+          "kind": "guide",
+          "accessed": "2026-10-27",
+          "note": "A long-standing fan site's unit list, cited as the second site in place of a third page of TheSuperHackers' repository, as the sources rule and the registry's CNCNZ note ask. Its Red Guard entry agrees on the price of a pair, no prerequisite, the horde bonus at five or more, training in pairs, the capture's recharge and its unlock at the Barracks, its exposure during a capture, and the Red Guard Training and Nationalism upgrades. It repeats the manual's bayonet, which the wiki says was never in the game (see uncertain).",
+          "supports": ["tier", "cost_band", "body", "abilities/0", "abilities/1", "uncertain"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "confidence",
+          "note": "Medium comes only from the High or Medium tie-break over one point, the bayonet (see armament), on which the cited manual and CNCNZ contradict the cited wiki page. The manual is official text, but it was printed for the base game's release and describes a feature the wiki says was cut, and the 1.04 files agree with the wiki, so the entry follows them; that point decides whether the unit has a second, melee weapon entry. The rest rests on cited official text (the manual and the in-game tooltip through a faithful copy) and on pages that agree."
+        },
+        {
+          "path": "armament",
+          "note": "The base-game manual (printed page 34) has the Red Guard swapping his rifle for a bayonet in close fighting, and CNCNZ repeats it. The wiki's trivia says the bayonet stab was planned but never implemented. The 1.04 files side with the wiki: the cited Object file gives the Red Guard a weapon set with the rifle alone and keeps only bayonet animations, its command set in CommandSet.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini, read, not cited) has no bayonet button, and Weapon.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini, read, not cited) defines a bayonet weapon that no weapon set uses. So no bayonet entry is recorded.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/family",
+          "note": "Small arms by the weapon-families tie-break (rifles are always small arms): the manual and the wiki call it a bolt-action rifle, and Weapon.ini (address under armament) fires single shots with a long pause between them and no clip. The weapon's internal name in the 1.04 files calls it a machine gun, which the families rule ignores, since they go by how a weapon fires."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Infantry, ground vehicles and structures by can_target step 4: no source labels the rifle by its targets. That it cannot fire at aircraft is the wiki's statement for all basic infantry but the Mini-Gunner. The reduced damage to tanks, trucks and buildings comes from Armor.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Armor.ini, read, not cited), and the wiki says massed Red Guards bring buildings down."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No cited page says how the shots travel, so hitscan is the small-arms default; Weapon.ini (address under armament) agrees, giving the rifle no projectile and a speed that makes each hit effectively instant."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "That each shot hits harder than a Ranger's or a Rebel's round is the wiki's statement; Weapon.ini (address under armament) gives the Red Guard's rifle three times the damage of the Ranger's per shot, though it fires far less often. The garrison bonus is a game-wide rule from the registry's Generals notes."
+        },
+        {
+          "path": "abilities/0",
+          "note": "Who counts toward the horde rests on EA's Zero Hour source code, HordeUpdate.cpp (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Update/HordeUpdate.cpp, official, read, not cited): it counts only allied objects within the module's radius that carry a horde module themselves and match its infantry kind, needs one fewer than the module's count of five, and lets a unit within the wider rub-off reach of a full member share the bonus. The wiki's Horde Bonus page (https://cnc.fandom.com/wiki/Horde_Bonus, read, not cited) agrees that any mix of Red Guards, Mini-Gunners and Tank Hunters counts and Battlemasters do not, and gives the bonus as half again the rate of fire, as GameData.ini does (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/GameData.ini, read, not cited). The registry's Generals game-wide note words it as four other allied soldiers of any kind; by the code, soldiers without the module do not count. The rule for troops in buildings comes from the Garrisoning page (https://cnc.fandom.com/wiki/Garrisoning, read, not cited)."
+        },
+        {
+          "path": "abilities/1",
+          "note": "Several details rest on pages read but not cited. The Capture building page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Capture_building): the slow raise, the attempt ending if the unit moves or dies, when the recharge runs, the list of structures that cannot be captured, the minefield advice and the upgrade's price and research time, which Upgrade.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Upgrade.ini) confirms. EA's source code, Player.cpp (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/Common/RTS/Player.cpp, official): a finished upgrade of the player makes every object of that player recheck its upgrade modules, so Red Guards already in the field gain the button, which is why upgrade-in-field is linked. SpecialAbilityUpdate.cpp in the same release (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Update/SpecialAbilityUpdate.cpp, official): a booby-trapped target goes off. The Zero Hour manual scan (https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b1/CNC_Generals_Zero_Hour_Manual_2015.pdf/revision/latest, official, printed page 16): tech buildings need the Capture upgrade."
+        },
+        {
+          "path": "abilities/1/cooldown",
+          "note": "The recharge comes from SpecialPower.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/SpecialPower.ini, read, not cited), which gives the Red Guard's capture power a fifteen-second reload, and the cited CNCNZ page lists the same. The figure sits exactly on the edge between short and medium, and a value on an edge takes the higher band."
+        },
+        {
+          "path": "roles/primary",
+          "note": "Roles step 1 reads the base-game manual's Purpose entry: Anti-Infantry names anti-infantry, which has no requires, and Urban Terrain Acquisition names no role (registry note), so step 1 gives anti-infantry. The registry reads every general's version as carrying the base-game Purpose entry, and the main, Nuke and Tank Generals' build buttons share one tooltip, which also calls it strong against infantry."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Engineer ranks at roles.secondary step 5: it rests on the Capture Building upgrade, with which Red Guards take over enemy buildings and keep them, and take neutral tech buildings too, which the engineer tie-break asks for. No button every copy has, no weapon and no speed, armour or senses give another role; the tooltip's weak line (vehicles) rules out anti-armour in any case."
+        },
+        {
+          "path": "tier",
+          "note": "Which generals field it rests on uncited 1.04 files of the same repository: CommandSet.ini (address under armament) puts a Red Guard build button in the main, Nuke and Tank Generals' Barracks and the Mini-Gunner in the Infantry General's, and the generals' own objects in Object/NukeGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/NukeGeneral.ini) and Object/TankGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/TankGeneral.ini) need only their Barracks, at a higher price and with a slightly longer training time. The Mini-Gunner's details come from the cited wiki page and Object/InfantryGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/InfantryGeneral.ini, read, not cited)."
+        },
+        {
+          "path": "body/count",
+          "note": "Two per purchase: the wiki and CNCNZ say Red Guards are trained in pairs, and the Barracks' production module in Object/FactionBuilding.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/FactionBuilding.ini, read, not cited) doubles each Red Guard order and lets them out one at a time."
+        },
+        {
+          "path": "armour/notes",
+          "note": "The Ranger's health comes from AmericaInfantry.ini of the same 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AmericaInfantry.ini, read, not cited), which also has the Ranger wearing Human Armor; the set's values come from Armor.ini (address under armament/0/can_target)."
+        },
+        {
+          "path": "countered_by/0",
+          "note": "The vehicle matchup rests on the tooltip's weak line. The crushing part is reasoned: the cited Object file gives the Red Guard the squish module of rank-and-file soldiers, which by the engine rule in EA's Object.cpp (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Object.cpp, read, not cited) any crushing vehicle flattens, as the registry's Generals notes say."
+        },
+        {
+          "path": "counters/1",
+          "note": "The Terrorist is not coded yet; its id is built from its in-game name in the cited string table (OBJECT:Terrorist)."
+        },
+        {
+          "path": "combos/2",
+          "note": "That Red Guards and Tank Hunters horde together rests on the wiki and on HordeUpdate.cpp (address under abilities/0); the wiki's strategy text also has Red Guards keeping Battlemasters horded, which the code and the Horde Bonus page contradict, so that part is left out."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "abilities/0/patterns",
+          "used": "none",
+          "wanted": "a pattern for a group bonus that each member earns by standing close to enough others of its kind (a horde or swarm bonus), with no unit that hands it to the rest",
+          "note": "As the registry's Generals notes say, rally-allies does not fit, because no single unit raises the others: every horde soldier checks its own neighbours. research/registry-notes/patterns.md folds the horde bonus into rally-allies, but that pattern's summary (an aura or a timed call from one unit) wins over the note."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J03-GENERALS"
+    },
+    {
+      "id": "generals.china.hacker",
+      "game": "generals",
+      "faction": "china",
+      "name": "Hacker",
+      "flavour_affinity": ["soviet"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "logistics",
+        "secondary": ["infiltrator"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Propaganda Center",
+        "basis": "Trained at the Chinese Barracks once a Propaganda Center stands: his 1.04 Object file lists both buildings as prerequisites, the wiki infobox gives tier 3 and names the Propaganda Center, CNCNZ names it too, and the base-game manual tags him Structure Upgrade, a unit the tech building opens. The Propaganda Center is China's tech building, which the tier map puts at t3. The main Chinese side and all three Chinese generals field him; the Nuke General's copy matches the main one and the Tank General's costs more. The Infantry General, Shin Fai, fields a version that its build button calls the Super Hacker, otherwise the same unit: it is camouflaged, hidden from enemies except while it uses a hack, and idle enemies close by go for it when it shows itself; it starts at Veteran like all of that general's soldiers; it earns a little faster inside an Internet Center; its armour lets less toxin, radiation and microwave harm through; and it has a third button, Vehicle Hack, which knocks an enemy vehicle out for a while without having to stay at it (tooltip, 1.04 files, wiki; see uncertain)."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 625,
+        "basis": "The main faction's list price is about four fifths of the anchor tanks' mean price, at or above the low threshold and below medium, so low; the wiki infobox, CNCNZ and the 1.04 Object file agree on it. The Tank General pays about a quarter more for his, a medium price, but a general's surcharge counts only for a unit recorded under that general; the Nuke and Infantry Generals pay the main price (1.04 files)."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": ["deploy-anchor"],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "His land speed in the wiki infobox comes from the basic human locomotor of the 1.04 files, the Ranger's own, and the Ranger is the speed reference, so medium. Hack Internet plants him with his laptop out until he packs up again (see modes), hence the deploy trait. Like most units he slows down when badly hurt, a game-wide rule the band leaves out."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "notes": "A lone soldier carrying a laptop, which he unpacks on the ground to hack; he takes one transport seat (1.04 Object file)."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class steps decided: he wears Human Armor (1.04 Object file; the wiki infobox writes Human), the Ranger's set, which the armour_map makes unarmoured, and the soldier rule keeps him there. He has a little over half a Ranger's health. The set takes double damage from crushing and sniper fire and half again from flame, and the wiki stresses that he has no protection at all from radiation or toxins. One health bar; the healing of Elite and Heroic ranks belongs to veterancy. The Infantry General's version wears that general's own soldier set, which lets less poison, radiation and microwave harm through but the same gunfire, so the soldier rule leaves it unarmoured as well."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "His fog-clearing figure, the second sight figure in the wiki infobox and the one the registry uses, is three quarters of the Ranger's, so medium. His first figure, how far he picks targets, equals the reach of his building hack. He detects nothing hidden. The Infantry General's version is camouflaged (see tier)."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One soldier and one player, who works both hacks himself."
+      },
+      "abilities": [
+        {
+          "name": "Disable Building",
+          "kind": "channel",
+          "source": "innate",
+          "cooldown": "spam",
+          "summary": "Sent at an enemy building, he walks within a short reach of it, half again as far as a Ranger's rifle reaches, stops, spends several seconds unpacking his laptop and a few more getting ready, then plants a computer virus in it: the building is knocked out, together with the units and structures that depend on it (manual), for as long as he stays at the hack, and it comes back to life a couple of seconds after he stops, is killed or is given another order. He stands still and exposed the whole time (CNCNZ), and unlike his Internet hack it earns him no experience. From inside a garrisoned building he cannot use it, except in an Internet Center (wiki). The button is ready again almost at once.",
+          "patterns": ["capture-structure"]
+        },
+        {
+          "name": "Hack Internet",
+          "kind": "deploy",
+          "source": "innate",
+          "summary": "He sits down wherever he stands, takes several seconds to unpack his laptop and then draws money out of the world economy online: a small payment reaches his side every couple of seconds for as long as he stays set up (1.04 data; see uncertain). Any new order makes him pack up first, which takes a few seconds. Hacking is how he ranks up: each payment earns him a little experience, so he climbs to Veteran, Elite and Heroic without fighting, and each rank raises the sum per payment until a Heroic Hacker brings in twice what a new one does. He can also hack from inside an Internet Center, a Zero Hour building that holds up to eight Hackers, and earns slightly faster there (hint, wiki); inside any other building he cannot (wiki).",
+          "patterns": ["deploy-siege-mode"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "hacking",
+          "name": "Hacking the Internet",
+          "via": "deploy-siege-mode",
+          "summary": "Laptop out and hacking, he cannot move: any order makes him pack up first, which takes a few seconds. He keeps the same armour and health, stays an infantry target in the open, and keeps earning until he packs up or dies."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "In the sources he is simply gone: his 1.04 Object file has only death animations and no blast, so the infantry default applies."
+      },
+      "strengths": [
+        {
+          "ref": "role:logistics",
+          "why": "His Purpose line in the manual is collecting funds: set up with his laptop he keeps money coming in for China anywhere, faster inside an Internet Center (hint) and more per payment as he ranks; the wiki rates a Heroic Hacker a better earner for his price than the Black Market or Supply Drop Zone."
+        },
+        {
+          "ref": "pattern:capture-structure",
+          "why": "His build tooltip rates him strong against buildings: from a short distance he puts an enemy building out of action, with what depends on it (manual), without destroying it, and keeps it that way for as long as he stays at the hack (wiki)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "A soldier's armour, a little over half a Ranger's health and no weapon of any kind, so he cannot fight back at all (wiki), and his build tooltip names infantry and vehicles as his weak points; toxins and radiation hurt him freely."
+        },
+        {
+          "ref": "pattern:deploy-siege-mode",
+          "why": "While hacking the Internet he sits still with his laptop out and has to pack it up, which takes a few seconds, before he can run, so enemies who reach him catch him (CNCNZ, 1.04 files)."
+        },
+        {
+          "ref": "pattern:capture-structure",
+          "why": "To shut a building down he has to come within a short reach of it and stay put, exposed, for the whole hack (CNCNZ), and the building recovers soon after he stops or dies."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:infantry",
+          "why": "His build tooltip names infantry as a weak point: any enemy soldier can shoot him down unopposed (wiki), and the wiki warns that the GLA's Rebel Ambush power can wipe out a whole group of Hackers."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "His build tooltip names vehicles as a weak point: he has nothing to stop them, and the wiki notes that vehicles simply run Hackers over."
+        },
+        {
+          "ref": "damage:toxic",
+          "why": "With no protection at all from radiation or toxins, chemical and nuclear weapons kill him quickly (wiki)."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "Unarmed, he cannot touch aircraft, and the wiki's page on the Infantry General's version counts aircraft among the attackers that strike Hackers from beyond their reach."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "target:structure",
+          "why": "Strong against buildings by his build tooltip: he keeps an enemy building out of action, together with what depends on it (manual), for as long as he keeps hacking it, without having to destroy it."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:generals.china.hacker",
+          "why": "They do best together: the Zero Hour manual says an Internet Center takes up to eight Hackers, who work better as a group, and that a few of them inside bring in plenty of money."
+        },
+        {
+          "ref": "role:anti-infantry",
+          "why": "A reasoned escort: his build tooltip names infantry as a weak point and the wiki says Hackers need protecting at all times, so troops that clear soldiers keep enemy infantry off him while he works."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "A reasoned escort for his other weak point by the tooltip, vehicles: anti-tank troops or vehicles stop the enemy vehicles that would run him down while he hacks."
+        }
+      ],
+      "memorable": "China's unarmed hacker sits down with a laptop to siphon cash off the Internet, earning more as hacking ranks him up, or keeps an enemy building switched off for as long as he stays at it.",
+      "as_player": "You carry no gun at all. Plant your laptop anywhere to trickle money into your team's account, more per payment as hacking ranks you up, but you cannot move until you pack up again. Or hold Q at an enemy structure from a few steps away to keep it shut down while you stand exposed beside it, so your team has to guard you from soldiers and vehicles.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b8/Command_and_Conquer_-_Generals_-_UK_Manual_-_PC.pdf/revision/latest",
+          "title": "Command & Conquer: Generals manual (UK, PC), scan hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Base-game manual (2003)",
+          "note": "EA's printed manual; the Command & Conquer Wiki hosts the scan. China unit table, printed page 34: the Hacker's row, tagged Structure Upgrade (a unit the tech building opens), gives Purpose Collect Funds and Neutralise Enemy Structures and says that, once he is close enough to an enemy structure, a satellite link lets him knock it out together with what depends on it, and that from the back of his own base he can drain money from the world economy over the Internet. Printed page 38 has the Barracks training him. Read in a layout text dump of the PDF; paraphrases checked by hand, since the copy-check cannot read it.",
+          "supports": [
+            "roles",
+            "tier",
+            "abilities/0",
+            "abilities/1",
+            "strengths/0",
+            "strengths/1",
+            "counters/0",
+            "memorable",
+            "uncertain"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Hacker",
+          "title": "Hacker, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Generals and Zero Hour",
+          "note": "Read through the MediaWiki API. Infobox: the China, Tank and Nuke factions, tier 3, health, the Human armour set, both prices, training time, the Barracks and the Propaganda Center, land speed, both sight figures, the hack's reach and the two abilities. Prose: the building stays disabled while he keeps up the hack; he earns more as he ranks, and ranks by hacking money; of all buildings only an Internet Center lets him use his abilities from inside; he sets up his laptop and stays put until the hacking stops; strategy (extra income midway through a match, the Internet Center for safety, a Heroic Hacker against the Black Market and the Supply Drop Zone) and counters (defenceless, run over or shot, no protection from radiation or toxins, the Rebel Ambush). Its role field and prose are the wiki's own words.",
+          "supports": [
+            "faction",
+            "tier",
+            "cost_band",
+            "mobility",
+            "armour",
+            "sensors",
+            "abilities/0",
+            "abilities/1",
+            "modes",
+            "strengths/0",
+            "strengths/1",
+            "weaknesses/0",
+            "countered_by/0",
+            "countered_by/1",
+            "countered_by/2",
+            "combos/1",
+            "combos/2",
+            "memorable",
+            "uncertain"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/a65f341431e95e926fca3ad7bbdce32bc6912d6d/Patch104pZH/GameFilesEdited/Data/generals.str",
+          "title": "generals.str, first plain-text copy of the Zero Hour 1.04 English string table, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour 1.04 (the file's first version, which matches the binary original)",
+          "note": "Copies the in-game text, as the registry note says; read from the page cache's copy. The Hacker build buttons of the main, Nuke and Tank Generals in the unedited 1.04 CommandButton.ini of the same repository all point to CONTROLBAR:ToolTipChinaBuildHacker: he shuts enemy buildings down with a virus or hacks the Internet for money, and its last two lines name buildings as his strength and infantry and vehicles as his weak points. Also read: OBJECT:Hacker (the in-game name); the button names CONTROLBAR:DisableBuildingHack and CONTROLBAR:InternetHack and their tooltips (CONTROLBAR:ToolTipChinaHackerBuildingHack, CONTROLBAR:ToolTipChinaFireHackerInternetHack); the Infantry General's build button and tooltip (CONTROLBAR:Infa_ConstructChinaInfantryHacker, CONTROLBAR:ToolTipChinaBuildSuperHacker: vehicles as well, and camouflaged); the hints HELP:InternetCenter-01 (Hackers in an Internet Center earn faster) and HELP:InfantryHacker-01 (the Infantry General's earn faster); and the Academy text ACADEMY:UseSecondaryIncomeMethods (Hackers can hack for funds anywhere, and faster inside an Internet Center).",
+          "supports": [
+            "name",
+            "roles",
+            "tier",
+            "abilities/0",
+            "abilities/1",
+            "strengths/0",
+            "strengths/1",
+            "weaknesses/0",
+            "countered_by/0",
+            "countered_by/1",
+            "counters/0",
+            "combos/1",
+            "combos/2"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/ChinaInfantry.ini",
+          "title": "ChinaInfantry.ini, unedited Zero Hour 1.04 game files, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour 1.04",
+          "note": "The Hacker's object, ChinaInfantryHacker: display name, one transport slot, no weapon, Human Armor, the vision and fog-clearing figures, the Barracks and the Propaganda Center as prerequisites, price and training time, the ranks it can earn, the basic human locomotor, the Internet hack module (set-up and pack-up times, the wait between payments and a shorter one inside a building, the sum per payment at each rank, experience per payment), the building hack (reach, set-up, preparation and pack-up times, how often it fires again, how long each trigger keeps the building down, no experience for triggering it), the squish module of rank-and-file infantry, and death animations with no blast.",
+          "supports": [
+            "name",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "abilities/0",
+            "abilities/1",
+            "modes",
+            "crew",
+            "on_death",
+            "countered_by/1",
+            "uncertain"
+          ]
+        },
+        {
+          "url": "https://cncnz.com/games/generals/china-units/",
+          "title": "Command & Conquer: Generals – China Units, CNCNZ",
+          "kind": "guide",
+          "accessed": "2026-10-27",
+          "note": "A long-standing fan site's unit list, cited as the second site in place of a third page of TheSuperHackers' repository, as the sources rule and the registry's CNCNZ note ask. Its Hacker entry agrees on the price and the Propaganda Center, describes both hacks (close range, standing still and exposed while he works), lists their recharges and the income at each rank, and repeats the manual's description. It gives the starting income per second and quicker payments at each rank, which the 1.04 data do not show (see uncertain).",
+          "supports": ["tier", "cost_band", "abilities/0", "abilities/1", "weaknesses/1", "weaknesses/2", "uncertain"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "confidence",
+          "note": "High: the cited sources include official text about the unit, the manual's row and the in-game build tooltip through a faithful copy, and two established sites, the wiki and CNCNZ, describe him and agree on the rest. The points on which pages contradict each other, how fast the Internet payments come and how soon the building hack's button is ready again, decide no term (see abilities/1 and abilities/0/cooldown)."
+        },
+        {
+          "path": "roles/primary",
+          "note": "Roles step 1 reads the base-game manual's Purpose entry, Collect Funds and Neutralise Enemy Structures. As the registry's Generals notes ask, Collect Funds is read as a word form of collector, an alias of logistics, since he earns the money by his own action; Neutralise Enemy Structures names no role. Logistics has no requires, so step 1 gives it. The registry reads every general's version as carrying the base-game Purpose entry, and the main, Nuke and Tank Generals' build buttons also share one tooltip."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Infiltrator ranks at roles.secondary step 2 on the Disable Building button, which every version has: the role's description names shutting down buildings. The engineer, infiltrator and logistics tie-break asks for sabotage from inside; he works from a short distance rather than going in, planting a computer virus in the building's systems (tooltip), which is read here as sabotage from inside those systems. Disabler is no candidate: no weapon trait, damage type or control pattern meets its requires, and its tie-break makes it a role for acting on units. Engineer would need buildings he takes over and keeps, which he never does. The tooltip's weak line (infantry, vehicles) rules out anti-infantry and anti-armour in any case."
+        },
+        {
+          "path": "tier",
+          "note": "Which generals field him and how their versions differ rests on uncited 1.04 files of the same repository. CommandSet.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini, read, not cited) gives the main, Nuke and Tank Generals' Barracks a Hacker build button and the Infantry General's a button for his own version, whose command set adds Vehicle Hack. Object/NukeGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/NukeGeneral.ini, read, not cited) and Object/TankGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/TankGeneral.ini, read, not cited) give their copies the same prerequisites, the Tank General's at a higher price. Object/InfantryGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/InfantryGeneral.ini, read, not cited) gives Shin Fai's version that general's soldier armour, a Veteran start, innate stealth that its hacks switch off and that sends idle enemies after it when it shows, the vehicle hack and a quicker payout inside an Internet Center. The wiki's Super hacker page (https://cnc.fandom.com/wiki/Super_hacker, read, not cited) and that version's build tooltip in the cited string table agree, and the string table's hint HELP:InfantryHacker-01 says that general's Hackers hack money faster."
+        },
+        {
+          "path": "abilities/1",
+          "note": "The cited pages disagree on how the payments speed up. The wiki says each rank pays a larger sum at a faster rate, a Heroic Hacker paying every second, and CNCNZ gives the starting sum per second and shorter intervals at each rank. The cited 1.04 Object file gives one fixed wait between payments, a little shorter inside a building, with only the sum changing by rank, and EA's Zero Hour source code, HackInternetAIUpdate.cpp (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Update/AIUpdate/HackInternetAIUpdate.cpp, official, read, not cited), uses that wait at every rank, the shorter one only while he sits inside a building, and packs him up before any new order. The summary follows the game data; no term depends on the rate. The money thresholds for each rank that the wiki and CNCNZ give match the cited Object file's experience steps at one point per payment. The Internet Center details rest on the wiki's Internet center page (https://cnc.fandom.com/wiki/Internet_center, read, not cited: up to eight Hackers, slightly faster, one per player) and on the Zero Hour manual scan (https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b1/CNC_Generals_Zero_Hour_Manual_2015.pdf/revision/latest, official, read, not cited: printed page 12).",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0",
+          "note": "How the shutdown runs rests partly on an uncited page. EA's source code, SpecialAbilityUpdate.cpp (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Update/SpecialAbilityUpdate.cpp, official, read, not cited), keeps a lasting hack firing again and again until he dies, the target dies or he gets a new order, and skips allied targets; each firing keeps the building down for the effect time in the cited Object file, so it recovers a couple of seconds after the last one. The cited Object file also gives the reach, the set-up and preparation times and no experience for triggering it. The wiki speaks of paralysing certain enemy structures and names none that resist; which ones cannot be hacked was not checked."
+        },
+        {
+          "path": "abilities/0/cooldown",
+          "note": "SpecialPower.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/SpecialPower.ini, read, not cited) gives the building hack a half-second reload, while the cited CNCNZ page lists a few seconds; both are under five seconds, so spam either way.",
+          "sources_disagree": true
+        },
+        {
+          "path": "modes/0",
+          "note": "The mode rests on the cited Object file's set-up and pack-up times for the Internet hack, on the wiki (he stays where he set up until the hacking stops) and on HackInternetAIUpdate.cpp (address under abilities/1), which makes him pack up before carrying out any new order."
+        },
+        {
+          "path": "armour/notes",
+          "note": "The Ranger's health comes from AmericaInfantry.ini of the same 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AmericaInfantry.ini, read, not cited), and the set's values from Armor.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Armor.ini, read, not cited), which also has the Infantry General's soldier set letting less poison, radiation and microwave harm through."
+        },
+        {
+          "path": "countered_by/1",
+          "note": "The crushing part rests on the wiki and on the cited Object file, which gives him the squish module of rank-and-file soldiers; by the engine rule in EA's Object.cpp (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Object.cpp, official, read, not cited) any crushing vehicle flattens such a soldier, as the registry's Generals notes say."
+        },
+        {
+          "path": "countered_by/3",
+          "note": "Aircraft rest on the wiki's Super hacker page (address under tier), which counts aircraft and long-range attacks among the threats that hit the Infantry General's version from outside its reach and says that version otherwise behaves like the ordinary Hacker, and on his lack of any weapon, which matchups rule 5 puts here."
+        },
+        {
+          "path": "combos",
+          "note": "combos/1 and combos/2 are reasoned: escorts for the two weak points the cited build tooltip names, infantry and vehicles, and for the wiki's warning that Hackers need protection at all times. combos/0 rests on the Zero Hour manual scan (address under abilities/1): printed page 12 for the Internet Center's Hackers working better together and the tips on printed page 35 for a few Hackers there bringing in plenty of money."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "abilities/1/patterns",
+          "used": "deploy-siege-mode",
+          "wanted": "a pattern for income earned in place: a unit that sets up anywhere, with no field, haul or drop-off, and sends money to its team for as long as it stays put, more as it ranks up",
+          "note": "deploy-siege-mode covers only the planting and packing up, through its stationary mode that works only while the unit stays put. gather-resources does not fit: its interaction and its counterplay rest on a field, a route and a drop-off that the enemy can contest, raid or destroy, and the Hacker has none of them, so the only answer left is to find and kill him. The rob-it variant of capture-structure takes money out of an enemy structure, which this hack never touches."
+        },
+        {
+          "path": "combos",
+          "used": "no link for the Internet Center",
+          "wanted": "a link kind for a friendly building that a unit works with",
+          "note": "The string table's hints and Academy text and the Zero Hour manual pair Hackers with the Internet Center, a Chinese building that houses up to eight of them and speeds up their earning, but typed links name units, and target:structure names enemy buildings in counters and countered by only. The pairing is described in abilities/1 and strengths/0 instead."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J03-GENERALS"
+    }
+  ]
+}

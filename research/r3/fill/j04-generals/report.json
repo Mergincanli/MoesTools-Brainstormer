@@ -1,0 +1,419 @@
+{
+ "label": "j04-generals",
+ "game": "generals",
+ "file_written": "data/units/generals.json",
+ "units": [
+  "generals.usa.aurora-bomber",
+  "generals.usa.sentry-drone"
+ ],
+ "validator_result": "OK. node scripts/validate.mjs . exits 0. The only warnings are expected ones: the planned patterns become-invulnerable, cloak, hijack-vehicle and upgrade-in-field, and unit links to units not yet researched (generals.china.overlord, generals.gla.jarmen-kell). One ATYPICAL line concerns my units: \"generals.usa.sentry-drone: mobility 'tracks' doesn't combine with speed-bands 'very-fast' (rule 'mobility:tracks allowed.speed-bands very-fast')\". It is recorded in that unit's atypical list at mobility/base with a note. node scripts/format-json.mjs data/units/generals.json ran clean.",
+ "copy_check_result": "Exit 0. \"node scripts/copy-check.mjs . --only cnc.fandom.com/wiki/Aurora --only cnc.fandom.com/wiki/Sentry_drone --only generals.str --only AmericaAir.ini --only AmericaVehicle.ini --only cncnz.com/games/zero-hour/usa-units\" checked 6 pages (all from cache, 0 not checked) and reports no shared runs. The first run found 8 runs of six or more words; I reworded them and ran it again. The copy-check cannot read the two cited manual PDFs (static.wikia.nocookie.net b8 Generals manual, b1 Zero Hour manual), so I checked them by hand with a script (<scratch>). It compared every prose string of both units with layout text dumps of both PDFs and with clean transcriptions of the relevant entries (the Aurora Bomber row, the Sentry Drone and the Sentry Drone Gun, the drone note, the tactics paragraph, Countermeasures, the Aurora Alpha) and found no 6-word runs. The same check against every page I read but did not cite (wiki Aurora_Alpha, Sentry_drone_gun, Bunker_Busters, Stealth, CNCNZ's Generals USA page, and the 1.04 INI files) also found none.",
+ "hesitations": [
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "roles/secondary",
+   "chosen": "[anti-infantry, raider]",
+   "alternatives": [
+    "[raider] only",
+    "[raider, anti-infantry]",
+    "[] (no secondary)"
+   ],
+   "reason": "roles.secondary makes any splash weapon an anti-infantry candidate at step 3, which ranks it above raider (step 4: very fast, light armour). No official text names soldiers among its targets: the tooltip says strong against buildings, and the wiki aims it at buildings and vehicles. Raider's 'hit and run' fit is loose for a plane that makes one bombing run and flies home. The rule is clear, but the result feels mechanical."
+  },
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "abilities/0/patterns",
+   "chosen": "become-invulnerable (planned), plus a fit_note",
+   "alternatives": [
+    "become-invulnerable + overclock-self",
+    "overclock-self only",
+    "empty patterns + fit_note"
+   ],
+   "reason": "The task asked whether become-invulnerable fits the run. The official tooltip and the manual call it immune or invulnerable on the supersonic run, it pays with a slow trip home, and the counterplay is to wait and strike afterwards, so it fits. But the 1.04 data makes aimed attackers miss (SneakyOffsetWhenAttacking, AttackersMissPersistTime) rather than ignoring damage, wide blasts still hurt it (wiki), and the state comes with every attack order rather than a chosen moment. overclock-self (speed burst, then a slump) passes the second-pattern test only weakly, because the speed change is numbers; Pattern links and Granularity left the choice open."
+  },
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "abilities/0/kind",
+   "chosen": "triggered",
+   "alternatives": [
+    "passive",
+    "no ability at all (only notes, as numbers)"
+   ],
+   "reason": "The Passive or Triggered tie-break: each attack run is an event with a one-off effect window. The abilities rule allows the entry because the sources describe a distinct state (immune on the supersonic attack) that no word-list term covers. The armour-models list says invulnerability lives in patterns, and evasive would break its small-size rule."
+  },
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "armament/0/range",
+   "chosen": "long",
+   "alternatives": [
+    "short (bombs default)",
+    "off-screen"
+   ],
+   "reason": "The rule bands by the reach figure: 300 against the rifle's 100 is 3.0, so long. Drop delivery is described as falling below or just ahead of the plane, but this bomb is released far ahead and flies on with its own locomotor (Weapon.ini comment, WeaponObjects.ini). Not off-screen, since the reach is under its fog figure of 600."
+  },
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "armament/0/delivery",
+   "chosen": "drop",
+   "alternatives": [
+    "projectile",
+    "lobbed"
+   ],
+   "reason": "The sources describe a bomb released on a run that does not track. The delivery order puts drop before projectile. In the game data the bomb is a projectile object that flies ahead to the target point."
+  },
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "armament/0/traits",
+   "chosen": "[splash]",
+   "alternatives": [
+    "[splash, friendly-fire]",
+    "[] (radius looks small)"
+   ],
+   "reason": "Splash: the infobox radius figure and the wiki's 'wide area' both count. Friendly-fire: only Weapon.ini (RadiusDamageAffects ALLIES) shows it, and the registry note says a term only the 1.04 files would set stays unset."
+  },
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "mobility/speed_raw",
+   "chosen": "9 (normal cruise 180 / Ranger 20)",
+   "alternatives": [
+    "24 (supersonic 480, its speed on attack runs)",
+    "7.5 (sluggish return)"
+   ],
+   "reason": "Speed bands say to use the way it moves in a fight but also the speed it can keep up for as long as it likes. The supersonic locomotor is limited to attack runs, so I took the cruise. All three readings band very fast."
+  },
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "countered_by/1",
+   "chosen": "target:high-air",
+   "alternatives": [
+    "class:aircraft",
+    "role:anti-air (folded into countered_by/0)"
+   ],
+   "reason": "The tooltip names 'fighters'. Matchups rule 2 says class:aircraft is for air units in general and a layer only when the point holds for one layer. Fighters are jets, so high air, but the tooltip does not say which units it means."
+  },
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "counters/1-2",
+   "chosen": "class:vehicle (reason limited to stopped, bunched or slow vehicles) + unit:generals.china.overlord",
+   "alternatives": [
+    "speed:<=slow (false for the Overlord, which bands medium against the Ranger)",
+    "armour-class:super-heavy (misses the reason, which is slowness)",
+    "unit link alone"
+   ],
+   "reason": "The wiki names slow vehicles like the Overlord, but our speed bands put the Overlord at medium, so no word-list link matches the reason exactly (Matchups rules 1 and 3)."
+  },
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "weaknesses/1-2",
+   "chosen": "armour-class:light for the slow, exposed return; delivery:drop for no tracking and no air attack",
+   "alternatives": [
+    "speed:very-fast with a comparison",
+    "weapon:bombs (already used in strengths)",
+    "mobility:jet"
+   ],
+   "reason": "Matchups rule 4 hangs a slow-for-its-kind weakness on the part that exposes it. Rule 5 hangs a lack (no anti-air) on the part that causes it. Which part that is stays a judgement."
+  },
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "combos/1",
+   "chosen": "role:anti-air, reasoned (uncertain entry)",
+   "alternatives": [
+    "leave it out (combos may stay short)"
+   ],
+   "reason": "No source names an escort. Matchups allow an entry reasoned from a weakness a page names (fighters in the tooltip)."
+  },
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "modes",
+   "chosen": "none",
+   "alternatives": [
+    "modes for the wiki infobox's 'Supersonic mode' and 'Sluggish mode' (via become-invulnerable)"
+   ],
+   "reason": "modes[] is for deploy, siege and transform forms. These are automatic locomotor swaps that change speed only, so they stay in the ability summary and mobility.notes."
+  },
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "confidence",
+   "chosen": "high",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "Official text is cited (the manual and the tooltip through a faithful copy). The contradictions I found (bomb damage figures, the tooltip's half speed, Countermeasures share, Bunker Busters, fuel-air wording) do not decide any coded term, so the High or Medium tie-break keeps high."
+  },
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "tier/basis (versions)",
+   "chosen": "Granger's version described as a cheaper, tougher Aurora with a point-defence laser, the plain name and the standard bomb; 'Fuel-Air' named only as an unused string and a cut design; Alexander's Aurora Alpha named as a separate unit",
+   "alternatives": [
+    "describe Granger's as a fuel-air version, as the task text suggests"
+   ],
+   "reason": "The rule was clear, but the task's premise is not borne out by the sources. In 1.04, AirF_AmericaJetAurora uses DisplayName OBJECT:Aurora and AuroraBombWeapon. The OBJECT:AirF_Aurora 'Fuel-Air Aurora Bomber' string is used by no object, and the wiki trivia says Granger's fuel-air 'Hypersonic Aurora' was cut."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "roles/primary",
+   "chosen": "scout (step 2, stock drone unarmed)",
+   "alternatives": [
+    "raider (if the upgrade gun counted)"
+   ],
+   "reason": "The rule is clear: upgrades never count for the primary. The tooltip's opening line names no role, so step 2 applies to the unarmed drone. Recorded because the armed drone plays as an ambusher."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "roles/secondary",
+   "chosen": "[raider, anti-infantry]",
+   "alternatives": [
+    "[anti-infantry, raider]",
+    "[anti-infantry] only"
+   ],
+   "reason": "Raider ranks at step 4 (very fast, light armour), but its coding rule's need for a non-tool weapon is met only by the acquired gun, and the rule does not say whether that counts at step 4 or only at step 5. Anti-infantry would rank at step 1 if the official description 'anti-personnel machine gun', which names the upgrade gun rather than the unit, counted as calling the unit by the alias."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "armament/0/family",
+   "chosen": "machine-gun",
+   "alternatives": [
+    "autocannon"
+   ],
+   "reason": "The rule was clear, but the sources disagree. Official texts (the ZH manual, the upgrade tooltip, the unit descriptions), the wiki infobox and CNCNZ say machine gun; the wiki's Sentry drone gun page and the drone page's trivia say 20mm autocannon. COMANCHE_VULCAN is left to what the sources say the gun fires (registry note), and none says bullets or shells outright."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "armament/0/delivery",
+   "chosen": "hitscan (family default)",
+   "alternatives": [
+    "projectile (Weapon.ini gives a WeaponSpeed)"
+   ],
+   "reason": "Delivery counts a travel speed in the sources as projectile. But the registry note says a term only the 1.04 files would set stays unset, and no cited page describes the shots' flight."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "armament/0/mount",
+   "chosen": "free-aim",
+   "alternatives": [
+    "body-aim (manual: nose-mounted)",
+    "auto-target (a turret that works only when deployed, like a sentry gun)"
+   ],
+   "reason": "Aim tie-break step 4: a weapon built into a small body is free aim. The data puts it on a 360-degree turret that works only after unpacking, which brushes the 'deployed sentry gun' example in step 2, but in a commanded game the unit's own turret goes on to the later steps."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "mobility/base",
+   "chosen": "tracks (atypical with very-fast)",
+   "alternatives": [
+    "wheels (would allow very-fast)"
+   ],
+   "reason": "The rule was clear but breaks a combination rule. The locomotor has a TREADS appearance and the object leaves track debris, and its speed of 60 against 20 is 3.0. Recorded as atypical."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "body/size",
+   "chosen": "small",
+   "alternatives": [
+    "tiny"
+   ],
+   "reason": "Sizes: a unit the game handles like a soldier in transports is small. It takes one slot like an infantryman (wiki, 1.04 file), but the wiki says it does not fit the Humvee's infantry-only seats, so the game does not treat it as a soldier everywhere."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "crew/model",
+   "chosen": "solo",
+   "alternatives": [
+    "remote"
+   ],
+   "reason": "The wiki calls it remotely controlled in its game section but autonomous in its background. The remote model needs an operator on the field, and there is none."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "weaknesses/2",
+   "chosen": "nature:uncrewed-machine for 'never ranks up'",
+   "alternatives": [
+    "class:drone",
+    "pattern:earn-veterancy (wrong: a link says the unit has it)"
+   ],
+   "reason": "The registry says units that never rank must say so in weaknesses but names no link, and Matchups rule 5 says to hang a lack on the part that causes it. I followed the ra2 Robot Tank example."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "weaknesses/3",
+   "chosen": "role:scout for the delay on move orders",
+   "alternatives": [
+    "class:drone",
+    "leave it out (move it to mobility.notes only)"
+   ],
+   "reason": "No word-list part names a slow response to orders, which the wiki calls its biggest drawback (the automatic pack and unpack). Rule 4 says to hang a weakness on the part that exposes it, and nothing fits well; see the fit_note."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "weaknesses/1",
+   "chosen": "weapon:machine-gun (unarmed stock, weak against tanks, no anti-air)",
+   "alternatives": [
+    "sensor:detector (the 'device it carries instead' route for unarmed units)",
+    "class:drone"
+   ],
+   "reason": "Rule 5's unarmed-unit clause seems not to apply, because the unit does have an acquired weapon."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "countered_by/0",
+   "chosen": "sensor:detector, reasoned (uncertain entry)",
+   "alternatives": [
+    "role:scout",
+    "leave it out"
+   ],
+   "reason": "No page names detectors as its counter. The entry is reasoned from the wiki's counters text (its defence is not being seen) and the registry's stealth note."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "countered_by/1",
+   "chosen": "armour-class:>=medium",
+   "alternatives": [
+    "class:vehicle",
+    "armour-class:heavy"
+   ],
+   "reason": "Matchups rule 1: tanks set apart from lighter vehicles take an armour-class link. The tooltip says tanks, the wiki says medium or heavy armour, and the manual and CNCNZ say the gun is for small or lighter vehicles."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "counters",
+   "chosen": "6 entries: pattern:cloak, pattern:hijack-vehicle, unit:generals.gla.jarmen-kell, class:infantry, role:logistics, role:siege",
+   "alternatives": [
+    "drop role:siege or role:logistics to stay near five",
+    "armour-class:light for thin-skinned vehicles (rejected: it covers aircraft the gun cannot hit)"
+   ],
+   "reason": "Matchups rule 7 allows a sixth entry when it is sourced and adds a reason; each of the wiki's ambush examples names a separate job."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "combos/0",
+   "chosen": "role:transport (it fits aircraft transport slots like an infantryman)",
+   "alternatives": [
+    "empty combos",
+    "a reasoned role:anti-infantry for allies who kill what it reveals"
+   ],
+   "reason": "The only sourced pairing is weak. The wiki's 'nearby allies kill what it exposes' names no kind of teammate."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "strengths/2",
+   "chosen": "immune:hijack-vehicle covering Kell's snipe, Hijackers, neutron shells and neutron mines",
+   "alternatives": [
+    "a separate immunity entry for the neutron weapons (no damage type fits: KILL_PILOT is left out of the map)"
+   ],
+   "reason": "hijack-vehicle is the pattern Kell's crew snipe links. The neutron weapons empty vehicles the same way, but I did not trace their mechanism in the files."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "abilities",
+   "chosen": "one passive 'Stealth while still' (cloak); no entry and no mode for the automatic pack and unpack",
+   "alternatives": [
+    "a deploy mode via deploy-siege-mode",
+    "a triggered ability with empty patterns"
+   ],
+   "reason": "It has no button and no new form; the effect is a delay. A fit_note at mobility/traits records the gap."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "generals.usa.aurora-bomber",
+   "path": "abilities/0/patterns",
+   "used": "become-invulnerable",
+   "wanted": "an attack-run variant: aimed fire misses a very fast plane during its run and for a moment after, area blasts still hurt it, and it is slowed afterwards",
+   "note": "The immunity comes with every attack order rather than a chosen moment, works by making aimed shots miss, and is paid for by a slow trip home rather than a cooldown. A fit_note is on the unit."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "mobility/traits",
+   "used": "none",
+   "wanted": "an automatic deploy step: the unit stops and unpacks before its weapon fires and packs up before it moves, with no button",
+   "note": "deploy-anchor needs a key and a stronger stationary mode. The drone's unpacking is automatic and only delays move orders. A fit_note is on the unit."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "mobility/base",
+   "used": "tracks",
+   "wanted": "tracks allowed with very-fast for small tracked robots",
+   "note": "A combination-rule break, recorded in atypical rather than as a missing term: it is as fast as the Humvee on wheels."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "weaknesses/3",
+   "used": "role:scout",
+   "wanted": "a link for 'slow to respond to orders'",
+   "note": "No word-list part names the delay on move orders, which the wiki calls its biggest drawback."
+  },
+  {
+   "unit": "generals.usa.sentry-drone",
+   "path": "weaknesses/2",
+   "used": "nature:uncrewed-machine",
+   "wanted": "a link for 'cannot gain veterancy'",
+   "note": "The registry asks for the point in weaknesses but names no link term."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "roles.secondary: raider whose only weapon is acquired",
+   "note": "Raider's coding rule needs a weapon that is not a tool. It is unclear whether an upgrade weapon meets that need at step 4 (speed and armour) or only at step 5 (upgrades). This affects the Sentry Drone's secondary order."
+  },
+  {
+   "topic": "roles.secondary step 1 and official labels on upgrade weapons",
+   "note": "An official unit description calls the Sentry Drone's upgrade gun 'anti-personnel', an alias of anti-infantry. The rule does not say whether that is the unit being called by the alias (step 1) or an upgrade's role (step 5)."
+  },
+  {
+   "topic": "Splash weapons give anti-infantry",
+   "note": "The rule makes any splash weapon an anti-infantry candidate at step 3. For a bomber that official text points only at buildings, anti-infantry then outranks raider, which may not be intended."
+  },
+  {
+   "topic": "Range band for dropped bombs released from afar",
+   "note": "The drop delivery is described as 'below or just ahead', but the Aurora's attack range is three times the rifle's because the bomb is released far ahead. Banding by the figure gives long. A note on drop weapons' reach would help."
+  },
+  {
+   "topic": "Speed figure for a unit with an automatic attack speed",
+   "note": "Speed bands say to use the way it moves in a fight but also the speed it can keep up indefinitely. The Aurora cruises at one speed and switches to a far higher one on every attack run, and the rule does not say which to take."
+  },
+  {
+   "topic": "become-invulnerable versus attackers-miss stealth-like immunity",
+   "note": "The pattern summary says immune to damage. Generals' 'attackers miss' leaves area damage working. It is unclear whether that is the same pattern or a variant."
+  },
+  {
+   "topic": "'Fighters' in countered_by",
+   "note": "Matchups rule 2 offers class:aircraft for air units in general or a layer link for one layer. 'Fighters' names a kind of unit that is a layer subset (jets), and I read it as target:high-air."
+  },
+  {
+   "topic": "Weakness link for 'never ranks up'",
+   "note": "The Generals game-wide note asks units that never rank up to say so in weaknesses but gives no link. I used nature:uncrewed-machine, as in the RA2 Robot Tank example, though class:drone is equally defensible."
+  },
+  {
+   "topic": "Wiki infobox 'modes' for locomotor swaps",
+   "note": "The Aurora's infobox lists Normal, Supersonic and Sluggish modes. The modes[] description covers deploy, siege and transform forms only, so I recorded none. A sentence on automatic speed modes would settle it."
+  },
+  {
+   "topic": "Size rule: 'fills an infantry seat in a transport'",
+   "note": "The Sentry Drone fills one infantry-sized slot in aircraft transports but cannot enter infantry-only ground transports such as the Humvee. The rule does not say whether one such transport is enough. I took small."
+  }
+ ],
+ "new_mechanics": [],
+ "pages_read_not_cited": [
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Locomotor.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Armor.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandButton.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Upgrade.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/ObjectCreationList.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/WeaponObjects.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AirforceGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/LaserGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/SuperWeaponGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/ChinaVehicle.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AmericaInfantry.ini",
+  "https://cnc.fandom.com/wiki/Aurora_Alpha",
+  "https://cnc.fandom.com/wiki/Sentry_drone_gun",
+  "https://cnc.fandom.com/wiki/Bunker_Busters",
+  "https://cnc.fandom.com/wiki/Stealth",
+  "https://cnc.fandom.com/wiki/Fuel_air_bomb_(Generals_1)",
+  "https://cncnz.com/games/generals/usa-units/",
+  "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b1/CNC_Generals_Zero_Hour_Manual_2015.pdf/revision/latest (read for the Aurora Alpha and Countermeasures entries; cited only on the Sentry Drone)"
+ ],
+ "source_problems": "Nothing failed to load. All pages came from the workspace cache or were fetched once this session (CNCNZ's Generals and Zero Hour USA unit pages, Upgrade.ini and ChinaVehicle.ini), with no 429s, and copy-check had 0 unchecked pages. web.archive.org was not tried. Contradictions, all recorded in uncertain with sources_disagree:\n(1) The task's \"Granger's Fuel-Air\" version does not exist in 1.04. Granger's Aurora (AirF_AmericaJetAurora) shows the plain Aurora Bomber name, carries the standard AuroraBombWeapon, costs a fifth less, has half again the health and a point-defence laser. The string OBJECT:AirF_Aurora \"Fuel-Air Aurora Bomber\" is used by no object. The wiki trivia says his fuel-air \"Hypersonic Aurora\" was cut and became Alexander's Aurora Alpha; unused AirF_ fuel-air bomb objects remain in his file.\n(2) The wiki Aurora changelog (ZH 1.03: bomb damage and radius raised to far larger figures) disagrees with its own infobox and with Weapon.ini (one modest blast). The changelog figures match the fuel-air bombs (the Alpha's second blast, and the unused AirF detonation weapon). The wiki's prose also calls the Aurora's bomb fuel-air while the infobox says conventional.\n(3) The build tooltip says the Aurora's speed halves after the attack; the 1.04 data and the infobox give a return speed only a little under its cruise. This matches the pre-Generals-1.03 value in the wiki changelog.\n(4) Countermeasures: the wiki says half of missile attacks are negated; the 1.04 module diverts a smaller share.\n(5) Three official unit descriptions say Bunker Busters upgrade the Aurora too; the wiki and the 1.04 data give it to the Stealth Fighter only.\n(6) The wiki Aurora Alpha page says the Alpha flies home supersonic; its 1.04 object keeps the sluggish return (concerns the Alpha's own entry).\n(7) Sentry Drone gun family: official texts, the wiki infobox and CNCNZ say machine gun; the wiki gun page and the drone page's trivia say 20mm autocannon.\n(8) The gun upgrade: CNCNZ's price is lower than the wiki's, and Upgrade.ini backs the wiki. The wiki gun page's research time is shorter than Upgrade.ini's. A hint and an official unit description say it is bought at the Strategy Center, while the wiki, CNCNZ and the 1.04 command sets say the War Factory (the Strategy Center button is commented out).\n(9) The wiki calls the drone both purely autonomous and remotely controlled.\n(10) The wiki trivia says the move-order delay lasts a few seconds; the 1.04 pack and unpack times are about a second each.\n(11) Official ECM Tank descriptions say its jamming field disables all drones near it, but in 1.04 that field deals SUBDUAL_MISSILE, which the Sentry Drone's armour set ignores; only the tank's aimed disabler affects it. So no ECM counter was coded.\ndata/units/generals.json did not exist, so I created it with the given header."
+}
