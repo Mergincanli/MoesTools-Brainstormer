@@ -1,0 +1,380 @@
+{
+ "label": "j05-tempest-rising",
+ "game": "tempest-rising",
+ "file_written": "data/units/tempest-rising.json",
+ "units": [
+  "tempest-rising.gdf.drone-operator",
+  "tempest-rising.gdf.sentinel"
+ ],
+ "validator_result": "OK",
+ "copy_check_result": "Exit 0. Ran `node scripts/copy-check.mjs . --only tempestrising.wiki.gg --only 1486920 --only Tempest_Rising/GDF_units`. It checked 13 cited pages: all of them came from the cache, none was fetched and none was left unchecked. Result: \"OK: no shared runs\". No PDF is cited. I also scanned our prose against every cached Tempest Rising page read for this task, cited or not. Earlier copies, in uncited Steam notes and wiki pages, were rewritten. The scan now finds no six-word run except fragments of the Steam URLs we cite.",
+ "hesitations": [
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "roles/primary",
+   "chosen": "assault",
+   "alternatives": [
+    "anti-armour"
+   ],
+   "reason": "The rule was clear but gives an odd result. Step 1 reads his build tooltip, which says he flies a combat drone at aircraft and vehicles, and that names no role label. At step 4 his main weapon, the pistol, has no bonus, and official strength wording tied to another weapon (the drone) does not count there. The makers' 'early game anti-tank infantry' label counts only for roles.secondary. So step 5 gives the generalist role: he is slow, so assault. A fit_note says anti-armour is wanted."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "roles/secondary",
+   "chosen": "[anti-armour, anti-air]",
+   "alternatives": [
+    "scout (fails its requires)",
+    "anti-air at step 1 instead of step 3"
+   ],
+   "reason": "Anti-armour comes in at step 1 through the 20 May 2025 'anti-tank infantry' wording. Anti-air comes in at step 3. The open point is whether a tooltip that names the drone's targets ('against air units and vehicles') is a label under can_target step 3. I read it as a label for the weapon, not as words about the unit's own job. Scout fails its requires. The only part that might meet them is the Ambush Protocols doctrine's cloak, which the registry keeps off, and scout would rank third anyway."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "armament/1/family",
+   "chosen": "drone-launcher",
+   "alternatives": [
+    "rockets (the micromissiles themselves)"
+   ],
+   "reason": "The registry says to record a spawned helper with its owner. The drone flies and fights by itself, which matches the drone-launcher family's meaning. No rule says whether the family should come from the helper's own gun instead."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "armament/1/range",
+   "chosen": "short (the missiles' listed reach, 1600 / 2500 = 0.64, measured from the drone)",
+   "alternatives": [
+    "medium (the drone attacks whatever he attacks, at his own reach)",
+    "long (the family default; the Remote Control leash plus the missiles' reach)"
+   ],
+   "reason": "The range-band rules do not say whether a drone weapon's reach is measured from the drone or from its owner. 'Divide the figures as the sources give them' points to the listed missile range."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "armament/1/mount",
+   "chosen": "auto-target (recorded in atypical against the humanoid body)",
+   "alternatives": [
+    "free-aim (aim step 4: a weapon a soldier carries)"
+   ],
+   "reason": "Aim tie-break step 2 names launched drones that act on their own, and that step comes before step 4. The choice then breaks the humanoid body's mount list."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "armament/1/delivery",
+   "chosen": "projectile",
+   "alternatives": [
+    "lock-on (homing missiles in a commanded game)"
+   ],
+   "reason": "No source says the micromissiles steer, so the launched-missile reading and the family default apply."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "armament/1/damage",
+   "chosen": "armour-piercing (Rocket through the damage map, recorded in atypical)",
+   "alternatives": [
+    "explosive (the family default)"
+   ],
+   "reason": "The rule was clear: step 4 binds even when the family's list leaves the type out."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "abilities/0/kind",
+   "chosen": "deploy",
+   "alternatives": [
+    "toggle"
+   ],
+   "reason": "The tie-break picks deploy when 'the unit cannot move at all' in one state. The operator cannot move in Remote Control mode, but the drone he flies can."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "abilities/0/patterns",
+   "chosen": "[launch-drones] (the piloted variant)",
+   "alternatives": [
+    "[] with a fit_note and a new pattern for flying a drone from a parked soldier",
+    "launch-drones plus deploy-siege-mode"
+   ],
+   "reason": "The batch brief and the table in research/registry-notes/patterns.md name launch-drones (piloted variant). The correction at the top of the same notes says a remote-piloted drone is the crew model remote, not launch-drones. launch-drones' summary is about releasing drones on a key, but his drone is always out."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "modes/0",
+   "chosen": "remote-control mode via launch-drones",
+   "alternatives": [
+    "no mode, the ability only",
+    "via deploy-siege-mode"
+   ],
+   "reason": "Modes are for deploy, siege and transform forms. Remote Control changes how the unit moves (he is rooted), but it is not a classic siege deploy."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "crew/model",
+   "chosen": "solo (proposal)",
+   "alternatives": [
+    "remote"
+   ],
+   "reason": "The remote coding rule's own example, 'a soldier who parks to fly a drone', describes him. But the remote model excludes infantry and organic units, and his default state is a walking soldier whose drone follows him."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "abilities (Ambush Protocols doctrine)",
+   "chosen": "left off; mentioned in the armament/1 summary and an uncertain entry",
+   "alternatives": [
+    "a passive ability, source commander-power, linking cloak (the earlier draft)"
+   ],
+   "reason": "The general doctrine rule says a doctrine that gives named unit types a new effect is recorded on each of them. The registry's Stealth note says 'the Ambush Protocols doctrine's wider stealth stays off'. Also, the stealth hides the drone, not him."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "abilities/1",
+   "chosen": "its own triggered ability (the Drone Factory perk), linking reinforce-squad (respawning-followers)",
+   "alternatives": [
+    "folded into the armament/1 summary",
+    "linking launch-drones"
+   ],
+   "reason": "Two rules pull different ways. The abilities rule asks for an entry when a named perk adds a mechanic. The Weapons-vs-abilities rule keeps an effect that is part of how a weapon works in that weapon's summary."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "mobility/speed_raw",
+   "chosen": "0.95 (525, from the 2.0.0 notes)",
+   "alternatives": [
+    "0.94 (515, the infobox)"
+   ],
+   "reason": "The registry says a patch-note speed replaces a stale page figure. Both values are slow."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "countered_by/2",
+   "chosen": "unit:tempest-rising.dynasty.operative, next to role:anti-air",
+   "alternatives": [
+    "leave the Operative out"
+   ],
+   "reason": "Matchup rule 3 allows a unit link only beside a word-list link for the same reason. The 6 Oct 2025 notes name the Operative among the Dynasty's anti-air replies to Drone Operators."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "combos/3",
+   "chosen": "pattern:rally-allies (Comms)",
+   "alternatives": [
+    "leave it out"
+   ],
+   "reason": "The source was clear but frames this as a balance problem: the 1.9.0 notes slowed him because Comms-boosted Drone Operators were oppressive. They do not recommend the pairing."
+  },
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "roles/secondary",
+   "chosen": "[anti-infantry, anti-air]",
+   "alternatives": [
+    "raider (step 4, ranks third)",
+    "raider at step 1 if the 6 Oct 2025 notes' 'drive-by harassment' named its job"
+   ],
+   "reason": "I read the Hotfix #8 wording, which praises how it lets the GDF both fight infantry and scout, as possibly naming its job at step 1; otherwise anti-infantry still enters at step 3 from the Codex's anti-infantry minigun. I read the harassment note as about Harvester Wheels, not the Sentinel's job. The result is the same either way."
+  },
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "sensors/sight",
+   "chosen": "medium (4500 / 3500 = 1.29)",
+   "alternatives": [
+    "long (the brief says long sight; the makers call it a scout)"
+   ],
+   "reason": "The rule was clear: the band ignores scout words, and the ratio is below 1.5."
+  },
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "body/plan",
+   "chosen": "open-mount",
+   "alternatives": [
+    "hull-turret",
+    "box-carrier"
+   ],
+   "reason": "No source says how its minigun is mounted or whether its crew sits exposed. Open-mount needs exposed crew, hull-turret is for tanks and box-carrier needs passenger room. A fit_note is filed."
+  },
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "armament/1/family",
+   "chosen": "machine-gun (the minigun's alternate ammunition)",
+   "alternatives": [
+    "another family (no source names the launcher)"
+   ],
+   "reason": "A campaign hint calls the marking rounds its 'alternate fire mode', and both buttons swap projectiles. No source says outright that the same gun fires them."
+  },
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "armament/1/damage",
+   "chosen": "kinetic (step 5, the family default for Omni)",
+   "alternatives": [
+    "a damage type that ignores armour (none exists in the list)"
+   ],
+   "reason": "Omni is not in the damage map. The explosive exception for area hits needs a family that allows explosive damage. A fit_note is filed."
+  },
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "armament/0/mount and armament/1/mount",
+   "chosen": "free-aim",
+   "alternatives": [
+    "body-aim (if the gun is fixed)",
+    "slow-turret (only for large or huge units)"
+   ],
+   "reason": "No source describes the mount and the body plan implies no turret, so the family default applies."
+  },
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "abilities/1",
+   "chosen": "EM Interference as a passive ability, source commander-power, with an empty pattern list and a fit_note",
+   "alternatives": [
+    "left off as a side-wide change to the Marked status, mentioned in the armament/0 summary (the earlier draft)",
+    "kind triggered"
+   ],
+   "reason": "The doctrine rule records a new effect on the named unit types, and the Doctrine page lists the Sentinel under it. The 'codes it on the unit and adds a fit_note, and the merge pass decides' clause also points to recording it. Against that, the Status effect page puts the silence on the Marked status itself, whoever applies it."
+  },
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "counters/2",
+   "chosen": "role:logistics (Dynasty Harvester Wheels)",
+   "alternatives": [
+    "leave it out",
+    "add unit:tempest-rising.dynasty.harvester-wheel"
+   ],
+   "reason": "The 6 Oct 2025 notes make Harvester Wheels easier drive-by targets that pay the GDF Intel, naming Sentinels. They do not describe a head-on fight."
+  },
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "combos/2",
+   "chosen": "role:anti-air (reasoned, from Networked Peacekeeper missiles against Marked aircraft)",
+   "alternatives": [
+    "leave it out"
+   ],
+   "reason": "No source names this pairing. The entry is reasoned from facts the sources give, and an uncertain entry says so."
+  },
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "armament/0/traits (mark)",
+   "chosen": "mark (in multiplayer only)",
+   "alternatives": [
+    "no mark, if campaign values were coded"
+   ],
+   "reason": "The registry codes multiplayer values and says a weapon that marks takes the mark trait. The trait's definition mentions the team seeing the target, which the game's Marked status does not do."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "roles/primary",
+   "used": "assault",
+   "wanted": "anti-armour",
+   "note": "The makers call him anti-tank infantry and both his weapons deal damage built for vehicles, but the role steps fall back to the generalist role."
+  },
+  {
+   "unit": "tempest-rising.gdf.drone-operator",
+   "path": "roles",
+   "used": "assault, anti-armour, anti-air",
+   "wanted": "scout",
+   "note": "The hand-flown drone scouts over cliffs and rivers, but no stock part meets scout's requires."
+  },
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "armament/1/damage",
+   "used": "kinetic",
+   "wanted": "a damage type that ignores armour (the game's Omni)",
+   "note": "Omni ignores every resistance, and no damage type in the list does that."
+  },
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "body/plan",
+   "used": "open-mount",
+   "wanted": "a scout car or armoured car body with one gun mount",
+   "note": "No body plan fits a light car with one gun and no passengers when the gun mount and crew exposure are unknown."
+  },
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "abilities/1/patterns",
+   "used": "none",
+   "wanted": "a pattern for shutting off a target's abilities (here through a mark)",
+   "note": "The silence weapon trait also stops firing, and disable-machine covers only machines hit by electric or EMP effects."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "A soldier who parks to fly a drone",
+   "note": "The table in research/registry-notes/patterns.md folds this into launch-drones (piloted variant) with crew model remote. The correction at the top of the same file says a remote-piloted drone is the crew model remote, not launch-drones. launch-drones' summary is about releasing drones on a key. The remote crew model's coding-rule example matches the Drone Operator exactly, yet its rules exclude infantry and organic units. One explicit rule for an owner unit with a drone it can take over is needed."
+  },
+  {
+   "topic": "Reach of a drone-launcher weapon",
+   "note": "The range bands do not say whether a drone weapon's reach is the drone's own gun range (here short) or how far from its owner the drone fights (medium by his attack reach, long with the Remote Control leash; the family default is long)."
+  },
+  {
+   "topic": "Doctrines that change a shared status",
+   "note": "EM Interference makes every Marked enemy silenced. The Doctrine page lists the markers (the Sentinel among them), while the Status effect page ties the silence to the status itself. It is unclear whether this is a new effect for named units (record it with source commander-power) or a side-wide change (leave it off). The registry line that 'the Ambush Protocols doctrine's wider stealth stays off' also leaves open whether 'wider' covers the drones' new stealth or only the longer stealth of units that already hide."
+  },
+  {
+   "topic": "Silence",
+   "note": "In Tempest Rising, silence blocks only active and passive abilities. Our silence weapon trait means the target can neither fire nor use abilities, so the game's narrower effect has no term or pattern."
+  },
+  {
+   "topic": "The mark trait in Tempest Rising",
+   "note": "The trait says the team sees the target and hits it harder. The game's Marked status gives an Intel bounty and a bonus to Networked weapons, with no reveal. The registry tells coders to use the trait anyway."
+  },
+  {
+   "topic": "A tooltip that names a weapon's targets",
+   "note": "The tooltip's line that he flies a combat drone at aircraft and vehicles could be a label under can_target step 3 and roles.secondary step 3, or strength wording for roles.primary step 4. The registry lists 'effective against' but not a bare 'against'. I treated it as a label for the drone only."
+  },
+  {
+   "topic": "Deploy or toggle when only the controlled drone moves",
+   "note": "The ability-kinds tie-break speaks of 'the unit'. For an operator who stands rooted while his drone flies, I read 'the unit' as the operator."
+  },
+  {
+   "topic": "Omni damage",
+   "note": "The damage map leaves out the game's armour-ignoring type, and step 5 then forces the family default (kinetic for the Sentinel's scanner rounds)."
+  },
+  {
+   "topic": "Body plan for a scout car",
+   "note": "Open-mount needs exposed crew, hull-turret is for tanks and box-carrier needs passenger room. No plan covers an armoured or scout car with one small gun when the sources do not describe the mount."
+  }
+ ],
+ "new_mechanics": [
+  {
+   "unit": "tempest-rising.gdf.sentinel",
+   "path": "abilities/1",
+   "proposed_id": "block-abilities",
+   "summary": "An effect stops enemies from using their active and passive abilities while it lasts, but leaves them free to move and attack; here the EM Interference doctrine applies it to every enemy the GDF has Marked. Counterplay: stay unmarked by keeping away from the marking units or killing them, or wait out the mark before relying on abilities.",
+   "pages": [
+    "https://tempestrising.wiki.gg/wiki/Doctrine",
+    "https://tempestrising.wiki.gg/wiki/Status_effect",
+    "https://tempestrising.wiki.gg/wiki/Sentinel"
+   ]
+  }
+ ],
+ "pages_read_not_cited": [
+  "https://tempestrising.wiki.gg/wiki/GDF_Barracks",
+  "https://tempestrising.wiki.gg/wiki/GDF_Arsenal",
+  "https://tempestrising.wiki.gg/wiki/Ability",
+  "https://tempestrising.wiki.gg/wiki/Status_effect",
+  "https://tempestrising.wiki.gg/wiki/Doctrine",
+  "https://tempestrising.wiki.gg/wiki/Stealth",
+  "https://tempestrising.wiki.gg/wiki/Riot_Van",
+  "https://tempestrising.wiki.gg/wiki/Skycrane",
+  "https://tempestrising.wiki.gg/wiki/Operative",
+  "https://tempestrising.wiki.gg/wiki/Peacekeeper",
+  "https://tempestrising.wiki.gg/wiki/Gatling_Turret",
+  "https://tempestrising.wiki.gg/wiki/Hunter_Tank",
+  "https://tempestrising.wiki.gg/wiki/Field_Scout",
+  "https://tempestrising.wiki.gg/wiki/Unit",
+  "https://tempestrising.wiki.gg/wiki/Damage",
+  "https://tempestrising.wiki.gg/wiki/Garrisoning",
+  "https://tempestrising.wiki.gg/wiki/Crushing",
+  "https://tempestrising.wiki.gg/wiki/Veterancy",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.6.0%2B53840",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.7.0%2B55422",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.7.1%2B55792",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.8.0%2B57140",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.8.0%2B57892",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.8.0%2B58218",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.9.0%2B58877",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.9.1%2B59012",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_2.0.0%2B60710",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_2.0.1%2B60808",
+  "https://store.steampowered.com/news/app/1486920/view/514096230384535253",
+  "https://store.steampowered.com/news/app/1486920/view/680754149992699178",
+  "https://store.steampowered.com/events/ajaxgetpartnereventspageable/?clan_accountid=42794230&appid=1486920&offset=0&count=100&l=english",
+  "https://store.steampowered.com/events/ajaxgetpartnereventspageable/?clan_accountid=42794230&appid=1486920&offset=100&count=100&l=english"
+ ],
+ "source_problems": "Copy-check: every page came from the cache; nothing failed to fetch. The pages themselves have these problems:\n(1) The Drone Operator page lags patch 2.0.0. Its infobox speed is the 1.9.0 value, and the 2.0.0 notes raise it a little.\n(2) The Combat Drone page is verified only at 1.6.0+53654. Its multiplayer health predates Hotfix Update #8, which raised it, as the page's own changelog also says. It also calls combat drones 'uncontrollable', which clashes with the Drone Operator's Remote Control button, his Codex text, his build tooltip and StrategyWiki.\n(3) The GDF Barracks page, which holds the Drone Operator's build tooltip, is verified only at 1.4.0.\n(4) The GDF Arsenal line for the Drone Operator (a soldier against vehicles and aircraft who also spots) is carried by no official Steam post found back to 2022, so it does not count.\n(5) StrategyWiki's 'Tempest Rising/GDF units' page shows pre-release values: Drone Operator price 220 against 370, Sentinel health 250 against 260.\n(6) The Drone Operator page says the drone outranges basic anti-ground base defences, yet the Gatling Turret reaches about twice the micromissiles' range. The claim probably means flying the drone in by hand, or defences that cannot fire at aircraft.\n(7) The Sentinel page is verified only at 1.6.0+53654. The wiki's patch pages from 1.6.0+53840 to 2.0.1+60808 change nothing on it. Its weapon box says the scanner rounds are 'rapidly fired', while the infobox has them firing half as often as the minigun. Its doctrine list includes Efficient Intel, which has no visible effect on it.\n(8) No source says how the Sentinel's gun is mounted. The only hint about its look is design trivia (a futuristic Hummer concept)."
+}

@@ -1,0 +1,676 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "tempest-rising",
+  "units": [
+    {
+      "id": "tempest-rising.dynasty.voltaic-tank",
+      "game": "tempest-rising",
+      "faction": "dynasty",
+      "name": "Voltaic Tank",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-armour",
+        "secondary": ["disabler", "anti-infantry"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Defender upgrade",
+        "basis": "Only a Machine Shop that has bought the Defender upgrade can build it, and that upgrade needs the Construction Yard's Bastion first; the wiki's infobox puts it at tier 3. No cap of its own: the population limit is shared by every unit."
+      },
+      "cost_band": {
+        "band": "high",
+        "raw": 1700,
+        "basis": "The wiki's multiplayer price is about one and three quarter times the average of the two anchor tanks, inside our high band. No patch note from 1.6.0 to 2.0.1 changes it."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": ["crush"],
+        "speed": "medium",
+        "speed_raw": 1.27,
+        "notes": "About a quarter faster than the Field Scout on the wiki's speed figures, and somewhat slower than the GDF Hunter Tank, the anchor battle tank (about seven eighths of its pace, Hunter Tank page). Its Heavy vehicle (Harvester) type lets it run over standard infantry but not heavy infantry or any vehicle, and since patch 1.5.0 nothing can run it over. Each crush slows the crusher for a moment, as for every vehicle. Handling stays pivot, the tracks default."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "large",
+        "notes": "A tracked battle tank whose Codex entry says it carries the biggest Tempest-battery gun a hull of its size can take."
+      },
+      "armour": {
+        "class": "heavy",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the armour_map reads its Heavy vehicle type (tagged Harvester) as heavy. Its six resistances match the Hunter Tank's: rifle, sniper and fire hits do a quarter of their damage, explosive hits half, rocket hits three quarters and cannon hits their full damage. It has about a fifth more health than that tank; patch 1.6.0 cut its health so that it falls more easily to ordinary attacks. Side-wide effects stay off: the Martial Plan gives every unit a little more resistance to rockets and explosives, and the Leading the Charge doctrine about a third more health to Dynasty vehicles."
+      },
+      "sensors": {
+        "sight": "short",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The wiki's sight figure is a little over half the Field Scout's, so short. Its cannon reaches well past what it can see, so it needs other units' vision to fire at full reach. It has no detection perk."
+      },
+      "armament": [
+        {
+          "name": "Voltaic Cannon",
+          "slot": "primary",
+          "family": "tesla",
+          "damage": "armour-piercing",
+          "mount": "slow-turret",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["chain", "splash", "silence"],
+          "summary": "A Tempest-powered particle beam. The tank spends a brief moment building charge before every shot, so its fire comes as slow, visible blasts, one every few seconds. Each blast hurts an area and its arcs leap to enemies close to the target, so tightly grouped vehicles suffer most. Voltaic Reaction: a vehicle already in Tempest Overflow dies to the hit outright, whatever its health. The tank lays no Tempest Charge itself: five stacks of Charge from Tempest fields or from teammates' Charge weapons (Matchstick grenades, the Machinist's sensor, Trebuchet shells, the Salvage Center's gun and others) push a vehicle into Overflow (a few weapons, such as the GDF Sniper's shot from stealth, inflict Overflow directly), and units immune to Charge or Overflow, such as harvesters and the Boar Tank, can never be finished this way. Structural Overload: any building it hits is forced to power down for a short time, so defences stop firing, yet the beam barely damages the structure itself. It reaches about a quarter further than the Field Scout's rifle, further than the Hunter Tank's gun against unmarked targets, and fires at ground targets only. Coded tesla for the arcing beam; its damage is armour-piercing because the game types it as Cannon.",
+          "patterns": ["execute-target", "disable-machine"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player drives and fires the beam. The sources name no crew."
+      },
+      "abilities": [
+        {
+          "name": "Tempest Dynamos / Safe Firing",
+          "kind": "toggle",
+          "source": "commander-power",
+          "cooldown": "medium",
+          "summary": "Two buttons that undo each other, open only while the Dynasty player runs the Martial Plan at a Construction Yard. Tempest Dynamos switches off the cannon's safety limits: the tank fires about half again as fast but loses health steadily for as long as it stays on. Safe Firing returns to the normal rate and stops the drain. Each switch is followed by a moderate wait before the next. Since patch 1.6.0 silencing effects cannot turn Dynamos off. The Empowered Dynamos doctrine also makes the tank take markedly less damage while Dynamos runs, and Energetic Enhancements strengthens the boost.",
+          "patterns": ["overclock-self"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "The sources show nothing special when it is destroyed, so the default for a crewed vehicle applies. Two doctrines the Dynasty player buys for the whole side change its death: with Manpower and any Plan running it releases an Assault Gunner, and with Minefields it leaves an anti-tank mine."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:execute-target",
+          "why": "Voltaic Reaction destroys any vehicle already in Tempest Overflow with one hit, whatever its health, so it finishes armour that teammates or Tempest fields have overloaded."
+        },
+        {
+          "ref": "weapon-trait:chain",
+          "why": "Its arcs jump between nearby enemies, so clustered vehicles take heavy damage; the 1.6.0 notes said massed Voltaic Tanks had been winning ground fights too easily, and toned them down."
+        },
+        {
+          "ref": "immune:crush",
+          "why": "Its harvester-type hull cannot be run over by anything, not even the heavy vehicles that flatten other tanks."
+        },
+        {
+          "ref": "weapon-trait:silence",
+          "why": "Every hit powers down the building it strikes for a short time, so base defences fall silent while the army closes in; the lead designer offered it as a late-game answer to defences."
+        },
+        {
+          "ref": "range:medium",
+          "why": "Its beam reaches further than the GDF Hunter Tank's cannon does against targets that are not Marked."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:tesla",
+          "why": "Its only weapon can target ground units and buildings alone, so it has no way to fight aircraft."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "The beam does very little real damage to buildings: it can switch defences off for a moment but cannot level a base by itself."
+        },
+        {
+          "ref": "sight:short",
+          "why": "It sees much less far than its cannon reaches, so without spotters it cannot use its full range."
+        },
+        {
+          "ref": "armour-class:heavy",
+          "why": "Patch 1.6.0 lowered its health so that ordinary attacks would counter it more easily; its resistances are no better than a main battle tank's."
+        },
+        {
+          "ref": "pattern:overclock-self",
+          "why": "Its fire-rate boost exists only while the side runs the Martial Plan, and it eats the tank's own health for as long as it stays on."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Its cannon cannot target anything in the air, so aircraft can attack it without any answer."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Its armour takes the full force of Cannon hits and most of each Rocket hit, both armour-piercing in our map, and patch 1.6.0 meant it to fall more easily to ordinary attacks."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Made to kill vehicles: its arcing blasts punish grouped armour, and any vehicle pushed into Tempest Overflow dies to a single shot."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Its hits power down base defences for a short time, so they stop shooting while the assault goes in, though the buildings themselves take little damage."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:tempest-rising.dynasty.matchstick",
+          "why": "Its grenades build Tempest Charge on enemy vehicles; once stacked into Overflow those vehicles die to one Voltaic shot. No word-list link names units that build Charge."
+        },
+        {
+          "ref": "unit:tempest-rising.dynasty.machinist",
+          "why": "His Searchlight Sensor builds Tempest Charge on enemy vehicles, setting up Overflow kills for the tank's beam. No word-list link names units that build Charge."
+        },
+        {
+          "ref": "unit:tempest-rising.dynasty.voltaic-tank",
+          "why": "Works best in numbers: the makers said a massed group won ground battles with ease, which patch 1.6.0 toned down."
+        },
+        {
+          "ref": "role:scout",
+          "why": "Its gun reaches well beyond its own short sight, so a teammate who sees further lets it fire at full range."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "An anti-air escort covers its lack of any weapon against aircraft."
+        }
+      ],
+      "memorable": "A Tempest beam tank whose slow, charged blasts arc through bunched-up armour, shut enemy defences down for a moment and erase outright any vehicle already overloaded with Tempest Charge.",
+      "as_player": "A T3 armour hunter on a slow turret: each shot needs a short, visible wind-up, then the blast arcs across grouped vehicles and instantly kills any that teammates have overloaded with Tempest Charge. Hits also switch enemy turrets off for a moment but barely scratch buildings. When the side-wide plan allows, Q toggles an overdrive: faster fire that slowly burns your own health. You cannot hit aircraft and see less far than you shoot, so stay near spotters and anti-air.",
+      "sources": [
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Voltaic_Tank",
+          "title": "Voltaic Tank, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-29",
+          "version": "Infobox verified for patch 1.6.0+53407; the patch notes from 1.6.0 to 2.0.1 were checked for later changes and hold none for this unit",
+          "note": "Read through the wiki's API. Infobox: tier 3, built at a Defender-upgraded Machine Shop, multiplayer price, Heavy vehicle (Harvester) type and resistances, tracked, speed and sight, the Voltaic Cannon's Cannon type, area, reach, rate, Ground targets and its two passives, and the Tempest Dynamos and Safe Firing buttons with their wait and Martial Plan requirement. Prose (citing the lead designer on Discord): the charge before each shot, arcs that punish packed vehicles, weak damage to buildings but a short shutdown of defences, the instant kill on Overflowing vehicles and the Matchstick and Machinist synergy. Changelog: no longer crushable since 1.5.0. The Codex box (official in-game text) describes the safeties the Dynamos release.",
+          "supports": [
+            "class",
+            "nature",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Machine_Shop",
+          "title": "Machine Shop, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-29",
+          "version": "Page verified for patch 1.2.0+46253",
+          "note": "Its tier 3 production sidebox copies the Voltaic Tank's build tooltip, which the batch registry note names as in-game text and the step 1 role line: a tank for killing vehicles, whose energy cannon reaches far, hurts an area and shuts down the buildings it hits. The Defender upgrade box says the upgrade unlocks the tank and needs the Bastion. Its Dynasty Arsenal row repeats the same line.",
+          "supports": [
+            "roles/primary",
+            "roles/secondary",
+            "tier",
+            "armament/0",
+            "counters/0",
+            "counters/1",
+            "strengths/3"
+          ]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/7281815976049032809",
+          "title": "Tempest Rising Unit Showcase - The Voltaic Tank, Tempest Rising Steam news",
+          "kind": "official",
+          "accessed": "2026-10-29",
+          "version": "Posted 17 October 2023, before the April 2025 launch",
+          "note": "The makers' showcase post: the lead designer presents the tank as an anti-vehicle unit whose charged particle beam breaks through the GDF's defensive lines, in line with the build tooltip. Text from before launch, so it counts for secondary roles, strong points and matchups only, never for the primary role. The embedded showcase video was not watched.",
+          "supports": ["armament/0", "counters/0", "counters/1"]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/532116339592004298",
+          "title": "The Superior Firepower update is...wait, what is that?! (patch 1.6.0 notes), Tempest Rising Steam news",
+          "kind": "official",
+          "accessed": "2026-10-29",
+          "version": "Patch 1.6.0+53407, 2 December 2025",
+          "note": "Design notes: a massed group of Voltaic Tanks had won ground fights too easily, so its health and blast area were cut to make it easier to counter; silencing effects no longer switch Tempest Dynamos off; the Salvage Center's new Charge attacks are meant to make Voltaic Reaction more valuable. A UI fix removed the Harvester unit type shown in the tank's armour tab. The wiki's patch page copies it.",
+          "supports": ["armour", "abilities/0", "strengths/1", "weaknesses/3", "countered_by/1", "combos/2", "armament/0"]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Ability",
+          "title": "Ability, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-29",
+          "note": "Passive lists: Voltaic Reaction (Voltaic attacks destroy Overflowing vehicles outright) and Structural Overload (struck buildings are forced into a powered-down state) both list the Voltaic Tank's cannon; the Tempest Charge passive lists the weapons that build Charge, the Matchstick's grenade launcher and the Machinist's Searchlight Sensor among them.",
+          "supports": ["armament/0", "strengths/0", "strengths/3", "combos/0", "combos/1"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "armament/0/patterns",
+          "note": "The Tempest Overflow page (https://tempestrising.wiki.gg/wiki/Tempest_Overflow) leaves the Voltaic Tank out of its Voltaic Reaction list, which repeats word for word the missile-and-sniper list of the Overflow passive above it, while its own text says units with Voltaic Reaction destroy Overflowing vehicles. The Voltaic Tank page (infobox passive, weapon box and prose), the Ability page's Voltaic Reaction list and the registry note all give the tank the finisher, so execute-target is linked and the Overflow page's list is read as a copying slip. The same page and the Tempest Charge page (https://tempestrising.wiki.gg/wiki/Tempest_Charge) say which units are immune to Overflow.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "Silence and the disable-machine link stand for Structural Overload: the Status effect page (https://tempestrising.wiki.gg/wiki/Status_effect) says struck buildings are forcibly powered down, and the registry note says low power shuts turrets off. It works on buildings only, not on vehicles or soldiers, and no source says how long it lasts beyond a short period."
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "Chain and splash both rest on the Voltaic Tank page: the infobox gives the shot an area of effect and the build tooltip says it hurts an area, while the prose says the attack arcs to nearby targets. The arcs may simply be how the area damage shows in play."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No source says whether the beam strikes at once or is held on the target; the charge builds before the shot, not while it stays on, so the tesla default, hitscan, is used."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "The build tooltip calls the cannon long-ranged, but the infobox reach is only about a quarter longer than the Field Scout's rifle, which bands medium; the figure decides."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "What it can crush, and that nothing crushes it, comes from the Crushing page (https://tempestrising.wiki.gg/wiki/Crushing) and the Unit page (https://tempestrising.wiki.gg/wiki/Unit), which list it as a Heavy vehicle (Harvester); its own page's changelog backs the uncrushability. Patch 1.6.0 removed the word Harvester from its armour tab as a display fix; no source says the crush rules changed with it."
+        },
+        {
+          "path": "abilities/0",
+          "note": "The size of the boost and the doctrine effects come from the Tempest Dynamos page (https://tempestrising.wiki.gg/wiki/Tempest_Dynamos), the Status effect page and the Doctrine page (https://tempestrising.wiki.gg/wiki/Doctrine); the Voltaic Tank page gives the buttons, their wait and the Martial Plan requirement. Source commander-power follows the registry note: a Plan is a side-wide effect switched on at the Construction Yard."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Disabler ranks first because the tooltip's word disables is read as a form of the disabler label, as harasses names harasser; the registry note's list of role words in these tooltips does not mention it. Read the other way, both roles would rank at step 3 and anti-infantry would come first. Disabler rests on the building shutdown alone. Anti-infantry comes only from the splash rule: no official text calls the tank good against infantry, and the wiki's Unit page says infantry resist Cannon damage."
+        },
+        {
+          "path": "body/plan",
+          "note": "No source text says the cannon sits in a turret; hull-turret follows its designation as a tank, and the aim tie-break then puts the cannon on the main turret."
+        },
+        {
+          "path": "on_death/notes",
+          "note": "The Manpower and Minefields effects come from the Doctrine page (https://tempestrising.wiki.gg/wiki/Doctrine)."
+        },
+        {
+          "path": "countered_by/1",
+          "note": "Reasoned from the infobox resistances and the 1.6.0 design note; no source names a counter by weapon type."
+        },
+        {
+          "path": "combos/3",
+          "note": "Reasoned from the infobox figures: its sight is much shorter than its cannon's reach."
+        },
+        {
+          "path": "combos/4",
+          "note": "Reasoned from the cannon's Ground-only target line; no source names an escort."
+        },
+        {
+          "path": "strengths/4",
+          "note": "The comparison rests on the Hunter Tank page (https://tempestrising.wiki.gg/wiki/Hunter_Tank), whose cannon reaches clearly less far than the Voltaic Cannon against unmarked targets but further against Marked ones."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armament/0/traits",
+          "used": "none for the wind-up",
+          "wanted": "a trait for an automatic wind-up before every shot",
+          "note": "The beam charges for a moment before each shot by itself; charge-up needs the player to hold the trigger, so it is left off and the wind-up is described in the summary."
+        },
+        {
+          "path": "combos",
+          "used": "unit links alone",
+          "wanted": "a term for weapons that build a stacking status (Tempest Charge) that another unit cashes in",
+          "note": "No damage type, weapon trait or pattern names units that build Tempest Charge, so the Matchstick and Machinist links stand alone."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "armament/0/family",
+          "rule": "weapon-families:tesla allowed.damage-types armour-piercing",
+          "note": "The game types the Voltaic Cannon as Cannon damage, which the damage map reads as armour-piercing (damage step 4; the batch registry note says Voltaic weapons follow the map). The tesla family, chosen for the arcing beam, allows only electric damage."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J07-TEMPEST-RISING"
+    },
+    {
+      "id": "tempest-rising.dynasty.tempest-sphere",
+      "game": "tempest-rising",
+      "faction": "dynasty",
+      "name": "Tempest Sphere",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["assault"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Defender upgrade",
+        "basis": "Like the Voltaic Tank it comes only from a Defender-upgraded Machine Shop, and that upgrade needs the Bastion; the wiki's infobox puts it at tier 3. No cap of its own."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 3000,
+        "basis": "Patch 1.7.0 raised its price to about three times the average of the two anchor tanks, well inside our very-high band; no later patch changes it."
+      },
+      "mobility": {
+        "base": "wheels",
+        "handling": "steer",
+        "traits": ["crush", "boost"],
+        "speed": "medium",
+        "speed_raw": 1.35,
+        "notes": "It rolls as one gyroscopically steadied ball (the game's movement type is Roller), which no mobility type names: wheels is the nearest, a ball being one big wheel, and steer is that type's default. About a third faster than the Field Scout on the wiki's speed figures and a little slower than the Hunter Tank, the GDF's anchor battle tank; the Codex calls it somewhat ponderous. As a heavy vehicle it rolls over every soldier, heavy infantry included, and over light and medium vehicles, main battle tanks among them; hover units and heavy vehicles cannot be crushed. Each crush slows it for a moment. The Tempest Engine gives a brief burst of speed on a long wait (boost)."
+      },
+      "body": {
+        "plan": "casemate",
+        "size": "large",
+        "notes": "A single armoured ball with no turret and no gun: the whole hull is the weapon. No body plan describes a sphere; casemate, a turretless hull that attacks straight ahead, is the nearest. The size is a judgement: it crushes main battle tanks, so it is bigger than one, but no source shows it twice their size."
+      },
+      "armour": {
+        "class": "super-heavy",
+        "models": ["flat-pool"],
+        "notes": "Step 1 (the armour_map's Heavy vehicle) gives heavy; the batch registry note lifts it to super-heavy as one of the game's biggest units. It has nearly four times the Hunter Tank's health. Rifle and sniper hits do a quarter of their damage, explosive and fire hits half, rocket hits three quarters and cannon hits their full damage. Tempest Plating turns Charge into repairs; it is recorded as an ability rather than the self-repair model, since it heals only by using Charge up. Side-wide effects stay off: the Leading the Charge doctrine adds about a third more health to Dynasty vehicles and the Martial Plan a little rocket and explosive resistance."
+      },
+      "sensors": {
+        "sight": "short",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The wiki's sight figure is a little over half the Field Scout's, so short."
+      },
+      "armament": [
+        {
+          "name": "Gimbal Roller",
+          "slot": "primary",
+          "family": "blades",
+          "damage": "explosive",
+          "mount": "body-aim",
+          "delivery": "ram",
+          "range": "melee",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "summary": "The Sphere's attack is its own body. Everything smaller than it, every soldier and the light and medium vehicles, is flattened as it rolls over them (the crush trait). What it cannot crush, heavy vehicles, hover units and buildings, it speeds up into and slams, a heavy blow at touching distance every couple of seconds; the build tooltip compares it to a wrecking ball rolling into enemy buildings. Since patch 1.7.0, in multiplayer, each slam also leaves the target Vulnerable: it takes nearly a third more damage from every source for a while. Ground targets only. Patch 1.8.0 fixed slams that could not reach some buildings, and patch 1.9.0 stopped it hurting uncrushable units just by rolling close to them. Coded as a melee weapon, since no family covers a ramming hull, with explosive damage from the game's Explosive type."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "The Codex mentions a pilot who fires up the engines; one player rolls the ball and triggers the charge."
+      },
+      "abilities": [
+        {
+          "name": "Tempest Engine",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "long",
+          "summary": "The Sphere revs its engine for a moment, then shoots forward along a straight line at a burst of speed, flattening everything smaller in its path and slamming whatever is too big to crush. The Codex pitches it as the way to catch enemies who believe they are out of reach. A long wait follows each use.",
+          "patterns": ["dash"]
+        },
+        {
+          "name": "Tempest Plating",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "A perk unique to the Sphere: Tempest Charge that builds up on it, from Tempest fields or from enemy Charge weapons, is used up to repair it, a modest share of its health each time. It gives no protection from Overflow, which hurts the Sphere faster than the Plating can mend it.",
+          "patterns": []
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "in-game",
+        "notes": "Since patch 1.7.0 a Demolitionist, the Dynasty's tier 3 heavy infantry in a powered exosuit with a wrecking hammer and a Voltaic gun, appears where the Sphere was destroyed and fights on. Doctrines bought for the whole side add more: with Manpower and a Plan running it also releases an Assault Gunner, and with Minefields it leaves an anti-tank mine."
+      },
+      "strengths": [
+        {
+          "ref": "mobility-trait:crush",
+          "why": "Rolls over everything smaller than itself: every soldier, heavy infantry included, and light and medium vehicles, main battle tanks among them."
+        },
+        {
+          "ref": "armour-class:super-heavy",
+          "why": "Nearly four times a main battle tank's health with resistances close to a tank's, so it soaks a great deal of fire while it rolls through a line."
+        },
+        {
+          "ref": "hits:structure",
+          "why": "Rams enemy buildings like a wrecking ball; the makers' showcase names breaking bases as its speciality."
+        },
+        {
+          "ref": "pattern:dash",
+          "why": "The Tempest Engine charge closes the distance at once, flattening whatever lies on the line."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "range:melee",
+          "why": "It harms only what it touches on the ground, so it has nothing against aircraft; the makers' showcase calls it vulnerable to the air."
+        },
+        {
+          "ref": "cost:very-high",
+          "why": "The makers call it heavy and expensive: it costs about as much as three main battle tanks, so losing one hurts."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "Heavy vehicles and hover units cannot be crushed, so against them it must slam each one in turn instead of rolling straight through."
+        },
+        {
+          "ref": "pattern:dash",
+          "why": "The Tempest Engine has a long wait between uses, so a wasted charge leaves it without its gap-closer."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Its ram reaches only ground targets, and the makers' showcase calls it vulnerable to the air."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Its armour takes the full force of Cannon hits and most of each Rocket hit, and it can strike back only by rolling into contact."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Every soldier, heavy infantry included, dies outright when it rolls over them; the Codex says infantry stand no chance against it."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Crushes light and medium vehicles, main battle tanks among them, instead of trading shots; only heavy vehicles and hover units are spared."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Built to break bases: it rams buildings, defences and walls, and since patch 1.7.0 its slams leave them taking extra damage from the rest of the attack."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:anti-air",
+          "why": "An anti-air escort covers the threat its showcase names: aircraft, which it cannot touch."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Its slams leave the heavy vehicles it cannot crush Vulnerable, so anti-armour teammates finish them faster."
+        }
+      ],
+      "memorable": "A giant gyroscopic wrecking ball that flattens soldiers and tanks alike, feeds on the Tempest Charge that cripples other vehicles, and drops a hammer-swinging Demolitionist when it finally breaks.",
+      "as_player": "You are the ball: a huge, very tough T3 roller that kills by running things over. Steer into infantry and lighter vehicles to crush them, and slam heavy vehicles and buildings to leave them Vulnerable for your team. Q revs the Tempest Engine and launches you along a line, your one gap-closer, on a long wait. Nothing you have can touch aircraft, so bring anti-air friends; when you break, you play on as the Demolitionist who climbs out.",
+      "sources": [
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Tempest_Sphere",
+          "title": "Tempest Sphere, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-29",
+          "version": "Infobox verified for patch 1.7.0+55422; the patch notes from 1.7.0 to 2.0.1 were checked for later changes",
+          "note": "Read through the wiki's API. Infobox: tier 3, built at a Defender-upgraded Machine Shop, multiplayer price, Heavy vehicle type and resistances, Roller movement, speed and sight, the Gimbal Roller's Explosive type, damage, touching reach, rate, Ground targets and its multiplayer Vulnerability passive, the Tempest Engine button and the Tempest Plating perk. Prose (citing the lead designer on Discord): it runs over any ground unit that is smaller, with only hover units and heavy vehicles spared, Vulnerability on what it cannot crush, a brief burst of speed, a Demolitionist on death, and Plating that heals by using up Charge but gives no protection from Overflow. The Codex box (official in-game text) calls it a mobile wrecking ball that outmatches tanks, infantry and walls, piloted, with an engine charge.",
+          "supports": [
+            "class",
+            "nature",
+            "roles/primary",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "abilities/1",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Machine_Shop",
+          "title": "Machine Shop, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-29",
+          "version": "Page verified for patch 1.2.0+46253",
+          "note": "Its tier 3 production sidebox copies the Sphere's build tooltip, which the batch registry note names as in-game text and the step 1 role line: it crushes everything smaller than itself, can fire a second engine for short bursts of speed and rolls into enemy buildings like a wrecking ball. It names no role. The Defender upgrade box says the upgrade unlocks the Sphere and needs the Bastion.",
+          "supports": ["roles/primary", "tier", "mobility/traits", "abilities/0", "strengths/2", "counters/2"]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/3793780512849552713",
+          "title": "Tempest Rising Unit Showcase - Tempest Sphere, Tempest Rising Steam news",
+          "kind": "official",
+          "accessed": "2026-10-29",
+          "version": "Posted 9 November 2023, before the April 2025 launch",
+          "note": "The makers' showcase post: a heavy, costly unit whose speciality is breaking bases and whose weak point is the air. Text from before launch, so it counts for strong and weak points and matchups only. The embedded showcase video was not watched.",
+          "supports": ["strengths/2", "weaknesses/0", "weaknesses/1", "countered_by/0", "counters/2", "combos/0"]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/514110819674360339",
+          "title": "A New Quality of Life Update is Out Now! (patch 1.7.0 notes), Tempest Rising Steam news",
+          "kind": "official",
+          "accessed": "2026-10-29",
+          "version": "Patch 1.7.0+55422, 10 March 2026",
+          "note": "Design note: the Sphere was very strong only in some situations, so it now leaves a Demolitionist when destroyed and its attacks make what it cannot crush Vulnerable to extra damage, with a higher price to match. The wiki's patch page copies it.",
+          "supports": ["cost_band", "armament/0", "on_death", "counters/2", "combos/1"]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Tempest_Charge",
+          "title": "Tempest Charge, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-29",
+          "note": "The Tempest Plating perk's own section (the Tempest Plating page redirects here): units with it use up Charge to repair themselves, are not immune to Overflow and lose more health to it than the Charge mends; the Sphere is the only unit listed. Charge slows vehicles and stacks five times before Overflow; it comes from Tempest fields or from weapons that set it.",
+          "supports": ["abilities/1", "armour"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Anti-infantry rests on the Codex sentence that has the Sphere outmatch tanks, infantry and even walls, read as official strength wording (the registry note reads the Codex like a manual paragraph). Anti-armour, named first, fails its requires, so step 4 keeps anti-infantry. If that sentence did not count as strength wording, step 5 would give assault."
+        },
+        {
+          "path": "body/size",
+          "note": "No source gives its footprint. It crushes main battle tanks, which only heavy vehicles can do, and the registry note counts it among the game's biggest units, but nothing shows it twice a battle tank's size, so large; huge is the alternative."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "The wiki's weapon box says the roller slams what is too big to crush, while the 1.7.0 notes speak of attack targets it cannot crush, implying that its attack also reaches targets it can crush, which it flattens. Infantry are listed on that reading."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "What it can and cannot crush also follows the Crushing page (https://tempestrising.wiki.gg/wiki/Crushing) and the Unit page (https://tempestrising.wiki.gg/wiki/Unit), which put it with the heavy vehicles: they flatten every soldier and every lighter vehicle, hover units excepted."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "The bug fixes come from the makers' 1.8.0 notes (https://store.steampowered.com/news/app/1486920/view/658231077844811913) and 1.9.0 notes (https://store.steampowered.com/news/app/1486920/view/680754149992699178). The Vulnerability size comes from the 1.7.0 notes and the Status effect page (https://tempestrising.wiki.gg/wiki/Status_effect); no source gives how long it lasts."
+        },
+        {
+          "path": "on_death/notes",
+          "note": "The Demolitionist's kit comes from its own page (https://tempestrising.wiki.gg/wiki/Demolitionist), and the Manpower and Minefields effects from the Doctrine page (https://tempestrising.wiki.gg/wiki/Doctrine)."
+        },
+        {
+          "path": "armour/class",
+          "note": "With its size coded large, super-heavy rests on the registry note alone, which lifts the Sphere to super-heavy as one of the game's biggest units."
+        },
+        {
+          "path": "countered_by/1",
+          "note": "Reasoned from the infobox resistances; no source names a counter by weapon type."
+        },
+        {
+          "path": "combos/0",
+          "note": "Reasoned from the showcase's weak point against aircraft; no source names an escort."
+        },
+        {
+          "path": "combos/1",
+          "note": "Reasoned from Vulnerability's extra damage from every source and the Sphere's inability to crush heavy vehicles; no source names the pairing."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "mobility/base",
+          "used": "wheels",
+          "wanted": "a rolling-ball (sphere) mobility type",
+          "note": "The game moves it as a Roller: one gyroscopically steadied ball. Wheels, as one big wheel, is the nearest; tracks would also do, and neither describes a ball that crushes as it rolls."
+        },
+        {
+          "path": "body/plan",
+          "used": "casemate",
+          "wanted": "a sphere body: an armoured ball whose whole hull is the weapon",
+          "note": "No body plan describes a ball with no turret or gun; casemate, a turretless hull that attacks straight ahead, is the closest and keeps its rules (wheels, large, body aim)."
+        },
+        {
+          "path": "armament/0/family",
+          "used": "blades",
+          "wanted": "a ram family: the vehicle's own hull as the weapon",
+          "note": "The roller is the Sphere slamming its whole body into a target; blades, a hammer used up close, is the nearest family but allows neither ram delivery nor explosive damage, which the atypical list records."
+        },
+        {
+          "path": "armament/0/traits",
+          "used": "none",
+          "wanted": "a vulnerability trait: hits make the target take extra damage from every source for a time",
+          "note": "Mark is closest, but it also reveals the target to the whole team; Vulnerability only raises the damage the target takes, from anyone."
+        },
+        {
+          "path": "abilities/0/patterns",
+          "used": "dash",
+          "wanted": "a charge that also rams and crushes along its line",
+          "note": "Dash is a burst of speed alone; the Tempest Engine charge also crushes or slams whatever it meets on the way."
+        },
+        {
+          "path": "abilities/1/patterns",
+          "used": "none",
+          "wanted": "a pattern for turning a harmful status on yourself into healing",
+          "note": "Tempest Plating repairs the Sphere by using up the Tempest Charge that slows other vehicles. The self-repair model is steady healing with no trigger and heal-self is a key, so neither fits."
+        },
+        {
+          "path": "on_death/outcomes",
+          "used": "bail-out",
+          "wanted": "an outcome in which the dying vehicle leaves a full combat unit",
+          "note": "Bail-out speaks of crew getting out as basic infantry with low health; the Sphere instead leaves a Demolitionist, a tier 3 heavy infantry unit with two weapons of its own."
+        },
+        {
+          "path": "roles",
+          "used": "anti-infantry, assault",
+          "wanted": "anti-armour",
+          "note": "It crushes light and medium vehicles, main battle tanks included, and the Codex names tanks first among what it beats, but anti-armour needs armour-piercing, energy, electric or EMP damage or the infest-vehicle pattern; its kills come from crushing, and its slam carries Explosive damage."
+        },
+        {
+          "path": "roles",
+          "used": "anti-infantry, assault",
+          "wanted": "a base-breaking (anti-structure) role",
+          "note": "The makers' showcase says breaking bases is its speciality, but no anti role covers buildings, and siege needs a lobbed, dropped or long-range weapon."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "armament/0/family",
+          "rule": "weapon-families:blades allowed.damage-types explosive",
+          "note": "The game types the Gimbal Roller as Explosive damage, which the damage map reads as explosive (damage step 4); blades, the nearest family for a ramming hull, allows only melee, electric or energy damage."
+        },
+        {
+          "path": "armament/0/family",
+          "rule": "weapon-families:blades allowed.weapon-delivery ram",
+          "note": "The sources describe the Sphere slamming its own body into what it attacks, which is ram delivery; blades allows only melee or attach delivery."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J07-TEMPEST-RISING"
+    }
+  ]
+}

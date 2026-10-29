@@ -1,0 +1,605 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "tempest-rising",
+  "units": [
+    {
+      "id": "tempest-rising.gdf.shieldmaiden",
+      "game": "tempest-rising",
+      "faction": "gdf",
+      "name": "Shieldmaiden",
+      "flavour_affinity": ["allied"],
+      "class": "hover",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-air",
+        "secondary": ["support", "scout"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Satellite Uplink with Specialist Pod",
+        "basis": "Built at the Vehicle Bay once a Satellite Uplink carries its Specialist Pod: the Vehicle Bay page lists it under Tier 2 with that requirement, and its own infobox gives tier 2. The wiki counts pod steps as tier 2.5, which the registry keeps in t2. It is not one of the GDF's Support Specialists, so no specialist cap applies to it; it takes ordinary population places."
+      },
+      "cost_band": {
+        "band": "high",
+        "raw": 1500,
+        "basis": "In multiplayer it is paid for in Intel, the GDF's second currency, not in credits. At the registry's estimated rate of credits per Intel point its price comes to about one and a half times the main-battle-tank anchor, inside high and level with the Sniper and the GDF's other tier 2 specialists. Patch 1.3.0 raised its Intel price by a quarter and patch 1.5.0+51028 took it back down; the 2.0.0 notes leave it alone. Campaign prices are ignored."
+      },
+      "mobility": {
+        "base": "hover",
+        "handling": "drift",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1.09,
+        "notes": "An air-cushion craft (infobox movement type Hovering) that ground weapons hit like any vehicle. It moves a little faster than the Field Scout and at about three quarters of the speed of the Hunter Tank, which is the battle tank the GDF fields. Its Hover perk means it sets off no mines and can neither run other units over nor be run over; the page backs this with a lead designer's remark, and the Codex adds that the air cushion makes pressure mines less of a threat to it. Its interference field works only while it stands still (see abilities)."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "large",
+        "notes": "The Codex calls it an air cushion vehicle, and the picture on its wiki page shows an armoured hull on a skirted air cushion with a turret on top that holds the laser. No size example covers a hovercraft and no page gives its footprint, so the size comes from the stand-in rule: in the Skycrane's hold it takes as much room as any other vehicle, the Hunter Tank included (see uncertain)."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: its armour type is Light vehicle, which the armour map makes light. One health bar, about two thirds bigger than the Hunter Tank's. Its resistances turn away three quarters of rifle, fire and sniper damage and half of explosive damage, but only a quarter of rocket damage, and the infobox lists none against cannon fire. The GDF's Investment Durability doctrine gives every Intel-priced unit, this one included, a quarter more health; that side-wide change is left out of the class. Mending out of combat at Elite rank is game-wide veterancy, not a self-repair model."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its infobox sight is a little more than the Field Scout's, about a seventh more; its laser reaches a little short of it. It has no detection perk."
+      },
+      "armament": [
+        {
+          "name": "FLASHPOINT Laser",
+          "slot": "primary",
+          "family": "laser",
+          "damage": "energy",
+          "mount": "slow-turret",
+          "delivery": "beam",
+          "range": "long",
+          "can_target": ["low-air", "high-air"],
+          "traits": ["anti-air"],
+          "summary": "A high-energy laser in the turret that fires in quick pulses. Its infobox target line is Air alone, so it cannot attack anything on the ground. It reaches about one and a half times as far as the Field Scout's rifle, a little short of its own sight. The game types it as Cannon - Laser, and the registry counts every laser as energy damage. Patch 1.1.0 lengthened its reach a little, patch 1.3.0+48710 retimed its shots, and patch 1.9.0 trimmed its damage per shot by a twentieth so that players would lean on its other tools and on mixed armies for air defence."
+        },
+        {
+          "name": "FLASHPOINT Laser (Pinpoint Weaknesses)",
+          "slot": "acquired",
+          "family": "laser",
+          "damage": "energy",
+          "mount": "slow-turret",
+          "delivery": "beam",
+          "range": "long",
+          "can_target": ["low-air", "high-air"],
+          "traits": ["anti-air", "mark"],
+          "summary": "The same laser once the GDF owns the Pinpoint Weaknesses doctrine: every GDF laser then hits a fifth harder and leaves what it hits Marked, so an aircraft it shoots gives the GDF Intel if it dies while Marked and takes more from the side's Networked weapons.",
+          "condition": "Pinpoint Weaknesses, the second step of the GDF's Intel doctrine tree, bought during a match for the whole side: a commander power, not an upgrade of this unit."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player drives and fires the laser. Its voice lines speak like a crew, which changes nothing."
+      },
+      "abilities": [
+        {
+          "name": "Deploy Repair Turret",
+          "kind": "active",
+          "cooldown": "short",
+          "summary": "Each use draws Intel from the side's stock, half the Shieldmaiden's own Intel price. Its onboard factory sets a small Repair Turret down at a spot the player picks. The turret is a temporary structure with a little over half the Shieldmaiden's health that does no fighting; for its short life, twice as long as the button's cooldown, it quickly mends the allied vehicles within about three fifths of the Field Scout rifle's reach, and then its battery is spent. The pages differ on whether it also mends structures or aircraft (see uncertain). The GDF's Efficient Intel doctrine cuts the cooldown of Intel-priced buttons, a side-wide change left out here.",
+          "patterns": ["repair-allies"],
+          "source": "innate"
+        },
+        {
+          "name": "Missile Interference Aura",
+          "kind": "passive",
+          "summary": "A perk, always on, with no button. While the Shieldmaiden stands still it projects a wide interference field, reaching about as far as it can see; enemy units and defences inside it whose weapons are of the game's Rocket type fire at half their usual rate. Other weapons are untouched. The Comms Officer carries the same perk with a smaller field, and the Haywire Turret with one as wide. The patch 1.9.0 notes count the field, with the Repair Turret, among the tools that should carry its air-defence job.",
+          "patterns": [],
+          "source": "innate"
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No page shows crew, a wreck or a blast when it is destroyed; it is simply gone, so this is the default for a crewed machine."
+      },
+      "strengths": [
+        {
+          "ref": "role:anti-air",
+          "why": "By the official tooltip its laser does heavy damage to aircraft, and the makers' 1.9.0 notes describe it as an air defender so reliable that players picked it without a second thought."
+        },
+        {
+          "ref": "range:long",
+          "why": "Its laser reaches about one and a half times as far as the Field Scout's rifle, a reach the wiki calls extreme, so it guards a wide stretch of sky."
+        },
+        {
+          "ref": "pattern:repair-allies",
+          "why": "Its Repair Turret quickly mends the allied vehicles around it, which the Codex presents as part of its real value to commanders."
+        },
+        {
+          "ref": "immune:crush",
+          "why": "As a hover unit, enemy vehicles cannot squash it (nor can it crush anything itself)."
+        },
+        {
+          "ref": "immune:lay-mines",
+          "why": "It sets off no mines, so minefields do not stop it; the Codex credits its air cushion for this."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:laser",
+          "why": "Its only gun, the laser, can attack aircraft alone, so it has no answer to infantry, vehicles or buildings."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "Light vehicle armour that blunts rifles, fire and sniper rounds but turns away only a quarter of rocket damage and none of cannon damage, so tanks wear it down despite its large health bar."
+        },
+        {
+          "ref": "pattern:repair-allies",
+          "why": "Every Repair Turret costs Intel from the side's stock and lasts only briefly before its battery runs out."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:vehicle",
+          "why": "Tanks and other armed ground vehicles can shoot it without reply, since it has nothing that fires at the ground, and their cannon shells meet no resistance in its armour."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:aircraft",
+          "why": "Its long-reach laser hits any enemy flier hard; the tooltip stresses its anti-air damage and the 1.9.0 notes call it an air defender."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:vehicle",
+          "why": "It works beside the GDF's armour: the Codex presents its repair gantries as keeping the side's tanks fit for frontline fighting, and while it stands still its field slows the enemy rocket fire turned on them."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "The 1.9.0 notes cut its laser so that GDF players mix it with other units for air defence instead of relying on it alone."
+        }
+      ],
+      "memorable": "A hovercraft whose laser only looks up: it burns aircraft from far off, drops brief repair turrets for nearby tanks and, parked, makes enemy rocket launchers fire at half speed.",
+      "as_player": "You drift behind your own tanks on an air cushion, burning down any aircraft that comes within your long laser reach. Spend Intel to drop a short-lived repair turret where the armour is fighting, and stop moving to spread a field that halves the fire rate of enemy rocket weapons. You cannot shoot anything on the ground, so you depend on your escorts.",
+      "sources": [
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Shieldmaiden",
+          "title": "Shieldmaiden, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Verified at patch 1.9.0+58877",
+          "note": "Read through the wiki's API. Infobox: tier, Intel price, health, armour type and resistances, Hovering movement, speed, sight, the laser's type, reach, rate and Air-only target line, the Repair Turret button, the Hover and Missile Interference Aura perks, and its two doctrines. Prose: the field works only while the unit stands still, and the hover rules, with a lead designer's Discord remark. Also the turret's ability box, the Codex text in the Background box (official, mostly lore) and a changelog up to 1.9.0. The 2.0.0 and 2.0.1 notes do not touch the unit.",
+          "supports": [
+            "class",
+            "nature",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "armament/1",
+            "abilities/0",
+            "abilities/1",
+            "strengths/1",
+            "strengths/2",
+            "strengths/3",
+            "strengths/4",
+            "weaknesses/0",
+            "weaknesses/1",
+            "weaknesses/2",
+            "countered_by/0",
+            "combos/0",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Vehicle_Bay",
+          "title": "Vehicle Bay, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Verified at patch 1.9.0+58877",
+          "note": "Its Production section copies the Shieldmaiden's build tooltip, which is game text (see the batch r3 registry note): a defensive support unit whose laser does high anti-air damage, whose passive field makes enemy missile weapons over a wide area fire more slowly, and which can put down a temporary repair turret. It lists the unit under Tier 2, needing the Satellite Uplink with the Specialist Pod.",
+          "supports": [
+            "roles/primary",
+            "roles/secondary",
+            "tier",
+            "abilities/0",
+            "abilities/1",
+            "strengths/0",
+            "counters/0"
+          ]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Missile_Interference",
+          "title": "Missile Interference, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "note": "The status effect: while under it, hostile units and buildings armed with Rocket-type weapons attack at half speed. Its perk box gives the Shieldmaiden's aura the widest radius, shared with the Haywire Turret, and the Comms Officer's a smaller one. No Verified tag.",
+          "supports": ["abilities/1", "combos/0"]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Repair_Turret",
+          "title": "Repair Turret, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "note": "The structure the button places: its health, resistances, timed life and Repair - Area perk, with prose saying it mends friendly vehicles and structures nearby; its background text cites the old official GDF site. No Verified tag.",
+          "supports": ["abilities/0", "weaknesses/2"]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/680754149992699178",
+          "title": "The Map Editor Update is Out NOW! (patch 1.9.0 notes, 7 July 2026), Tempest Rising news on Steam",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "1.9.0+58877",
+          "note": "The makers' balance notes: they call the Shieldmaiden an anti-air defender that players picked without thinking, and trim its laser's damage per shot a little so that GDF players use its whole kit, the Repair Turret and the interference aura included, and mixed armies for air defence.",
+          "supports": ["armament/0", "abilities/1", "strengths/0", "counters/0", "combos/1"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/secondary",
+          "note": "Scout rests on the acquired laser that the Pinpoint Weaknesses doctrine makes mark (roles.secondary step 5), which comes from the Doctrine page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Doctrine, read, not cited). Support also has the makers' 5 August 2025 notes (https://store.steampowered.com/news/app/1486920/view/505083956845086898, read, not cited), which call it a support unit that was doing too well for its price."
+        },
+        {
+          "path": "availability",
+          "note": "Open rests on the Specialist page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Specialist, read, not cited), whose capped specialist groups leave the Shieldmaiden out; its infobox gives it ordinary population, not a specialist place."
+        },
+        {
+          "path": "cost_band",
+          "note": "The registry's Intel rate is its own estimate, not a game value. The infobox also holds a credit price in a field (cost.st) that the template's documentation (https://tempestrising.wiki.gg/wiki/Template:UnitBox/doc, read, not cited) does not explain; it is ignored."
+        },
+        {
+          "path": "body/plan",
+          "note": "No text describes its shape: hull-turret rests on the picture on its wiki page (an armoured hull with a laser turret on top) and on the Codex's air cushion vehicle. Read as a vehicle built around an exposed weapon mount, launcher-rack, whose description names mobile anti-air, would be the alternative."
+        },
+        {
+          "path": "body/size",
+          "note": "Large by the stand-in rule: the Skycrane page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Skycrane, read, not cited) gives every vehicle the same room in its hold, the Hunter Tank's included. That data does not tell vehicles apart, so the size rests on little; its picture looks about the size of a tank."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Beam is the laser family's default, as no page says how the shot travels. The notes speak of damage per shot and the infobox gives a short pause between shots, so it fires in pulses; a reader who takes each pulse as instant would code hitscan."
+        },
+        {
+          "path": "armament/1",
+          "note": "Recorded from the Doctrine page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Doctrine, read, not cited, verified at 1.9.0+58877), which lists the Shieldmaiden among the lasers that Pinpoint Weaknesses makes hit harder and mark. The registry records a doctrine's new effect on each unit it names; a weapon has no source field, so the doctrine is named in condition and the entry is acquired."
+        },
+        {
+          "path": "abilities/0",
+          "note": "The Shieldmaiden page's ability box and the Repair Turret page give the same repair radius, while the Shieldmaiden page's prose gives one a little smaller. They also differ on what it mends: the Shieldmaiden page says allied vehicles, the Repair Turret page friendly vehicles and structures, and the Ability page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Ability, read, not cited) lists the turret under a perk that mends vehicles and aircraft. The summary keeps vehicles, which all three name.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/1",
+          "note": "Only the Shieldmaiden page's prose says the field needs the unit to stand still; the tooltip and the perk pages give no such condition. The Missile Interference page and the Status effect page (https://tempestrising.wiki.gg/wiki/Status_effect, read, not cited) give a flat halving of the rate of fire, while the Ability page's perk text (https://tempestrising.wiki.gg/wiki/Ability, read, not cited) says the effect grows the longer a unit stays in it. The tooltip speaks of missile weapons, the status pages of the game's Rocket weapon type.",
+          "sources_disagree": true
+        },
+        {
+          "path": "weaknesses/1",
+          "note": "Its infobox has no cannon resistance line, read here as none. The wiki leaves some zero values out (the Field Scout's page lists only some of its resistances), but no page says so for this unit."
+        },
+        {
+          "path": "countered_by/0",
+          "note": "Reasoned, not named by any page: from its Air-only target line and its resistance table, which has no entry against cannon fire."
+        },
+        {
+          "path": "combos/1",
+          "note": "Reasoned from the 1.9.0 notes, which ask for mixed armies in air defence without naming the units; other anti-air units are the teammates read into them."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J06-TEMPEST-RISING",
+      "fit_notes": [
+        {
+          "path": "abilities/0/patterns",
+          "used": "repair-allies",
+          "wanted": "a placed-device pattern: a temporary, destructible device that works on its own without fighting (here it mends vehicles)",
+          "note": "deploy-turret needs a device that fights, so the registry's batch r3 note keeps the Repair Turret off it; repair-allies alone does not show that the mending comes from a timed structure the enemy can shoot."
+        },
+        {
+          "path": "abilities/1/patterns",
+          "used": "none",
+          "wanted": "an always-on aura that slows the fire of one kind of enemy weapon (rocket and missile launchers) around the unit, here only while it stands still",
+          "note": "leave-hazard-zone is a zone laid on a key, and as a pattern that mirrors the zone weapon trait it is the home for the ability version only. No armour model or sensor trait slows enemy fire; interceptor shoots missiles down instead. Disabler's requires would need such a pattern in the control category."
+        },
+        {
+          "path": "armament/1/slot",
+          "used": "acquired",
+          "wanted": "a way to mark a weapon change that a commander power (a doctrine) adds",
+          "note": "The acquired slot speaks of bought upgrades, research and ranks, and only abilities have a source field that can say commander-power, so the doctrine is named in condition."
+        },
+        {
+          "path": "armament/1/traits",
+          "used": "mark",
+          "wanted": "a mark that pays out resources when the marked target dies",
+          "note": "In Tempest Rising a Marked target gives the GDF Intel on death and takes more from Networked weapons, and the pages describe no reveal for the team, which the mark trait includes."
+        }
+      ]
+    },
+    {
+      "id": "tempest-rising.dynasty.line-officer",
+      "game": "tempest-rising",
+      "faction": "dynasty",
+      "name": "Line Officer",
+      "flavour_affinity": ["soviet"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "limited",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["buffer", "anti-infantry"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Specialist Bureau",
+        "basis": "Trained at the Dynasty Barracks once a Specialist Bureau stands, a tier 2 tech building: the Barracks page lists that requirement and his infobox gives tier 2. He is one of the Dynasty's Support Specialists, and in multiplayer each player may field three tier 2 Support Specialists at once in any mix (Specialist page), so his availability is limited."
+      },
+      "cost_band": {
+        "band": "high",
+        "raw": 1500,
+        "basis": "His multiplayer price in credits is about one and a half times the main-battle-tank anchor, inside high. The Dynasty's Officers doctrine halves the price of its specialists; that side-wide power is left out of the band."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1.14,
+        "notes": "A little faster than the Field Scout and as fast as the Dynasty Guard; patch 1.2.0 sped him up slightly."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "notes": "A single officer, Major Mykyta Moroz in the fiction."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: his armour type is Infantry, which the armour map makes unarmoured, and the registry reads the class from that label (see uncertain). He takes a quarter less damage from rifles, explosives, fire and sniper rounds and three quarters less from rockets and cannon shells, and his health is more than four times a Field Scout's. As standard infantry he goes prone under heavy fire at low health and can be run over by medium and heavy vehicles (see uncertain). The Dynasty's Body Armor doctrine gives every infantry unit more health, a side-wide change left out here."
+      },
+      "sensors": {
+        "sight": "short",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "His infobox sight is a little over half the Field Scout's; since patch 2.0.0 his pistol reaches exactly as far as he sees."
+      },
+      "armament": [
+        {
+          "name": "RLO .50 Model 62 Handgun",
+          "slot": "primary",
+          "family": "sniper",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle"],
+          "traits": [],
+          "summary": "A heavy pistol that fires one precise, very heavy shot after a long pause, enough to kill a Field Scout or a Dynasty Guard outright. The game gives it the Sniper damage type, which vehicles mostly resist, so it does little to them; its target line is Ground. Patch 1.4.0 raised its damage by a quarter and made the pause slightly longer, and patch 2.0.0 stretched its reach by about a ninth, to four fifths of the Field Scout rifle's reach, so that he can keep further back from the fighting. The Dynasty's Officers doctrine raises specialists' damage output, a side-wide change left out here."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "A single soldier."
+      },
+      "abilities": [
+        {
+          "name": "Inspire Troops",
+          "kind": "active",
+          "cooldown": "medium",
+          "summary": "A timed call: friendly infantry around him become Inspired and move and fire half again as fast, for a little under half the cooldown. Patch 1.2.0 made the boost last two fifths longer. The Codex credits his presence with better cohesion and morale. The Officers doctrine shortens specialists' cooldowns, a side-wide change left out here.",
+          "patterns": ["rally-allies"],
+          "source": "innate"
+        },
+        {
+          "name": "Supervise Crew",
+          "kind": "active",
+          "cooldown": "medium",
+          "summary": "He climbs into a friendly vehicle the player targets and takes direct charge of it, and while he rides it counts as Elite, the top veterancy rank. By the Veterancy page an Elite unit carries the gains of all three ranks: from Hardened, a tenth more armour resistance and a tenth faster fire; from Veteran, about a seventh more damage per shot and sight, with Charge draining off about a third faster on vehicles; from Elite itself, a quarter more health, mending on its own out of combat and another tenth on damage per shot. Only one Line Officer can supervise a given vehicle. If the vehicle is destroyed he is thrown clear alive and returns to the player's control. The Codex names the button Commandeer Vehicle, and the build tooltip speaks of providing a single powerful vehicle.",
+          "patterns": [],
+          "source": "innate"
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "An ordinary death leaves nothing behind. He does not die with a vehicle he supervises: he gets out alive when it is destroyed (see abilities)."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:rally-allies",
+          "why": "Inspire Troops makes the infantry around him move and fire half again as fast for a while, one of the two jobs his official tooltip gives him."
+        },
+        {
+          "ref": "role:buffer",
+          "why": "Supervise Crew lifts one friendly vehicle to Elite while he rides inside, with more health, damage, resistance and fire rate and mending out of combat, and he comes out alive if it is destroyed."
+        },
+        {
+          "ref": "role:anti-infantry",
+          "why": "One pistol shot can kill a basic soldier outright, and the wiki's weapon text calls the pistol devastating against infantry."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:sniper",
+          "why": "His pistol fires only after a long pause and deals the Sniper damage type, which vehicles mostly resist, so on his own he cannot hold off vehicles or large groups."
+        },
+        {
+          "ref": "sight:short",
+          "why": "He sees only a little over half as far as a Field Scout, so he finds enemies late and leans on others' sight."
+        },
+        {
+          "ref": "range:medium",
+          "why": "Even after patch 2.0.0 his pistol reaches less far than a basic rifle; the makers lengthened it a little then to keep him further back from the front line and help him survive."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:vehicle",
+          "why": "Vehicles shrug off most of his pistol's Sniper damage, and medium and heavy vehicles can simply run him over."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "His pistol attacks ground targets only, so aircraft can hit him without reply."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Massed rifle infantry: his price buys several Field Scouts, whose combined fire kills him long before his slow pistol can thin them out."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "role:engineer",
+          "why": "Unarmed builders and capturers such as the GDF Engineer: one pistol shot kills one, and they cannot shoot back."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:infantry",
+          "why": "Inspire Troops speeds up the movement and fire of the infantry around him; his tooltip names boosting nearby infantry as his first job."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Supervise Crew turns one tank or other armoured vehicle into an Elite one while he rides it; his tooltip calls this providing a single powerful vehicle, and the Codex names tanks as the vehicles he joins."
+        }
+      ],
+      "memorable": "A grizzled major with a slow, heavy pistol who either speeds up the infantry around him or climbs into one tank to make it Elite, and walks away alive when it blows up.",
+      "as_player": "A tough officer with a slow, hard-hitting pistol that drops soldiers one shot at a time. Press Inspire to make the infantry around you move and shoot faster, or climb into a teammate's vehicle to lift it to Elite rank while you ride, jumping clear alive if it is destroyed. Stay behind the front: vehicles barely feel your pistol.",
+      "sources": [
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Line_Officer",
+          "title": "Line Officer, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Verified at patch 1.4.0+49623",
+          "note": "Read through the wiki's API. Infobox: tier, price, health, armour type and resistances, speed, sight, the handgun's Sniper type, damage, reach, rate and Ground target line, the specialist place, his two buttons and three doctrines. Also the weapon and ability boxes, the Codex text in the Background box (official, mostly lore; it calls the second button Commandeer Vehicle), prose with a lead designer's Discord remarks (the vehicle goes to top rank; one officer per vehicle) and a reference to the old official Dynasty site (he is evacuated when the vehicle dies), and a changelog up to 1.4.0. Its reach predates patch 2.0.0.",
+          "supports": [
+            "class",
+            "nature",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "abilities/1",
+            "strengths/1",
+            "strengths/2",
+            "weaknesses/0",
+            "weaknesses/1",
+            "countered_by/0",
+            "countered_by/1",
+            "combos/1",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Dynasty_Barracks",
+          "title": "Dynasty Barracks, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Verified at patch 1.2.0+46089",
+          "note": "Its Production section copies the Line Officer's build tooltip, which is game text (see the batch r3 registry note): a versatile specialist for combat support who can either boost the infantry near him or provide one strong vehicle. It lists him under Specialists, needing the Specialist Bureau.",
+          "supports": ["roles/primary", "roles/secondary", "tier", "strengths/0", "combos/0", "combos/1"]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/696524994028504915",
+          "title": "The Veti's Wrath Expansion is available NOW! (patch 2.0.0 notes, 29 September 2026), Tempest Rising news on Steam",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "2.0.0+60710",
+          "note": "The makers' GDF and Dynasty balance notes: they lengthen the Line Officer's reach slightly so that he can stay back from the fighting and survive longer. The 2.0.1 hotfix that followed changed no values.",
+          "supports": ["armament/0", "sensors", "weaknesses/2"]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Veterancy",
+          "title": "Veterancy, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "note": "What each of the three ranks adds (Hardened, Veteran, Elite), that ranks are earned by damage dealt, and that the Line Officer's vehicle takeover lifts it to Elite, with a lead designer's Discord remarks. No Verified tag.",
+          "supports": ["abilities/1", "strengths/1", "combos/1"]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Status_effect",
+          "title": "Status effect, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "note": "Its Inspired entry: infantry under the effect fire and move half again as fast, given for a time by the Line Officer's Inspire Troops. Its Prone entry names six standard infantry units, the Line Officer not among them. No Verified tag.",
+          "supports": ["abilities/0", "strengths/0", "combos/0", "armour"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "No official text read says what he is strong or weak against: the tooltip names no role (combat support means firepower, and boost is no alias of buffer), and the older official Dynasty site the wiki cites (https://tempestrising.com/factions/tempest-dynasty, now gone) could not be read from an archive in this session. The wiki's weapon text calls the pistol devastating against infantry, which would give anti-infantry at step 4 if it were official; as it is not, the primary falls to assault at step 5."
+        },
+        {
+          "path": "availability",
+          "note": "Limited rests on the Specialist page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Specialist, read, not cited): three tier 2 Support Specialists per player in multiplayer, in any mix, the Line Officer among them. His infobox also gives him a specialist place."
+        },
+        {
+          "path": "armament/0/family",
+          "note": "Sniper by the small-arms or sniper tie-break, because the game gives the pistol its Sniper damage type and the wiki describes precise, slow shots. The small-arms or machine-gun tie-break says pistols are always small arms, but it settles a different pair; small arms would change only the family."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "The Line Officer page still shows the reach from before patch 2.0.0; the official 2.0.0 notes give the longer one, which decides. Both fall in medium.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0",
+          "note": "That one shot kills a Field Scout or a Dynasty Guard compares its damage with the health given on the pages of the Field Scout and the Dynasty Guard on the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Field_Scout and https://tempestrising.wiki.gg/wiki/Dynasty_Guard, read, not cited), which list no resistance to Sniper damage; ranks and doctrines aside."
+        },
+        {
+          "path": "armour/class",
+          "note": "Unarmoured by his Infantry label, which the registry says is enough for the class. His resistances are tougher than the Field Scout's against rifle, explosive, fire and sniper damage (Field Scout page, https://tempestrising.wiki.gg/wiki/Field_Scout, read, not cited), which the soldier rule's clause on a tougher infantry armour attribute could read as light."
+        },
+        {
+          "path": "armour/notes",
+          "note": "The Unit page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Unit, read, not cited) puts him with the standard infantry, all of whom go prone and can be crushed, but the Status effect page names only six prone units, not him. The crushing rule is on the Crushing page (https://tempestrising.wiki.gg/wiki/Crushing, read, not cited).",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0",
+          "note": "No page says whether he inspires himself."
+        },
+        {
+          "path": "abilities/1",
+          "note": "No page says whether he can leave the vehicle by himself or whether it keeps Elite after he leaves; the Codex says he joins crews for a time. That only one officer fits a vehicle rests on a lead designer's Discord remark the wiki quotes, and that he gets out alive on the old official site the wiki cites. The Veterancy page lists each rank's gains on its own; that Elite holds the lower ranks' gains too is read from its wording of a further damage rise."
+        },
+        {
+          "path": "countered_by",
+          "note": "All three entries are reasoned, not named by any page: from vehicle resistances to Sniper damage (Hunter Tank page, https://tempestrising.wiki.gg/wiki/Hunter_Tank, read, not cited), the crushing rules (Crushing page, read, not cited), the Unit page's remark that most vehicles resist rifle and sniper attacks (https://tempestrising.wiki.gg/wiki/Unit, read, not cited), his Ground-only target line, and, for massed infantry, the prices, health and rifle damage on the Field Scout page (https://tempestrising.wiki.gg/wiki/Field_Scout, read, not cited) set against his own."
+        },
+        {
+          "path": "counters/0",
+          "note": "Reasoned: the Engineer page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Engineer, read, not cited) shows an unarmed Engineer whose health is far below the damage of one pistol shot."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J06-TEMPEST-RISING",
+      "fit_notes": [
+        {
+          "path": "abilities/1/patterns",
+          "used": "none",
+          "wanted": "a pattern for boarding a friendly vehicle to lift its rank while aboard, the rider getting out alive when it is destroyed",
+          "note": "rally-allies is an aura or a timed call around the buffer, earn-veterancy is rank earned by fighting, and passenger-sets-weapon changes a vehicle's weapon or job, not its rank."
+        }
+      ]
+    }
+  ]
+}

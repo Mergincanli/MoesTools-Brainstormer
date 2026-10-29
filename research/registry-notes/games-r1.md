@@ -535,7 +535,7 @@ Written for pilot round 1, then checked and extended to Uprising's skirmish unit
   - **Mortar Cycle:** it is trained at the Barracks but needs a War Factory. Its gate is War Factory (t1).
   - **Tsunami Tank:** it comes from the Mecha Bay (Mecha Bay Upgrade) or the Imperial Docks (Docks Upgrade). Both are t2; record the Mecha Bay gate, the first building its infobox names.
   - **Giga-Fortress:** it needs Docks Breakthrough and a Nanotech Mainframe. Its gate is Docks Breakthrough (t3).
-  - **Allied clearance is local** (Tier page): a production building builds tier 2 and tier 3 units only while it is linked to a nearby Command Hub or construction yard that holds the clearance. The band still comes from the gate.
+  - **Allied clearance is local** (Tier page): a production building builds units of the two upper tiers only while it is linked to a nearby Command Hub or construction yard that holds the clearance. The band still comes from the gate.
 - **Prices.** Several infoboxes give one price per patch (Javelin Soldier, Flak Trooper, Prospector, Assault Destroyer, Multigunner IFV). Take the 1.12 figure for base-game units. Ignore the Mass Production protocol and the Crusher Crane's recycling refund.
 - **Sight.**
   - Nearly every infobox gives a shroud clearing range of 500 (some pages call it shroud reveal range; it is the same figure), so nearly every unit is medium. Short: the Allied Engineer and Combat Engineer (100) and the Sputnik (250). The Attack Dog's 750 is exactly 1.5 times the Conscript's, so it is medium by the edge rule.

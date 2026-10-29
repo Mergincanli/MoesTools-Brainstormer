@@ -1,0 +1,430 @@
+{
+ "label": "j01-generals",
+ "game": "generals",
+ "file_written": "data/units/generals.json",
+ "units": [
+  "generals.gla.battle-bus",
+  "generals.usa-air-force.combat-chinook"
+ ],
+ "validator_result": "OK",
+ "copy_check_result": "Exit 0. I ran `node scripts/copy-check.mjs . --only` on the 8 cited pages. All 8 were checked from cache and none was left unchecked; there were no shared runs. The cited Zero Hour manual is a PDF, so I checked it by hand: I extracted its text with pdftotext into <scratch> and compared every prose string with it, using the copy-check's own word and n-gram functions. That found one 6-word run in the Combat Chinook's manual source note. I rewrote it, and both checks now report no runs. I also compared all prose with every uncited page I read (wiki pages, 1.04 INI files, EA code files): no shared runs of 6 or more words.",
+ "hesitations": [
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "armour/class",
+   "chosen": "medium",
+   "alternatives": [
+    "light",
+    "heavy"
+   ],
+   "reason": "Armour-class step 4 needs 'the kind of unit', and the registry only says the one-off Battle Bus set 'maps by what the unit is'. I read it as an improvised armoured troop carrier (APC, so medium). Read as a civilian bus it is close to the class descriptions' trucks (light), and the set's own name is Battle Bus Truck Armor. If the kind counts as named nowhere, step 5 would compare it with the anchor tanks: its health equals a Battlemaster's and it takes gunfire like Tank Armor, which could give heavy."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "on_death/outcomes",
+   "chosen": "bail-out, basis proposal (3C default), plus a fit_note",
+   "alternatives": [
+    "wreck, basis in-game",
+    "bail-out, basis in-game"
+   ],
+   "reason": "The source shows something special, the bunker second life, but it is none of the in-game kinds the basis rule lists. Wreck needs remains that a unit repairs, recrews or salvages, and it excludes remains that only give cover. Bail-out needs riders getting out on their own, and here they stay inside and die when the bunker falls. Bail-out also matches the player version of passenger-sets-weapon's wreck-bunker variant (players thrown out hurt). Answer to the task's question: no on-death term fits the bunker."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "modes/0",
+   "chosen": "The bunker is recorded as a mode with via passenger-sets-weapon.",
+   "alternatives": [
+    "No mode; the triggered ability only",
+    "via deploy-siege-mode",
+    "via transform"
+   ],
+   "reason": "modes[] covers second forms that change how the unit moves or what it is, and via must be 'the pattern that switches to this mode'. No registry pattern switches a form on death. The closest is passenger-sets-weapon's wreck-bunker variant, which names this unit. deploy-siege-mode and transform need a voluntary, reversible switch."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "modes/0/target",
+   "chosen": "structure",
+   "alternatives": [
+    "Leave target out, so it stays a ground vehicle from wheels"
+   ],
+   "reason": "The rule asks for target when a mode changes what kind of target the unit is, like a vehicle deploying into a building. The wiki and the Garrisoning page call the bunker a structure, and its 1.04 armour set is a building set (immune to mines and to Kell's snipe, open to building EMP). But the 1.04 object keeps KindOf VEHICLE and the code adds no structure kind."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "abilities/1",
+   "chosen": "A separate triggered, innate ability ('Bunker (second life)') linking passenger-sets-weapon",
+   "alternatives": [
+    "Fold it into the passenger passive's summary",
+    "Empty patterns plus a fit_note"
+   ],
+   "reason": "The abilities rule allows a triggered entry when a source describes a distinct state that adds a mechanic no term covers; the manual, wiki and campaign lines all do. The pattern is passenger-sets-weapon through its wreck-bunker variant, so two abilities link the same pattern."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "abilities/1/cooldown",
+   "chosen": "per-life",
+   "alternatives": [
+    "leave cooldown out"
+   ],
+   "reason": "The cooldown rule says 'a per-life ability is per-life without a figure', but also 'leave it out when ... the ability has no wait'. This is a triggered effect that happens once per bus."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "roles/primary",
+   "chosen": "transport (roles.primary step 2)",
+   "alternatives": [
+    "assault (step 5), if the riders' fire were counted as the bus's own weapon"
+   ],
+   "reason": "Weapon entries rule 7 gives no entries for riders firing their own guns from ports, and the bus's own weapons are dummies, so it is unarmed and reaches step 2. Step 1 finds nothing, as the registry notes the opening tooltip line names no role. A campaign line does call it a transport."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "roles/secondary",
+   "chosen": "[anti-infantry, anti-armour] (step 5, riders)",
+   "alternatives": [
+    "[anti-infantry, anti-air]",
+    "[anti-infantry, marksman]",
+    "[anti-infantry]"
+   ],
+   "reason": "Step 5 says to 'rank these roles by how many of the options give them', but it does not say which riders count for a fire-port carrier: main GLA only, the generals' own, or captured and allied ones. Nor does any source say whether Terrorists or Hijackers fire from the windows. Anti-armour, anti-air and marksman tie at one rider type each (RPG Trooper; Kell), so the roles list order breaks the tie. The tooltip's 'strong vs. infantry' backs anti-infantry, but the bus has no weapon for it to attach to at step 3. Anti-armour meets its requires only through the riders, which is recorded in atypical."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "counters",
+   "chosen": "Only the Hijacker immunity: pattern:hijack-vehicle plus unit:generals.gla.hijacker",
+   "alternatives": [
+    "class:infantry and target:structure from the tooltip's Strong vs. line",
+    "empty"
+   ],
+   "reason": "Matchups rule 5: a unit that harms no enemy with a weapon or an ability lists only what it foils by itself, and the riders' fire goes to combos. It is unclear whether a firing-port passive counts as the bus 'harming with an ability'."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "countered_by/2",
+   "chosen": "pattern:hijack-vehicle (Jarmen Kell's snipe), the same link as counters/0, plus unit:generals.gla.jarmen-kell",
+   "alternatives": [
+    "unit:generals.gla.jarmen-kell alone",
+    "role:marksman"
+   ],
+   "reason": "Rule 6 allows the same enemy link in both lists only when the reasons name different situations: a Hijacker climbing in versus Kell sniping the driver. Rule 3 keeps a link that is false for only a few of the units it covers."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "countered_by/4",
+   "chosen": "unit:generals.china.nuke-cannon, standing alone",
+   "alternatives": [
+    "role:siege plus the unit link",
+    "leave the entry out"
+   ],
+   "reason": "Rule 3 lets a unit link stand alone only when every word-list or pattern link is false for most of the units it covers. No term names crew-killing neutron shells, and most siege units cannot kill crews."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "mobility/traits",
+   "chosen": "crush",
+   "alternatives": [
+    "no crush trait (CNCNZ: crushing only after the second salvage step)"
+   ],
+   "reason": "The rule was clear: the registry's game-wide note gives crush to every ground vehicle whose crusher level is above zero, and the 1.04 object has it from the start. The sources disagree, and this drops confidence to medium."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "mobility/speed",
+   "chosen": "very-fast (speed_raw 3.5)",
+   "alternatives": [
+    "slow (the official campaign line calls it 'slow moving')"
+   ],
+   "reason": "The rule was clear: the figure sets the band and a speed word stays in notes. The source was not: the official line contradicts the figures."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "weaknesses/3",
+   "chosen": "armour-class:medium for 'never ranks up'",
+   "alternatives": [
+    "pattern:passenger-sets-weapon",
+    "role:transport",
+    "class:vehicle"
+   ],
+   "reason": "The registry says units that never rank up say so in weaknesses, but it names no link. Matchups rule 5 hangs a lack on the part that causes it, and no part causes this one. Armour class was the closest fit as 'the part that exposes it (its health)'."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "strengths",
+   "chosen": "Two strengths and two weaknesses that both use pattern:passenger-sets-weapon, one for the riders' fire and one for the bunker",
+   "alternatives": [
+    "Merge each pair into one entry",
+    "Hang the bunker on armour-class:medium"
+   ],
+   "reason": "No rule says whether a link may repeat within one list. The bunker's part is the passenger-sets-weapon ability, so the link is the same."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "confidence",
+   "chosen": "medium",
+   "alternatives": [
+    "high"
+   ],
+   "reason": "The High or Medium tie-break: CNCNZ, cited as the registry asks, contradicts the cited 1.04 file on the crush trait, a coded term, and no official text settles it. Without CNCNZ cited the entry would be high, since the manual and tooltip are cited official text."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "body/plan",
+   "chosen": "box-carrier",
+   "alternatives": [
+    "open-mount"
+   ],
+   "reason": "The tie-break was mostly clear: the riders sit hidden inside and fire from the windows. It is still an improvised civilian bus, not a military APC."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "tier/basis",
+   "chosen": "The Stealth General's bus is treated as having no disguise button.",
+   "alternatives": [
+    "Record a disguise button for his version in tier.basis"
+   ],
+   "reason": "In 1.04 CommandSet.ini the Stealth General's set assigns slot 1 twice, first disguise and then a transport exit. I assumed the later line wins; I did not check the engine's handling in code. His object also has no disguise module, and the wiki's trivia says the disguise was cut and does nothing."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "roles/primary",
+   "chosen": "transport",
+   "alternatives": [
+    "logistics"
+   ],
+   "reason": "Step 1: the opening tooltip line names both 'Assault Transport' and 'Collects supplies' (registry note). Neither role has a target, so it goes on to step 2, 'the role whose description fits its main button or main action'. The Chinook does both. I took transport as the main action: the tooltip names it first, the gun ports are what set this unit apart, and the same general fields the ordinary Chinook for supplies."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "roles/secondary",
+   "chosen": "[logistics, anti-infantry]",
+   "alternatives": [
+    "[logistics, engineer]",
+    "[logistics, anti-armour] (riders, step 5)",
+    "raider"
+   ],
+   "reason": "Logistics ranks at step 1. Anti-infantry comes from step 2: 'a button that harms only one kind of target supports that target's anti role', and Combat Drop kills only garrisoned soldiers, though the Rangers do the killing. The tie-break between the anti roles and engineer applies because it also takes the building over and keeps it. Raider was rejected: the wiki's hit-and-run praise is not official text, and raider's coding rule needs a weapon of the unit's own."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "abilities/1/patterns",
+   "chosen": "drop-in-from-above (planned), plus a fit_note",
+   "alternatives": [
+    "carry-passengers (hot-drop variant)",
+    "capture-structure (take-over variant)",
+    "empty with a fit_note"
+   ],
+   "reason": "Paired entries says 'never both' (passenger-sets-weapon or carry-passengers), but it is unclear whether that binds only the passenger passive or the whole unit. capture-structure needs an enemy building, and a civilian building that enemy troops occupy is ambiguous. The task named drop-in-from-above, which covers only the arrival on a chosen spot, not clearing the garrison."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "abilities/2",
+   "chosen": "Supply runs recorded as a passive, innate ability linking gather-resources",
+   "alternatives": [
+    "Kind active",
+    "No ability; leave gathering to the logistics role and notes"
+   ],
+   "reason": "Gathering has no button; the helicopter is sent to a dock. The wiki lists it as a passive, and abilities rules allow a passive entry for a distinct behaviour that no term covers. 'Passive' means always on, which does not quite describe an order. The gather-resources generator kinds are channel, deploy or active."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "tier/gate",
+   "chosen": "War Factory",
+   "alternatives": [
+    "Supply Center"
+   ],
+   "reason": "Both are t1 on the tier map. The rule gives no choice between the production building and the prerequisite. I named the extra building it waits for, as Kell's entry names the Palace rather than the Barracks."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "variant_of",
+   "chosen": "generals.usa.chinook",
+   "alternatives": [
+    "leave variant_of out"
+   ],
+   "reason": "The registry calls a general's unit with its own in-game name 'a unit of its own'. The field is 'for subfaction or general-specific versions: the base unit id', and the wiki infobox names the Chinook as its base unit."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "lineage",
+   "chosen": "none",
+   "alternatives": [
+    "chinook or transport-helicopter, linking Tiberian Dawn's CH-47 transport helicopter"
+   ],
+   "reason": "Lineage needs the same or nearly the same name, or a source presenting both as the same unit. Tiberian Dawn's unit is named Transport Helicopter in-game, and its wiki page treats it as a different Chinook."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "counters",
+   "chosen": "weapon:guided-missiles (missile anti-air foiled by the laser)",
+   "alternatives": [
+    "empty",
+    "role:anti-air"
+   ],
+   "reason": "Matchups rule 5 allows only what it foils by itself. role:anti-air also sits in countered_by (groups of anti-air, Avengers), and rule 6 lets the two stand only as different situations."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "countered_by/0",
+   "chosen": "weapon:machine-gun",
+   "alternatives": [
+    "weapon:autocannon (the sources call them a Quad 'cannon' and a Gattling 'Cannon')",
+    "role:anti-air"
+   ],
+   "reason": "I applied the weapon-family tie-break that rotary guns firing bullets are machine guns, using the SMALL_ARMS damage their anti-air guns have in Weapon.ini. None of these units is coded yet."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "armour/models",
+   "chosen": "interceptor",
+   "alternatives": [
+    "flat-pool"
+   ],
+   "reason": "The interceptor meaning speaks of few charges that must reload, while the point-defence laser fires several times a second with no clip. But the term's own 'Seen in' names the Generals point-defence laser, and the task called it an armour model."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "crew/passengers/kind",
+   "chosen": "passenger-firing",
+   "alternatives": [
+    "passenger-cargo"
+   ],
+   "reason": "Only one kind is allowed. Soldiers fire from the ports, while vehicles in the same slots ride as cargo."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "abilities/1",
+   "chosen": "The summary reports both versions of what clearing a garrison costs.",
+   "alternatives": [
+    "Follow the wiki only (one Ranger per soldier)",
+    "Follow EA's code only (each Ranger kills up to two, then dies)"
+   ],
+   "reason": "The rule was clear; the sources disagree. The cited Combat Chinook page, which the task asked me to check, says only that the drop can be used on buildings the enemy holds. The tooltip and CNCNZ say the garrison is cleared and the Rangers take over."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "weaknesses/5",
+   "chosen": "armour-class:light for 'never ranks up'",
+   "alternatives": [
+    "pattern:passenger-sets-weapon",
+    "class:aircraft"
+   ],
+   "reason": "Same as the Battle Bus: no link is prescribed for a unit that never ranks up."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "on_death/outcomes",
+   "used": "bail-out (proposal)",
+   "wanted": "A second-life outcome: the lethal hit turns the hull into a static bunker with fresh health, and its riders survive hurt and keep fighting until it falls.",
+   "note": "Wreck needs remains that a unit repairs, recrews or salvages, and it excludes remains that only give cover. Bail-out needs riders who get out on their own."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "modes/0",
+   "used": "No class or body change",
+   "wanted": "A structure class and body plan for a vehicle's static bunker form",
+   "note": "As a bunker it is a fixed fortification. This matches the earlier Slave Miner fit_note for a deployed building form."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "armour/models",
+   "used": "flat-pool",
+   "wanted": "A second-life armour model: a lethal hit starts one more, larger health pool in a new form",
+   "note": "Each life has one bar, but there are two lives. Recorded as abilities/1 and modes/0."
+  },
+  {
+   "unit": "generals.gla.battle-bus",
+   "path": "roles",
+   "used": "transport, anti-infantry, anti-armour",
+   "wanted": "area-denial",
+   "note": "The bunker is a fortification riders fight from, useful for holding an isolated spot (wiki). Area denial needs a lingering-zone trait or an area or summon pattern, which the bus lacks."
+  },
+  {
+   "unit": "generals.usa-air-force.combat-chinook",
+   "path": "abilities/1/patterns",
+   "used": "drop-in-from-above",
+   "wanted": "A pattern for clearing an occupied building from above: dropped troops kill the soldiers inside at a cost in attackers, then hold it",
+   "note": "drop-in-from-above covers only the arrival. The Shared mechanics convention names this very button as doing more than the enter key, but no pattern covers it."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Matchups rule 5 and firing-port carriers",
+   "note": "'A unit that harms no enemy with a weapon or an ability' does not say whether a passenger passive whose riders shoot their own guns counts as the carrier harming. This decides whether the Battle Bus tooltip's 'strong vs. infantry, buildings' goes in counters or in combos. I put it in combos and kept counters to what each unit foils by itself."
+  },
+  {
+   "topic": "roles.secondary step 5 for riders firing their own weapons",
+   "note": "The rule does not say which riders count as options (main faction only, the generals' own, captured or allied). It also does not say whether official strong-against text about an unarmed carrier can rank a role above step 5, or how to count riders whose port fire no source confirms (Terrorists)."
+  },
+  {
+   "topic": "on_death basis when the source shows an outcome no term covers",
+   "note": "The basis rule knows only the listed in-game kinds versus 'simply gone'. A special outcome like a second life has no slot. I used the 3C proposal with a fit_note."
+  },
+  {
+   "topic": "Modes for one-way, death-triggered forms",
+   "note": "modes[].via must be 'the pattern that switches to this mode', but no pattern switches a form on death. I used passenger-sets-weapon because its wreck-bunker variant describes the Battle Bus."
+  },
+  {
+   "topic": "modes[].target when the game's own unit kind differs from the sources",
+   "note": "The wiki calls the bunker a structure and gives it a building armour set, but the engine keeps it a vehicle kind. The rule does not say which wins."
+  },
+  {
+   "topic": "Armour-class step 4 for improvised vehicles",
+   "note": "'The kind of unit named in the class descriptions' is ambiguous for a reinforced civilian bus used as an APC (trucks are light, APCs medium). The registry's 'one-off sets map by what the unit is' does not settle it."
+  },
+  {
+   "topic": "variant_of versus 'a unit of its own'",
+   "note": "The registry makes general's units with their own names units of their own, while variant_of is for 'general-specific versions'. It is unclear whether both apply to the Combat Chinook; I set variant_of."
+  },
+  {
+   "topic": "tier.gate with a production building and a separate prerequisite",
+   "note": "The rule does not say which to name when both are on the tier map at the same band (Supply Center versus War Factory)."
+  },
+  {
+   "topic": "Ability kind for an ordered action with no button",
+   "note": "Supply gathering is ordered by sending the unit to a dock. 'Passive' is defined as always on, and the button-based kinds need a key."
+  },
+  {
+   "topic": "Scope of Paired entries' 'never both'",
+   "note": "It is unclear whether passenger-sets-weapon and carry-passengers exclude each other only on the passenger passive or across all of a unit's abilities. This matters for a rope-drop button on a fire-port carrier (carry-passengers' hot-drop variant)."
+  },
+  {
+   "topic": "Interceptor armour model wording",
+   "note": "The meaning says 'few charges and must reload', but its own 'Seen in' is the Generals point-defence laser, which fires continuously with no clip."
+  },
+  {
+   "topic": "Repeating a link in one matchup list",
+   "note": "No rule says whether the same ref may appear twice in strengths or weaknesses with different reasons. I did so for passenger-sets-weapon on the Battle Bus."
+  },
+  {
+   "topic": "Repeated slot numbers in Generals command sets",
+   "note": "The registry does not say how to read a CommandSet that assigns one slot twice (the Stealth General's Battle Bus). I assumed the later line wins, but I did not verify that in the engine code."
+  }
+ ],
+ "new_mechanics": [],
+ "pages_read_not_cited": [
+  "https://cnc.fandom.com/wiki/Pilot",
+  "https://cnc.fandom.com/wiki/Garrisoning",
+  "https://cnc.fandom.com/wiki/Salvaging",
+  "https://cnc.fandom.com/wiki/Veterancy",
+  "https://cnc.fandom.com/wiki/Chinook_(Tiberian_Dawn)",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Locomotor.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Armor.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandButton.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/ObjectCreationList.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/ChemicalGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/DemoGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/StealthGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AirforceGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/ChinaVehicle.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AmericaVehicle.ini",
+  "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Body/UndeadBody.cpp",
+  "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Behavior/BattleBusSlowDeathBehavior.cpp",
+  "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/AI/AIStates.cpp",
+  "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Update/AIUpdate/ChinookAIUpdate.cpp"
+ ],
+ "source_problems": "No page failed to fetch, and nothing was left unchecked. Problems found:\n(1) Combat Drop against a held building: the Combat Chinook page, which the task asked me to check, says only that the drop can be used on buildings the enemy holds, without saying what happens. The Chinook (Generals) and Garrisoning pages trade one Ranger per enemy soldier. The tooltip and CNCNZ say the garrison is cleared and the Rangers take over. EA's released AIStates.cpp has each landing Ranger kill up to two occupants and die once he has killed two. Recorded with sources_disagree.\n(2) CNCNZ says only the Battle Bus's second salvage step lets it crush infantry, while the 1.04 object gives it crusher level 2 from the start and the wiki lists its crush lines. This is a coded term, so the Battle Bus drops to medium confidence.\n(3) CNCNZ says the bus turns into a bunker 'when badly damaged' and that Evacuate destroys the hulk at once. The wiki says 'when destroyed' and 'shortly after', the manual says 'when immobilized', and the code shows the lethal hit and about a second of emptiness.\n(4) An official campaign line calls the Battle Bus slow-moving, while its land speed is three and a half times the Ranger's (very fast).\n(5) The Stealth General's Battle Bus command set assigns slot 1 twice (disguise, then exit), and the wiki's trivia says the disguise was cut.\n(6) The copy-check cache stores the Zero Hour manual PDF as raw bytes, so the copy-check cannot read it. I downloaded it to <scratch> and checked it by hand.\n(7) My earlier notes credited 'never ranks up' to the Pilot page, but that page had not been read in this workspace. I fetched it on 2026-10-27, and it confirms Chinooks and Battle Buses cannot gain veterancy."
+}

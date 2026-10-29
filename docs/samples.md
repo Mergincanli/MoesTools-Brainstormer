@@ -487,7 +487,7 @@ The pattern itself is uncommon, so on a rolled card these variants appear from s
 - Use aircraft against ground claimers that can't tether them.
 - Use hard counters against the stolen weapon itself, such as point defence against salvaged rockets.
 
-**Source units in the database:** Hammer Tank
+**Source units in the database:** Technical, Hammer Tank
 
 **Other examples found (to be entered as source units during the research run)**
 
@@ -636,7 +636,7 @@ The pattern itself is uncommon, so on a rolled card these variants appear from s
 - Punish the swap: hit infantry while they walk to board or after they leave, before the vehicle's threat changes.
 - Catch deploy-to-fire carriers while they move, and attack fixed firing ports from their blind side.
 
-**Source units in the database:** Multigunner IFV
+**Source units in the database:** Overlord, Battle Bus, Combat Chinook, Multigunner IFV
 
 **Other examples found (to be entered as source units during the research run)**
 

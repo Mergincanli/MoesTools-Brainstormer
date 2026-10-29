@@ -1,0 +1,769 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "tempest-rising",
+  "units": [
+    {
+      "id": "tempest-rising.gdf.drone-operator",
+      "game": "tempest-rising",
+      "faction": "gdf",
+      "name": "Drone Operator",
+      "flavour_affinity": ["allied"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["anti-armour", "anti-air"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Barracks",
+        "basis": "Trained at the GDF Barracks with no other building needed: his infobox gives tier 1, the Barracks lists him among its tier 1 production, and the registry's tier map puts the GDF Barracks at t1."
+      },
+      "cost_band": {
+        "band": "very-low",
+        "raw": 370,
+        "basis": "His multiplayer price since patch 1.9.0, the same in his infobox and in the makers' 1.9.0 notes, is a little over a third of the anchor price of the two main battle tanks and below the low threshold, so very low. StrategyWiki's older, lower price is out of date and would be very low as well (see uncertain)."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "slow",
+        "speed_raw": 0.95,
+        "notes": "On foot. Patch 1.9.0 cut his pace from the Field Scout's to clearly slower, and patch 2.0.0 gave a little of it back because the cut had hurt him more than intended; his infobox still shows the 1.9.0 value. Either way he walks a little slower than the Field Scout, the reference. His drone flies nearly three times as fast as he walks, so it keeps up with him easily."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "notes": "One soldier. His quadcopter Combat Drone, a separate small flier that the game counts as an aircraft, is recorded as his second weapon (armament/1), as the registry note asks for spawned helpers."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the armour map turns the infobox's Infantry type into unarmoured. His resistances match the Field Scout's: rifle fire hits him in full, while rocket and cannon damage lose most of their force. As standard infantry he drops prone under sustained fire at low health, taking half damage but stuck in place until the shooting stops or he is ordered to move, and medium and heavy vehicles can run him over. His drone has a small health pool of its own and halves explosive and fire damage."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "His infobox sight is a little under three quarters of the Field Scout's, just inside the medium band. His drone sees a little further than he does, and flown by hand it can look over cliffs and uncover high ground for his side. Like every soldier he spots hidden enemies standing right beside him (a game-wide rule); he has no Detection perk."
+      },
+      "armament": [
+        {
+          "name": ".45 Hand Cannon",
+          "slot": "primary",
+          "family": "small-arms",
+          "damage": "armour-piercing",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "low-air", "high-air"],
+          "traits": ["anti-air"],
+          "summary": "His own sidearm, listed first on his page: an anti-tank pistol that his Codex entry presents as a backup handgun for when the drone is knocked out. It fires single shots of Cannon damage, armour-piercing by the damage map, at a steady pace and reaches a little past the Field Scout's rifle, at ground targets and at aircraft alike. Soldiers resist most of its damage, so vehicles are its targets. Hotfix Update #8 (patch 1.6.0) made it hit a third harder, a change to his own damage rather than the drone's. Hitscan is the family default; no source says how its shots travel."
+        },
+        {
+          "name": "Combat Drone (ATAS Micromissiles)",
+          "slot": "secondary",
+          "family": "drone-launcher",
+          "damage": "armour-piercing",
+          "mount": "auto-target",
+          "delivery": "projectile",
+          "range": "short",
+          "can_target": ["infantry", "ground-vehicle", "structure", "low-air", "high-air"],
+          "traits": ["anti-air"],
+          "summary": "A Combat Drone, a small quadcopter that flies beside him; his Drone Factory perk replaces it when it is lost (abilities/1). In its default Autonomous mode it trails him and attacks whatever he attacks, two micromissiles to a volley. Their damage type is Rocket, armour-piercing by the damage map; the drone's own page labels them for use against both aircraft and surface targets and rates them good against vehicles, structures and fliers, while soldiers resist most of their damage. It fires only at what his side can already see. The missiles reach nearly two thirds as far as the Field Scout's rifle, measured from the drone, which flies on its own and outpaces any soldier; in Remote Control mode it ranges further out (modes/0). It is an aircraft with a small health pool, so anti-air weapons can shoot it down, and it dies at once when he dies. When he rides in a transport or sits in a garrison the drone stays outside and keeps fighting, and a Skycrane carrying him picks its targets and replaces it when lost. Side-wide doctrines change it: Manufacturing gives drones about half again their health, faster rebuilding and the Networked bonus against Marked targets, and Ambush Protocols keeps every GDF drone invisible until it attacks (a doctrine stealth the registry leaves off units)."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player is the operator. The drone is not a seat but his weapon; in Remote Control mode the player steers it while the soldier stays planted, close to what the remote crew model describes, but the unit coded here is the soldier himself, organic infantry, which the remote model excludes, so the crew is solo. He takes one infantry place in transports and garrisons like any soldier (game-wide)."
+      },
+      "abilities": [
+        {
+          "name": "Remote Control Drone / Autonomous Drone",
+          "kind": "deploy",
+          "source": "innate",
+          "summary": "One toggle made of two buttons. Remote Control Drone roots the operator where he stands and gives the player direct control of the drone, which may fly anywhere within a fixed radius of him, a little longer than the Field Scout's rifle reach: over cliffs and rivers that stop soldiers, over high ground to uncover it for friendly artillery, or close enough to strike anti-infantry defences while he stays out of their reach (StrategyWiki). Autonomous Drone ends it: he can walk again, and the drone goes back to trailing him and attacking his targets. If the drone is shot down while flown, control returns to him. No source gives a cooldown or how long the switch takes. Coded as the piloted variant of launch-drones; his rooting is part of that interaction, so deploy-siege-mode is not linked (see uncertain).",
+          "patterns": ["launch-drones"]
+        },
+        {
+          "name": "Drone Factory",
+          "kind": "triggered",
+          "source": "innate",
+          "summary": "A perk: whenever his Combat Drone is destroyed, a new one is made by itself after a while and flies out from him at no cost, one drone at a time, until he dies, since his death kills the drone. StrategyWiki suggests spending these free drones to find enemy anti-air before sending your own aircraft. No source gives the delay. The respawning-followers variant of reinforce-squad.",
+          "patterns": ["reinforce-squad"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "remote-control",
+          "name": "Remote Control Drone",
+          "via": "launch-drones",
+          "summary": "The operator cannot move while the player flies his drone by hand anywhere within a fixed radius of him, a little longer than the Field Scout's rifle reach, so its missiles can strike well beyond his own pistol. Switching back with Autonomous Drone frees him to walk and returns the drone to his side. No source says whether his pistol keeps firing while he stands planted."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "In the sources he is simply gone, so the infantry default applies. His Combat Drone dies at the same moment. With the side-wide Triangulation doctrine every GDF soldier who dies leaves a Marking Mine behind; that is a picked power, not his own outcome."
+      },
+      "strengths": [
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Both his pistol and his drone's missiles deal damage built for vehicles (Cannon and Rocket), and the makers count him among the early anti-tank infantry."
+        },
+        {
+          "ref": "hits:high-air",
+          "why": "Pistol and drone alike fire at aircraft as well as ground targets, so one cheap soldier answers both tanks and fliers."
+        },
+        {
+          "ref": "weapon:drone-launcher",
+          "why": "His drone stays outside and keeps fighting while he rides in a transport or sits in a garrison, and a Skycrane carrying him even picks its targets."
+        },
+        {
+          "ref": "pattern:launch-drones",
+          "why": "Planted, he flies the drone by hand to scout over cliffs and rivers, uncover high ground for artillery and hit anti-infantry defences from outside their reach."
+        },
+        {
+          "ref": "pattern:reinforce-squad",
+          "why": "A lost drone comes back free after a while, so it can be thrown at enemy anti-air to find it before friendly aircraft go in (StrategyWiki)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "A frail soldier: little health and no armour, most vehicles can run him over, and sustained fire at low health pins him prone."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Soldiers resist most of the Cannon and Rocket damage both his weapons deal, so he does badly against infantry and in close fights (StrategyWiki)."
+        },
+        {
+          "ref": "speed:slow",
+          "why": "Slower than the basic rifleman since patch 1.9.0, a cut the makers meant to make him pay more for being caught out of position."
+        },
+        {
+          "ref": "pattern:launch-drones",
+          "why": "Flying the drone by hand roots him in place, and the drone cannot leave a short radius around him."
+        },
+        {
+          "ref": "weapon:drone-launcher",
+          "why": "Most of his firepower rides on a fragile flier that anti-air fire can shoot down, and the drone dies the moment he does."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-infantry",
+          "why": "The makers strengthened the Field Scout to beat early anti-tank infantry, naming the Drone Operator, and the Dynasty Guard to kill anti-tank troopers faster; his own weapons do little to soldiers."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "His drone is an aircraft: the makers gave the Peacekeeper a little splash so it would deal with GDF drones in mirror matches, and StrategyWiki notes that anti-air sites often shoot the drones down, stripping him of his main firepower."
+        },
+        {
+          "ref": "unit:tempest-rising.dynasty.operative",
+          "why": "Part of the same anti-air answer: the makers widened the Operative's Sensor Interference, which briefly keeps fliers from firing on ground targets, to trouble Drone Operators and drone harassment."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "His anti-tank pistol and Rocket-armed drone are built for vehicles; StrategyWiki rates him strong against them and the makers class him as anti-tank infantry."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "Both his weapons reach fliers, and the drone's missiles are rated effective against air units."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Base defences: flying the drone by hand lets him strike anti-infantry defences from outside their reach (StrategyWiki), and its missiles are rated effective against buildings."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:transport",
+          "why": "Riding in a carrier keeps him safe while his drone fights on outside: the makers strengthened the Riot Van partly so it would carry Drone Operators better, and named Skycranes packed with them as a GDF tactic that worked too well."
+        },
+        {
+          "ref": "unit:tempest-rising.gdf.riot-van",
+          "why": "The same reason: riders cannot shoot out of the van, but his drone stays active above it."
+        },
+        {
+          "ref": "unit:tempest-rising.gdf.skycrane",
+          "why": "The same reason: a Skycrane picks targets for the drones of the Drone Operators it carries and replaces lost ones."
+        },
+        {
+          "ref": "pattern:rally-allies",
+          "why": "Comms from units such as the Comms Officer or Comms Rig speeds his movement and fire; the makers slowed him in patch 1.9.0 because Comms-boosted Drone Operators were oppressive."
+        }
+      ],
+      "memorable": "A cheap anti-tank trooper whose real gun is a missile quadcopter: it fights beside him, keeps shooting while he rides in a van, and on command he plants himself and flies it on a short leash.",
+      "as_player": "A cheap, slow T1 soldier. Left mouse fires your anti-tank pistol, and your drone hovers beside you and fires micromissiles at whatever you shoot, tanks and aircraft alike. Q plants you and hands you the drone to fly within a short leash, to scout over cliffs, light up high ground or hit turrets from outside their reach; Q again lets you walk. A lost drone comes back after a while and dies with you, and soldiers, flamers and anti-air are your problem.",
+      "sources": [
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Drone_Operator",
+          "title": "Drone Operator, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Verified for patch 1.9.0+58877",
+          "note": "Read through the MediaWiki API. Infobox: tier 1, the Infantry armour type with its resistances, foot movement, speed and sight, multiplayer price, the GDF Barracks, the .45 Hand Cannon (Cannon type, reach, Ground and Air targets), the Remote Control Drone / Autonomous Drone toggle and the Drone Factory perk. Prose: the drone's missiles hit ground and air but only targets his side sees; hand control within the operator's radius to scout cliffs and rivers and uncover high ground; the drone stays outside transports and garrisons (a lead designer's Discord remark); a lost drone is replaced. The Background box copies the game's Codex, official text: remote-controlled drones that trail the operator, and a backup handgun. Changelog up to patch 1.9.0.",
+          "supports": [
+            "class",
+            "nature",
+            "availability",
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "armament/1",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "modes/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "counters",
+            "combos/0",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Combat_Drone",
+          "title": "Combat Drone, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Verified for patch 1.6.0+53654",
+          "note": "The drone's own page, read through the MediaWiki API. Infobox: Aircraft armour that halves explosive and fire damage, flying movement, speed and sight, and the ATAS Micromissiles (Rocket type, two per volley, reach, Ground and Air targets); its weapon box labels the missiles for air and surface targets and rates them good against vehicles, structures and fliers. Prose: the drone dies when its parent does; it also calls combat drones uncontrollable (see uncertain). It names the Manufacturing and Ambush Protocols doctrines. Its multiplayer health predates Hotfix Update #8.",
+          "supports": [
+            "roles/secondary",
+            "armour",
+            "sensors",
+            "armament/1",
+            "on_death",
+            "strengths/0",
+            "strengths/1",
+            "weaknesses/4",
+            "counters/1",
+            "counters/2"
+          ]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Tempest_Rising/GDF_units",
+          "title": "Tempest Rising/GDF units, StrategyWiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Pre-release values (multiplayer demo era)",
+          "note": "Read through the MediaWiki API and cited as the second established site. Its Drone Operator entry: an anti-armour unit, strong against vehicles and weak against infantry and close fighting, with Cannon-type attacks and a free drone that fights by itself with rockets, is often shot down by anti-air and can be spent to find anti-air threats; Remote Control Drone immobilises him while the drone flies freely around him and lets it hit anti-infantry defences from outside their reach, and control returns to him when the drone dies. Its price and some figures are older than launch (see uncertain).",
+          "supports": [
+            "roles/secondary",
+            "armament/1",
+            "abilities/0",
+            "abilities/1",
+            "modes/0",
+            "strengths/3",
+            "strengths/4",
+            "weaknesses/1",
+            "countered_by/1",
+            "counters/0",
+            "counters/2"
+          ]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/696524994028504915",
+          "title": "The Veti's Wrath Expansion is available NOW! (patch 2.0.0+60710 notes), Tempest Rising news on Steam",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "Patch 2.0.0+60710 (29 September 2026)",
+          "note": "The makers' notes for the patch the registry researches: the Drone Operator's speed raised a little because the 1.9.0 cut hurt him more than intended, and the Riot Van strengthened partly so it would serve better as a Drone Operator carrier. The 2.0.1 hotfix changed no values.",
+          "supports": ["mobility", "combos/0", "combos/1"]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/536602273129694258",
+          "title": "Multiplayer Balance Patch and Top 12 Steam Releases, Tempest Rising news on Steam",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "Patch 1.1.1+44720 (20 May 2025)",
+          "note": "The makers' balance notes: the Field Scout strengthened against early anti-tank infantry, the Missile Trooper and the Drone Operator named; the Dynasty Guard strengthened to kill anti-tank troopers; Skycranes packed with Drone Operators or Engineers named as a GDF tactic that worked too well.",
+          "supports": ["roles/secondary", "countered_by/0", "combos/0", "combos/2"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Assault comes from the generalist step. His build tooltip, copied on the GDF Barracks page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/GDF_Barracks), says he flies a combat drone at aircraft and vehicles but uses no role label, so step 1 names nothing. His pistol, listed first, is the main weapon and has no game bonus (no damage type does more than full damage in this game), and the tooltip ties his job to the drone, another weapon. The makers' notes call him early anti-tank infantry, which counts only for secondary roles. Anti-armour would be the natural primary (fit_notes)."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Anti-armour enters at step 1 through the makers' anti-tank infantry wording (cited 20 May 2025 notes); anti-air at step 3 through the drone's label for air targets on the Combat Drone page and the tooltip naming air units as what the drone is flown against. The wiki's GDF Arsenal line (https://tempestrising.wiki.gg/wiki/GDF_Arsenal), which describes him as a flexible trooper against vehicles and aircraft who also spots, is carried by no official post found in the makers' Steam news back to 2022, so it does not count."
+        },
+        {
+          "path": "abilities/0",
+          "sources_disagree": true,
+          "note": "The Combat Drone page calls combat drones uncontrollable, while the Drone Operator page (ability box, voice lines and Codex), StrategyWiki and the build tooltip on the GDF Barracks page all have the operator steering his drone. The official texts (tooltip and Codex) settle it for the operator; the Combat Drone page may mean that drones cannot be selected on their own, as for those of the Drone Command Unit and the Drone Turret, but it does not say so."
+        },
+        {
+          "path": "abilities/0/kind",
+          "note": "Deploy by the toggle-or-deploy tie-break, because the operator cannot move at all while he flies the drone, even though the drone itself moves. Deploy-siege-mode and the deploy-anchor trait were considered and left out: the registry's pattern notes fold a soldier who parks to pilot a drone into launch-drones' piloted variant (see abilities/0/patterns), so linking both would count the parking twice."
+        },
+        {
+          "path": "armament/1/range",
+          "note": "Banded short from the micromissiles' listed reach, nearly two thirds of the Field Scout's rifle, measured from the drone. The drone flies on its own and attacks whatever the operator attacks, so its real reach from him is longer: in Remote Control mode a leash a little longer than a rifle shot plus the missiles' own reach. The drone-launcher family's default would be long. The Drone Operator page says the drone outranges basic anti-ground defences, yet the GDF Gatling Turret (https://tempestrising.wiki.gg/wiki/Gatling_Turret) reaches twice as far as the missiles, so that claim likely rests on flying the drone in by hand or on defences that cannot fire at fliers."
+        },
+        {
+          "path": "armament/1/damage",
+          "note": "The Combat Drone infobox types the micromissiles as Rocket, which the damage map makes armour-piercing (step 4); the drone-launcher family does not list that type, so the break is recorded in atypical."
+        },
+        {
+          "path": "armament/1",
+          "sources_disagree": true,
+          "note": "Drone health: the Combat Drone infobox still gives its multiplayer health from before Hotfix Update #8 (https://store.steampowered.com/news/app/1486920/view/532116974486947422, patch 1.6.0+53654), which raised it by a tenth, as the page's own changelog also says. The same hotfix made the operator's pistol hit a third harder, a change to his own damage, not the drone's."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Infantry and structures come from the pistol's own wording on his page (it may hit both aircraft and ground units) beside its anti-tank label; soldiers take only a small share of its Cannon damage. Air is listed because the infobox gives it an Air target line, which in this game reaches every flier (registry note), so the anti-air trait follows."
+        },
+        {
+          "path": "mobility/speed",
+          "sources_disagree": true,
+          "note": "His infobox gives the patch 1.9.0 speed; the cited 2.0.0 notes raise it a little, and speed_raw uses the newer figure. Both put him in the slow band. The 1.9.0 cut and price rise come from the makers' notes of 7 July 2026 (https://store.steampowered.com/news/app/1486920/view/680754149992699178), which call Comms-boosted Drone Operators oppressive and want them punished harder when caught out of position."
+        },
+        {
+          "path": "cost_band",
+          "sources_disagree": true,
+          "note": "StrategyWiki gives a lower, pre-release price; his infobox and the patch 1.9.0 notes give the current one, which the band uses. Both prices are very low."
+        },
+        {
+          "path": "abilities/1",
+          "note": "The perk's rule, that a destroyed Combat Drone is rebuilt automatically after a while, also comes from the Ability page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Ability); no source gives the delay."
+        },
+        {
+          "path": "armament/1/summary",
+          "note": "The doctrine effects rest on the Doctrine page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Doctrine, verified for patch 1.9.0), whose Manufacturing and Ambush Protocols entries both list the Combat Drone, and on the Stealth page (https://tempestrising.wiki.gg/wiki/Stealth), which puts drones under Ambush Protocols among the units hidden while moving. Manufacturing changes numbers and adds the Networked bonus, which the registry keeps in summaries. Ambush Protocols would give named drones a new effect, which the doctrine rule records as a commander-power ability, but the registry's Stealth note keeps that doctrine's wider stealth off, and it hides the drone, not the operator, so no ability is recorded."
+        },
+        {
+          "path": "armour",
+          "note": "Prone and crushing: the Status effect page (https://tempestrising.wiki.gg/wiki/Status_effect) names the Drone Operator among the six soldiers who go prone, and the Unit page (https://tempestrising.wiki.gg/wiki/Unit) lists him as standard infantry, which most vehicles can crush; the two agree."
+        },
+        {
+          "path": "modes/0",
+          "note": "The leash comes from the ability box on his page, which gives it in build squares; by the Unit page's scale that is a little longer than the Field Scout's rifle reach. No source says whether the pistol fires while he is planted or how long the switch takes."
+        },
+        {
+          "path": "combos",
+          "note": "The Riot Van page (https://tempestrising.wiki.gg/wiki/Riot_Van) says riders cannot shoot out but the drones of GDF soldiers such as the Drone Operator stay active above the van, and the Skycrane page (https://tempestrising.wiki.gg/wiki/Skycrane) says a Skycrane controls and replaces the drones of the Drone Operators it carries, even inside a carried Riot Van. The makers' notes of 5 August 2025 (https://store.steampowered.com/news/app/1486920/view/505083956845086898) and 6 October 2025 (https://store.steampowered.com/news/app/1486920/view/514096230384535253) also name Drone Operator harassment from Skycranes. The Comms entry rests on the 7 July 2026 notes named under mobility/speed."
+        },
+        {
+          "path": "countered_by",
+          "note": "The anti-air entries rest on the makers' notes of 5 August 2025 (a little splash for the Peacekeeper so it copes with GDF drones in mirror matches) and 6 October 2025 (Peacekeepers struggling against GDF drones; the Operative's Sensor Interference widened to trouble Drone Operators), both linked under combos, and on the Operative page (https://tempestrising.wiki.gg/wiki/Operative), whose pulse keeps fliers from firing on ground targets for a few seconds."
+        },
+        {
+          "path": "abilities/0/patterns",
+          "note": "launch-drones is linked as the batch brief names it (piloted variant) and as the table in the registry's pattern notes (research/registry-notes/patterns.md) folds piloting a remote drone into it, but a correction at the top of those notes says a remote-piloted drone is the crew model remote, not launch-drones, and the pattern's summary speaks of releasing drones on a key, which he does not do: his drone is always out. Remote is not used for crew because the unit coded is the soldier, organic infantry, which that model excludes (see crew.notes)."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "assault",
+          "wanted": "anti-armour",
+          "note": "The makers call him anti-tank infantry and both his weapons are built for vehicles, but the role steps reach the generalist fallback: his tooltip uses no role label, his main weapon (the pistol, listed first) has no game bonus, and the tooltip ties his job to the drone."
+        },
+        {
+          "path": "roles",
+          "used": "assault, anti-armour, anti-air",
+          "wanted": "scout",
+          "note": "His hand-flown drone scouts over cliffs and rivers and uncovers high ground, but no stock part meets scout's requires (fast speed, long sight, a sensor trait, stealth, a mark or a reveal), so scout is left out; it would rank behind the two roles kept anyway."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J05-TEMPEST-RISING",
+      "atypical": [
+        {
+          "path": "body/plan",
+          "rule": "bodies:humanoid allowed.aim-models auto-target",
+          "note": "The Combat Drone flies on its own and attacks his targets without being aimed, the auto-target case the mount tie-break names for launched drones; the humanoid body lists only mounts a soldier aims himself or that hit all around him."
+        },
+        {
+          "path": "armament/1/family",
+          "rule": "weapon-families:drone-launcher allowed.damage-types armour-piercing",
+          "note": "The infobox types the micromissiles as Rocket, which the registry's damage map makes armour-piercing (damage step 4); the drone-launcher family lists only explosive, kinetic and EMP damage."
+        }
+      ]
+    },
+    {
+      "id": "tempest-rising.gdf.sentinel",
+      "game": "tempest-rising",
+      "faction": "gdf",
+      "name": "Sentinel",
+      "flavour_affinity": ["allied"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "scout",
+        "secondary": ["anti-infantry", "anti-air"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Vehicle Bay",
+        "basis": "Built at the GDF Vehicle Bay with nothing else required: its infobox gives tier 1, the Vehicle Bay lists it among its tier 1 production, and the registry's tier map puts the Vehicle Bay at t1."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 500,
+        "basis": "Its multiplayer price, the same in its infobox and on StrategyWiki, is about half the anchor price of the two main battle tanks and sits exactly on the low threshold; a price on an edge takes the higher band."
+      },
+      "mobility": {
+        "base": "wheels",
+        "handling": "steer",
+        "traits": [],
+        "speed": "very-fast",
+        "speed_raw": 2.73,
+        "notes": "Wheeled, and by its infobox nearly three times as fast as the Field Scout and nearly twice as fast as the Hunter Tank, the GDF's battle tank; its build tooltip calls it a fast scout and StrategyWiki stresses its very high speed. As a light vehicle it runs over nothing, and heavy vehicles can crush it. Handling is the wheels default."
+      },
+      "body": {
+        "plan": "open-mount",
+        "size": "medium",
+        "notes": "A light scout car carrying one minigun; the makers drew its look from a futuristic Hummer concept. No source read says whether the gun sits in a turret or how exposed its crew is, so the gun-truck body plan is a judgement (see uncertain and fit_notes); the size follows the size examples for cars and armoured cars."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 decided: the armour map turns the infobox's Light vehicle type into light. Its health is less than half the Hunter Tank's, a little higher since Hotfix Update #8. Its armour halves rifle, fire and sniper damage and takes a quarter off rockets and explosives; the infobox lists no protection against cannon fire. StrategyWiki notes that it shrugs off anti-infantry fire but cannot stand up to anti-armour attacks."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its infobox sight reaches nearly a third further than the Field Scout's, which keeps it in the medium band; the makers raised it in August 2025 to make the Sentinel a more consistent scout, and StrategyWiki praises its view. It has no Detection perk."
+      },
+      "armament": [
+        {
+          "name": "PG68 Minigun",
+          "slot": "primary",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "low-air", "high-air"],
+          "traits": ["mark", "anti-air"],
+          "summary": "Its default Anti-Personnel Projectiles: a rotary minigun firing Rifle damage, kinetic by the damage map, at a very quick pace and reaching a little past the Field Scout's rifle, at ground targets and at aircraft. It is good at running down basic infantry, while vehicles shrug off most rifle damage. In multiplayer each attack also Marks its main target (in the campaign it does not): a Marked enemy is worth Intel to the GDF when it is killed, and GDF Networked weapons (the Hunter Tank, Peacekeeper, Drone Mauler and Trebuchet) reach further and hit harder against it. Side-wide doctrines change marking: Boosted Comms lengthens the reach of marking weapons by nearly a third, and Virulent Scanners makes Marked enemies fire more slowly and take more damage; the silence EM Interference adds is abilities/1. Hitscan is the family default; no source says how its rounds travel."
+        },
+        {
+          "name": "Scanner Rounds",
+          "slot": "alternate",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure", "low-air", "high-air"],
+          "traits": ["mark", "splash", "anti-air"],
+          "summary": "The minigun's alternate fire: small-bore scanner rounds fired about half as often as the minigun and reaching a little further, at ground and air targets. Each hit Marks every enemy within a short radius of the target, a little more than one build square, and deals a trifle of Omni damage, the game's type that ignores all resistances. The makers cut that damage in patch 1.1.1 because massed Sentinels were using the rounds as area fire against infantry, to make them the utility tool they were meant to be. Omni has no damage type of its own in our list (fit_notes).",
+          "condition": "Only after the Marking Projectiles button; it replaces the minigun's anti-personnel fire until Anti-Personnel Projectiles switches back.",
+          "patterns": ["switch-weapon-mode"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "Its voice lines and the campaign-only crew upgrades imply a crew, but no player sits in it; it fires one weapon at a time (the scanner rounds replace the minigun's fire), so one player drives and shoots."
+      },
+      "abilities": [
+        {
+          "name": "Anti-Personnel Projectiles / Marking Projectiles",
+          "kind": "toggle",
+          "source": "innate",
+          "cooldown": "medium",
+          "summary": "One toggle made of two buttons that swap its ammunition. Marking Projectiles loads the scanner rounds (armament/1): little damage, but every enemy in an area around the hit is Marked. Anti-Personnel Projectiles goes back to the minigun's full damage, which in multiplayer still marks its main target. It can drive in either state. The wiki gives Marking Projectiles a recharge time, in the medium band.",
+          "patterns": ["switch-weapon-mode"]
+        },
+        {
+          "name": "EM Interference (doctrine)",
+          "kind": "passive",
+          "source": "commander-power",
+          "summary": "Not stock. Once the GDF player buys EM Interference, the fifth step of the Comms doctrine tree, every enemy that is Marked, by this car's fire among others, is also silenced while the mark lasts. In this game silence shuts off a unit's active and passive abilities; the pages do not say it stops attacks. The Doctrine page names the Sentinel among the markers this applies to.",
+          "patterns": []
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "The sources show nothing special when it dies, so the default for a crewed vehicle applies."
+      },
+      "strengths": [
+        {
+          "ref": "speed:very-fast",
+          "why": "Very fast for a ground unit: its tooltip calls it a fast scout and StrategyWiki stresses its speed, so it scouts, chases down stragglers and escapes what it cannot fight."
+        },
+        {
+          "ref": "weapon-trait:mark",
+          "why": "Its fire Marks enemies, one at a time with the minigun in multiplayer or a whole cluster with scanner rounds: each Marked kill earns the GDF Intel, and Networked weapons hit Marked enemies harder and from further."
+        },
+        {
+          "ref": "weapon:machine-gun",
+          "why": "Its rapid minigun is good at chasing down and killing basic infantry."
+        },
+        {
+          "ref": "hits:high-air",
+          "why": "Both its weapons fire at aircraft as well as ground targets; StrategyWiki rates it strong against aircraft."
+        },
+        {
+          "ref": "role:scout",
+          "why": "It sees nearly a third further than the Field Scout, and the makers raised its sight to make it a more consistent scout."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:light",
+          "why": "Thin health and light armour: StrategyWiki calls anti-armour attacks its main weakness, and it has less than half the Hunter Tank's health."
+        },
+        {
+          "ref": "damage:kinetic",
+          "why": "Its minigun's Rifle damage barely hurts vehicles, so it is weak against them (StrategyWiki)."
+        },
+        {
+          "ref": "pattern:switch-weapon-mode",
+          "why": "One ammunition at a time: on scanner rounds it does almost no damage, and switching to them has a wait."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-armour",
+          "why": "Rocket and Cannon weapons, the kinds made for vehicles, tear through its thin hull; StrategyWiki names anti-armour attacks as its main weakness."
+        },
+        {
+          "ref": "class:vehicle",
+          "why": "Its rifle-type minigun barely scratches vehicles, so tanks win the head-on fight; StrategyWiki lists vehicles as its weakness."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Its minigun is good at chasing down and killing basic infantry; StrategyWiki rates it strong against infantry."
+        },
+        {
+          "ref": "class:aircraft",
+          "why": "StrategyWiki rates it strong against aircraft, and both its weapons fire at fliers."
+        },
+        {
+          "ref": "role:logistics",
+          "why": "Harvesters: the makers made Dynasty Harvester Wheels easier to kill so that drive-by raids, with units such as Sentinels, slow the Dynasty economy and earn the GDF Intel."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:anti-armour",
+          "why": "Networked tanks such as the Hunter Tank hit Marked targets harder and from further, and kill the vehicles the Sentinel cannot; StrategyWiki says the two cover each other's weaknesses and earn Intel on every kill."
+        },
+        {
+          "ref": "unit:tempest-rising.gdf.hunter-tank",
+          "why": "The same reason: the Hunter Tank is the Networked tank StrategyWiki pairs it with."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "Networked anti-air such as the Peacekeeper reaches Marked aircraft from further and hits them harder, and the Sentinel's weapons can mark fliers."
+        }
+      ],
+      "memorable": "A very fast scout car that can trade its minigun's bite for scanner rounds which tag a whole cluster of enemies, so each kill pays the team Intel and Networked tanks hit them harder from further away.",
+      "as_player": "A cheap, very fast T1 scout car with a minigun that shreds infantry and can fire at aircraft; in multiplayer each burst tags its target. Q swaps to scanner rounds that barely scratch but tag everything around the hit, so Networked teammates such as Hunter Tanks hit harder and from further and each tagged kill earns Intel. Thin armour: anti-tank fire and tanks are deadly, so tag, spot and run.",
+      "sources": [
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Sentinel",
+          "title": "Sentinel, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Verified for patch 1.6.0+53654; no later patch changes it",
+          "note": "Read through the MediaWiki API. Infobox: tier 1, the Light vehicle armour type and resistances, wheeled movement, speed, sight, multiplayer price and the Vehicle Bay; the PG68 Minigun (Rifle type, reach, Ground and Air targets, Marking in multiplayer only) and the Scanner Rounds (Omni type, area, reach, Ground and Air targets, Marking); the Anti-Personnel / Marking Projectiles toggle with its cooldown; the doctrines that touch it, EM Interference among them. Prose: Marked targets give Networked units more reach and damage and yield Intel; the minigun suits chasing down basic infantry; scanner rounds mark the enemies around the target. The Background box copies the game's Codex, official text: a car built for gathering intelligence, whose minigun it calls anti-infantry, with smart rounds that mark. A campaign hint on the page calls the marking rounds its alternate fire mode. The wiki's patch pages from 1.6.0+53840 to 2.0.1+60808 change nothing on it.",
+          "supports": [
+            "class",
+            "nature",
+            "availability",
+            "roles",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "armament/1",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "counters/0",
+            "combos/0",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Vehicle_Bay",
+          "title": "Vehicle Bay, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Verified for patch 1.9.0+58877",
+          "note": "Read through the MediaWiki API. Its tier 1 production list copies the Sentinel's build tooltip, which the registry note names as game text: a fast scout that shoots at aircraft and ground units alike and can switch to Marking rounds, and Marked enemies pay Intel when they die.",
+          "supports": [
+            "roles/primary",
+            "tier",
+            "mobility",
+            "armament/0/can_target",
+            "armament/1/can_target",
+            "abilities/0",
+            "strengths/0",
+            "strengths/3"
+          ]
+        },
+        {
+          "url": "https://strategywiki.org/wiki/Tempest_Rising/GDF_units",
+          "title": "Tempest Rising/GDF units, StrategyWiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Pre-release values (multiplayer demo era)",
+          "note": "Read through the MediaWiki API and cited as the second established site. Its Sentinel entry: a cheap scout car that sees far and drives very fast, Rifle-type attacks, Light vehicle armour, strong against infantry and aircraft and weak against vehicles, resistant to anti-infantry fire but weak to anti-armour attacks with its low health; Marking Projectiles trade damage for Marked targets, and it pairs very well with Hunter Tanks. Its health figure is older than launch (see uncertain).",
+          "supports": [
+            "cost_band",
+            "mobility",
+            "armour",
+            "sensors",
+            "armament/0",
+            "abilities/0",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters/0",
+            "counters/1",
+            "combos/0",
+            "combos/1"
+          ]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/505083956845086898",
+          "title": "Difficulty Selector, EULA Update, Heal/Repair Auras, and Party & Multiplayer QoL, Tempest Rising news on Steam",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "Patch 1.3.0+47868 (5 August 2025)",
+          "note": "The makers widened the Sentinel's and the Havoc's vision so that both scout more reliably, and lengthened the Sentinel's build time to curb early spamming.",
+          "supports": ["roles", "sensors", "strengths/4"]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/532116974486947422",
+          "title": "Hotfix Update #8, Tempest Rising news on Steam",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "Patch 1.6.0+53654 (9 December 2025)",
+          "note": "The makers gave the Sentinel a little more health and made its Scanner Rounds hit a little harder and fire faster, for more early survivability and versatility in GDF anti-infantry work and scouting.",
+          "supports": ["roles/secondary", "armour", "armament/1"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "sensors/sight",
+          "note": "Medium by the ratio: its sight is nearly a third more than the Field Scout's, under the long band's edge, although the makers raised it to make the Sentinel a better scout and StrategyWiki praises its view; the band ignores such words."
+        },
+        {
+          "path": "body/plan",
+          "note": "No source read describes how its minigun is mounted or whether the gunner sits exposed; open-mount is chosen as the gun-truck shape nearest to a Hummer-like scout car with one gun. Hull-turret (kept for tanks) and box-carrier (it has no passenger room) fit worse."
+        },
+        {
+          "path": "armament/1/family",
+          "note": "Coded with the minigun's family because a campaign hint on its page calls the marking rounds the Sentinel's alternate fire mode and both buttons speak of swapping projectiles; no source says outright that the same gun fires them."
+        },
+        {
+          "path": "armament/1/damage",
+          "note": "Omni, which ignores all resistances, is not in the damage map, so step 5 gives the machine-gun default, kinetic; the explosive exception for area hits needs a family that allows explosive damage. See fit_notes."
+        },
+        {
+          "path": "armament/1/traits",
+          "note": "Splash rests on the infobox's area figure and on the makers' notes of 20 May 2025 (https://store.steampowered.com/news/app/1486920/view/536602273129694258), which say massed marking rounds dealt strong area damage to infantry before those notes cut their damage, slowed them and made them Omni."
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "The mark trait holds in multiplayer only: the Sentinel page and the Status effect page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Status_effect) say the campaign minigun does not mark. The registry codes multiplayer values."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Its weapon box labels the minigun anti-infantry and anti-air; ground vehicles and structures come from the build tooltip's ground targets and the infobox's Ground line, and StrategyWiki shows it weak, not powerless, against vehicles."
+        },
+        {
+          "path": "armament/0",
+          "note": "The doctrine effects come from the Doctrine page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Doctrine). Boosted Comms and Virulent Scanners only change numbers for the whole side and stay in this summary; EM Interference, which names the Sentinel among the markers whose targets it silences, is recorded as abilities/1."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Anti-infantry enters at step 1 if the cited Hotfix Update #8 wording (a little more versatility in the GDF's anti-infantry and scouting work) is read as naming its job; otherwise at step 3 through the Codex's anti-infantry minigun. Either way it ranks ahead of anti-air (step 3, the weapon box's anti-air label) by the order of the roles list. Raider (step 4: very fast with light armour) comes third and is dropped."
+        },
+        {
+          "path": "armour",
+          "sources_disagree": true,
+          "note": "StrategyWiki gives its pre-launch health; the infobox gives the value Hotfix Update #8 set. The class is light either way."
+        },
+        {
+          "path": "abilities/0/cooldown",
+          "note": "The cooldown comes from the wiki's ability box for Marking Projectiles; no official text gives it."
+        },
+        {
+          "path": "mobility",
+          "note": "Crushing follows the Crushing page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Crushing): light vehicles, the Sentinel among them, crush nothing, and heavy vehicles crush light ones."
+        },
+        {
+          "path": "combos/0",
+          "note": "The Hunter Tank's Networked figures come from its page on the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Hunter_Tank): against Marked targets it reaches about two fifths further and hits about half again as hard."
+        },
+        {
+          "path": "combos/2",
+          "note": "Reasoned: the Peacekeeper page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Peacekeeper) gives its Networked missiles more reach and damage against Marked aircraft, and the Sentinel's weapons can mark fliers; no source names the pairing."
+        },
+        {
+          "path": "counters/2",
+          "note": "Rests on the makers' notes of 6 October 2025 (https://store.steampowered.com/news/app/1486920/view/514096230384535253), which cut the Harvester Wheel's health so that drive-by harassment pays, with more Intel for the GDF, and name Sentinels and Field Scouts among the units for it."
+        },
+        {
+          "path": "abilities/1",
+          "note": "Recorded under the registry's doctrine rule (a doctrine that gives named unit types a new effect is recorded on each of them, source commander-power), because the Doctrine page lists the Sentinel under it. But the silence belongs to the Marked status itself, whoever applies it: the Status effect page of the Tempest Rising Wiki (https://tempestrising.wiki.gg/wiki/Status_effect) says the doctrine makes Marked units silenced too, and defines silence as losing active and passive abilities. The merge pass may judge it a side-wide change and drop it."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "armament/1/damage",
+          "used": "kinetic",
+          "wanted": "a damage type that ignores armour (the game's Omni)",
+          "note": "The scanner rounds deal Omni damage, which ignores every resistance; no damage type in the list does that, so the family default stands in."
+        },
+        {
+          "path": "body/plan",
+          "used": "open-mount",
+          "wanted": "a scout car or armoured car body with one gun mount",
+          "note": "A light scout car with one gun and no passenger room, whose gun mount and crew exposure no source describes, fits neither the tank turret nor the troop carrier, and only loosely the exposed gun truck."
+        },
+        {
+          "path": "abilities/1/patterns",
+          "used": "none",
+          "wanted": "a pattern for shutting off a target's abilities (here through a mark)",
+          "note": "No registered pattern stops an enemy from using its abilities while leaving it free to move and fire; the weapon trait silence also stops firing, and disable-machine covers only machines hit by electric or EMP effects."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J05-TEMPEST-RISING"
+    }
+  ]
+}

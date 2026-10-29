@@ -186,6 +186,15 @@ describe('copy-check --also (notes that cite no page)', () => {
     const t = noteTexts(path.join(dir, 'a/c.json'))
     assert.deepEqual(t.texts, [])
   })
+
+  it('drops web addresses from the strings of a .json note, as from a .md note', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'unit-forge-notes-'))
+    tmpDirs.push(dir)
+    writeFiles(dir, { 'n.json': { notes: 'Scan: https://static.example.net/cnc_gamepedia_en/images/b/be/Manual.pdf/revision/latest, read [it](https://x.example/a_(b)) first.', pages_read: ['https://x.example/wiki/Page'] } })
+    const t = noteTexts(path.join(dir, 'n.json'))
+    assert.deepEqual(t.texts.map(x => x.ws.join(' ')), ['scan read it first', ''])
+    assert.deepEqual(t.urls, ['https://static.example.net/cnc_gamepedia_en/images/b/be/Manual.pdf/revision/latest', 'https://x.example/a_(b)', 'https://x.example/wiki/Page'])
+  })
 })
 
 // A local server: `handle` decides what each request gets. Returns its base URL and a request count.

@@ -1362,7 +1362,7 @@
         "very-high": 1500
       },
       "speed_reference": "Ranger (USA basic rifle infantry, land speed 20 in the wiki's game data; the GLA Rebel is also 20 and the Chinese Red Guard 25)",
-      "sight_reference": "Ranger: sight 100-400 in the wiki infobox. Most units list two figures this way; read them as Red Alert 3's vision and shroud-clearing pair and use the second (400). Compare a unit that lists one figure with 100",
+      "sight_reference": "Ranger: sight 100-400 in the wiki infobox, which are the VisionRange (100) and ShroudClearingRange (400) of its object in the unedited 1.04 files. The engine clears the fog of war out to ShroudClearingRange; VisionRange clears no fog (it is how far the unit targets and, for a detector with no detection range of its own, how far it reveals stealthed units). So use 400, and the second figure of every unit that lists two. Where the infobox lists one figure, read ShroudClearingRange in the unit's 1.04 Object file; an object without one clears the fog to its VisionRange",
       "range_reference": "Ranger's M16 rifle: range 100 (its flash-bang grenades reach 175, but only after an upgrade)",
       "damage_map": {
         "SMALL_ARMS": "kinetic",
@@ -1433,6 +1433,23 @@
           "accessed": "2026-10-18",
           "supports": ["speed_reference", "sight_reference", "range_reference"],
           "note": "Infobox: land speed 20 (10 when badly wounded), costs $225. Sight 100-400; M16 range 100, flash-bangs 175."
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AmericaInfantry.ini",
+          "title": "AmericaInfantry.ini, unedited Zero Hour 1.04 game files, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-24",
+          "version": "Zero Hour 1.04",
+          "supports": ["speed_reference", "sight_reference", "range_reference"],
+          "note": "The Ranger's object: locomotor BasicHumanLocomotor, VisionRange 100, ShroudClearingRange 400, BuildCost 225, main weapon RangerAdvancedCombatRifle. In the same folder, Locomotor.ini gives that locomotor Speed 20 and SpeedDamaged 10 (the Rebel uses it too; the Red Guard's own locomotor is 25), and Weapon.ini gives the rifle AttackRange 100 and the flash-bang weapon 175."
+        },
+        {
+          "url": "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Object.cpp",
+          "title": "Object.cpp, Command & Conquer: Generals - Zero Hour source code, Electronic Arts on GitHub",
+          "kind": "official",
+          "accessed": "2026-10-24",
+          "supports": ["speed_reference", "sight_reference"],
+          "note": "A new object whose ShroudClearingRange is unset takes its VisionRange instead. The look routine lifts the fog of war for the owner and its allies out to the shroud-clearing figure; the vision figure is how far the object counts as a target or a threat, not a fog figure. Riders in transports and tunnels do not look. Other files of the same release: Source/GameLogic/Object/Update/StealthDetectorUpdate.cpp (a detector with no DetectionRange of its own detects out to its VisionRange); Source/Common/INI/INI.cpp with Include/Common/GameCommon.h (a Speed in the INI files is a distance per second, turned into a step per logic frame at 30 frames a second); Source/GameLogic/Object/Locomotor.cpp (a walking soldier speeds up to its Speed, slowing only to turn or stop, and moves at SpeedDamaged once ActiveBody.cpp finds its health at or below GameData.ini's UnitReallyDamagedThreshold, 0.35); Source/GameLogic/Object/Update/PhysicsUpdate.cpp (no forward friction acts while a unit drives itself, so the listed Speed is its real top speed)."
         }
       ]
     },
@@ -1445,7 +1462,7 @@
       "franchise": "Tempest Rising",
       "control": "commanded",
       "research_bucket": "r3",
-      "version_researched": "Patch 2.0.1+60808 (7 October 2026), the first version with the Veti in skirmish and multiplayer; multiplayer values, not campaign ones, as described by the Tempest Rising Wiki and the official patch notes in October 2026",
+      "version_researched": "Patch 2.0.1+60808 (7 October 2026), a bug-fix hotfix on patch 2.0.0+60710 (29 September 2026), the first full release with the Veti in skirmish and multiplayer; multiplayer values, not campaign ones, as described by the Tempest Rising Wiki and the official patch notes in October 2026",
       "expansions": [
         {
           "id": "tempest-rising-vetis-wrath",
@@ -1611,6 +1628,11 @@
           "gate": "Corral",
           "band": "t3",
           "faction": "veti"
+        },
+        {
+          "gate": "Corral with Initial, Elevated or Transcendent Awakening",
+          "band": "t3",
+          "faction": "veti"
         }
       ],
       "cost_thresholds": {
@@ -1770,7 +1792,7 @@
       },
       "speed_reference": "Rifle squads (Polanian Riflemen, Saxon Stormtroopers, Rusviet Vanguards, Usonian Volunteers; movement speed 5 in the wiki's stat boxes)",
       "sight_reference": "None: the wiki's stat boxes give no sight figures, so every sight band is a medium proposal",
-      "range_reference": "Polanian Riflemen's rifle: maximum range 26 in the wiki's stat box. The other rifle squads reach less (Usonian Volunteers 23, Saxon Stormtroopers 20, Rusviet Vanguards 16), but every weapon is compared with the 26",
+      "range_reference": "Usonian Volunteers' bolt rifle: maximum range 23 (metres) in the wiki's stat box, entered in August 2021; no later post changes that rifle. The Polanian Riflemen's 26 is not used: it has stood since 2019, and patch 0.11.5 (August 2020) lengthened their rifle without giving the new reach. The Saxon Stormtroopers' 20 and the Rusviet Vanguards' 16 date from August 2019. Every weapon is compared with the 23",
       "armour_map": {
         "Unarmored": "unarmoured",
         "Light": "medium",
@@ -1786,7 +1808,7 @@
           "kind": "wiki",
           "accessed": "2026-10-18",
           "supports": ["tier_map"],
-          "note": "Infantry come from the Barracks and mechs from the Workshop; the stronger ones need the Advanced Barracks or Advanced Workshop upgrade. In skirmish and multiplayer each player picks one hero, built at the Headquarters. Weapon systems use the same designs for every faction."
+          "note": "Infantry come from the Barracks and mechs from the Workshop; the stronger ones need the Advanced Barracks or Advanced Workshop upgrade. Weapon systems use the same designs for every faction. The page has heroes produced at the Headquarters, which is where the reserves are called from: in skirmish and multiplayer each player picks one hero before the match and calls it in with a reserve (DevBlog #27), so the Headquarters is never a hero's gate."
         },
         {
           "url": "https://kingart-games.com/article/90-iron-harvest-devblog-30-september-2020",
@@ -1810,7 +1832,7 @@
           "kind": "official",
           "accessed": "2026-10-18",
           "supports": ["tier_map"],
-          "note": "Reserve rework: Reserve II used to need an advanced building plus a basic one; from this patch either a single advanced building or a pair of basic buildings will do. No source gives the condition for Reserve I. A unit that can also be built normally takes its production gate, so the Reserve gates are only for units that cannot be built any other way; Reserve II stays t2 for those by judgement, even though two basic buildings also open it."
+          "note": "Reserve rework: Reserve II used to need an advanced building plus a basic one; from this patch either a single advanced building or a pair of basic buildings will do. Reserve I's condition, a Barracks or a Workshop, comes from DevBlog #27, and no later post changes it. A unit that can also be built normally takes its production gate, so the Reserve gates are only for units that cannot be built any other way, which in skirmish and multiplayer means the heroes. Reserve II stays t2 for them by judgement, since KING Art calls the heroes that need it tier 2 (Change Log #04, patch 0.11.5), even though two basic buildings also open it."
         },
         {
           "url": "https://iron-harvest.fandom.com/wiki/Saxon_Stormtrooper",
@@ -1821,12 +1843,20 @@
           "note": "Infobox: movement speed 5, unarmoured. The Polanian Rifleman, Rusviet Vanguards and Usonian Volunteer pages give the same speed. The armour_map keys are the four unit armour classes on the wiki's Armor page. It gives no sight figure; its submachine gun reaches 20."
         },
         {
-          "url": "https://iron-harvest.fandom.com/wiki/Polanian_Rifleman",
-          "title": "Polanian Rifleman, Iron Harvest Wiki",
+          "url": "https://iron-harvest.fandom.com/wiki/Usonian_Volunteer",
+          "title": "Usonian Volunteer, Iron Harvest Wiki",
           "kind": "wiki",
-          "accessed": "2026-10-19",
-          "supports": ["range_reference"],
-          "note": "Infobox: movement speed 5; rifle maximum range 26. The Usonian Volunteer and Rusviet Vanguards pages give 23 (bolt rifle) and 16 (shotgun)."
+          "accessed": "2026-10-25",
+          "supports": ["range_reference", "speed_reference"],
+          "note": "Infobox, entered in August 2021: movement speed 5 (metres per second); bolt rifle maximum range 23 (metres). It replaces the Polanian Rifleman page as the range source: that page's 26 has stood since 2019, and patch 0.11.5 (August 2020) lengthened the Polanian rifle without a figure; its price (200 iron) and its Headquarters are out of date too (Change Log #17)."
+        },
+        {
+          "url": "https://kingart-games.com/article/81-iron-harvest-devblog-27-july-2020",
+          "title": "Iron Harvest DevBlog #27 - July 2020, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-25",
+          "supports": ["tier_map"],
+          "note": "Brings in the reserves and the hero pick for skirmish and multiplayer. Reserves are called in from the Headquarters: the first once the player has a Barracks or a Workshop, the second after one of them is upgraded (changed later; see DevBlog #35). The hero, picked with the faction, takes the field through a reserve."
         }
       ]
     },
@@ -1838,7 +1868,7 @@
       "developer": "Relic Entertainment",
       "franchise": "Company of Heroes",
       "control": "commanded",
-      "research_bucket": "r4",
+      "research_bucket": "later",
       "version_researched": "Version 2.700 (the 2014 Steam release, whose balance is that of patch 2.602 of July 2011) with Tales of Valor and Opposing Fronts, as described by the Company of Heroes Wiki in October 2026; the Definitive Edition announced for early 2027 is not covered",
       "expansions": [
         {
@@ -2060,7 +2090,7 @@
       "developer": "Relic Entertainment",
       "franchise": "Company of Heroes",
       "control": "commanded",
-      "research_bucket": "r4",
+      "research_bucket": "later",
       "version_researched": "The last official balance patch (4.0.0.24250 of 9 September 2021, restored by the June 2022 hotfixes) with The Western Front Armies and The British Forces, as described by the Company of Heroes Wiki in October 2026; many of the wiki's prices predate that patch, so check each number against its patch",
       "expansions": [
         {
@@ -2293,7 +2323,7 @@
       "developer": "Relic Entertainment",
       "franchise": "Company of Heroes",
       "control": "commanded",
-      "research_bucket": "r4",
+      "research_bucket": "later",
       "version_researched": "Patch 2.5.6 (16 September 2026) with every battlegroup DLC up to Dare & Destroy (the Hammer & Shield Expansion Pack of December 2023 was delisted in March 2026, and its two battlegroups have been sold since April 2026 as the Hammer & Shield Battlegroup DLC), as coh3stats.com and the official patch notes describe it in October 2026; the announced 3.0 update and the standalone Final Stand mode are not covered",
       "expansions": [
         {
@@ -2509,7 +2539,7 @@
       "developer": "Massive Entertainment",
       "franchise": "World in Conflict",
       "control": "commanded",
-      "research_bucket": "r4",
+      "research_bucket": "later",
       "version_researched": "World in Conflict: Complete Edition with Soviet Assault, last official patch 1.011 (June 2009), as described by WICapedia in October 2026",
       "expansions": [
         {
@@ -2590,7 +2620,7 @@
       "developer": "Eugen Systems",
       "franchise": "Wargame",
       "control": "commanded",
-      "research_bucket": "r4",
+      "research_bucket": "later",
       "version_researched": "Wargame: Red Dragon (2014) in its final patched state, as described by the Wargame Wiki in October 2026; European Escalation (2012) and AirLand Battle (2013) values only where a unit differs and the note says so",
       "factions": [
         {
@@ -2727,7 +2757,7 @@
       "developer": "Steel Balalaika",
       "franchise": "Broken Arrow",
       "control": "commanded",
-      "research_bucket": "r4",
+      "research_bucket": "later",
       "version_researched": "Version 1.2.0.3 (14 September 2026) with the Baltic Battalion and Russian Guard specialisations, as the BattleGroup and Born2Battle unit lists show it in October 2026; the 1.2.1 open beta is not covered",
       "expansions": [
         {
@@ -2819,7 +2849,7 @@
       "developer": "Gas Powered Games",
       "franchise": "Supreme Commander",
       "control": "commanded",
-      "research_bucket": "r5",
+      "research_bucket": "later",
       "version_researched": "Forged Alliance patch 1.5.3599, the version recorded in the Supreme Commander Wiki's unit data (its SupComVersion field), as described there in October 2026. Forged Alliance Forever balance changes are not used unless a unit's notes say so.",
       "expansions": [
         {
@@ -2931,7 +2961,7 @@
       "developer": "Uber Entertainment (Planetary Annihilation Inc. since August 2018)",
       "franchise": "Planetary Annihilation",
       "control": "commanded",
-      "research_bucket": "r5",
+      "research_bucket": "r4",
       "version_researched": "The live TITANS build as listed by the PA Lobby units database (version 'TITANS') in October 2026; the last numbered build archived there is 124632. Base-game units only: the Legion Expansion community mod is not used.",
       "expansions": [
         {
@@ -3054,8 +3084,8 @@
       "developer": "Blizzard Entertainment",
       "franchise": "StarCraft",
       "control": "commanded",
-      "research_bucket": "r5",
-      "version_researched": "Legacy of the Void multiplayer at patch 5.0.17 (7 October 2026), plus the campaigns of Wings of Liberty and both its expansions for campaign-only units, as described by Liquipedia, the StarCraft Wiki and Blizzard's patch notes in October 2026",
+      "research_bucket": "r4",
+      "version_researched": "Legacy of the Void at patch 5.0.17 (7 October 2026): its multiplayer units (the base game, Archon mode included, with no custom or modded content), plus units that only its campaign or its co-op missions (Allied Commanders) have, across all three races, as described by Liquipedia, the StarCraft Wiki and Blizzard's patch notes in October 2026. Units that only the Wings of Liberty or Heart of the Swarm campaigns have are not used (plan change of 24 October 2026)",
       "expansions": [
         {
           "id": "sc2-heart-of-the-swarm",
@@ -3293,7 +3323,7 @@
       "developer": "Creative Assembly and 343 Industries",
       "franchise": "Halo",
       "control": "commanded",
-      "research_bucket": "r5",
+      "research_bucket": "r4",
       "version_researched": "The final balance update of 13 August 2020 (Season 15; 343 Industries announced in February 2021 that no further balance patches would follow), standard skirmish and multiplayer values (not Blitz), as given by Halopedia in October 2026. Tech 1 is mapped t1 on the assumption that the UNSC, like the Banished, starts a match with HQ tech 1; no source found says so for the UNSC, and if it starts at tech 0, its tech 1 units are t2",
       "expansions": [
         {
@@ -3402,7 +3432,7 @@
       "developer": "Relic Entertainment (Soulstorm by Iron Lore Entertainment)",
       "franchise": "Warhammer 40,000",
       "control": "commanded",
-      "research_bucket": "r5",
+      "research_bucket": "later",
       "version_researched": "Soulstorm patch 1.2.0 (1 November 2008), with all nine races, as described by the Dawn of War Wiki in October 2026. The 2025 Definitive Edition and its updates changed some values; use those only where a source ties a value to them.",
       "expansions": [
         {
@@ -3550,7 +3580,7 @@
       "developer": "Relic Entertainment",
       "franchise": "Warhammer 40,000",
       "control": "commanded",
-      "research_bucket": "r5",
+      "research_bucket": "later",
       "version_researched": "Retribution patch 3.19.1 (16 February 2012, the last version the wiki lists), multiplayer values as given by the Dawn of War Wiki's Retribution pages in October 2026 (the pages state versions 3.17.1 to 3.19.1). The Elite community mod is not used.",
       "expansions": [
         {
@@ -3723,7 +3753,7 @@
       "developer": "DICE (Battlefield Studios for Battlefield 6)",
       "franchise": "Battlefield",
       "control": "piloted",
-      "research_bucket": "r6",
+      "research_bucket": "later",
       "version_researched": "Vehicle archetypes as each title's final patch has them, led by Battlefield 4 and Battlefield 3 (newest first; the fullest modern vehicle rosters), with Battlefield 1942, 2142, 1, V, 2042 and 6 for archetypes they add; as described by the Battlefield Wiki in October 2026",
       "factions": [
         {
@@ -3821,7 +3851,7 @@
       "developer": "Sony Online Entertainment (Daybreak Game Company from 2015)",
       "franchise": "PlanetSide",
       "control": "piloted",
-      "research_bucket": "r6",
+      "research_bucket": "later",
       "version_researched": "The live PC game in October 2026, as the PlanetSide 2 Wiki describes it (vehicle costs from its Resources page; resist tables current to the 29 March 2023 update)",
       "factions": [
         {
@@ -3944,7 +3974,7 @@
       "developer": "Siege Camp",
       "franchise": "Foxhole",
       "control": "piloted",
-      "research_bucket": "r6",
+      "research_bucket": "later",
       "version_researched": "Update 67 (1 October 2026), as the official Foxhole Wiki (foxhole.wiki.gg) describes it in October 2026; the order of the tech tree changes from war to war",
       "factions": [
         {
@@ -4083,7 +4113,7 @@
       "developer": "BULKHEAD (published by Team17)",
       "franchise": "WARDOGS",
       "control": "piloted",
-      "research_bucket": "r6",
+      "research_bucket": "later",
       "version_researched": "Early Access Season 2 (update 0.2.0, 15 October 2026). Bulkhead publishes no vehicle prices: prices are the community-recorded Season 2 vendor prices, and they change between seasons",
       "factions": [
         {
@@ -4169,7 +4199,7 @@
       "developer": "Embark Studios",
       "franchise": "ARC Raiders",
       "control": "piloted",
-      "research_bucket": "r6",
+      "research_bucket": "later",
       "version_researched": "Update 2.0 'Frozen Trail' (8 October 2026) with hotfix 2.1.1, as the ARC Raiders Wiki (arcraiders.wiki) describes it in October 2026",
       "factions": [
         {
@@ -4263,7 +4293,7 @@
       "developer": "FASA and Catalyst Game Labs (tabletop); Piranha Games (MechWarrior Online, MechWarrior 5) and Harebrained Schemes (BattleTech, 2018), among others",
       "franchise": "BattleTech",
       "control": "both",
-      "research_bucket": "r6",
+      "research_bucket": "r4",
       "version_researched": "Standard 'Mech designs as the BattleTechWiki (Sarna) describes them from the tabletop Technical Readouts, with MechWarrior Online and MechWarrior 5: Clans (2024) for how they play when piloted; archetypes by weight class, October 2026",
       "factions": [
         {

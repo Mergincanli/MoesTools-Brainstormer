@@ -1,0 +1,768 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "iron-harvest",
+  "units": [
+    {
+      "id": "iron-harvest.usonia.william-mason",
+      "game": "iron-harvest",
+      "introduced_in": "iron-harvest-operation-eagle",
+      "faction": "usonia",
+      "name": "William Mason",
+      "flavour_affinity": ["allied"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "unique",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["anti-infantry", "area-denial"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Reserve II",
+        "basis": "Heroes reach the field only through a reserve called in at the Headquarters (DevBlog #27, registry note), and his infobox names only the Usonian HQ, where reserves are called and fallen heroes come back. No page read says which reserve holds him, so the band is judged from the evidence: his price and population sit with the mech heroes, among them Prince Wilhelm, whom Change Log #04 calls a tier 2 reserve hero, and well above Anna, who enters with the first reserve (DevBlog #40); and since DevBlog #35 the exosuit squads may be picked only for the second reserve. Reserve II is t2 in the tier map, by the registry's judgement, although two basic buildings also open it."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 810,
+        "basis": "The infobox price, unchanged since the faction came out in May 2021, with no change in any later post read up to DevBlog #47. Counted as iron plus three times the oil, it lands just above the medium threshold, a little under what the anchor line mechs cost and close to the mech heroes' prices rather than the cheap infantry heroes'. Population is a cap, not a price, so it is left out."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": ["transform"],
+        "speed": "very-slow",
+        "speed_raw": 0.54,
+        "notes": "In the suit he walks at a little over half the pace of the rifle squads, the game's speed reference, about as fast as the line mechs; the wiki says he is fairly slow and hard pressed to keep up with quicker infantry. Out of the suit he moves at exactly the rifle squads' pace (see modes). Handling stays strafe, the on-foot default. The transform trait stands for climbing out of the suit and back in (abilities/0, modes/0)."
+      },
+      "body": {
+        "plan": "power-suit",
+        "size": "small",
+        "notes": "One officer inside a hulking powered exosuit: hydraulic pistons, a massive chest plate and pauldrons, a rocket booster on the back and a big burst-fire gun built into the right arm. Power suit by the body tie-break, since the sources call it an exosuit and the wiki likens it to the power armour of Warhammer 40,000's Space Marines. Small as one soldier wearing a power suit, which is how the wiki frames him (an infantry hero in an exo-suit), although the suit is far bulkier than a rifleman (see uncertain). When he climbs out, the empty suit stays on the field as a turret (abilities/0), and he becomes an ordinary soldier (modes/0)."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["downed-revive"],
+        "notes": "Step 1 decided: the infobox gives the game's Medium class, which the armour map reads as heavy, and the registry note steps him down to medium in his suit, as it does the Eisenhans, since our heavy class holds no suits; the soldier rule keeps a class that step 1 gives. The game gives most mechs that class: light weapons barely scratch it, while field cannons and anti-mech weapons hurt it (Armor page), and the wiki calls him the best-armoured infantry hero. No source gives him a weak rear, so he is not directional. Downed-revive follows the registry's rule for a hero coded as infantry, and it differs from the model in three ways: in the suit he never goes down, because he climbs out when the suit fails (on_death); once on foot he falls unconscious at no health and is out of play, so no enemy can finish him; and no source shows him crawling. Friendly infantry or a hero on foot, an ally's included, revive him where he lies at no cost (DevBlog #35), or the Headquarters brings him back. Veterancy adds about a third to his health and then half; healing at the base is game-wide."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "No source gives sight figures for Iron Harvest units (the registry's sight reference), so the band is the medium proposal. No source gives him radar, a detector or stealth."
+      },
+      "armament": [
+        {
+          "name": "Flak Cannon",
+          "slot": "primary",
+          "family": "autocannon",
+          "damage": "explosive",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["splash"],
+          "summary": "The suit's right arm carries a gun the wiki thinks belongs on a heavier vehicle. Each attack is a burst of three shells, which the wiki calls armour-piercing, and every shell also hurts whatever stands close to where it lands. By the infobox it does the same harm to unarmoured targets and to the game's Light and Medium classes, about a third less to Heavy armour and a third as much to buildings, the splash doing half of that. It reaches about as far as the reference rifle, which the wiki still counts as short for him. The infobox calls it a Flak Cannon, and, by the wiki's trivia, the game's files name it both flak cannon and autocannon, but no source says it shoots at aircraft. Once he climbs out, the empty suit keeps firing it on its own as a turret (abilities/0)."
+        },
+        {
+          "name": "Revolver (Dismounted)",
+          "slot": "alternate",
+          "family": "small-arms",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "condition": "Only while he is out of the exosuit (the dismounted mode): after Deploy Exosuit, or after Exit Strategy has taken him out of a failing suit.",
+          "summary": "A big revolver that fires single shots slowly. By the infobox it is meant for soldiers: the game's Light class takes two fifths of what unarmoured targets take, Medium armour and buildings about a quarter and Heavy armour an eighth. It reaches a little less far than the reference rifle. It is his own weapon while he is on foot; the suit's cannon stays with the empty suit.",
+          "patterns": ["transform"],
+          "mode": "dismounted"
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "A single hero: one player is William, in the suit or out of it. The empty suit is no seat of its own: it fights by itself as a turret and moves only when he orders it to jump to him (abilities/1). The wiki's opening line says he can control the suit remotely, but no source has him steer it while he stands parked, so the crew is not remote. No passenger seats."
+      },
+      "abilities": [
+        {
+          "name": "Deploy Exosuit",
+          "kind": "toggle",
+          "source": "innate",
+          "summary": "He climbs out and leaves the exosuit standing as a turret: it holds its position and goes on shooting enemies by itself, drawing fire and covering him, while he runs off on foot with his revolver (modes/0, armament/1). The wiki compares this to Anna Kos leaving her bear to tie up the enemy, and says it lets him fight in two spots at the same time. Getting out and back in leaves him exposed for a moment (wiki). No source read says how he climbs back in; the wiki has him call the suit back to his side first (abilities/1). No source gives a cooldown.",
+          "patterns": ["transform", "deploy-turret"]
+        },
+        {
+          "name": "Relocate",
+          "kind": "active",
+          "cooldown": "long",
+          "source": "innate",
+          "summary": "Sends the empty suit on a rocket jump to a spot he picks close to himself, so that once he has slipped away he can get his armour back, provided the suit still stands. KING Art's patch notes call it Turret Relocate and in July 2021 stretched its wait to most of a minute (DevBlog #40). Linked to transform as the way from the pilot form back to the suited one.",
+          "patterns": ["transform"]
+        },
+        {
+          "name": "Requisition",
+          "kind": "active",
+          "cooldown": "long",
+          "source": "innate",
+          "summary": "When his suit has been destroyed, he orders a brand-new one, which comes crashing down from above at a spot he picks, wherever he is (wiki). KING Art's patch notes call it Turret Requisition and in July 2021 stretched its wait to well over a minute and a half (DevBlog #40). No source says whether the landing warns enemies or hurts what is below it.",
+          "patterns": ["drop-in-from-above"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "dismounted",
+          "name": "Dismounted",
+          "via": "transform",
+          "body": {
+            "plan": "humanoid",
+            "size": "small"
+          },
+          "mobility": {
+            "base": "foot",
+            "handling": "strafe",
+            "speed": "medium"
+          },
+          "armour": {
+            "class": "unarmoured",
+            "models": ["downed-revive"]
+          },
+          "summary": "Out of the suit he is a plain soldier: a little over half the suit's health, no armour, and the rifle squads' pace, almost twice his speed in the suit. His weapon is the revolver (armament/1), while the empty suit, if it still stands, fights on by itself as a turret. He is in this form after Deploy Exosuit, or after Exit Strategy has pulled him out of a failing suit (on_death). The wiki warns that enough fire cuts him down quickly like this."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["pilot-eject"],
+        "basis": "in-game",
+        "notes": "Exit Strategy, a passive on his page: when the suit would be knocked out, he gets out by himself and carries on on foot with his revolver (modes/0), and once its wait is over he can order a new suit with Requisition (abilities/2) and climb in again. The wiki's first wording, in June 2021, had him leave the suit at low health; the current one has him leave when he would otherwise be incapacitated. Destroyed exosuits leave no wreck (Recycling Wrecks page). On foot he falls unconscious instead of dying and can be revived (armour.notes)."
+      },
+      "strengths": [
+        {
+          "ref": "armour-class:medium",
+          "why": "The wiki rates him the most heavily armoured infantry hero: in the suit he shrugs off bullets and can take the fire that would kill the soldiers around him."
+        },
+        {
+          "ref": "weapon:autocannon",
+          "why": "His three-shell bursts, each with splash, hit soldiers and the game's Light-armoured units equally hard, which is why the wiki rates his firepower highly against soldiers and lightly armoured units."
+        },
+        {
+          "ref": "pattern:deploy-turret",
+          "why": "He can fight in two spots at the same time: the empty suit holds its ground as a turret and keeps shooting while he flees or slips off elsewhere on foot (wiki)."
+        },
+        {
+          "ref": "pattern:drop-in-from-above",
+          "why": "Losing the suit is not the end: wherever he is, he can have a new one crash down beside him after a long wait (wiki; DevBlog #40)."
+        },
+        {
+          "ref": "pattern:transform",
+          "why": "He trades armour for speed at will: on foot he moves almost twice as fast and can call the suit back to him once he is safe (wiki)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "speed:very-slow",
+          "why": "In the suit he is fairly slow, falls behind quicker infantry and has trouble closing in on enemies (wiki)."
+        },
+        {
+          "ref": "range:medium",
+          "why": "For a heavy gun his cannon reaches only about as far as a rifle, which the wiki counts against him, so he must plod slowly into enemy fire to use it."
+        },
+        {
+          "ref": "pattern:transform",
+          "why": "Out of the suit he has no armour and much less health and is soon gunned down under enough fire, and climbing in or out leaves him exposed for a moment (wiki)."
+        },
+        {
+          "ref": "weapon:autocannon",
+          "why": "For all the splash of its shells, the wiki says he copes badly with crowds and needs a fair amount of support."
+        },
+        {
+          "ref": "availability:unique",
+          "why": "One hero per player, picked before the match (Unit page), and called in only through a reserve."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:infantry",
+          "why": "Crowds of soldiers: the wiki says he struggles against crowds and that, once out of the suit, enough fire guns him down; a small group loses to him (see counters)."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "His suit has the game's Medium armour, which field cannons and anti-mech weapons hurt (Armor page), and field cannons pierce even heavy mech armour from long range (Unit page), well beyond his gun's reach."
+        },
+        {
+          "ref": "range:>=long",
+          "why": "His gun reaches only about as far as a rifle and he is slow in the suit (wiki), so long-range weapons can hit him while he struggles to close the gap."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Small groups of soldiers: his shell bursts hurt them, while their bullets barely scratch his suit (wiki)."
+        },
+        {
+          "ref": "armour-class:medium",
+          "why": "Light mechs and exosuits, the game's Light armour class, which our armour map makes medium: his gun hits them as hard as soldiers, and the wiki says he duels the anti-infantry mechs fairly easily."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:infantry",
+          "why": "The wiki says he needs support: he soaks up the fire that would kill friendly infantry while they slip round behind him and push forward."
+        },
+        {
+          "ref": "role:support",
+          "why": "Ward exosuits repair mechs and other exosuits in the field, and medics and engineers heal exosuits, so a repair escort keeps his armoured suit in the fight."
+        }
+      ],
+      "memorable": "A Usonian captain in a hulking exosuit who can step out, leave the suit fighting as a turret, rocket-jump it back to his side, and have a new one dropped from the sky when it is wrecked.",
+      "as_player": "A hero who is two bodies at once. In the suit you are a slow, armoured brawler whose left mouse fires three-shell bursts that tear into infantry and light machines; Q climbs out, leaving the suit behind as a turret that keeps shooting while you sprint off with a revolver. E rocket-jumps the empty suit back to you; if it is destroyed you are thrown clear on foot, and R calls a new one down from the sky after a long wait.",
+      "sources": [
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/William_Mason",
+          "title": "William Mason, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Last edited 21 November 2025 (categories only); price and health from May 2021, weapon and speed figures from June 2021, the dismounted figures from August 2021 and the Requisition line from February 2022 (page history)",
+          "note": "Read through the wiki's API, with its page history. The infobox (the mech template) gives price, population, health and speed in and out of the suit, armour class Medium (Unarmored when dismounted), and the Flak Cannon and the dismounted Revolver with reach, burst, pause and damage per armour class. The prose gives the burst-fire cannon, the suit holding position while he flees, recalling the suit or calling a new one, his weak points, and four abilities, Exit Strategy marked passive. Its italic opening line, unit type and Pros and Cons are the wiki's own words, which the roles rules do not read as official text.",
+          "supports": [
+            "class",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "armament/0",
+            "armament/1",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "abilities/2",
+            "modes/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by/0",
+            "countered_by/2",
+            "counters",
+            "combos/0",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://kingart-games.com/article/116",
+          "title": "Iron Harvest DevBlog #40 - July 2021, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "Changelog 23, July 2021 (posted 5 August 2021)",
+          "note": "Under Captain William Mason, raises the cooldowns of Turret Relocate and Turret Requisition. The same changelog has Anna and Wojtek entering with the first reserve. No later post read, up to DevBlog #47, changes him.",
+          "supports": ["abilities/1", "abilities/2", "tier", "strengths/3"]
+        },
+        {
+          "url": "https://kingart-games.com/article/107",
+          "title": "Iron Harvest DevBlog #35 - February 2021, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "Changelog 18, February 2021",
+          "note": "Infantry and heroes on foot can now revive allied heroes who have fallen unconscious; the reserve rework makes exo-suit squads a choice for the second reserve only and lets a single advanced building, or a pair of basic ones, open it. Written before Usonia came out (May 2021), so it does not name him.",
+          "supports": ["armour/models", "armour/notes", "tier"]
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Unit",
+          "title": "Unit, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "note": "Exosuits are advanced infantry in mechanical exoskeletons, healed by medics or engineers; each player fields one hero in skirmish and multiplayer, chosen beforehand; heroes come as infantry heroes and mech heroes, the exosuit hero Janek Kos among the latter; field cannons pierce even heavy mech armour from long range.",
+          "supports": ["availability", "class", "body/size", "weaknesses/4", "countered_by/1", "combos/1"]
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Armor",
+          "title": "Armor, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "note": "The four unit armour classes: Light for small, fast mechs and for exosuits, Medium for most mechs, barely hurt by light weapons but open to field cannons and anti-mech weapons; weak rear spots on many mechs take double damage.",
+          "supports": ["armour/class", "armour/notes", "countered_by/1", "counters/1"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "class",
+          "note": "Infantry with a small power-suit body. The William Mason page calls him the most heavily armoured infantry hero and the second infantry hero in an exo-suit after Janek Kos, the Unit page counts exosuits as advanced infantry, the Usonia page of the Iron Harvest Wiki (read, not cited) describes him as a leader who goes into battle in an American exosuit, and the wiki likens the suit to Space Marine power armour, so he is read as a power-suit trooper. The walker reading (a power suit of medium size) has support too: his infobox uses the mech template, the wiki calls the suit his mech throughout and counts him the second mech unit with Medium armour, the Unit page puts the exosuit hero Janek Kos among the mech heroes, the empty suit fights on and is dropped from the sky like a machine, and his price, population and pace match the mech heroes (Lech Kos, Prince Wilhelm of Saxony and Lev Aleksey Zubov pages, Iron Harvest Wiki, read, not cited). The two pages disagree on Janek Kos, the William Mason page calling him an infantry hero and the Unit page a mech hero. As a walker he would move on two legs, which allow his very slow pace, pilot-eject would fit his class, and the dismounted mode would be the infantry form.",
+          "sources_disagree": true
+        },
+        {
+          "path": "body/size",
+          "note": "No source gives the suit's footprint. Small follows the size examples (a power-suit trooper is one soldier); the wiki stresses how bulky it is (hulking chest plate, a gun fit for a heavier vehicle), which is the case for medium."
+        },
+        {
+          "path": "tier",
+          "note": "No page read says whether he comes with the first or the second reserve. Reserve II is the band the evidence best supports: his price and population (wiki infoboxes) are close to those of Prince Wilhelm, a tier 2 reserve hero by Change Log #04 (https://kingart-games.com/article/92, read, not cited), and Lech Kos, and well above those of Anna, Gunter and Princess Sita (their Iron Harvest Wiki pages, read, not cited); DevBlog #35 limited exosuit squads to Reserve II. DevBlog #27 (https://kingart-games.com/article/81, read, not cited) brought in the reserves and the hero pick, with some units allowed only in certain reserves. Patch 0.11.5 (https://kingart-games.com/article/85, read, not cited) shows that KING Art sorts heroes into tier 1 and tier 2, but no post read sorts him. If he is a Reserve I hero, the band is t1 and his unique availability would break its t2 floor."
+        },
+        {
+          "path": "cost_band",
+          "note": "The infobox price is used as the registry says, but no page says what that figure buys: heroes come only through a reserve, and since DevBlog #35 a reserve's price depends on what it holds."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "His speed in the suit was entered on 11 June 2021; the dismounted speed, first a little faster than the rifle squads, was set to their pace on 2 August 2021 (page history). No KING Art post read changes either. The comparison with the line mechs uses the M-19 \"Knox\", PZM-11 \"Lowca\", SKS 156 \"Wotan\" and SHM-79 \"Nagan\" pages of the Iron Harvest Wiki (read, not cited). On foot only the slow, medium and fast bands are listed, so his very slow pace in the suit is recorded as atypical."
+        },
+        {
+          "path": "armour/class",
+          "note": "The armour map alone gives heavy (infobox Medium); medium comes from the registry note, which steps him down with the Eisenhans. The Armor page gives exosuits the game's Light class, one step below his."
+        },
+        {
+          "path": "armour/models",
+          "note": "Downed-revive is the registry's rule for heroes coded as infantry, but the suit itself never goes down: when it fails he leaves it (Exit Strategy) and only falls unconscious later, on foot, so the model really belongs to the dismounted form, which also lists it; flat-pool would describe the suit alone. The revival facts rest on DevBlog #35 and on two pages of the Iron Harvest Wiki, read, not cited: Admiral Mason (every hero but the Admiral is revived for free) and Structure (the Headquarters brings fallen heroes back)."
+        },
+        {
+          "path": "armament/0/family",
+          "note": "Autocannon, because it fires shells in quick three-round bursts (the machine gun, autocannon or cannon tie-break). Its infobox name, Flak Cannon, and the game files' flak cannon would point to flak, but flak is for air-bursting shells mainly against aircraft, while this gun hurts mechs and buildings and is never said to fire at aircraft. A cannon fires one heavy shell at a time."
+        },
+        {
+          "path": "armament/0/damage",
+          "note": "No damage map: step 5 keeps the autocannon default, explosive, which its splash also gives. The wiki calls the shells armour-piercing, but no source calls the gun anti-armour or built to kill vehicles, and the infobox gives it no extra harm against armour (the same damage to unarmoured, Light and Medium targets, less to Heavy), so the armour-piercing exception is not read."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "No air targets: no source says the gun attacks aircraft, whatever its name. Structures come from the infobox's building figures."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "The weapon figures were entered on 11 June 2021 (page history) and no post read changes them. Medium by the figure, although the wiki's Cons call his reach relatively short."
+        },
+        {
+          "path": "armament/1/delivery",
+          "note": "No source says how the revolver's shots travel; hitscan is the small-arms default. Its pause between shots was added on 2 August 2021 (page history)."
+        },
+        {
+          "path": "abilities/0",
+          "note": "Toggle, because he can move in both forms, though the empty suit cannot. How he gets back into the suit is not described: the wiki has him recall the suit and names mounting as a weak moment, so climbing back in is read as the undo of this button (or as a plain enter action). The first version of the page (May 2021) already said he could leave the suit in an autonomous defensive mode."
+        },
+        {
+          "path": "abilities/1/patterns",
+          "note": "Transform, as the step that lets the pilot form get back into the suited form. KING Art's own name, Turret Relocate, frames it as moving a turret, which would be deploy-turret, and the suit's rocket jump on its own would be leap, but the jump is the suit's, not his (fit_notes)."
+        },
+        {
+          "path": "abilities/2/patterns",
+          "note": "Drop-in-from-above fits a suit that crashes down on a chosen spot, but it is the suit that arrives, not him, and no source mentions a warning. The transform pattern's shell-and-pilot variant (a pilot who must earn a new shell) also describes the button. The Requisition line was added to the wiki page in February 2022, while the Pros line about a suit crashing down from overhead dates from June 2021 and DevBlog #40 names Turret Requisition in July 2021."
+        },
+        {
+          "path": "abilities",
+          "note": "Exit Strategy, his passive, has no entry: the on-death term pilot-eject says the same."
+        },
+        {
+          "path": "on_death",
+          "note": "No source says whether the suit is destroyed or left empty when Exit Strategy takes him out; his page's first wording said he leaves it at low health. Pilot-eject is listed only for walkers, aircraft, vehicles and hovercraft, so on an infantry unit it is recorded as atypical. No wreck is coded because the Recycling Wrecks page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Recycling_Wrecks, read, not cited for him) says destroyed exosuits leave none behind."
+        },
+        {
+          "path": "roles/primary",
+          "note": "Step 1 finds no role: no post read gives him a bracketed label (the registry lists him among the unlabelled heroes), and his name names no job. No official strong-against text was found and the registry finds no bonus in the game data, so step 4 gives nothing; step 5 gives assault, since he is very slow and medium-armoured."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Both at step 2. Anti-infantry from the revolver his Deploy Exosuit button switches to (small arms that do little to armour; the cannon's splash also gives it at step 3). Area denial from the same button, which leaves the suit holding ground as a turret (the summon category meets the role's requires). Anti-armour was considered: the wiki calls the shells armour-piercing, but the gun deals explosive damage, which fails the role's requires, and no source calls him strong against armour."
+        },
+        {
+          "path": "countered_by/1",
+          "note": "Reasoned: his page names no anti-armour enemy; the entry rests on the Armor page (Medium armour is open to field cannons and anti-mech weapons) and the Unit page (field cannons reach far and pierce heavy mech armour), set against his short reach."
+        },
+        {
+          "path": "countered_by/2",
+          "note": "Reasoned from his page's short range and low speed in the suit; no source names a long-range enemy."
+        },
+        {
+          "path": "combos/1",
+          "note": "Reasoned: his page names no partner but infantry. It rests on the S3-55 \"Ward\" page of the Iron Harvest Wiki (read, not cited), whose Wards repair mechs and other exosuits, and on the Unit page (exosuits are healed by medics or engineers)."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "abilities/1/patterns",
+          "used": "transform",
+          "wanted": "a recall for a deployed turret or an empty suit: the machine jumps or flies back to its owner on a cooldown",
+          "note": "Transform covers the change of form, deploy-turret the placing of the turret and leap a unit's own jump; none covers sending your parked machine to your side."
+        },
+        {
+          "path": "armour/models",
+          "used": "downed-revive",
+          "wanted": "an outer shell with its own health over a pilot who fights on when it breaks",
+          "note": "The suit soaks damage and, once it fails, leaves the officer fighting on foot with his own, smaller health; downed-revive covers only his last stand on foot, and ablative plates break off one by one rather than as a whole suit."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "mobility/base",
+          "rule": "mobility:foot allowed.speed-bands very-slow",
+          "note": "In the exosuit he walks at a little over half the rifle squads' pace by his infobox, about as fast as a line mech, and our on-foot type lists only the slow, medium and fast bands. Out of the suit he moves at the rifle squads' pace (modes/0)."
+        },
+        {
+          "path": "on_death/outcomes",
+          "rule": "on-death:pilot-eject classes infantry",
+          "note": "Exit Strategy takes him out of a failing suit to fight on foot and later climb into a new one, which is what pilot-eject describes, but the term lists only walkers, aircraft, vehicles and hovercraft. Coded as a soldier in a power suit he is infantry; under the walker reading (uncertain at class) the break would go away."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J12-IRON-HARVEST"
+    },
+    {
+      "id": "iron-harvest.usonia.stark",
+      "game": "iron-harvest",
+      "introduced_in": "iron-harvest-operation-eagle",
+      "faction": "usonia",
+      "name": "M-22 \"Stark\"",
+      "flavour_affinity": ["allied", "soviet"],
+      "class": "walker",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["anti-infantry"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Advanced Workshop",
+        "basis": "Built at the Usonian Advanced Workshop, by the wiki's infobox, and no post read adds a second building for it (DevBlog #30's extra Advanced Barracks binds only the three mega mechs). The Advanced Workshop is t2 in the tier map."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 780,
+        "basis": "DevBlog #43 (December 2021) cut its oil price, and the wiki's infobox has shown the new price since January 2022; no later post read, up to DevBlog #47, changes it. Counted as iron plus three times the oil, it lands just under the medium threshold, a little cheaper than the anchor line mechs such as the Knox; before the cut it was medium. Its population cost uses up the cap rather than paying a price, so it is left out."
+      },
+      "mobility": {
+        "base": "legs-multi",
+        "handling": "pivot",
+        "traits": [],
+        "speed": "very-slow",
+        "speed_raw": 0.6,
+        "notes": "Walks on four legs at three fifths of the rifle squads' pace, the game's speed reference, so infantry outrun it. Iron Harvest has no tanks: it keeps about the pace of the Knox, Usonia's line mech, and is quicker than the Lowca, the Wotan and the Nagan, which fits the wiki's view that it can catch or match most mechs and sidestep artillery shells. Handling stays pivot, the many-legs default: it is no small walker, and no source gives a reason to change it. Like the other medium mechs it tramples flimsy cover and can push through small buildings (game-wide terrain breaking, not the crush trait)."
+      },
+      "body": {
+        "plan": "spider-frame",
+        "size": "large",
+        "notes": "A boxy, humped hull on four legs, shaped like a North American bison, with horns and a grille for a head, the engine and its smoking exhausts at the back. A flamethrower on a swivel sits on the head's left side and the huge pneumatic jackhammer on the right. Spider frame by the Iron Harvest notes for a walker on many legs whose main weapon is fixed or sits in a mount that does not turn all the way round: the jackhammer strikes where the head points, which its body-aim mount records. Large as a battle mech of the game's medium weight, the medium-to-assault mechs of our size examples; no source gives its footprint."
+      },
+      "armour": {
+        "class": "heavy",
+        "models": ["directional"],
+        "notes": "Step 1 decided: the infobox gives the game's Medium class, which the armour map reads as heavy, and the registry adds no step for it. By the Armor page light weapons only scratch that class while field cannons and anti-mech weapons hurt it; the wiki says it can mostly ignore infantry fire but blunts artillery and field cannon fire less well than heavier mechs, and Usonia fields no unit of the game's Heavy class (Usonia page). Directional: its own page counts attacks on its flanks and rear armour among its dangers, and the Armor page says hits on the weak rear spots of many mechs do double damage. Veterancy raises its health by about a third and then by half. Repair at the base is game-wide; in the field Ward exosuits repair it, and its own shutdown patches a little (abilities/0)."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "No source gives sight figures for Iron Harvest units (the registry's sight reference), so the band is the medium proposal. No source gives it radar, a detector or stealth."
+      },
+      "armament": [
+        {
+          "name": "Chisel",
+          "slot": "primary",
+          "family": "blades",
+          "damage": "melee",
+          "mount": "body-aim",
+          "delivery": "melee",
+          "range": "melee",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "summary": "A huge pneumatic jackhammer, which the infobox names a chisel, mounted on the right of the head. The wiki says it was made to break through the heaviest armour and that it does tremendous damage to any ground unit, mechs above all; it strikes at touching distance in bursts of blows. Since DevBlog #43 (December 2021) it hits harder the heavier the armour: by the infobox the game's Heavy class most, then Medium, then Light, soldiers a little less than Light, and buildings half as hard as soldiers. The melee family takes no armour-piercing damage, so it codes as melee. Berserk (abilities/1) raises its damage as the mech loses health. It cannot reach aircraft: the wiki calls the Stark useless against air units."
+        },
+        {
+          "name": "Flamethrower",
+          "slot": "secondary",
+          "family": "flamethrower",
+          "damage": "fire",
+          "mount": "limited-arc",
+          "delivery": "projectile",
+          "range": "short",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["splash"],
+          "summary": "A flamethrower on a swivel on the head's left side, which covers mainly the mech's left side. It sprays long bursts of flame a little over half as far as the reference rifle reaches, and the wiki says its area effect is devastating to infantry. By the infobox the game's Light class takes about two thirds of what soldiers take, buildings half, Medium armour a sixth and Heavy armour next to nothing. It works while the Stark walks, so it can burn through infantry on the way to a target (wiki)."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "No player seats: RTS units are ordered, not driven. The wiki says its pilot keeps calling himself Deuce (voice lines), so it is a crewed machine. Solo by the crew tie-break: no source says the flamethrower and the jackhammer fire at the same moment (the wiki says only that the flamethrower works on the move, on the way to a target), so they count as one at a time. No passenger seats."
+      },
+      "abilities": [
+        {
+          "name": "Emergency Shutdown",
+          "kind": "active",
+          "source": "innate",
+          "summary": "The mech switches itself off for a few seconds to mend itself, regaining a little health while it stands helpless. On its own it restores little, so it is best used once a fight is over; the wiki says it also makes a Ward exosuit's repairs even quicker. No source gives its cooldown or says whether it can be cut short.",
+          "patterns": ["heal-self"]
+        },
+        {
+          "name": "Berserk",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "A damage bonus that grows as its health drops: the harder the enemy hits it, the harder it hits back, so a badly damaged Stark is at its most dangerous and should be finished quickly. No source gives the size of the bonus. Lech Kos, Polania's mech hero, has the same passive under the name Patriotic Frenzy (Lech Kos page).",
+          "patterns": []
+        }
+      ],
+      "on_death": {
+        "outcomes": ["wreck"],
+        "basis": "in-game",
+        "notes": "Like any destroyed mech it leaves a wreck that nearly any infantry squad can recycle for a little iron and oil, the same haul whatever the mech was; another mech or exosuit walking over it, an explosion, or a death too close to a live mech wipes it out (Recycling Wrecks page). No source says its destruction harms anything nearby."
+      },
+      "strengths": [
+        {
+          "ref": "weapon:blades",
+          "why": "Its jackhammer does very high damage up close to any ground unit and was built to break the heaviest armour; since DevBlog #43 it hits heavy armour hardest of all, and Berserk adds more as the mech takes damage."
+        },
+        {
+          "ref": "weapon:flamethrower",
+          "why": "Its flamethrower works on the move and devastates infantry over an area, so it can burn through a swarm of soldiers on the way to its target (wiki)."
+        },
+        {
+          "ref": "armour-class:heavy",
+          "why": "Its armour lets it mostly ignore what infantry can throw at it (wiki), so it can lead a charge through soldiers."
+        },
+        {
+          "ref": "mobility:legs-multi",
+          "why": "Slow next to infantry but quick for a mech: the wiki says it can catch or keep up with most mechs and sidestep artillery shells, and it keeps about the pace of the Knox."
+        },
+        {
+          "ref": "pattern:heal-self",
+          "why": "After a fight it can patch itself up in the field, and the shutdown makes a Ward exosuit's repairs even quicker (wiki)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "range:melee",
+          "why": "It can fight only up close: the jackhammer must touch its target and the flamethrower is short-ranged, so field cannons soften it on the way in and it cannot hit aircraft at all (wiki)."
+        },
+        {
+          "ref": "armour-model:directional",
+          "why": "Brawling at touching distance leaves its flanks and rear open (wiki), and hits on the weak rear spots of mechs do double damage (Armor page)."
+        },
+        {
+          "ref": "armour-class:heavy",
+          "why": "Its armour is the game's Medium class, so it soaks artillery and field cannon fire less well than the heaviest mechs, and the wiki finds it rather fragile for its population and price."
+        },
+        {
+          "ref": "mount:limited-arc",
+          "why": "The flamethrower covers mainly the mech's left side (wiki)."
+        },
+        {
+          "ref": "pattern:heal-self",
+          "why": "While shut down it is helpless, and on its own the shutdown mends very little (wiki)."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Neither weapon reaches fliers: the wiki calls it useless against air units, so aircraft can attack it freely."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Field cannons, which pierce even heavy mech armour from long range (Unit page), soften it considerably before it can close in (wiki), and its armour class is open to field cannons and anti-mech weapons (Armor page)."
+        },
+        {
+          "ref": "unit:iron-harvest.shared.field-cannon",
+          "why": "Named on its page: since it can fight only at close range, field cannons wear it down well before it reaches them."
+        },
+        {
+          "ref": "role:siege",
+          "why": "Artillery: its armour soaks artillery fire less well than heavier mechs' armour does (wiki), although it is quick enough for a mech to dodge some shells."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Its flamethrower burns through swarms of infantry, even on the move, while their weapons barely hurt its armour (wiki)."
+        },
+        {
+          "ref": "class:walker",
+          "why": "Mechs: its jackhammer does tremendous damage to any ground unit and to mechs above all (wiki), and since DevBlog #43 it hits harder the heavier their armour."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:support",
+          "why": "Ward exosuits repair Usonia's mechs quickly in the field, making up for their lack of staying power; the wiki says the Stark should lean on an attending Ward, whose repairs its shutdown speeds up."
+        },
+        {
+          "ref": "unit:iron-harvest.usonia.ward",
+          "why": "The same reason: its page names the S3-55 \"Ward\" as the repairer to keep beside it."
+        }
+      ],
+      "memorable": "A bison-shaped Usonian mech that charges in with a giant jackhammer and a flamethrower at its side, hits harder the nearer it is to death, and can switch itself off to patch its wounds.",
+      "as_player": "A line-breaking brawler on four legs. Left mouse drives the jackhammer into whatever is right in front of you and wrecks mechs; right mouse sweeps the flamethrower over infantry on your left as you charge, and the more damage you take, the harder you hit. Q shuts you down for a few helpless seconds to patch yourself after a fight. Keep away from aircraft and field cannons, which you cannot touch from afar.",
+      "sources": [
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/M-22_%22Stark%22",
+          "title": "M-22 \"Stark\", Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Last edited 21 November 2025 (categories only); health, speed and weapon figures entered August 2021, price and jackhammer damage updated January 2022 from DevBlog #43 (page history)",
+          "note": "Read through the wiki's API, with its page history. The infobox gives health, armour class Medium, speed, price, population, and the Chisel and the Flamethrower with reach, burst, pause and damage per armour class. The prose gives the four-legged bison-like hull, the swivelling flamethrower on the left and the jackhammer on the right, damage that rises as it is hurt, its lack of anti-air, its weakness to artillery, field cannons and flanking, and two abilities, Emergency Shutdown and Berserk (passive). Its italic opening line, unit type and Pros and Cons are the wiki's own words, which the roles rules do not read as official text.",
+          "supports": [
+            "class",
+            "nature",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "armament/0",
+            "armament/1",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "roles/secondary",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://kingart-games.com/article/119",
+          "title": "Iron Harvest DevBlog #43 - December 2021, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "Changelog 25, December 2021",
+          "note": "Labels the unit Stark (Melee mech), the newest bracketed label, cuts its oil price and raises its damage against the Light, Medium and Heavy armour classes. No later post read, up to DevBlog #47, changes it.",
+          "supports": ["roles/primary", "cost_band", "armament/0", "strengths/0", "counters/1"]
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Armor",
+          "title": "Armor, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "note": "The four unit armour classes, Medium being the class of most mechs, only scratched by light weapons but open to field cannons and anti-mech weapons; hits on the weak rear spots of many mechs do double damage.",
+          "supports": ["armour/models", "armour/notes", "weaknesses/1", "countered_by/1"]
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Recycling_Wrecks",
+          "title": "Recycling Wrecks, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "note": "Marked beta. Every destroyed mech leaves a wreck that nearly any infantry can recycle for a small, fixed amount of iron and oil; mechs or exosuits walking over it, explosions or a death next to a live mech remove it; destroyed exosuits leave none.",
+          "supports": ["on_death"]
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Lech_Kos",
+          "title": "Lech Kos, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "note": "The Polanian mech hero's passive, Patriotic Frenzy, raises his damage in step with the health he has lost: the same mechanic as the Stark's Berserk.",
+          "supports": ["abilities/1"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Step 1 finds no role: the newest bracketed label, Melee mech (DevBlog #43), names none (registry). No official text read says what it is strong against, and the registry finds no bonus in the game data, so DevBlog #43's higher damage against heavier armour is not read as a step 4 bonus; step 5 gives assault, since it is very slow and heavy-armoured. The wiki's lines about mechs and about growing stronger under fire are its own words."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Anti-infantry from the flamethrower's splash (step 3). Anti-armour fits the jackhammer's job (built to break armour, tremendous damage to mechs, harder hits on heavier armour since DevBlog #43), but its melee damage fails the role's requires (fit_notes)."
+        },
+        {
+          "path": "tier/gate",
+          "note": "The wiki has no page for the Usonian Advanced Workshop, so the gate rests on the Stark's infobox alone. DevBlog #30 (https://kingart-games.com/article/90, read, not cited) asks for an Advanced Barracks as well only for the Tur, the Gulyay-Gorod and the Kaiser."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The infobox speed and health were entered on 2 August 2021 (page history) and equal the SHM-69 \"Serp\" page's, which also shares the Stark's unit type, Heavy Melee Linebreaker, and its veterancy figures, so they may have been copied from the Serp; no KING Art post read changes the Stark's speed. Either way it stays very slow. The comparisons use the M-19 \"Knox\", PZM-11 \"Lowca\", SKS 156 \"Wotan\", SHM-79 \"Nagan\" and SHM-69 \"Serp\" pages of the Iron Harvest Wiki (read, not cited). Many legs list no very slow band, so the pace is recorded as atypical, as on the Kaiser."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "Trampling flimsy cover and small buildings rests on two pages of the Iron Harvest Wiki, read, not cited: Unit (https://iron-harvest.fandom.com/wiki/Unit, on medium mechs) and Mech (https://iron-harvest.fandom.com/wiki/Mech); the Stark's own page says nothing of buildings."
+        },
+        {
+          "path": "body/plan",
+          "note": "Spider frame by the Iron Harvest notes' reading for walkers on many legs (night decision of 27 October 2026), until a body tie-break for such walkers is settled at the rule-fix round after R4. No turret carries its main weapon, so it is spider-frame under either reading of the opening check. Its hull is shaped like a beast, but the creature body is for real animals, not machines."
+        },
+        {
+          "path": "body/size",
+          "note": "No source gives its footprint. Large follows the size examples for battle mechs (medium to assault mechs); a weight word in its type is not a size, but the wiki's medium mech is also a mech of the main battle kind, like the anchor line mechs."
+        },
+        {
+          "path": "armour/models",
+          "note": "Directional by the registry's rule for every mech, backed by its own page's con about flanking and rear-armour attacks and by the Armor page's doubled rear damage; the Mech page of the Iron Harvest Wiki (read, not cited) says almost every mech has a vulnerable rear. Its page gives no figure of its own."
+        },
+        {
+          "path": "armament/0/mount",
+          "note": "Body-aim: the jackhammer sits at the front, to the right of the head, and no source says it turns (aim tie-break step 6). Read as a weapon on the side of the hull it would be limited-arc (step 3); either keeps the spider-frame body."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "Melee, because the blow lands at touching distance (the melee or short tie-break); by its infobox reach alone, under a quarter of the reference rifle's, it would read short. The brief's note that both weapons are used on the move is sourced only for the flamethrower."
+        },
+        {
+          "path": "armament/0/damage",
+          "note": "No damage map: step 5 keeps the blades default, melee. The wiki's armour-breaking wording and DevBlog #43's harder hits on heavier armour would give armour-piercing, but the melee family does not allow it."
+        },
+        {
+          "path": "armament/1/traits",
+          "note": "Splash rests on the wiki's area effect against infantry; the infobox gives no splash radius for it."
+        },
+        {
+          "path": "armament/1/mount",
+          "note": "Limited-arc: the wiki has it swivel on the head's left side and fire mainly to the left side (aim tie-break step 3)."
+        },
+        {
+          "path": "crew",
+          "note": "Solo because no source says the flamethrower fires at the same moment as the jackhammer. If it does (it works on the move on the way to a target), the flamethrower on its own mount would go to a gunner and the crew would be driver-gunner, falling back to full control."
+        },
+        {
+          "path": "abilities/0",
+          "note": "Innate: no source says it needs veterancy, but the first veterancy rank opens a veteran ability for most units (Veterancy page of the Iron Harvest Wiki, read, not cited) and no page names the Stark's; if Emergency Shutdown is that ability, its source is veterancy. No source gives a cooldown."
+        },
+        {
+          "path": "abilities/1",
+          "note": "Its own entry: the wiki names it as a passive ability, and damage that grows as health falls is a mechanic, not just a number, that no word-list term covers (fit_notes)."
+        },
+        {
+          "path": "armour/class",
+          "note": "Heavy by the armour map alone (infobox Medium), as for the line mechs. The Usonia page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Usonia, read, not cited) says Usonia has no unit of the game's Heavy armour type, which the armour notes repeat."
+        },
+        {
+          "path": "countered_by/1",
+          "note": "Field cannons are named on the Stark page; that their guns pierce even heavy mech armour from long range comes from the Unit page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Unit, read, not cited for this unit)."
+        },
+        {
+          "path": "countered_by/3",
+          "note": "Artillery rests on the wiki's prose; the same page's Pros say it is quick enough to avoid artillery shells, so artillery wins only when its shells land."
+        },
+        {
+          "path": "combos",
+          "note": "The Ward combo rests on the Stark page, whose Pros and Cons name the S3-55 \"Ward\", and on the Usonia and S3-55 \"Ward\" pages of the Iron Harvest Wiki (read, not cited), which say the Wards repair Usonia's mechs quickly in the field."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles",
+          "used": "assault, anti-infantry",
+          "wanted": "anti-armour",
+          "note": "The jackhammer is built to break armour and hurts mechs most, but the melee family allows only melee, electric or energy damage, so the weapon codes melee and fails anti-armour's requires (armour-piercing, energy, electric or EMP damage, or infest-vehicle)."
+        },
+        {
+          "path": "abilities/1/patterns",
+          "used": "none",
+          "wanted": "rage-when-wounded: a passive that raises the unit's damage as its health falls",
+          "note": "No pattern covers damage that grows with lost health; overclock-self is a short boosted state on a key, not a lasting passive. Lech Kos's Patriotic Frenzy is a second Iron Harvest example."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "mobility/base",
+          "rule": "mobility:legs-multi allowed.speed-bands very-slow",
+          "note": "It walks on four legs at three fifths of the rifle squads' pace by its infobox, and our many-legs type starts at slow. Most Iron Harvest mechs are very slow next to the rifle squads; the Stark keeps about the pace of the Knox and outpaces the Lowca, Wotan and Nagan, and the Kaiser records the same break."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J12-IRON-HARVEST"
+    }
+  ]
+}

@@ -1,0 +1,811 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "tempest-rising",
+  "units": [
+    {
+      "id": "tempest-rising.veti.thunderhead",
+      "game": "tempest-rising",
+      "faction": "veti",
+      "name": "Thunderhead",
+      "flavour_affinity": [],
+      "class": "aircraft",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "transport",
+        "secondary": ["engineer"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Veti Eye with Initial or Elevated Awakening",
+        "basis": "Built at the Celestial Gate, whose production list puts it under Tier 2 once a Veti Eye is tethered to an Ascension Anchor at Initial Awakening; its own infobox agrees (tier 2, the same requirement). The registry keeps Initial and Elevated tethers in t2."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 2000,
+        "basis": "Its page's multiplayer price is about twice a main battle tank's and sits exactly on the registry's very-high threshold, and a price on an edge takes the higher band. The 2.0.0 notes do not touch its price."
+      },
+      "mobility": {
+        "base": "rotor",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "fast",
+        "speed_raw": 1.64,
+        "notes": "Patch 2.0.0 raised its speed to about one and two thirds of the Field Scout's (the makers' Veti changes post); its page still shows a figure older than the beta's, which the post replaces. Among aircraft it now matches the GDF Skycrane and is a little slower than the Dynasty Hammerhand, the two transports its page names as its counterparts, and it moves at over twice the speed of the Caretaker or the Vimana. It floats rather than flies on wings, so hovering flight, a low flier here; in the source only weapons that can attack air units reach it, whatever their layer. Strafe is the default handling, and no source gives a reason to change it."
+      },
+      "body": {
+        "plan": "rotorcraft",
+        "size": "large",
+        "notes": "A hovering Veti transport that its Codex likens to a dark storm cloud of charged metal; no source mentions rotors or wings, so rotorcraft (a VTOL-type airframe) is only the nearest plan (see fit_notes). Large, as a transport aircraft like its counterparts the Skycrane and Hammerhand; no source gives its footprint."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class order decided: its armour type, Aircraft, maps to light. One health bar; its six resistances only scale each damage type. By its page it takes full damage from Cannon hits, three quarters from Rocket hits, half from Explosive hits and a quarter from Rifle, Fire and Sniper hits; Omni hits ignore resistances. Patch 2.0.0 raised its health by almost half (the page still shows the older figure). Arcing, which strikes back at close attackers, is recorded as an ability, not an armour model."
+      },
+      "sensors": {
+        "sight": "short",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its page gives a sight figure a little over half the Field Scout's, so short. It has no Detection perk. The Lightning Rod it sets down sees as far as the aircraft does."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "passengers": {
+          "seats": 10,
+          "kind": "passenger-cargo"
+        },
+        "notes": "The ten places are the Lightning Rod's: a soldier fills one and a ground vehicle four. Nobody ever rides in the aircraft itself; units walk into the Rod it places, and recalling the Rod sets them down on the ground where the aircraft is. Counting the Rod's places as its seats is the coder's call the registry leaves open (see uncertain): the makers' overview calls it a heavy transport, and the 2.0.0 notes speak of its troop-transport role. Riders shoot out of the Rod and infantry heal inside it, so cargo fits only loosely (see fit_notes). As an RTS aircraft it has no player seats; solo is our proposal: the buyer flies it and works the Rod."
+      },
+      "abilities": [
+        {
+          "name": "Lightning Rod garrison (passenger seats)",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "The Rod it sets down is a sturdy garrison building with ten places, where a soldier takes one and a ground vehicle four. Armed riders shoot out of it at enemies, enemy vehicles included (Firing Slits), and infantry inside slowly heal (Medical Kits). If the Rod is destroyed, everyone inside dies at once by its page, but the aircraft is unhurt and can raise another. Entering and the Rod's Unload button are universal keys.",
+          "patterns": ["carry-passengers"]
+        },
+        {
+          "name": "Deploy / Recall Lightning Rod",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "spam",
+          "summary": "One button that swaps between two orders. Deploy sets the Rod down on a target spot; each Thunderhead keeps one Rod at a time. Recall works from anywhere on the map: the Rod dissolves and every unit inside is teleported to the ground beneath the aircraft, wherever it now hovers, so a garrison can be pulled out of danger or dropped onto an unexpected flank. Recall can be used again after only a moment.",
+          "patterns": ["build-linked-exits", "teleport"]
+        },
+        {
+          "name": "Arcing",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Whenever an enemy attacks it from within a radius of about two thirds of a rifle's reach, a bolt of Omni damage, which ignores resistances, strikes that attacker straight back. The damage is small (its pages disagree on how small; see uncertain). The Tempest Cells doctrine widens and strengthens it by about a third, and Lifeblood Curse makes it put Tempest Charge on vehicles it hurts and adds about a third to the unit's maximum health. It is the only way the Thunderhead harms anything.",
+          "patterns": []
+        },
+        {
+          "name": "Tempest Shielded and Symbiotic Restoration (Engine Tuning doctrine)",
+          "kind": "passive",
+          "source": "commander-power",
+          "summary": "Once the side buys the Engine Tuning doctrine, the Thunderhead, like the other Veti vehicles and aircraft the doctrine names, becomes fully immune to Tempest Charge and slowly mends itself whenever it is inside a Tempest field.",
+          "patterns": []
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No page shows anything special when it is destroyed. Its riders never sit in the aircraft, so its death costs no passengers; no page says what becomes of a Rod still standing when its Thunderhead falls. The garrison dies only if the Rod itself is destroyed (see abilities/0)."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:build-linked-exits",
+          "why": "Recalling its Lightning Rod moves the whole garrison, soldiers and tanks alike, at once to wherever the aircraft hovers, for a quick extraction or a surprise attack from an unexpected side."
+        },
+        {
+          "ref": "passengers:10",
+          "why": "Its Rod has ten places and takes ground vehicles as well as soldiers (a vehicle fills four), while the game's other garrisons hold infantry only."
+        },
+        {
+          "ref": "pattern:carry-passengers",
+          "why": "The Rod is a sturdy fortified garrison: riders shoot out of it at enemies, vehicles included, and infantry inside slowly heal."
+        },
+        {
+          "ref": "speed:fast",
+          "why": "Patch 2.0.0 made it much faster and tougher to suit its job as a troop carrier; it now flies about as fast as the GDF Skycrane."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "pattern:carry-passengers",
+          "why": "Should enemies wreck the Rod, every unit inside dies at once by its page, and an achievement rewards killing Rods with units inside."
+        },
+        {
+          "ref": "pattern:build-linked-exits",
+          "why": "The Rod is its only tool: the aircraft carries no gun, and Arcing only zaps attackers that come close, for little damage."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "A light aircraft with modest health even after 2.0.0: Cannon hits hurt it at full strength and Rocket hits nearly so."
+        },
+        {
+          "ref": "sight:short",
+          "why": "It sees only a little over half as far as a Field Scout."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "hits:low-air",
+          "why": "Only weapons that can attack air units reach it, and it has no gun to answer them; Arcing strikes back only at attackers within a short radius."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Aircraft are weak to Rocket attacks (Unit page), which the damage map reads as armour-piercing, and its page shows Rocket hits getting most of the way through its resistances."
+        },
+        {
+          "ref": "damage:fire",
+          "why": "Fire weapons with the Penetrating passive, such as the Ignitor's flamethrower and the Pillager's flame cannons, hurt infantry sheltering in garrisons such as its Lightning Rod (Garrisoning page)."
+        }
+      ],
+      "counters": [],
+      "combos": [
+        {
+          "ref": "class:vehicle",
+          "why": "Its Rod is the one garrison that takes ground vehicles, so tanks can be sheltered and then pulled across the map together with the infantry."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Soldiers in the Rod shoot out of it and slowly heal there, then reappear under the Thunderhead when it recalls them."
+        },
+        {
+          "ref": "pattern:teleport",
+          "why": "The Vimana page pairs a Vimana's Relocate jump with Dominance Arcs carried in by Thunderheads, whose deployed anchors extend the build area the Vimana can jump into."
+        },
+        {
+          "ref": "unit:tempest-rising.veti.vimana",
+          "why": "The same pairing: the Vimana page names Dominance Arcs carried in by Thunderheads among the units that make its Relocate jump useful."
+        }
+      ],
+      "memorable": "An unarmed storm-cloud transport that sets down a fortified pylon for soldiers and tanks, then whisks the whole garrison across the map to wherever it hovers.",
+      "as_player": "A fast, unarmed T2 transport aircraft. Press Q to set down a Lightning Rod that teammates can enter, soldiers and even tanks, and fight from; press Q again, from anywhere, to dissolve it and teleport everyone inside to the ground beneath you. Fly somewhere safe, or behind the enemy, before you recall. Close attackers get zapped back, but you cannot shoot, so anti-air drives you off, and if the Rod falls with your team inside, they all die.",
+      "sources": [
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/701027957162902191",
+          "title": "Veti Faction Overview - Aerial Units, Tempest Rising news on Steam",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Written for patch 2.0.0+60710 (posted 28 September 2026)",
+          "note": "The makers' overview of the Veti aircraft. It gives the Thunderhead's designation, Heavy Aerial Transport, which roles step 1 reads, and its one-line description: a heavy transport with Arcing defence whose Rod shelters ground units and can bring them back to the aircraft. The beta build guide (https://store.steampowered.com/news/app/1486920/view/702143710591189091) gives the same designation.",
+          "supports": ["roles", "crew/passengers", "abilities/0", "abilities/1", "abilities/2", "memorable"]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/696524994028504917",
+          "title": "Veti Faction Changes (Since Beta), Tempest Rising news on Steam",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Patch 2.0.0+60710 (29 September 2026)",
+          "note": "The makers' notes for the Veti's release: the Thunderhead's health and speed rise so it can better serve as a troop transport (its speed figure replaces the page's), the Caretaker gets faster, and the Dominance Anchor's build radius grows. The wiki's 2.0.0 patch page repeats them.",
+          "supports": ["roles", "mobility", "armour/notes", "strengths/3", "combos/2"]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Thunderhead",
+          "title": "Thunderhead, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "No Verified tag; its speed predates the second public beta",
+          "note": "Infobox: tier 2, built at the Celestial Gate behind a Veti Eye at Initial Awakening, multiplayer price, armour type Aircraft with six resistances, health, flying movement, an old speed, sight, the Arcing perk and the Engine Tuning doctrine; Sacrificial Summons is the Veti-wide button left off. Prose: unarmed, carries nobody itself, and its Rod takes infantry and ground vehicles that the recall teleports to the aircraft. Its Background box copies the Codex, official but mostly lore.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament",
+            "crew",
+            "abilities",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "combos/0",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Lightning_Rod",
+          "title": "Lightning Rod, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "No Verified tag",
+          "note": "The Rod's own page: a structure with ten places (a soldier one, a vehicle four), the Firing Slits and Medical Kits perks and the Recall and Unload buttons. Armed riders fire out, infantry inside heal, and if it is destroyed everyone inside dies while the Thunderhead is unharmed and can place a new one. It also gives the Rod's sight and an achievement for destroying occupied Rods.",
+          "supports": [
+            "sensors/notes",
+            "crew/passengers",
+            "abilities/0",
+            "abilities/1",
+            "strengths/1",
+            "strengths/2",
+            "weaknesses/0",
+            "on_death/notes",
+            "combos/0",
+            "combos/1"
+          ]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Celestial_Gate",
+          "title": "Celestial Gate, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Verified for patch 1.8.0+57892 (second public beta)",
+          "note": "The production page the registry names for gates: it lists the Thunderhead under Tier 2, needing a Veti Eye at Initial Awakening, in a sidebox that copies its build tooltip; the tooltip matches the makers' overview line.",
+          "supports": ["tier", "roles"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "crew/passengers",
+          "note": "Nobody rides in the Thunderhead itself: the ten places belong to the Lightning Rod, and the recall sets riders down beside the aircraft. The registry leaves it to the coder whether these count as its seats; they are counted, because carrying the Rod's garrison across the map is the unit's whole job."
+        },
+        {
+          "path": "roles/primary",
+          "note": "Transport rests on counting the Rod's places as its seats (see crew/passengers). Without them, the designation's transport would fail its requires, and step 2 would give engineer for its main button, the Rod."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Engineer rests on step 2: the Rod is a building it places that serves the team. Area denial (a fortification that riders fire from) was weighed, but it fails its requires and fits the Rod's job of moving troops less well."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The speed comes from the makers' 2.0.0 Veti changes post, which says it rose from the beta's figure; the page shows a still older figure. The comparisons use the Skycrane page (checked for 1.6.0) and the Hammerhand page (checked for 1.8.0) on the Tempest Rising Wiki, which the 2.0.0 notes leave unchanged, the Caretaker's 2.0.0 speed from the same post, and the Vimana page."
+        },
+        {
+          "path": "cost_band",
+          "note": "The price is from its page, which carries no Verified tag; the 2.0.0 notes do not mention it."
+        },
+        {
+          "path": "sensors/sight",
+          "note": "The sight figure is from its page, which carries no Verified tag; the 2.0.0 notes do not mention it."
+        },
+        {
+          "path": "armour/notes",
+          "note": "The resistances are from its page, which carries no Verified tag; only the health change comes from the 2.0.0 post."
+        },
+        {
+          "path": "abilities/2",
+          "note": "The Arcing page's prose gives half the damage that its own perk box and the Ability page give (both Tempest Rising Wiki, https://tempestrising.wiki.gg/wiki/Arcing and https://tempestrising.wiki.gg/wiki/Ability); the radius, the same for the Thunderhead and the Vimana, comes from those two pages. The Ability page's changelog says patch 1.6.0 cut Arcing's damage and reach. The doctrine effects are from the Doctrine page (Tempest Rising Wiki, checked for 1.9.0).",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/3",
+          "note": "From the Doctrine page (checked for 1.9.0) and the Ability page (Tempest Rising Wiki), which both list the Thunderhead among the units Engine Tuning gives the two perks."
+        },
+        {
+          "path": "weaknesses/0",
+          "note": "The Lightning Rod page says everyone inside dies when it falls, while the Garrisoning page (Tempest Rising Wiki, https://tempestrising.wiki.gg/wiki/Garrisoning) quotes a 2024 designer remark that every ground garrison and transport drops its units, hurt, when destroyed. The quote predates the Veti, so the Rod's own page is followed here.",
+          "sources_disagree": true
+        },
+        {
+          "path": "countered_by",
+          "note": "The first entry rests on the Damage page (Tempest Rising Wiki), which says only weapons with an Air target line hit aircraft; the second on the Unit page (Tempest Rising Wiki), which calls aircraft vulnerable to Rocket attacks; the third on the Garrisoning page, which lists the Penetrating weapons that hurt infantry inside garrisons."
+        },
+        {
+          "path": "combos/2",
+          "note": "The pairing in this entry and the next (combos/3) rests on the Vimana page (Tempest Rising Wiki, https://tempestrising.wiki.gg/wiki/Vimana), which names Thunderhead-carried Dominance Arcs among the units that suit the Vimana's jump; that the deployed Dominance Anchor has a build radius is from the 2.0.0 Veti post."
+        },
+        {
+          "path": "strengths/1",
+          "note": "That every other garrison holds infantry only is from the Garrisoning page (Tempest Rising Wiki), which lists the game's garrisons and their capacity; combos/0 rests on the same list."
+        },
+        {
+          "path": "nature",
+          "note": "No source says whether anyone crews it; the default for an aircraft is crewed."
+        },
+        {
+          "path": "body/size",
+          "note": "No source gives its footprint; large follows the size examples for transport aircraft, as for its counterparts the Skycrane and Hammerhand."
+        },
+        {
+          "path": "on_death",
+          "note": "No page says what happens to a standing Rod, or to the riders in it, when the Thunderhead itself is destroyed."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "body/plan",
+          "used": "rotorcraft",
+          "wanted": "a body plan for a floating alien hull with no rotors or wings",
+          "note": "Its Codex describes a brooding cloud of charged metal; nothing on the list is a hovering craft that is neither a helicopter nor a saucer."
+        },
+        {
+          "path": "crew/passengers/kind",
+          "used": "passenger-cargo",
+          "wanted": "a seat kind for riders housed in a separate structure that the unit places and recalls",
+          "note": "Riders shoot out of the Rod's slits, which passenger-firing would describe, but the Rod is a building garrison, which the pattern notes keep under carry-passengers, and carry-passengers pairs with cargo seats. Inside the aircraft itself nobody rides at all."
+        },
+        {
+          "path": "abilities/1/patterns",
+          "used": "build-linked-exits, teleport",
+          "note": "A variant: the exit is the moving aircraft itself rather than a second placed entrance, and losing the entrance kills everyone inside instead of only closing it."
+        },
+        {
+          "path": "abilities/2/patterns",
+          "used": "none",
+          "wanted": "a passive that strikes back at anyone who attacks the unit from close by (retaliate when attacked)",
+          "note": "Arcing is not a weapon, since it fires only in answer to an attack, and no armour model covers damage returned to an attacker."
+        },
+        {
+          "path": "abilities/3/patterns",
+          "used": "none",
+          "wanted": "immunity to one status effect (Tempest Charge) and self-repair inside a hazard field",
+          "note": "No pattern or term covers immunity to a status effect, and the self-repair armour model is for stock units and for repair anywhere, not a doctrine's repair inside Tempest fields."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J08-TEMPEST-RISING"
+    },
+    {
+      "id": "tempest-rising.veti.vimana",
+      "game": "tempest-rising",
+      "faction": "veti",
+      "name": "Vimana",
+      "flavour_affinity": [],
+      "class": "aircraft",
+      "nature": "crewed-machine",
+      "availability": "limited",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["buffer", "anti-infantry"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Veti Eye with Transcendent Awakening",
+        "basis": "Built at the Celestial Gate, whose production list puts it under Tier 3 behind a Veti Eye tethered to an Ascension Anchor at Transcendent Awakening; its infobox gives tier 3. Its own page names only the Veti Eye, but the registry takes the level from the production page, and the 2.0.0 notes change neither. Limited: each Gate supports a single Vimana."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 4000,
+        "basis": "Its page's multiplayer price is about four times a main battle tank's, far above the registry's very-high threshold."
+      },
+      "mobility": {
+        "base": "rotor",
+        "handling": "strafe",
+        "traits": ["teleport"],
+        "speed": "slow",
+        "speed_raw": 0.73,
+        "notes": "Its page's speed is about three quarters of the Field Scout's. Among aircraft it is a little slower than the Caretaker and less than half as fast as the Thunderhead. It floats like the other Veti craft, so hovering flight, a low flier here; in the source only weapons that can attack air units reach it. Hovering flight's speed rule leaves out slow, which is recorded as atypical. Relocate, its jump to any point in its owner's build area, gives the teleport trait. Strafe is the default handling."
+      },
+      "body": {
+        "plan": "disc",
+        "size": "huge",
+        "notes": "A flying stepped pyramid, a floating ziggurat in its Codex; no plan fits (see fit_notes), and disc, the flying saucer, is the nearest alien flying shape. Huge: its Codex calls Vimanas vast vessels that blot out the sun, and the Celestial Gate's Codex says one is too big to hold itself together without its Gate; no source gives its footprint."
+      },
+      "armour": {
+        "class": "super-heavy",
+        "models": ["flat-pool"],
+        "notes": "Check A decided: as a huge t3 unit it is super-heavy, though step 1 (its armour type, Aircraft, maps to light) gives light. Its page's health is more than three times a Hunter Tank's, near the Tempest Sphere's, which the registry also lifts to super-heavy. One health bar; its resistances only scale each damage type: full damage from Explosive, Cannon and Fire hits, three quarters from Rocket hits, half from Rifle hits and a quarter from Sniper hits, while Omni hits ignore them. The Lifeblood Curse doctrine adds about a third to its maximum health through its Arcing perk."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": ["detector"],
+        "basis": "in-game",
+        "notes": "Its page gives a sight figure a little under the Field Scout's, so medium. Its Detection perk reveals stealthed enemies within about half its sight, and what it sees its whole team sees."
+      },
+      "armament": [
+        {
+          "name": "Blessed Golden Cannon",
+          "slot": "primary",
+          "family": "laser",
+          "damage": "energy",
+          "mount": "free-aim",
+          "delivery": "beam",
+          "range": "short",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "high-air", "structure"],
+          "traits": ["splash", "magazine", "anti-air"],
+          "summary": "A golden energy weapon that strikes ground and air targets alike with heavy Omni damage, which ignores every resistance, and hurts everything in a moderate area around the hit. It fires one shot every few seconds and holds four; Auto Restock brings spent shots back by themselves, slowly, and Consecrated Restocking refills them at once. It reaches only about three fifths as far as the Field Scout's rifle. The Tempest Empowerment doctrine gives it Tempest Affinity, extra damage against targets carrying Tempest Charge."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "No crew is named in the sources. As an RTS aircraft it has no player seats; solo is our proposal: the buyer flies it, fires the cannon and works its buttons."
+      },
+      "abilities": [
+        {
+          "name": "Summon Caretaker",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "long",
+          "summary": "Calls a Caretaker, the Veti utility aircraft that heals infantry and can set up a build area, to the Vimana's side, and since 2.0.0 six Combat Servitors with it: fast, fragile flying constructs whose spike launchers hit ground and air targets and which expire after a short while; the makers say they can defend or scout. Each use draws a large sum of credits and population from the player's stock, then needs a long wait.",
+          "patterns": ["launch-drones"]
+        },
+        {
+          "name": "Relocate Vimana",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "long",
+          "summary": "Teleports the Vimana to any point inside its owner's build area, however far across the map, then waits a long time before the next jump. Its page pairs the jump with Facilitated Caretakers and with Dominance Arcs carried in by Thunderheads, which extend that area.",
+          "patterns": ["teleport"]
+        },
+        {
+          "name": "Sacrificial Benediction",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "long",
+          "summary": "Consecrates every friendly unit and building in a target area for a time: they take somewhat less damage and move about a third faster. Unlike an Enlightened's Sacrifice it costs no Enlightened; each use draws credits from the player's stock instead, then needs a long wait. The Vimana does not consecrate itself this way.",
+          "patterns": ["rally-allies"]
+        },
+        {
+          "name": "Gate Link",
+          "kind": "toggle",
+          "source": "innate",
+          "summary": "An autocast toggle: while it is on, every unit its home Celestial Gate finishes (the Gate makes aircraft) appears at the Vimana's current position instead of at the Gate, so fresh aircraft join it at the front at once. Switching the autocast off sends new units back to the Gate as usual.",
+          "patterns": ["host-spawn-point"]
+        },
+        {
+          "name": "Subjugation Aura",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Enemy infantry in a wide circle around it, as far as it sees, are Subjugated: they cannot receive any buffs, and those who die while Subjugated rise as Enlightened for the Veti, both a unit and the side's second resource. Golden rays show the aura. Doctrines change it: Aura Amplifiers widens it by half, and Vile Subjugation makes Subjugation also silence its victims and slow their attacks by a quarter.",
+          "patterns": []
+        },
+        {
+          "name": "Arcing",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Whenever an enemy attacks it from within a radius of about two thirds of a rifle's reach, a bolt of Omni damage strikes that attacker straight back; the damage is small (its pages disagree on how small). The Tempest Cells doctrine widens and strengthens it by about a third, and Lifeblood Curse makes it put Tempest Charge on vehicles it hurts and adds maximum health.",
+          "patterns": []
+        },
+        {
+          "name": "Consecrated Restocking",
+          "kind": "triggered",
+          "source": "innate",
+          "summary": "Each time the Vimana is Consecrated, by a Sacrifice from an Enlightened (the Veti-wide Sacrificial Summons button can call one over) or by a Benediction cast by a second Vimana, it regains all its missing cannon shots at once, and Auto Restock works twice as fast while the buff lasts.",
+          "patterns": []
+        },
+        {
+          "name": "Bound to its Celestial Gate (Vimana Limit)",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Each Vimana is tied to the Celestial Gate that built it, and each Gate supports a single Vimana. If that Gate is destroyed, the Vimana is destroyed at once, wherever it is; the Gate's Codex says a Vimana cannot hold itself together without its Gate.",
+          "patterns": ["depend-on-relay"]
+        },
+        {
+          "name": "Tempest Shielded and Symbiotic Restoration (Engine Tuning doctrine)",
+          "kind": "passive",
+          "source": "commander-power",
+          "summary": "Once the side buys the Engine Tuning doctrine, the Vimana, like the other Veti vehicles and aircraft the doctrine names, becomes fully immune to Tempest Charge and slowly mends itself whenever it is inside a Tempest field.",
+          "patterns": []
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No page shows anything special when it is shot down, beyond its death with its Gate (see abilities/7). The Resurrection doctrine, bought for the whole side, brings it back at its home Gate after a while at no cost and leaves six Repair Servitors where it fell; that is a side-wide pick, not its own outcome."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:host-spawn-point",
+          "why": "Gate Link makes every aircraft its Gate builds appear at its side, a steady stream of reinforcements wherever it goes."
+        },
+        {
+          "ref": "pattern:rally-allies",
+          "why": "Its Benediction consecrates every friendly unit and building in a wide area, cutting the damage they take and speeding them up, for credits rather than an Enlightened."
+        },
+        {
+          "ref": "weapon-trait:splash",
+          "why": "Its cannon hits ground and air targets, damages a moderate area, and as Omni damage ignores every resistance."
+        },
+        {
+          "ref": "pattern:teleport",
+          "why": "It can jump to any point inside its owner's build area, so the slow fortress reaches a distant front at once."
+        },
+        {
+          "ref": "sensor:detector",
+          "why": "It reveals stealthed units around it for the whole team."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "pattern:depend-on-relay",
+          "why": "It is destroyed at once if the Celestial Gate that built it falls, however far away it is."
+        },
+        {
+          "ref": "speed:slow",
+          "why": "It moves at about three quarters of a Field Scout's pace, slower even than the Caretaker."
+        },
+        {
+          "ref": "range:short",
+          "why": "Its cannon reaches only about three fifths as far as a Field Scout's rifle."
+        },
+        {
+          "ref": "weapon-trait:magazine",
+          "why": "It holds only four shots and gets them back slowly on its own unless it is Consecrated."
+        },
+        {
+          "ref": "availability:limited",
+          "why": "Each Celestial Gate supports a single Vimana, and one costs about four main battle tanks."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Aircraft are weak to Rocket attacks (Unit page), which the damage map reads as armour-piercing, and its page shows Rocket hits getting most of the way through its resistances."
+        },
+        {
+          "ref": "role:siege",
+          "why": "Destroying the Celestial Gate that built it destroys the Vimana at once, so units that break buildings can kill it without fighting it."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Enemy infantry near it are Subjugated, so they cannot be buffed and rise as Enlightened for the Veti when they die there, while its cannon's blast hits whole groups."
+        },
+        {
+          "ref": "pattern:cloak",
+          "why": "Its Detection perk reveals stealthed units around it to the whole team, so cloaked enemies cannot hide from it."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:aircraft",
+          "why": "Gate Link brings every aircraft its home Gate builds straight to its side, so fresh air units join it at the front."
+        },
+        {
+          "ref": "pattern:build-linked-exits",
+          "why": "Thunderheads carry Dominance Arcs to new ground in their Lightning Rods, and the anchors those Arcs deploy extend the build area its Relocate jump needs (Vimana page)."
+        },
+        {
+          "ref": "unit:tempest-rising.veti.thunderhead",
+          "why": "The same pairing: the Vimana page names Dominance Arcs carried in by Thunderheads."
+        },
+        {
+          "ref": "unit:tempest-rising.veti.caretaker",
+          "why": "The Vimana page pairs its Relocate jump with Facilitated Caretakers, which open new build area to jump into; no word-list or pattern link names units that extend a build area."
+        },
+        {
+          "ref": "unit:tempest-rising.veti.enlightened",
+          "why": "An Enlightened that sacrifices itself onto the Vimana sets off Consecrated Restocking and refills its cannon at once; no word-list or pattern link names the Veti's Sacrifice."
+        }
+      ],
+      "memorable": "A vast flying pyramid bound to its Gate: aircraft built there appear at its side, it jumps anywhere in its build area, and it dies the moment its Gate falls.",
+      "as_player": "A slow, very costly T3 flying fortress, one per Gate. Your cannon blasts ground and air alike through any armour but reaches only a short way and holds four shots. Q jumps you anywhere inside your build area, E consecrates allies in a target area for credits, R summons a Caretaker and six attack drones, and teammates' new aircraft spawn at your side. Enemy infantry near you cannot be buffed and rise as your Enlightened. Guard your Gate: if it falls, so do you.",
+      "sources": [
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/701027957162902191",
+          "title": "Veti Faction Overview - Aerial Units, Tempest Rising news on Steam",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Written for patch 2.0.0+60710 (posted 28 September 2026)",
+          "note": "The makers' overview of the Veti aircraft. It gives the Vimana's designation, Aerial Subjugation Fortress, which names no role (registry note), and its one-line description: it brings reinforcements from its Gate, gives off a Subjugation aura and can now and then consecrate allies en masse. The beta build guide (https://store.steampowered.com/news/app/1486920/view/702143710591189091) gives the same designation.",
+          "supports": ["roles", "abilities/2", "abilities/3", "abilities/4", "memorable"]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/696524994028504917",
+          "title": "Veti Faction Changes (Since Beta), Tempest Rising news on Steam",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Patch 2.0.0+60710 (29 September 2026)",
+          "note": "The makers' notes for the Veti's release. The Vimana's only change: Summon Caretaker also brings six Combat Servitors, meant for defence or scouting. It names no new Vimana price, speed, health or tech requirement, so the page's figures stand as unverified. It also raises the Caretaker's speed and the Dominance Anchor's build radius.",
+          "supports": ["tier", "mobility/notes", "abilities/0", "combos/1"]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Vimana",
+          "title": "Vimana, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "No Verified tag; Upcoming banner left from before release",
+          "note": "Infobox: tier 3, Celestial Gate, a bare Veti Eye requirement, multiplayer price, armour type Aircraft with six resistances, health, flying movement, speed, sight, the Blessed Golden Cannon (Omni, ground and air, ammunition with a restock), its buttons, perks and doctrines; Sacrificial Summons is the Veti-wide button left off. Prose and boxes: Subjugation radius, detection, teleport inside the build radius, cheaper Caretakers, Benediction, Gate Link and its death with its Gate. Its Background box copies the Codex.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "availability",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "crew",
+            "abilities",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Celestial_Gate",
+          "title": "Celestial Gate, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Verified for patch 1.8.0+57892 (second public beta)",
+          "note": "The production page the registry names for gates: it lists the Vimana under Tier 3, needing a Veti Eye at Transcendent Awakening, allows one per Gate, and copies its build tooltip, which matches the makers' overview line. Its Codex ties every Vimana to a single Gate, without which it falls apart at once.",
+          "supports": [
+            "tier",
+            "availability",
+            "roles",
+            "body/notes",
+            "abilities/3",
+            "abilities/7",
+            "weaknesses/0",
+            "weaknesses/4"
+          ]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Ability",
+          "title": "Ability, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "note": "Lists the game's perks with figures and the units that have them: the Vimana's Arcing radius and damage, Auto Restock, Consecrated Restocking, Detection radius and Subjugation Aura radius, and the Tempest Shielded and Symbiotic Restoration perks it gains with Engine Tuning. Its changelog gives patch 1.6.0's Arcing cut.",
+          "supports": ["sensors", "armament/0/traits", "abilities/4", "abilities/5", "abilities/6", "abilities/8"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "tier/gate",
+          "note": "The Vimana page gives a bare Veti Eye requirement, while the Celestial Gate page (verified for the second beta) adds Transcendent Awakening. The registry takes the level from the production page, and the 2.0.0 Veti notes change neither page's requirement, so the tier_map gate for a Transcendent tether is used.",
+          "sources_disagree": true
+        },
+        {
+          "path": "cost_band",
+          "note": "The price is from its page, which carries no Verified tag; the 2.0.0 Veti notes name no Vimana price."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The speed is from its page, which carries no Verified tag; the 2.0.0 Veti notes name no Vimana speed. The comparison with the Caretaker uses that post's 2.0.0 speed, and with the Thunderhead the same post."
+        },
+        {
+          "path": "sensors/sight",
+          "note": "The sight figure is from its page, which carries no Verified tag; the 2.0.0 notes do not mention it."
+        },
+        {
+          "path": "armour/notes",
+          "note": "Health and resistances are from its page, which carries no Verified tag; the 2.0.0 notes name neither. The comparisons use the Hunter Tank page (checked for 1.9.0) and the Tempest Sphere page (checked for 1.7.0) on the Tempest Rising Wiki."
+        },
+        {
+          "path": "body/size",
+          "note": "No source gives its footprint; huge rests on the Codex's words (vast vessels that blot out the sun) and on airships being the nearest size example. Large would leave it light by step 1, since check A turns only huge t3 units super-heavy."
+        },
+        {
+          "path": "armour/class",
+          "note": "Super-heavy follows from the huge size by check A (see body/size); the registry names only the Tempest Sphere and War Ender as units lifted by size, and its armour map gives aircraft light."
+        },
+        {
+          "path": "mobility/base",
+          "note": "Hovering flight follows the registry note for hovering craft; airship would match its slow speed and looming bulk, but nothing says it is lighter than air."
+        },
+        {
+          "path": "armament/0/family",
+          "note": "No source says what the cannon fires. Laser is chosen by analogy with the Veti's Golden Cannon defence (Golden Cannon page, Tempest Rising Wiki, https://tempestrising.wiki.gg/wiki/Golden_Cannon, whose Codex describes a ray of coherent light; the beta guide calls it an energy beam turret), whose name it shares. The Vimana's own weapon box, not official text, says only that it is an energy weapon. Plasma or cannon would also be possible; cannon would make its damage explosive and add the soviet flavour."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "Beam is the laser family's default; no source says how its shot travels."
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "Splash rests on the page's weapon box, which is not official text; no other source gives the area. Magazine follows the Auto Restock perk, as the registry says."
+        },
+        {
+          "path": "abilities/0",
+          "note": "The page's prose says the Vimana makes Caretakers more cheaply than the Celestial Gate, but its ability box asks more credits, and far more population, than the Caretaker page (Tempest Rising Wiki, https://tempestrising.wiki.gg/wiki/Caretaker) gives for a Caretaker built at the Gate; the box's price may include the six Servitors added in 2.0.0. The Servitors' speed, life span and weapon are from the Combat Servitor page (Tempest Rising Wiki, https://tempestrising.wiki.gg/wiki/Combat_Servitor), which has no Verified tag.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/4",
+          "note": "The aura's effect and golden rays are also on the Subjugation and Status effect pages (Tempest Rising Wiki); the doctrine changes are from the Doctrine page (checked for 1.9.0)."
+        },
+        {
+          "path": "abilities/5",
+          "note": "The Arcing page's prose (Tempest Rising Wiki, https://tempestrising.wiki.gg/wiki/Arcing) gives half the damage that its own perk box and the Ability page give; the doctrine effects are from the Doctrine page.",
+          "sources_disagree": true
+        },
+        {
+          "path": "on_death/notes",
+          "note": "The Resurrection doctrine's effect is from the Doctrine page (Tempest Rising Wiki, checked for 1.9.0)."
+        },
+        {
+          "path": "availability",
+          "note": "Limited rests on the Celestial Gate page and the Vimana Limit perk in its infobox (its perk box is hidden on the page); an achievement for having ten living Vimanas shows the cap is per Gate, not per player."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Anti-infantry rests on the splash trait, which only the weapon box gives (see armament/0/traits). Scout, from its Detection perk, ranks lower at step 4 and is left out; the 2.0.0 note that the summoned Servitors can scout hedges, so it is not read as a step 2 role."
+        },
+        {
+          "path": "counters",
+          "note": "Both entries are reasoned from facts on its pages (the Subjugation aura and the cannon's area for infantry; the Detection perk for cloaked units); no source names these matchups."
+        },
+        {
+          "path": "countered_by/1",
+          "note": "Reasoned from its page's statement that it dies when its Gate is destroyed; no source names a unit that hunts the Gate."
+        },
+        {
+          "path": "countered_by/0",
+          "note": "Rests on the Unit page (Tempest Rising Wiki), which calls aircraft vulnerable to Rocket attacks."
+        },
+        {
+          "path": "combos",
+          "note": "That Facilitated Caretakers set up a build area is from the Caretaker page and the overview post; that Dominance Anchors have one is from the 2.0.0 Veti post."
+        },
+        {
+          "path": "nature",
+          "note": "No source says whether anyone crews it; its page calls it a construct, and the default for an aircraft is crewed."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "body/plan",
+          "used": "disc",
+          "wanted": "a body plan for a huge flying pyramid or floating fortress",
+          "note": "Its page and Codex describe a flying stepped pyramid; disc, the nearest alien flying shape, allows no huge size, which is recorded as atypical."
+        },
+        {
+          "path": "armament/0/damage",
+          "used": "energy",
+          "wanted": "a damage type that ignores every resistance and armour (the game's Omni)",
+          "note": "Omni is not in the damage map, so step 5 gives the laser family's default. The point of the weapon, that no armour or resistance blunts it, is lost."
+        },
+        {
+          "path": "abilities/0/patterns",
+          "used": "launch-drones",
+          "wanted": "a pattern for summoning a full unit in the field (mobile production)",
+          "note": "launch-drones fits the six short-lived Combat Servitors; the Caretaker it calls is a full, lasting unit that no pattern covers."
+        },
+        {
+          "path": "abilities/4/patterns",
+          "used": "none",
+          "wanted": "an aura that stops enemy infantry from being buffed and turns those who die in it into your own units (subjugate)",
+          "note": "mind-control takes living units; here only the dead change sides, and they come back as the Veti's Enlightened."
+        },
+        {
+          "path": "abilities/5/patterns",
+          "used": "none",
+          "wanted": "a passive that strikes back at anyone who attacks the unit from close by (retaliate when attacked)",
+          "note": "Arcing is not a weapon, since it fires only in answer to an attack, and no armour model covers damage returned to an attacker."
+        },
+        {
+          "path": "abilities/6/patterns",
+          "used": "none",
+          "wanted": "an ally's buff that refills the unit's ammunition at once (resupply on buff)",
+          "note": "resupply-allies is the pattern for the one who refills others; nothing covers a unit whose ammunition comes back when an ally's buff lands on it."
+        },
+        {
+          "path": "abilities/7/patterns",
+          "used": "depend-on-relay",
+          "note": "A harsher variant: losing the relay destroys the Vimana outright instead of shutting it down until a new relay stands, and only one Vimana may lean on each Gate."
+        },
+        {
+          "path": "abilities/8/patterns",
+          "used": "none",
+          "wanted": "immunity to one status effect (Tempest Charge) and self-repair inside a hazard field",
+          "note": "No pattern or term covers immunity to a status effect, and the self-repair armour model is for stock units and for repair anywhere, not a doctrine's repair inside Tempest fields."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "mobility/base",
+          "rule": "mobility:rotor allowed.speed-bands slow",
+          "note": "A slow hovering fortress: its page's speed is under the Field Scout's, below the speeds hovering flight allows."
+        },
+        {
+          "path": "body/plan",
+          "rule": "bodies:disc allowed.sizes huge",
+          "note": "The nearest plan for a flying pyramid allows sizes up to large, but its Codex makes it vast."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J08-TEMPEST-RISING"
+    }
+  ]
+}

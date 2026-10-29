@@ -1,0 +1,873 @@
+{
+ "game": "cnc-td",
+ "notes": {
+  "role_line": "### Tiberian Dawn (`cnc-td`)\n\nWritten in batch R2 preparation, before any Tiberian Dawn unit is coded, from the Windows 95 (Gold) manual scan, the wiki's transcript of it and the unit pages that quote it, StrategyWiki's two Tiberian Dawn unit pages, and EA's code for the original game (files in capitals are at https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/<FILE>).\n\n- **No in-game role text.** Units have no designation. Hovering over a sidebar icon shows only the item's name and price (SIDEBAR.CPP, the Help_Text call that passes the name and Cost_Of). The Remastered Collection adds tooltips, but their text is not in EA's code release and no page read here quotes them as such, so nothing in-game feeds roles step 1 or step 4.\n- **Official text: the manual.** Each unit gets stat lines (Armor, Cost, Seconds to produce, Range), a Weapon line and a short paragraph; an asterisk marks units buildable only in multiplayer.\n  - Scan: https://static.wikia.nocookie.net/cnc_gamepedia_en/images/e/e9/CC-Manual.pdf/revision/latest (the wiki's File:CC-Manual.pdf, an October 1998 OEM printing of the Gold manual). GDI units on printed pages 35 to 41 and Nod units on 52 to 59. The 'State of the Art' tables give each unit's multiplayer tech level and prerequisites on pages 42-43 (GDI) and 60-61 (Nod), next to a hierarchy chart on 42 and 60.\n  - Transcript: https://cnc.fandom.com/wiki/Command_%26_Conquer_(1995)_manual copies every unit paragraph but leaves out the multiplayer section and the tables, and some of its stat lines are mistyped (GDI Engineer cost 160 and Nod Rocket Soldier cost 400, where the scan has 500 and 300). Most Tiberian Dawn unit pages repeat the paragraph in a quote box credited to the manual.\n  - Cite the scan as kind official, and take figures from it rather than from the transcript. Cite the transcript or a unit page as kind wiki, with a note that it copies the manual. Only the scan has the tables, the multiplayer options and the controls pages.\n  - The PDF is the publisher's manual, not a page of the wiki that hosts it, so it never counts toward the sources rule's third page of the same site. The copy-check cannot read a PDF: check paraphrases of it by hand against its extracted text.\n- **Roles step 1 reads the paragraph**, the unit's official one-line description, together with the unit's manual name where that name is its job (roles word list).\n  - Words that name a role: transporting troops and the name Armored Personnel Carrier (APC: transport); Transport Chinook Helicopter (transport); the name Recon Bike and its 'ideal scouting unit' (scout; the APC paragraph calls the APC a scouting unit too); hit and run tactics (Nod Buggy: raider); the name Mobile Artillery (siege, which must still pass its coding rule); capturing buildings and the name Engineer (engineer); the name Harvester (logistics).\n  - Words that name none: support unit in mixed groups (Rocket Soldier; support here means firepower), all-purpose (Grenadier), versatile attack unit (Mammoth Tank), all-around vehicle (Medium Tank), Elite Forces (GDI Commando), the MCV's base-building text (step 2 decides it), and the Weapon line ('Sniper Rifle' names a weapon, not the Commando's job).\n  - Two roles in one paragraph (the APC's transport and scout): neither has a target, so step 1 goes on and both wait for roles.secondary step 1.\n- **Roles step 4 and the roles.secondary drop rule read the same paragraph.** There are no separate strong-against or weak-against lines.\n  - Strong: the unit is useful, very useful, especially or exceptionally useful, or effective against a kind of target, or useful for or proficient at crushing it; it is used mainly against it; or it destroys, kills, tears through, mows through, takes out or takes down, or shines against it, or makes it suffer. A qualifier such as en masse or in groups keeps the target; when one sentence names two targets, the first wins a tie.\n  - Weak (for the drop rule): the unit dies against, is vulnerable to, or can be brought down by a kind of target. Examples: the Nod Buggy against armour; the Medium Tank, which infantry in numbers and aircraft can kill.\n  - Target words: tanks, armor, armored units, vehicles and harvesters mean armour; infantry, troops, humans, personnel and engineers mean infantry; aircraft and airborne or aerial units, threats and assaults mean air. Structures, buildings, base defenses, walls, armament, lone units, 'just about everything', lightly armored targets (the Buggy's, whose same paragraph says armour kills it), a named unit (Attack Cycles) and a weapon kind (the Humvee's weakness to explosive weapons) match none of the three anti roles.\n  - Paragraphs that name a target, read literally: Minigunner (tanks, en masse, on both sides' entries), Rocket Soldier (armour), Commando (infantry), Humvee (infantry), Medium Tank (vehicles; weak: infantry and aircraft), Rocket Launcher (aerial threats, on both sides' entries), Orca (armour), Flamethrower Infantry (humans, so infantry), Chem Warrior (infantry), Recon Bike (aerial assaults), Nod Buggy (infantry; weak: armour), Light Tank (destroying personnel, so infantry), Flame Tank (infantry), SSM Launcher (infantry in large groups; its base defences name no anti role), Apache (infantry first; armour only en masse), APC and Harvester (infantry, by crushing them; the Harvester is unarmed, so roles step 2 decides its primary).\n  - The literal reading gives the Minigunner anti-armour at step 4 although its small-arms rifle fails anti-armour's requires (step 4 skips a role for failed requires only when it yields more than one target). Code it as the rule says, record the requires break in atypical, and report it as a rule problem (quality bar); the same holds for any other line above that looks wrong for its unit.\n  - Text that ties a strength to a second weapon counts only for that weapon at roles.secondary step 3: the Mammoth Tank's firing at aircraft belongs to its missiles.\n- **No step 4 bonus from the game data.** The warhead table (CONST.CPP, Warheads) gives each warhead a multiplier against five armour types (none, wood, aluminum, steel, concrete). None is above full damage: the original stores full as 255/256 and the 2020 Remastered code as exactly 256/256. So step 4 rests on the paragraph, or on a main weapon that can hit nothing else.\n- **Shared units.** Every buildable type has one data entry, whichever side builds it. A paragraph the manual prints once counts for the shared entry (the APC is printed only under GDI, although the Nod table lists it as multiplayer-only for Nod). Where both sides print the unit with different paragraphs, only what both carry counts (Minigunner, Engineer, Commando, Rocket Launcher); the Rocket Soldier, Harvester, MCV and Chinook paragraphs read the same on both sides.\n- **The stat lines are neither role text nor band data.** The Armor and Range words often clash with the code (the Light Tank reads Medium and the Orca Light, but both have steel armour in UDATA.CPP and AADATA.CPP). Take bands and the armour class from the code; the Weapon line is only a name.\n- **Not official.** The wiki's UnitBox role field (Basic infantry, Troop transport and so on), its useguns field and the page prose are the wiki's words. StrategyWiki's https://strategywiki.org/wiki/Command_%26_Conquer/GDI_units and https://strategywiki.org/wiki/Command_%26_Conquer/Nod_units end each unit with Strong vs. lines and give Remastered build times; they cite no source, and whether the lines copy the Remastered tooltips is unchecked (they would describe the remaster anyway). Cite them as kind guide; step 4 and the drop rule do not read them. For the sources rule that prefers another established site to a third page of the same site, StrategyWiki is that other site, though its kind stays guide.\n- **Official site.** The wiki's Recon bike page links an archived copy of Westwood's Command & Conquer page (https://web.archive.org/web/19980206010948/http://www.westwood.com:80/games/ccuniverse/cc1pc/cc1info.html). It would not load from this session (the archive reset the connection twice), so whether it profiles units is unchecked.",
+  "game_wide": "### Tiberian Dawn (`cnc-td`)\n\nWritten in batch R2 preparation, before any Tiberian Dawn unit is coded, from EA's code for the original game (files named in capitals are at https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/<FILE>; where the 2020 Remastered Collection code at https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/<FILE> differs, that is said), the Gold manual scan named under Official role lines (printed page numbers), and the Command & Conquer Wiki pages named below (https://cnc.fandom.com/wiki/<Title>). All of it describes multiplayer: the original has no skirmish mode ([Skirmish](https://cnc.fandom.com/wiki/Skirmish): the mode starts with Red Alert), only multiplayer games to which AI players can be added (manual, page 22).\n\n- **Basic orders** (no pattern): every unit. Move, attack, stop (S), guard (G: the unit then goes after threats that come near), force fire (Ctrl), force move (Alt: a crusher sent onto enemy infantry runs it over), scatter (X), follow (Ctrl+Alt), team keys and view keys (manual, Advanced Game Controls, pages 32 to 34). No attack-move, waypoints, patrol, stances, retreat or reinforce order. Deploying the MCV is that unit's own ability; letting riders out is the universal key. Two exceptions belong in their units' notes, not in abilities: a cloaked unit of a human player picks no target by itself while on guard (FOOT.CPP, Greatest_Threat), which is the Stealth Tank; and a human player's Commando on guard picks no target by himself either, so his rifle fires only at targets the player picks (INFANTRY.CPP, Greatest_Threat, the sniper rifle case).\n- **Multiplayer tech level** (a lobby setting, not a unit mechanic): the host sets a tech level from 1 to 7 (manual, page 24; the slider in NETDLG.CPP and NULLDLG.CPP, capped by MPLAYER_BUILD_LEVEL_MAX in DEFINES.H; it starts at 3, GLOBALS.CPP). Every unit and building has a level, and a multiplayer side may build a type only if its level is at or below the setting and its prerequisite buildings stand (HOUSE.CPP, Can_Build). Research at level 7, where every multiplayer unit (all are level 7 or lower) is open and only buildings gate; name the unit's level in tier.basis. Take the level from the code (IDATA.CPP, UDATA.CPP, AADATA.CPP); the manual's 'For Multiplay' lists (pages 42, 50, 60 and 68) agree except for the Nod Buggy (manual 3, code 4).\n- **No veterancy:** kills only make a soldier cheer and make the killer a likelier pick for enemies choosing targets (INFANTRY.CPP, Made_A_Kill; TECHNO.CPP, Evaluate_Object); nothing ranks up ([Veterancy](https://cnc.fandom.com/wiki/Veterancy) starts with Tiberian Sun). No `earn-veterancy`, and no ability has source veterancy.\n- **No garrisons:** no building takes infantry in to fight ([Garrisoning](https://cnc.fandom.com/wiki/Garrisoning) starts with Red Alert 2). Infantry enter buildings only through one-shot actions of their own (the Engineer's capture, the Commando's C4); record each on its unit.\n- **Transports** (`carry-passengers` on the carrier, never on the riders):\n  - Both the APC and the Chinook carry five infantry of their owner (TECHNO.CPP gives every transport five seats; the load checks in UNIT.CPP and AIRCRAFT.CPP turn away other owners; manual). No rider fires out, so the seats are passenger-cargo. Each carrier keeps one passive for its seats (Paired entries); entering and leaving are universal keys.\n  - When the APC dies, its infantry get out if there is room and die otherwise (UNIT.CPP, Take_Damage): on_death bail-out, basis in-game. A destroyed Chinook takes its riders with it (AIRCRAFT.CPP, Take_Damage): say so in on_death.notes.\n  - An Engineer can take over an empty enemy Chinook (INFANTRY.CPP, What_Action; [Engineer (Tiberian Dawn)](https://cnc.fandom.com/wiki/Engineer_(Tiberian_Dawn))): part of the Engineer's capture ability, and a weakness of the Chinook.\n- **Crew survivors** (on_death, not an ability): a destroyed vehicle that has the crew flag and is not a transport lets one crewman out half the time, with part of his health: a Minigunner if the vehicle is armed, a civilian technician if not (UNIT.CPP, Take_Damage). The flag (UDATA.CPP) is on for the Light, Medium, Mammoth, Flame and Stealth Tanks, Humvee, Buggy, Recon Bike, Artillery, Rocket Launcher, SSM Launcher, Harvester and MCV; the APC's riders get out instead (Transports). Aircraft and infantry never leave a survivor (AIRCRAFT.CPP and INFANTRY.CPP have no such code). Code bail-out with basis in-game for the flagged vehicles, citing UDATA.CPP and UNIT.CPP (or naming them in an uncertain entry when the unit already has five sources), and give the even chance in on_death.notes.\n- **Death blasts** (on_death death-blast, basis in-game; per unit, listed here because one routine holds them):\n  - The Flame Tank bursts into a napalm blast that burns everything near it (UNIT.CPP, Take_Damage, keyed to its death animation in UDATA.CPP).\n  - The Grenadier, Flamethrower Infantry and Chem Warrior always explode when killed, the Grenadier's blast being the smallest (INFANTRY.CPP, Take_Damage). A soldier crushed under a vehicle is removed without exploding (DRIVE.CPP, Overrun_Square).\n  - The SSM Launcher shows a bigger explosion when it dies with a missile loaded, but that animation does no damage (UNIT.CPP; the Napalm3 entry in ADATA.CPP has none): no death blast.\n- **Repair, rearming and healing** (no pattern; leave all of these off):\n  - The Repair Facility mends the vehicle parked on it for credits, more slowly when the pad is damaged (manual; [Repair facility](https://cnc.fandom.com/wiki/Repair_facility)); a badly hurt aircraft also heads for one (AIRCRAFT.CPP).\n  - The Helipad reloads helicopters, any of its side's aircraft may use any pad, and each new pad comes with a free Orca or Apache (manual; BUILDING.CPP; [Helipad (Tiberian Dawn)](https://cnc.fandom.com/wiki/Helipad_(Tiberian_Dawn))). No unit heals infantry; the Hospital is a campaign building.\n  - Self-repair is per unit: only the Mammoth Tank regains health by itself, and only up to half (UNIT.CPP, AI; manual). Code the armour model self-repair on it alone.\n- **Ammunition** (resource `limited-ammo`, not an ability): the Orca and the Apache carry a fixed load and must land on a Helipad to rearm (AADATA.CPP ammo values; AIRCRAFT.CPP; manual). Code limited-ammo on both and leave the trip home off. The SSM Launcher's two missiles come back on their own, one at a time and only while it stands still (UNIT.CPP, AI): never limited-ammo; whether it is the weapon's magazine trait follows that trait's coding rule (the manual's paragraph names the long reload as its weak point).\n- **Aircraft:**\n  - In flight they take half damage (AIRCRAFT.CPP, Take_Damage). No pattern and no armour model: mention it in armour.notes of every aircraft.\n  - Only a weapon whose projectile is flagged anti-aircraft can fire at a flying aircraft; any weapon can hit one that has landed (TECHNO.CPP, Can_Fire; the flag in BBDATA.CPP). Flagged: the Dragon TOW (Rocket Soldier, Recon Bike, Stealth Tank, Orca), the missiles of the Mammoth Tank, the Rocket Launcher's rockets and the SAM Site. Not flagged: the SSM Launcher's Honest John, cannons, guns, flames, grenades, shells and the Apache's chain gun. A unit with a flagged weapon also picks flying aircraft as targets by itself (FOOT.CPP and INFANTRY.CPP, Greatest_Threat), apart from the guard exceptions under Basic orders.\n  - The game does not split its fliers, so a flagged weapon lists low air and high air (high-air's coding rule for commanded games) and every other weapon lists neither (target-types: a flier that can be hit only on the ground is no air target).\n- **Crushing** (mobility trait `crush`, not an ability): the code fixes which vehicles run over enemy infantry (UDATA.CPP, the squash flag; DRIVE.CPP, Overrun_Square).\n  - Crushers: the Light, Medium, Mammoth, Flame and Stealth Tanks, the APC, Harvester and MCV. Not crushers: the Humvee, Buggy, Recon Bike, Artillery, Rocket Launcher and SSM Launcher.\n  - Every infantry type can be crushed, the Commando included (IDATA.CPP sets the flag for all infantry). Force move orders a crush, and a vehicle never crushes its own side's soldiers (manual; DRIVE.CPP). Give the trait to each crusher; on one smaller than large, record the size break in atypical, as in batch R1; the trait never decides a size.\n  - In the original data the Recon Bike can also be run over by these vehicles (UDATA.CPP, its crushable flag; DRIVE.CPP). The Remastered code turns that off and the manual says vehicles cannot overrun each other, so wherever crushing matters to the Recon Bike, add an uncertain entry marked sources_disagree.\n- **Going prone** (no pattern, not an armour model): frightened infantry drop flat, take half damage and crawl at half speed (INFANTRY.CPP, Take_Damage and AI). Mention it in armour.notes where it matters; never code damage-reduction or evasive for it.\n- **Tiberium fields** (no pattern): infantry lose a little health each time they reach the centre of a Tiberium cell; only the Chem Warrior is spared (INFANTRY.CPP, Per_Cell_Process; manual). Vehicles are not hurt. The Chem Warrior says so in its strengths (`immune:toxic`, the field being a toxic hazard); it is not immune to fire weapons, although the code books the field's harm as fire damage.\n- **Damaged vehicles slow down** (no pattern): at half health or less a vehicle takes three quarters of its throttle (DRIVE.CPP, Start_Of_Move). Leave it off; speed bands use full health.\n- **Crates** (a multiplayer option, manual page 22; picking one up is a universal key): ground units collect one by moving onto it (FOOT.CPP, Start_Driver; DRIVE.CPP). A multiplayer crate gives money, a free vehicle, a squad of five infantry, a one-shot nuclear missile, ion blast or air strike, full health for everything its finder owns, a cloak for units within a few cells, a map reveal or re-shroud, a nuclear, conventional or napalm blast, or a hostile Visceroid (CELL.CPP, Goodie_Check; the list on [Crate](https://cnc.fandom.com/wiki/Crate) leaves out the air strike, napalm and squad). Leave every crate effect off; a unit cloaked only by a crate gets no cloak.\n- **Side-wide powers** (left off every unit; none gives named unit types a new button, so no Tiberian Dawn ability takes source commander-power):\n  - The Ion Cannon, from the Advanced Communications Center (HOUSE.CPP; [Ion cannon](https://cnc.fandom.com/wiki/Ion_cannon)), and the Nuclear Strike, from the Temple of Nod; in multiplayer each side starts with every bomb part, so the strike recharges after each use, and both powers pause while the base is short of power (HOUSE.CPP; [Temple of Nod (Tiberian Dawn)](https://cnc.fandom.com/wiki/Temple_of_Nod_(Tiberian_Dawn))).\n  - The A-10 air strike is a campaign power; in multiplayer it comes only from a crate (HOUSE.CPP; CELL.CPP; [the A-10 page](https://cnc.fandom.com/wiki/A-10_ground_support_plane_(Tiberian_Dawn))). The A-10 and the Cargo Plane are not buildable: do not research them.\n- **Shroud, sight and radar** (no pattern): there is no fog of war. A black shroud (the manual's Unrevealed Terrain, tutorial pages) covers unexplored ground and stays lifted once any unit has seen it, and no setting makes it grow back (the game options in SPECIAL.H have none; [Fog of war](https://cnc.fandom.com/wiki/Fog_of_war)).\n  - So every sight band is a medium proposal (see the registry finding on sight_reference). Say in sensors.notes, in words, how far the unit lifts the shroud compared with the Minigunner. Aircraft have sight 0: in flight they lift no shroud, and a landed one lifts only a little around itself (AADATA.CPP; AIRCRAFT.CPP). A unit hidden under the shroud that fires at a player's unit is shown to that player, with a little ground around it (TECHNO.CPP, Fire_At).\n  - The radar map needs a powered Communications Center or Advanced Communications Center (manual), so no unit has the radar trait.\n  - A weapon is off-screen only by the range rule's second and third reasons (a proposal band uses no sight figure), and a gun is artillery only when a source shows it lobbing over cover: the code flags the Artillery's shell as arcing and clearing walls (BBDATA.CPP).\n- **Cloaking and detection** (per unit, apart from one engine default):\n  - Only the Stealth Tank cloaks (UDATA.CPP; manual): record cloak on it, with what breaks it.\n  - By engine default every infantry type, and the Communications Center, Turret, Obelisk of Light, Guard Tower and Advanced Guard Tower, make a cloaked enemy in a neighbouring cell shimmer into view (FOOT.CPP, Per_Cell_Process; the scanner flag IDATA.CPP sets for all infantry; BDATA.CPP). Being hit also makes it shimmer (TECHNO.CPP). That is game-wide and gives no unit the detector trait. The manual's Stealth Tank paragraph (page 55) names infantry and Guard Towers that the tank comes too close to. [Stealth](https://cnc.fandom.com/wiki/Stealth) lists only the buildings and says they find the tank within their attack range, while the code checks only the cells next to the tank; where the Stealth Tank's counters rest on the range, add an uncertain entry marked sources_disagree.\n- **Capturing buildings** (`capture-structure`): not game-wide. Only the Engineer captures: it takes any capturable enemy building outright, whatever its health, and is used up (INFANTRY.CPP, Per_Cell_Process; manual). Nobody can capture defences, walls or the Temple of Nod (BDATA.CPP); the Advanced Communications Center can in the original data but not in the Remastered code. A vehicle or aircraft docked at a captured building changes hands with it ([Engineer (Tiberian Dawn)](https://cnc.fandom.com/wiki/Engineer_(Tiberian_Dawn)); BUILDING.CPP, Captured). Say all this in the Engineer's ability summary. The Commando's C4 is his own ability.\n- **Captured factories** (leave off): a captured Construction Yard, Barracks, Hand of Nod, Weapons Factory, Airstrip or Helipad goes on building what its first owner's side builds, in multiplayer too (HOUSE.CPP, Can_Build, whose header says so; BUILDING.CPP, Update_Buildables reads the building's ActLike). That does not make a unit shared: record it under its own side and say so in tier.basis, as for Red Alert 1.\n- **Game-mode and economy rules** (leave off): selling buildings, and selling the vehicle that stands on a Repair Facility (BUILDING.CPP; [Repair facility](https://cnc.fandom.com/wiki/Repair_facility)). Capture the Flag is a multiplayer option in which a vehicle carries the flag at half speed and a cloaked carrier keeps shimmering (DRIVE.CPP, While_Moving; UNIT.CPP); a no-base flag game hands each side a Mobile Headquarters, which is never buildable ([Mobile Headquarters](https://cnc.fandom.com/wiki/Mobile_Headquarters)). At tech level 7 a hostile Visceroid may appear at random (HOUSE.CPP, AI). Nod's vehicles arrive at the Airstrip by cargo plane, and the Refinery comes with a free Harvester (manual).",
+  "registry_findings": [
+   {
+    "path": "speed_reference",
+    "severity": "wrong",
+    "current": "Minigunner (both sides' basic rifle infantry): speed 8 on the game's internal speed scale (MPH_SLOW in the released source code), against 18 for the Medium Tank",
+    "proposed": "Minigunner (both sides' basic rifle infantry): MaxSpeed MPH_SLOW, which is 8 (IDATA.CPP; DEFINES.H gives each MPH_ name its number, and the wiki's landspeed repeats it), against MPH_MEDIUM, 18, for the Medium Tank. Those two figures are not comparable as they stand. Tiberian Dawn bands compare paces worked out from EA's code for the original game (https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/<FILE>; the 2020 Remastered copy moves units the same way), because infantry, vehicles and aircraft turn MaxSpeed into movement differently; the steps below need no simulation. Let m be the unit's MaxSpeed number (6, 8, 10, 12, 18, 30, 35 or 40); a cell is 256 leptons.\n\nThe reference's pace: a walking soldier keeps full throttle on any ground and strides m leptons a tick (one less going north or east, from rounding). It snaps onto the next cell's spot once within 16 leptons and then stands for one tick before the next cell (INFANTRY.CPP, AI; COORD.CPP, Move_Point). So a straight cell takes floor(240 / (m - 1)) + 3 ticks going north or east and floor(240 / m) + 3 going south or west: 37 and 33 ticks for the Minigunner, an average of 7.338 leptons a tick. Diagonally (362 leptons a cell) it averages 7.780. Divide each straight pace by 7.338 and each diagonal pace by 7.780.\n\nInfantry follow the same rule: m 6 (Rocket Soldier) gives 0.75 (slow); m 8 (Minigunner, Engineer, Chem Warrior) 1.00; m 10 (Grenadier, Flamethrower Infantry, Commando) 1.25, diagonal 1.19 (medium).\n\nVehicles: UDATA.CPP makes each one wheeled (SPEED_WHEEL: Humvee, Buggy, Recon Bike, Harvester, MCV) or tracked (SPEED_TRACK: all the others). Clear ground cuts the throttle to 112/256 (tracked) or 160/256 (wheeled) (CONST.CPP, the Ground table; DRIVE.CPP, Start_Of_Move), so each tick banks a = m x 112 / 256 or m x 160 / 256, rounded to the nearest whole number, and the vehicle runs along its track in steps of 10 leptons. A straight cell takes floor(240 / a) ticks and a diagonal cell floor(320 / a) (DRIVE.CPP, While_Moving). Tracked, straight (diagonal): m 12 0.73 (0.73), slow (Mammoth Tank, Artillery); m 18 1.16 (1.16), medium (Light, Medium and Flame Tanks, Rocket Launcher, SSM Launcher); m 30 1.94 (1.94), fast (Stealth Tank); m 35 2.18 (2.22), fast (APC). Wheeled: m 12 1.16 (1.16), medium (Harvester, MCV); m 30 2.91 (2.91), very fast (Humvee, Buggy); m 40 3.88 (3.88), very fast (Recon Bike). Example, Medium Tank: m 18 and a 8, so 30 ticks a straight cell, 8.53 leptons a tick, 1.16 (medium), not the 2.25 that 18 / 8 suggests.\n\nAircraft fly at full throttle with no per-cell loss, moving in steps of 10 leptons and carrying the rest to the next tick (FLY.CPP, Physics), so they make close to m leptons a tick: the Orca and Apache (m 40) about 5.4 times the reference and the Chinook (m 30) about 4.0, all very fast.\n\nStore the straight ratio as speed_raw, rounded once from the exact pace (the Minigunner's unrounded straight pace is 7.338247), never from a figure already rounded. No unit's straight and diagonal ratios fall in different bands, and none rounds onto an edge. Leave out half health (vehicles then get three quarters of the throttle), prone crawling, flag carrying, roads (where tracked vehicles get the wheeled throttle) and crates.",
+    "evidence": "The current text invites dividing 18 by 8 (2.25, fast), but the engine does not move units at their MaxSpeed. https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/IDATA.CPP and UDATA.CPP give the MPH_ names and each vehicle's locomotion type; DEFINES.H gives each speed name a number: the three slow names 6, 8 and 10, the four medium names 12, 18, 30 and 35, and the one fast name 40. INFANTRY.CPP (AI movement block) sets soldiers to full throttle whatever the ground and snaps them onto a cell spot once within 16 leptons; COORD.CPP (Move_Point) floors each axis step, which costs one lepton going north or east. CONST.CPP (Ground table, LAND_CLEAR row) gives tracked units S3 = 0x70 and wheeled units S4 = 0xA0; DRIVE.CPP (Start_Of_Move) applies that throttle and cuts it by a quarter at half health or less; DRIVE.CPP (While_Moving) steps along 24-entry straight and 32-entry diagonal tracks, 10 leptons a step; FLY.CPP (Physics) moves aircraft in whole 10-lepton steps and keeps the remainder. A tick-by-tick model of that code gives the ratios above (Medium Tank 1.163, Stealth Tank 1.938, APC 2.180, Mammoth Tank and Artillery 0.727, Humvee and Buggy 2.907, Recon Bike 3.876); the raw ratios would put the Medium, Light and Flame Tanks fast instead of medium, the Mammoth and Artillery medium instead of slow, and the APC very fast instead of fast. The infantry diagonal uses an exact-angle stand-in for the facing routine, which the release does not contain; the same stand-in reproduces the Red Alert 1 entry's diagonal figures, and no diagonal changes a band here. The wiki infoboxes repeat the raw numbers (https://cnc.fandom.com/wiki/Minigunner_(Tiberian_Dawn): landspeed 8; https://cnc.fandom.com/wiki/SSM_Launcher_(Tiberian_Dawn): landspeed 18). The ra1 entry's speed_reference already works this way for the same engine family."
+   },
+   {
+    "path": "sight_reference",
+    "severity": "wrong",
+    "current": "Minigunner: sight range 1 in the released source code (IDATA.CPP). Vehicles' sight ranges are in UDATA.CPP, on the same scale",
+    "proposed": "None: Tiberian Dawn has no fog of war in any mode (the game has no setting for it), only a black shroud over unexplored ground that stays lifted once a unit has seen it, enemy units on it included. So every sight band is a medium proposal. A unit's sight range (in cells: IDATA.CPP, UDATA.CPP, AADATA.CPP) is how far it lifts the shroud; the Minigunner's is 1, among the shortest, and aircraft have none. Say in sensors.notes, in words, how far the unit lifts the shroud compared with the Minigunner (for example, four times as far), never as a figure",
+    "evidence": "Manual scan https://static.wikia.nocookie.net/cnc_gamepedia_en/images/e/e9/CC-Manual.pdf/revision/latest, GDI and Nod tutorials (printed pages 71 and 79): the dark Unrevealed Terrain goes away as units move through it, and units differ in how far they reveal; nothing makes it come back. https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/SPECIAL.H: the game options hold no shroud or fog setting (Red Alert 1 later added one). https://cnc.fandom.com/wiki/Fog_of_war: in the early games the shroud was always on and fog of war was off by default, with no option for it in some. docs/fields.md, sensors.basis: a game with no fog of war gives proposal and a medium band, and fields.md's sight_reference row asks for None and the reason; the ra2 entry follows this. With the current text, coders would band every vehicle (sight 2 to 4) and the Commando (5) long against the Minigunner's 1."
+   },
+   {
+    "path": "range_reference",
+    "severity": "wrong",
+    "current": "Minigunner's M16: range 0x0200 in the weapon table of the released source code (CONST.CPP). Compare every weapon's range from that table. Weapon ranges are in leptons, 256 (0x0100) to a cell, while sight ranges are in cells (FUNCTION.H, Cell_To_Lepton), so convert before the off-screen test compares a reach with a sight figure: 0x0200 is two cells",
+    "proposed": "Minigunner's M16: range 0x0200 (two cells) in the weapon table of EA's code (CONST.CPP, Weapons; the same in the original and the 2020 release). Compare every weapon's range from that table, in leptons (256 to a cell). With no fog of war every sight band is a proposal, which uses no sight figure, so the off-screen test's first reason never applies (see sight_reference): a weapon is off-screen only when a source says it needs spotters or fires beyond its own sight",
+    "evidence": "The M16 figure is right (https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/CONST.CPP, Weapons table, WEAPON_M16 0x0200). The last sentence tells coders to compare reaches with sight figures, which the range rule forbids once sight bands are proposals: docs/vocabularies.md, range band off-screen, compares only with the figure the sight band uses, and a proposal band uses none (the batch R1 note says the same for Red Alert 2, research/registry-notes/games-r1.md, Shroud and sight). Followed as written, it would make nearly every vehicle gun off-screen, since most reach past their own unit's sight figure (Medium Tank cannon 0x04C0, almost five cells, against sight 3; Humvee machine gun 0x0400 against sight 2; Artillery 0x0600 and SSM Launcher 0x0A00 against sight 4), and both gunships' weapons too (sight 0). Weapon figures from CONST.CPP, sight figures from UDATA.CPP and AADATA.CPP."
+   },
+   {
+    "path": "tier_map",
+    "severity": "missing",
+    "current": "Nine gates: Barracks t1, Hand of Nod t1, Weapons Factory t1, Airstrip t1, Communications Center t2, Helipad t1, Repair Facility t2, Advanced Communications Center t3, Temple of Nod t3; no Obelisk of Light",
+    "proposed": "Add {\"gate\": \"Obelisk of Light\", \"band\": \"t2\"} after the Communications Center entry, with a source entry for https://cnc.fandom.com/wiki/SSM_Launcher_(Tiberian_Dawn) (kind wiki, supports tier_map) whose note says: the SSM Launcher, the only unit gated by it, needs an Obelisk of Light, which itself needs only the Communications Center (BDATA.CPP), so the gate is t2; the manual's Nod table names the Temple of Nod instead, which the page and the code (UDATA.CPP, HOUSE.CPP) contradict.",
+    "evidence": "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/UDATA.CPP: the SSM Launcher's entry (UnitSAM, internal name MLRS) has the Advanced Guard Tower flag as its prerequisite; HOUSE.CPP (Can_Build) counts an Obelisk of Light as that flag; BDATA.CPP gives the Obelisk the Communications Center as its only prerequisite. https://cnc.fandom.com/wiki/SSM_Launcher_(Tiberian_Dawn): infobox built at the Airstrip, req Obelisk of Light, tech level 7; the page calls it the only unit gated by a base defence and says the manual's Temple of Nod is a mistake. Manual scan (https://static.wikia.nocookie.net/cnc_gamepedia_en/images/e/e9/CC-Manual.pdf/revision/latest): the Nod hierarchy chart on printed page 60 pairs the Airfield with the Obelisk of Light for the SSM Launcher, while the table on page 61 lists the Temple of Nod. https://cnc.fandom.com/wiki/Tier: the Communications Center is Tiberian Dawn's tier 2 building and the Advanced Communications Center and Temple of Nod its tier 3 buildings, so the Obelisk is no top-level tech. Without the gate a coder has no listed gate to copy and could take the Temple of Nod (t3) from the manual's table."
+   },
+   {
+    "path": "sources/1/note",
+    "severity": "wrong",
+    "current": "The infobox labels the Helipad tier 2 and lists no prerequisite. EA's released source code is stricter evidence: BDATA.CPP gives the Helipad only the Barracks as a prerequisite, HOUSE.CPP lets a Hand of Nod stand in for a Barracks, and AADATA.CPP gives the Orca, Apache and Chinook only the Helipad. Under our tier rule (t1 = built from a basic production building with no extra tech) the Helipad and its aircraft are therefore t1, not the wiki's tier 2.",
+    "proposed": "The infobox labels the Helipad tier 2 and gives the Barracks (GDI) or the Hand of Nod (Nod) as its only requirement; the Tier page names the Communications Center as Tiberian Dawn's tier 2 building and says nothing of the Helipad. EA's released source code agrees on the requirement: BDATA.CPP gives the Helipad only the Barracks as a prerequisite, HOUSE.CPP lets a Hand of Nod stand in for a Barracks, and AADATA.CPP gives the Orca, Apache and Chinook only the Helipad. Under our tier rule (t1 = built from a basic production building with no extra tech) the Helipad, a production building, and its aircraft are therefore t1, not the wiki's tier 2.",
+    "evidence": "https://cnc.fandom.com/wiki/Helipad_(Tiberian_Dawn) (cached 2026-10-19): the infobox req field lists the Barracks (GDI) and the Hand of Nod (Nod), with tier 2 and tech level 6; the page also says the pad builds as fast as a much cheaper building and can be used for an early rush. https://cnc.fandom.com/wiki/Tier (Tiberian Dawn tab): tier 2 is the Communications Center, tier 3 the Advanced Communications Center or Temple of Nod. https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/BDATA.CPP: the Helipad's prerequisite is the Barracks flag (level 6). The band itself (t1) is right; only the note misreports the infobox."
+   },
+   {
+    "path": "version_researched",
+    "severity": "wrong",
+    "current": "The original game's final rules (DOS patch 1.22 and the Windows 95 Gold edition) with The Covert Operations, as the Command & Conquer Wiki and the source code EA released in 2020 describe them in October 2026; balance changes made by the 2020 Remastered Collection patches, such as the APC needing a Repair Facility, are noted where they differ",
+    "proposed": "The original game's final rules (DOS patch 1.22 and the Windows 95 Gold edition) with The Covert Operations, as EA's source code for the original game (electronicarts/CnC_Tiberian_Dawn), the Gold manual and the Command & Conquer Wiki describe them in October 2026. The 2020 Remastered Collection code (CnC_Remastered_Collection, folder TIBERIANDAWN) gives the same values except where the remaster changed the data; where the two differ, the original code counts and the 2020 value goes in notes (the Recon Bike can be crushed, and the Chem Warrior runs from danger, only in the original). Balance changes made by the Remastered Collection patches, such as the APC needing a Repair Facility, are noted where they differ",
+    "evidence": "The 2020 code (https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/<FILE>) is the Remastered Collection's copy and changes some original data. EA's separate release of the original game's code (https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/<FILE>, the 2025 release for Steam Workshop support) differs from it in UDATA.CPP (heavy vehicles can crush the Recon Bike in the original; the 2020 copy sets false and keeps true in a comment), IDATA.CPP (the Chem Warrior is a run-away type in the original, not in 2020, and its single-player level is 99 against 98; the Commando has the capture flag in the original, not in 2020), BDATA.CPP (the Advanced Communications Center is capturable in the original, not in 2020) and CONST.CPP (full damage is 255/256 in the original warhead table, 256/256 in 2020). The 2020 copy also carries a Nuke Tank only as a Petroglyph example mod. https://cnc.fandom.com/wiki/Command_%26_Conquer:_The_Covert_Operations notes the Chem Warrior's 99 versus 98 level. Since the entry describes the original rules, unit coders need to know which code release decides."
+   }
+  ],
+  "other_notes": "- **Three open points, settled.** The batch note's lines on each need updating.\n  - *The Helipad stays t1, not t2.* The registry already maps it t1, a change the step-1 fact-check made; the note's line saying t2 is out of date. The pad needs only the Barracks or Hand of Nod (BDATA.CPP and HOUSE.CPP at https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/<FILE>; the infobox req on https://cnc.fandom.com/wiki/Helipad_(Tiberian_Dawn)). It is itself the aircraft factory, https://cnc.fandom.com/wiki/Tier names only the Communications Center as Tiberian Dawn's tier 2 building, and batch R1 records production buildings as t1 gates. Its multiplayer level 6 is a lobby level, not a building. So the Orca, Apache and Chinook are t1 with gate Helipad; tier.basis mentions the wiki's tier 2 label and the level.\n  - *The original lobby's build level* is a slider from 1 to 7 that the host sets (manual scan, page 24; NETDLG.CPP for network games and NULLDLG.CPP for modem and serial games; the cap MPLAYER_BUILD_LEVEL_MAX is 7 in DEFINES.H). It goes to every player with the game options. It starts at 3 when the program starts (GLOBALS.CPP) and keeps the host's last choice after that; no settings file stores it, and multiplayer ignores the single-player levels. The 2020 Remastered code takes it from its own lobby (DLLInterface.cpp). Research at 7, as the note already says.\n  - *The SSM Launcher is buildable in multiplayer.* Nod builds it at level 7 once an Obelisk of Light stands. UDATA.CPP gives it level 7, the Advanced Guard Tower flag as prerequisite, Nod and the multiplayer houses as owners, and single-player level 98, which marks multiplayer-only units (INI.CPP uses 98 for the full multiplayer set; https://cnc.fandom.com/wiki/Command_%26_Conquer:_The_Covert_Operations reads 98 the same way). HOUSE.CPP (Can_Build) counts an Obelisk as that flag; the manual's Nod pages 60 and 61 mark it multiplayer-only; https://cnc.fandom.com/wiki/SSM_Launcher_(Tiberian_Dawn) says no original mission lets the player start with or build it (only a hidden dinosaur mission does), while the AI fields it, which is what the Covert Operations page's remark about its missions using the SSM Launcher comes down to. The note's campaign-only reading is a name trap: in the code the SSM Launcher is UNIT_MSAM (data UnitSAM, INI name MLRS) and the Rocket Launcher is UNIT_MLRS (UnitMLRS, INI name MSAM). HOUSE.CPP's campaign rules keep UNIT_MLRS, the Rocket Launcher, from campaign Nod for good and from campaign GDI before mission 9. The wiki keeps the trap too: the SSM page's internalname is MLRS.\n- **Shared units: nine.** Each is ownable by both sides in the code and listed in both sides' tables in the manual (pages 42-43 and 60-61): Minigunner, Rocket Soldier, Engineer, Commando, APC, Harvester, MCV, Rocket Launcher (the manual's MRLS) and Chinook. The note's list leaves out the Rocket Soldier, APC and Chinook.\n  - GDI only: Grenadier, Humvee, Medium Tank, Mammoth Tank, Orca. Nod only: Flamethrower Infantry, Chem Warrior, Recon Bike, Buggy, Light Tank, Flame Tank, Stealth Tank, Artillery, SSM Launcher, Apache. That makes 24 buildable units.\n  - Not buildable in multiplayer, so not to be researched: the A-10, Cargo Plane, Gunboat, Hovercraft, Mobile Headquarters, Visceroid, civilians and dinosaurs. The 2020 code also holds a Nuke Tank (NTNK), but only inside Petroglyph's example-mod switch (UDATA.CPP of the Remastered Collection): it is no game unit.\n- **Gates for shared units** (a suggestion for the note): the two sides' buildings have different names for the same band (Barracks or Hand of Nod, Weapons Factory or Airstrip, Advanced Communications Center or Temple of Nod). Record the GDI building, GDI being the first side in the registry, and name the Nod one in tier.basis; the Chinook's gate is the Helipad on both sides. The APC needs a barracks and a vehicle factory, both t1: record the factory it comes out of. The Harvester also needs a Refinery, which every vehicle factory needs anyway: record the factory. If the tier_map finding is accepted, the SSM Launcher records Obelisk of Light; the manual's table (page 61) wrongly names the Temple of Nod.\n- **Neither starting units nor crates make a unit shared.** Multiplayer games with starting units give each side a level-dependent set that ignores ownership (INI.CPP, the starting-unit tables): from level 6 a GDI player can start with an SSM Launcher, as the SSM Launcher page notes. A crate may hand over any unit of either side (CELL.CPP; https://cnc.fandom.com/wiki/Crate). The faction comes from what a side can build.\n- **Code names**, for reading the code and the wiki's internalname field: E1 Minigunner, E2 Grenadier, E3 Rocket Soldier, E4 Flamethrower Infantry, E5 Chem Warrior, E6 Engineer (its data object is called E7 in IDATA.CPP), RMBO Commando; JEEP Humvee, BGGY Buggy, BIKE Recon Bike, LTNK Light Tank, MTNK Medium Tank, HTNK Mammoth Tank, FTNK Flame Tank, STNK Stealth Tank, ARTY Artillery, HARV Harvester, MCV, APC, MSAM Rocket Launcher, MLRS SSM Launcher; ORCA Orca, HELI Apache, TRAN Chinook.\n- **Original code against the 2020 code, per unit** (the game-wide list covers the Recon Bike's crushability and the Advanced Communications Center's capture). The Chem Warrior runs from danger in the original data (IDATA.CPP, its run-away flag), not in the 2020 code. The original Commando has the capture flag, so he too can take over an empty enemy Chinook and is used up doing it (INFANTRY.CPP, What_Action and Per_Cell_Process); the 2020 code clears the flag. Put each in the unit's notes with both versions named.\n- **Per-unit code facts that are easy to miss:** the Flamethrower Infantry takes a little extra damage from every hit that does not kill it, from the pilot light (INFANTRY.CPP, Take_Damage), a weakness; the Recon Bike has wood armour, the class buildings use, so fire hurts it at full strength and explosives more than other light vehicles (UDATA.CPP; CONST.CPP, Warheads); the SSM Launcher's reload stops while it drives (UNIT.CPP, AI).\n- **Damage categories that step 4 will turn into odd types.** The wiki's bracketed category repeats the code, and step 4 maps it.\n  - The Chem Warrior's spray is HE (BBDATA.CPP gives the chem spray the HE warhead; infobox 80 (HE)), so step 4 makes it explosive, which the chemical family does not allow. The manual calls it a Tiberium gas that kills infantry (page 53). If the note wants it toxic, it needs a step-3 line like the one for Tiberium Wars' flamethrowers; otherwise code explosive and record the family break in atypical.\n  - The Apache's chain gun is HE too (infobox 25 (HE); CONST.CPP, the chain gun fires the spreadfire bullet), which gives explosive with a machine-gun family break. The manual's use of it against infantry and structures fits HE, so no step-3 line is suggested for it.\n  - The SSM Launcher's Honest John is fire (infobox 100 (fire); BBDATA.CPP).\n- **Range bands will be long almost everywhere.** Against the M16's two cells only the M16, the two flame weapons and the chem spray are medium; every other unit weapon, from the Grenadier's grenade up, is long, and none is short (CONST.CPP, Weapons). With no fog of war none is off-screen unless a source says it needs spotters or fires beyond its sight (see the range_reference finding). That is the rule working, not an error.\n- **Prices.** cost_band.raw is the list price. Each Refinery comes with a free Harvester and each Helipad with a free Orca or Apache (manual; Helipad page), which does not change raw.\n- **Resolved wiki titles.** Armored Personnel Carrier, Chemical Warrior, Flamethrower Infantry, Light Tank, Medium Tank, Mobile Construction Vehicle, Recon Bike, Rocket Launcher and Rocket Soldier take capitals, each followed by (Tiberian Dawn), and so does Mobile Headquarters; the lower-case spellings redirect. Flame tank, Mammoth tank, Stealth tank and Communications center (Tiberian Dawn) stay lower case, and the Repair Facility's page is plain Repair facility. The other units' pages are the name followed by (Tiberian Dawn): Minigunner, Grenadier, Engineer, Commando, Humvee, Buggy, Artillery, Harvester, Orca, Apache, Chinook, SSM Launcher.\n- **Other endpoints and files.** StrategyWiki's API is https://strategywiki.org/w/api.php?action=parse&page=<Title>&prop=wikitext&format=json (titles Command_&_Conquer/GDI_units and Command_&_Conquer/Nod_units). The manual scan needs a text extraction (pdftotext) before searching; its page headers carry the printed page numbers. EA's original code is at https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/<FILE> (files at the repository root, names in capitals), the 2020 copy at https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/<FILE>.",
+  "pages_read": [
+   "docs/fields.md (Conventions, roles.primary, roles.secondary, sensors, armament damage, Game table)",
+   "docs/vocabularies.md (tiers, roles, speed, sight and range bands, damage types, weapon families, resources, on-death terms)",
+   "research/registry-notes/README.md",
+   "research/registry-notes/games-r1.md (Official role lines, Game-wide mechanics, RA1 research notes)",
+   "research/registry-notes/games-r2.md",
+   "data/games.json (cnc-td entry; ra1, ra2, cnc-ts, cnc3, renegade references)",
+   "data/pattern-registry.json",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/README.md",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/AADATA.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/ADATA.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/AIRCRAFT.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/BBDATA.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/BDATA.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/BUILDING.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/CELL.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/CONST.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/COORD.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/DEFINES.H",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/DISPLAY.H",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/DRIVE.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/FLY.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/FOOT.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/GLOBALS.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/HOUSE.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/IDATA.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/INFANTRY.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/INI.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/INIT.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/NETDLG.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/NULLDLG.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/SIDEBAR.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/SPECIAL.H",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/TECHNO.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/UDATA.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/UNIT.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/UDATA.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/IDATA.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/BDATA.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/CONST.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/HOUSE.CPP",
+   "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/DLLInterface.cpp",
+   "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/e/e9/CC-Manual.pdf/revision/latest",
+   "https://cnc.fandom.com/wiki/Command_%26_Conquer_(1995)_manual",
+   "https://cnc.fandom.com/wiki/Command_%26_Conquer:_The_Covert_Operations",
+   "https://cnc.fandom.com/wiki/SSM_Launcher_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Helipad_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Tier",
+   "https://cnc.fandom.com/wiki/Minigunner_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Fog_of_war",
+   "https://cnc.fandom.com/wiki/Veterancy",
+   "https://cnc.fandom.com/wiki/Garrisoning",
+   "https://cnc.fandom.com/wiki/Stealth",
+   "https://cnc.fandom.com/wiki/Crate",
+   "https://cnc.fandom.com/wiki/Skirmish",
+   "https://cnc.fandom.com/wiki/Repair_facility",
+   "https://cnc.fandom.com/wiki/Ion_cannon",
+   "https://cnc.fandom.com/wiki/Temple_of_Nod_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/A-10_ground_support_plane_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Mobile_Headquarters",
+   "https://cnc.fandom.com/wiki/Engineer_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Commando_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Grenadier_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Rocket_Soldier_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Flamethrower_Infantry_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Chemical_Warrior_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Humvee_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Buggy_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Recon_Bike_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Light_Tank_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Medium_Tank_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Mammoth_tank_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Flame_tank_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Stealth_tank_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Artillery_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Rocket_Launcher_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Armored_Personnel_Carrier_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Harvester_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Mobile_Construction_Vehicle_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Orca_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Apache_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Chinook_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Communications_center_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Guard_tower",
+   "https://cnc.fandom.com/wiki/Damage_Calculation_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Visceroid_(Tiberian_Dawn)",
+   "https://cnc.fandom.com/wiki/Portal:Tiberian_Dawn",
+   "https://cnc.fandom.com/wiki/Template:Tiberian_Dawn_GDI_Arsenal",
+   "https://cnc.fandom.com/wiki/Template:Tiberian_Dawn_Nod_Arsenal",
+   "https://cnc.fandom.com/wiki/Official_Guide_to_Command_%26_Conquer",
+   "https://cnc.fandom.com/wiki/Tiberian_Dawn_Mission_Manual",
+   "https://strategywiki.org/wiki/Command_%26_Conquer/GDI_units",
+   "https://strategywiki.org/wiki/Command_%26_Conquer/Nod_units",
+   "https://strategywiki.org/wiki/Command_%26_Conquer/Units"
+  ]
+ },
+ "verdicts": {
+  "verdicts": [
+   {
+    "claim": "Role line: no in-game role text; hovering a sidebar icon shows only the item's name and price (SIDEBAR.CPP, Help_Text with Cost_Of)",
+    "real": true,
+    "reason": "The original sidebar passes only the full name and Cost_Of to the help text; the type classes hold no designation field.",
+    "evidence": "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/SIDEBAR.CPP (the sidebar's click handler hands the item's full name and its price to the help-text call); UDATA/IDATA/AADATA constructors read in full: no role or description field."
+   },
+   {
+    "claim": "Role line: the Remastered Collection adds tooltips whose text is not in EA's code release",
+    "real": false,
+    "reason": "No page or file read shows that Remastered tooltips exist or what they say; the sentence is unsourced (the conclusion that nothing in-game feeds roles steps 1 and 4 for the original rules still holds).",
+    "evidence": "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/DLLInterface.cpp: no tooltip or description strings (grep); cached https://cnc.fandom.com/wiki/Command_%26_Conquer:_Remastered_Collection_manual and the cached Remastered patch pages: no mention of unit tooltips.",
+    "correction": "Drop the tooltip sentence or cite a page that shows them; keep: the original game has no in-game role text, so nothing in-game feeds roles step 1 or step 4."
+   },
+   {
+    "claim": "Manual unit entries carry Armor, Cost, Seconds to produce and Range lines, a Weapon line and a short paragraph; an asterisk marks multiplayer-only units",
+    "real": true,
+    "reason": "Every unit entry in the scan has that layout, and the starred entries carry a footnote saying they are multiplayer-only (sometimes given in single-player missions).",
+    "evidence": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/e/e9/CC-Manual.pdf/revision/latest, pdftotext -layout, printed pages 35-40 and 52-58; footnotes on pages 36, 53, 56 and 58."
+   },
+   {
+    "claim": "Scan = the wiki's File:CC-Manual.pdf, an October 1998 OEM printing of the Gold manual; GDI units on printed pages 35-41, Nod on 52-59; tables and hierarchy charts on 42-43 and 60-61",
+    "real": true,
+    "reason": "Metadata and page headers match; pages 41 and 59 are only section title pages, pages 42 and 60 hold the hierarchy chart plus the For Multiplay level list, and 43 and 61 hold the State of the Art tables.",
+    "evidence": "pdfinfo of the PDF: title '1 C&C OEM v.1', created 19 Oct 1998, 89 pages; each page header carries the printed page number (pdf page n = printed page n). https://cnc.fandom.com/api.php?action=parse&page=File:CC-Manual.pdf: the English C&C95 manual PDF; the transcript page calls it the Gold Edition manual."
+   },
+   {
+    "claim": "Transcript page copies every unit paragraph, leaves out the multiplayer section and tables, and mistypes the GDI Engineer cost (160) and Nod Rocket Soldier cost (400)",
+    "real": true,
+    "reason": "All unit paragraphs match the scan word for word; the page names the sections it leaves out (the start-up, play, multiplayer, advanced-controls, credits and award sections) and has no State of the Art tables; both mistypes are there.",
+    "evidence": "https://cnc.fandom.com/api.php?action=parse&page=Command%20%26%20Conquer%20(1995)%20manual&prop=wikitext&format=json, compared paragraph by paragraph with the scan text by script; GDI Engineer 'Cost: 160' (scan 500), Nod 'Rocket Infantry' 'Cost: 400' (scan 300).",
+    "correction": "Add a third mistype: the GDI Rocket Soldier shows 33 seconds to produce and Range N/A, where the scan (page 35) has 17 and Medium."
+   },
+   {
+    "claim": "Most Tiberian Dawn unit pages repeat the manual paragraph in a quote box credited to the manual",
+    "real": true,
+    "reason": "22 of the 23 buildable-unit pages fetched have such a Quote box; the Medium Tank page has none.",
+    "evidence": "API wikitext of all unit pages (Grenadier ... Chinook (Tiberian Dawn)); regex for {{Quote|...manual}}."
+   },
+   {
+    "claim": "Cite the scan as kind official and the transcript or unit pages as kind wiki with a copy note; the PDF never counts toward the third-page rule; the copy-check cannot read a PDF",
+    "real": true,
+    "reason": "Matches the source-kinds terms, the sources rule and the runbook's hand check for PDFs.",
+    "evidence": "data/vocab/source-kinds.json (official covers the manual; a wiki page copying official text stays wiki with a note); docs/fields.md sources[] (cite another established site rather than a third page of the same site); docs/research-runbook.md section 8 step 4 part 3 (PDFs checked by hand from pdftotext)."
+   },
+   {
+    "claim": "Step 1 words that name a role: APC transport (verb plus name), Transport Chinook (transport), Recon Bike name and 'ideal scouting unit' (scout, also the APC), Buggy hit and run (raider), Mobile Artillery (siege), Engineer, Harvester (logistics)",
+    "real": true,
+    "reason": "Each is a label, an alias or a word form of one in the scan's paragraph or name, and the unit's own name names its job.",
+    "evidence": "Manual pages 37 (APC), 38/56 (Chinook), 54 (Recon Bike, Buggy), 55 (Mobile Artillery), 36/53 (Engineer), 39/57 (Harvester); data/vocab/roles.json aliases (personnel carrier, recon, hit-and-run, artillery, harvester) and the rule that a unit's name counts when it names its job."
+   },
+   {
+    "claim": "Step 1 words that name no role include the MCV's base-building text (step 2 decides it)",
+    "real": false,
+    "reason": "roles.json says official words name a role through any word form of a label or alias (its example: harasses for harasser). The MCV paragraph says the vehicle is converted into a Construction Yard and used to build other structures: 'build' is a word form of the engineer alias builder, and it describes the MCV's own job. The other 'name none' items (support unit in diverse groups, all-purpose, versatile attack unit, all-around vehicle, Elite Forces, the Sniper Rifle weapon line) hold.",
+    "evidence": "Manual pages 39 and 57 (MCV paragraph); data/vocab/roles.json description (word forms count; the name counts when it names the job) and engineer aliases (builder, sapper, pioneer).",
+    "correction": "Move the MCV to the role-naming list: its paragraph names engineer (requires none) at step 1, or say why the editor reads 'build' as the yard's job rather than the MCV's and add a fit_note. Note the manual's wording is 'diverse groups', not 'mixed groups' (paraphrase is fine)."
+   },
+   {
+    "claim": "The APC paragraph names transport and scout; neither has a target, so step 1 goes on and both wait for roles.secondary step 1",
+    "real": true,
+    "reason": "Matches roles.primary step 1 (a role with no target never wins the bonus test) and the APC paragraph.",
+    "evidence": "docs/fields.md roles.primary step 1; manual page 37."
+   },
+   {
+    "claim": "Strong/weak reading and the list of paragraphs that name a target (Minigunner: tanks en masse; ... Nod Buggy weak: armour; Medium Tank weak: infantry and aircraft)",
+    "real": false,
+    "reason": "Every listed reading checks out against the scan, but the list misses the Minigunner's weak point: both sides' paragraphs warn that big tanks can run the soldiers over (tanks = armour) and that flame weapons wipe out squads (a weapon kind). The drop rule reads any official text that calls a target a weak point, and the notes' weak wording (dies against, vulnerable to, brought down by) does not catch 'crush'. The Stealth Tank paragraph also names infantry as able to reveal it when close.",
+    "evidence": "Manual pages 35 and 52 (Minigunner paragraphs), 55 (Stealth Tank); docs/fields.md roles.secondary (drop any role whose target official text calls a weak or limited point).",
+    "correction": "Minigunner (tanks, en masse, on both sides' entries; weak: large tanks that crush it, i.e. armour; flame weapons name no target). Add crushing by a kind of target to the weak wording, and decide whether the Stealth Tank's revealing infantry counts as a weak point."
+   },
+   {
+    "claim": "The literal reading gives the Minigunner anti-armour at step 4 though its rifle fails anti-armour's requires; code it, record atypical, report a rule problem",
+    "real": true,
+    "reason": "anti-armour requires an armour-piercing, energy, electric or EMP weapon or infest-vehicle; the M16 fires a small-arms bullet; step 4 skips failed requires only when it yields more than one target.",
+    "evidence": "data/vocab/roles.json anti-armour requires; https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/BBDATA.CPP ClassBullet warhead WARHEAD_SA; CONST.CPP WEAPON_M16 fires BULLET_BULLET; docs/fields.md roles.primary step 4."
+   },
+   {
+    "claim": "Text that ties a strength to a second weapon: the Mammoth Tank's firing at aircraft belongs to its missiles",
+    "real": false,
+    "reason": "The manual only says the Mammoth in guard mode can fire at aerial units; it names no weapon, and 'can fire at' is not on the notes' own strong wording. The tie to the missiles comes from the code: only the Mammoth Tusk's BULLET_SSM is flagged anti-aircraft, not the 120mm APDS.",
+    "evidence": "Manual page 38; https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/CONST.CPP (MAMMOTH_TUSK fires BULLET_SSM, 120MM fires BULLET_APDS) and BBDATA.CPP (ClassMissile anti-aircraft true, ClassAPDS false).",
+    "correction": "Say the code, not the paragraph, puts the air reach on the missiles; at roles.secondary step 3 the missiles give anti-air through their targets, not through an official strong line."
+   },
+   {
+    "claim": "No step 4 bonus from the game data: no warhead multiplier exceeds full damage (255/256 original, 256/256 in 2020), so step 4 rests on the paragraph or a weapon that hits nothing else",
+    "real": false,
+    "reason": "The warhead-table facts are right, but the combat code adds a target-side bonus the notes miss: Explosion_Damage doubles high-explosive damage against aircraft (before the in-flight halving in AircraftClass::Take_Damage). That is extra damage the code gives HE weapons against aircraft, which touches the Rocket Launcher's rockets (HE, anti-aircraft, its main weapon) and the Mammoth's Tusk missiles (HE, anti-aircraft, secondary).",
+    "evidence": "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/COMBAT.CPP Explosion_Damage (WARHEAD_HE and RTTI_AIRCRAFT: damage times two); AIRCRAFT.CPP Take_Damage (damage halved while Altitude > 0); CONST.CPP Warheads (max 0xFF) and the 2020 CONST.CPP (0x100); BBDATA.CPP ClassMissile2/ClassMissile warhead HE, anti-aircraft true.",
+    "correction": "State the HE-versus-aircraft doubling and either rule on it (it only cancels the in-flight halving, so flying targets take full HE damage while armour-piercing missiles do half) or report it as a rule question before the Rocket Launcher and Mammoth are coded."
+   },
+   {
+    "claim": "Shared units: one data entry per type; APC printed only under GDI though the Nod table lists it multiplayer-only; Minigunner, Engineer, Commando and Rocket Launcher paragraphs differ by side; Rocket Soldier, Harvester, MCV and Chinook read the same",
+    "real": true,
+    "reason": "Confirmed by comparing the two sides' paragraphs in the scan.",
+    "evidence": "Manual pages 35-39 and 52-58 (Minigunner weapon sentence, Engineer APC vs Chinook sentence, Commando Elite Forces sentence, MRLS opening sentence differ; the others identical; no Nod APC entry); page 61 lists APC* for Nod; roles.json (one entry for several sides counts only text every side carries)."
+   },
+   {
+    "claim": "Manual Armor words clash with the code: Light Tank reads Medium and Orca Light, but both are steel in UDATA.CPP and AADATA.CPP",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "Manual pages 54 (Light Tank ARMOR: MEDIUM) and 38 (Orca ARMOR: LIGHT); https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/UDATA.CPP UnitLTank ARMOR_STEEL; AADATA.CPP OrcaHeli ARMOR_STEEL."
+   },
+   {
+    "claim": "Take bands and the armour class from the code",
+    "real": false,
+    "reason": "The armour-class tie-break has no step that reads game armour types: step 1 is the armour_map (none for cnc-td), step 2 (the game's own armour word) is explicitly skipped for cnc-td, then the cost-anchor tanks are heavy, then the kind of unit, then health and weapons. games-r2.md also says TD's steel spans the Light Tank, APC, Orca, Apache and Mammoth, so the class is set per unit by that order.",
+    "evidence": "data/vocab/armour-classes.json tie_breaks; research/registry-notes/games-r2.md (No armour_map for TD); UDATA.CPP/AADATA.CPP armour types.",
+    "correction": "Take speed, sight and range figures from the code; set the armour class with the armour-class tie-break (the code's armour type may inform step 5 and armour.notes, but never sets the class by itself)."
+   },
+   {
+    "claim": "Not official: the wiki's UnitBox fields and prose; StrategyWiki's GDI and Nod unit pages end each unit with Strong vs. lines, give Remastered build times and cite no source; cite them as kind guide",
+    "real": true,
+    "reason": "Both pages say their times are the Remastered Collection's and carry no references. Small precision: the Strong vs. line sits right under each stat box, and the non-combat units (Engineer, Harvester, MCV, transport) get a job line instead.",
+    "evidence": "https://strategywiki.org/w/api.php?action=parse&page=Command_%26_Conquer/GDI_units&prop=wikitext&format=json and .../Nod_units: opening note on Remastered times, 0 ref tags, 26 Strong vs. lines over 34 units.",
+    "correction": "'... give most units a Strong vs. line under the stat box (non-combat units get a job line) ...'."
+   },
+   {
+    "claim": "The Recon Bike page links an archived Westwood C&C page that would not load, so whether it profiles units is unchecked",
+    "real": true,
+    "reason": "The link is on the page and the archive still does not load from this session.",
+    "evidence": "https://cnc.fandom.com/api.php?action=parse&page=Recon%20Bike%20(Tiberian%20Dawn) wikitext contains web.archive.org/web/19980206010948/http://www.westwood.com:80/games/ccuniverse/cc1pc/cc1info.html; two curl attempts (plain and id_) ended in connection resets; proxy status records the web.archive.org tunnel closing."
+   },
+   {
+    "claim": "Game-wide: the original has no skirmish mode, only multiplayer games to which AI players can be added (Skirmish page; manual page 22)",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "https://cnc.fandom.com/api.php?action=parse&page=Skirmish: mode first introduced in Red Alert; manual page 22 lists the AI Players host option."
+   },
+   {
+    "claim": "Basic orders: move, attack, stop (S), guard (G), force fire (Ctrl), force move (Alt), scatter (X), follow (Ctrl+Alt), team and view keys (manual pages 32-34); no attack-move, waypoints, patrol, stances, retreat or reinforce",
+    "real": true,
+    "reason": "The Advanced Game Controls pages list exactly these.",
+    "evidence": "Manual pages 32-34."
+   },
+   {
+    "claim": "Guard exceptions: a human player's cloaked unit picks no target by itself while on guard (FOOT.CPP), and a human player's Commando on guard picks none either (INFANTRY.CPP)",
+    "real": false,
+    "reason": "The cloak exception tests the ability to cloak (IsCloakable, so crate-cloaked units too) and only the plain guard mission units sit in when idle; the G key gives the guard-area mission, where the exception does not apply. The Commando exception covers both guard missions, and outside them his rifle looks only for infantry and buildings.",
+    "evidence": "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/FOOT.CPP Greatest_Threat (IsHuman && IsCloakable && Mission == MISSION_GUARD); CONQUER.CPP VK_G sends MISSION_GUARD_AREA; INFANTRY.CPP Greatest_Threat WEAPON_RIFLE case (MISSION_GUARD or MISSION_GUARD_AREA returns none; otherwise THREAT_INFANTRY|THREAT_BUILDINGS).",
+    "correction": "A human player's Stealth Tank (any cloak-capable unit) picks no target by itself while idle in the default guard mission, but does under the G-key guard-area order; a human player's Commando picks none by himself idle or under G, and when hunting seeks only infantry and buildings."
+   },
+   {
+    "claim": "Multiplayer tech level 1-7 set by the host, starting at 3; a side builds a type only at or below that level with its prerequisites standing (HOUSE.CPP Can_Build)",
+    "real": true,
+    "reason": "Confirmed in the code (Can_Build also checks ownership through the factory's ActLike).",
+    "evidence": "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/NETDLG.CPP and NULLDLG.CPP (the lobby's build-level gauge stops one below the highest multiplayer level, and the level chosen is the gauge value plus one); DEFINES.H sets that highest level to 7; GLOBALS.CPP BuildLevel = 3; HOUSE.CPP Can_Build multiplayer branch; manual page 24 (host picks the tech level; the 1-7 range is from the code)."
+   },
+   {
+    "claim": "The manual's For Multiplay lists (pages 42, 50, 60 and 68) agree with the code except for the Nod Buggy (manual 3, code 4)",
+    "real": false,
+    "reason": "The unit lists (42, 60) agree except the Buggy, but the structure lists (50, 68) also differ: they give level 1 to the Construction Yard (code 99, never buildable), the Power Plant, the Barracks and the Hand of Nod (code 0).",
+    "evidence": "Manual pages 42, 50, 60, 68; https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/BDATA.CPP (FACT 99, NUKE 0, PYLE 0, HAND 0), UDATA.CPP UnitBuggy level 4.",
+    "correction": "The unit lists on pages 42 and 60 agree with the code except the Nod Buggy (manual 3, code 4); the structure lists on 50 and 68 also differ for the Construction Yard, Power Plant, Barracks and Hand of Nod."
+   },
+   {
+    "claim": "No veterancy: kills only make a soldier cheer and make the killer a likelier target (Made_A_Kill; Evaluate_Object)",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/INFANTRY.CPP Made_A_Kill (IsStoked, then a victory gesture in AI); TECHNO.CPP Evaluate_Object adds the target's Kills to its value; https://cnc.fandom.com/wiki/Veterancy (cached): starts with Tiberian Sun."
+   },
+   {
+    "claim": "No garrisons; infantry enter buildings only by the Engineer's capture or the Commando's C4",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "Cached https://cnc.fandom.com/wiki/Garrisoning (starts with Red Alert 2); INFANTRY.CPP Per_Cell_Process (only MISSION_CAPTURE and MISSION_SABOTAGE act on buildings)."
+   },
+   {
+    "claim": "Transports: APC and Chinook carry five infantry of their owner; APC riders get out or die when it dies; a destroyed Chinook kills its riders; an Engineer can take an empty enemy Chinook",
+    "real": true,
+    "reason": "Confirmed in code and wiki.",
+    "evidence": "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/TECHNO.CPP Max_Passengers (5); UNIT.CPP and AIRCRAFT.CPP load checks (same owner); UNIT.CPP Take_Damage (detach, unlimbo or delete); AIRCRAFT.CPP Take_Damage (Kill_Cargo); INFANTRY.CPP What_Action (ACTION_CAPTURE on an enemy transport helicopter with no passengers); https://cnc.fandom.com/wiki/Engineer_(Tiberian_Dawn)."
+   },
+   {
+    "claim": "Crew survivors: a crew-flagged non-transport vehicle lets one crewman out half the time with part health (Minigunner if armed, technician if not); flag on the listed vehicles, not the APC",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/UNIT.CPP Take_Damage (IsCrew && !IsTransporter, Random_Pick(0,1), C1 technician or E1, strength 5 to half); UDATA.CPP crew flags (APC false)."
+   },
+   {
+    "claim": "Death blasts: Flame Tank napalm blast; Grenadier, Flamethrower Infantry and Chem Warrior explode (Grenadier smallest); crushed soldiers vanish without exploding; the loaded SSM's bigger explosion does no damage",
+    "real": true,
+    "reason": "Confirmed; the napalm animation also spawns fires, but they are not attached to anything and so hurt nothing.",
+    "evidence": "UNIT.CPP Take_Damage (Explosion == ANIM_NAPALM3 gives Explosion_Damage 200 fire; UnitFTank uses ANIM_NAPALM3; UNIT_MSAM with ammo only swaps the animation); INFANTRY.CPP Take_Damage (E4 80 fire, E2 30 HE, E5 80 HE); DRIVE.CPP Overrun_Square (Limbo and delete); ADATA.CPP Napalm3 damage 0x0000; ANIM.CPP (anim damage applies only when attached)."
+   },
+   {
+    "claim": "Repair Facility mends the parked vehicle for credits, slower when damaged; a badly hurt aircraft also heads for one (AIRCRAFT.CPP)",
+    "real": false,
+    "reason": "The repair-pad facts hold, but the aircraft's own search for a repair bay runs only for computer players: Mission_Guard returns early for human houses before that search.",
+    "evidence": "Manual pages 48 and 65; https://cnc.fandom.com/wiki/Repair_facility; https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/AIRCRAFT.CPP Mission_Guard (if House->IsHuman return; then the Health_Ratio <= half repair-bay search).",
+    "correction": "... more slowly when the pad is damaged (manual; Repair facility); a badly hurt computer-controlled aircraft also heads for one (AIRCRAFT.CPP, Mission_Guard)."
+   },
+   {
+    "claim": "Helipad reloads helicopters, any of the side's aircraft may use any pad, and each new pad comes with a free Orca or Apache (manual; BUILDING.CPP; Helipad page)",
+    "real": true,
+    "reason": "Confirmed; the free aircraft comes from the code and the Helipad page, not the manual, and is not given for a captured pad.",
+    "evidence": "Manual pages 47 and 65 (rearming; any pad on your side); BUILDING.CPP Grand_Opening (Orca if ActLike GDI, else Apache; not when captured); BDATA.CPP Raw_Cost subtracts the Orca's cost; cached https://cnc.fandom.com/wiki/Helipad_(Tiberian_Dawn) (cost includes the aircraft)."
+   },
+   {
+    "claim": "Only the Mammoth Tank self-repairs, up to half (UNIT.CPP AI; manual)",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "UNIT.CPP AI (UNIT_HTANK, every 16 frames, +1 strength while below half); manual page 38."
+   },
+   {
+    "claim": "Ammunition: Orca and Apache limited-ammo, rearm at a Helipad; SSM missiles return one at a time only while it stands still",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "AADATA.CPP ammo (Orca 6, Apache 15); AIRCRAFT.CPP Enter_Idle_Mode/Mission_Guard helipad search; manual page 38; UNIT.CPP AI (UNIT_MSAM reload 30 s, held back while IsDriving); data/vocab/resources.json limited-ammo, weapon-traits.json magazine."
+   },
+   {
+    "claim": "Aircraft take half damage in flight; only anti-aircraft-flagged projectiles hit flying aircraft; flagged: Dragon TOW, Mammoth missiles, Rocket Launcher rockets and the SAM Site",
+    "real": false,
+    "reason": "The mechanics are right but the flagged list is incomplete: the Advanced Guard Tower's missiles (WEAPON_TOW_TWO, BULLET_SSM) carry the same anti-aircraft flag.",
+    "evidence": "AIRCRAFT.CPP Take_Damage; TECHNO.CPP Can_Fire; BBDATA.CPP anti-aircraft true for ClassDragon, ClassMissile, ClassMissile2, ClassPatriot; CONST.CPP WEAPON_TOW_TWO fires BULLET_SSM; BDATA.CPP ClassATower primary WEAPON_TOW_TWO.",
+    "correction": "Flagged: the Dragon TOW (Rocket Soldier, Recon Bike, Stealth Tank, Orca), the Mammoth Tank's missiles, the Rocket Launcher's rockets, the Advanced Guard Tower's missiles and the SAM Site."
+   },
+   {
+    "claim": "No split fliers: flagged weapons list low and high air, others neither",
+    "real": true,
+    "reason": "Matches the high-air rule for commanded games and the can_target note on fliers hit only on the ground.",
+    "evidence": "data/vocab/target-types.json high-air rule; docs/fields.md armament[].can_target."
+   },
+   {
+    "claim": "Crushers and non-crushers as listed; all infantry crushable; force move crushes; never own side's soldiers; size break recorded as in R1",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "UDATA.CPP squash flags; IDATA.CPP InfantryTypeClass constructor passes crushable true; DRIVE.CPP Overrun_Square (not ally, within 0x80); manual page 33; research/registry-notes/games-r1.md Crushing."
+   },
+   {
+    "claim": "Recon Bike crushable in the original data, not in the 2020 code; manual says vehicles cannot overrun each other",
+    "real": true,
+    "reason": "Confirmed, and the original Can_Enter_Cell lets a crusher drive into a cell holding a crushable unit.",
+    "evidence": "UDATA.CPP UnitBike crushable true; https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/UDATA.CPP false with true in a comment; UNIT.CPP Can_Enter_Cell; manual page 33."
+   },
+   {
+    "claim": "Going prone: half damage, half-speed crawl",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "INFANTRY.CPP Take_Damage (prone damage halved) and AI (prone movespeed Speed/2 for crawling types)."
+   },
+   {
+    "claim": "Tiberium fields hurt infantry at each cell centre except the Chem Warrior; vehicles unhurt; harm booked as fire",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "INFANTRY.CPP Per_Cell_Process (2 damage, WARHEAD_FIRE, not INFANTRY_E5); manual page 53."
+   },
+   {
+    "claim": "Damaged vehicles take three quarters throttle at half health or less",
+    "real": false,
+    "reason": "The cut applies only below half health.",
+    "evidence": "DRIVE.CPP, Start_Of_Move: when a vehicle's strength is below half its maximum, its speed drops by a quarter.",
+    "correction": "below half health a vehicle takes three quarters of its throttle"
+   },
+   {
+    "claim": "Crates: list of multiplayer effects; Crate page omits air strike, napalm and squad",
+    "real": true,
+    "reason": "Confirmed (the cloak crate also cloaks enemy units within three cells).",
+    "evidence": "CELL.CPP Goodie_Check; FOOT.CPP Start_Driver and DRIVE.CPP Start_Of_Move call it; cached https://cnc.fandom.com/wiki/Crate TD list."
+   },
+   {
+    "claim": "Side-wide powers: Ion Cannon from the ACC, Nuclear Strike from the Temple (all bomb parts at start in multiplayer, recharges, pauses on low power); A-10 campaign-only, crate in multiplayer",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "HOUSE.CPP (NukePieces 0x07 at start; NukeStrike.Enable(GameToPlay == GAME_NORMAL); Suspend(Power_Fraction() < 0x100); IonCannon enabled by STRUCTF_EYE); https://cnc.fandom.com/wiki/Temple_of_Nod_(Tiberian_Dawn); https://cnc.fandom.com/wiki/A-10_ground_support_plane_(Tiberian_Dawn) (campaign only); CELL.CPP AIR_STRIKE crate."
+   },
+   {
+    "claim": "Shroud only, no fog; aircraft sight 0 (landed reveals a little); firing from the shroud reveals the firer; radar needs a powered Comm Center or ACC",
+    "real": true,
+    "reason": "Confirmed (in multiplayer the firer is shown only to the player whose unit was targeted).",
+    "evidence": "SPECIAL.H (no fog or regrow option); manual pages 71 and 79; AADATA.CPP sight 0; AIRCRAFT.CPP Sight_From only with SightRange, Sight_From(1) on landing; TECHNO.CPP Fire_At; manual radar lines and Communications Center page; https://cnc.fandom.com/wiki/Fog_of_war."
+   },
+   {
+    "claim": "Off-screen only by the second and third reasons; a gun is artillery only when shown lobbing over cover; the Artillery's shell is flagged arcing and clearing walls",
+    "real": true,
+    "reason": "Matches the RA2 precedent and BBDATA (the Grenadier's grenade carries the same two flags; see missing).",
+    "evidence": "research/registry-notes/games-r1.md (RA2 Shroud and sight); BBDATA.CPP Class120mm high and arcing."
+   },
+   {
+    "claim": "Cloaking and detection: only the Stealth Tank cloaks; infantry and five buildings shimmer an adjacent cloaked enemy; game-wide, so no detector trait; Stealth page says attack range, code says adjacent cells",
+    "real": true,
+    "reason": "Confirmed, and it follows the R1 precedent for Red Alert 1.",
+    "evidence": "UDATA.CPP (only STNK cloakable); IDATA.CPP scanner true for all infantry; BDATA.CPP scanner true for GTWR, ATWR, OBLI, GUN, HQ; FOOT.CPP Per_Cell_Process; TECHNO.CPP Take_Damage Do_Shimmer; manual page 55; cached https://cnc.fandom.com/wiki/Stealth; games-r1.md line 341."
+   },
+   {
+    "claim": "Capturing buildings: only the Engineer, outright, used up; defences, walls, Temple not capturable; ACC capturable only in the original; docked vehicles change hands",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "INFANTRY.CPP What_Action and Per_Cell_Process (Captured, delete this); BDATA.CPP capturable flags; 2020 BDATA.CPP ClassEye false; BUILDING.CPP Captured (attached and docked objects); https://cnc.fandom.com/wiki/Engineer_(Tiberian_Dawn)."
+   },
+   {
+    "claim": "Captured factories keep building their first owner's list, in multiplayer too",
+    "real": true,
+    "reason": "Confirmed; matches the RA1 precedent.",
+    "evidence": "HOUSE.CPP Can_Build header; BUILDING.CPP constructor forces ActLike for Barracks/Weapons Factory and Hand/Airstrip, Captured leaves ActLike, Update_Buildables uses it; games-r1.md line 488."
+   },
+   {
+    "claim": "Game-mode and economy rules (selling, CTF flag at half speed and shimmering, Mobile HQ in no-base CTF, random Visceroid at level 7, cargo plane delivery, free Harvester)",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "DRIVE.CPP While_Moving (MaxSpeed/2 when Flagged); UNIT.CPP (cloaked flag carrier shimmers); https://cnc.fandom.com/wiki/Mobile_Headquarters; HOUSE.CPP AI (BuildLevel >= 7, UNIT_VICE for HOUSE_JP); manual Airfield page and refinery text."
+   },
+   {
+    "claim": "Registry finding speed_reference (wrong): replace raw MaxSpeed ratios with paces worked out from the code",
+    "real": true,
+    "reason": "Every step and figure reproduces. Minor wording: the damage cut is below half health, and the 2020 copy also multiplies MaxSpeed by a per-house GroundspeedBias from its lobby rules, so 'moves units the same way' holds at a bias of 1.",
+    "evidence": "COORDA.ASM Fixed_To_Cardinal rounds ((b*f+0x80)>>8); CONST.CPP Ground LAND_CLEAR 0x70/0xA0, road 0xA0 for tracked; DRIVE.CPP While_Moving (strict > PIXEL_LEPTON_W=10), Track1 24 and Track2 32 entries, DriveClass::AI restarts the next track in the same tick; INFANTRY.CPP AI (Set_Speed 0xFF, snap < 0x10); COORD.CPP calcx/calcy floor; FLY.CPP Physics. Tick model <scratch>/r2/verify-td/scripts/sim_drive.py gives 48/30/18/16/30/12/9 ticks straight and 64/40/24/21/40/16/12 diagonal; ratios 0.727, 1.163, 1.938, 2.180 (2.216), 1.163, 2.907, 3.876; infantry 0.748, 1.000, 1.248; reference pace 7.338247; no ratio on a band edge."
+   },
+   {
+    "claim": "Registry finding sight_reference (wrong): set None, every sight band a medium proposal, describe shroud reach in words",
+    "real": true,
+    "reason": "TD has only a permanent-lift shroud; fields.md and the RA2 precedent call for None and medium proposals.",
+    "evidence": "SPECIAL.H; manual pages 71 and 79; IDATA/UDATA/AADATA sight 1 to 5, aircraft 0; docs/fields.md sensors.basis and sight_reference row; data/games.json ra2 sight_reference."
+   },
+   {
+    "claim": "Registry finding range_reference (wrong): keep M16 0x0200, drop the lepton-to-sight comparison",
+    "real": true,
+    "reason": "The off-screen first reason needs the sight band's figure, which a proposal band lacks; the cited weapon and sight figures are right.",
+    "evidence": "CONST.CPP Weapons (M16 0x0200, 105mm 0x04C0, M60 0x0400, 155mm 0x0600, Honest John 0x0A00) same in both releases; UDATA.CPP/AADATA.CPP sight; data/vocab/range-bands.json off-screen rule; games-r1.md RA2 note."
+   },
+   {
+    "claim": "Registry finding tier_map (missing): add Obelisk of Light at t2 for the SSM Launcher",
+    "real": true,
+    "reason": "Code, SSM page and hierarchy chart agree; the Obelisk page also labels it tier 2 with only the Comm center required.",
+    "evidence": "UDATA.CPP UnitSAM pre STRUCTF_ATOWER; HOUSE.CPP Can_Build (OBELISK counts as ATOWER); BDATA.CPP ClassObelisk pre STRUCTF_RADAR (= ClassCommand); https://cnc.fandom.com/wiki/SSM_Launcher_(Tiberian_Dawn); https://cnc.fandom.com/api.php?action=parse&page=Obelisk%20of%20Light%20(Tiberian%20Dawn) (tier 2, techlvl 4); manual pages 60 and 61; cached Tier page."
+   },
+   {
+    "claim": "Registry finding sources/1/note (wrong): the Helipad infobox does list a requirement (Barracks or Hand of Nod)",
+    "real": true,
+    "reason": "Confirmed; the band t1 stays.",
+    "evidence": "Cached https://cnc.fandom.com/wiki/Helipad_(Tiberian_Dawn) (fetched 2026-10-19: tier 2, techlvl 6, req Barracks/Hand of Nod, $300 build-rate bug and rush); BDATA.CPP ClassHelipad pre BARRACKS level 6; AADATA.CPP aircraft pre HELIPAD."
+   },
+   {
+    "claim": "Registry finding version_researched (wrong): name the original code release as decider and the 2020 differences",
+    "real": true,
+    "reason": "All listed differences are real and the 2025 original release exists. One extra data difference is unlisted (the Helipad's factory flag: false original, true 2020), which only affects primary-factory handling.",
+    "evidence": "https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/README.md (Steam Workshop release; headers Copyright 2025); full field diff of UDATA/IDATA/AADATA/BBDATA/BDATA between releases: Bike (and dinosaur Rapt) crushable, Commando capture, E5 run-away and 99/98, EYE capturable, Helipad factory flag; CONST.CPP 0xFF vs 0x100; 2020 UDATA PETROGLYPH_EXAMPLE_MOD Nuke Tank."
+   },
+   {
+    "claim": "Other notes: the Helipad stays t1; the batch note's t2 line is out of date",
+    "real": true,
+    "reason": "Registry maps t1; production building needing only Barracks or Hand; Tier page names only the Comm Center as tier 2.",
+    "evidence": "data/games.json cnc-td tier_map; games-r2.md; BDATA.CPP; HOUSE.CPP; cached Tier page; data/vocab/tiers.json t1 rule."
+   },
+   {
+    "claim": "Other notes: lobby build level slider 1-7, starts at 3, sent to all players, not stored in any settings file; 2020 takes it from its lobby",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "NETDLG.CPP (GPacket.ScenarioInfo.BuildLevel), NULLDLG.CPP (SendPacket.BuildLevel); MPLAYER.CPP Write_MultiPlayer_Settings writes only Handle, Color, Side, PhoneIndex and serial settings to CONQUER.INI; GLOBALS.CPP; 2020 DLLInterface.cpp BuildLevel = build_level."
+   },
+   {
+    "claim": "Other notes: the SSM Launcher is buildable in multiplayer at level 7 with an Obelisk; the code's SSM is UNIT_MSAM (UnitSAM, INI MLRS) and the Rocket Launcher UNIT_MLRS (UnitMLRS, INI MSAM); campaign rules keep UNIT_MLRS from Nod and from GDI before mission 9",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "UDATA.CPP UnitSAM (UNIT_MSAM, 'MLRS', level 7, pre ATOWER, MULTI|BAD, scenario 98) and UnitMLRS (UNIT_MLRS, 'MSAM'); DEFINES.H enum comments; HOUSE.CPP Can_Build campaign branch; manual pages 60-61; SSM Launcher and Covert Operations pages."
+   },
+   {
+    "claim": "Other notes: single-player level 98 marks multiplayer-only units, as INI.CPP uses 98 for the full multiplayer set",
+    "real": false,
+    "reason": "INI.CPP sets BuildLevel to 98 for Jurassic games, and Can_Build then compares it with each type's multiplayer Level, not with the Scenario field. The Scenario field's 98 does mean multiplayer-only, but because Can_Build's campaign branch compares Scenario with the mission level (the debug cheat lifts that to 98), as the Covert Operations page says.",
+    "evidence": "INI.CPP Read_Scenario_Ini (Special.IsJurassic && AreThingiesEnabled: BuildLevel = 98); HOUSE.CPP Can_Build (multiplayer/Jurassic branch: type->Level <= BuildLevel; campaign branch: type->Scenario <= level; Debug_Cheat level = 98); https://cnc.fandom.com/wiki/Command_%26_Conquer:_The_Covert_Operations.",
+    "correction": "...and single-player level 98, which keeps a type out of every campaign mission (HOUSE.CPP, Can_Build's campaign check; the Covert Operations page reads 98 as multiplayer-only)."
+   },
+   {
+    "claim": "Other notes: nine shared units; GDI-only five, Nod-only ten, 24 buildable; non-buildable list; Nuke Tank only in the 2020 example mod",
+    "real": true,
+    "reason": "Ownership flags and both manual tables agree.",
+    "evidence": "IDATA/UDATA/AADATA ownable fields; manual pages 43 and 61; games-r2.md shared list (lacks Rocket Soldier, APC, Chinook); 2020 UDATA.CPP NTNK under PETROGLYPH_EXAMPLE_MOD."
+   },
+   {
+    "claim": "Other notes: gate suggestions for shared units (record the GDI building; APC and Harvester record their factory)",
+    "real": true,
+    "reason": "Consistent with the code's prerequisites.",
+    "evidence": "UDATA.CPP APC pre BARRACKS, Harvester pre REFINERY; BDATA.CPP WEAP and AFLD pre REFINERY; data/games.json factions order."
+   },
+   {
+    "claim": "Other notes: starting units ignore ownership (GDI can start with an SSM from level 6); crates hand over any unit",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "INI.CPP: the table of starting units includes the MSAM (the code name of the SSM Launcher); SSM Launcher page (GDI starts with one when tech and starting units are maxed); CELL.CPP UNIT crate (ownable by the finder's multiplayer house); Crate page."
+   },
+   {
+    "claim": "Other notes: code names E1...TRAN, with the Engineer's data object called E7",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "IDATA.CPP (static E7 with INI name E6), UDATA.CPP, AADATA.CPP INI names."
+   },
+   {
+    "claim": "Other notes: Chem Warrior runs from danger only in the original; the original Commando can capture an empty enemy Chinook and is used up",
+    "real": true,
+    "reason": "Confirmed (buildings give him the sabotage action first).",
+    "evidence": "IDATA.CPP E5 fraidycat true vs 2020 false; INFANTRY.CPP AI fraidycat block; Commando capture flag true vs 2020 false; INFANTRY.CPP What_Action (sabotage for buildings, capture for an empty transport helicopter) and Per_Cell_Process."
+   },
+   {
+    "claim": "Other notes: Flamethrower Infantry extra damage per hit; Recon Bike wood armour 'the class buildings use'; SSM reload stops while driving",
+    "real": true,
+    "reason": "Confirmed; small precision: wood is the armour of most buildings, not all (Temple, Weapons Factory, AGT and Obelisk are aluminum; Airfield, Turret and SAM Site steel).",
+    "evidence": "INFANTRY.CPP Take_Damage (E4 +5); UDATA.CPP UnitBike ARMOR_WOOD; CONST.CPP Warheads (fire vs wood 0xFF, HE vs wood 0xC0 vs aluminum 0x90); BDATA.CPP armour types; UNIT.CPP AI.",
+    "correction": "'...wood armour, like most buildings, so fire...'"
+   },
+   {
+    "claim": "Other notes: Chem spray HE, Apache chain gun HE, Honest John fire; family breaks",
+    "real": true,
+    "reason": "Confirmed against code, infoboxes and family lists.",
+    "evidence": "BBDATA.CPP ClassChem HE, ClassSpreadfire HE, ClassHonestJohn FIRE; CONST.CPP chain gun fires BULLET_SPREADFIRE; infoboxes 80 (HE), 25 (HE), 100 (fire); data/vocab/weapon-families.json (chemical allows toxic only; machine-gun kinetic/AP/fire)."
+   },
+   {
+    "claim": "Other notes: range bands long almost everywhere; only M16, two flame weapons and chem spray medium; none short",
+    "real": true,
+    "reason": "Ratios against 0x0200 confirm (grenade 1.625, others 2 to 5).",
+    "evidence": "CONST.CPP Weapons; data/vocab/range-bands.json."
+   },
+   {
+    "claim": "Other notes: Refinery comes with a free Harvester and each Helipad with a free Orca or Apache (manual; Helipad page)",
+    "real": true,
+    "reason": "Confirmed; only the Harvester half is in the manual.",
+    "evidence": "Manual (refinery comes with a Harvester); Helipad page; BUILDING.CPP Grand_Opening."
+   },
+   {
+    "claim": "Other notes: resolved wiki titles, including 'and so does Mobile Headquarters'",
+    "real": false,
+    "reason": "All unit titles and redirects check out, but Mobile Headquarters has no (Tiberian Dawn) suffix: 'Mobile Headquarters (Tiberian Dawn)' does not exist, the page is plain Mobile Headquarters and 'Mobile headquarters' redirects to it.",
+    "evidence": "API calls with redirects=1 for every capitalised and lower-case title; 'Mobile Headquarters (Tiberian Dawn)' and 'Communications Center (Tiberian Dawn)' return missingtitle.",
+    "correction": "... each followed by (Tiberian Dawn); Mobile Headquarters also takes capitals but has no suffix; the lower-case spellings redirect."
+   },
+   {
+    "claim": "House rules: no run of six or more words copied from a page",
+    "real": false,
+    "reason": "A six-word check (the repository's copy-check words/grams/sharedRuns, ignoring wording shared with docs/fields.md, docs/vocabularies.md and games-r1/r2 notes) finds three runs; none against the manual, transcript or StrategyWiki.",
+    "evidence": "node <scratch>/r2/verify-td/scripts/sixcheck.mjs: (1) Stealth page: a run of building names (Turret, Obelisk of Light, Guard Tower) inside the detector list; (2) DEFINES.H: the MPH_ name-and-number list in the speed finding's evidence (two runs); (3) the capture paragraph echoed a HOUSE.CPP comment saying the Temple of Nod is not capturable.",
+    "correction": "Reorder or split the building names (e.g. 'the Obelisk of Light, the Turret, both guard towers and the Communications Center'); give the MPH_ values as a sentence ('slow is 8, slow-ish 10, ...'); write 'Defences, walls and the Temple of Nod are never capturable'."
+   }
+  ],
+  "missing": [
+   "Combat model in COMBAT.CPP (https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/COMBAT.CPP, Explosion_Damage and Modify_Damage): every hit is applied as a blast to all objects in the impact cell and its neighbours within 1.5 cells, halving with distance at a rate set by the warhead's spread factor (CONST.CPP: small arms 2, HE and AP 6, fire 8, hollow point 4), so HE, AP and fire weapons splash while small arms barely do; there is no owner check (only the firer is skipped), so splash and death blasts hurt the shooter's own side (the Flamethrower Infantry paragraph, manual p52, warns of it); and HE damage against aircraft is doubled. The notes give no guidance on the splash and friendly-fire weapon traits and their 'no step 4 bonus' claim misses the HE doubling.",
+   "Defender-advantage rule, on by default in every game (SPECIAL.H Init sets IsDefenderAdvantage true; only a coded CONQUER.INI 'Combat' option clears it, OPTIONS.CPP; NETDLG.CPP copies the host's Special flags to all players): infantry cannot fire while walking (INFANTRY.CPP Can_Fire returns FIRE_MOVING), any unit firing while driving gets inaccurate shots (TECHNO.CPP Fire_At sets the bullet inaccurate), infantry do not go prone while moving (INFANTRY.CPP AI), and the Rocket Launcher, Artillery and SSM Launcher must wait twice their rearm delay after halting before they fire (UNIT.CPP, the setup-after-halt block). This bears on weapon summaries and on raider/hit-and-run readings.",
+   "Inaccuracy against infantry (BULLET.CPP, around line 659): shots with an AP warhead or a fuelled projectile (all missiles and rockets, Dragon TOWs, the SAM, flames, chem spray, Honest John) aimed at infantry or a ground cell scatter; homing or arcing ones land within a third of the range (grenade a quarter, capped), straight ones overshoot by up to a cell. BBDATA.CPP marks the 155mm shell, grenade and SSM/SSM2 missiles inherently inaccurate (manual p55 says artillery is somewhat inaccurate). Tank cannons and anti-tank rockets are therefore poor against soldiers by code, which matters for matchups and for the Minigunner/anti-armour rule-problem discussion.",
+   "The Grenadier's grenade has the same flags as the Artillery shell (BBDATA.CPP ClassGrenade: flies over walls, arcs), and the manual (p35) says it goes over walls and destroys them; the notes cite only the Artillery shell for lobbing over cover, so coders may miss the lobbed delivery for the grenade.",
+   "The Advanced Guard Tower's missiles are anti-aircraft-flagged (CONST.CPP WEAPON_TOW_TWO fires BULLET_SSM; BBDATA.CPP ClassMissile anti-aircraft true; BDATA.CPP ClassATower), so GDI base defence against aircraft includes the AGT, not only Nod's SAM Site; relevant to aircraft 'countered by'.",
+   "Stealth Tank cloak details the notes ask coders to record but do not give: it cannot fire while cloaked and must uncloak (TECHNO.CPP Can_Fire FIRE_CLOAKED; manual p55), a fully cloaked unit cannot be fired upon (Can_Fire FIRE_CANT), crushing infantry uncloaks it (DRIVE.CPP Overrun_Square Do_Uncloak), below a quarter health it recloaks only rarely and may drop out of cloaking (TECHNO.CPP AI), and the shimmer from scanners happens only as it moves into a cell next to them (FOOT.CPP Per_Cell_Process).",
+   "Registry problem: the version_researched finding makes the original code decide, but the cnc-td sources still cite the 2020 copies (CnC_Remastered_Collection/master/TIBERIANDAWN/UDATA.CPP, IDATA.CPP, CONST.CPP) and the UDATA/IDATA entries still claim to support sight_reference, which becomes 'None'; the editor should retarget those sources to https://raw.githubusercontent.com/electronicarts/CnC_Tiberian_Dawn/main/ files (the cited values are identical) and update their supports/notes (data/games.json cnc-td sources[2], [4], [5]).",
+   "pages_read lists https://strategywiki.org/wiki/Command_%26_Conquer/Units, but that page does not exist (StrategyWiki API returns missingtitle for 'Command & Conquer/Units'); the record's page list should drop it.",
+   "Sources disagree on aircraft prerequisites: the manual's State of the Art tables give Weapons Factory plus Helipad for the Orca and Chinook (p43) and Helipad plus Airfield for the Apache and Chinook (p61), and the GDI chart pairs Barracks with Helipad (p42), while the code needs only the Helipad (AADATA.CPP pre STRUCTF_HELIPAD). Bands stay t1, but tier.basis should say so.",
+   "The Orca's manual paragraph (p38) says it carries five salvos, while AADATA.CPP gives it 6 shots; the limited-ammo notes should take the code and mention the manual figure in words.",
+   "The 2020 Remastered code scales ground speed and turn rate by a per-house GroundspeedBias from the Remastered lobby's difficulty/handicap rules (Remastered DRIVE.CPP While_Moving and AI, INFANTRY.CPP, HOUSE.CPP), so the speed finding's statement that the 2020 copy moves units the same way holds only at a bias of 1.",
+   "Trap for coders: StrategyWiki's Engineer entry says an Engineer can repair a friendly structure, but neither code release has any engineer repair action (INFANTRY.CPP What_Action and Per_Cell_Process handle only capture, entering transports and sabotage); a guide-only claim to keep out of the Engineer record or mark uncertain.",
+   "The manual's 'Seconds to produce' and StrategyWiki's Remastered build times are build times, not stats the generator uses, but the Helipad builds at the speed of a much cheaper building (Helipad page; build time follows Raw_Cost, BDATA.CPP) - a known rush tactic that affects the aircraft's early availability and may belong in the Orca/Apache tier.basis."
+  ]
+ },
+ "candidates": {
+  "candidates": [
+   {
+    "id": "cnc-td.nod.stealth-tank",
+    "name": "Stealth Tank",
+    "faction": "nod",
+    "class": "vehicle",
+    "role_guess": "raider (secondary anti-armour, anti-air)",
+    "teaches": "The registry's first sourced cloak unit. It stays invisible parked or moving, never shows on radar, must drop the cloak to fire its twin missiles, and fades again once reloaded; anything aiming at it loses its lock as it fades. The iconic counter is foot soldiers: in the source every infantry type counts as a scanner, so driving into a cell next to one makes the tank flicker and become targetable for a moment. A hit does the same, and below a quarter of its health it seldom manages to cloak. Its armour is thin, so a medium tank wins once it is seen. Its missiles reach aircraft, but only on a direct order.",
+    "patterns": [
+     "cloak"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Stealth_tank_(Tiberian_Dawn)",
+     "https://cnc.fandom.com/wiki/Stealth",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/UDATA.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/TECHNO.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/FOOT.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/IDATA.CPP"
+    ],
+    "repeats": "No unit in data/units/ cloaks yet. The Renegade and Tiberium Wars stealth tanks (and Tiberian Sun's stealth generator) continue this line in R2; this is the origin, and soldiers acting as detectors is its own twist.",
+    "skirmish": "Multiplayer: Nod only, at the Airstrip once a Communications Center stands (t2 by the registry gate; the wiki infobox says tier 3, as the registry notes flag). Also built in the late Nod campaign. The 1995 game has no skirmish mode; the Remastered Collection's skirmish runs on the multiplayer build rules.",
+    "shooter_note": "Drive unseen to a target, decloak for a missile volley, then fade and move on; enemy soldiers near your path give you away, so you hunt tanks and harvesters and steer around infantry screens."
+   },
+   {
+    "id": "cnc-td.shared.engineer",
+    "name": "Engineer",
+    "faction": "shared",
+    "class": "infantry",
+    "role_guess": "engineer (secondary infiltrator)",
+    "teaches": "Capture-structure at its purest: an unarmed soldier walks into an enemy building (defences excepted), takes it over at once and is used up. Twists: a captured factory keeps offering its first owner's units, so stealing the enemy barracks or airstrip opens their roster to you; whatever is docked inside (a harvester at a refinery, aircraft on a helipad, a vehicle on the repair bay) changes sides with the building; and an empty enemy transport helicopter can be taken the same way (closest id hijack-vehicle, though no crew is thrown out). The manual pairs its slowness with riding in an APC.",
+    "patterns": [
+     "capture-structure"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Engineer_(Tiberian_Dawn)",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/INFANTRY.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/HOUSE.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/BUILDING.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/IDATA.CPP"
+    ],
+    "repeats": "Shares capture-structure with the RA1 Spy (kept for its sabotage variant). The Tiberian Sun, Tiberium Wars and Renegade engineers in this batch also capture or repair; this one adds the instant single-use capture and the stolen enemy roster. In TD it only captures; no repair action turned up in the source.",
+    "skirmish": "Multiplayer: both sides, at the Barracks or Hand of Nod with no other tech (t1, low price). Also in both campaigns.",
+    "shooter_note": "A fragile, unarmed runner: reach an enemy building alive and it flips to your team for good, and a captured factory adds the enemy's units to your team's buy menu; teammates must escort or ferry you in."
+   },
+   {
+    "id": "cnc-td.shared.commando",
+    "name": "Commando",
+    "faction": "shared",
+    "class": "infantry",
+    "role_guess": "marksman (secondary anti-infantry, siege)",
+    "teaches": "A marksman hero split by target type. Its silenced long rifle fires hollow-point rounds that drop any soldier in one hit but barely scratch anything else (the wiki says it cannot target vehicles at all). Its C4 levels any building it reaches after a short fuse while it runs clear, whatever the building's health: execute-target against structures. It is also the fastest infantry, has the longest infantry sight, and fires only when ordered or shot at.",
+    "patterns": [
+     "execute-target",
+     "throw-explosive"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Commando_(Tiberian_Dawn)",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/IDATA.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/CONST.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/INFANTRY.CPP"
+    ],
+    "repeats": "RA3 Tanya (kept) also plants C4 and guns down infantry; the RA1 Attack Dog carries execute-target against soldiers. Renegade's Havoc and the Tiberium Wars Commando continue the line in R2. Twist here: a long-range rifle instead of pistols, and C4 that only works on buildings.",
+    "skirmish": "Multiplayer only (and Remastered skirmish): both sides, at the Barracks or Hand of Nod once an Advanced Communications Center or Temple of Nod stands (t3, high price). Neither campaign lets you build it (source scenario 98; the wiki infobox agrees). No unit cap turned up in the house, factory, building or sidebar code; check.",
+    "shooter_note": "Pick off soldiers from beyond their reach, then sprint into a building to plant C4 and run; tanks are your hard counter, since nothing you carry can hurt them."
+   },
+   {
+    "id": "cnc-td.shared.mobile-construction-vehicle",
+    "name": "Mobile Construction Vehicle",
+    "faction": "shared",
+    "class": "vehicle",
+    "role_guess": "engineer",
+    "teaches": "The unit that becomes the base: a slow, unarmed, very expensive truck that unpacks on a chosen spot into the Construction Yard, the building every other structure is built from. The source lets a yard pack up again only behind a special game option (Special.IsMCVDeploy), so the default looks one-way, which separates it from deploy-siege-mode (check the option's default). In a team game it is the forward-base founder: escort it to a site and the team gains a new place to build; lose the yard and nothing new can be built.",
+    "patterns": [],
+    "new_mechanics": [
+     {
+      "id": "unpack-into-base",
+      "summary": "Drive to a chosen spot and unpack, usually for good, into a base building from which the team can raise new structures; until then you are a slow, unarmed, costly target."
+     }
+    ],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Mobile_Construction_Vehicle_(Tiberian_Dawn)",
+     "https://cnc.fandom.com/wiki/Construction_yard_(Tiberian_Dawn)",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/UDATA.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/UNIT.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/BUILDING.CPP"
+    ],
+    "repeats": "The RA2 Slave Miner (kept) deploys into a stationary form but packs up again (deploy-siege-mode). The Tiberian Sun and Tiberium Wars MCVs may teach the same unpacking in R2; TD's is the original and, by default, one-way. The in-game name for the slug needs a check (the wiki also calls it the mobile construction yard).",
+    "skirmish": "Multiplayer: both sides, at the Weapons Factory or Airstrip once an Advanced Communications Center or Temple of Nod stands (t3, very high price).",
+    "shooter_note": "Drive a lumbering, unarmed truck under escort to a forward site and deploy it into a team build point; the deploy itself becomes the team's objective and the enemy's first target."
+   },
+   {
+    "id": "cnc-td.nod.chem-warrior",
+    "name": "Chemical Warrior",
+    "faction": "nod",
+    "class": "infantry",
+    "role_guess": "anti-infantry (secondary area-denial)",
+    "teaches": "Immunity to the map's own hazard. In TD every soldier crossing Tiberium is hurt at each cell, except this one, so it can fight from inside fields that others must avoid (it is not proof against spores from blossom trees). Its chemical sprayer is a short-range anti-infantry weapon that the manual says leaves a brief toxic cloud; it cannot hit aircraft, and it bursts on death like TD's other volatile soldiers.",
+    "patterns": [],
+    "new_mechanics": [
+     {
+      "id": "ignore-hazard",
+      "summary": "Walk and fight unharmed inside a battlefield hazard (Tiberium fields, radiation, gas) that hurts everyone else, turning it into cover; may fit better as a word-list trait than as a pattern."
+     }
+    ],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Chemical_Warrior_(Tiberian_Dawn)",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/INFANTRY.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/IDATA.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/CONST.CPP"
+    ],
+    "repeats": "The RA2 Desolator (kept) has a chemical weapon and a hazard zone of its own; Renegade's chemical warrior is the same line. No kept unit is immune to a hazard everyone else suffers. Slug to check against the in-game name (wiki title Chemical Warrior, manual Chem-Warrior).",
+    "skirmish": "Multiplayer only as a buildable unit: Nod, at the Hand of Nod once a Temple of Nod stands (t3, very low price). The source gives it scenario 98, so neither campaign offers it for building, though Covert Operations missions feature it. The GDI ownership flag is commented out in IDATA.CPP, so GDI cannot train it.",
+    "shooter_note": "Camp in the Tiberium field enemies cannot enter safely and hose anyone who follows; avoid vehicles, and keep teammates back when you are low, because you burst when killed."
+   },
+   {
+    "id": "cnc-td.nod.flame-tank",
+    "name": "Flame Tank",
+    "faction": "nod",
+    "class": "vehicle",
+    "role_guess": "anti-infantry (secondary assault)",
+    "teaches": "A volatile brawler. Twin short-range flame guns burn through infantry and buildings with splash, on a quick tracked hull as tough as Nod's light tank that still loses a straight fight with a medium tank. Its death is coded in the source as a napalm strike on its own spot, burning friend and foe alike. It is the clearest case of the on-death term death-blast at full scale, without the deliberate trigger of self-destruct.",
+    "patterns": [],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Flame_tank_(Tiberian_Dawn)",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/UNIT.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/UDATA.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/CONST.CPP"
+    ],
+    "repeats": "The RA1 M.A.D. Tank (kept) blows up on purpose (self-destruct) and the RA3 Kirov's crash harms what lies below. Tiberian Sun's Devil's Tongue and the Tiberium Wars and Renegade flame tanks continue this line in R2. The TD twist is the unplanned napalm burst when it dies.",
+    "skirmish": "Multiplayer: Nod only, at the Airstrip once a Communications Center stands (t2, medium price). Also in the Nod campaign.",
+    "shooter_note": "Charge infantry clusters and buildings at close range; your death torches everything around you, so teammates give you room and enemies try to finish you beside your own squad."
+   },
+   {
+    "id": "cnc-td.nod.recon-bike",
+    "name": "Recon Bike",
+    "faction": "nod",
+    "class": "vehicle",
+    "role_guess": "raider (secondary scout, anti-air)",
+    "teaches": "The glass-cannon scout: the fastest ground unit in TD, with twin missiles that hit vehicles and, when it is left on guard, aircraft. Its iconic counter is instant-hit fire: the wiki notes that its speed lets it dodge shells, rockets and missiles, while machine guns tear it apart, a clean projectile-versus-hitscan lesson for a shooter. The manual gives it scouting and pack hunts on lone units and harvesters. Check its health: UDATA.CPP sets 160 or 90 depending on an ADVANCED build flag (the wiki gives 160).",
+    "patterns": [],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Recon_Bike_(Tiberian_Dawn)",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/UDATA.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/CONST.CPP"
+    ],
+    "repeats": "No fast bike in data/units/. Tiberian Sun's Attack Cycle continues the line in R2; TD's Humvee and Buggy are plainer machine-gun scouts.",
+    "skirmish": "Multiplayer: Nod only, at the Airstrip with no other tech (t1, low price). Also in the Nod campaign.",
+    "shooter_note": "Outrun shells and rockets to snipe tanks and helicopters, then vanish; any machine gunner who catches you in the open wins."
+   },
+   {
+    "id": "cnc-td.nod.ssm-launcher",
+    "name": "SSM Launcher",
+    "faction": "nod",
+    "class": "vehicle",
+    "role_guess": "siege",
+    "teaches": "Siege that outranges every base defence: two napalm missiles with the longest reach in TD, beyond the Obelisk, the Advanced Guard Tower and GDI's rocket launcher, then a very long reload that leaves it needing guards. Its tech gate is unique: an Obelisk of Light, a defence tower, unlocks it. It also settles a registry point: the wiki and the source both make it a multiplayer-only Nod unit, not campaign-only as research/registry-notes/games-r2.md says, and its gate is missing from the cnc-td tier_map.",
+    "patterns": [],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/SSM_Launcher_(Tiberian_Dawn)",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/UDATA.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/CONST.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/HOUSE.CPP"
+    ],
+    "repeats": "R1 cut the V2 for linking no pattern, and this links none either; Nod's Artillery and GDI's Rocket Launcher are TD's other long-range pieces (named as alternates). Its own lessons are outranging static defences and a two-shot magazine with a long reload. Its big explosion when killed with missiles aboard is visual only in the source.",
+    "skirmish": "Multiplayer only: Nod builds it at the Airstrip once an Obelisk of Light stands (top build level 7; the source's prerequisite is the Advanced Guard Tower flag, which the Obelisk satisfies). GDI gets one only as a starting unit when tech and starting units are maxed (wiki). Not buildable in the campaigns apart from one dinosaur mission. The registry note calling it campaign-only should be corrected, and its gate needs a tier_map band.",
+    "shooter_note": "Park far behind the line, drop two huge fire missiles on turrets that cannot answer, then sit out a long reload in hiding; a fast flanker is your doom."
+   },
+   {
+    "id": "cnc-td.shared.transport-helicopter",
+    "name": "Transport Helicopter (Chinook)",
+    "faction": "shared",
+    "class": "aircraft",
+    "role_guess": "transport",
+    "teaches": "Air transport: an unarmed helicopter that carries five soldiers and can set down on any clear ground, so a squad can be dropped past cliffs, rivers and walls. Twists: it costs as much as the Mammoth yet has little health, only multiplayer lets you build it, and an enemy engineer can steal it whenever it sits empty.",
+    "patterns": [
+     "carry-passengers"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Chinook_(Tiberian_Dawn)",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/AADATA.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/INFANTRY.CPP",
+     "https://cnc.fandom.com/wiki/Engineer_(Tiberian_Dawn)"
+    ],
+    "repeats": "Carry-passengers is taught by the RA3 Sudden Transport (kept) and the Multigunner IFV sample. Renegade's Transport Helicopter is the same line in R2, flown by a player there. The air layer and the capture risk are the new parts; the in-game name is Transport Helicopter, hence the slug.",
+    "skirmish": "Multiplayer only: both sides, from a Helipad (t1 by the registry gate; the wiki infobox says tier 2). The source gives it scenario 98, so neither campaign lets you build one; some missions have engineers capture parked ones.",
+    "shooter_note": "Fly a squad of teammates past walls and defences and land wherever there is room; with no gun, the pilot's skill is route and timing, and you never leave the helicopter empty near enemy engineers."
+   },
+   {
+    "id": "cnc-td.gdi.orca",
+    "name": "Orca",
+    "faction": "gdi",
+    "class": "aircraft",
+    "role_guess": "anti-armour (secondary raider, anti-air)",
+    "teaches": "GDI's signature VTOL gunship: fast, with paired anti-armour missiles that can also hit aircraft, but only a handful of salvos (five in the manual, six in the source) before it must fly home to a helipad to reload. It gives the generator the low-air version of the finite-ammo, return-to-rearm loop, built around heavy missiles rather than guns.",
+    "patterns": [],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Orca_(Tiberian_Dawn)",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/AADATA.CPP",
+     "https://cnc.fandom.com/wiki/Helipad_(Tiberian_Dawn)"
+    ],
+    "repeats": "Repeats the RA1 Yak's finite ammunition and rearming at a pad (kept), and low air is already covered by the Siege Chopper and Cryocopter; the Orca line returns in Tiberian Sun, Tiberium Wars and Renegade. Worth keeping only if the trim wants a TD attack aircraft besides the transport.",
+    "skirmish": "Multiplayer: GDI only, from a Helipad (t1 by the registry gate; the wiki infobox says tier 2, high price). Also in the GDI campaign.",
+    "shooter_note": "Strafe tanks and helicopters with missile pairs, count your shots, and break off to rearm at the pad; ground anti-air punishes a greedy run."
+   },
+   {
+    "id": "cnc-td.gdi.grenadier",
+    "name": "Grenadier",
+    "faction": "gdi",
+    "class": "infantry",
+    "role_guess": "anti-infantry (secondary siege)",
+    "teaches": "Indirect fire on foot: grenades thrown in an arc clear walls and can break them, letting a cheap soldier hit enemies sheltering behind cover. Its twist is a volatile death: a killed grenadier's own grenades go off and hurt whoever stands beside him, so squads have to spread out.",
+    "patterns": [],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Grenadier_(Tiberian_Dawn)",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/INFANTRY.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/IDATA.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/CONST.CPP"
+    ],
+    "repeats": "Death-blast also sits on the RA3 Kirov (kept) and on TD's Flame Tank, Flamethrower Infantry and Chemical Warrior; the lob over cover is what no kept infantry teaches. Renegade's Grenadier is the same line.",
+    "skirmish": "Multiplayer: GDI only, at the Barracks with no other tech (t1, very low price). Also in the GDI campaign.",
+    "shooter_note": "Arc grenades over cover onto clustered enemies and walls; keep away from teammates, since your death blast hurts them."
+   },
+   {
+    "id": "cnc-td.shared.armored-personnel-carrier",
+    "name": "Armored Personnel Carrier",
+    "faction": "shared",
+    "class": "vehicle",
+    "role_guess": "transport (secondary anti-infantry, scout)",
+    "teaches": "The armed battle taxi: five soldiers ride inside, and its best weapon is its tracks, since crushing infantry works better than its machine gun, which has no turret and needs the hull turned toward the target. The manual also calls it a scout, and the wiki's classic combo is an APC full of engineers rushing a base. In multiplayer both sides build it, while the campaign keeps it from Nod.",
+    "patterns": [
+     "carry-passengers"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Armored_Personnel_Carrier_(Tiberian_Dawn)",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/UDATA.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/HOUSE.CPP",
+     "https://cnc.fandom.com/wiki/Engineer_(Tiberian_Dawn)"
+    ],
+    "repeats": "Carry-passengers again (Sudden Transport, IFV sample and this list's transport helicopter), so the trim should keep at most one of the two TD transports; crushing as the main anti-infantry tool (mobility trait crush) is its own twist. The in-game name for the slug needs a check.",
+    "skirmish": "Multiplayer: both sides, at the Weapons Factory or Airstrip once the side has its infantry building, the Barracks or the Hand of Nod (t1, medium price); the source's ban on Nod APCs applies only to the campaign. The registry notes that the Remastered balance patch later added a Repair Facility requirement.",
+    "shooter_note": "Drive teammates into the fight, run down enemy soldiers in your path, and swing the hull to use the gun; an Obelisk can kill you in two shots and spill your passengers."
+   },
+   {
+    "id": "cnc-td.shared.minigunner",
+    "name": "Minigunner",
+    "faction": "shared",
+    "class": "infantry",
+    "role_guess": "anti-infantry",
+    "teaches": "TD's fear rule as the brace pattern: soldiers who take fire drop prone, halving the damage they take but crawling at half speed, and get up again once the fear fades. The rule covers every TD soldier, so it can ride on whichever TD infantry the trim keeps; the minigunner is the clean baseline both sides share and the registry's speed reference.",
+    "patterns": [
+     "brace"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://cnc.fandom.com/wiki/Minigunner_(Tiberian_Dawn)",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/INFANTRY.CPP",
+     "https://raw.githubusercontent.com/electronicarts/CnC_Remastered_Collection/master/TIBERIANDAWN/IDATA.CPP"
+    ],
+    "repeats": "No kept unit links brace yet (the pilot coded Dawn of War II examples). Every TD soldier shares the rule, so drop this candidate if another kept TD soldier carries brace instead.",
+    "skirmish": "Multiplayer and both campaigns: both sides, at the Barracks or Hand of Nod (t1, very low price).",
+    "shooter_note": "The basic rifleman with a hit-the-dirt key: go prone to halve incoming damage at the price of crawling, the core infantry survival choice."
+   }
+  ],
+  "coverage_note": "13 candidates: infantry 5 (Engineer, Commando, Chemical Warrior, Grenadier, Minigunner), vehicles 6 (Stealth Tank, Flame Tank, Recon Bike, MCV, SSM Launcher, APC), aircraft 2 (Transport Helicopter, Orca). TD has no walkers, drones or buildable hovercraft or ships: the Hovercraft and Gunboat have build level 99 in the source (scripted only). Factions: Nod 5, GDI 2, shared 6. GDI-only is thin on purpose: its other own units repeat (Mammoth = the kept RA1 Mammoth's half-health self-repair and guard-mode anti-air missiles; Humvee = the Recon Bike's scouting; Medium Tank = plain baseline). Tiers: t1 7, t2 2 (Stealth Tank, Flame Tank), t3 3 (Commando, MCV, Chemical Warrior), SSM unbanded (gate missing). Prices: very low 3, low 2, medium 4, high 2, very high 2. Likely primary roles: engineer (Engineer, MCV), marksman (Commando), raider (Stealth Tank, Recon Bike), anti-infantry (Chemical Warrior, Flame Tank, Grenadier, Minigunner), siege (SSM), transport (Transport Helicopter, APC), anti-armour (Orca); TD has no medic, mechanic, disabler or buffer, and its Harvester repeats the Slave Miner's gather-resources. Patterns: cloak (first sourced unit), capture-structure, execute-target, throw-explosive, carry-passengers, brace; proposed new ids unpack-into-base and ignore-hazard. Five candidates (Flame Tank, Recon Bike, SSM, Orca, Grenadier) link no pattern; their lessons are word-list ones (death-blast, speed against hitscan, extreme range with a two-shot magazine, finite ammo, lobbed fire). Game-wide rules for the game notes rather than candidates: prone under fire (brace) on all infantry; Tiberium hurts infantry except the Chemical Warrior; crewed vehicles have an even chance to leave a wounded crewman (UNIT.CPP); flamethrower, grenadier, chemical warrior and flame tank always explode on death; tanks, the APC, the harvester and the MCV crush infantry; a rare crate grants stealth. Registry points: the SSM Launcher is a multiplayer-only Nod unit (registry note says campaign-only) and its Obelisk / Advanced Guard Tower gate is not in tier_map; the APC is shared in multiplayer; the Chemical Warrior's GDI flag is commented out (Nod only); the source's Nuke Tank exists only under PETROGLYPH_EXAMPLE_MOD, so it is not part of the original rules; the 1995 game had no skirmish (the wiki's Skirmish page dates skirmish to Red Alert). Named alternates: Rocket Launcher (MLRS; shared in multiplayer, ground and air artillery with a close-range dead zone; the swap if a shared siege unit is wanted over the SSM), Artillery (cheap Nod t1 howitzer with a minimum range), Apache (Nod chain-gun gunship, repeats the Yak), Humvee and Buggy, Mammoth, Harvester, Light and Medium Tank, Rocket Soldier, Flamethrower Infantry (friendly fire on the soldier ahead, extra damage from its pilot light). Left out as not buildable: Visceroid, the Covert Operations dinosaurs (hidden mode, special house only), Mobile HQ, A-10 and C-17."
+ }
+}

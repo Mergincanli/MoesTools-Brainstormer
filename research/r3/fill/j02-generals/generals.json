@@ -1,0 +1,662 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "generals",
+  "units": [
+    {
+      "id": "generals.gla.technical",
+      "game": "generals",
+      "faction": "gla",
+      "name": "Technical",
+      "flavour_affinity": [],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["scout", "transport"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Arms Dealer",
+        "basis": "Built at the Arms Dealer, the GLA's basic vehicle factory, with nothing else needed (its Prerequisites in the 1.04 files), so t1. Every GLA general fields it: the Toxin, Demolition and Stealth Generals' Technicals match the main one apart from the Demolition General's higher price (see cost_band)."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 500,
+        "basis": "Its list price is about two thirds of the main battle tank anchor, inside the low band. The Demolition General (Juhziz) pays a fifth more for his (wiki; the 1.04 files agree), which is still low."
+      },
+      "mobility": {
+        "base": "wheels",
+        "handling": "steer",
+        "traits": ["crush"],
+        "speed": "very-fast",
+        "speed_raw": 4.5,
+        "notes": "Its land speed is four and a half times the Ranger's and three times the Crusader's; the wiki ranks it with the speediest vehicles of all. It loses only a little speed when badly damaged. Like every ground vehicle it flattens soldiers in its path (crusher level in the 1.04 files), but it cannot run over other vehicles."
+      },
+      "body": {
+        "plan": "open-mount",
+        "size": "medium",
+        "notes": "An armed civilian pickup: the gun turns on a turret in the open bed, with its gunner standing exposed, while the riders are not shown. Salvage swaps the gun model for a cannon and then a rocket pod. It comes in three chassis models that play alike (wiki)."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class steps decides: its Truck Armor set maps to light. The wiki calls it only lightly armoured and dependent on its speed. Junk Repair, a Black Market upgrade for every GLA vehicle, lets it mend itself slowly, and Technical Training, a general's promotion, makes new Technicals start at the first veterancy rank; neither is stock."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The wiki lists a targeting figure and a larger fog-clearing figure; the fog figure, which the registry uses, is three quarters of the Ranger's."
+      },
+      "armament": [
+        {
+          "name": "Heavy machine gun",
+          "slot": "primary",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "summary": "A machine gun on a quick turret in the truck bed. It tears through soldiers and works on light vehicles but does little to tanks, and like both salvaged weapons it cannot shoot at aircraft (1.04 data). It reaches as far as a Ranger's rifle and half again. Armour-Piercing Bullets, a side-wide Black Market upgrade, add a quarter to its damage."
+        },
+        {
+          "name": "Salvaged cannon",
+          "slot": "acquired",
+          "family": "cannon",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["splash"],
+          "condition": "Taken from salvage: the first crate the truck picks up replaces the machine gun with it for the rest of its life.",
+          "summary": "A light gun firing single shells that burst over an area, far slower than the machine gun but better against lightly armoured vehicles (wiki). An early Generals patch moved its damage from explosive to a bullet class so that it would hurt tanks less, and the game still files its hits as gunfire, so heavy armour shrugs them off. Same reach as the machine gun. Armour-Piercing Bullets add a quarter.",
+          "patterns": ["leech-weapon-on-kill"]
+        },
+        {
+          "name": "Salvaged rocket launcher",
+          "slot": "acquired",
+          "family": "rockets",
+          "damage": "explosive",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "condition": "Taken from salvage: the second crate replaces the cannon with it for the rest of the truck's life.",
+          "summary": "A rocket launcher that hits vehicles harder still (wiki). Its rockets fly to the target, so point-defence lasers can shoot them down and the ECM Tank can throw them off course. It cannot fire at aircraft, nor at a target almost touching the truck (1.04 data). Same reach as the earlier guns. Since Zero Hour patch 1.03 Armour-Piercing Bullets raise its damage too.",
+          "patterns": ["leech-weapon-on-kill"]
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "passengers": {
+          "seats": 5,
+          "kind": "passenger-cargo"
+        },
+        "notes": "Solo proposal: it fires one gun at a time. The wiki says the riders travel in addition to a driver and a gunner, a crew that exists only in the fiction and the models. The seats take infantry only; riders sit as cargo, since the truck has no firing ports (wiki)."
+      },
+      "abilities": [
+        {
+          "name": "Transport infantry",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Up to five soldiers ride inside. They cannot fire from the truck and have to get out to fight (wiki); Evacuate empties it at once. When the truck is destroyed they climb out alive but hurt.",
+          "patterns": ["carry-passengers"]
+        },
+        {
+          "name": "Salvage",
+          "kind": "triggered",
+          "source": "innate",
+          "summary": "When a GLA unit destroys an enemy vehicle, a salvage crate drops by the wreck; the Salvaging page says a GLA vehicle the enemy destroys leaves one as well. Only GLA players see the crates and only their GLA units can collect them, not captured vehicles of other sides (Salvaging page); crates vanish after about half a minute (1.04 data). Driving over one moves the Technical one step up a fixed ladder, whatever the wreck was: first a splash cannon replaces the machine gun, then a rocket launcher replaces the cannon. After both steps a crate gives a little money or, now and then, a veterancy rank; before that, crates never rank it up (Veterancy page). The upgrades stay on the truck if its crew is killed and someone else claims it.",
+          "patterns": ["leech-weapon-on-kill"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "in-game",
+        "notes": "Only when riders are aboard: they get out alive but hurt. The wiki says they keep half their health; the 1.04 files take only a tenth of their health from them. An empty Technical is simply gone, and its crew from the fiction never climbs out. The Demolition General's Demolitions upgrade, bought once for his whole side, adds a detonate order; since patch 1.03 of Zero Hour his Technical blows up only on that order, not when it is destroyed (wiki)."
+      },
+      "strengths": [
+        {
+          "ref": "speed:very-fast",
+          "why": "Among the quickest vehicles in the game (wiki): it reaches an unready base early, runs from fights it cannot win and gets to salvage crates first."
+        },
+        {
+          "ref": "weapon:machine-gun",
+          "why": "Its gun cuts down soldiers: the build tooltip rates the Technical strong against infantry, and the manual says it does well against soldiers and lightly armoured vehicles."
+        },
+        {
+          "ref": "passengers:5",
+          "why": "Five soldiers ride in the back, so an early rush can drop a squad straight into a base that is not ready (wiki), and they live through the truck's death."
+        },
+        {
+          "ref": "pattern:leech-weapon-on-kill",
+          "why": "It grows with the wrecks its side leaves: two crates swap its gun for a splash cannon and then for a rocket launcher that hits vehicles harder (wiki, Salvaging page)."
+        },
+        {
+          "ref": "cost:low",
+          "why": "Cheap and built at the Arms Dealer with no further tech, so it is on the field early (wiki: affordable, early access)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:light",
+          "why": "Only lightly armoured: sustained fire kills it quickly, and it must rely on speed to get away (wiki)."
+        },
+        {
+          "ref": "weapon:machine-gun",
+          "why": "None of its guns, stock or salvaged, can shoot at aircraft; the tooltip names aircraft as a weak point and the wiki calls it very vulnerable to them."
+        },
+        {
+          "ref": "damage:kinetic",
+          "why": "Its bullets, and even the salvaged cannon's hits, count as gunfire that heavy armour shrugs off: the tooltip calls it weak against tanks, and even upgraded it needs plenty of help against heavy vehicles (wiki)."
+        },
+        {
+          "ref": "passengers:5",
+          "why": "Its riders are cargo with no firing ports: they cannot shoot from inside and must climb out to fight (wiki)."
+        },
+        {
+          "ref": "weapon:rockets",
+          "why": "Its last salvaged weapon fires rockets that point-defence lasers can shoot down and the ECM Tank can deflect (wiki)."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "Nothing it carries can shoot upward, and both the tooltip and the wiki single out aircraft as its bane."
+        },
+        {
+          "ref": "armour-class:heavy",
+          "why": "Tanks: the tooltip lists them as a weak point, and the wiki says even a fully salvaged Technical needs a lot of support to beat heavy vehicles, while the manual rates it only against light ones."
+        },
+        {
+          "ref": "armour-model:interceptor",
+          "why": "Point-defence lasers can intercept the rockets of its last salvage step (wiki, Salvaging page), taking away the weapon it worked hardest for."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "The build tooltip rates it strong against infantry, and the manual calls its gun effective against them."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "The manual rates it effective against light vehicles too, and its first salvaged cannon handles lightly armoured vehicles better still (wiki)."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:infantry",
+          "why": "Loaded with up to five soldiers, it turns a fast early rush into a troop drop inside a base that is not ready (wiki)."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Anti-tank teammates deal with the tanks it cannot beat, and every enemy vehicle a GLA unit destroys leaves a crate the Technical can drive over for its next salvage step."
+        }
+      ],
+      "memorable": "A cheap, very fast gun truck that loots the battlefield: crates from destroyed vehicles turn its machine gun into a splash cannon and then a rocket launcher, while five soldiers ride in the back.",
+      "as_player": "A fast early pickup: left mouse fires a turret machine gun that shreds soldiers but not tanks, and nothing you carry hits aircraft. Drive over salvage crates only your team can see to swap in a splash cannon, then a rocket pod that point defence can swat down. Up to five teammates ride as cargo; they cannot shoot from the bed and spill out hurt if the truck is destroyed.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b8/Command_and_Conquer_-_Generals_-_UK_Manual_-_PC.pdf/revision/latest",
+          "title": "Command & Conquer: Generals UK PC manual (scan hosted by the Command & Conquer Wiki), GLA units, printed page 41",
+          "kind": "official",
+          "accessed": "2026-10-26",
+          "version": "Generals manual (2003)",
+          "note": "The Technical's entry gives Purpose: Transport, Anti-Infantry, and describes a truck-mounted machine gun good against infantry and light vehicles that salvages parts from destroyed enemies and carries infantry. Read from a layout text dump of the scan; the copy-check cannot read PDFs, so paraphrases were compared with the text by hand.",
+          "supports": [
+            "roles/primary",
+            "roles/secondary",
+            "armament/0",
+            "abilities/0",
+            "abilities/1",
+            "strengths",
+            "counters"
+          ]
+        },
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b1/CNC_Generals_Zero_Hour_Manual_2015.pdf/revision/latest",
+          "title": "Command & Conquer: Generals - Zero Hour manual (2015 scan hosted by the Command & Conquer Wiki), Probing and Reconnaissance, printed page 36",
+          "kind": "official",
+          "accessed": "2026-10-26",
+          "version": "Zero Hour manual (2003)",
+          "note": "The multiplayer tactics pages name Technicals, with Combat Cycles, as the GLA's group for probing and reconnaissance attacks, using their speed to cross the enemy camp. Read from a layout text dump and the page image; checked against our wording by hand.",
+          "supports": ["roles/secondary", "strengths"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Technical_(Generals_1)",
+          "title": "Technical (Generals 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "version": "Zero Hour 1.04",
+          "note": "Infobox: Truck armour, land speed, sight, range, damage names for the gun and both salvage steps, and the Demolition General's price; salvage section, game unit and counters prose, and a changelog to Zero Hour patch 1.03.",
+          "supports": [
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament",
+            "crew",
+            "abilities",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Salvaging",
+          "title": "Salvaging, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "version": "Zero Hour 1.04",
+          "note": "When crates drop, who can see and collect them, what a fully upgraded vehicle gets, and the Technical's two steps (machine gun to cannon, cannon to an interceptable missile launcher).",
+          "supports": ["abilities/1", "armament/1", "armament/2", "strengths", "countered_by", "combos"]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/a65f341431e95e926fca3ad7bbdce32bc6912d6d/Patch104pZH/GameFilesEdited/Data/generals.str",
+          "title": "generals.str (first version), plain-text copy of the Zero Hour 1.04 English string table, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-20",
+          "version": "Zero Hour 1.04",
+          "note": "Copies the in-game build tooltip CONTROLBAR:ToolTipGLABuildTechnical, which the main GLA and all three GLA generals' Technical buttons use (CommandButton.ini in the unedited 1.04 files): it upgrades its weapon with parts from kills, strong against infantry, weak against tanks and aircraft. OBJECT:Technical gives the in-game name.",
+          "supports": ["name", "roles/primary", "weaknesses", "countered_by", "counters"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/secondary",
+          "note": "Scout ranks at roles.secondary step 1 only on one reading: the Zero Hour manual's Probing and Reconnaissance section lists Technicals for the GLA's reconnaissance groups, read here as official text calling the unit by scout's alias. If that reading is too loose, the two roles would be transport (step 1, its Purpose entry) and raider (step 4: very fast, light armour)."
+        },
+        {
+          "path": "armament/0/damage",
+          "note": "The wiki's infobox names the machine gun's and the salvaged cannon's damage Comanche Vulcan, while Weapon.ini in the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini) gives both GATTLING. Both names map to kinetic, so the code is the same either way.",
+          "sources_disagree": true
+        },
+        {
+          "path": "on_death/notes",
+          "note": "The wiki says riders survive the truck's death at half health; the Technical's transport module in GLAVehicle.ini of the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/GLAVehicle.ini) takes a tenth of their health. Either way they get out alive, so bail-out stands.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/1",
+          "note": "The Salvaging page has a crate drop when the enemy destroys a GLA vehicle too; Crate.ini in the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Crate.ini) makes a salvage crate only when a GLA player's salvaging unit is the killer. The crate's lifetime and what a crate gives after both steps come from the same file; the wiki's Technical page says later crates turn into money, the Salvaging page says money and experience. That crates give no rank before both steps comes from the Veterancy page (https://cnc.fandom.com/wiki/Veterancy).",
+          "sources_disagree": true
+        },
+        {
+          "path": "mobility/traits",
+          "note": "Crush rests on the crusher level in GLAVehicle.ini of the unedited 1.04 files, as the registry's crushing rule asks; the wiki's infobox gives no level, though the page lists the truck's voice lines for running soldiers over."
+        },
+        {
+          "path": "armament/2/family",
+          "note": "The wiki calls the second salvage weapon both a rocket launcher and a missile launcher, and says point-defence lasers can intercept it; the Point defense laser page (https://cnc.fandom.com/wiki/Point_defense_laser) says those lasers stop guided projectiles. No source says the rocket steers to its target, so the tie-break keeps it rockets."
+        },
+        {
+          "path": "armament/2/summary",
+          "note": "That it cannot fire at aircraft or at a target almost touching it comes only from Weapon.ini in the unedited 1.04 files; its tiny blast radius there is not coded as splash, since no cited page says the hit spreads."
+        },
+        {
+          "path": "combos/1",
+          "note": "Reasoned, not named by a source: the wiki says the Technical needs support against heavy vehicles, and the Salvaging page says vehicles destroyed by GLA units leave crates."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J02-GENERALS",
+      "atypical": [
+        {
+          "path": "mobility/traits",
+          "rule": "mobility-traits:crush allowed.sizes medium",
+          "note": "The registry's crushing rule gives crush to every ground vehicle whose crusher level is above zero, so the medium-sized Technical has it too; it flattens soldiers, not vehicles."
+        },
+        {
+          "path": "armament/1/family",
+          "rule": "weapon-families:cannon allowed.damage-types kinetic",
+          "note": "Damage step 4 binds: the game files the salvaged cannon's hits under a bullet category (Comanche Vulcan on the wiki, GATTLING in Weapon.ini), and both map to kinetic, while its single shells with a pause between them make it a cannon by the families tie-break."
+        }
+      ]
+    },
+    {
+      "id": "generals.china.overlord",
+      "game": "generals",
+      "faction": "china",
+      "name": "Overlord",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "anti-armour",
+        "secondary": ["scout", "support"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Propaganda Center",
+        "basis": "Built at the War Factory once a Propaganda Center, China's one tech building, stands (Prerequisites in the 1.04 files; the wiki's infobox says tier 3). Of the Chinese generals, the Tank General (Kwai) builds the Emperor in its place, the Infantry General (Shin Fai) has no Overlord at all, and the Nuke General (Tao) fields his own version, which cannot get Uranium Shells or Nuclear Tanks (wiki)."
+      },
+      "cost_band": {
+        "band": "very-high",
+        "raw": 2000,
+        "basis": "Its list price is two and a half times a Battlemaster's, well above the very-high threshold. Each add-on is paid for separately, on the tank."
+      },
+      "mobility": {
+        "base": "tracks",
+        "handling": "pivot",
+        "traits": ["crush"],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "Exactly as fast as the Ranger, which leaves it slower than the main battle tanks: four fifths of the Battlemaster's speed and two thirds of the Crusader's. The wiki calls it slow-moving and hard to manoeuvre. Unlike most units it keeps full speed when badly damaged (Locomotor.ini). It runs over enemy vehicles, tanks included, as well as soldiers: only it and the Emperor are heavy enough to crush other vehicles (wiki). Nuclear Tanks, a side-wide upgrade at the Nuclear Missile, makes it faster, and the Nuke General's version moves twice as fast as the stock tank."
+      },
+      "body": {
+        "plan": "hull-turret",
+        "size": "huge",
+        "notes": "A four-track hull under one turret with twin cannons; the wiki stresses its sheer size and mass, and its collision box in the 1.04 files is twice the Battlemaster's length. A platform near the back takes one add-on, a bunker, a Gattling turret or a speaker tower, recorded under armament and abilities."
+      },
+      "armour": {
+        "class": "super-heavy",
+        "models": ["flat-pool"],
+        "notes": "Its Tank Armor set maps to heavy (step 1), but check A makes it super-heavy: it is huge and t3, and the registry notes name it super-heavy by size. The wiki stresses its thick armour. An add-on has no health of its own and shares the tank's damage (1.04 files), and EMP or the ECM Tank disables tank and add-on together (wiki)."
+      },
+      "sensors": {
+        "sight": "short",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "The wiki lists a targeting figure and a slightly larger fog-clearing figure; the fog figure is half the Ranger's, so it clears the fog only a little past the reach of its own cannons. The Gattling Cannon add-on makes it a detector that reveals stealthed units around it (wiki), but that is an upgrade, so it stays out of the traits."
+      },
+      "armament": [
+        {
+          "name": "Twin cannons",
+          "slot": "primary",
+          "family": "cannon",
+          "damage": "armour-piercing",
+          "mount": "slow-turret",
+          "delivery": "projectile",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["splash"],
+          "summary": "Two heavy shells fired close together from the main turret, then a pause before the next pair; each hit also hurts whatever stands right around the target. Strong against vehicles and buildings (tooltip), and it outreaches the main battle tanks' guns, but the turret turns slowly, the shells can stray against soldiers (1.04 data) and it cannot fire at aircraft. Uranium Shells, a side-wide upgrade at the Nuclear Missile, add a quarter to its damage; the Nuke General's version fires shells that leave radiation where they land (wiki)."
+        },
+        {
+          "name": "Gattling Cannon (add-on)",
+          "slot": "acquired",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "off-screen",
+          "can_target": ["infantry", "ground-vehicle", "low-air", "high-air", "structure"],
+          "traits": ["spin-up", "anti-air"],
+          "condition": "Added by the Gattling Cannon add-on, bought on the tank in the field; it rules out the other two add-ons.",
+          "summary": "A twin rotary bullet gun on its own turret on the tank's back that works just like China's Gattling Cannon base defence: its hits land instantly and it fires faster over a few seconds of shooting. It shreds infantry and aircraft and out-guns light vehicles but struggles against heavy armour, and it reaches nearly twice as far against aircraft as against ground targets. With it the tank also detects stealthed units. Chain Guns, a side-wide War Factory upgrade, add a quarter to its damage. Sitting near the rear, it reaches a little less far ahead and further to the sides and back (wiki).",
+          "patterns": ["upgrade-in-field"],
+          "option_group": "overlord-add-on"
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "passengers": {
+          "seats": 5,
+          "kind": "passenger-firing"
+        },
+        "notes": "Solo proposal: the stock tank fires one gun from its turret, and a gun added by an upgrade does not make a second seat. The five passenger seats come only with the Battle Bunker add-on, one of three that exclude each other; its riders fire out of it. The tank has a crew inside that Jarmen Kell can snipe, leaving it empty for any infantry to take (wiki)."
+      },
+      "abilities": [
+        {
+          "name": "Battle Bunker",
+          "kind": "passive",
+          "source": "upgrade",
+          "summary": "An add-on bunker built on the tank's back, bought on the tank in the field: five soldiers ride in it and fire their own weapons out, so the riders decide what else the tank can hit (Tank Hunters inside give it some anti-air cover, wiki). Unlike the standalone Bunker it gives no protection from chemical weapons. Evacuate lets them out; if the tank is destroyed they get out hurt. It rules out the other two add-ons.",
+          "patterns": ["passenger-sets-weapon", "upgrade-in-field"],
+          "exclusive_group": "overlord-add-on"
+        },
+        {
+          "name": "Propaganda Tower",
+          "kind": "passive",
+          "source": "upgrade",
+          "summary": "An add-on speaker tower, bought on the tank in the field, that broadcasts to friendly units close around it, the tank itself included: they fire about a quarter faster and slowly heal or repair, at half the healing rate of China's static Speaker Tower. Allied players' units and aircraft benefit too, and several towers' bonuses do not stack. Subliminal Messaging, researched at the Propaganda Center, makes both effects stronger. It rules out the other two add-ons.",
+          "patterns": ["rally-allies", "repair-allies", "upgrade-in-field"],
+          "exclusive_group": "overlord-add-on"
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "in-game",
+        "notes": "Only with the Battle Bunker fitted and riders aboard: they get out with half their health gone (1.04 files). Otherwise it is simply gone. Nuclear Tanks, a side-wide upgrade, makes it explode when destroyed and hurt whatever stands near; the Nuke General's version blows up far more violently unless he researches Isotope Stability (wiki)."
+      },
+      "strengths": [
+        {
+          "ref": "armour-class:super-heavy",
+          "why": "Thick armour lets it make the first breach in an enemy line and take the fire while lighter units follow (wiki)."
+        },
+        {
+          "ref": "mobility-trait:crush",
+          "why": "One of only two vehicles in the game that can run over other vehicles, tanks included, which also clears crowds of small vehicles in tight spaces (wiki)."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Its twin armour-piercing cannons make it a fine tank destroyer, and the build tooltip rates it strong against vehicles and buildings."
+        },
+        {
+          "ref": "pattern:upgrade-in-field",
+          "why": "One add-on bought on the tank covers a gap of the player's choice: a bunker for firing soldiers, a Gattling gun against infantry and aircraft that also spots stealth, or a speaker tower that heals nearby units and speeds their fire (wiki)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:cannon",
+          "why": "Its cannons cannot fire at aircraft: the stock tank has no answer to them (wiki) and the tooltip names aircraft as a weak point; only a Gattling or a loaded bunker helps, and only somewhat."
+        },
+        {
+          "ref": "mount:slow-turret",
+          "why": "Its turret traverses slowly, so large groups of smaller, more agile anti-tank units can overwhelm it (wiki)."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Its shells are made for armour: the tooltip names rocket-armed infantry as a weak point, and the wiki calls it especially vulnerable to them."
+        },
+        {
+          "ref": "size:huge",
+          "why": "A big, slow target: it moves at infantry pace, slower than the main battle tanks, so harassment, artillery and even plain dropped bombs wear it down on its way in (wiki)."
+        },
+        {
+          "ref": "cost:very-high",
+          "why": "It costs as much as two and a half Battlemasters, and the wiki warns never to send one alone."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "class:aircraft",
+          "why": "The stock tank cannot fire at aircraft: hit-and-run anti-armour planes such as the Raptor and the MiG destroy it while it can do very little back (wiki), and the tooltip names aircraft as a weak point."
+        },
+        {
+          "ref": "weapon:rockets",
+          "why": "Rocket-armed infantry, which the tooltip names as a weak point; the wiki calls it especially vulnerable to rocket-wielding soldiers."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Big groups of smaller, nimbler anti-tank units out-turn its slow turret and mob it (wiki)."
+        },
+        {
+          "ref": "delivery:ram",
+          "why": "Suicide attackers such as Terrorists and Bomb Trucks blow up when it tries to run them over, and a lone Overlord can neither kill nor outrun them before they reach it (wiki)."
+        },
+        {
+          "ref": "unit:generals.gla.jarmen-kell",
+          "why": "He snipes its crew and leaves it empty for the enemy to take (wiki). It stands alone because a sniper link would be false for most snipers, which cannot kill a vehicle's crew."
+        },
+        {
+          "ref": "damage:emp",
+          "why": "EMP weapons and the ECM Tank disable it and its add-on together; only riders in a bunker can still shoot back (wiki)."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:vehicle",
+          "why": "Strong against vehicles by its tooltip: its twin cannons kill tanks, and it can simply drive over smaller vehicles (wiki)."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Strong against buildings by its tooltip, and tough enough to make the first breach in a defended line (wiki)."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:generals.china.overlord",
+          "why": "Works best in numbers with mixed add-ons: the wiki suggests a wedge of Overlords around one whose speaker tower heals the rest, and the Zero Hour manual an attack group of four, half fitted with Propaganda Towers and half with Gattling Cannons."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "Tank Hunters riding in its bunker partly cover its blindness to aircraft (wiki)."
+        },
+        {
+          "ref": "speed:>=fast",
+          "why": "Once it breaches the enemy line, smaller, faster and less armoured units go through to strike the rear and fight inside the base (wiki)."
+        },
+        {
+          "ref": "role:siege",
+          "why": "The Zero Hour manual keeps Nuke Cannons behind its Overlord group, because they are very good against buildings."
+        }
+      ],
+      "memorable": "A huge twin-cannon tank that runs over other tanks and carries one add-on of three: a firing bunker, a Gattling that downs aircraft and spots stealth, or a speaker that heals and quickens allies.",
+      "as_player": "A huge, slow tank with a slow-turning turret: left mouse fires twin armour-piercing shells, and you crush enemy vehicles by driving over them, but you cannot shoot aircraft. During a life you buy one of three add-ons: a bunker whose five seats let teammates shoot their own guns from your back, a Gattling turret that shreds infantry and aircraft and reveals cloaked enemies, or a speaker tower that heals you and speeds the fire of every friend around you.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b8/Command_and_Conquer_-_Generals_-_UK_Manual_-_PC.pdf/revision/latest",
+          "title": "Command & Conquer: Generals UK PC manual (scan hosted by the Command & Conquer Wiki), China units, printed page 35",
+          "kind": "official",
+          "accessed": "2026-10-26",
+          "version": "Generals manual (2003)",
+          "note": "The Overlord Tank's entry gives Purpose: Tank/Structure Assault, which names no role; it describes a large, slow tank that runs over enemy vehicles and takes one of three structures on its back, with Uranium Shells and Nuclear Tanks from the Nuclear Missile. Read from a layout text dump; checked against our wording by hand.",
+          "supports": ["roles/primary", "mobility", "abilities", "armament/1", "strengths", "memorable"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Overlord_tank_(Generals_1)",
+          "title": "Overlord tank (Generals 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-19",
+          "version": "Zero Hour 1.04",
+          "note": "Infobox: Tank Armor, tier 3, price, sight, land speeds, cannon and Gattling ranges, damage names and cooldowns; game unit, add-on and counters prose; the Emperor, Shin Fai and Tao variants.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament",
+            "crew",
+            "abilities",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/a65f341431e95e926fca3ad7bbdce32bc6912d6d/Patch104pZH/GameFilesEdited/Data/generals.str",
+          "title": "generals.str (first version), plain-text copy of the Zero Hour 1.04 English string table, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-20",
+          "version": "Zero Hour 1.04",
+          "note": "Copies the in-game build tooltip CONTROLBAR:ToolTipChinaBuildOverlord (strong against vehicles and buildings, weak against rocket-armed infantry and aircraft), which both the main Chinese and the Nuke General's Overlord buttons use (CommandButton.ini in the unedited 1.04 files), and the three add-on tooltips; OBJECT:Overlord gives the in-game name.",
+          "supports": [
+            "name",
+            "roles/primary",
+            "roles/secondary",
+            "abilities",
+            "armament/1",
+            "weaknesses",
+            "countered_by",
+            "counters"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Speaker_tower",
+          "title": "Speaker tower, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour 1.04",
+          "note": "The tower's fire-rate bonus and healing, that mobile towers such as the Overlord's give the same fire-rate bonus but half the healing, that allies and aircraft benefit, and that bonuses do not stack.",
+          "supports": ["abilities/1", "roles/secondary"]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Gattling_cannon_(Generals_1)",
+          "title": "Gattling cannon (Generals 1), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour 1.04",
+          "note": "The base defence's gun: instant hits, spin-up over a few seconds, ground and air reach, stealth detection, and that the Overlord's version performs the same.",
+          "supports": ["armament/1", "sensors/notes", "roles/secondary"]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/secondary",
+          "note": "No step before step 5 gives a secondary role: assault fails step 4 because the cannons outreach the main battle tanks' guns (the Crusader tank page, https://cnc.fandom.com/wiki/Crusader_tank, and Weapon.ini of the unedited 1.04 files give those guns a shorter reach), and the tooltip's weak line drops anti-infantry and anti-air. At step 5 each add-on gives roles once: the Gattling scout (through its detector), the Propaganda Tower support and buffer, the Battle Bunker transport. With all tied, the roles list's order picks scout and support. Scout meets its requires only through the add-on's detector, which the validator does not read; a reader who gives the detector no role would get support and transport."
+        },
+        {
+          "path": "body/size",
+          "note": "Huge rests on its collision box in ChinaVehicle.ini of the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/ChinaVehicle.ini), twice the Battlemaster's length and about three times its area, on the wiki's words about its sheer size, and on the registry note that makes it super-heavy by size. The same file gives both tanks the same room in a transport."
+        },
+        {
+          "path": "on_death",
+          "note": "Bail-out rests on ChinaVehicle.ini of the unedited 1.04 files: the Battle Bunker's riders lose half their health when the tank dies and the survivors get out, as the registry's garrison note reads it. The Bunker (Generals) page of the wiki (https://cnc.fandom.com/wiki/Bunker_(Generals)) implies the same, setting the Helix's bunker apart as one that cannot protect its riders when destroyed."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The wiki has Nuclear Tanks raise its speed by half; the Generals manual and CNCNZ's China units page (https://cncnz.com/games/generals/china-units/) say by a quarter. Locomotor.ini of the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Locomotor.ini) matches the wiki. Only the notes use it.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/1/range",
+          "note": "Off-screen by the first reason of its coding rule: the gun is long by its reach (several times the Ranger's rifle against aircraft), and both its air and its ground reach pass the tank's own fog figure, which an add-on uses."
+        },
+        {
+          "path": "armament/1/damage",
+          "note": "The wiki names its damage Gattling against ground targets and Small Arms against aircraft, two names, so step 5 gives the machine gun's default, kinetic; both names map to kinetic anyway."
+        },
+        {
+          "path": "armament/1/can_target",
+          "note": "Structures come from can_target step 4 (no source labels the gun by its targets, and the family allows buildings); no page says how it does against buildings."
+        },
+        {
+          "path": "combos/0",
+          "note": "The attack group of four comes from the Zero Hour manual's Full-Force Attack section, printed page 37 (https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b1/CNC_Generals_Zero_Hour_Manual_2015.pdf/revision/latest), not a cited page; the wiki's wedge formation is cited."
+        },
+        {
+          "path": "combos/3",
+          "note": "Rests only on the Zero Hour manual's Full-Force Attack section, printed page 37 (same scan as above), which is not cited."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J02-GENERALS",
+      "atypical": [
+        {
+          "path": "roles/secondary",
+          "rule": "roles:scout requires speed:>=fast|category:stealth-deception|weapon-trait:mark|sight:>=long|sensor:radar|sensor:detector|sensor:lingering-sight|sensor:stealth|pattern:reveal-area|pattern:mark-target",
+          "note": "Scout enters at roles.secondary step 5 through the Gattling Cannon add-on, which makes the tank a detector. A sensor from an upgrade goes in sensors.notes, which the validator does not read, so the requires shows as unmet."
+        }
+      ]
+    }
+  ]
+}
