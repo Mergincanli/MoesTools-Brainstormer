@@ -5,16 +5,19 @@
   - R2 is paused, and its prep of three games is kept in `research/r2/`. The other 14 games are shelved until after the app.
 - **R3 goes on in this pull request**, because the batch and the plan share one branch:
   - **its prep** (9340fde): the three games' notes, 10 registry fixes, and 27 units kept, 9 per game;
-  - **its opening check** (48629b8): two coders coded Jarmen Kell and the Kaiser separately and agreed on 54 of 56 fields. The two splits are gaps in the rules, and fixes for them are drafted for the rule-fix round after R4. No word list changed.
-- **Running now:** the fill of R3's other 25 units.
-- **Checks:** all 297 tests pass. The copy-check finds no shared runs in R2's record, R3's prep or the opening record.
-- **Merging this pull request also merges R3's prep and opening check.** R3's own pull request then opens from its next commit.
+  - **its opening check** (48629b8): two coders coded Jarmen Kell and the Kaiser separately and agreed on 54 of 56 fields. The two splits are gaps in the rules, and fixes for them are drafted for the rule-fix round after R4. No word list changed;
+  - **its fill** (a9cd648, 2ccc323, 2870003, bcdfa81): the other 25 units, each recorded with its agent's report;
+  - **the merge pass's first step** (6c817f1): all 27 units are in `data/units/`.
+- **Paused on 29 October, at your request.** The merge pass's consistency check and the pattern files were part done. On 10 November the work moved to a new session. [docs/handoff.md](https://github.com/Mergincanli/MoesTools-Brainstormer/blob/claude/quirky-cray-tih1w4/docs/handoff.md) says where it stands and what comes next. The unfinished work is saved, unchecked, in `research/handoff/` (71d7e67).
+- **Still to do for R3:** finish the merge pass and the pattern files, then the checker, the final review, the report and the claims check.
+- **Checks:** all 297 tests pass. The copy-check finds no shared runs in the records.
 
 ## Decisions needed
 
-1. **Approve the plan as written and merge?**
-   - A (recommended): yes.
-   - B: tell me what to change.
+1. **Approve the plan as written?** This pull request now also holds R3's units, which the checker has not yet re-checked.
+   - A (recommended): approve the plan now, and merge once R3 has passed its checks.
+   - B: merge now, with R3's units going to `main` before the checker.
+   - C: tell me what to change.
 2. **StarCraft II count.** The plan keeps about 15 units, 5 per race, drawn from multiplayer, co-op and the campaign (all Legacy of the Void). Say if you want a different number.
 
 R3's prep raised five questions. Coding goes ahead on the recommended answers, which are how the notes are written now. A different answer means recoding the units it touches.
@@ -76,6 +79,12 @@ R3's prep raised five questions. Coding goes ahead on the recommended answers, w
   - `final/`: the reconciled entries with the reconciler's reports, and `recode-iron-harvest.md` on the Kaiser's two recodes;
   - `splits.json`: the drafted fixes for items 12 and 13.
   - The reconciler raised six more rule problems, such as when a weapon counts as hitting buildings. They wait for the round after R4, with the fill's.
+- **R3's fill and merge pass (a9cd648 to 6c817f1):** `research/r3/fill/` has one folder per job with its unit file and report, and `hesitations.md`. `data/units/generals.json`, `tempest-rising.json` and `iron-harvest.json` hold the 27 units.
+- **The handoff (71d7e67):**
+  - `docs/handoff.md`;
+  - `docs/brief.md` (your brief);
+  - `CLAUDE.md` (the working rules);
+  - `research/handoff/` (the unchecked work in progress, to delete once used).
 - **Kept units:**
   - **Generals:** Jarmen Kell, Battle Bus, Technical, Overlord, Red Guard, Hacker, Aurora Bomber, Sentry Drone, Combat Chinook.
   - **Tempest Rising:** Drone Operator, Sentinel, Shieldmaiden, Line Officer, Voltaic Tank, Tempest Sphere, Enlightened, Thunderhead, Vimana.

@@ -113,7 +113,7 @@ CI was green on 6c817f1 (four check jobs). `npm run check:merge` passes, with 29
 
 ## 4. What waits for Mustafa (pull request #6, "Decisions needed")
 
-1. Approve the plan change and merge the pull request.
+1. Approve the plan change. The pull request now also holds R3's units, which the checker has not re-checked yet. The recommendation (A) is to approve the plan now and merge once R3 has passed its checks.
 2. The StarCraft II count: about 15 units, 5 per race.
 3. The five questions from R3's prep. Coding follows the recommended answers:
    - the Generals tier map (A, keep it);
