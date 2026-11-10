@@ -270,8 +270,8 @@ When Mustafa sends a batch's rule problems to a rule-fix round, it runs after th
 - **Branch:** push only to `claude/quirky-cray-tih1w4`, with `git push -u origin claude/quirky-cray-tih1w4`. Retry up to four times with backoff on a network error.
 - **Commits:**
   - Write plain messages that say what changed and why.
-  - End the message with the attribution lines exactly as the session's instructions give them.
-  - Put no model names in files, pull-request text or comments.
+  - End the message with the session's attribution lines, with the model's name left out of the co-author line: `Co-Authored-By: Claude <noreply@anthropic.com>`, then the session link (Mustafa, 11 November 2026).
+  - Put no model names in files, commit messages, pull-request text or comments.
 - **Never force-push.** If a push is refused, stop and report.
 - **Never rewrite history,** never skip, weaken or delete a test or a check, and never push only to make CI run.
 - **Red CI, or any failed gate, gets two attempts per night:**
