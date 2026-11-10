@@ -12,8 +12,10 @@ A creativity tool for designing units for **Shamble Frontlines**, a browser team
 
 On 24 October 2026, Mustafa narrowed the research run to reach the generator sooner: batch R3 (Generals with Zero Hour, Tempest Rising, Iron Harvest), then a new batch R4 (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech), then steps 4 to 6. Batch R2 is paused during its prep, and the other games are shelved until after the app ([proposal, section 2.2](docs/proposal.md#22-the-research-run)).
 
-Now: batch R3's prep. The generator and the app have not started.
+Now: batch R3. All 27 of its units are coded and checked, and the merge pass and the pattern files are under way. The work paused on 29 October 2026 and moved to a new session on 10 November; [docs/handoff.md](docs/handoff.md) says where it stands and what comes next. The generator and the app have not started.
 
+- [Brief](docs/brief.md): Mustafa's original brief for Unit Forge.
+- [Handoff](docs/handoff.md): where the work stands and how to go on with it.
 - [Proposal](docs/proposal.md): the plan, repository structure, decisions needed. Start here. Its counts (37 word lists at version 0.3.0, 23 planned patterns) are as they were when it was approved.
 - [Samples](docs/samples.md): three researched units (RA3 Terror Drone, Hammer Tank, Multigunner IFV), three mechanic patterns and an example concept card.
 - [Vocabularies](docs/vocabularies.md): the fixed word lists every record uses (version 1.1.0, approved), with each term's coding rule and each list's tie-breaks.

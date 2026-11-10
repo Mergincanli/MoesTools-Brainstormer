@@ -1,0 +1,340 @@
+{
+ "batch": "r3",
+ "scope": "C&C Generals (with Zero Hour), Tempest Rising, Iron Harvest",
+ "pr": 6,
+ "branch": "claude/quirky-cray-tih1w4",
+ "base_commit": "1fe9f84",
+ "why": "Mustafa, 24 October 2026 (day): go on with R3 now; R2 paused. New plan drafted for his approval (R3, then a new R4 with StarCraft II, Halo Wars 1 and 2, Planetary Annihilation and MechWarrior/BattleTech, then steps 4-6; the other games shelved).",
+ "phases": {
+  "prep": {
+   "status": "done",
+   "script": "r3/prep.js (copy of research/workflows/prep.js at 1fe9f84)",
+   "args": "r3/args/prep-<game>.json",
+   "progress": "r3/progress/prep",
+   "workflows": [
+    {
+     "game": "generals",
+     "run_id": "wf_73baf629-470",
+     "task_id": "wuy6bviii",
+     "status": "done (result r3/prep-generals.json): notes with 3 registry findings and 118 pages; 43 verdicts (30 real, 13 corrected), 10 missing; 14 candidates",
+     "result": "r3/prep-generals.json",
+     "launched_from": "1fe9f84",
+     "partial": "r3/partial-run1-generals.output",
+     "tokens": "1.51M run 1 + 0.40M resume 1 + 0.37M resume 2"
+    },
+    {
+     "game": "tempest-rising",
+     "run_id": "wf_9f4853ff-ac6",
+     "task_id": "w4doqjq2i",
+     "status": "done (result r3/prep-tempest-rising.json): notes with 2 registry findings and 141 pages; 69 verdicts (50 real, 19 corrected), 13 missing; 14 candidates",
+     "result": "r3/prep-tempest-rising.json",
+     "launched_from": "489ba33",
+     "partial": "r3/partial-run1-tempest-rising.output",
+     "tokens": "1.23M run 1 + 0.65M resume 1"
+    },
+    {
+     "game": "iron-harvest",
+     "run_id": "wf_3efbb482-ec9",
+     "task_id": "wwa72fih3",
+     "status": "done (result r3/prep-iron-harvest.json): notes with 6 registry findings and 182 pages; 57 verdicts (48 real, 9 corrected), 9 missing; 14 candidates",
+     "result": "r3/prep-iron-harvest.json",
+     "launched_from": "489ba33",
+     "partial": "r3/partial-run1-iron-harvest.output",
+     "tokens": "1.11M run 1 + 1.00M resume 1"
+    }
+   ],
+   "then": "notes-and-trim.js (one editor per game, one judge) -> research/r3/prep/trim.json; commit; open the R3 PR and subscribe",
+   "notes_and_trim": {
+    "script": "r3/notes-and-trim.js (copy at 5b2dd46)",
+    "progress": "r3/progress/notes-and-trim",
+    "workflows": [
+     {
+      "label": "a: editors generals + tempest-rising",
+      "args": "r3/args/notes-and-trim-a.json",
+      "run_id": "wf_607c00fa-15f",
+      "task_id": "w4olah2cz",
+      "status": "done (r3/nat-a.json): editors generals, tempest-rising",
+      "partial": "r3/partial-nat-a-run1.output"
+     },
+     {
+      "label": "b: editor iron-harvest + trim",
+      "args": "r3/args/notes-and-trim-b.json",
+      "status": "done (r3/nat-b.json): editor iron-harvest, trim (27 kept, 15 cut; opening check generals.gla.jarmen-kell, iron-harvest.saxony.kaiser; 13 new pattern ids)",
+      "run_id": "wf_44e518b3-685",
+      "task_id": "w0ek5z19e",
+      "partial": "r3/partial-nat-b-run1.output"
+     }
+    ]
+   },
+   "record": {
+    "workspace": "r3/prep-record/ws-record (mkws at 5b2dd46)",
+    "script": "r3/tools/apply-prep.mjs",
+    "applied": "games-r3.md (36 lines removed, official role lines, game-wide and research notes for the three games), data/games.json (10 registry edits), research/r3/prep/trim.json and editors.json",
+    "checks": "check:merge 296/297 in the copy (the vocab-diff git test fails in any copy); no local paths; online copy-check running (task bpycdbuu3)",
+    "open_questions": 5,
+    "files": [
+     "data/games.json",
+     "research/registry-notes/games-r1.md (one phrase reworded)",
+     "research/registry-notes/games-r3.md",
+     "research/r3/prep/trim.json",
+     "research/r3/prep/editors.json"
+    ],
+    "pr_body": "r3/pr-body.md (draft; 5 decisions)"
+   },
+   "commit": "9340fde (on PR #6, with the plan change; R3 PR opens after PR #6 merges)"
+  },
+  "opening": {
+   "status": "done",
+   "why": "word lists 1.1.0 changed the rules after R1 (git log ef62f3a..HEAD prints 9fda853 and 8366649)",
+   "script": "r3/code-units.js (copy at 9340fde)",
+   "briefs": "r3/opening/briefs.json (name, faction and game only, as R1)",
+   "workspaces_from": "9340fde",
+   "workflows": [
+    {
+     "game": "generals",
+     "unit": "generals.gla.jarmen-kell",
+     "args": "r3/args/opening-generals.json",
+     "run_id": "wf_57670023-7ff",
+     "task_id": "womp7idnz",
+     "jobs": [
+      "A-generals: r3/opening/ws-a-generals",
+      "B-generals: r3/opening/ws-b-generals"
+     ],
+     "status": "done (r3/opening/result-generals.json; both coders, validator OK, offline copy-check clean, only the unit file new)"
+    },
+    {
+     "game": "iron-harvest",
+     "unit": "iron-harvest.saxony.kaiser",
+     "args": "r3/args/opening-iron-harvest.json",
+     "run_id": "wf_f19eb244-bc5",
+     "task_id": "whri4k31g",
+     "jobs": [
+      "A-iron-harvest: r3/opening/ws-a-iron-harvest",
+      "B-iron-harvest: r3/opening/ws-b-iron-harvest"
+     ],
+     "status": "done (r3/opening/result-iron-harvest.json; both coders, validator OK, offline copy-check clean, only the unit file new)"
+    }
+   ],
+   "agreement": "r3/opening/agreement-both.md: 54 of 56 fields reach 80%; below: body.plan (Kaiser: A spider-frame, B casemate) and confidence (Jarmen Kell: A medium, B high). Both are rule gaps.",
+   "splits": {
+    "script": "r3/splits.js",
+    "args": "inline (fields body.plan and confidence)",
+    "run_id": "wf_caa990c3-038",
+    "task_id": "wnulh5eig",
+    "status": "done (r3/opening/result-splits.json): both skeptics hold=false with corrected fixes; neither blocks R4. body.plan: narrowed tie-break, walkers on many legs with a fixed main weapon are spider-frame. confidence: O2 corrected (the tie-break reads cited and named pages; guides never drop the level). Both go to the rule-fix round after R4 (3A); interim readings N3 and N4 in games-r3.md; R4 prep must copy them into games-r4.md.",
+    "out": "r3/opening/splits"
+   },
+   "reconcile": {
+    "script": "r3/reconcile.js (copy at 9340fde)",
+    "args": "r3/args/reconcile.json",
+    "run_id": "wf_6cd9ebf3-de5",
+    "task_id": "w3tekzx7w",
+    "workspaces": "r3/opening/ws-rec-{generals,iron-harvest} (mkws at 9340fde)",
+    "status": "done (r3/opening/result-reconcile.json): Jarmen Kell medium (16 decisions), Kaiser casemate with 4 atypical lines (12 decisions); 10 rule problems (5 per unit); my checks on ws-rec-*: only the unit file new, validator OK, offline copy-check clean"
+   },
+   "recode_kaiser": {
+    "why": "night decision N1",
+    "agent": "background agent (Kaiser rockets as a weapon with mode entrenched) in r3/opening/ws-rec-iron-harvest, notes in its .progress/recode",
+    "status": "done: armament/2 Rockets (secondary, mode entrenched), crew driver-gunner; checks pass; record note final/recode-iron-harvest.md"
+   },
+   "record_ws": "r3/opening/ws-record (mkws at 9340fde): games-r3.md amended there (N1, N2)",
+   "record": "staged in r3/opening/ws-record/research/r3/opening/ (all but the splits analysis)",
+   "commit": "48629b8 (on PR #6): research/r3/opening/ and the N1-N4 notes in games-r3.md; check:merge 297/297, copy-check clean (28 runs reworded), manuals clean, no local paths",
+   "merge_pass_source": "research/r3/opening/final/{generals,iron-harvest}.json (the committed record, with N1 and N3 applied and text reworded); not the ws-rec copies"
+  },
+  "fill": {
+   "status": "done: 25 units in 13 jobs, all recorded (a9cd648, 2ccc323, 2870003, bcdfa81, with research/r3/fill/hesitations.md)",
+   "script": "r3/code-units.js (same as research/workflows/code-units.js at 48629b8)",
+   "workspaces_from": "48629b8",
+   "workflows": [
+    {
+     "label": "fill-a",
+     "args": "r3/args/fill-a.json",
+     "jobs": "j01-j07 (14 units)",
+     "run_id": "wf_3a6309ec-b6f",
+     "task_id": "w1oyj4w98",
+     "status": "done (j01-j07 all recorded)",
+     "runs": [
+      {
+       "task_id": "w57in6qq0",
+       "ended": "on the spend limit (org monthly limit message; session reset 04:50 UTC), 27 Oct about 01:00 UTC; agents with notes: j01, j02 (a) and j08, j09 (b); the others never started"
+      },
+      {
+       "task_id": "wzfobs1ka",
+       "ended": "27 Oct about 06:07 UTC: j01, j02 done; j03-j07 failed on the spend limit (reset 10:00 UTC 27 Oct)",
+       "result": "r3/fill/result-fill-a-run2.json"
+      },
+      {
+       "task_id": "wdxdb40vp",
+       "ended": "28 Oct about 04:00 UTC: j03, j04 done; j05-j07 failed on the spend limit (5-hour reset 08:00 UTC 28 Oct)",
+       "result": "r3/fill/result-fill-a-run3.json"
+      },
+      {
+       "task_id": "w1oyj4w98",
+       "ended": "29 Oct about 02:00 UTC: all seven jobs done (j05-j07 new)",
+       "result": "r3/fill/result-fill-a-run4.json"
+      }
+     ]
+    },
+    {
+     "label": "fill-b",
+     "args": "r3/args/fill-b.json",
+     "jobs": "j08-j13 (11 units)",
+     "run_id": "wf_aa154e3a-b5b",
+     "task_id": "w1ilmeww9",
+     "status": "done (j08-j13 all recorded)",
+     "runs": [
+      {
+       "task_id": "walefgmj3",
+       "ended": "on the spend limit (org monthly limit message; session reset 04:50 UTC), 27 Oct about 01:00 UTC; agents with notes: j01, j02 (a) and j08, j09 (b); the others never started"
+      },
+      {
+       "task_id": "wb4hjnw2n",
+       "ended": "27 Oct about 06:07 UTC: j08, j09 done; j10-j13 failed on the spend limit (reset 10:00 UTC 27 Oct)",
+       "result": "r3/fill/result-fill-b-run2.json"
+      },
+      {
+       "task_id": "wlt1ogrhp",
+       "ended": "28 Oct about 04:00 UTC: j10, j11 done; j12, j13 failed on the spend limit (reset 08:00 UTC 28 Oct)",
+       "result": "r3/fill/result-fill-b-run3.json"
+      },
+      {
+       "task_id": "w1ilmeww9",
+       "ended": "29 Oct about 01:35 UTC: all six jobs done (j12, j13 new)",
+       "result": "r3/fill/result-fill-b-run4.json"
+      }
+     ]
+    }
+   ],
+   "record": "each finished job: checks at the top of runbook section 3, then research/r3/fill/<job>/ (unit file + report), paraphrase, copy-check part 1, commit and push",
+   "recorded": {
+    "a9cd648": [
+     "j01-generals",
+     "j02-generals",
+     "j08-tempest-rising",
+     "j09-tempest-rising"
+    ],
+    "2ccc323": [
+     "j03-generals",
+     "j04-generals",
+     "j10-iron-harvest",
+     "j11-iron-harvest"
+    ],
+    "2870003": [
+     "j12-iron-harvest",
+     "j13-iron-harvest"
+    ],
+    "bcdfa81": [
+     "j05-tempest-rising",
+     "j06-tempest-rising",
+     "j07-tempest-rising",
+     "hesitations.md"
+    ]
+   },
+   "merge_pass_source": "the committed records in research/r3/fill/<job>/ (text reworded after the copy-check), not the workspaces",
+   "record_ws": "r3/fill/ws-record (mkws at 48629b8, plus each recorded job); tools/record-fill.py"
+  },
+  "merge_pass": {
+   "status": "running",
+   "step1": "6c817f1: 27 units into data/units (equal to the records), sync-patterns (18 files), docs, tests/validate.test.mjs categoryRole helper; check:merge 297/297",
+   "consistency": {
+    "script": "inline (saved as workflows/scripts/r3-merge-consistency-wf_d3a04f6c-e9b.js)",
+    "run_id": "wf_d3a04f6c-e9b",
+    "task_id": "w0t3qpr62",
+    "dims": [
+     "registry",
+     "links",
+     "conventions",
+     "facts"
+    ],
+    "status": "paused (hold)",
+    "runs": [
+     {
+      "task_id": "wnejnhbif",
+      "ended": "29 Oct about 02:35 UTC on the spend limit (5-hour reset 06:00 UTC); links and registry finders had started"
+     },
+     {
+      "task_id": "w0t3qpr62",
+      "ended": "29 Oct about 07:00 UTC on the spend limit (reset 11:00 UTC): registry and links finders done (results cached; r3/merge/result-consistency-run2.json); conventions and facts finders and both skeptics not done"
+     }
+    ]
+   },
+   "then": "a fixes workflow per game for the confirmed findings (as R1: r1-merge-fixes), registry and notes edits as night decisions; then commit"
+  },
+  "patterns": {
+   "status": "paused (hold)",
+   "script": "r3/patterns.js (copy at 6c817f1)",
+   "args": "r3/args/patterns.json (9 groups, 35 patterns: 17 planned, 18 new)",
+   "workspaces": "r3/patterns/ws-g1..g9 (mkws at 6c817f1)",
+   "run_id": "wf_b4b987f4-b0d",
+   "task_id": "w354hbfh4",
+   "runs": [
+    {
+     "task_id": "wrq6bd2vi",
+     "ended": "29 Oct about 02:35 UTC on the spend limit (reset 06:00 UTC); writers g1, g2 had started"
+    },
+    {
+     "task_id": "w354hbfh4",
+     "ended": "29 Oct about 07:00 UTC on the spend limit (reset 11:00 UTC): writers g1, g2 done (cached; r3/patterns/result-patterns-run2.json); g3-g9 writers and the g1, g2 skeptics not done"
+    }
+   ]
+  },
+  "checker": {
+   "status": "waiting"
+  },
+  "final_review": {
+   "status": "waiting"
+  },
+  "report": {
+   "status": "waiting"
+  }
+ },
+ "open_decisions": [
+  {
+   "when": "24 October",
+   "what": "New plan",
+   "answers": "1A (R2: let Tiberium Wars finish, skip Renegade, commit three games paused); StarCraft II: Legacy of the Void only, units from its campaign, Archon mode, co-op (Allied Commanders) and multiplayer, all three races; 3A (one rule-fix round after R4, before step 4; R4 needs no opening check)",
+   "status": "answered; to record in docs/proposal.md, the runbook and the README (plan pull request)"
+  }
+ ],
+ "next": "Merge pass consistency and patterns running. Then: apply the confirmed consistency fixes (fixes workflow per game), integrate the patterns (files, registry entries, unit links, remove fit_notes), sync-patterns, docs, commit. Then the checker (seed r3-<date>), final review, report, copy-check in three parts, claims check. PR #6 waits for Mustafa (never merge it at night).",
+ "plan_pr": {
+  "number": 6,
+  "head": "6c817f1",
+  "status": "open, waiting for Mustafa; R2 record added (5b2dd46); description refreshed"
+ },
+ "night_decisions": [
+  {
+   "id": "N1",
+   "when": "27 October 2026, 01:20 CET",
+   "what": "Iron Harvest notes, Wiki traps bullet on the infobox \"(Ability)\" slots",
+   "text": "taken at night (reversible): amend the bullet so that a slot a mode adds as a standing weapon (the Kaiser's Rockets once entrenched) is coded as a weapon with the mode, and the button that enters the mode stays the ability, because the field rules (armament[].slot and armament[].mode in docs/fields.md) come before a game note and both opening coders and the reconciler flagged the conflict; units it affects: iron-harvest.saxony.kaiser (recoded now); in the fill, any Iron Harvest unit with such a slot"
+  },
+  {
+   "id": "N2",
+   "when": "27 October 2026, 01:20 CET",
+   "what": "Generals notes, generals' versions",
+   "text": "taken at night (reversible): a general's version's extra or missing buttons go in tier.basis, beside the generals it names, because abilities have no notes field and the note sent them to the notes of the fields they would change; units it affects: generals.gla.jarmen-kell (already coded so); in the fill, the Generals units that generals' versions change"
+  },
+  {
+   "id": "N3",
+   "when": "27 October 2026, 01:38 CET",
+   "what": "Iron Harvest notes: body plans of walkers on many legs, until the rule-fix round after R4",
+   "text": "taken at night (reversible): a walker on many legs whose main weapon is fixed facing forward or sits in a mount that does not turn all the way round is spider-frame (not casemate), unless a launcher rack, troop carrier or creature, with an uncertain entry at body/plan, because it is the skeptic-checked fix recommended for the round (so the round needs no recode) and it breaks no class rule; units it affects: iron-harvest.saxony.kaiser (recoded from casemate), and in the fill iron-harvest.polania.mocny and iron-harvest.usonia.stark"
+  },
+  {
+   "id": "N4",
+   "when": "27 October 2026, 01:38 CET",
+   "what": "R3 notes: confidence until the rule-fix round after R4",
+   "text": "taken at night (reversible): cite the other established site where the sources rule asks (CNCNZ for Generals, as games-r1.md says for the Red Alert games), judge the level on the cited pages by the High or Medium tie-break, and log every contradiction in uncertain with sources_disagree, cited page or not, because that is how R1 and the reconciler read the current rules and the logged clashes let the round re-judge levels without research; units it affects: generals.gla.jarmen-kell (stays medium; high under the proposed fix), and any fill unit with a guide-only clash"
+  }
+ ],
+ "for_r4_prep": [
+  "Copy the interim readings N3 (walker body plans) and N4 (confidence) into games-r4.md, with the launcher-rack, troop-carrier and creature exceptions (skeptic, r3/opening/result-splits.json)."
+ ],
+ "hold": {
+  "until": "2026-10-30T23:00:00Z (Saturday 31 October 00:00 Amsterdam, Friday night)",
+  "why": "Mustafa, 29 October 2026 22:32 CET: pause the night shift until Friday night, tomorrow off; he needs the usage for other work",
+  "routine": "trig_01LqCG4UedD6MMbQK2R2Fwfq disabled at 21:32 UTC; a one-shot send_later at 2026-10-30T23:00Z re-enables it and resumes the two workflows"
+ }
+}

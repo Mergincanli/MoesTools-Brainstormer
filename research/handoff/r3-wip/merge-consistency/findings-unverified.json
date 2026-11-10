@@ -1,0 +1,312 @@
+{
+ "status": "finders only; no skeptic has checked these yet",
+ "done": [
+  "registry",
+  "links"
+ ],
+ "not_run": [
+  "conventions",
+  "facts"
+ ],
+ "results": [
+  {
+   "key": "registry",
+   "findings": [
+    {
+     "id": "REG-01",
+     "severity": "major",
+     "units": [
+      "tempest-rising.dynasty.line-officer"
+     ],
+     "path": "games-r3.md > Damage and armour maps > 'Tempest Rising armour' bullet (line 89); unit armour/class, armour/notes, uncertain armour/class",
+     "summary": "The Tempest Rising armour note says the infobox label alone decides the class. That overrides the soldier rule, which wins over every step. The Line Officer's game data gives him tougher infantry armour than the Field Scout, so he should be light, not unarmoured.",
+     "evidence": "Line Officer wiki infobox (wikitext via API; the page is verified at 1.4.0): armortype Infantry, with a quarter resisted against Rifle, Explosive, Fire and Sniper damage. Its changelog says the Sniper resistance was added in patch 1.2.0+46089. The Field Scout's infobox resists no Rifle damage and lists only the Rocket and Cannon resistances. The Dynasty Guard's matches the Field Scout's. The 2.0.0 patch page changes only his range. The soldier rule in vocabularies.md (armour-class tie-breaks) wins over every step: a soldier whose game data gives a tougher infantry armour type or attribute than the basic rifle infantry is light. The Generals note sets a gunfire test for this same rule, but the TR note instead says the label is enough. The unit's armour.notes says 'Step 1 decided ... the registry reads the class from that label'. j06 hesitations[17] and unclear_rules[2] report following the note against the rule. Other batch soldiers checked: the Drone Operator (infobox resists no Rifle damage) and the Enlightened (same) stay unarmoured.",
+     "fix": "games-r3.md line 89. Old: 'Units also have six armour percentages, but the label is enough for the class.' New: 'Units also have six armour percentages. For vehicles and aircraft the label is enough for the class. For the soldier rule, a soldier of the Infantry type has tougher armour than the Field Scout, and so is light, when its percentages let less Rifle or Sniper damage through than his (he resists neither). One that resists only Rocket and Cannon damage, as he does, stays unarmoured, and side-wide doctrines such as Body Armor stay out.' Recode tempest-rising.dynasty.line-officer: armour.class unarmoured -> light. Rewrite armour.notes to say the soldier rule decided: step 1 gave unarmoured, but he resists a quarter of Rifle and Sniper damage where the Field Scout resists none. Rewrite uncertain armour/class to name the note. No other batch unit changes."
+    },
+    {
+     "id": "REG-02",
+     "severity": "major",
+     "units": [
+      "generals.gla.technical",
+      "generals.usa.sentry-drone",
+      "generals.usa.aurora-bomber",
+      "generals.china.overlord"
+     ],
+     "path": "games-r3.md > Research notes > Generals > 'The 1.04 files' bullet, second sentence (line 372); units armament[].traits, armament[].delivery, related uncertain entries",
+     "summary": "The Generals note says any term only the 1.04 files would set is not set, with friendly-fire as its example. That contradicts the field rules. A damage radius or a travel speed in any page an uncertain entry names counts for splash and for projectile delivery, and a database page may carry a code. Coders followed the note, so four units lack terms the rules give them.",
+     "evidence": "fields.md sources[]: 'the sources' are the cited pages plus every page an uncertain entry names and says what it shows, and an uncited database page may carry a code. The splash rule in vocabularies.md: a radius figure in the sources counts. The delivery rule in fields.md: a travel speed in the sources makes a shot projectile. 1.04 Weapon.ini, fetched from TheSuperHackers repository at 6c7f40d: TechnicalRPGWeapon has PrimaryDamageRadius 5 and RadiusDamageAffects includes ALLIES. TechnicalCannonWeapon has radius 25 and ALLIES. SentryDroneGun has WeaponSpeed 600 and no projectile object. AuroraBombWeapon has radius 20 and ALLIES (NOT_SIMILAR). OverlordTankGun has radius 5/10 and ALLIES. Each unit's uncertain entries name Weapon.ini: Technical armament/0/damage and armament/2/summary, Sentry Drone armament/0/delivery, Aurora armament/0/range and armament/0/traits, Overlord roles/secondary. The coders say they followed the note against the rules: j02 hesitations[6] and unclear_rules[6], j04 hesitations[5] and [17], and the Aurora's uncertain armament/0/traits. Current codes: Technical armament[2].traits is [], armament[1].traits is [splash]; Sentry Drone armament[0].delivery is hitscan; Aurora armament[0].traits is [splash]; Overlord armament[0].traits is [splash]. The note's other examples agree with the rules: the magazine rule rejects a clip size alone, and mount is a proposal field.",
+     "fix": "games-r3.md line 372. Old: 'Any other term only they would set (friendly-fire from a blast that hurts allies, magazine from a clip size, auto-target from an add-on's own AI) is not set; mention the fact in notes.' New: 'A term whose own rule a figure or flag in these files meets is set from them as from any other page an uncertain entry names: splash from a PrimaryDamageRadius above zero, projectile delivery from a WeaponSpeed the file does not mark as effectively instant, and friendly-fire where a weapon with a damage radius lists ALLIES in RadiusDamageAffects. Any other term only they would set (magazine from a clip size alone, which its rule does not accept, or auto-target from an add-on's own AI) is not set; mention the fact in notes.' Recodes: generals.gla.technical armament[2].traits [] -> [splash, friendly-fire] and armament[1].traits [splash] -> [splash, friendly-fire]; drop the uncertain armament/2/summary clause about the radius not being coded. generals.usa.sentry-drone armament[0].delivery hitscan -> projectile, and rewrite uncertain armament/0/delivery. generals.usa.aurora-bomber armament[0].traits [splash] -> [splash, friendly-fire], and rewrite uncertain armament/0/traits. generals.china.overlord armament[0].traits [splash] -> [splash, friendly-fire] (its source set names Weapon.ini). Rerun the validator for any new atypical lines."
+    },
+    {
+     "id": "REG-03",
+     "severity": "major",
+     "units": [
+      "tempest-rising.veti.thunderhead",
+      "tempest-rising.veti.vimana"
+     ],
+     "path": "games-r3.md > Game-wide mechanics > Tempest Rising > 'Doctrines' bullet (line 272); Thunderhead abilities/3, Vimana abilities/8, their fit_notes and uncertain entries",
+     "summary": "The Doctrines note lists Engine Tuning among doctrines to record on each unit. Engine Tuning gives its two perks to every Veti vehicle and aircraft, and the Shared mechanics rule leaves off a side-wide power that changes every unit of a class. Two batch units carry an ability that should be off.",
+     "evidence": "Doctrine page (wikitext, cached 26 Oct 2026): Engine Tuning gives the Veti's vehicles Tempest Shielded (no Charge) and Symbiotic Restoration (self-repair in Tempest) and lists 14 types. The Veti Arsenal page shows these 14 are every Veti vehicle (from the Gorgon and the War Ender to the Warden, Subjugator, Luminary, Dominance Arc and Phantom Artillery) and every Veti aircraft (Messenger, Caretaker, Thunderhead, Constellation, Vimana), plus two Servitors. fields.md, Shared mechanics: a side-wide power, doctrines included, that changes every unit of a class is left off; only a power that gives named unit types a new button or effect is recorded. The note narrows the off-rule to 'class-wide number changes'. The same file treats the Demolition General's upgrade, which reaches nearly every unit, as side-wide and off. data/units/tempest-rising.json: Thunderhead abilities[3] and Vimana abilities[8] are 'Tempest Shielded and Symbiotic Restoration (Engine Tuning doctrine)', passive, commander-power. j08 hesitations[8] and unclear_rules[3] report following the note against the rule.",
+     "fix": "games-r3.md line 272. Old: 'class-wide number changes stay off.' New: 'class-wide changes stay off, new effects included, when the doctrine reaches every unit of a class: Engine Tuning gives every Veti vehicle and aircraft Tempest Shielded and Symbiotic Restoration, so mention it in notes.' In the same sentence's example list, old: ', Engine Tuning (Veti vehicles shrug off Charge and mend in Tempest) and Caretaker Empowerment (a repair aura).' New: ' and Caretaker Empowerment (a repair aura).' Recode tempest-rising.veti.thunderhead: delete abilities[3], its fit_note (abilities/3/patterns) and uncertain abilities/3, and name the doctrine in mobility.notes or armour.notes. Recode tempest-rising.veti.vimana: delete abilities[8] and its fit_note (abilities/8/patterns), and name the doctrine in notes. Re-index any sources[].supports and uncertain paths that point past the removed entries."
+    },
+    {
+     "id": "REG-04",
+     "severity": "major",
+     "units": [
+      "tempest-rising.veti.thunderhead",
+      "tempest-rising.veti.vimana"
+     ],
+     "path": "games-r3.md > Game-wide mechanics > Tempest Rising > 'Servitor spawns and Arcing' bullet (line 291); Thunderhead abilities/2/kind, Vimana abilities/5/kind",
+     "summary": "The note says to record Arcing as a passive ability. Arcing strikes back once each time the unit is attacked, which the Passive or Triggered tie-break makes triggered. Both batch carriers are coded passive.",
+     "evidence": "Arcing page (wikitext via API, fetched 29 Oct 2026): a perk that sends a small Omni bolt back at each attacker within a radius. Its perk box lists the Thunderhead and the Vimana as stock carriers. The ability-kinds tie-break in vocabularies.md: pick triggered when each event causes a one-off effect, and passive only when the effect is always on. data/units/tempest-rising.json: Thunderhead abilities[2] 'Arcing' and Vimana abilities[5] 'Arcing' are both kind passive. j08 hesitations[7] and unclear_rules[0] say the coder followed the note against the tie-break. The same bullet records Progenesis (Servitors left by each Enlightened that dies nearby) as a passive, which has the same conflict. No batch unit has it.",
+     "fix": "games-r3.md line 291. Old: 'Record it as a passive ability; no pattern or armour model covers it, so add a fit_note.' New: 'Record it as a triggered ability (each attack sets off one strike back: the Passive or Triggered tie-break); no pattern or armour model covers it, so add a fit_note.' In the same bullet, old: 'Record it as the unit's own passive.' New: 'Record it as the unit's own triggered ability (each Enlightened that dies nearby leaves Servitors).' Recode: tempest-rising.veti.thunderhead abilities[2].kind passive -> triggered; tempest-rising.veti.vimana abilities[5].kind passive -> triggered. Summaries and fit_notes stay."
+    },
+    {
+     "id": "REG-05",
+     "severity": "minor",
+     "units": [
+      "generals.china.red-guard"
+     ],
+     "path": "games-r3.md > Game-wide mechanics > Generals > 'Horde Bonus' bullet (line 226); Red Guard uncertain abilities/0",
+     "summary": "The Horde Bonus note says four other allied soldiers of any kind start the bonus. The code and the wiki count only allied soldiers that have the bonus themselves.",
+     "evidence": "HordeUpdate.cpp from EA's Zero Hour source, fetched 29 Oct 2026: the member filter turns away any object without a horde module of its own, then checks the KindOf mask and the alliance. With Count 5, four others are needed, and a unit within RubOffRadius of a full member shares the bonus. 1.04 ChinaInfantry.ini: Red Guard and Tank Hunter have HordeUpdate with KindOf INFANTRY and ExactMatch No. InfantryGeneral.ini adds the Mini-Gunner. ChinaVehicle.ini: the Battlemaster has KindOf VEHICLE and ExactMatch Yes, so the note is right for the Battlemaster. The Horde Bonus wiki page says any mix of Red Guards, Mini-Gunners and Tank Hunters sets it off, with Battlemasters left out of that mix. The Red Guard follows the code and records the clash in uncertain abilities/0. j03 unclear_rules[6] and source_problems (4) raise it.",
+     "fix": "games-r3.md line 226. Old: 'fire faster while at least four other allied soldiers of any kind stand close by, and the Battlemaster while at least four other Battlemasters do (HordeUpdate in the 1.04 Object files and HordeUpdate.cpp; Horde Bonus page).' New: 'fire faster while at least four other allied soldiers that carry the bonus themselves (Mini-Gunners, Red Guards or Tank Hunters, mixed freely) stand close by, or while one stands right beside a soldier who has it, and the Battlemaster while at least four other Battlemasters do (HordeUpdate in the 1.04 Object files and HordeUpdate.cpp, which counts only allies with a horde module of their own; Horde Bonus page).' Recode: no coded value changes. In generals.china.red-guard uncertain abilities/0, drop the sentence contrasting the registry's wording."
+    },
+    {
+     "id": "REG-06",
+     "severity": "minor",
+     "units": [
+      "iron-harvest.shared.engineer"
+     ],
+     "path": "data/games.json /games/9/factions/0/name; games-r3.md > Choices that need a look > item 8 (line 21); Engineer uncertain faction",
+     "summary": "The registry names and describes Iron Harvest's shared faction as the common aircraft and weapon systems only. The batch files the Engineers there, which the Ids convention allows.",
+     "evidence": "data/games.json /games/9/factions/0/name is 'All factions (common aircraft and weapon systems)', and games-r3.md item 8 names only those two groups. The Polanian, Saxon, Rusviet and Usonian Engineer pages (wikitext via API, 29 Oct 2026) have identical stat boxes: five men, speed 4, handgun reach 16, 150 iron at the HQ and Barracks. They have the same stock build list: HQ, Barracks, Workshop, unarmed bunker, sandbags, wire, mines. MG and cannon bunkers are for veteran and elite engineers only. The Saxon page says every faction's engineers work alike. Ids convention in fields.md: shared is for units every side fields, and only stock parts that differ by side force one entry per side (veteran bunkers are not stock). The research notes' Kit-only units bullet already puts such squads under shared. The Engineer's uncertain faction entry and j13 hesitations[21] and unclear_rules[7] ask the merge pass to confirm.",
+     "fix": "data/games.json /games/9/factions/0/name. Old: 'All factions (common aircraft and weapon systems)'. New: 'All factions (common aircraft, weapon systems and engineers)'. games-r3.md line 21: after 'although it has a page per faction.' insert: 'It also covers the Engineers: every faction's engineer page has the same stat box and the same stock build list. Only the bunkers of veteran and elite engineers may differ by side (the Usonia, Flame Bunker and Paratrooper Bunker pages), and those are not stock, so under the Ids convention they are one shared entry.' Recode: none. In iron-harvest.shared.engineer uncertain faction, drop the 'for the merge pass to confirm' caveat."
+    },
+    {
+     "id": "REG-07",
+     "severity": "minor",
+     "units": [
+      "tempest-rising.dynasty.tempest-sphere",
+      "tempest-rising.veti.vimana"
+     ],
+     "path": "games-r3.md > Damage and armour maps > 'Tempest Rising armour' bullet (line 89); Sphere and Vimana armour/notes, uncertain armour/class and body/size",
+     "summary": "The note lifts the Tempest Sphere and the War Ender to super-heavy 'by size', but no page gives a footprint and the Sphere is coded large. The Vimana is as tough as the Sphere but is not named, so its super-heavy class rests only on a size taken from Codex words.",
+     "evidence": "Infoboxes via API, 29 Oct 2026: Tempest Sphere 2,200 health (t3, Heavy vehicle); War Ender 5,000 (t3); Vimana 2,000 (t3, Aircraft, no Verified tag); Boar Tank 780; Hunter Tank 590. The 2.0.0 patch page changes none of these health figures. The Sphere is coded size large, and its uncertain armour/class says super-heavy rests on the note alone. The Vimana is coded huge from Codex wording and is super-heavy by check A (uncertain body/size and armour/class), against the armour_map's Aircraft -> light. Check A lets registry notes make a unit super-heavy. j07 unclear_rules[2], j08 hesitations[24]-[25] and unclear_rules[1].",
+     "fix": "games-r3.md line 89. Old: 'Lift the biggest units (Tempest Sphere, War Ender) to super-heavy by size.' New: 'Lift the Tempest Sphere, the War Ender and the Vimana to super-heavy (check A, registry clause): each is a t3 unit with more than twice the health of either main battle tank (2,200, 5,000 and 2,000 against the Hunter Tank's 590 and the Boar Tank's 780). No page gives a footprint, so this decides no size.' Recode: no class changes. Reword tempest-rising.dynasty.tempest-sphere armour.notes and uncertain armour/class, and tempest-rising.veti.vimana armour.notes and uncertain armour/class, so the class rests on this note rather than on a size."
+    },
+    {
+     "id": "REG-08",
+     "severity": "minor",
+     "units": [
+      "generals.usa.sentry-drone",
+      "generals.gla.battle-bus",
+      "generals.usa-air-force.combat-chinook"
+     ],
+     "path": "games-r3.md > Game-wide mechanics > Generals > 'Veterancy' bullet (line 205); weaknesses entries for 'never ranks up'",
+     "summary": "The note asks units that never rank up to say so in weaknesses but names no link. The three batch units it covers use three different links.",
+     "evidence": "data/units/generals.json: the Battle Bus hangs the weakness on armour-class:medium, the Combat Chinook on armour-class:light and the Sentry Drone on nature:uncrewed-machine. The non-trainable units in the note's own lists (the Pilot page and the 1.04 IsTrainable list) mix crewed and uncrewed ones (Battle Bus, Chinooks, Ambulance, drones), so no part such as nature causes the lack in this game. Matchups rule 4 in fields.md hangs a weakness the unit's own value hides on its armour or health, and rule 5 hangs a lack on its cause. j01 hesitations[13] and [30], j04 hesitations[22] and unclear_rules[7] ask for a link.",
+     "fix": "games-r3.md line 205. Old: 'Units that never rank up say so in weaknesses.' New: 'Units that never rank up say so in weaknesses, hung on their armour class: no part of theirs causes the lack, and the ranks would have raised their health (Matchups rules 4 and 5).' Recode generals.usa.sentry-drone weaknesses[2].ref nature:uncrewed-machine -> armour-class:light, keeping the reason. The Battle Bus and Combat Chinook stay as they are."
+    },
+    {
+     "id": "REG-09",
+     "severity": "minor",
+     "units": [
+      "tempest-rising.dynasty.voltaic-tank"
+     ],
+     "path": "games-r3.md > Official role lines > Tempest Rising > 'Reading the GDF and Dynasty tooltips', Name a role list (line 165); unit roles/secondary and roles/primary uncertain",
+     "summary": "The TR list of role words in the build tooltips leaves out the Voltaic Tank's word form of disabler, which decides the order of its secondary roles and its path through step 1. The Generals note reads the same word as naming disabler.",
+     "evidence": "The Machine Shop page (cached wikitext; verified 1.2.0), tier-3 sidebox: an anti-vehicle tank whose attack disables the buildings it targets. The Roles intro in vocabularies.md: any word form of a label names that role. games-r3.md's Generals role lines read the Microwave and ECM Tanks' disabling of electronics as a word form of disabler. The Voltaic Tank has roles.secondary [disabler, anti-infantry]; its uncertain roles/secondary says the note is silent. j07 hesitations[0]-[1] and unclear_rules[0].",
+     "fix": "games-r3.md line 165. Old: 'control (the Sniper's combat control: disabler, if its stock parts meet disabler's requires).' New: 'control (the Sniper's combat control: disabler, if its stock parts meet disabler's requires); disables (the Voltaic Tank's attack on buildings: disabler, as the Generals note reads disable, if its stock parts meet disabler's requires).' Recode: none, the coded roles stand. tempest-rising.dynasty.voltaic-tank uncertain roles/secondary can cite the note instead of its silence."
+    },
+    {
+     "id": "REG-10",
+     "severity": "minor",
+     "units": [
+      "tempest-rising.dynasty.tempest-sphere"
+     ],
+     "path": "games-r3.md > Official role lines > Tempest Rising > 'Strong and weak points' bullet (line 169); unit roles/primary",
+     "summary": "The list of TR strength phrases does not say whether it is complete. It leaves out the Codex wording that decides the Tempest Sphere's primary role.",
+     "evidence": "Tempest Sphere page, Codex box (wikitext via API, 29 Oct 2026): tanks, infantry and even walls are said to be no match for the Sphere. The TR note tells coders to read the Codex like a manual paragraph and lists strength phrases without this one. The Sphere's roles.primary anti-infantry rests on reading that sentence as strength wording (uncertain roles/primary); otherwise step 5 gives assault. j07 hesitations[16] and unclear_rules[1].",
+     "fix": "games-r3.md line 169. Old: 'Good against, effective against, great at harassing, devastates, annihilates, tears apart, deals high or catastrophic damage to and destroyer of give strengths.' New: 'Good against, effective against, great at harassing, devastates, annihilates, tears apart, deals high or catastrophic damage to, destroyer of and being no match for the unit (the Tempest Sphere's Codex: tanks, infantry and walls) give strengths, as does other wording that says the unit beats a kind of target.' Recode: none."
+    },
+    {
+     "id": "REG-11",
+     "severity": "minor",
+     "units": [
+      "iron-harvest.polania.anna-kos"
+     ],
+     "path": "games-r3.md > Official role lines > Iron Harvest > 'Strong against (roles step 4)' bullet (line 187); unit roles/primary",
+     "summary": "The IH list of official strong-against text leaves out DevBlog #40's line on Anna and Wojtek. Her primary role rests on that line.",
+     "evidence": "DevBlog #40 (kingart-games.com/article/116, fetched 29 Oct 2026), Changelog 23: when the pair arrive with Reserve 1 they outmatch the other early heroes and most infantry groups. The note's list, 'read so far', names four texts and not this one. Anna's roles.primary anti-infantry comes from step 4 on this line (uncertain roles/primary); without it she would be assault. j10 hesitations[0] and unclear_rules[1].",
+     "fix": "games-r3.md line 187. Old: '...; and the gunners' job of fighting mechs (Change Log #10).' New: '...; the gunners' job of fighting mechs (Change Log #10); and Anna and Wojtek outmatching most infantry groups when Reserve 1 brings them in (DevBlog #40: infantry).' Recode: none."
+    },
+    {
+     "id": "REG-12",
+     "severity": "minor",
+     "units": [
+      "iron-harvest.saxony.kaiser",
+      "iron-harvest.saxony.grimbart",
+      "iron-harvest.rusviet.nakovalnya"
+     ],
+     "path": "games-r3.md > Official role lines > Iron Harvest > 'The wiki's italic opening line is not official text' bullet (line 181); Kaiser roles/primary",
+     "summary": "The note rules on the wiki's italic opening line but not on the blockquotes under the pages' Lore headings. These read like the in-game Codex, and the Kaiser's would decide its primary role if it were official.",
+     "evidence": "The Kaiser, Grimbart and Nakovalnya pages (wikitext via API, 29 Oct 2026) each have a Lore heading with a quoted paragraph and name no source. The Kaiser's credits it with proven effectiveness against both infantry and mechs. The note (lines 180-181) says the Codex exists on the wiki only as gallery pictures, and that the italic lines are the wiki's words unless a readable source shows them in the game. The Kaiser's uncertain roles/primary treats the Lore box as wiki words, so step 5 gives assault. Both opening-check coders asked how to treat it (research/r3/opening/hesitations.md).",
+     "fix": "games-r3.md line 181. After 'If a coder finds a readable source that shows the line in the game, it becomes official text for that unit.' append: 'The same holds for the blockquote under a page's Lore heading (on the Kaiser, Grimbart and Nakovalnya pages among others): it reads like the Codex's lore, but no page says it copies it, so it is the wiki's own words.' Recode: none, the Kaiser already reads it so."
+    },
+    {
+     "id": "REG-13",
+     "severity": "minor",
+     "units": [
+      "iron-harvest.shared.engineer"
+     ],
+     "path": "games-r3.md > Game-wide mechanics > Iron Harvest > 'Cover and stances' bullet, last sentence (line 320); Engineer abilities/2 and uncertain abilities/2",
+     "summary": "The note maps all the engineers' bunkers to build-cover and says nothing of the anti-air turret. The MG and cannon bunkers and the AA turret are defences with their own guns, which the Engineer entry links to deploy-turret against the note.",
+     "evidence": "The Polanian MG Bunker page (API, 29 Oct 2026) gives the structure its own forward-facing heavy machine gun; a squad inside only covers its flanks. DevBlog #21 (kingart-games.com/article/73): each faction has an unarmed bunker, one strong against infantry and one strong against mechs. DevBlog #40 (article/116) announced anti-air turrets that every faction's engineers can raise in the HQ zone, and DevBlog #41 (article/117) shipped them. The Anti-Air Turret page agrees. The TR note reads deploy-turret as a placed device that fights. The Engineer's abilities[2] links deploy-turret, and its uncertain abilities/2 says the note names only build-cover and lay-mines. j13 hesitations[27] and unclear_rules[8].",
+     "fix": "games-r3.md line 320. Old: 'The engineers' sandbags, barbed wire, mines and bunkers are their own abilities (build-cover, lay-mines).' New: 'The engineers' sandbags, barbed wire, mines and unarmed bunkers are their own abilities (build-cover, lay-mines). The defences that fire by themselves link deploy-turret: the MG and cannon bunkers of veteran and elite engineers, each with its own gun (the Polanian MG Bunker page; DevBlog #21), and the anti-air turret every faction's engineers can build in the HQ zone since DevBlog #41 (announced in DevBlog #40; Anti-Air Turret page).' Recode: none. In iron-harvest.shared.engineer uncertain abilities/2, drop the remark that the note names only build-cover and lay-mines."
+    },
+    {
+     "id": "REG-14",
+     "severity": "minor",
+     "units": [
+      "iron-harvest.rusviet.nakovalnya"
+     ],
+     "path": "games-r3.md > Research notes > Iron Harvest > Wiki traps, '(Ability)' bullet (line 452); unit abilities/0",
+     "summary": "The note's list of ability attacks in infobox weapon slots covers only slots marked '(Ability)'. The Nakovalnya's Bombardment sits unmarked in its first weapon slot and is an ability.",
+     "evidence": "SHM-68 \"Nakovalnya\" page (wikitext via API, 29 Oct 2026): weapon1_name is Bombardment, with a cooldown and no '(Ability)' mark, and the page's Abilities section lists Bombardment and Sentry Mode. The note lists nineteen marked slots on eighteen pages and not this one. The coder coded Bombardment as an ability on other evidence (uncertain abilities/0). j13 unclear_rules[2] asks which evidence wins.",
+     "fix": "games-r3.md line 452. After 'Admiral Mason's Scorched Earth.' insert: 'One more ability attack sits in an unmarked slot: the Nakovalnya's Bombardment, in its first weapon slot, which the page's Abilities section lists. Record it as an ability too.' Recode: none."
+    },
+    {
+     "id": "REG-15",
+     "severity": "minor",
+     "units": [
+      "iron-harvest.polania.anna-kos"
+     ],
+     "path": "games-r3.md > Game-wide mechanics > Iron Harvest, new bullet after 'Suppression' (line 322); Anna armament/0/traits and uncertain",
+     "summary": "The IH game-wide list says nothing of infantry tumbling (being knocked down), which the makers treat as a general infantry state. This leaves open whether Anna's stun trait is her rifle's or the game's.",
+     "evidence": "DevBlog #40 (article/116), Changelog 23: retreating infantry can no longer be knocked tumbling. DevBlog #41 (article/117): that change weakened Michal's chase of retreating infantry. Anna Kos page (API): soldiers who survive her shot are knocked flat; its Cons have the Kolokol knock her down. Anna's armament[0].traits is [stun], and uncertain armament/0/traits asks whether tumbling is game-wide. j10 unclear_rules[8]. fields.md Shared mechanics: each game's list names its game-wide mechanics, and a possibly game-wide mechanic that is not listed goes to the merge pass.",
+     "fix": "games-r3.md, after line 322 ('An ability that lifts suppression (the Serp's) is that unit's own.') insert a bullet: '- **Tumbling** (no pattern): heavy hits can knock soldiers off their feet for a moment, and since DevBlog #40 retreating infantry no longer tumble (DevBlogs #40 and #41; the Anna Kos page). Leave the reaction off. Give a weapon the stun trait only where its own sources make flooring the soldiers it hits part of what it does (Anna's rifle), and say so in its summary.' Recode: none; Anna's uncertain armament/0/traits can cite the bullet."
+    }
+   ]
+  },
+  {
+   "key": "links",
+   "findings": [
+    {
+     "id": "L1",
+     "severity": "major",
+     "units": [
+      "generals.china.overlord",
+      "generals.gla.jarmen-kell"
+     ],
+     "path": "generals.china.overlord countered_by/4",
+     "summary": "The Overlord's Jarmen Kell link stands alone on a false claim that no typed link fits. pattern:hijack-vehicle fits his crew snipe, so the generator never sees this counter.",
+     "evidence": "countered_by/4 is unit:generals.gla.jarmen-kell with no typed link beside it. Its why says it stands alone because a sniper link would be false for most snipers. But Kell's Sniper Attack (abilities/0) links hijack-vehicle, and his strengths/1 is pattern:hijack-vehicle. The Battle Bus codes the same snipe as pattern:hijack-vehicle plus the unit link (countered_by/2-3), and the Sentry Drone uses the same pattern (counters/1). The registry summary of hijack-vehicle: take over an enemy vehicle by throwing out or killing its crew. The cited Overlord wiki page (cached copy) has, in its Counters section, the GLA sending Kell to snipe away the crew and leave the tank open to capture. Under fields.md matchups rule 3, a unit link may stand alone only when every word-list and pattern link would be false for most units it covers. The fill hesitation (research/r3/fill/hesitations.md, Overlord countered_by) weighed only weapon:sniper. Unit links never reach a card, so the generator loses this counter.",
+     "fix": "Replace countered_by/4 with two entries, in this order: {\"ref\": \"pattern:hijack-vehicle\", \"why\": \"A crew-killing snipe takes it out however thick its armour: Jarmen Kell kills its crew and leaves the tank neutral for enemy infantry to claim (wiki).\"}, then {\"ref\": \"unit:generals.gla.jarmen-kell\", \"why\": \"The same reason: the wiki names Jarmen Kell, whose snipe empties it.\"}. damage:emp moves to countered_by/6."
+    },
+    {
+     "id": "L2",
+     "severity": "major",
+     "units": [
+      "generals.gla.battle-bus",
+      "generals.gla.jarmen-kell"
+     ],
+     "path": "generals.gla.battle-bus counters/0, counters/1 and uncertain at counters (against countered_by/2)",
+     "summary": "pattern:hijack-vehicle sits in both the bus's counters (Hijackers foiled) and its countered_by (Kell's snipe empties it), in the same loaded-bus situation. A generator reads 'beats' and 'is beaten by' for the same enemies.",
+     "evidence": "counters/0 is pattern:hijack-vehicle: since patch 1.03, Hijackers cannot take a loaded bus. countered_by/2 is pattern:hijack-vehicle: Kell's snipe kills the driver and the riders spill out. Both need riders aboard. Only the enemy unit differs, and the typed link cannot tell those units apart. Kell's Sniper Attack links hijack-vehicle, and Kell's counters/2 role:transport claims the bus. My scratch pair check (same matching logic as the validator) puts Kell in both of the bus's lists, with each claiming to beat the other. In Generals the hijack-vehicle units are the Hijacker, Kell's snipe and the Nuke Cannon's neutron shells (Sentry Drone strengths/2), and the bus foils only the first. Under fields.md, rule 6 allows the same enemy in both lists only for different situations. Rule 1 covers a link that covers units its reason is false for. Rule 3 lets a unit link stand alone when the typed links would be false for most units they cover. The cited Battle bus page's changelog names only Hijackers.",
+     "fix": "Delete counters/0. Rewrite the why of the remaining unit:generals.gla.hijacker entry to: \"Hijackers: since Zero Hour patch 1.03 they cannot take a bus while anyone is aboard (wiki changelog), so a loaded one is safe from them. The unit link stands alone because pattern:hijack-vehicle would also name Jarmen Kell's snipe and the Nuke Cannon's Neutron shells, which do empty a loaded bus (countered_by/2).\" In the uncertain entry at path counters, delete the last sentence (from 'pattern:hijack-vehicle names the enemy in countered_by as well' to 'two different situations')."
+    },
+    {
+     "id": "L3",
+     "severity": "major",
+     "units": [
+      "tempest-rising.veti.vimana",
+      "tempest-rising.veti.enlightened"
+     ],
+     "path": "tempest-rising.veti.vimana combos/4",
+     "summary": "The Vimana's Enlightened link stands alone, saying no pattern names the Veti Sacrifice. But the Enlightened entry links its Sacrifice to resupply-allies, which is the refill this combo describes.",
+     "evidence": "combos/4 is unit:tempest-rising.veti.enlightened, and its why ends 'no word-list or pattern link names the Veti's Sacrifice'. In the Enlightened entry, abilities/0 (Sacrifice) links rally-allies and resupply-allies. Its strengths/1 is pattern:resupply-allies (Sacrifice refills the missing ammo of Veti units that fire limited ammo). Its fill hesitation says support's requires pass only through that link. The Vimana page (wiki.gg API, read today): an Enlightened's Sacrifice onto the Vimana triggers Consecrated Restocking, which refills its ammo at once and doubles its Auto Restock rate. The page also pairs it with Facilitated Caretakers and Thunderhead-carried Dominance Arcs, which matches combos/1-3. Registry summary of resupply-allies: refill teammates' ammo, energy or charges. The only typed links left in combos are class:aircraft and build-linked-exits, so the generator drops this pairing.",
+     "fix": "Insert before combos/4: {\"ref\": \"pattern:resupply-allies\", \"why\": \"An Enlightened that sacrifices itself onto the Vimana sets off Consecrated Restocking, refilling the cannon's four shots at once and speeding their return (Vimana page).\"}. Rewrite the why of the Enlightened unit link (now combos/5) to: \"The same reason: the Vimana page names the Enlightened's Sacrifice.\""
+    },
+    {
+     "id": "L4",
+     "severity": "major",
+     "units": [
+      "tempest-rising.veti.enlightened",
+      "tempest-rising.dynasty.voltaic-tank",
+      "tempest-rising.gdf.drone-operator"
+     ],
+     "path": "tempest-rising.veti.enlightened counters/0 (against countered_by/0 and countered_by/3)",
+     "summary": "The Enlightened's counters damage:armour-piercing covers every Cannon- or Rocket-armed tank. Its own countered_by/3 says those tanks crush it, so the same enemies sit in both lists in the same situation.",
+     "evidence": "counters/0 is damage:armour-piercing, a reasoned entry: infantry resist Rocket and Cannon, so an enemy armed only with anti-tank weapons does little to it. countered_by/3 is armour-class:heavy: medium and heavy vehicles crush it and shrug off its punches. countered_by/0 and weaknesses/0 cite the wiki: any armed unit dispatches it easily. The cached Enlightened page calls them weak, slow and easy prey for any armed unit. The registry damage_map makes Cannon and Rocket armour-piercing, so the Hunter and Boar tanks fall under both entries. In the batch, the Voltaic Tank (Cannon, so armour-piercing; heavy armour; crushes standard infantry per the Crushing page) matches counters/0 and countered_by/3. The Drone Operator, whose armour-piercing pistol is small-arms, matches counters/0 and countered_by/0. The fill hesitation rejected role:anti-armour because it would cover tanks, but damage:armour-piercing covers them too. This breaks fields.md matchups rule 6.",
+     "fix": "Delete counters/0. Change the note of the uncertain entry at path counters to: \"Reasoned, since no page names a unit it beats: buffer from Subjugation, which keeps positive effects off the enemy soldiers it hits (Status effect page).\" counters/1 stays, which keeps the validator's non-empty counters check for an armed unit satisfied. That forced entry for weak units is the rule problem the fill hesitations already raised."
+    },
+    {
+     "id": "L5",
+     "severity": "minor",
+     "units": [
+      "generals.gla.battle-bus",
+      "generals.usa.sentry-drone"
+     ],
+     "path": "generals.gla.battle-bus countered_by/2, countered_by/4 and uncertain at countered_by/4",
+     "summary": "The Battle Bus's Nuke Cannon link stands alone, saying no pattern names crew-killing neutron shells. The Sentry Drone codes the same shells under pattern:hijack-vehicle, so the two batch units disagree.",
+     "evidence": "countered_by/4 (unit:generals.china.nuke-cannon) and its uncertain note say no word-list or pattern link describes weapons that kill a vehicle's crew and riders and leave the hull. The Sentry Drone's strengths/2 (immune:hijack-vehicle) and counters/1 (pattern:hijack-vehicle) both name the Nuke Cannon's neutron shells. The Neutron shells page (cnc API, read today): the shells kill a vehicle's crew and riders and leave it neutral until infantry claim it. That is the hijack-vehicle summary (kill the crew to take the vehicle over), the same effect as Kell's snipe. The cited Battle bus page groups the Neutron shells with Kell as ways to empty the bus and leave it open for capture. The bus's countered_by/2 already holds pattern:hijack-vehicle, so only the reasons need aligning.",
+     "fix": "Rewrite the why of countered_by/2 to: \"Weapons that kill a vehicle's crew empty it and leave it open to capture: Jarmen Kell's snipe kills its driver so every rider gets out where they are easy to pick off, and the Nuke Cannon's Neutron shells kill riders and crew together (wiki).\" Rewrite the why of countered_by/4 to: \"The same reason: the wiki names the Nuke Cannon's Neutron shells.\" Change the note of the uncertain entry at countered_by/4 to: \"The wiki names Neutron mines and the Nuke Cannon's Neutron shells. The Neutron shells page has them kill a vehicle's crew and riders and leave it neutral for capture, which hijack-vehicle covers, as the Sentry Drone entry also reads them. The Nuke Cannon's id is the one its entry would get.\""
+    },
+    {
+     "id": "L6",
+     "severity": "minor",
+     "units": [
+      "generals.gla.technical",
+      "tempest-rising.veti.enlightened",
+      "generals.china.overlord",
+      "tempest-rising.dynasty.tempest-sphere"
+     ],
+     "path": "generals.gla.technical countered_by/1; tempest-rising.veti.enlightened countered_by/3",
+     "summary": "armour-class:heavy has no comparator, so it leaves out the super-heavy members of the group each reason names: the Overlord among Generals tanks, and the Tempest Sphere among Tempest Rising heavy vehicles.",
+     "evidence": "The Technical's countered_by/1 reason names tanks and heavy vehicles. The registry's Generals armour note makes the Overlord and Emperor super-heavy by size. The batch Overlord is coded super-heavy, and its counters/0 class:vehicle says it beats vehicles and drives over smaller ones. The Enlightened's countered_by/3 reason names medium and heavy vehicles that crush standard infantry. The Crushing page (cached) has heavy vehicles crush every soldier. The Tempest Sphere page gives armortype Heavy vehicle, the batch Sphere is coded super-heavy, and its counters/0 class:infantry says every soldier dies under it. Elsewhere the batch uses a comparator for such groups (Sentry Drone countered_by armour-class:>=medium, Anna Kos armour-class:>=medium, Mocny counters armour-class:>=heavy). fields.md rule 4 allows comparators in countered_by for a group.",
+     "fix": "Change the ref of the Technical's countered_by/1 and of the Enlightened's countered_by/3 from armour-class:heavy to armour-class:>=heavy. Leave both whys as they are."
+    },
+    {
+     "id": "L7",
+     "severity": "minor",
+     "units": [
+      "generals.gla.jarmen-kell",
+      "generals.usa.sentry-drone",
+      "generals.gla.technical",
+      "tempest-rising.dynasty.line-officer",
+      "generals.usa-air-force.combat-chinook",
+      "generals.usa.aurora-bomber",
+      "tempest-rising.veti.thunderhead"
+     ],
+     "path": "generals.gla.jarmen-kell counters/2; generals.usa.sentry-drone counters/5; generals.gla.technical counters/1; tempest-rising.dynasty.line-officer counters/0",
+     "summary": "Each of these counters links also covers a batch aircraft that the unit cannot hit and that its own countered_by class:aircraft says beats it. Unlike the Sentry Drone's counters/4, which names its Chinook exception, the whys do not say so.",
+     "evidence": "My scratch pair check puts a batch aircraft in both the counters and the countered_by of each unit. Kell's counters/2 role:transport covers the Combat Chinook (primary transport). His rifle hits only infantry and structures, the Jarmen Kell page limits the snipe to land vehicles, and his countered_by/4 is class:aircraft. The Sentry Drone's counters/5 role:siege covers the Aurora Bomber (primary siege). Its gun cannot fire at aircraft (weaknesses/1; Sentry drone page). The Technical's counters/1 armour-class:light covers the Aurora and the Combat Chinook: the registry armour_map puts Airplane, Comanche and Chinook Armor at light, and no Technical weapon reaches aircraft (weaknesses/1, countered_by/0). The Line Officer's counters/0 role:engineer covers the Thunderhead (secondary engineer), an aircraft that his Ground-only pistol cannot target (countered_by/1). A typed link cannot say ground only, which is a rule problem, but the why can, as the Sentry Drone's counters/4 already does for the Chinooks.",
+     "fix": "Kell counters/2 why: \"Sniping a ground transport's crew throws its riders out into the open, where his rifle picks them off (wiki); air transports such as the Chinooks are out of his reach.\" Sentry Drone counters/5: append \" Only artillery on the ground: its gun cannot fire at bombers such as the Aurora.\" Technical counters/1: append \" Light ground vehicles only: the aircraft that the armour map also makes light are out of its guns' reach (countered_by/0).\" Line Officer counters/0 why: \"Unarmed ground builders and capturers such as the GDF Engineer: one pistol shot kills one, and they cannot shoot back; a flying engineer such as the Veti Thunderhead is out of his pistol's reach.\" At each of the four paths, add an uncertain entry saying the typed link also covers aircraft that the unit cannot hit."
+    },
+    {
+     "id": "L8",
+     "severity": "minor",
+     "units": [
+      "tempest-rising.gdf.drone-operator"
+     ],
+     "path": "tempest-rising.gdf.drone-operator countered_by/2 and uncertain at countered_by",
+     "summary": "The Operative link sits beside role:anti-air as 'the same anti-air answer', but role:anti-air is false for the Operative. The unit link therefore stands alone without the reason rule 3 asks for.",
+     "evidence": "The Operative page (wiki.gg API, read today) calls him an anti-vehicle sniper. His only weapon targets Ground, and Sensor Interference is a damage-free pulse that briefly stops aircraft attacking ground units. anti-air requires hits:high-air (data/vocab/roles.json), which a Ground-only rifle fails. The registry's 6 October 2025 note counts him in the Dynasty's answer to aircraft through that button, not his rifle. Under fields.md matchups rule 3, a unit link goes next to a word-list or pattern link for the same reason, or stands alone only when its reason says every such link is false. No registered pattern covers a pulse that stops aircraft firing on ground units (disable-machine and jam-sensors do not match it).",
+     "fix": "Rewrite the why of countered_by/2 to: \"The makers widened the Operative's Sensor Interference, a pulse that briefly stops aircraft firing on ground targets, to trouble Drone Operators and drone harassment. The unit link stands alone: role:anti-air is false for the Operative, whose rifle hits ground targets only, and no word-list or pattern link names a pulse that stops aircraft from firing.\""
+    },
+    {
+     "id": "L9",
+     "severity": "minor",
+     "units": [
+      "generals.usa-air-force.combat-chinook"
+     ],
+     "path": "generals.usa-air-force.combat-chinook counters/0",
+     "summary": "The why says missile-armed fighters struggle against the Combat Chinook. The cited Combat Chinook page instead lists Raptors and MiGs among its counters, only weakened by the laser.",
+     "evidence": "counters/0 is weapon:guided-missiles, and its why says missile-firing anti-air and missile-armed fighters struggle against it. The cited Combat Chinook wiki page (cached copy): the Tactics section has the laser intercept Patriot, Stinger Site and missile-infantry fire, which supports the anti-air half. The Counters section lists gun anti-air, EMP and Avengers, then adds that Raptors and MiGs can deter it too, if less well because of the point-defence laser. weapon:guided-missiles covers those missile-armed fighters, so the why claims the outcome the cited page frames the other way.",
+     "fix": "Rewrite the why of counters/0 to: \"Its laser shoots down incoming missiles by itself, so missile-firing anti-air (Patriots, Stinger Sites, missile infantry) struggles against it; the wiki says it is weapons other than missiles that bring it down.\" Add an uncertain entry at counters/0: \"weapon:guided-missiles also covers missile-armed fighters such as the Raptor and MiG, which the Combat Chinook page counts among its counters, though weakened by the laser.\""
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,61 @@
+{
+  "files": [
+    "data/patterns/drop-in-from-above.json",
+    "data/patterns/host-spawn-point.json",
+    "data/patterns/build-linked-exits.json",
+    "data/patterns/produce-unit-in-field.json",
+    "data/pattern-registry.json"
+  ],
+  "registry_entries": [
+    {
+      "id": "produce-unit-in-field",
+      "name": "Produce a unit in the field",
+      "category": "summon",
+      "summary": "For a large price and a long wait, bring a full, lasting unit into play at your side, away from any factory; short-lived escorts are launch-drones."
+    }
+  ],
+  "unit_links": [
+    {
+      "unit": "generals.usa-air-force.combat-chinook",
+      "path": "abilities/1",
+      "pattern": "drop-in-from-above",
+      "remove_fit_note": "fit_notes/0"
+    },
+    {
+      "unit": "iron-harvest.usonia.william-mason",
+      "path": "abilities/2",
+      "pattern": "drop-in-from-above"
+    },
+    {
+      "unit": "tempest-rising.veti.thunderhead",
+      "path": "abilities/1",
+      "pattern": "build-linked-exits",
+      "remove_fit_note": "fit_notes/2"
+    },
+    {
+      "unit": "tempest-rising.veti.vimana",
+      "path": "abilities/3",
+      "pattern": "host-spawn-point"
+    },
+    {
+      "unit": "tempest-rising.veti.vimana",
+      "path": "abilities/0",
+      "pattern": "produce-unit-in-field",
+      "remove_fit_note": "fit_notes/2"
+    }
+  ],
+  "checks": "Format: node scripts/format-json.mjs on the 4 pattern files and data/pattern-registry.json. The last run rewrote nothing.\n\nValidate (node scripts/validate.mjs . in the workspace): exits 1 with one error, and it comes from my files: 'produce-unit-in-field: no unit links this pattern'. I can't clear it without editing data/units, which I may not do. It goes away once the Vimana abilities/0 link is added.\n- My files add two warnings: produce-unit-in-field's related ids launch-drones and deploy-turret are planned with no file yet.\n- Warnings went from 144 (baseline) to 125, because writing these files cleared 21 'planned, not filled in yet' warnings across other patterns and units.\n\nLinked check: in a temporary copy under .progress/write/linkcheck (deleted afterwards), I added the Vimana abilities/0 link and removed the three fit notes (Chinook fit_notes/0, Thunderhead fit_notes/2, Vimana fit_notes/2). There, validate exits 0 with no errors, and sync-patterns --check reports all 40 pattern files up to date, so every source_units list matches exactly. Output is in .progress/write/validate-linked.txt.\n\nCopy-check: node scripts/copy-check.mjs . with --only for all 42 URLs cited by the 4 files exits 0. All 42 pages were checked (from cache) and none shares a run of 6 or more words. Two earlier runs, in drop-in-from-above and build-linked-exits, were rewritten.\n\nExtra copy check: I also compared all four files with every page in the workspace cache (1418 pages) using copy-check's own word and run functions (.progress/write/tools/fullcache-check.mjs). It found no shared runs.\n\nnpm test in the workspace: 294 of 297 pass.\n- Two validate tests fail only because of the same unlinked produce-unit-in-field error.\n- One vocab-diff test fails because the workspace copy has no git history ('HEAD' is not a commit).",
+  "open_points": [
+    "produce-unit-in-field stays a validator error until the Vimana's abilities/0 (Summon Caretaker) also links it. Keep launch-drones on that ability too: the six Combat Servitors are short-lived escorts.",
+    "The Vimana is not in build-linked-exits' source_units, although the task listed it as a user. Only its combos/1 names the pattern (the Thunderhead teammate that carries Dominance Arcs), and sync-patterns counts only abilities, weapons and modes. No Vimana ability does linked exits, so source_units is the Thunderhead alone.",
+    "Removing fit notes shifts the indexes of later notes. The integrator should remove Vimana fit_notes/2, Thunderhead fit_notes/2 and Chinook fit_notes/0 by their content (or in descending order) and then run npm run sync-patterns and npm run docs.",
+    "I made the Combat Chinook's fit-note request (clearing an enemy-held building from above) the storm-a-garrison variant of drop-in-from-above, not a new id. The Chinook's capture is a drop onto the building, with the same counterplay: shoot the carrier, bleed the drop. drop-in-from-above.json asks in open_questions whether a separate pattern for clearing a garrison without a drop is wanted later (Generals flash-bangs, microwave tank, bunker busters).",
+    "I made the Thunderhead's fit_notes/2 the recall-to-carrier variant of build-linked-exits: the exit is the moving carrier, and if the shelter is destroyed everyone inside dies.",
+    "William Mason's Requisition is the call-down-machine variant of drop-in-from-above. His unit record also names transform's shell-and-pilot variant; this is left as an open question in the file.",
+    "produce-unit-in-field overlaps with command-companion, which another job of this batch proposes for Anna Kos and Olga Morozova. The suggested line: a companion comes back for free after a wait, while a produced unit is bought again each time. This is recorded in open_questions.",
+    "iron-harvest.shared.engineer fit_notes/0 (building production buildings inside the base zone) is not covered by produce-unit-in-field. produce-unit-in-field.json asks whether it should be a variant or a pattern of its own.",
+    "The design choices for the player versions are proposals for review, such as an AI-run produced unit that a respawning teammate can claim, a deploy-based host, and drop markers.",
+    "Confidence notes:\n- The C&C 4 Crawler examples are rated low: the wiki page was written before release.\n- The Paratroopers (manual quote) and Battlefield Radio Beacon (Battlelog quotes) examples are high because their pages quote official text.\n- The Warp Prism example is high because two wikis agree.\n- Everything else is medium.\n- No registry note names PlanetSide 2's Description field as official text, so the Sunderer example stays medium.",
+    "I fetched https://battlefield.fandom.com/wiki/Radio by mistake (it is about in-vehicle music) and did not cite it. The cited Battlefield beacon pages are Radio_Beacon and Squad_Leader_Spawn_Beacon."
+  ]
+}

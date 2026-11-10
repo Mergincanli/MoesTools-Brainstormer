@@ -1,0 +1,38 @@
+export const meta = {
+  name: 'r3-merge-consistency',
+  description: 'Batch R3 merge pass steps 2 and 3: registry and note errors the agents found, unit links, game-wide conventions and repeated facts across the 27 units, each finding checked by a skeptic',
+  phases: [{ title: 'Find', detail: 'one finder per dimension' }, { title: 'Verify', detail: 'a skeptic per dimension tries to refute each finding' }],
+}
+const REPO = '<repo>'
+const SP = '<scratchpad>'
+const COMMON = `Unit Forge (repository ${REPO}; read only for you, never edit a file there) is a research database of real RTS units, coded with fixed word lists (version 1.1.0, approved) and field rules (docs/fields.md, docs/vocabularies.md), that feeds a generator of original unit concepts for a top-down team shooter. Research batch R3 just added 27 units to data/units/generals.json, tempest-rising.json and iron-harvest.json (9 each). Each game's official role lines, game-wide mechanics and research notes are in research/registry-notes/games-r3.md, and its registry entry is in data/games.json. The agents' reports are in research/r3/fill/<job>/report.json and research/r3/opening/final/report-<game>.json.
+Batch notes:
+- Patterns are being written separately: do not report planned pattern ids that have no file, or fit_notes that ask for new patterns.
+- games-r3.md carries four interim notes, the night decisions of 27 October 2026: mode weapons in Iron Harvest's "(Ability)" slots, a Generals general's extra buttons in tier.basis, body plans of walkers on many legs, and confidence. Units must follow them.
+- Where the written rules themselves give a poor result, that is a rule problem for a later rule-fix round, not a finding here, unless your dimension asks for them.
+Scratch work goes in ${SP}/r3/consistency/<your label>/ (create it). Fetch wikis through their APIs (https://cnc.fandom.com/api.php, https://tempestrising.wiki.gg/api.php, https://iron-harvest.fandom.com/api.php, with action=parse&page=<Title>&prop=wikitext&format=json), two seconds apart, and retry after a 429. Paraphrase only: never six or more words copied from a page.`
+const DIMS = {
+  registry: `Registry and note errors found while coding (runbook section 4, step 2). Read every report's source_problems, unclear_rules, gaps and hesitations, and the units' uncertain entries. Collect each claim that data/games.json or research/registry-notes/games-r3.md is wrong, out of date, or silent where it should speak. Examples: a speed or range reference unit, a tier gate or tier map entry, a damage or armour map key (such as an Omni damage type with no key), a price basis, a faction note (such as the shared faction's note naming only aircraft and weapon systems while the Engineer squad is filed there), a version, or a source rule. Check each one against the pages yourself. Then give the exact edit: a JSON pointer with the old and new values for games.json, or the old and new text for games-r3.md. List the batch units the edit would recode and the fields involved. Changes to the word lists or field rules are out of scope here.`,
+  links: `Links between units and matchups. On every R3 unit, each link (strengths, weaknesses, counters, countered_by, combos and any other ref) must name something that exists or is a plausible future id in the right game and faction: a unit id, term, pattern or class. Check the spelling against the registry's naming in data/games.json and the units already written. Each link's why must describe the right part of the target. Pairs inside the batch must agree. If Jarmen Kell says the Sentry Drone foils his snipe, the drone should say the same. If two batch units link each other, their reasons must not contradict. Run node scripts/validate.mjs . and read every WARN about unit links.`,
+  conventions: `Game-wide mechanics and conventions, coded the same way on every batch unit of a game. For each game, list the game-wide mechanics in research/registry-notes/games-r3.md and check that each batch unit of that game codes them the same way. Cover:
+- the armour map step and the sight basis and band rule;
+- the cost_band thresholds and basis wording (Iron Harvest's iron plus three times oil; Tempest Rising's Intel rate);
+- veterancy and ranks, and crushing;
+- tier gates named the same way, including generals' promotions, Tempest Rising's doctrines and Iron Harvest's reserves and heroes;
+- the four interim notes;
+- each unit's sources, which must follow the registry's source rules for its game (version, kinds).`,
+  facts: `Repeated facts across the batch. Where two or more batch units share a fact, check that every unit states it the same way, codes it the same way, and matches the cited pages. Shared facts include the same weapon or damage type, the same building or tech gate, the same patch change, the same immunity, the same counter unit, and the same described behaviour of another unit (Tempest Charge and Overflow, Consecration, Subjugation, the horde bonus, salvage crates, rear-armour weak spots). Fetch the pages where two units disagree. Also check:
+- each unit's atypical list against the validator's ATYPICAL lines (node scripts/validate.mjs .);
+- that each uncertain and fit_notes path points at a field that exists on the unit.`,
+}
+const FIND = { type: 'object', required: ['findings'], properties: { findings: { type: 'array', items: { type: 'object', required: ['id', 'severity', 'units', 'path', 'summary', 'evidence', 'fix'], properties: {
+  id: { type: 'string' }, severity: { enum: ['major', 'minor'] }, units: { type: 'array', items: { type: 'string' } }, path: { type: 'string', description: 'the field path on each unit, or the games.json pointer, or the games-r3.md section' },
+  summary: { type: 'string' }, evidence: { type: 'string', description: 'what you read in the files, the pages fetched, the commands run and what they showed, paraphrased' }, fix: { type: 'string', description: 'the exact change, per unit or per registry or notes entry' } } } } } }
+const VERD = { type: 'object', required: ['verdicts'], properties: { verdicts: { type: 'array', items: { type: 'object', required: ['id', 'real', 'reason', 'evidence'], properties: {
+  id: { type: 'string' }, real: { type: 'boolean' }, reason: { type: 'string' }, evidence: { type: 'string' }, better_fix: { type: 'string' } } } } } }
+const keys = Object.keys(DIMS)
+const out = await pipeline(keys,
+  k => agent(`${COMMON}\n\n## Your dimension: ${k}\n${DIMS[k]}\n\nReport real problems only, each with evidence you checked yourself and the exact fix. Major: a wrong or contradictory value a generator would use, a broken link, or a registry or note error that changes a coded value. Minor: wording or small inconsistencies. Skip style preferences. Up to 30 findings, most severe first.`, { label: `find:${k}`, phase: 'Find', schema: FIND }),
+  (f, k) => f && (f.findings.length ? agent(`${COMMON}\n\n## Your job: try to refute each finding below (dimension ${k})\nCheck each one yourself: read the files, run the commands, fetch the pages. Set real=true only when you confirmed it. Set real=false when it is wrong, already handled, or not a problem in practice. Give a better fix when the proposed one is wrong or incomplete. Default to real=false when you cannot confirm it.\n\n${JSON.stringify(f.findings, null, 1)}`, { label: `verify:${k}`, phase: 'Verify', schema: VERD }).then(v => ({ key: k, findings: f.findings, verdicts: v ? v.verdicts : null })) : { key: k, findings: [], verdicts: [] }),
+)
+return { results: out.filter(Boolean), failed: keys.filter((k, i) => !out[i]), unverified: out.filter(r => r && !r.verdicts).map(r => r.key) }
