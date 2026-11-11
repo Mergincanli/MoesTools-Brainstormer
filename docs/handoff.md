@@ -1,6 +1,6 @@
 # Handoff: continuing Unit Forge in a new session
 
-Written on 10 November 2026, when the project moved from the session that ran it from 17 October to a new account. Read this first, then [CLAUDE.md](../CLAUDE.md) and the [research runbook](research-runbook.md). Updated on 11 November 2026: the phases that were open then are done, and the saved work in progress (`research/handoff/`) has been used and deleted.
+Written on 10 November 2026, when the project moved from the session that ran it from 17 October to a new account. Read this first, then [CLAUDE.md](../CLAUDE.md) and the [research runbook](research-runbook.md). Updated on 11 November 2026: the phases that were open then are done, the saved work in progress (`research/handoff/`) has been used and deleted, and Mustafa approved pull request #6 (section 4).
 
 ## TL;DR
 
@@ -8,8 +8,8 @@ Written on 10 November 2026, when the project moved from the session that ran it
 - **Where it stands:** plan step 3, the research run, batch R3 (Command & Conquer: Generals with Zero Hour, Tempest Rising, Iron Harvest).
   - All 27 R3 units are coded, checked and in `data/units/` (commit 6c817f1).
   - The merge pass, the patterns, the checker, the rule problems, the report, the final review and the claims check followed on 10 and 11 November (section 3). The report is [research/r3/README.md](../research/r3/README.md).
-  - R3 is finished. It waits for Mustafa's approval of the pull request, and R4 waits for his word.
-- **Everything is on one branch, `claude/quirky-cray-tih1w4`, in [pull request #6](https://github.com/Mergincanli/MoesTools-Brainstormer/pull/6).** That pull request also holds Mustafa's plan change of 24 October, and it waits for his approval (section 4).
+  - R3 is finished. Mustafa approved its pull request on 11 November 2026. R4 waits for his word: do not start it before he says so.
+- **Everything is on one branch, `claude/quirky-cray-tih1w4`, in [pull request #6](https://github.com/Mergincanli/MoesTools-Brainstormer/pull/6).** That pull request also holds Mustafa's plan change of 24 October. He approved the plan change, the wording change in `schemas/game.schema.json` and the merge on 11 November 2026 (section 4). It is merged with a merge commit that records his approval.
 - **First thing to do in the new session:** section 7.
 
 ## 1. What the project is
@@ -23,7 +23,7 @@ Written on 10 November 2026, when the project moved from the session that ran it
   |---|---|---|
   | 1 | Foundations: tooling, CI, games registry, pattern registry | done |
   | 2 | Calibration pilot: word lists 1.0 | done |
-  | 3 | Research run: batches R1, R3, R4 | R1 merged; R3 in progress; R4 next |
+  | 3 | Research run: batches R1, R3, R4 | R1 and R3 merged; R4 next, on Mustafa's word |
   | 4 | Pattern consolidation: merge duplicates, coverage report, top-30 list | after R4 and its rule-fix round |
   | 5 | Generator (TypeScript, seeded rolls) | not started |
   | 6 | App (GitHub Pages) | not started |
@@ -37,7 +37,8 @@ Written on 10 November 2026, when the project moved from the session that ran it
   - step 1;
   - step 2;
   - batch R1 (Red Alert 1, 2 and 3; pull request #4);
-  - the rule-fix round after R1, which made word lists 1.1.0 (pull request #5).
+  - the rule-fix round after R1, which made word lists 1.1.0 (pull request #5);
+  - batch R3, with the plan change of 24 October 2026 (pull request #6).
 
 ## 2. The commits on pull request #6
 
@@ -61,7 +62,8 @@ Written on 10 November 2026, when the project moved from the session that ran it
 | a199319, 9fe2a4e, c04f1a1 | R3 follow-up check: 9 fixes, its record, and the report's copy-check figures |
 | 4920f1a, 1e6a63d | R3 claims check: the 11 confirmed findings fixed |
 | 8217585, 50f85f5 | R3 recheck: its 5 fixes, and 16 rewordings from the comparison with the rendered wiki pages |
-| f9f4a18 and the commit after it | R3 second recheck: its 3 fixes; the report names the commit the copy-check ran on; this file updated |
+| f9f4a18, 51d6c62 | R3 second recheck: its 3 fixes; the report names the commit the copy-check ran on; this file updated |
+| the last commit before the merge | Mustafa's approval and answers of 11 November 2026 recorded (this file and the review record) |
 
 CI runs four check jobs on every push; it was green on each head it has finished on. `npm run check:merge` passes, with 305 of 305 tests.
 
@@ -98,29 +100,41 @@ CI runs four check jobs on every push; it was green on each head it has finished
 
 **What is left:**
 
-1. **Mustafa's approval of pull request #6**, which also holds the plan change. Then the merge (runbook section 9): only when every gate passes on the same wake-up, and with a merge commit, never a squash.
-2. **Then R4** (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech), from its prep, and only when Mustafa says so. Before any fill:
-   - **The copy-check and rendered pages.** Pull request #6 asks Mustafa whether the copy-check should learn to read the rendered wiki page as R4's first prep step (recommended) or in that pull request. Until the tool can, repeat the one-off comparison before a batch is called clean: ask each wiki's `api.php` for `action=parse` with `prop=text` instead of `prop=wikitext`, save the result as an html page in a throwaway root's cache, copy `data/`, `schemas/` and the batch's `research/` folders beside it, and run the copy-check there with `--offline`.
-   - **The site test.** Test the copy-check on one page from each site R4 will cite, and show that it reads the page's real text: open the page in a browser, plant passages of what a reader sees in a throwaway record that cites the page, and see that the copy-check flags them. For a wiki that shows a headless browser a bot page (Fandom, Liquipedia), take the wiki's own rendered page from its API as the reader's view.
-   - **The test of 11 November** (run ahead, as a tool check): all planted passages were flagged on www.halopedia.org, halo.fandom.com, www.sarna.net, mwo.fandom.com, planetaryannihilation.fandom.com, palobby.com, news.blizzard.com and www.halowaypoint.com (its news index; test a Halo Wars 2 page too). On starcraft.fandom.com only 2 of 5 were flagged: its ability and upgrade boxes are templates kept on other pages. liquipedia.net: 4 of 5 on a saved page; the site limits automated reading, so read its API terms before citing it at volume. mwomercs.com: 4 of 5 (the miss is a cookie notice). planetaryannihilation.com refuses the request (HTTP 403): check by hand if it is cited. A Steam news index page holds no post; single posts are read. Repeat the test for every site the prep adds.
-   - **A line for the agent briefs,** proposed to Mustafa on 11 November and not in the runbook until he approves: "Evidence: give the page's address and say in your own words what it shows. Never copy six or more words in a row from a page, in any field of your answer, your notes or a file, the evidence included; give a figure or a name as it is, and paraphrase everything else."
+1. **Nothing for R3.** Pull request #6 is approved and merged (runbook section 9).
+2. **R4** (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech), from its prep, and **only when Mustafa says so**. His decisions of 11 November 2026 set the order of the prep:
+   1. **First, the copy-check learns to read the rendered wiki page as well as the page's source, with tests.** Today it reads only the source (wikitext), so it misses text that a template kept on another page draws in, such as an ability box. Mustafa's conditions: the change passes only when the StarCraft wiki plant test flags 5 of 5, and the plant test goes into the repository as a script that can be run again.
+      - The plant test: open a page in a browser, take passages of ten words in a row from what a reader sees, plant them in a throwaway record that cites the page, run the copy-check on that record, and count the passages it flags. For a wiki that shows a headless browser a bot page (Fandom, Liquipedia), take the wiki's own rendered page from its API as the reader's view (`api.php`, `action=parse`, `prop=text`).
+      - The test page of 11 November was `https://starcraft.fandom.com/wiki/Marine_(StarCraft_II)`: 2 of 5 flagged. The three missed passages come from ability and upgrade templates kept on other pages.
+      - The scripts of 11 November were in the session's scratch folder and did not move. Write the repository's script new.
+      - Until the tool can read rendered pages, a batch is not clean without the one-off comparison: save each wiki page's rendered version as an html page in a throwaway root's cache, copy `data/`, `schemas/` and the batch's `research/` folders beside it, and run the copy-check there with `--offline`.
+   2. **Then the site test:** run the plant test on one page from each site R4 will cite, and show that the copy-check reads the page's real text. Results of 11 November, run ahead as a tool check: all planted passages flagged on www.halopedia.org, halo.fandom.com, www.sarna.net, mwo.fandom.com, planetaryannihilation.fandom.com, palobby.com, news.blizzard.com and www.halowaypoint.com (its news index; test a Halo Wars 2 page too). liquipedia.net: 4 of 5 on a saved page; the site limits automated reading, so read its API terms before citing it at volume. mwomercs.com: 4 of 5 (the miss is a cookie notice). planetaryannihilation.com refuses the request (HTTP 403): check by hand if it is cited. A Steam news index page holds no post; single posts are read. Repeat the test for every site the prep adds.
+   3. **The line for the agent briefs,** approved by Mustafa on 11 November 2026 with this wording. Add it to the runbook and to the agent briefs in `research/workflows/` at R4's prep: "Evidence: give the page's address and where on the page it is (the section or box), and say in your own words what it shows. Never copy six or more words in a row from a page, in any field of your answer, your notes or a file, the evidence included; give a figure or a name as it is, and paraphrase everything else."
+   4. **The StarCraft II scope, to confirm with Mustafa before the trim.** His answer of 11 November keeps the count (option A). His words: "About 15 StarCraft II Legacy of void units, all units per race. (only Legacy of Void version and the units from the base game)". The plan's scope line says multiplayer, Archon mode, co-op and the campaign. Ask him whether "the units from the base game" narrows that, and whether the count stays 5 per race. Change the plan only with his answer.
 
 **Known and left alone:** `npm run copy-check -- --offline --also data/units` finds coincidental six-word runs in R1's units (13 on 11 November 2026; the count depends on the cache), against pages that other records cite or name, most of them cited by R1's own pattern files, such as "while it is in the air" (Halopedia's Plasma grenade page, cited by throw-explosive). None is a page those units cite, and none is in R3's units.
 
-## 4. What waits for Mustafa (pull request #6, "Decisions needed")
+## 4. Mustafa's decisions of 11 November 2026, and what still waits
 
-1. Approve the plan change and merge. R3 has passed its checker and its final review. His approval also covers a one-line wording change in `schemas/game.schema.json` (no rule changes); the merge commit message records it.
-2. The StarCraft II count: about 15 units, 5 per race (A, recommended: keep it; B: another number before R4's prep). The plan lists this count among his answers of 24 October, but the saved record of that day has no count; the plan's line stands until he says which it is.
-3. The five questions from R3's prep. Coding follows the recommended answers:
+**Decided on 11 November 2026:**
+
+1. **Pull request #6:** he approved the plan change of 24 October 2026, the wording change in `schemas/game.schema.json` (no rule changes) and the merge. The merge commit message records it.
+2. **The StarCraft II count:** option A, keep about 15 units of Legacy of the Void. The plan's line stands. His note on the scope is to be confirmed before R4's trim (section 3, "What is left").
+3. **The copy-check and rendered pages:** option A, as the first step of R4's prep, with tests. It passes only when the StarCraft wiki plant test flags 5 of 5. The plant test goes into the repository as a script that can be run again.
+4. **The line for the agent briefs:** approved, with his wording (section 3, "What is left").
+5. **The night shift:** leave it off.
+6. **R4:** not until he says so.
+
+**Still open:**
+
+1. The five questions from R3's prep (pull request #6, items 3 to 7). He gave no other answer, so the units stay coded by the recommended answers:
    - the Generals tier map (A, keep it);
    - Generals lasers (A, follow the game's damage types);
    - Purpose lines for generals' versions (A);
    - Tempest Rising's "air control" and "zone control" (A now: they name no role; then C: write that into the word list at the rule-fix round);
    - Iron Harvest's "mech hunter" (B, add to anti-armour at the rule-fix round).
-4. Taken during the batch with the recommended option, each reversible: night decisions N1 to N4 (above), the consistency check's fixes, three choices about the new patterns, the Vimana's second roles and 18 settled rule problems. The report's "Decisions" lists them.
-5. Left for him at the pattern review (plan step 4): whether to fold `stack-to-overload` into `freeze-and-shatter`.
-6. For the rule-fix round after R4, no answer needed now: the 83 rule problems in `research/r3/rule-problems.md`, among them the walker body-plan tie-break and the confidence rule (`research/r3/opening/splits.json`).
-7. For R4's prep, no answer needed to merge: whether the copy-check learns to read rendered wiki pages as R4's first prep step (A, recommended) or in pull request #6 (B); and the one-line rule on evidence for the agent briefs (section 3, "What is left").
+2. Taken during the batch, each reversible if he asks: night decisions N1 to N4 (above), the consistency check's fixes, three choices about the new patterns, the Vimana's second roles and 18 settled rule problems. The report's "Decisions" lists them.
+3. Left for him at the pattern review (plan step 4): whether to fold `stack-to-overload` into `freeze-and-shatter`.
+4. For the rule-fix round after R4: the 83 rule problems in `research/r3/rule-problems.md`, among them the walker body-plan tie-break and the confidence rule (`research/r3/opening/splits.json`).
 
 ## 5. How the work is done
 
@@ -140,7 +154,7 @@ The procedure is [docs/research-runbook.md](research-runbook.md): its sections 1
 | Scratchpad (state file, night log, workspaces, agent results) | the session's machine | It does not move. What a later session needs is in the repository: the record under `research/r3/` and this file |
 | Workflow runs | the old session | They cannot be resumed from a new session: re-run (section 3) |
 | Page cache | `.cache/sources/` on the old machine | Rebuilt as pages are fetched again |
-| Night-shift routine | the old account (disabled on 29 October) | Recreate it on the new account if wanted ([appendix](#appendix-the-night-shift-routine)); delete the old one |
+| Night-shift routine | the old account (disabled on 29 October) | Leave it off: Mustafa's decision of 11 November 2026 ([appendix](#appendix-the-night-shift-routine)). Delete the old one |
 | Branch name | `claude/quirky-cray-tih1w4`, named in the runbook (lines 39, 234, 248, 270) and the routine | Keep using it if the new environment can push to it; otherwise update those lines |
 
 ## 7. First steps in the new session
@@ -173,4 +187,4 @@ Its prompt follows. If you recreate it, change the branch and the state file's p
 >
 > Write every action to the night log as you go. If Mustafa has written since the last wake-up, his message comes first.
 
-Running it costs usage around the clock. Mustafa paused it on 29 October to free usage for other work.
+Running it costs usage around the clock. Mustafa paused it on 29 October to free usage for other work. On 11 November 2026 he decided to leave it off.
