@@ -75,7 +75,7 @@ Every pull request stays small, runs the schema checks and tests in CI, and ends
 |---|---|---|
 | R1 | Red Alert 1, 2 (with Yuri's Revenge) and 3 (with Uprising) | Merged on 23 October 2026 |
 | R2 | C&C Tiberian Dawn, Tiberian Sun, Tiberium Wars (with Kane's Wrath), Renegade | Paused during its prep, with the prep of three games kept in `research/r2/` |
-| R3 | C&C Generals (with Zero Hour), Tempest Rising, Iron Harvest | Next |
+| R3 | C&C Generals (with Zero Hour), Tempest Rising, Iron Harvest | Merged on 11 November 2026 |
 | R4 | StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech | After R3 |
 | Shelved | Company of Heroes 1-3, World in Conflict, Wargame, Broken Arrow, Supreme Commander, Dawn of War 1-2, Battlefield (vehicle archetypes), PlanetSide 2, Foxhole, WARDOGS, Arc Raiders | After step 6 |
 
