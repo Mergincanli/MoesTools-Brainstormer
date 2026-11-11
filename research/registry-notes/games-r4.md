@@ -27,7 +27,7 @@ Batch R4 is StarCraft II: Legacy of the Void (`sc2`), Halo Wars (`hw1`), Halo Wa
   - **t1:** the first production building, plus the tech building its line units need. Terran: Command Center, Barracks. Zerg: Hatchery, Spawning Pool, Roach Warren, Baneling Nest. Protoss: Nexus, Gateway, Cybernetics Core.
   - **t2:** the second step. Terran: Factory, Starport, Armory, Ghost Academy. Zerg: Lair-tech buildings (Lair, Hydralisk Den, Lurker Den, Infestation Pit, Spire, Nydus Network). Protoss: Robotics Facility, Stargate.
   - **t3:** the third step. Terran: Fusion Core, and the Thor, whose own gate is "Factory with tech lab and Armory (Thor)". Zerg: Hive-tech buildings (Hive, Ultralisk Cavern, Greater Spire). Protoss: Fleet Beacon, Robotics Bay, Dark Shrine, Templar Archives.
-  - Tech Lab and Reactor add-ons are not a tier step. So the Marauder is t1 and the Siege Tank t2; the Banshee and Raven are t2.
+  - The two add-ons, Tech Lab and Reactor, are not a tier step. So the Marauder is t1 and the Siege Tank t2; the Banshee and Raven are t2.
   - Judgement calls: the Hellbat is t2: it is the Hellion's second mode, and the Armory is t2 in the registry. The Starport is t2 although it needs the Factory. The Ghost is t2. The Twilight Council unlocks no unit, so it is left out.
   - Campaign-only units (for example the WoL Firebat, Goliath, Diamondback and Wraith, or the LotV Reaver): use the multiplayer gate of the building that makes them. Mission unlocks are not tech gates.
   - Co-op Missions values appear in the same wiki infoboxes; ignore them.
@@ -53,7 +53,7 @@ Batch R4 is StarCraft II: Legacy of the Void (`sc2`), Halo Wars (`hw1`), Halo Wa
   - **Step 2 never applies.** BattleTech has no light, medium or heavy armour word. Light, medium and heavy are weight classes, and the armour a design's page names (a brand, or a kind of plating such as ferro-fibrous) does not change the class. A plating with a special effect goes in armour.notes, or into an armour model where one fits.
   - **Step 3 decides nothing.** The game has no costs, and the registry names no standard main battle tank.
   - **Check A.** Superheavy 'Mechs are super-heavy through the map. The game has no tiers, so another unit of body size huge can be super-heavy too.
-  - **Other kinds of unit** (combat vehicles, aerospace fighters, battle armour), if any is coded, are not in the map either: go on to step 4.
+  - **Other kinds of unit** (battle armour, combat vehicles, aerospace fighters), if any is coded, are not in the map either: go on to step 4.
 - **Damage map.** It covers the three weapon kinds (Energy, Ballistic, Missile). They are MechWarrior Online's hardpoint types, and the BattleTechWiki's BattleMech page sorts 'Mech weapons into the same three, with physical attacks besides.
 - **MechWarrior damage: which step decides** (armament[].damage). Checked against the BattleTechWiki's BattleMech page and about twenty weapon pages, and the MechWarrior Online Wiki's Weapons page (October 2026).
   - **Step 4 binds.** A weapon's kind is the first word of the Type field in its BattleTechWiki infobox: Energy for lasers, PPCs, flamers and plasma weapons, Ballistic for autocannons, machine guns and Gauss rifles, Missile for LRMs and other launchers. In MechWarrior Online it is the hardpoint type the weapon needs. A 'Mech's own page lists its weapons without their kind, so step 4 needs the weapon's page, or the MechWarrior Online 'Mech page's hardpoint types, among the sources (cited, or named in an uncertain entry).
