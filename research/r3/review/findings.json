@@ -8,7 +8,225 @@
   "without_verdict": 0
  },
  "note": "Local folder names are replaced by plain words (runbook section 8, step 5). Page quotes in the evidence are paraphrased, so the record passes the copy-check.",
- "follow_ups": [],
+ "follow_ups": [
+  {
+   "run": "research/workflows/verify-fixes.js, angles closure and regression, since 7142f5c, on 11 November 2026",
+   "counts": {
+    "found": 13,
+    "real": 10,
+    "refuted": 3,
+    "fixed": 9,
+    "for_mustafa": 1
+   },
+   "note": "Two closure findings and two regression findings name the same two points (the runbook's list of addresses, rule problem 89), so the 10 confirmed findings are 8 distinct problems. The evidence, which quotes pages, is kept outside the repository.",
+   "findings": [
+    {
+     "angle": "closure",
+     "id": "F1-partial",
+     "severity": "major",
+     "file": "docs/proposal.md",
+     "summary": "F1 is only partly fixed. The plan still lists the StarCraft II count, \"About 15 units, 5 per race\", among Mustafa's answers of 24 October. His recorded answers that day give the StarCraft II scope but no count, and the same pull request asks him for the count as an open question (item 2). So the plan he is asked to approve in item 1 records an open choice as his answer. The skeptic's better_fix asked for this line to be reworded, but the fixer left it as written.",
+     "fix": "In docs/proposal.md line 84, delete the closing sentence \"About 15 units, 5 per race.\" from the answers bullet, so the bullet ends at \"...across all three races.\" After the answers list (after line 86), add a line outside the list: \"The plan keeps about 15 StarCraft II units, 5 per race, until you answer pull request #6, item 2.\" The plan then agrees with PR item 2 and with handoff section 4. Until this is done, F1's status in findings.json and the claim \"all 40 are fixed\" (README line 22, PR TL;DR) are not accurate.",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. docs/proposal.md has not changed since 7142f5c. Line 84 sits in the list that line 82 opens with 'Your answers that day:', and it still ends 'About 15 units, 5 per race.' Every record of his answers that day gives the StarCraft II scope with no count: night-log line 4; open_decisions in both state.json and state-old-session.json; the message of 8366649; and the handoff's own account of the plan change (handoff lines 29-31). The session that had his chat wrote the count into the plan at 16:17. At 16:18 it asked about the count in the PR ('Say if you want a different number'). Its handoff (line 101) lists the count under what waits for Mustafa. F1's better_fix made its rewording conditional ('unless his chat confirms he gave it'). The only session that saw the chat treated the count as open, so that condition is met. The fixer's reason ('only Mustafa can say what he answered') does not hold up: item 1 asks him to approve a plan that states as his answer what item 2 asks him. No other record exists: PR #6 has no comments or reviews. Under the review's scale (a contradiction, a false claim to Mustafa) major is defensible. If he keeps option A, only the attribution is wrong, not the number.",
+      "better_fix": "Apply the proposed fix, with four changes. (1) Make the new sentence its own paragraph: put it after the blank line that follows line 86, with a blank line after it. Otherwise Markdown folds it into the 'Rule fixes' bullet. (2) Word it so it stays true after the merge, for example: 'The count, about 15 StarCraft II units (5 per race), is the plan's number, not one of your answers; pull request #6 asks you to confirm it (item 2).' When he answers, replace it with his answer. (3) Update F1's 'how' in findings.json to name the proposal change, so that 'all 40 are fixed' (README line 22, PR TL;DR) holds. (4) Include the changed plan text in the claims check."
+     },
+     "status": "for Mustafa",
+     "how": "The plan is his to change, and on 11 November he asked for no change to it. The line stands as written; item 2 of the pull-request description asks him for the count and says what the record of 24 October holds. The report says 49 of the 50 confirmed findings are fixed."
+    },
+    {
+     "angle": "closure",
+     "id": "CONS-1-partial",
+     "severity": "minor",
+     "file": "research/r3/README.md",
+     "summary": "CONS-1 is fixed in the tool but only partly in the record. The README still leaves out that fill job j07 reported the Steam problem during the fill, and credits the discovery to the final review. It also repeats the overstatement that the skeptic corrected: that the copy-check had never read the Steam posts at all. In fact the notes were compared with the posts' text all along, through the partner-events list pages; only the units were not. The better_fix asked the README to record both points.",
+     "fix": "Replace README line 158 with: \"- **Steam news posts.** Fill job j07 reported during the fill that the copy-check could not read them ([fill/hesitations.md](fill/hesitations.md), 'Copy-check and Steam posts'), and the final review confirmed it: Steam draws a post with a script, so the check saw only the store's page frame, and no unit's prose had been compared with the posts it cites. The notes had been compared with the posts' text all along, through the two partner-events list pages that the Tempest Rising notes link. Thirteen posts are cited by the nine Tempest Rising units. The check now reads the post itself (bc3d69a), and every run below includes them.\" In line 22, change \"the copy-check had never read the text of Steam news posts, which the nine Tempest Rising units cite\" to \"the copy-check had never compared the units with the text of the Steam news posts they cite, as a fill agent had reported\".",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed, minor. grep finds no mention of j07 in the README. Line 158 says the final review found the problem, and lines 22 and 158 say the check had never read the posts' text. hesitations.md:455 holds j07's report, in the j07-tempest-rising section that starts at line 383. j07's report.json line 10 adds that its own check of the embedded post data found and rewrote runs the official check missed. copy-check.mjs compares every --also note with every cached page (the 'Notes cite no page of their own' block). Both partner-events list pages are cached and give 11482 and 142001 words through pageText. So before bc3d69a the notes were compared with the post text and the units were not. CONS-1's better_fix asked the README to say both things. Its 'how' covers only the tool. The tool part is right: 26 of 26 copy-check tests pass. However, the proposed README wording overstates in the other direction. I compared each cached post's six-word runs with the list pages: 45 to 69% of each post's runs are there (23% and 28% for two short posts). The list pages keep BBCode tags and JSON escapes, which split runs. The notes were compared with these pages because the pages are in the cache, not because the notes link them. games-r3.md:421 gives only the offset=0 address; both addresses are in the j05 report's page list. 'All along' can only be shown for this machine's cache, whose list pages were fetched on 10 November at 22:14 UTC.",
+      "better_fix": "Use the proposed line 22 change. Replace line 158 with: '- **Steam news posts.** Fill job j07 reported during the fill that the copy-check could not read them ([fill/hesitations.md](fill/hesitations.md), \"Copy-check and Steam posts\"), and the final review confirmed it: Steam draws a post with a script, so for a cited post the check saw only the store's page frame, and no unit's prose had been compared with the posts it cites. The notes had been compared with most of the posts' text, through the two partner-events list pages in the cache, whose markup breaks some runs. Thirteen posts are cited by the nine Tempest Rising units. The check now reads the post itself (bc3d69a), and every run below includes them.' Then run part 1 of the copy-check again, since the README is part of the record."
+     },
+     "status": "fixed",
+     "commit": "a199319",
+     "how": "The report credits fill job j07 and says the units, not the notes, had gone uncompared."
+    },
+    {
+     "angle": "closure",
+     "id": "NEW-runbook-always-appear",
+     "severity": "minor",
+     "file": "docs/research-runbook.md",
+     "summary": "A new problem created by the fixes. The CONS-1 change makes the copy-check list a Steam news page with no post text as not checked. Two such addresses are in the shared notes and the games registry, so they now appear in every part-1 run. The tooling-5 fix rewrote the runbook's list of addresses that \"always appear\" among the unread pages, and it names only the four placeholders and folders. The next batch will meet two unread addresses that the runbook does not explain.",
+     "fix": "At the end of the sentence on docs/research-runbook.md:213, add: \"Two Steam news addresses also always appear, as pages that hold no post text: `https://store.steampowered.com/news/app/1486920/view/` (a placeholder in games-r3.md) and the Company of Heroes 3 post `https://store.steampowered.com/news/app/1677280/view/1817483467037275`, cited in data/games.json.\" A later option: re-fetch or replace that games.json citation, so that only the placeholder remains.",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed, minor. The tooling-5 fix rewrote runbook line 213, and it names only the four placeholders and folders. pageText returns null for exactly 2 of the 29 cached Steam pages. The first is .../news/app/1486920/view/: urlsIn's pattern stops at '<', so the placeholders at games-r3.md:139 and :421 produce it. The second is .../1677280/view/1817483467037275, cited at data/games.json:2524. That citation was added in 633f733, which main contains. games.json is always read as a record (collectRecords), so this address is in every run that has no --only. Before bc3d69a both pages counted as checked (only frame text was read), so this problem is new. tooling-5 was judged real for the same kind of gap. The practical cost is small: the NOT CHECKED reason names the cause, and README:165 explains both addresses for R3.",
+      "better_fix": "Add the proposed sentence to line 213. A correction to the 'later option': fetching the CoH3 page again will not clear it. The cached page is the news hub, not a post: its event store is empty and its clan_event_gid is blank, so the cited id opens no post on the store. It is probably a news-feed id, the trap games-r3.md:421 warns about for Tempest Rising. Replacing the citation in data/games.json with the post's store address from CoH3's partner-events list would clear it. That edits a registry entry merged in step 1, so it belongs in a later change."
+     },
+     "status": "fixed",
+     "commit": "a199319",
+     "how": "As the regression skeptic's fix for the same point: the Steam placeholder joins the runbook's list; the Company of Heroes 3 post is a real page that came back empty, so it is reported per batch."
+    },
+    {
+     "angle": "closure",
+     "id": "R3-UNITS-02-side-effect",
+     "severity": "minor",
+     "file": "research/r3/rule-problems.md",
+     "summary": "Low. The R3-UNITS-02 fix added the veteran-ability uncertain entry to Anna Kos, Olga Morozova and William Mason. Rule problem 89, whose settled note asks for that entry, was not updated. It still names only the Mocny, the Grimbart and the Stark, says \"The units already read so\" and \"No unit changes\". Three units did not read so until bc3d69a.",
+     "fix": "In item 89, add `iron-harvest.polania.anna-kos`, `iron-harvest.rusviet.olga-morozova` and `iron-harvest.usonia.william-mason` to the Units list. Extend the settled line to: \"As proposed: the Veterancy note now covers a unit whose veteran ability no source names. The final review (bc3d69a) found that Anna Kos, Olga Morozova and William Mason lacked the entry the note asks for, and added it; no role changed.\"",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed, low. Item 89 (rule-problems.md lines 550-555) still lists only the Mocny, the Grimbart and the Stark. It still says 'The units already read so', and its settled line still says 'No unit changes'. Since 7142f5c the file changed only in item 84. bc3d69a added the abilities uncertain entry the note asks for to Anna Kos, Olga Morozova and William Mason; the Veterancy note at games-r3.md:309 is unchanged. README:124 counts 11 settled items that only clarify a note: 87, 88, 89, 90, 96, 97, 98, 99, 103, 105 and 106. Item 89 is one of them, and the PR draft's item 12 says the same. The impact is small: only uncertain entries changed, no coded value or role, and findings.json records the fix. The proposed fix, though, creates a new inconsistency. rule-problems.md line 11 says each list runs from the problem that touches the most batch units to the fewest. With six units, item 89 would belong ahead of items 85 to 88, which touch 4, 4, 3 and 3 units. Moving it would renumber items that other texts cite: item 73 (line 449) cites '(item 89)', and the README and PR cite item numbers. The proposed fix also leaves the 11/7 split in README:124 and PR item 12 out of date.",
+      "better_fix": "Keep item 89's number and Units list. Extend its settled line: 'As proposed: the Veterancy note now covers a unit whose veteran ability no source names. No unit changed when it was settled; the final review (bc3d69a) found that the note also reaches Anna Kos, Olga Morozova and William Mason, which lacked its entry, and added it to each. No coded value or role changed.' Then make README:124 agree: '10 of the 18 only clarify a note ..., and 8 also change a unit or the pattern registry (..., and, through the final review, three Iron Harvest heroes' uncertain entries for item 89)'. Make PR item 12 match. Alternatively, keep the 11/7 split and add a parenthesis naming item 89's later entries. Include both texts in the claims check."
+     },
+     "status": "fixed",
+     "commit": "a199319",
+     "how": "Rule problem 89's settled line names the three heroes; the report and the draft say so beside the 11-and-7 split."
+    },
+    {
+     "angle": "regression",
+     "id": "REG-1",
+     "severity": "minor",
+     "file": "docs/handoff.md",
+     "summary": "The fix commits did the final review and the full section-8 copy-check, and they added 8 tests. bc3d69a also edited handoff.md. Yet handoff.md still lists the final review and those checks as left to do, and still says check:merge passes 297 of 297. CLAUDE.md tells a session to read this file first, so a new session would be sent to redo the final review.",
+     "fix": "In docs/handoff.md:\n1. Add to \"Done since the handoff\": \"5. **Final review** (bc3d69a, 43f6abb): 48 findings, 40 confirmed and fixed, 8 answered. The full online copy-check in three parts, the manuals by hand and the local-path search ran on bc3d69a. Record: research/r3/review/ and the README's Copied wording.\"\n2. Replace \"What is left\" items 1 and 2 with: \"1. `verify-fixes.js` on bc3d69a and 43f6abb. 2. The claims check (section 8) on the report and the pull-request description.\"\n3. Change \"297 of 297\" to \"305 of 305\" on lines 59 and 134.\n4. Add rows for 7142f5c and for bc3d69a, 43f6abb to the commits table.\n5. In section 4, item 1, replace \"which the checker has not re-checked yet\" with \"which have passed the checker and the final review\".",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. CLAUDE.md tells a new session to read the handoff first, and at HEAD 43f6abb it is out of date in four places. It still lists the final review and the section-8 copy-check as left to do (lines 89-92). It says 297 of 297 tests (lines 59 and 134). Its commit table ends at e05e5c4. Line 100 says the checker has not re-checked R3's units. The fix commits made the first three wrong: bc3d69a and 43f6abb did the final review and the three-part copy-check, and bc3d69a added 8 tests (305 now). bc3d69a touched handoff.md only at line 96. Line 100's clause is older (unchanged since 71d7e67, and 7142f5c left it alone), but it sits in the same stale section. Severity low to minor: a new session would soon find findings.json and the README, but it would first be sent to finished work and given a wrong test count.",
+      "better_fix": "Use the proposed fix, with three changes. (a) 'What is left' should read: record this verify-fixes run in findings.json follow_ups and fix what it confirms; run the section-8 checks again on whatever those fixes change, including part 2 on the pages named only by title (REG-3); post the draft as PR #6's description; run the claims check and its recheck; merge with Mustafa's approval; then R4. (b) Do not write that R3 'has passed the final review' while verify-fixes is still open. Section 4 copies the current PR #6 body almost word for word (item 1: 'which the checker has not yet re-checked'; item 6: 'A (recommended for R3)'). So rewrite the whole of section 4 to match the new description once it is posted, rather than editing line 100 alone now. (c) Do not say part 2 covered every named page until REG-3 is fixed."
+     },
+     "status": "fixed",
+     "commit": "a199319",
+     "how": "docs/handoff.md: the final review is under what is done, what is left starts at the claims check, the test count and the commit table are current, and section 4 follows the new description."
+    },
+    {
+     "angle": "regression",
+     "id": "REG-2",
+     "severity": "minor",
+     "file": "docs/handoff.md",
+     "summary": "F3 corrected the recommended answer to the Tempest Rising control-words question in the README and in the draft pull-request text: A now, then C at the rule-fix round. handoff.md, in its list of what waits for Mustafa, still gives the recommendation as plain A. So two texts Mustafa reads now disagree.",
+     "fix": "Change docs/handoff.md:106 to: \"Tempest Rising's \\\"air control\\\" and \\\"zone control\\\" (A now: they name no role; then C at the rule-fix round, which writes that into the word list);\".",
+     "verdict": {
+      "real": false,
+      "reason": "The line is incomplete, not contradictory. handoff:106 sits under 'Coding follows the recommended answers', and R3's coding does follow A. Section 4 copies the live PR #6 body, which still marks A '(recommended for R3)' and lists C as an option without recommending it. So the handoff agrees with what Mustafa sees on GitHub today. The README's new wording ('name no role for now; ... then into the word list at the rule-fix round') adds the later step without contradicting A for R3. Nobody acts on the handoff line: the rule-fix round works from rule-problems.md item 80, whose Fix already reads 'A for R3, then its option C at the rule-fix round'.",
+      "better_fix": "No separate edit. When the draft (pr-body.md, item 6 'C (recommended)') is posted as PR #6's description, rewrite the whole of handoff section 4 to match it, as part of the REG-1 update."
+     },
+     "status": "answered",
+     "answer": "Not confirmed by the skeptic; see the verdict's reason. Nothing changed."
+    },
+    {
+     "angle": "regression",
+     "id": "REG-3",
+     "severity": "minor",
+     "file": "research/r3/README.md",
+     "summary": "The new copy-check section says part 2 covered \"the 159 pages named in the batch's uncertain entries but not cited\". But 159 counts only the pages named by web address. At least ten more wiki pages are named only by title and marked read, not cited, and three of them are not even in the page cache, so no run ever read them. The runbook's part 2 covers every page named, and the tooling-1 fix was made for exactly these title-only pages. I checked all ten myself and found nothing copied, so only the record's claim falls short.",
+     "fix": "1. Run part 2 on the title-only pages, using their full addresses: https://iron-harvest.fandom.com/wiki/PZM-24_%22Tur%22, .../SHM-70_%22Gulay-Gorod%22, .../ZR-25_%22Samson%22, .../SKS_156_%22Wotan%22, .../M-19_%22Knox%22, .../PZM-11_%22Lowca%22, .../SHM-79_%22Nagan%22, .../Sd._KS_78_%22Isegrim%22, .../S3-55_%22Ward%22 and .../SHM-69_%22Serp%22. This also caches the three missing pages.\n2. Reword README line 166 to: \"The 159 pages named by address in the batch's uncertain entries but not cited, and the 10 named only by title (`npm run copy-check -- --also data/units --only <url>` for each, with the full address of a titled page): no shared run with an R3 unit.\"\n3. Optionally, add to runbook part 2: \"A page named only by title counts too: give its full address.\"",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. The input to part 2 (scratch folder r3/checks/part2-urls.json) is the 159 web addresses written in R3's uncertain entries and not cited by the unit that names them. Pages named only by title were never added. Yet runbook line 210 says 'each page named', and copy-check.mjs:534 (added in bc3d69a) handles full addresses precisely for 'a page the notes name only by title'. So README:166 undercounts. Tur, Gulay-Gorod and Samson were read by no run on this machine: they have no cache file, and their addresses appear nowhere in the repository. The data itself is clean: no R3 unit shares a six-word run with any title-only page I checked. Severity minor: the record claims more coverage than part 2 had; nothing was copied.",
+      "better_fix": "Two additions to the proposed fix. (1) There are more than ten title-only pages. The Engineers' abilities/2 entry names the Polanian MG Bunker and Polanian Cannon Bunker pages by title ('read, not cited'): both are cached, neither is in part2-urls.json, and both check clean. The Kaiser's can_target entry names the Gunship page with no address: not cached, checks clean. So list the title-only pages with a script over every uncertain entry, rather than fixing the README at 'the 10'. (2) Running part 2 on the Gulay-Gorod page prints a FOUND line on an R1 unit: ra3.allied.multigunner-ifv /units/2/armament/6/summary, a six-word run. That is a coincidence: the unit does not cite that page, and ra3.json is unchanged from main. The reworded README line must report it next to the Riot_Van run (two coincidental runs on R1 units), not only 'no shared run with an R3 unit'."
+     },
+     "status": "fixed",
+     "commit": "a199319",
+     "how": "Part 2 ran again on the pages named only by title, found by a script over every uncertain entry: 48 pages read, four fetched for the first time. No shared run with an R3 unit; the report names the two coincidental runs on a batch R1 unit. The runbook says a page named by title counts too."
+    },
+    {
+     "angle": "regression",
+     "id": "REG-4",
+     "severity": "minor",
+     "file": "docs/research-runbook.md",
+     "summary": "Since the Steam fix (CONS-1), every full run lists the notes' Steam address pattern as not checked. The same commit rewrote the runbook's list of addresses that \"always appear\" there (tooling-5), but that list still names only four. The next batch's report will meet a fifth entry that the runbook does not explain.",
+     "fix": "Extend runbook line 213 to: \"... `.../GameFilesOriginalZH/Data/INI/` and `https://store.steampowered.com/news/app/1486920/view/` (the notes' `<id>` pattern for Steam posts, listed as a Steam news page that holds no post text) always appear there: they are placeholders or folders in the notes, not pages.\"",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. games-r3.md:139 and :421 write the Steam post address as .../news/app/1486920/view/<id>, which urlsIn cuts to .../view/, and every part-1 run reads the registry notes. Since CONS-1 (bc3d69a), pageText returns null for that page, so every run lists it as 'a Steam news page that holds no post text', from the cache or after a fresh fetch. The runbook's list of addresses that 'always appear' was rewritten in the same commit (tooling-5) and names only four. This is not a contradiction, since the list does not claim to be complete, but it is the same omission the final review confirmed in tooling-5. Severity low.",
+      "better_fix": "As proposed. The other page with no post text is the Company of Heroes 3 post cited in data/games.json: a real page that came back empty, not a placeholder. So it stays out of the list and is reported per batch."
+     },
+     "status": "fixed",
+     "commit": "a199319",
+     "how": "The runbook's list names the Steam placeholder."
+    },
+    {
+     "angle": "regression",
+     "id": "REG-5",
+     "severity": "minor",
+     "file": "README.md",
+     "summary": "bc3d69a changed what the copy-check does, but the README's option and exit-code tables and the script's own usage header were not updated:\n- exit 3 now also comes from a Steam news page with no post, and from an --only text that matches nothing;\n- a full address given to --only is fetched even when nothing cites it;\n- web addresses in a record's prose no longer count as wording.",
+     "fix": "1. README.md, --only row: \"Checks only the pages whose URL contains this text; can be given more than once. A full address that nothing cites is fetched (or listed as not checked), and a text that matches no cited, linked or cached page is listed as not checked.\"\n2. README.md, exit 3 row: add \"a Steam news page that holds no post, or an `--only` text that matched nothing\".\n3. Make the same two edits in the usage header of scripts/copy-check.mjs.\n4. Add one line to the header's opening comment: \"A Steam news post is read from the page's data attribute, and web addresses in a record's prose are not wording.\"",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. bc3d69a changed four behaviours: two new reasons end a run INCOMPLETE with exit 3 (NO_POST_TEXT and ONLY_MATCHED_NOTHING); a full --only address that nothing cites is now fetched (lines 534-538); and web addresses in a record's prose no longer count as wording (line 580). README.md:74 and :89 and the usage header (lines 32 and 42-43) still describe the old behaviour. Each output line names its reason, so a run is not misread. But these tables are where users look; the final review's answer to tooling-6 relied on exactly that. Severity low.",
+      "better_fix": "As proposed. In the exit-3 row, also say that running again does not fix a Steam page with no post (a placeholder or an empty post), so the advice 'run it again with the network, or fix the URLs listed' does not cover it."
+     },
+     "status": "fixed",
+     "commit": "a199319",
+     "how": "The project README and the script's header describe the new --only behaviour and the new reasons for exit 3."
+    },
+    {
+     "angle": "regression",
+     "id": "REG-6",
+     "severity": "minor",
+     "file": "docs/research-runbook.md",
+     "summary": "The sentence added to part 2 tells the reader to look for \"--only matched no cited, linked or cached page\". But part 2 passes a full address, and for a full address the script never gives that reason. It fetches the address instead, so a mistyped URL shows up as a fetch error, or as \"offline and not cached\".",
+     "fix": "Replace the sentence with: \"If the run ends INCOMPLETE, read its NOT CHECKED line. For a full address it gives the fetch error (or 'offline and not cached'); for a part of an address it gives '--only matched no cited, linked or cached page'. Either way, compare the URL with the entry, copy it exactly, and run again.\"",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. Part 2 passes a full address, and for a full address the script never gives the --only reason. The first --only loop puts an uncited, uncached full address into `urls`, and `seen = new Set(urls)` then counts it as matched. A mistyped address therefore shows up as 'offline and not cached' when offline, or as a fetch error when online: the wiki API's missingtitle, or an HTTP 404 that looks like a page that no longer exists. The run still ends INCOMPLETE, so nothing passes silently. But the new sentence tells the reader to look for a message that part 2 cannot produce. Severity low.",
+      "better_fix": "As proposed."
+     },
+     "status": "fixed",
+     "commit": "a199319",
+     "how": "The runbook sentence is replaced as proposed."
+    },
+    {
+     "angle": "regression",
+     "id": "REG-7",
+     "severity": "minor",
+     "file": "research/r3/rule-problems.md",
+     "summary": "R3-UNITS-02 added the Veterancy note's uncertain entry to Anna Kos, Olga Morozova and William Mason, because they lacked it. But rule problem 89, which wrote that note, still says it changed no unit and that the units already follow it. The README and the draft also still count it among the 11 settlements that only make a note say what the units already do.",
+     "fix": "1. Add to item 89's Settled line: \"The final review then found that three heroes the item did not list lacked the entry, and added it (R3-UNITS-02, bc3d69a): Anna Kos, Olga Morozova and William Mason. No coded value changed.\"\n2. In README line 124 and in the draft's item 12, add after the 11-and-7 split: \"(one of the 11, the Veterancy note, later gave three Iron Harvest heroes an uncertain entry in the final review)\".",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. When item 89 was settled, the Veterancy note gained a rule: wherever no source names a unit's veteran ability, add an uncertain entry at abilities that names the Veterancy page. R3-UNITS-02 found three heroes without that entry, and bc3d69a added it. Item 89 still says 'No unit changes', and the README (line 124) and draft item 12 still count it among the 11 settlements that 'only clarify a note to say what the units already do'. bc3d69a updated item 84 for CONS-4 but did not update item 89 for R3-UNITS-02. No coded value changed, so severity is low, but a count Mustafa reads no longer holds as written. F9 was the same kind of slip in the same sentence, and it was confirmed and fixed.",
+      "better_fix": "As proposed."
+     },
+     "status": "fixed",
+     "commit": "a199319",
+     "how": "With R3-UNITS-02-side-effect."
+    },
+    {
+     "angle": "regression",
+     "id": "REG-8",
+     "severity": "minor",
+     "file": "research/r3/README.md",
+     "summary": "The new Files row says the review folder holds the findings of a follow-up check, but research/r3/review/findings.json has none.",
+     "fix": "Before the merge, record this verify-fixes run in findings.json's follow_ups, as R1 did. Until then, change the row to: \"The findings of the final review, each with its verdict and status\".",
+     "verdict": {
+      "real": false,
+      "reason": "Already in hand. The row describes this very verify-fixes run (runbook section 7, step 4), which is still running: the night log's last entry launched it after 43f6abb. R1 did the same in the same order: it recorded its verify-fixes run in follow_ups in a later commit (f9a38a7), after the run. The row becomes true once this run is recorded, and the claims check, which runs after the last change to the README, checks it again. Rewording the row now would only have to be undone.",
+      "better_fix": "Before the claims check, record this run (closure and regression, since 7142f5c) in findings.json follow_ups, with each finding's verdict and status, as R1 did. Leave the row as it is."
+     },
+     "status": "answered",
+     "answer": "Not confirmed by the skeptic; see the verdict's reason. Nothing changed."
+    },
+    {
+     "angle": "regression",
+     "id": "REG-9",
+     "severity": "minor",
+     "file": "data/units/iron-harvest.json",
+     "summary": "The three new hero entries mark the Veterancy page \"read, not cited\", but name Change Log #04 and DevBlog #20 without that mark. Anna Kos and William Mason cite neither page, and Olga Morozova does not cite DevBlog #20. Everywhere else in the file an uncited page carries the mark, so these two read as cited sources (and confidence counts only cited pages).",
+     "fix": "Text only, then run `npm run format` and the copy-check:\n- Anna Kos and William Mason: write \"Change Log #04 (https://kingart-games.com/article/92, read, not cited)\" and \"DevBlog #20 (https://kingart-games.com/article/67, read, not cited)\".\n- Olga Morozova: write \"DevBlog #20 (https://kingart-games.com/article/67, read, not cited)\".",
+     "verdict": {
+      "real": false,
+      "reason": "The facts hold: Anna Kos and William Mason cite neither page, and Olga cites article/92 but not article/67. But no rule needs the mark. The sources rule in schemas/source-unit.schema.json only asks that an uncited page be named by 'title and site, or its URL' with what it shows, and these entries do that. Whether a page is cited is decided by the sources list, and 'Confidence counts only the cited pages' is worked out from that list, not from a note's wording. The mark is a habit, and not a uniform one: in iron-harvest.json, Olga's cost_band entry names the uncited Iron Harvest Archive page without it, and the Tempest Rising file leaves 68 of its 89 uncited addresses unmarked (Generals: 32 of 107). Part 2 of the copy-check covered both posts. At most a polish.",
+      "better_fix": "Optional, when these entries are next edited: add ', read, not cited' after the two addresses (only article/67 for Olga)."
+     },
+     "status": "answered",
+     "answer": "Not confirmed by the skeptic; see the verdict's reason. Nothing changed."
+    }
+   ]
+  }
+ ],
  "findings": [
   {
    "dimension": "data",
