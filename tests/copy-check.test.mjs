@@ -10,7 +10,7 @@ import path from 'node:path'
 import { describe, it, after } from 'node:test'
 import {
   REPO_ROOT, MAX_NETWORK_FAILURES, NO_POST_TEXT, ONLY_MATCHED_NOTHING, cachePath, copyCheck, exitCode, formatCopyReport, markdownBlocks, noteFiles,
-  noteTexts, pageText, steamNewsText, urlsIn,
+  noteTexts, pageGrams, pageText, pageTexts, sourceOnly, steamNewsText, urlsIn, HOST_MIN_DELAY, SOURCE_ONLY_OFFLINE, USER_AGENT,
 } from '../scripts/copy-check.mjs'
 
 const COPY_CHECK = path.join(REPO_ROOT, 'scripts/copy-check.mjs')
@@ -342,3 +342,161 @@ describe('copy-check --only', () => {
   })
 })
 
+
+// A wiki page as a reader sees it holds text that its source only names: a template kept on another page draws
+// the ability box in. The check reads both the source and the rendered page.
+const WIKI = 'https://w.example/wiki/Test_Drone'
+const WIKI_SOURCE = "'''Test Drone''' is a small scout.\n{{DroneLeapAbility}}\n[[Category:Drones]]"
+const WIKI_RENDERED = '<div class="mw-parser-output"><p><b>Test Drone</b> is a small scout.</p>' +
+  '<table><tr><th>Leap</th></tr><tr><td>The drone leaps inside an enemy vehicle and eats it from within.</td></tr></table></div>'
+
+// Seeds a wiki page in a throwaway repo's cache: with its rendered page, or (an older cache) with the source only.
+function seedWiki(root, url, { rendered } = {}) {
+  const file = cachePath(path.join(root, '.cache', 'sources'), url)
+  fs.mkdirSync(path.dirname(file), { recursive: true })
+  fs.writeFileSync(file, JSON.stringify({ url, format: 'wikitext', raw: WIKI_SOURCE, ...(rendered ? { rendered } : {}) }))
+}
+
+describe('copy-check on rendered wiki pages', () => {
+  it('reads a wiki page as its source and as the rendered page, and never joins the two into one run', () => {
+    const page = { url: WIKI, format: 'wikitext', raw: 'one two three four five', rendered: '<p>six seven eight nine ten</p>' }
+    assert.deepEqual(pageTexts(page).map(t => t.trim()), ['one two three four five', 'six seven eight nine ten'])
+    assert.equal(pageGrams(page, 5).size, 2)
+    assert.equal(pageGrams(page, 6).size, 0, 'no six-word run spans the source and the rendered page')
+    assert.equal(sourceOnly(page), false)
+    assert.equal(sourceOnly({ format: 'wikitext', raw: 'x' }), true)
+    assert.equal(sourceOnly({ format: 'html', raw: 'x' }), false)
+    assert.deepEqual(pageTexts({ format: 'wikitext', raw: 'one two' }), ['one two'])
+    assert.match(pageText(page), /five\n\s*six/)
+  })
+
+  it('finds a run that only the rendered page holds: text a template on another page draws in', () => {
+    const root = tempRepo([WIKI])
+    seedWiki(root, WIKI, { rendered: WIKI_RENDERED })
+    const r = cli(root, '--offline')
+    assert.equal(r.status, 1, r.stdout)
+    assert.match(r.stdout, /FOUND {4}data\/units\/g\.json g\.f\.test-drone \/summary/)
+    assert.match(r.stdout, /"drone leaps inside an enemy vehicle and eats it from within"/)
+  })
+
+  it('offline, compares a page cached with its source only, lists it as SOURCE ONLY and ends incomplete', () => {
+    const root = tempRepo([WIKI])
+    seedWiki(root, WIKI)
+    const r = cli(root, '--offline')
+    assert.equal(r.status, 3, r.stdout)
+    assert.doesNotMatch(r.stdout, /FOUND/)
+    assert.match(r.stdout, /^pages checked: 1 \(1 from cache, 0 fetched\); not checked: 0; source only: 1$/m)
+    assert.match(r.stdout, new RegExp(`^SOURCE ONLY \\(${SOURCE_ONLY_OFFLINE}\\): 1 wiki page\\(s\\) compared with the page source, not with the rendered page$`, 'm'))
+    assert.match(r.stdout, /^INCOMPLETE: 1 wiki page\(s\) compared with the page source only \(listed above\); no shared runs in the 1 page\(s\) checked$/m)
+  })
+
+  it('still reports a run in the source of a page cached with its source only', async () => {
+    const root = tempRepo([WIKI])
+    const file = cachePath(path.join(root, '.cache', 'sources'), WIKI)
+    fs.mkdirSync(path.dirname(file), { recursive: true })
+    fs.writeFileSync(file, JSON.stringify({ url: WIKI, format: 'wikitext', raw: 'The [[drone]] leaps inside an enemy vehicle and eats it.' }))
+    const res = await copyCheck({ ...quick(root), offline: true })
+    assert.equal(res.findings.length, 1)
+    assert.equal(res.partly.length, 1)
+    assert.equal(exitCode(res), 1)
+    assert.match(formatCopyReport(res), /^INCOMPLETE: 1 wiki page\(s\) compared with the page source only \(listed above\)$/m)
+  })
+
+  it('exitCode() is 3 when a page was compared with its source only', () => {
+    assert.equal(exitCode({ findings: [], notChecked: [], partly: [['u', 'why']] }), 3)
+    assert.equal(exitCode({ findings: [], notChecked: [], partly: [] }), 0)
+    assert.equal(exitCode({ findings: [], notChecked: [] }), 0)
+  })
+
+  // A local wiki: /api.php answers action=parse with the props asked for.
+  async function wikiServer({ withText = true } = {}) {
+    const asked = []
+    const s = await server((req, res) => {
+      const u = new URL(req.url, 'http://x')
+      if (u.pathname !== '/api.php') { res.writeHead(404); res.end('no'); return }
+      asked.push({ prop: u.searchParams.get('prop'), page: u.searchParams.get('page'), agent: req.headers['user-agent'] })
+      const parse = { title: u.searchParams.get('page'), wikitext: { '*': WIKI_SOURCE }, ...(withText ? { text: { '*': WIKI_RENDERED } } : {}) }
+      res.writeHead(200, { 'content-type': 'application/json' })
+      res.end(JSON.stringify({ parse }))
+    })
+    return { ...s, asked }
+  }
+
+  it('asks the wiki for the source and the rendered page in one request, caches both and finds the run', async () => {
+    const { base, hits, asked } = await wikiServer()
+    const url = `${base}/wiki/Test_Drone`
+    const root = tempRepo([url])
+    const res = await copyCheck(quick(root))
+    assert.equal(asked.filter(a => a.page === 'Test Drone').length, 1, 'one request for the page')
+    assert.equal(asked.find(a => a.page === 'Test Drone').prop, 'wikitext|text')
+    assert.equal(asked[0].agent, USER_AGENT)
+    assert.equal(res.fetched, 1)
+    assert.equal(res.partly.length, 0)
+    assert.equal(res.findings.length, 1)
+    const cached = JSON.parse(fs.readFileSync(cachePath(path.join(root, '.cache', 'sources'), url), 'utf8'))
+    assert.equal(cached.format, 'wikitext')
+    assert.equal(cached.raw, WIKI_SOURCE)
+    assert.equal(cached.rendered, WIKI_RENDERED)
+    const before = hits.n
+    const again = await copyCheck(quick(root))
+    assert.equal(hits.n, before, 'a page cached with both is not fetched again')
+    assert.equal(again.fromCache, 1)
+  })
+
+  it('fetches a page again when the cache holds its source only, and then finds the run', async () => {
+    const { base, asked } = await wikiServer()
+    const url = `${base}/wiki/Test_Drone`
+    const root = tempRepo([url])
+    seedWiki(root, url)
+    const res = await copyCheck(quick(root))
+    assert.equal(asked.length >= 1, true)
+    assert.equal(res.fetched, 1)
+    assert.equal(res.fromCache, 0)
+    assert.equal(res.partly.length, 0)
+    assert.equal(res.findings.length, 1)
+    assert.equal(exitCode(res), 1)
+  })
+
+  it('keeps the cached source and lists the page as source only when the page cannot be fetched again', async () => {
+    const { base } = await server((req, res) => { res.writeHead(500); res.end('down') })
+    const url = `${base}/wiki/Test_Drone`
+    const root = tempRepo([url])
+    seedWiki(root, url)
+    const res = await copyCheck(quick(root))
+    assert.equal(res.notChecked.length, 0)
+    assert.equal(res.pagesChecked, 1)
+    assert.equal(res.fromCache, 1)
+    assert.deepEqual(res.partly.map(([u]) => u), [url])
+    assert.match(res.partly[0][1], /^HTTP 500/)
+    assert.equal(exitCode(res), 3)
+  })
+
+  it('lists a page as source only when the wiki gives no rendered page', async () => {
+    const { base } = await wikiServer({ withText: false })
+    const url = `${base}/wiki/Test_Drone`
+    const res = await copyCheck(quick(tempRepo([url])))
+    assert.equal(res.fetched, 1)
+    assert.deepEqual(res.partly, [[url, 'the wiki gave the page source but no rendered page']])
+    assert.equal(exitCode(res), 3)
+  })
+
+  it('checks notes against the rendered page of a cached wiki page too', () => {
+    const root = tempRepo([])
+    seedWiki(root, WIKI, { rendered: WIKI_RENDERED })
+    fs.mkdirSync(path.join(root, 'notes'))
+    fs.writeFileSync(path.join(root, 'notes/n.md'), 'A report says the drone leaps inside an enemy vehicle and eats it from within.\n')
+    const r = cli(root, '--offline', '--also', path.join(root, 'notes'))
+    assert.equal(r.status, 1, r.stdout)
+    assert.match(r.stdout, /FOUND {4}notes\/n\.md line 1/)
+  })
+
+  it('waits longer between two requests to a site whose terms ask for it', async () => {
+    const { base } = await wikiServer()
+    assert.equal(HOST_MIN_DELAY['liquipedia.net'], 30000)
+    const urls = [`${base}/wiki/A`, `${base}/wiki/B`]
+    const t0 = Date.now()
+    await copyCheck({ ...quick(tempRepo(urls)), hostDelay: { '127.0.0.1': 400 } })
+    const slow = Date.now() - t0
+    assert.ok(slow >= 400, `two requests to one site took ${slow} ms, the second should wait 400 ms`)
+  })
+})

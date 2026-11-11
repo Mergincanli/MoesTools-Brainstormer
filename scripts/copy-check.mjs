@@ -14,15 +14,22 @@
 // appears in our own wording (any string in data/ or schemas/, or any text in research/registry-notes/,
 // leaving out files under an --also folder) is ignored: that is our own text quoted back, not a copy.
 //
-// Pages come from MediaWiki sites (Fandom, wiki.gg, StrategyWiki, Halopedia, Wikipedia and others) as
-// wikitext through the site's api.php (action=parse), and from other sites as HTML turned into text.
+// Pages come from MediaWiki sites (Fandom, wiki.gg, StrategyWiki, Halopedia, Wikipedia and others) through
+// the site's api.php (action=parse), and from other sites as HTML turned into text. A wiki page is read twice
+// over in one request: its source (wikitext) and its rendered page, the text a reader sees. The source alone
+// misses what a template kept on another page draws in, such as an ability box. A wiki page whose rendered
+// version is not in the cache is fetched again; offline it is compared with its source only and listed as
+// SOURCE ONLY, and the run then ends incomplete.
 // Every page is cached under .cache/sources/ (git-ignored), so later runs work offline. Requests go one
 // at a time with a pause between them, and a 429 or 503 answer is retried with a growing wait (Retry-After
 // when the site gives one). A dropped connection, a timeout or a temporary DNS failure is tried again at
 // most twice; other network errors are not retried. After three network failures in a row the network
 // counts as unavailable: nothing more is fetched and the remaining uncached pages are listed as not checked.
 // A Steam news post is read from the page's data attribute (its markup holds only the store's frame), and web
-// addresses in a record's prose are not wording.
+// addresses in a record's prose are not wording. A site can ask for a longer pause (HOST_MIN_DELAY). Set
+// COPY_CHECK_CONTACT to add a contact to the User-Agent header for sites whose terms ask for one.
+// scripts/plant.mjs tests whether the check reads what a reader of a page sees: run it on one page of
+// every new site before a batch cites it.
 //
 // This needs the network, so CI does not run it: research agents and checkers run it by hand. Behind a
 // proxy it needs Node.js 22.21 or newer (see rerunWithProxy below).
@@ -44,7 +51,8 @@
 //   2  bad arguments, an --also folder that does not exist, or a file under it that is not valid JSON
 //   3  no shared runs were found, but some pages were not checked (offline and not cached, over
 //      --max-fetch, an HTTP or network error, the network unavailable, a Steam news page that holds no post,
-//      or an --only TEXT that matched nothing), so the check is incomplete
+//      or an --only TEXT that matched nothing) or a wiki page was compared with its source only, so the
+//      check is incomplete
 import crypto from 'node:crypto'
 import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
@@ -52,7 +60,10 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const USER_AGENT = 'UnitForgeCopyCheck/1.0 (checks research notes for copied wording; one request at a time)'
+// Some sites' terms ask for a contact in the User-Agent (Liquipedia's API terms do). It is not kept in the
+// repository: set COPY_CHECK_CONTACT (a web address or an email address) to add one.
+const CONTACT = (process.env.COPY_CHECK_CONTACT || '').trim()
+export const USER_AGENT = `UnitForgeCopyCheck/1.1 (checks research notes for copied wording; one request at a time${CONTACT ? `; ${CONTACT}` : ''})`
 
 // Keys whose values are names, titles, ids or citations rather than our own prose.
 const NOT_PROSE = new Set([
@@ -189,12 +200,37 @@ export function steamNewsText(h) {
   return parts.join('\n').replace(/\[\/?[a-z0-9*]+(?:=[^\]]*)?\]/gi, ' ') // [h3], [/url], [url=...], [*]
 }
 
-/** The plain text of a cached page, or null when it has none to compare (a Steam news page without its post). */
-export function pageText(page) {
-  if (page.format === 'wikitext') return wikitextToText(page.raw)
-  if (STEAM_NEWS.test(page.url || '')) return steamNewsText(page.raw)
-  return htmlToText(page.raw)
+/**
+ * The plain texts of a cached page, or null when it has none to compare (a Steam news page without its post).
+ * A wiki page gives two: its source, and its rendered page when the cache holds it (what a reader sees,
+ * with the text that templates kept on other pages draw in).
+ */
+export function pageTexts(page) {
+  if (page.format === 'wikitext') {
+    return typeof page.rendered === 'string' ? [wikitextToText(page.raw), htmlToText(page.rendered)] : [wikitextToText(page.raw)]
+  }
+  if (STEAM_NEWS.test(page.url || '')) { const t = steamNewsText(page.raw); return t === null ? null : [t] }
+  return [htmlToText(page.raw)]
 }
+
+/** The texts of pageTexts() as one text, or null. For comparing, use pageGrams(): a run never spans two texts. */
+export function pageText(page) {
+  const texts = pageTexts(page)
+  return texts === null ? null : texts.join('\n')
+}
+
+/** Every n-word run in a cached page's texts, or null when the page has no text to compare. */
+export function pageGrams(page, n) {
+  const texts = pageTexts(page)
+  if (texts === null) return null
+  const out = new Set()
+  for (const t of texts) for (const g of grams(words(t), n)) out.add(g)
+  return out
+}
+
+/** A wiki page cached with its source only: what a reader sees was not read. */
+export const sourceOnly = page => page.format === 'wikitext' && typeof page.rendered !== 'string'
+export const SOURCE_ONLY_OFFLINE = 'offline, and the cache holds the page source but not the rendered page'
 export const NO_POST_TEXT = 'a Steam news page that holds no post text'
 export const ONLY_MATCHED_NOTHING = '--only matched no cited, linked or cached page'
 
@@ -237,6 +273,11 @@ function safeDecode(s) {
 
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 
+// The shortest pause between two requests to one site, where the site's terms ask for more than --delay.
+// Liquipedia's API terms (liquipedia.net/api-terms-of-use, read on 11 November 2026) allow one action=parse
+// request per 30 seconds.
+export const HOST_MIN_DELAY = Object.freeze({ 'liquipedia.net': 30000 })
+
 // Network errors worth one more try: a dropped connection, a timeout or a temporary DNS failure. Anything
 // else (connection refused, host not found, a bad certificate) fails the same way the next time.
 const TRANSIENT = new Set(['ECONNRESET', 'ETIMEDOUT', 'EAI_AGAIN', 'UND_ERR_SOCKET', 'UND_ERR_CONNECT_TIMEOUT'])
@@ -257,9 +298,11 @@ function networkCode(e) {
 // network error is retried at most NETWORK_RETRIES times; any other network error throws a NetworkError.
 async function politeGet(url, state) {
   for (let busy = 1, net = 0; ;) {
-    const wait = state.lastRequest + state.delay - Date.now()
+    const host = new URL(url).hostname
+    const hostDelay = (state.hostDelay || HOST_MIN_DELAY)[host] || 0
+    const wait = Math.max(state.lastRequest + state.delay, ((state.lastByHost ||= {})[host] || 0) + hostDelay) - Date.now()
     if (wait > 0) await sleep(wait)
-    state.lastRequest = Date.now()
+    state.lastRequest = state.lastByHost[host] = Date.now()
     state.requests++
     let res
     try {
@@ -299,7 +342,8 @@ async function fetchPage(url, state) {
   const wiki = mediaWikiTarget(url)
   if (wiki) {
     for (const api of wiki.apis) {
-      const q = `${api}?action=parse&page=${encodeURIComponent(wiki.title)}&prop=wikitext&redirects=1&format=json`
+      // One request for both the page source and the rendered page (prop=wikitext|text).
+      const q = `${api}?action=parse&page=${encodeURIComponent(wiki.title)}&prop=wikitext%7Ctext&redirects=1&format=json`
       const res = await politeGet(q, state)
       if (res.status === 404) { await res.body?.cancel(); continue } // no API at this path
       if (!res.ok) throw new Error(`HTTP ${res.status} from ${api}`)
@@ -307,9 +351,9 @@ async function fetchPage(url, state) {
       let data
       try { data = JSON.parse(body) } catch { continue } // not an API here; try the next one
       if (data.error) throw new Error(`wiki API: ${data.error.code}${data.error.info ? ` (${data.error.info})` : ''}`)
-      const wt = data.parse?.wikitext
-      const raw = typeof wt === 'string' ? wt : wt?.['*']
-      if (typeof raw === 'string') return { format: 'wikitext', via: q, raw }
+      const part = v => typeof v === 'string' ? v : v?.['*']
+      const raw = part(data.parse?.wikitext), rendered = part(data.parse?.text)
+      if (typeof raw === 'string') return { format: 'wikitext', via: q, raw, ...(typeof rendered === 'string' ? { rendered } : {}) }
     }
   }
   const res = await politeGet(url, state)
@@ -540,9 +584,10 @@ export async function copyCheck(options = {}) {
   for (const t of opts.only) {
     if (/^https?:\/\//.test(t) && !allUrls.some(u => u.includes(t)) && !fs.existsSync(cachePath(cacheDir, t)) && !urls.includes(t)) urls.push(t)
   }
-  const state = { delay: opts.delay, retryWait: opts.retryWait, log: opts.log, lastRequest: 0, requests: 0 }
+  const state = { delay: opts.delay, retryWait: opts.retryWait, log: opts.log, lastRequest: 0, lastByHost: {}, hostDelay: opts.hostDelay, requests: 0 }
   const pages = new Map() // url -> gram set
   const notChecked = [] // [url, reason]
+  const partly = [] // [url, reason]: wiki pages compared with their source only, not with the rendered page
   let fromCache = 0, fetched = 0, requested = 0, failuresInARow = 0
   for (const url of urls) {
     const file = cachePath(cacheDir, url)
@@ -550,30 +595,39 @@ export async function copyCheck(options = {}) {
     if (fs.existsSync(file) && !opts.refresh) {
       try { page = JSON.parse(fs.readFileSync(file, 'utf8')); cached = true } catch { page = null }
     }
-    if (!page) {
-      if (opts.offline) { notChecked.push([url, 'offline and not cached']); continue }
-      if (failuresInARow >= MAX_NETWORK_FAILURES) { notChecked.push([url, NETWORK_UNAVAILABLE]); continue }
-      if (requested >= opts.maxFetch) { notChecked.push([url, `over --max-fetch ${opts.maxFetch}`]); continue }
-      try {
-        opts.log(`fetching ${url}`)
-        page = { url, fetched: new Date().toISOString(), ...(await fetchPage(url, state)) }
-        fs.mkdirSync(path.dirname(file), { recursive: true })
-        fs.writeFileSync(file, JSON.stringify(page, null, 1) + '\n')
-        requested++ // pages fetched from the network, for --max-fetch
-        failuresInARow = 0
-      } catch (e) {
-        // Only a failure to reach a site at all counts towards the network being down; an HTTP or wiki
-        // API error shows the network works.
-        failuresInARow = e instanceof NetworkError ? failuresInARow + 1 : 0
-        if (failuresInARow === MAX_NETWORK_FAILURES) opts.log(`${MAX_NETWORK_FAILURES} network failures in a row; fetching nothing more`)
-        notChecked.push([url, e.message])
-        continue
+    // A wiki page cached by an older run holds the page source only: read it again for the rendered page. When
+    // that cannot be done, the page is still compared with its source, and listed as source only.
+    const old = page && sourceOnly(page) ? page : null
+    let why = null // why a page that needs fetching was not fetched
+    if (!page || old) {
+      if (opts.offline) why = old ? SOURCE_ONLY_OFFLINE : 'offline and not cached'
+      else if (failuresInARow >= MAX_NETWORK_FAILURES) why = NETWORK_UNAVAILABLE
+      else if (requested >= opts.maxFetch) why = `over --max-fetch ${opts.maxFetch}`
+      else {
+        try {
+          opts.log(`fetching ${url}`)
+          page = { url, fetched: new Date().toISOString(), ...(await fetchPage(url, state)) }
+          cached = false
+          fs.mkdirSync(path.dirname(file), { recursive: true })
+          fs.writeFileSync(file, JSON.stringify(page, null, 1) + '\n')
+          requested++ // pages fetched from the network, for --max-fetch
+          failuresInARow = 0
+        } catch (e) {
+          // Only a failure to reach a site at all counts towards the network being down; an HTTP or wiki
+          // API error shows the network works.
+          failuresInARow = e instanceof NetworkError ? failuresInARow + 1 : 0
+          if (failuresInARow === MAX_NETWORK_FAILURES) opts.log(`${MAX_NETWORK_FAILURES} network failures in a row; fetching nothing more`)
+          why = e.message
+          page = old
+        }
       }
     }
-    const text = pageText({ url, ...page })
-    if (text === null) { notChecked.push([url, NO_POST_TEXT]); continue }
+    if (!page) { notChecked.push([url, why]); continue }
+    const pg = pageGrams({ url, ...page }, n)
+    if (pg === null) { notChecked.push([url, NO_POST_TEXT]); continue }
+    if (sourceOnly(page)) partly.push([url, why || 'the wiki gave the page source but no rendered page'])
     if (cached) fromCache++; else fetched++
-    pages.set(url, grams(words(text), n))
+    pages.set(url, pg)
   }
 
   const findings = [] // { file, id, path, run, urls }
@@ -602,8 +656,8 @@ export async function copyCheck(options = {}) {
       if (!inScope(url)) continue
       seen.add(url)
       if (all.has(url)) continue
-      const text = pageText({ url, ...page })
-      if (text !== null) all.set(url, grams(words(text), n))
+      const pg = pageGrams({ url, ...page }, n)
+      if (pg !== null) all.set(url, pg)
     }
     notePages = all.size
     const own = ownWordingGrams(opts.root, n, opts.also)
@@ -633,7 +687,7 @@ export async function copyCheck(options = {}) {
     if (!matched) notChecked.push([t, ONLY_MATCHED_NOTHING])
   }
   return {
-    urls, allUrls, pagesChecked: pages.size, fromCache, fetched, requests: state.requests, notChecked, findings,
+    urls, allUrls, pagesChecked: pages.size, fromCache, fetched, requests: state.requests, notChecked, partly, findings,
     records: records.length, notes: notes.length, notePages,
   }
 }
@@ -643,9 +697,9 @@ function shownPath(root, file) {
   return (inside(file, root) ? path.relative(root, file) : file).split(path.sep).join('/')
 }
 
-/** 1 when shared runs were found, else 3 when some pages were not checked, else 0. */
+/** 1 when shared runs were found, else 3 when some pages were not checked or only partly, else 0. */
 export function exitCode(res) {
-  return res.findings.length ? 1 : res.notChecked.length ? 3 : 0
+  return res.findings.length ? 1 : res.notChecked.length || res.partly?.length ? 3 : 0
 }
 
 export function formatCopyReport(res, options = {}) {
@@ -653,7 +707,9 @@ export function formatCopyReport(res, options = {}) {
   const lines = []
   const scope = opts.only.length ? `${res.urls.length} of ${res.allUrls.length} cited page(s) (--only)` : `${res.urls.length} cited page(s)`
   lines.push(`copy-check: ${scope} in ${res.records} record(s)${res.notes ? ` and ${res.notes} note file(s)` : ''}; reporting shared runs of ${opts.minWords}+ words`)
-  lines.push(`pages checked: ${res.pagesChecked} (${res.fromCache} from cache, ${res.fetched} fetched); not checked: ${res.notChecked.length}`)
+  const partly = res.partly || []
+  lines.push(`pages checked: ${res.pagesChecked} (${res.fromCache} from cache, ${res.fetched} fetched); not checked: ${res.notChecked.length}` +
+    (partly.length ? `; source only: ${partly.length}` : ''))
   if (res.notes) lines.push(`notes (--also): ${res.notes} file(s) checked against ${res.notePages} page(s), the cache and every page fetched`)
   for (const f of res.findings) {
     lines.push('')
@@ -670,19 +726,32 @@ export function formatCopyReport(res, options = {}) {
     lines.push('', `NOT CHECKED (${why}): ${us.length} page(s)`)
     for (const u of us) lines.push(`  ${u}`)
   }
+  const partlyBy = new Map()
+  for (const [u, why] of partly) {
+    if (!partlyBy.has(why)) partlyBy.set(why, [])
+    partlyBy.get(why).push(u)
+  }
+  for (const [why, us] of partlyBy) {
+    lines.push('', `SOURCE ONLY (${why}): ${us.length} wiki page(s) compared with the page source, not with the rendered page`)
+    for (const u of us) lines.push(`  ${u}`)
+  }
   lines.push('')
   if (res.findings.length) lines.push(`FAILED: ${res.findings.length} shared run(s); rewrite them in your own words`)
-  if (res.notChecked.length) {
-    lines.push(`INCOMPLETE: ${res.notChecked.length} page(s) not checked (listed above)` +
+  if (res.notChecked.length || partly.length) {
+    const what = [
+      ...(res.notChecked.length ? [`${res.notChecked.length} page(s) not checked`] : []),
+      ...(partly.length ? [`${partly.length} wiki page(s) compared with the page source only`] : []),
+    ].join(' and ')
+    lines.push(`INCOMPLETE: ${what} (listed above)` +
       (res.findings.length ? '' : `; no shared runs in the ${res.pagesChecked} page(s) checked`))
   }
-  if (!res.findings.length && !res.notChecked.length) lines.push('OK: no shared runs')
+  if (!res.findings.length && !res.notChecked.length && !partly.length) lines.push('OK: no shared runs')
   return lines.join('\n')
 }
 
 // Node's fetch ignores HTTPS_PROXY unless NODE_USE_ENV_PROXY=1 (Node 22.21+ and 24.5+), so behind a proxy
 // the script runs itself again with that set.
-function rerunWithProxy() {
+export function rerunWithProxy() {
   const proxied = process.env.HTTPS_PROXY || process.env.https_proxy
   if (!proxied || process.env.NODE_USE_ENV_PROXY) return null
   const args = ['--disable-warning=UNDICI-EHPA', ...process.execArgv, ...process.argv.slice(1)] // quiet "experimental" notice
