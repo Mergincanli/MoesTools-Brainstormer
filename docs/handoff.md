@@ -29,7 +29,7 @@ Written on 10 November 2026, when the project moved from the session that ran it
   | 6 | App (GitHub Pages) | not started |
 
 - **Plan change of 24 October 2026** (Mustafa):
-  - R3 now, then a new R4: StarCraft II (Legacy of the Void only: multiplayer, Archon mode, co-op Allied Commanders and its campaign, all three races), Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech.
+  - R3 now, then a new R4: StarCraft II (Legacy of the Void only), Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech. On 11 November 2026 he changed the StarCraft II scope: multiplayer only, and every unit of the three races except the workers, about 50 (section 4).
   - Then one rule-fix round for R3's and R4's rule problems (his answer 3A), then steps 4 to 6.
   - R2 (Tiberian Dawn, Tiberian Sun, Tiberium Wars, Renegade) is paused with its prep kept in [research/r2/](../research/r2/README.md). Fourteen other games are shelved until after the app.
 - **Merged to `main` so far:**
@@ -38,7 +38,8 @@ Written on 10 November 2026, when the project moved from the session that ran it
   - step 2;
   - batch R1 (Red Alert 1, 2 and 3; pull request #4);
   - the rule-fix round after R1, which made word lists 1.1.0 (pull request #5);
-  - batch R3, with the plan change of 24 October 2026 (pull request #6).
+  - batch R3, with the plan change of 24 October 2026 (pull request #6);
+  - the status lines after R3's merge, the games registry's status and the StarCraft II plan change of 11 November 2026 (pull request #7).
 
 ## 2. The commits on pull request #6
 
@@ -109,7 +110,9 @@ CI runs four check jobs on every push; it was green on each head it has finished
       - Until the tool can read rendered pages, a batch is not clean without the one-off comparison: save each wiki page's rendered version as an html page in a throwaway root's cache, copy `data/`, `schemas/` and the batch's `research/` folders beside it, and run the copy-check there with `--offline`.
    2. **Then the site test:** run the plant test on one page from each site R4 will cite, and show that the copy-check reads the page's real text. Results of 11 November, run ahead as a tool check: all planted passages flagged on www.halopedia.org, halo.fandom.com, www.sarna.net, mwo.fandom.com, planetaryannihilation.fandom.com, palobby.com, news.blizzard.com and www.halowaypoint.com (its news index; test a Halo Wars 2 page too). liquipedia.net: 4 of 5 on a saved page; the site limits automated reading, so read its API terms before citing it at volume. mwomercs.com: 4 of 5 (the miss is a cookie notice). planetaryannihilation.com refuses the request (HTTP 403): check by hand if it is cited. A Steam news index page holds no post; single posts are read. Repeat the test for every site the prep adds.
    3. **The line for the agent briefs,** approved by Mustafa on 11 November 2026 with this wording. Add it to the runbook and to the agent briefs in `research/workflows/` at R4's prep: "Evidence: give the page's address and where on the page it is (the section or box), and say in your own words what it shows. Never copy six or more words in a row from a page, in any field of your answer, your notes or a file, the evidence included; give a figure or a name as it is, and paraphrase everything else."
-   4. **The StarCraft II scope, to confirm with Mustafa before the trim.** His answer of 11 November keeps the count (option A). His words: "About 15 StarCraft II Legacy of void units, all units per race. (only Legacy of Void version and the units from the base game)". The plan's scope line says multiplayer, Archon mode, co-op and the campaign. Ask him whether "the units from the base game" narrows that, and whether the count stays 5 per race. Change the plan only with his answer.
+   4. **StarCraft II** (Mustafa, 11 November 2026; the plan's section 2.2 has the full text): every Legacy of the Void multiplayer unit except the three workers, about 50, with no trim. Multiplayer only: no co-op-only or campaign-only units. The plan lists what is not a unit of its own (the Larva, the Cocoon, the MULE, the Changeling, the Locust, the Broodling, the Interceptor) and says that a unit that morphs or merges from another is one. The prep decides by the field rules as written whether the Hellion and the Hellbat are one unit or two.
+   5. **Liquipedia, before any fill:** report to Mustafa how Liquipedia will be read within its terms of use, now that about 50 units cite it. On 11 November the site answered a headless browser with a rate-limit notice, and its API refused a request without compression and later rate-limited the session. Read its API terms first.
+   6. **The fill rule for StarCraft II** (Mustafa, 11 November 2026): code StarCraft II one race at a time. After the first race, report to him the tokens used per unit against the estimate. The estimate is 0.44 million tokens per unit for the fill, from R3's fill (about 11 million for 25 units). Measure it as the fill workflows' own token totals for that race, divided by its units. Above one and a half times the estimate, 0.66 million per unit, stop and ask him. Otherwise go on. For a first race of 16 units that is about 7 million expected, and a stop above about 10.6 million.
 
 **Known and left alone:** `npm run copy-check -- --offline --also data/units` finds coincidental six-word runs in R1's units (13 on 11 November 2026; the count depends on the cache), against pages that other records cite or name, most of them cited by R1's own pattern files, such as "while it is in the air" (Halopedia's Plasma grenade page, cited by throw-explosive). None is a page those units cite, and none is in R3's units.
 
@@ -118,11 +121,14 @@ CI runs four check jobs on every push; it was green on each head it has finished
 **Decided on 11 November 2026:**
 
 1. **Pull request #6:** he approved the plan change of 24 October 2026, the wording change in `schemas/game.schema.json` (no rule changes) and the merge. The merge commit message records it.
-2. **The StarCraft II count:** option A, keep about 15 units of Legacy of the Void. The plan's line stands. His note on the scope is to be confirmed before R4's trim (section 3, "What is left").
+2. **StarCraft II:** every Legacy of the Void multiplayer unit except the three workers, about 50; multiplayer only. He approved the new plan lines (the StarCraft II sentence and the size target, now about 140 units before the generator) and the registry line. In the fill, StarCraft II is coded one race at a time, with a report after the first race (section 3, "What is left").
 3. **The copy-check and rendered pages:** option A, as the first step of R4's prep, with tests. It passes only when the StarCraft wiki plant test flags 5 of 5. The plant test goes into the repository as a script that can be run again.
 4. **The line for the agent briefs:** approved, with his wording (section 3, "What is left").
 5. **The night shift:** leave it off.
 6. **R4:** not until he says so.
+7. **The games registry's `status`:** the six games of R1 and R3 say `done`, and the schema describes the field. He approved that wording change in `schemas/`.
+8. **Liquipedia:** before any fill, a report on how it will be read within its terms (section 3, "What is left").
+9. **Models for the agents:** the session itself may run on the most capable model. Every work agent runs on the family below it, at the highest effort. Set the model on every agent call, so that no agent takes the session's model. Model names are not written in files: if in doubt, ask him.
 
 **Still open:**
 
@@ -141,7 +147,7 @@ CI runs four check jobs on every push; it was green on each head it has finished
 The procedure is [docs/research-runbook.md](research-runbook.md): its sections 1 to 10, the state file and night log, decisions, Git and safety. [CLAUDE.md](../CLAUDE.md) lists the rules that matter most. The ones learned the hard way:
 
 - **Spend limits stop workflows part way.** Each agent keeps progress notes in its workspace (`.progress/`), so a resumed run goes on from them. `resumeFromRunId` works only within the session that launched the run. A new session re-runs the missing agents with the same script and arguments.
-- **At most two workflows at once.** Mustafa wants efficient use of tokens. A fill job of two units costs about 0.5 to 1 million tokens; the R3 fill as a whole cost about 11 million.
+- **At most two workflows at once.** Mustafa wants efficient use of tokens. A fill job of two units costs about 0.5 to 1 million tokens; the R3 fill as a whole cost about 11 million. R3 in all cost about 60 million new tokens (new input, cache writes and output): about 40 million measured on 10 and 11 November, the fill's 11 million, and a guess of about 9 million for the prep and the opening check, which were not recorded. The estimate given to Mustafa for R4 with about 86 units is 100 to 135 million.
 - **The copy-check finds six-word runs in agent text every time.** This happens most in reports, hesitations and uncertain notes, and in older text once a new page is cited. Run it on the whole record before every commit, and reword only the text, never a coded value.
 - **Tests that read the live data can break when units are added.** Fix the test without weakening it, as in 6c817f1.
 - **The copy-check reads a wiki page's source text, not the page a reader sees.** Text that a template kept on another page draws in is missed (section 3, item 7). A script-drawn page can be missed too, as Steam news posts were. Test each new site before a fill.
