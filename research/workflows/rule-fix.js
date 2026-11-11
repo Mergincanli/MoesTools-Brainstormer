@@ -13,6 +13,19 @@ export const meta = {
 // lists, field rules and validator checks change only after he approves it (runbook, "Decisions").
 const REPO = '/home/user/MoesTools-Brainstormer'
 const R = args.round
+
+// Rules every agent gets with its brief, word for word (docs/research-runbook.md, "The quality bar"): the rule on
+// evidence that Mustafa approved on 11 November 2026, tool problems reported apart from the hesitations, and how to
+// read a wiki page. args.batch.rules (args.round.rules in a rule-fix round) adds a batch's own rules, such as a
+// site that must not be fetched.
+const EVIDENCE_RULE = 'Evidence: give the page\'s address and where on the page it is (the section or box), and say in your own words what it shows. Never copy six or more words in a row from a page, in any field of your answer, your notes or a file, the evidence included; give a figure or a name as it is, and paraphrase everything else.'
+const TOOL_RULE = 'Tool problems: when a tool fails you or cannot do its job (a script that crashes, a check that cannot read a page, a site that refuses you), list it in tool_problems, apart from your hesitations: the tool, what you asked of it and what happened. Leave the list empty when there were none.'
+const WIKI_RULE = 'Wiki pages: a page\'s source (prop=wikitext) leaves out what a template kept on another page draws in, such as an ability box. Ask the wiki\'s API for prop=wikitext|text and read the rendered text as well.'
+const BATCH_RULES = (args.batch && args.batch.rules) || (args.round && args.round.rules) || ''
+const RULES = `## Rules for every answer\n- ${EVIDENCE_RULE}\n- ${TOOL_RULE}\n- ${WIKI_RULE}${BATCH_RULES ? `\n- For this batch: ${BATCH_RULES}` : ''}`
+const TOOL_PROBLEMS = { type: 'array', items: { type: 'string' }, description: 'tool problems, one line each: the tool, what you asked of it and what happened; empty when there were none' }
+// ask() is agent() with the rules at the end of the brief and a tool_problems list in the answer.
+const ask = (prompt, opts = {}) => agent(`${prompt}\n\n${RULES}`, opts.schema ? { ...opts, schema: { ...opts.schema, properties: { ...opts.schema.properties, tool_problems: TOOL_PROBLEMS } } } : opts)
 if (!args.progress) throw new Error('args.progress is required: a folder outside the repository for the agents\' notes (runbook, "Progress notes")')
 if (!args.ws) throw new Error('args.ws is required: the folder for the scratch copies, <scratchpad>/r<N>/<phase>')
 
@@ -40,7 +53,7 @@ A usage limit can cut you off part way, and you would then be started again with
 - Look there first. If the notes are for another task (their first line names the task), move them into ${dir}/old/ and start fresh. If they end with DONE, write your answer from them without redoing the work. Otherwise go on from where they stop, without redoing the steps they mark done.
 - A new notes file starts with one line naming your task. After each step you finish (an item drafted or tested, a check run), add a line or two: what is done, what you found and where, what comes next. Keep them short: just enough to write your answer without redoing the work.
 - When the work is done, add a last line DONE, then give your answer.
-Pages fetched before are cached in ${root}/.cache/sources/<site>/ (one JSON file per page, named after its path; the raw field holds the page text): look there before fetching a page. Read long files and pages in parts, by searching for the section you need.`
+Pages fetched before are cached in ${root}/.cache/sources/<site>/ (one JSON file per page, named after its path; the raw field holds the page text or, for a wiki page, its source, and the rendered field holds the rendered wiki page): look there before fetching a page. Read long files and pages in parts, by searching for the section you need.`
 
 const COMMON = `Unit Forge (repo ${REPO}; read only for you: do not edit, commit or push anything in it) is a research database of real RTS and shooter units, coded with fixed word lists (version 1.1.0, approved), that feeds a generator of original unit concepts for a top-down team shooter. Batch ${R.after.toUpperCase()} is merged. Its agents reported rule problems (${args.problems}, each with the rule, the problem, the units and a proposed fix). Mustafa chose a rule-fix round before the next batch: analysts turn each proposed fix into exact rule changes, a skeptic checks each against the ${R.after.toUpperCase()} codings, Mustafa approves the set as word lists ${R.version}, and then the ${R.after.toUpperCase()} units they touch are recoded.
 Where the rules live: the word lists are data/vocab/*.json; the field rules are the descriptions in schemas/*.json and the Conventions text in scripts/build-docs.mjs; scripts/build-docs.mjs generates docs/vocabularies.md, docs/fields.md and docs/samples.md from them, so never edit those three, edit their sources. The validator's rule checks are in scripts/validate.mjs, with tests in tests/. The game-level notes are research/registry-notes/games-${R.after}.md and the registry data/games.json. The units are data/units/*.json.
@@ -65,8 +78,8 @@ ${JSON.stringify(draft.items, null, 1)}`
 
 const out = await pipeline(
   args.groups,
-  g => agent(`${COMMON}\n\n${saving(`${args.progress}/draft-${g.label}`, REPO)}\n\n${DRAFT_TASK(g)}`, { label: `draft:${g.label}`, phase: 'Draft', schema: DRAFT }),
-  (draft, g) => draft && agent(`${COMMON}\n\n${saving(`${args.progress}/test-${g.label}`, REPO)}\n\n${TEST_TASK(g, draft)}`, { label: `verify:${g.label}`, phase: 'Test', schema: VERDICTS })
+  g => ask(`${COMMON}\n\n${saving(`${args.progress}/draft-${g.label}`, REPO)}\n\n${DRAFT_TASK(g)}`, { label: `draft:${g.label}`, phase: 'Draft', schema: DRAFT }),
+  (draft, g) => draft && ask(`${COMMON}\n\n${saving(`${args.progress}/test-${g.label}`, REPO)}\n\n${TEST_TASK(g, draft)}`, { label: `verify:${g.label}`, phase: 'Test', schema: VERDICTS })
     .then(v => ({ label: g.label, draft: draft.items, verdicts: v ? v.verdicts : null, unverified: !v })),
 )
 const groups = out.filter(Boolean)
@@ -77,7 +90,7 @@ const confirmed = tested.flatMap(r => r.draft.map(d => {
   const v = r.verdicts.find(x => x.item === d.item)
   return v && v.confirmed ? { group: r.label, item: d.item, edits: v.edits && v.edits.length ? v.edits : d.edits, recodes: v.recodes && v.recodes.length ? v.recodes : d.recodes } : null
 }).filter(Boolean))
-const whole = confirmed.length ? await agent(`${COMMON}\n\n${saving(`${args.progress}/whole-all`, REPO)}\n\n## Your job: the whole set
+const whole = confirmed.length ? await ask(`${COMMON}\n\n${saving(`${args.progress}/whole-all`, REPO)}\n\n## Your job: the whole set
 Make a scratch copy: sh ${REPO}/research/workflows/mkws.sh ${args.ws}/ws-all. Apply every item below, in the order given, each item's edits in order. List each clash: an edit whose old text an earlier item already changed, two items that change the same rule in different ways, or rules that now contradict each other; give the fix for each. Then run npm run check:merge in the copy and report what it showed (the vocab-diff test always fails in a copy, which has no git history; leave that one out). Last, merge the recodes per unit and path, and list every unit and path that two items recode differently as a clash.
 
 ${JSON.stringify(confirmed, null, 1)}`, { label: 'whole:all', phase: 'Whole set', schema: WHOLE }) : null
