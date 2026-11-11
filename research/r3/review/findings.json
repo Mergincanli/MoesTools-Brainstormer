@@ -225,6 +225,284 @@
      "answer": "Not confirmed by the skeptic; see the verdict's reason. Nothing changed."
     }
    ]
+  },
+  {
+   "run": "research/workflows/verify-fixes.js, angle claims, on the report at c04f1a1 and the draft pull-request description, on 11 November 2026",
+   "counts": {
+    "claims_checked": 147,
+    "claims_that_held": 133,
+    "found": 11,
+    "real": 11,
+    "refuted": 0,
+    "fixed": 11
+   },
+   "note": "Every number and factual claim of the two texts was recomputed from the files. The draft is kept outside the repository until it is posted, so a fix to it has no commit of its own. The evidence is kept outside the repository.",
+   "findings": [
+    {
+     "angle": "claims",
+     "id": "C1",
+     "severity": "major",
+     "file": "the draft pull-request description",
+     "summary": "PR description line 17 (Decisions needed, item 2, StarCraft II count): the recommended option gives a false reason. Keeping about 15 does not keep R4 near the size of R1 or R3. With 15 for StarCraft II and the plan's usual 9 per game for R4's other four games, R4 holds about 51 units, nearly twice R1 (28) or R3 (27).",
+     "fix": "Replace line 17 with: '- A (recommended): keep about 15 (5 per race), the number R4's prep is planned on. With about 9 units for each of R4's other four games, R4 holds about 51 units (R1 has 28, R3 has 27), and the three batches together about 106, near the plan's target of about 100 before the generator.' Replace line 18 with: '- B: give another number before R4's prep starts. For example, 9 (3 per race) brings R4 to about 45 units and the three batches to about 100.'",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. R1 has 28 units and R3 has 27. R4 is five games, and the plan keeps about 9 per game, with StarCraft II at about 15. That gives R4 about 51 units, nearly twice the size of R1 or R3, so the reason given for option A is false. No StarCraft II count brings R4 near 27 or 28: even with none, R4 would hold about 36. The reason actually points to B, because 9 for StarCraft II lands exactly on the target of about 100. The proposed fix's numbers are right: 15 + 36 = 51, total 106; 9 + 36 = 45, total 100.",
+      "better_fix": "Use the proposed fix, with a true reason for A. For example: '- A (recommended): keep about 15 (5 per race), the number the plan holds now, so each of the three races gets 5. With about 9 for each of R4's other four games, R4 holds about 51 units (R1 has 28, R3 has 27), and the three batches together about 106, near the plan's target of about 100.' Keep B as proposed: 9 (3 per race) gives about 45 units, and about 100 in all."
+     },
+     "status": "fixed",
+     "commit": "4920f1a",
+     "how": "Fixed in the draft with the skeptic's wording: option A gives the sums, and option B an example."
+    },
+    {
+     "angle": "claims",
+     "id": "C2",
+     "severity": "minor",
+     "file": "the draft pull-request description",
+     "summary": "PR description line 29 (item 4, Generals lasers) says 'No unit of this batch has a laser.' That is false as written. Two Tempest Rising units have laser weapons, and a Generals unit of this batch, the Combat Chinook, has a point-defence laser. What is true is that no Generals unit of this batch has a laser weapon.",
+     "fix": "Line 29: replace 'No unit of this batch has a laser.' with 'No Generals unit of this batch has a laser weapon (the Combat Chinook's point-defence laser is coded as an armour model, which this answer does not change).'",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed as written. Two Tempest Rising units in this batch carry laser-family weapons, the Shieldmaiden and the Vimana, and option B on the line just above even refers to Tempest Rising's lasers. The Combat Chinook, a Generals unit in this batch, has a point-defence laser. The batch's notes code point-defence lasers as an armour model, not a weapon, so the conclusion still holds: the answer recodes nothing in this batch. Minor.",
+      "better_fix": "Use the proposed fix as it stands."
+     },
+     "status": "fixed",
+     "commit": "4920f1a",
+     "how": "Fixed as the skeptic's better fix says."
+    },
+    {
+     "angle": "claims",
+     "id": "C3",
+     "severity": "minor",
+     "file": "research/r3/README.md",
+     "summary": "Three short descriptions in 'Units that break a combination rule' do not match the units' own atypical notes. Anna Kos's rifle hurts buildings in general, not one kind of building. The Engineers' anti-armour comes from one button, the mine. And in the 'two soldiers auto-target' line, it is not the soldiers that aim themselves but a drone and a bear.",
+     "fix": "Line 111: replace 'a sniper rifle that can hurt one kind of building (Jarmen Kell, Anna Kos)' with 'sniper rifles that can hurt buildings (Jarmen Kell's only the Fire Base, Anna Kos's any building, a little more than mechs)'. Line 113: replace 'for the Engineers' buttons' with 'for the Engineers' mine button'. Line 115: replace 'two soldiers auto-target (Drone Operator, Anna Kos)' with 'two soldiers carry a weapon that aims itself (the Drone Operator's drone, Anna Kos's bear Wojtek)'.",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. Line 111 is wrong about Anna Kos: her rifle hurts buildings in general, not one kind of building; only Jarmen Kell's is limited to the Fire Base. Line 113 says 'buttons', but the anti-armour comes from one button, the mine. Line 115 says the soldiers auto-target, but what aims itself is a companion: the drone and the bear. The proposed rewording of line 115, 'carry a weapon that aims itself', does not fit: nobody carries a bear, and the drone flies on its own.",
+      "better_fix": "Lines 111 and 113 as proposed. Line 115: replace 'two soldiers auto-target (Drone Operator, Anna Kos)' with 'two soldiers come with a partner that picks its own targets (the Drone Operator's drone, Anna Kos's bear Wojtek)'."
+     },
+     "status": "fixed",
+     "commit": "4920f1a",
+     "how": "Fixed as the skeptic's better fix says."
+    },
+    {
+     "angle": "claims",
+     "id": "C4",
+     "severity": "minor",
+     "file": "the draft pull-request description",
+     "summary": "PR description line 13 ties the start of R4 to the merge: 'approve and merge ... and R4's prep can start'. The record and this session's instruction say R4 starts only when Mustafa says so. As written, approving item 1 can be read as the go for R4.",
+     "fix": "Line 13: replace ', and R4's prep can start.' with '. R4's prep still waits for your word: approving this merge does not start it.'",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. The handoff and this session's instruction both say R4 starts only when Mustafa says so. The handoff's own version of item 1 does not add 'R4's prep can start'. The runbook also lets a session start the next batch's prep right after a merge (section 9, step 4; night-shift step 5, line 324). So a session could take Mustafa's approval of item 1 as the go for R4, which spends tokens he has not approved. Minor.",
+      "better_fix": "Use the proposed fix as it stands."
+     },
+     "status": "fixed",
+     "commit": "4920f1a",
+     "how": "Fixed in the draft: approving the merge does not start R4."
+    },
+    {
+     "angle": "claims",
+     "id": "C5",
+     "severity": "minor",
+     "file": "research/r3/README.md",
+     "summary": "README line 160 and PR description line 8 say the copy-check found no shared run 'in the 1172 pages it could read'. But 8 of the 1172 are PDF manuals that the tool counts as checked, though it cannot read their text. The README itself says on line 157 that 'The copy-check cannot read PDFs'.",
+     "fix": "README line 160: replace 'no shared run in the 1172 pages it could read.' with 'no shared run in the 1172 pages it checked. Eight of them are PDF manuals whose text it cannot read: the two this batch cites are checked by hand (part 3), and the six Red Alert manuals belong to batch R1, whose units this pull request does not change.' PR line 8: replace 'the copy-check finds no copied wording in the 1172 pages it could read' with 'the copy-check finds no copied wording in the 1172 pages it checked (8 of them PDF manuals it cannot read; the two this batch cites were checked by hand)'.",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed, but the proposed fix gets the count wrong. The copy-check reads a PDF as raw bytes and turns them into meaningless words, yet still counts the page as checked. The finding's figure of 8 comes from a run without the two --also folders. Part 1 used those folders, and research/registry-notes/games-r1.md line 231 also links the Red Alert 2 manual. So nine PDF addresses are among the 1172: eight files, because the Red Alert 3 manual is cited under two addresses. That is the two Generals manuals and seven Red Alert addresses for six manuals. The run also counts three wiki File: pages, which hold only a licence line. The result itself holds: R1's unit files are unchanged on this branch, and the two R3 manuals were checked by hand. Minor.",
+      "better_fix": "README line 160: '... no shared run in the 1172 pages it checked. Nine of those addresses are PDF manuals whose text it cannot read (eight files; the Red Alert 3 manual has two addresses). The two this batch cites were checked by hand (part 3). The other seven are Red Alert manuals of batch R1, whose units this pull request does not change.' PR line 8: '... in the 1172 pages it checked (9 of them PDF manuals it cannot read; the two this batch cites were checked by hand)'."
+     },
+     "status": "fixed",
+     "commit": "4920f1a",
+     "how": "Fixed as the skeptic's better fix says."
+    },
+    {
+     "angle": "claims",
+     "id": "C6",
+     "severity": "minor",
+     "file": "research/r3/README.md",
+     "summary": "README line 159 says the full copy-check 'ran in three parts on 9fe2a4e, after the final review's fixes and the follow-up's'. Only part 1 ran on 9fe2a4e. Both runs of part 2 came before the follow-up's commits, and the manual check of part 3 is recorded only at bc3d69a. The results still hold today, because the data did not change and my reruns at the current head match.",
+     "fix": "Line 159: replace 'ran in three parts on 9fe2a4e, after the final review's fixes and the follow-up's:' with 'ran in three parts after the final review's fixes: part 1 on 9fe2a4e, after the follow-up's fixes too; part 2 before the follow-up's commits, on data that no later commit changed; part 3 at bc3d69a, and again on c04f1a1 in the claims check, over all of the record:'.",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. Only part 1 ran on 9fe2a4e. Both part 2 runs came before the follow-up's commits; the first came even before bc3d69a. The hand check of the manuals is recorded only at bc3d69a, and the later commits do not mention it. The results still hold: no file under data/ changed after bc3d69a, and scripts/copy-check.mjs changed only in comments. My own six-word check of both manuals against today's whole record found 0 runs. The proposed sentence is long and cites a run that exists only in the scratch folder. These claim fixes edit research/r3/README.md, which part 1 reads, so part 1 has to run again anyway.",
+      "better_fix": "After this round's edits, run all three parts again on the final head: part 1, part 2 offline from the cache, and the six-word check of the two manuals. Save the logs and write 'ran in three parts on <final head>'. That is simpler than the proposed sentence and stays true."
+     },
+     "status": "fixed",
+     "commit": "4920f1a",
+     "how": "Fixed as the skeptic's better fix says: every part ran again after the fixes, and the report names the commit."
+    },
+    {
+     "angle": "claims",
+     "id": "C7",
+     "severity": "minor",
+     "file": "research/r3/README.md",
+     "summary": "The timeline on README line 3 is wrong in two places. The prep did not start on 26 October: it ran from 24 to 26 October, partly by day. And two of the nine pattern writers (8 of the 33 drafts) finished on 29 October, but the README places all of the patterns phase in the 10 to 11 November session. The record patterns/result.json repeats the second error ('ran': '10 and 11 November 2026').",
+     "fix": "Line 3: replace 'the prep, the opening check and the fill at night from 26 to 29 October 2026, with the merge pass's first step (6c817f1) and two of its finders on 29 October. The rest of the merge pass, the patterns, the checker,' with 'the prep from 24 to 26 October 2026, then the opening check and the fill at night from 26 to 29 October, with the merge pass's first step (6c817f1), two of its finders and two of the nine pattern writers (8 of the 33 drafts) on 29 October. The rest of the merge pass and of the patterns, the checker,'. In research/r3/patterns/result.json, set 'ran' to '29 October 2026 (writers g1 and g2), then 10 and 11 November 2026'.",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed on both counts. The prep began on 24 October (Generals) and ended with the trim on 26 October, partly by day, and was committed late on 26 October (UTC). On 29 October two of the nine pattern writers finished: g1 and g2, 4 files each, 8 of the 33. The new session did not rewrite those files; it only re-ran the checks. The README already names the merge pass's two 29 October finders, so leaving out the writers is inconsistent. The 'ran' field in patterns/result.json repeats the error. Minor.",
+      "better_fix": "Use the proposed fix as it stands."
+     },
+     "status": "fixed",
+     "commit": "4920f1a",
+     "how": "Fixed as the skeptic's better fix says."
+    },
+    {
+     "angle": "claims",
+     "id": "C8",
+     "severity": "minor",
+     "file": "research/r3/README.md",
+     "summary": "README TL;DR line 12 says 'every decision the batch took used the recommended option'. The record says rule problem 90 took 'A smaller fix' than the proposed one. The same TL;DR list also leaves out a decision that the Decisions section lists: the Vimana's second roles (decision 7).",
+     "fix": "Line 12: replace 'every decision the batch took used the recommended option and can be reversed: four note decisions taken at night (N1 to N4), the consistency check's fixes to the notes, three choices about the new patterns and the 18 settled rule problems.' with 'every decision the batch took can be reversed: four note decisions taken at night (N1 to N4), the consistency check's fixes to the notes, three choices about the new patterns, the Vimana's second roles and the 18 settled rule problems. All used the recommended option, except that rule problem 90 took a smaller fix and 102 only the part the batch can do.'",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. Rule problem 90 was settled with a smaller fix than the one proposed, and the README's own line 124 says so. The TL;DR's list leaves out decision 7, the Vimana's second roles, which appears both in the Decisions section and in PR item 11. Item 102 is arguably not an exception: its proposed fix already splits into a part for now and a part for the pattern review. The Decisions heading on line 171 makes the same 'recommended option' claim for item 8, so it needs the same fix. Minor.",
+      "better_fix": "Line 12 as proposed. Also README line 179, item 8: '18 batch-level rule problems settled ...: 16 as proposed, item 90 with a smaller fix and item 102 in part, as rule-problems.md says.'"
+     },
+     "status": "fixed",
+     "commit": "4920f1a",
+     "how": "Fixed as the skeptic's better fix says."
+    },
+    {
+     "angle": "claims",
+     "id": "C9",
+     "severity": "minor",
+     "file": "the draft pull-request description",
+     "summary": "PR description line 70 says the two opening coders 'agreed on 54 of 56 fields'. The record says 54 of 56 measured fields reached the 80% line. That is not the same: in one of those fields (sources.kind, 87.5%) the coders agreed on only one of the two units. The README (line 17) states it correctly.",
+     "fix": "Line 70: replace 'agreed on 54 of 56 fields' with 'reached the 80% agreement line on 54 of the 56 measured fields'.",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed, but a nit. Of the 56 measured fields, the two coders agreed fully on 53. A 54th, sources.kind, reached 87.5%, above the 80% line but not full agreement. So 54 is the count of fields that reached the line, not of fields they agreed on. README line 17 states it correctly. docs/handoff.md line 73 uses the same shorthand, '(54 of 56 fields agreed)'.",
+      "better_fix": "PR line 70 as proposed. Change docs/handoff.md line 73 the same way, since that file is being edited anyway: '(54 of the 56 measured fields reached 80% agreement)'."
+     },
+     "status": "fixed",
+     "commit": "4920f1a",
+     "how": "Fixed in the draft and in docs/handoff.md."
+    },
+    {
+     "angle": "claims",
+     "id": "C10",
+     "severity": "minor",
+     "file": "research/r3/README.md",
+     "summary": "Plain words. A decision left for Mustafa relies on 'the one-pattern rule', a name that appears nowhere in the rules: the field rules call it Granularity. Three sentences run to 70 to 79 words, against the house rule of short sentences.",
+     "fix": "README line 181: replace 'and the one-pattern rule argues for that' with 'and the field rules argue for that: the same interaction with the same counterplay makes one pattern'. Split README line 166 after '159 named by address.' and after 'which a script searched the entries for.'. Split line 176 at each semicolon into its own sentence. Split PR line 46 into one short sentence per note decision (N1, N2, N3, N4).",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed, and minor: a matter of plain words and style. 'The one-pattern rule' is not a name the rules use; the field rules call it Granularity. The sentences the finding names are 62 to 79 words long, against the house rule of short sentences. Other sentences are nearly as long: README line 111 (60 words), 158 (57), 177 (56) and 157 (51).",
+      "better_fix": "As proposed. If time allows, also split README lines 111, 157, 158 and 177 at their semicolons."
+     },
+     "status": "fixed",
+     "commit": "4920f1a",
+     "how": "Fixed as the skeptic's better fix says."
+    },
+    {
+     "angle": "claims",
+     "id": "C11",
+     "severity": "minor",
+     "file": "research/r3/README.md",
+     "summary": "README line 121 says 'Each entry gives the rule, what goes wrong, the units, a proposed fix and who raised it.' The 25 entries settled during the batch give how they were settled instead of a fix: only 106 of the 131 entries have a fix line.",
+     "fix": "Line 121: replace 'Each entry gives the rule, what goes wrong, the units, a proposed fix and who raised it.' with 'Each entry gives the rule, what goes wrong, the units it touches and who raised it; the 106 open ones give a proposed fix, and the 25 settled ones say how they were settled.'",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. The 25 entries settled earlier have a 'Settled by' line and no proposed fix. The proposed wording calls the other 106 'open', but 18 of them were settled in the batch, so 'open' is wrong for those. Minor.",
+      "better_fix": "Line 121: 'Each entry gives the rule, what goes wrong, the units it touches and who raised it. The 106 under the two Open headings give a proposed fix (the 18 the batch settled also say how), and the 25 settled earlier say how they were settled instead.'"
+     },
+     "status": "fixed",
+     "commit": "4920f1a",
+     "how": "Fixed as the skeptic's better fix says."
+    }
+   ]
+  },
+  {
+   "run": "research/workflows/verify-fixes.js, angle recheck, on the sentences changed since c04f1a1, on 11 November 2026",
+   "counts": {
+    "claims_checked": 63,
+    "claims_that_held": 53,
+    "found": 5,
+    "real": 5,
+    "refuted": 0,
+    "fixed": 5
+   },
+   "note": "Fixed in the commit that adds this entry. The recheck reads only the sentences that changed after the claims check.",
+   "findings": [
+    {
+     "angle": "recheck",
+     "id": "R1",
+     "severity": "minor",
+     "file": "research/r3/README.md (line 160) and the draft pull-request description (line 8)",
+     "summary": "C5 is not fully fixed, because the new count of unreadable PDFs is wrong. Part 1 counts 1172 pages as checked. Ten of those addresses are PDF manuals (nine files), not nine (eight files). The tenth is the manual of Dawn of War II: Retribution at https://store.steampowered.com/manual/56400. Only the step-1 registry notes link it (research/registry-notes/games-r5.md line 274). The claims check counted with '--only .pdf', and this address has no '.pdf' in it, so it was missed.",
+     "fix": "README line 160: replace 'Nine of those addresses are PDF manuals whose text it cannot read (eight files; the Red Alert 3 manual has two addresses). The two this batch cites were checked by hand (part 3). The other seven are Red Alert manuals of batch R1, whose units this pull request does not change.' with 'Ten of those addresses are PDF manuals whose text it cannot read (nine files; the Red Alert 3 manual has two addresses). The two this batch cites were checked by hand (part 3). Seven are Red Alert manuals of batch R1, whose units this pull request does not change. The last is the manual of Dawn of War II: Retribution (only the step-1 registry notes link it) (research/registry-notes/games-r5.md); this pull request does not change that file.' PR draft line 8: replace '(9 of them PDF manuals it cannot read;' with '(10 of them PDF manuals it cannot read;'.",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. Part 1's 1172 checked pages hold 10 PDF addresses for 9 files, not 9 addresses for 8 files. The tenth is https://store.steampowered.com/manual/56400, the manual of Dawn of War II: Retribution. Only research/registry-notes/games-r5.md (line 274) links it, and this pull request does not change that file. The claims check counted with '--only .pdf', and this address has no '.pdf' in it, so it was missed. The copy-check turns its bytes into meaningless words, as it does for the Generals manuals. No other kind of unreadable page is among the 1172. The result itself holds. The proposed fix to README line 160 and PR draft line 8 is correct, and no other file states the count (I searched the README, the PR draft and docs/handoff.md)."
+     },
+     "status": "fixed",
+     "how": "Fixed as proposed. The manual of Dawn of War II: Retribution was then extracted and compared by hand as well: no shared run."
+    },
+    {
+     "angle": "recheck",
+     "id": "R2",
+     "severity": "minor",
+     "file": "research/r3/README.md (line 115)",
+     "summary": "C3 is only partly fixed. Line 115 now says the Drone Operator's drone is a partner that 'picks its own targets'. The unit's own record and the page it cites both say the drone attacks whatever the operator attacks. Only Anna Kos's bear picks his own targets.",
+     "fix": "README line 115: replace the whole bullet with '- **Others** (6 lines): the Sentry Drone is very fast on tracks. The Vimana is a huge flying pyramid, slow for a hovering craft (two lines). Two soldiers come with a partner that fires by itself: the Drone Operator's drone attacks whatever he attacks, and Anna Kos's bear Wojtek picks his own targets. William Mason's suit lets its pilot out as a vehicle would.'",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed. README line 115 says the Drone Operator's drone 'picks its own targets'. Its own record, its atypical note (the very note this bullet sums up) and its cited wiki page all say the drone attacks the operator's targets. Only Anna Kos's bear picks his own. The wording came from the claims skeptic's better fix for C3. The bullet is 55 words (43 before). The proposed rewrite is accurate, with one flaw: 'a partner that fires by itself' does not fit a bear, whose attack is a melee maul. The aim-model rule's word 'fires' does not carry over into plain words here.",
+      "better_fix": "README line 115: '- **Others** (6 lines): the Sentry Drone is very fast on tracks. The Vimana is a huge flying pyramid, slow for a hovering craft (two lines). Two soldiers come with a partner that fights on its own: the Drone Operator's drone attacks whatever he attacks, and Anna Kos's bear Wojtek picks his own targets. William Mason's suit lets its pilot out as a vehicle would.' This is the finder's text, with 'fights on its own' in place of 'fires by itself', since a bear does not fire."
+     },
+     "status": "fixed",
+     "how": "Fixed with the skeptic's wording: a partner that fights on its own."
+    },
+    {
+     "angle": "recheck",
+     "id": "R3",
+     "severity": "minor",
+     "file": "research/r3/README.md (lines 159 and 166)",
+     "summary": "C6 is only partly fixed. Line 159 now says the full online copy-check ran in three parts on 4920f1a, but on 4920f1a only part 1 ran online. Part 2 ran offline from the page cache. The figures line 166 gives for part 2 (48 pages read, four fetched for the first time) come from the earlier online run at 10:40 UTC, which came before the follow-up's fixes. Part 3 on 4920f1a left out data/patterns, although line 157 says the hand check covers the patterns. Every result still holds.",
+     "fix": "Line 159: replace '**The full online copy-check** (runbook section 8, step 4) ran in three parts on 4920f1a, after the fixes of the final review, of its follow-up check and of the claims check:' with '**The full copy-check** (runbook section 8, step 4) ran in three parts on 4920f1a, after the fixes of the final review, of its follow-up check and of the claims check. Part 1 ran online. Part 2 read the pages that its first, online runs had saved before the follow-up's fixes:'. Line 166: replace 'That gave 48 pages read, most of them also cited or named by address elsewhere, and four fetched for the first time (the Tur, Gulay-Gorod, Samson and Gunship pages of the Iron Harvest Wiki).' with 'That gave 48 pages, most of them also cited or named by address elsewhere. The first run fetched four of them for the first time (the Tur, Gulay-Gorod, Samson and Gunship pages of the Iron Harvest Wiki).'. Part 3: also run the six-word check of the two manuals on data/patterns (it is the same at 4920f1a and HEAD), and keep the log beside copy-check-claims-part3.txt.",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed on all three points, and every result holds, so this is Low: a wording fix in the record of how the check ran. (1) On 4920f1a only part 1 ran online. Both part 2 runs used --offline. That was what the C6 skeptic's better fix asked for; only the README's word 'online' was not updated. (2) Line 166's figures (48 pages read, four fetched for the first time) come from the online title run at 10:40 UTC, before a199319. a199319 changed nothing under data/ and only comments in copy-check.mjs, so that run compared the same units. On 4920f1a the same 48 pages were compared: 44 as matched pages and the four new ones as saved pages. (3) Part 3 on 4920f1a covered research/r3, the registry notes, data/units and docs, but not data/patterns. The runbook's part 3 asks only for the prose that cites each manual, and no pattern cites the two manuals, so the run met the runbook. The overclaim is line 157's 'the patterns'. Those have been checked anyway, with 0 runs. The finder's new line 159 is accurate but hard to follow, and 'the pages that its first, online runs had saved' is inexact: those runs saved only four pages.",
+      "better_fix": "Line 159: '**The full copy-check** (runbook section 8, step 4) ran in three parts on 4920f1a, after the fixes of the final review, of its follow-up check and of the claims check. Part 1 ran online. Part 2 ran offline, on the saved copies of the pages; an earlier online run on the same units had fetched the four new ones:'. Line 166, as the finder proposes: 'That gave 48 pages, most of them also cited or named by address elsewhere. The first run fetched four of them for the first time (...).' Part 3: save a log of the manuals check over data/patterns (0 runs; the patterns are the same at 4920f1a and HEAD) beside copy-check-claims-part3.txt. Or else drop 'the patterns' from line 157."
+     },
+     "status": "fixed",
+     "how": "Fixed: the report says which parts ran online and which on saved pages, and the hand check of the manuals now covers all of data/."
+    },
+    {
+     "angle": "recheck",
+     "id": "R4",
+     "severity": "minor",
+     "file": "research/r3/README.md (line 171) and the draft pull-request description (line 44)",
+     "summary": "The C8 fix leaves two headings that still say every decision taken used the recommended option. In the README, the heading on line 171 sits over item 8, which now says 'item 90 with a smaller fix and item 102 in part'. The new TL;DR sentence on line 12 names those two as exceptions. The PR draft's matching heading (line 44) makes the same claim above item 12's 'two of them only in part'.",
+     "fix": "README line 171: replace '**Taken during the batch with the recommended option** (each can be reversed; the units it affects are named):' with '**Taken during the batch** (each can be reversed; the units it affects are named; all with the recommended option except rule problems 90 and 102, item 8):'. PR line 44: replace '**Taken during the batch with the recommended option, each reversible.**' with '**Taken during the batch, each reversible, and all with the recommended option except the two rule problems that item 12 says were settled only in part.**'",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed for the README. The heading on line 171 still says every decision under it used the recommended option. Item 8 under it says rule problem 90 took 'a smaller fix', and line 12 names 90 and 102 as exceptions. The C8 skeptic's verdict said this heading needs the same fix, but its better_fix touched only lines 12 and 179, and the heading was left as it was. The PR draft's heading on line 44 is a weaker case: item 12's 'only in part' could be read as the recommended fix done in part. But the record (rule-problems.md item 90) calls it a smaller fix and the README calls it an exception, so the PR heading should match.",
+      "better_fix": "README line 171: simply drop the claim: '**Taken during the batch** (each can be reversed; the units it affects are named):'. Line 12 and item 8 already say which ones used the recommended option. PR draft line 44, shorter than the finder's: '**Taken during the batch, each reversible, all with the recommended option except two of the rule problems in item 12.**'"
+     },
+     "status": "fixed",
+     "how": "Fixed as the skeptic's better fix says, in the report and the draft."
+    },
+    {
+     "angle": "recheck",
+     "id": "R5",
+     "severity": "minor",
+     "file": "research/r3/README.md (line 3) and the draft pull-request description (line 17)",
+     "summary": "Plain words. The C7 fix made the timeline sentence on README line 3 54 words long (37 before). It is now one of the two longest sentences the fixes touched, beside line 115 (see R2). PR line 17 says '5 per race' twice in one sentence.",
+     "fix": "README line 3: replace 'It ran by [docs/research-runbook.md](../../docs/research-runbook.md): the prep from 24 to 26 October 2026, then the opening check and the fill at night from 26 to 29 October, with the merge pass's first step (6c817f1), two of its finders and two of the nine pattern writers (8 of the 33 drafts) on 29 October.' with 'It ran by [docs/research-runbook.md](../../docs/research-runbook.md). The prep ran from 24 to 26 October 2026, and the opening check and the fill at night from 26 to 29 October. On 29 October the merge pass's first step (6c817f1) ran too, with two of its finders and two of the nine pattern writers (8 of the 33 drafts).' PR line 17: replace 'the number the plan holds now, so each of the three races gets 5.' with 'the number the plan holds now.'",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed, but it is Low (polish). The C7 fix made the timeline sentence on README line 3 about 17 words longer. That goes against the house rule 'short sentences'. PR draft line 17 says '5 per race' and then 'each of the three races gets 5' in the same sentence. The proposed split and the cut are correct. The README has two more sentences of the same length that no fix touched, on lines 124 and 158, so the length is not unique to line 3.",
+      "better_fix": "As proposed. If shorter is wanted on line 3: 'It ran by docs/research-runbook.md. The prep ran from 24 to 26 October 2026. The opening check and the fill ran at night from 26 to 29 October. On 29 October the merge pass's first step (6c817f1) also ran, with two of its finders and two of the nine pattern writers (8 of the 33 drafts).' Optionally split lines 124 (62 words) and 158 (53) as a follow-up."
+     },
+     "status": "fixed",
+     "how": "Fixed with the skeptic's shorter split."
+    }
+   ]
   }
  ],
  "findings": [
@@ -274,7 +552,7 @@
    "verdict": {
     "real": false,
     "reason": "The main claim does not hold. The Lightning Rod is not a separate building: it is the Thunderhead's own deployable. The Rod page's Codex text has the Thunderhead put its core on the ground, and the Rod grows from it. The record's transport role, its ten seats and its strengths all rest on the Rod. Destroying the Rod kills everyone inside. Fire weapons threaten that garrison in two ways: Penetrating fire hurts the infantry inside, and the Rod is a Structure with no fire resistance, while the Damage page calls fire effective against structures. So the entry does name an enemy that beats the unit's main job. The batch also counts enemies that kill a carrier's riders in countered_by elsewhere: the Battle Bus's countered_by/2 covers crew-killing snipes and neutron shells that kill riders and crew. The 'half the list' point fails too. The reason is explicitly limited to fire weapons with the Penetrating passive, so it is not false. The other half has no fitting link: damage:explosive covers every weapon of the game's Explosive damage type, and the Garrisoning page lists only five of them as Penetrating. Rule (1) forbids a link that covers units the reason is false for, so the proposed alternative (adding a damage:explosive entry) would itself break the rules. That leaves whether the entry is 'reasoned'. That is a judgment call: the Garrisoning page states the Penetrating rule and lists the Lightning Rod among the garrisons it applies to, and the uncertain note cites that page. At worst this is a Low wording point, not a wrong link.",
-    "evidence": "tempestrising.wiki.gg/wiki/Garrisoning (cached): Penetrating 'Breaches garrisons (but not transports)', the Rod listed with 10 units, five Explosive - Penetrating weapons and three Fire weapons. tempestrising.wiki.gg/wiki/Lightning_Rod (cached): armour type Structure, armorfire 0, armorexplosive 0; the Codex has the Thunderhead put its core on the ground; if the Rod is destroyed, everyone inside dies. tempestrising.wiki.gg/wiki/Damage: fire is effective against infantry and structures. data/games.json, the tempest-rising damage map: Explosive to explosive, Fire to fire. docs/fields.md line 11 (Matchups, rule 1). data/units/generals.json, the Battle Bus's countered_by/2.",
+    "evidence": "tempestrising.wiki.gg/wiki/Garrisoning (cached): Penetrating is described as breaching garrisons, though not transports, the Rod listed with 10 units, five Explosive - Penetrating weapons and three Fire weapons. tempestrising.wiki.gg/wiki/Lightning_Rod (cached): armour type Structure, armorfire 0, armorexplosive 0; the Codex has the Thunderhead put its core on the ground; if the Rod is destroyed, everyone inside dies. tempestrising.wiki.gg/wiki/Damage: fire is effective against infantry and structures. data/games.json, the tempest-rising damage map: Explosive to explosive, Fire to fire. docs/fields.md line 11 (Matchups, rule 1). data/units/generals.json, the Battle Bus's countered_by/2.",
     "better_fix": "Keep countered_by/2 and do not add a damage:explosive entry. If a reviewer counts it as reasoned, add the word 'reasoned' to the uncertain countered_by note. Optionally, add to the reason that fire also hits the Rod itself at full strength (Rod page; Damage page)."
    },
    "status": "answered",
@@ -555,7 +833,7 @@
    "verdict": {
     "real": true,
     "reason": "The Tailwind page carries a quote box that pulls in the game's own description of the ability, the same box as ZERO/point, which is high in block-abilities sa/1. Orbital Strike and Recon Bolt are also high on this box. Rendered, the box gives the actual in-game ability text.",
-    "evidence": "Cache valorant.fandom wiki_Tailwind and wiki_ZERO-point: identical boxes. valorant.fandom api.php render of {{Game Descriptions|Tailwind}}: 'ACTIVATE to prepare a gust of wind... RE-USE the wind to propel Jett...'. Pattern scan: bombard-area sa/2 and reveal-area sa/1 are high on the same box."
+    "evidence": "Cache valorant.fandom wiki_Tailwind and wiki_ZERO-point: identical boxes. valorant.fandom api.php render of {{Game Descriptions|Tailwind}}: the box's two steps: first ready a gust, then use it again to launch Jett. Pattern scan: bombard-area sa/2 and reveal-area sa/1 are high on the same box."
    },
    "status": "fixed",
    "commit": "bc3d69a",
@@ -687,12 +965,12 @@
    "file": "the draft pull-request description",
    "summary": "Decisions needed item 2 (StarCraft II count) gives no options and no recommendation, which the house rules require for every item. It also asks Mustafa again about a choice he already made on 24 October.",
    "evidence": "pr-body.md line 14: \"2. **StarCraft II count.** The plan keeps about 15 units, 5 per race, drawn from multiplayer, co-op and the campaign (all Legacy of the Void). Say if you want a different number.\" CLAUDE.md: \"then 'Decisions needed', each item self-contained, with options and a recommendation\". docs/brief.md lines 148-149 say the same, and runbook section 8 (line 225) requires the brief's format. docs/proposal.md line 84 records it as his answer of 24 October: \"About 15 units, 5 per race.\" The current PR #6 body (fetched through gh api) carries the same option-less text.",
-   "fix": "Replace item 2 with: \"2. **StarCraft II count.** Your answer of 24 October (docs/proposal.md) keeps about 15 Legacy of the Void units, 5 per race, from multiplayer, co-op and the campaign. - A (recommended): keep about 15, because R4's prep is planned on it. - B: give another number before R4's prep starts.\" Or move it out of Decisions needed and into For Mustafa as already decided.",
+   "fix": "Replace item 2 with: \"2. **StarCraft II count.** Your answer of 24 October (docs/proposal.md) keeps about 15 units of Legacy of the Void, 5 per race, from multiplayer, co-op and the campaign. - A (recommended): keep about 15, because R4's prep is planned on it. - B: give another number before R4's prep starts.\" Or move it out of Decisions needed and into For Mustafa as already decided.",
    "verdict": {
     "real": true,
     "reason": "Only the format part holds. Item 2 has no options and no recommendation, which the brief, CLAUDE.md and runbook section 8 all require. The claim that Mustafa already chose the count on 24 October is not supported. The night log (16:12, 24 Oct) and state.json's open_decisions record his answers that day as 1A, the StarCraft II scope (Legacy of the Void with campaign, Archon, co-op and multiplayer) and 3A, with no count. The PR opened five minutes after his answers already asked about the count. Severity is minor, not major. The proposed fix calls it 'Your answer of 24 October', which repeats the unsupported claim.",
     "evidence": "pr-body.md line 14; CLAUDE.md line 10; docs/brief.md lines 148-149; runbook line 225. Scratchpad r3/night-log.md line 5: 'Mustafa answered the plan questions (1A, SC2 Legacy of the Void only with campaign/Archon/co-op/multiplayer units, 3A)'. Scratchpad r3/state.json open_decisions[0].answers: no count. Commit 8366649's message names 1A and 3A and no count. docs/proposal.md line 84 puts 'About 15 units, 5 per race' under 'Your answers that day'. Current PR #6 body (gh api) line 21 has the same option-less item; the PR has no comments or reviews.",
-    "better_fix": "Item 2: 'StarCraft II count. The plan keeps about 15 Legacy of the Void units, 5 per race, from multiplayer, co-op and the campaign. A (recommended): keep about 15, so R4 stays near R1's and R3's size and the plan's target of about 100 units before the generator. B: give another number before R4's prep starts.' Do not call it his answer. Also have the main session check docs/proposal.md line 84, which lists the count among 'Your answers that day' although the night log and state file do not. Reword it to the plan's number, pending item 2, unless his chat confirms he gave it."
+    "better_fix": "Item 2: 'StarCraft II count. The plan keeps about 15 units of Legacy of the Void, 5 per race, from multiplayer, co-op and the campaign. A (recommended): keep about 15, so R4 stays near R1's and R3's size and the plan's target of about 100 units before the generator. B: give another number before R4's prep starts.' Do not call it his answer. Also have the main session check docs/proposal.md line 84, which lists the count among 'Your answers that day' although the night log and state file do not. Reword it to the plan's number, pending item 2, unless his chat confirms he gave it."
    },
    "status": "fixed",
    "commit": "bc3d69a",

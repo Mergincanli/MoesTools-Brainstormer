@@ -37,7 +37,7 @@ Every cited page was checked:
 - **StarCraft II.** (Corrected after the fact-check to match data/games.json.) There is no in-game tier label, so I matched the Zerg Hatchery, Lair and Hive levels:
   - **t1:** the first production building, plus the tech building its line units need. Terran: Command Center, Barracks. Zerg: Hatchery, Spawning Pool, Roach Warren, Baneling Nest. Protoss: Nexus, Gateway, Cybernetics Core.
   - **t2:** the second step. Terran: Factory, Starport, Armory, Ghost Academy. Zerg: Lair-tech buildings (Lair, Hydralisk Den, Lurker Den, Infestation Pit, Spire, Nydus Network). Protoss: Robotics Facility, Stargate.
-  - **t3:** the third step. Terran: Fusion Core, and the Thor, whose own gate is "Factory with tech lab and Armory (Thor)". Zerg: Hive-tech buildings (Hive, Ultralisk Cavern, Greater Spire). Protoss: Robotics Bay, Fleet Beacon, Templar Archives, Dark Shrine.
+  - **t3:** the third step. Terran: Fusion Core, and the Thor, whose own gate is "Factory with tech lab and Armory (Thor)". Zerg: Hive-tech buildings (Hive, Ultralisk Cavern, Greater Spire). Protoss: Fleet Beacon, Robotics Bay, Dark Shrine, Templar Archives.
   - Tech Lab and Reactor add-ons are not a tier step. So the Marauder is t1 and the Siege Tank t2; the Banshee and Raven are t2.
   - Judgement calls: the Hellbat is t2: it is the Hellion's second mode, and the Armory is t2 in the registry. The Starport is t2 although it needs the Factory. The Ghost is t2. The Twilight Council unlocks no unit, so it is left out.
   - Campaign-only units (for example the WoL Firebat, Goliath, Diamondback and Wraith, or the LotV Reaver): use the multiplayer gate of the building that makes them. Mission unlocks are not tech gates.
@@ -49,7 +49,7 @@ Every cited page was checked:
   - Consequence: the Garage, Airpad and Foundry need tech 2, so Warthogs, Hornets, Wolverines and Marauders are t2, and the Scorpion, Wraith and Vulture are t3. Heroes such as Atriox's Chosen are listed at tech 1, so they are t1.
   - Unit upgrades (Gauss Warthog, Canister Shell) are upgrades, not tiers.
   - The Flood appear only as enemies (Awakening the Nightmare campaign, Terminus Firefight). They are not a playable side; skip them or mark them atypical.
-- **Dawn of War.** Nine races step up in different ways, so the gates are generic: `Tier 1`, `Tier 2`, `Tier 3`.
+- **Dawn of War.** Nine races step up in different ways, so the gates are generic: `Tier 1`, `Tier 2` and `Tier 3`.
   - Relic units (Land Raider, Baneblade, Avatar, Squiggoth and so on) count as Tier 3.
   - Newer wiki unit pages (the Dow1UnitData template) give the tier as a number, for example Tau Devilfish 2, Hammerhead 3, Sisters Immolator 2, Exorcist 3 and Living Saint 3. Older pages (DoWUnitData) give requirements instead. Translate them with this table:
 
