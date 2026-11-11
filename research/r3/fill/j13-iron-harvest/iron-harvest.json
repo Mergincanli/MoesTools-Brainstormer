@@ -1,0 +1,728 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "iron-harvest",
+  "units": [
+    {
+      "id": "iron-harvest.rusviet.nakovalnya",
+      "game": "iron-harvest",
+      "faction": "rusviet",
+      "name": "SHM-68 \"Nakovalnya\"",
+      "flavour_affinity": ["soviet"],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "siege",
+        "secondary": []
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Workshop",
+        "basis": "Built at the Rusviet Workshop, a basic production building, and also at the Advanced Rusviet Workshop, by the wiki's infobox. Its page's Pros point out that it is the one artillery mech a plain Workshop can build, where the others wait for the upgraded building. The Workshop is a t1 gate in the tier map."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 700,
+        "basis": "DevBlog #43 (December 2021) cut its oil price, and the wiki's infobox has shown that iron and oil price since January 2022; no later post read changes it. Counted as iron plus three times the oil, it sits in the low band, a little short of medium and about four fifths of what the anchor line mechs cost. Its population cost uses up the cap rather than paying a price, so it is left out."
+      },
+      "mobility": {
+        "base": "wheels",
+        "handling": "steer",
+        "traits": ["deploy-anchor"],
+        "speed": "very-slow",
+        "speed_raw": 0.47,
+        "notes": "Rolls on two big wheels, shoved along by three short legs at the back, at a little under half the pace of the rifle squads, the game's speed reference (infobox). Iron Harvest has no tanks: among the other artillery mechs it is a touch slower than Polania's Mocny and quicker than Saxony's Erlkönig. Handling stays steer, the wheels default: the wiki's Pros say it turns fairly quickly, but an RTS model turning on the spot is no reason to change it. It needs no set-up before it fires its barrage. Once veteran it can anchor in Sentry Mode, in which it cannot move at all (deploy-anchor)."
+      },
+      "body": {
+        "plan": "launcher-rack",
+        "size": "large",
+        "notes": "A two-wheeled carriage: the body hangs between two large wheels and pivots on their axle, and most of it is a bank of sixteen big launch tubes set side by side like organ pipes. At the back sit the engine and three short mechanical legs that shove it forward, and the pilot rides in a small armoured cab on the right side (wiki). Launcher rack: a light chassis built around an exposed rocket rack, with no room for passengers. The game files it among its mechs, but no source shows it walking (see uncertain at class). Large, as the self-propelled guns of our size examples are; no source gives its footprint (see uncertain)."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["directional"],
+        "notes": "Step 1 of the armour-class steps reads the infobox's Light through the armour map as medium. The Armor page puts small, fast mechs and exosuits in that class: light weapons wear it down only slowly, while field cannons, gunners and anti-mech weapons hurt it badly. The opening prose of its own page still calls it medium-armoured, a line older than the infobox's change to Light in September 2020 (see uncertain). Directional: by the game's rule a hit on a mech's weak rear does about twice the damage (Armor page), and Change Log #06 fixed a bug that had spared the Rusviet artillery mech that extra rear damage. DevBlog #43 raised its health a little. Veterancy adds health, about a third at the first rank and half at the second (infobox), and base repair is game-wide; neither changes the class."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "No source gives sight figures for Iron Harvest units (the registry's sight reference), so the band is the medium proposal. No source gives it radar, a detector or stealth. The wiki says its rockets ignore line of sight because they fly over terrain and buildings, but no source says it fires past what it can see."
+      },
+      "armament": [
+        {
+          "name": "Sentry Mode rockets",
+          "slot": "alternate",
+          "family": "rockets",
+          "damage": "explosive",
+          "mount": "auto-target",
+          "delivery": "lobbed",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["splash"],
+          "summary": "Single rockets from the same tube bank, fired only in Sentry Mode: the mech launches them by itself, with fair accuracy, at any enemy that moves into the small circle its player picked within reach, and at nothing outside it. Like the barrage they arc over terrain and buildings. KING Art calls this fire very strong and hard to see coming, and in March 2021 cut its damage against mechs by a quarter and against buildings by a fifth, so that enemies who blunder in are punished less. No source gives the sentry fire its own reach, so it is banded from the barrage's, about two and a half times the reference rifle's; the wiki credits the mech's rockets with strong warheads that hit a wide area. While the mode lasts the Bombardment cannot be fired, though its wait keeps running (guide).",
+          "condition": "Only in Sentry Mode, which a Nakovalnya can enter once it reaches its first veterancy rank.",
+          "patterns": ["deploy-siege-mode"],
+          "mode": "sentry"
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "No player seats: RTS units are ordered, not driven. The wiki puts a pilot in a small armoured cab on the right side, so it is a crewed machine. Solo: its only weapon is the sentry fire, which no other weapon fires beside, and its barrage is a button. It has no passenger seats."
+      },
+      "abilities": [
+        {
+          "name": "Bombardment",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "medium",
+          "summary": "Its main attack, launched from its own button: the player picks a patch of ground at long range, about two and a half times the reference rifle's reach, and all sixteen tubes empty onto it in one rocket salvo that arcs over terrain and buildings. It needs no set-up, so it can fire straight off the march and is not held to a narrow arc. The salvo smothers a wide area and hurts every armour class, buildings far less, but the rockets stray, so much of it is wasted on a moving or lone target, and nothing close to the mech can be hit. It never fires by itself, so out of Sentry Mode the mech attacks only where the player aims it, and each salvo is followed by a long wait: the infobox's figure and the guide's both fall in the medium band. A salvo cut short when its target dies still starts the wait (wiki trivia). The salvo variant of bombard-area.",
+          "patterns": ["bombard-area"]
+        },
+        {
+          "name": "Sentry Mode",
+          "kind": "deploy",
+          "source": "veterancy",
+          "cooldown": "medium",
+          "summary": "Opens at the first veterancy rank (Change Log #06; the guide). The mech anchors and cannot move; the player marks a small circle within its reach, and from then on it fires single rockets by itself at whatever enters that circle (the Sentry Mode rockets, armament/0), which makes it a hard-to-read guard over a spot and a quick answer to units rushing in. To fire a full barrage it has to leave the mode, and the guide has players drop out, fire a barrage and anchor again, since the barrage's wait runs on meanwhile. After leaving the mode it must wait before anchoring again: Change Log #06 (October 2020) stretched that wait from the short band to the medium band, so that players think harder about where and when to use it. The zone-anchor variant of deploy-siege-mode.",
+          "patterns": ["deploy-siege-mode"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "sentry",
+          "name": "Sentry Mode",
+          "via": "deploy-siege-mode",
+          "summary": "Anchored, it cannot move. It fires the Sentry Mode rockets (armament/0) by itself at anything entering the small circle chosen when it anchored, and only there; moving the circle means leaving the mode. The Bombardment cannot be used until it leaves (read from the guide's advice to switch out for a barrage and back). No source says its armour changes or how long anchoring and packing up take."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["wreck"],
+        "basis": "in-game",
+        "notes": "Like any destroyed mech it leaves a wreck that nearly any infantry squad can strip for a small haul of iron and oil, the same whatever the mech; another mech or exosuit stepping on it, or an explosion, wipes it out first. Its death animation shows it loosing rockets wildly, but the wiki says they are only for show and harm nothing, so it has no death blast."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:bombard-area",
+          "why": "Its barrage blankets a wide area from long range with no set-up, flying over buildings and terrain: it shreds clumped infantry, strips the crews off weapon systems, wrecks buildings and still hurts every armour class (wiki; guide)."
+        },
+        {
+          "ref": "pattern:deploy-siege-mode",
+          "why": "From its first rank Sentry Mode turns it into a rocket sentry over a chosen spot that fires by itself and is hard to read; KING Art calls it very potent, above all against threats as they arrive, and the guide calls it a superb area-denial tool."
+        },
+        {
+          "ref": "tier:t1",
+          "why": "It is the only artillery mech that a basic Workshop builds, so Rusviet can field long-range fire before any advanced building (wiki Pros)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "pattern:bombard-area",
+          "why": "A long wait between salvos, rockets that mostly miss a moving or lone target, and, outside Sentry Mode, no fire unless aimed by hand: enemies can close in or slip away between barrages (wiki)."
+        },
+        {
+          "ref": "pattern:bombard-area",
+          "why": "In its base form the barrage is its only attack and cannot reach anything close by, so a unit that gets near is safe from it; the wiki says rushing or flanking it is easy, since nothing defends it up close."
+        },
+        {
+          "ref": "armour-model:directional",
+          "why": "Hits on its rear do about twice the damage (Armor page; Change Log #06), and the wiki notes how easily it is taken apart from behind."
+        },
+        {
+          "ref": "armour-class:medium",
+          "why": "Light armour by the game's own class, thin for a mech: field cannons, gunners and anti-mech weapons cut through it (Armor page)."
+        },
+        {
+          "ref": "mobility-trait:deploy-anchor",
+          "why": "In Sentry Mode it cannot move and guards only the small circle it chose, which the wiki's Cons call fairly small, and leaving the mode starts a long wait before it can anchor again (Change Log #06)."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "speed:>=medium",
+          "why": "Units at rifle-squad pace or faster, more than twice its speed, can cross the open ground during its long wait between salvos and get in close or behind it, where hits do double and it has nothing to shoot back with."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "The Armor page says the game's Light class suffers badly from field guns, gunner squads and any mech carrying an anti-mech weapon, and once these reach it the Nakovalnya cannot answer them."
+        },
+        {
+          "ref": "role:siege",
+          "why": "Artillery that reaches further can hit it from beyond its own reach: the guide warns that the Erlkönig, which it says outranges every other artillery mech, threatens the Nakovalnya and should be taken out first."
+        },
+        {
+          "ref": "unit:iron-harvest.saxony.erlkonig",
+          "why": "Named by the guide as a danger to the Nakovalnya; by the guide's account no artillery mech reaches further."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Its salvo, made to saturate an area, is deadliest against infantry bunched together: the guide says it punishes infantry blobs, and the wiki rates it strong against infantry."
+        },
+        {
+          "ref": "speed:<=slow",
+          "why": "Slow targets cannot scatter before the rockets land: the guide sets it on slow mechs and on Saxony's slow army, while a moving target wastes much of a salvo (wiki)."
+        },
+        {
+          "ref": "unit:iron-harvest.shared.field-cannon",
+          "why": "The guide says its barrage reliably kills the crews of weapon systems and has it pick out the enemy's field guns first; the guns stand still while they fire."
+        },
+        {
+          "ref": "target:structure",
+          "why": "The guide says its barrages destroy buildings, and the wiki has its rocket storms built to wreck them, though each rocket does far less to a building than to a unit (infobox)."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:iron-harvest.rusviet.nakovalnya",
+          "why": "The wiki strongly advises fielding them in pairs that take turns firing, so the long wait of one is covered by the other's salvo."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "The guide pairs it with a squad of gunners for mid-game pushes; the anti-armour gunners deal with the mechs that would otherwise run it down."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "The guide adds a few Vanguards to that escort: Rusviet's basic shotgun squad, which can screen it from units rushing in close."
+        }
+      ],
+      "memorable": "Rusviet's rocket cart on two great wheels, shoved along by stubby legs: it empties sixteen tubes onto a far-off area and, once veteran, anchors as a rocket sentry over a chosen spot.",
+      "as_player": "A cheap early artillery piece that hangs back. Your main key launches a rocket salvo onto ground you pick far away, then a long reload, so aim at clumps, gun crews, buildings and slow mechs rather than anything quick. Once veteran, a second key anchors you: you can't move, but your tubes fire single rockets by themselves at anything entering a small circle you chose. You have no close-range weapon and a soft rear, so let teammates screen you.",
+      "sources": [
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/SHM-68_%22Nakovalnya%22",
+          "title": "SHM-68 \"Nakovalnya\", Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Speed and weapon figures entered 28 April 2020; armour class Light since 27 September 2020; health and oil price since January 2022 (page history)",
+          "note": "Read through the wiki's API, with its page history. The infobox gives health, armour class, speed, price and population, and lists Bombardment in its first weapon slot (not marked as an ability) with reach, dead zone, rockets per salvo, wait, damage per armour class and blast. The prose gives the wheels and pushing legs, firing without set-up, the stray rockets, the dead zone, the lack of close defence and the advice to pair them; the Abilities section lists Bombardment and Sentry Mode. Its italic opening line, Lore box, unit type and Pros and Cons are the wiki's own words, which the roles rules do not read as official text.",
+          "supports": [
+            "class",
+            "nature",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "armament/0",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "modes/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by/0",
+            "counters/0",
+            "counters/1",
+            "counters/3",
+            "combos/0",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Armor",
+          "title": "Armor, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "note": "The game's four unit armour classes, with small, fast mechs and exosuits in Light and that class badly hurt by field cannons, gunners and anti-mech weapons; and the weak spots, often at the back, where many mechs take double damage.",
+          "supports": [
+            "armour/class",
+            "armour/models",
+            "armour/notes",
+            "weaknesses/2",
+            "weaknesses/3",
+            "countered_by/0",
+            "countered_by/1"
+          ]
+        },
+        {
+          "url": "https://kingart-games.com/article/119",
+          "title": "Iron Harvest DevBlog #43 - December 2021, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "Changelog 25, December 2021",
+          "note": "The mech cost rebalance labels the unit Nakovalnya (Rocket Artillery), the newest bracketed label, cuts its oil price and raises its health; the wiki's infobox matches, and no later post read, up to DevBlog #47, changes either.",
+          "supports": ["roles/primary", "cost_band", "armour/notes"]
+        },
+        {
+          "url": "https://kingart-games.com/article/94",
+          "title": "Iron Harvest Change Log #06, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "Change Log #06, 22 October 2020",
+          "note": "Under the heading Nakovalnya (rocket artillery), calls Sentry Mode its veteran ability, very potent above all for reacting to threats as they come, and lengthens the wait after leaving the mode. The same post fixes a bug that had kept the Rusviet and Polanian artillery mechs from taking extra damage from behind.",
+          "supports": [
+            "roles/primary",
+            "abilities/1",
+            "mobility/traits",
+            "armour/models",
+            "armour/notes",
+            "strengths/1",
+            "weaknesses/2",
+            "weaknesses/4"
+          ]
+        },
+        {
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2223610703",
+          "title": "1v1 - Rusviet R2 Zubov Build Order Variants, by Troyd, Steam Community guide",
+          "kind": "guide",
+          "accessed": "2026-10-28",
+          "version": "Patch 1.0.1, September 2020 (first written for patch 1.00)",
+          "note": "A multiplayer build-order guide that calls the Nakovalnya the best offensive artillery in the game. It gives the barrage's wait, Sentry Mode opening at the first veterancy rank and firing at a chosen area, the barrage's wait running on during Sentry Mode, what its barrages are good against, the Erlkönig as its threat, and an escort of gunners and some Vanguards. Written before Change Logs #06 and #20 weakened Sentry Mode.",
+          "supports": [
+            "abilities/0",
+            "abilities/1",
+            "modes/0",
+            "armament/0",
+            "strengths/0",
+            "strengths/1",
+            "countered_by/2",
+            "countered_by/3",
+            "counters/0",
+            "counters/1",
+            "counters/2",
+            "counters/3",
+            "combos/1",
+            "combos/2"
+          ]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "class",
+          "note": "Coded a vehicle on wheels by how it moves: the wiki has it riding on a pair of large wheels instead of walking, pushed by three small legs at the back, and TheGamer's list of the best mechs (https://www.thegamer.com/iron-harvest-best-powerful-mechs-to-use-tips/, a guide, read, not cited) also has two large wheels hauling its body. The game counts it a mech, and the Polanian Field Cannon page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Polanian_Field_Cannon, read, not cited) calls the field cannon the only unit that rolls on wheels with no mechanical legs. A walker on many legs (its three) is the other reading; that type's speed range starts at slow too, so it would also break a rule."
+        },
+        {
+          "path": "roles/primary",
+          "note": "Siege from the newest bracketed label, Rocket Artillery (DevBlog #43; Change Logs #06 and #20 use the same words). The coding rule is met through what every copy has: its only stock attack is the innate Bombardment button, rockets lobbed onto ground at long reach, which passes the lobbed-and-long clause and siege's requires read as a weapon. The validator reads requires only from weapons, and there it finds the lobbed, long Sentry Mode rockets, which only a veteran has."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Left empty. The Bombardment is a button every copy has, but roles.secondary step 2 gives an anti role only to a button with extra damage against one kind of target, one that harms only one kind, or one labelled by its targets; its splash does not count there, the registry finds no bonus in the game data, and no official text says what it is strong against. The Sentry Mode rockets are an alternate weapon behind a veteran button, which no step ranks. Area denial, the guide's word for Sentry Mode, is left out by the area-denial-or-siege tie-break: a gun that holds ground only by the threat of its fire is siege."
+        },
+        {
+          "path": "tier",
+          "note": "The infobox names both the Rusviet Workshop and the Advanced Rusviet Workshop. The Rusviet Workshop page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Rusviet_Workshop, read, not cited) says that building produces light mechs. No post read gates the Nakovalnya further."
+        },
+        {
+          "path": "cost_band",
+          "note": "DevBlog #35 (https://kingart-games.com/article/107, read, not cited) prices it at two coins in the reserve; that is left out, since a unit that can be built takes its production price."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The infobox speed was entered on 28 April 2020 with the weapon figures, and no post read changes it. The comparisons in mobility.notes use the infobox speeds on the PZM-13 \"Mocny\" and SLL 33 \"Erlkönig\" pages of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/PZM-13_%22Mocny%22 and https://iron-harvest.fandom.com/wiki/SLL_33_%22Erlk%C3%B6nig%22, read, not cited)."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "Deploy-anchor stands for Sentry Mode, which a Nakovalnya gains only at its first veterancy rank, so a new one cannot anchor. It is kept because the button and its mode are recorded, as on the Kaiser; mobility traits have no stock-only rule like the one for sensor traits."
+        },
+        {
+          "path": "body/size",
+          "note": "No source gives its footprint. Large follows the self-propelled guns of our size examples, and the wiki's trivia likens it to the giant Tsar Tank. The Rusviet Workshop page says that building makes light mechs, and light mechs are medium in our size examples, so medium is the other reading, although a weight word is not a size."
+        },
+        {
+          "path": "armour/class",
+          "note": "The infobox has said Light since an edit of 27 September 2020 (page history), and Medium before it. The page's opening prose still calls it medium-armoured, a line from before that edit; Medium would map to heavy. The PZM-13 \"Mocny\" page of the Iron Harvest Wiki (read, not cited) calls the Rusviet artillery light-armoured. Light is kept as the newer reading.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armour/models",
+          "note": "Its own page says only that it is easily taken apart from behind; the doubling comes from the Armor page, and the Mech page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Mech, read, not cited) says almost every mech has a weaker rear. Change Log #06 (October 2020) fixed the bug that had kept the Rusviet artillery mech from taking the extra damage, so directional holds from then on."
+        },
+        {
+          "path": "armament/0",
+          "note": "The damage cut comes from Change Log #20 (https://kingart-games.com/article/110, read, not cited), which calls Sentry Mode very strong and hard to see coming. No source gives the sentry fire its own reach, wait or blast: range is banded from the barrage's reach in the infobox, splash rests on the wiki's Weapons section, which credits the mech's rockets with wide-area warheads, and lobbed on its saying the rockets fly over terrain and buildings. The guide calls them missiles of perfect accuracy, but no source says they steer, so they stay rockets."
+        },
+        {
+          "path": "armament/0/slot",
+          "note": "Alternate rather than secondary with the mode: what Sentry Mode silences is the Bombardment, a button (the guide has players leave the mode to fire a barrage), and no weapon keeps firing beside the rockets, so nothing in the armament is replaced."
+        },
+        {
+          "path": "abilities/0",
+          "note": "Coded as a button, not a weapon, although the infobox lists Bombardment in its first weapon slot without the (Ability) mark: the wiki lists it under Abilities, its Cons say it has to be aimed by hand outside Sentry Mode, and the guide gives it a wait, so it is a rocket volley on its own button. The infobox's wait, from April 2020, is a little longer than the guide's, from September 2020; both fall in the medium band. No source says whether the salvo can be set to fire by itself."
+        },
+        {
+          "path": "abilities/1",
+          "note": "The band is for the wait after leaving the mode, which Change Log #06 raised; no source says how long anchoring takes. The unlock at the first rank rests on Change Log #06, the guide and the Veterancy page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Veterancy, read, not cited). The guide predates Change Logs #06 and #20, which weakened Sentry Mode, so its claim that Sentry Mode can kill a Kaiser may no longer hold."
+        },
+        {
+          "path": "on_death",
+          "note": "The wreck rests on the Recycling Wrecks page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Recycling_Wrecks, read, not cited) and on DevBlog #24 (https://kingart-games.com/article/77, read, not cited), which made mech wrecks harvestable; the Nakovalnya page says nothing of its wreck, only that the rockets of its death animation do no harm."
+        },
+        {
+          "path": "countered_by/0",
+          "note": "Reasoned: the wiki warns that its dead zone and long wait leave it open to rushing and flanking, and that it can be wrecked from behind, and the Armor page doubles hits on a mech's rear. The faster units that exploit this are read as units at least as quick as the rifle squads, since its page names no unit."
+        },
+        {
+          "path": "countered_by",
+          "note": "Aircraft are left out: its rockets are coded lobbed, which never hits fliers, but no source says it cannot fire at air units or names aircraft among its threats. The Erlkönig sits in countered_by although it is slow, a kind of target counters/1 says the Nakovalnya beats: the guide has the Erlkönig hit it from beyond its reach, while counters/1 is about slow targets inside its reach."
+        },
+        {
+          "path": "counters/3",
+          "note": "The guide says its barrages destroy buildings and the wiki's lore has it made to wreck them, but the infobox gives each rocket a quarter of its damage against units when it hits a building; a full salvo still adds up."
+        },
+        {
+          "path": "combos",
+          "note": "The guide names the gunner and Vanguard escort without saying why; the reasons given are read from the wiki's warnings that it has no defence up close."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J13-IRON-HARVEST",
+      "fit_notes": [
+        {
+          "path": "mobility/base",
+          "used": "wheels",
+          "wanted": "a wheel-and-leg drive: big wheels shoved along by small legs",
+          "note": "It rolls on two big wheels while three small legs at the back push it, and the game counts it a mech. Wheels fits the rolling but not the legs, many legs fits the legs but not the rolling, and both types start above its very slow speed."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "mobility/base",
+          "rule": "mobility:wheels allowed.speed-bands very-slow",
+          "note": "It rolls at a little under half the rifle squads' pace by its infobox speed, and our wheels type starts at medium; its wheels are pushed by small legs rather than driven, which may be why."
+        }
+      ]
+    },
+    {
+      "id": "iron-harvest.shared.engineer",
+      "game": "iron-harvest",
+      "faction": "shared",
+      "name": "Engineers",
+      "flavour_affinity": [],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "engineer",
+        "secondary": ["support", "anti-armour"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Headquarters",
+        "basis": "Every faction trains its engineers at the Headquarters, at the Barracks and at the Advanced Barracks, by the infoboxes of the four engineer pages; the wiki's Structure page also has the Headquarters recruit them, and no post read moves them off it, as Change Log #17 did the rifle squads. The Headquarters and the Barracks are both t1 gates in the tier map."
+      },
+      "cost_band": {
+        "band": "very-low",
+        "raw": 150,
+        "basis": "The iron price, with no oil, that the four infoboxes give at the Headquarters and the Barracks, which no post read changes: the very-low band, cheaper than the rifle squads, and its page calls engineers the cheapest units in the game. Since DevBlog #35 the Advanced Barracks sells them a little cheaper still (Change Log #17 had cut that price further, and DevBlog #35 took part of the cut back). Reinforcing lost soldiers and the population cost are left out."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "slow",
+        "speed_raw": 0.8,
+        "notes": "Walks at four fifths of the rifle squads' pace (infobox). Its page's Cons call it slower than standard infantry, though its Pros and part of its prose call engineers fast; the figure decides. Like any squad it can lie down, which makes it harder to hit but far slower, and barbed wire bars it as it bars other infantry."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "count": 5,
+        "notes": "Five soldiers in their faction's rifle-squad uniform, with heavy packs of tools and a shovel (the Polanian ones add a vest, the Saxon ones goggles and a spool of wire)."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class steps: the infoboxes' Unarmored maps to unarmoured, and the Armor page puts every infantry unit in that class. Each soldier has a rifleman's health, and damage for its armour class comes straight off it; losing soldiers is the squad crew model. Cover, kneeling, lying down and veterancy (more health at each rank) help it as they help every squad; none lifts the class."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "No source gives sight figures for Iron Harvest units (the registry's sight reference), so the band is the medium proposal. Its page says engineers can even scout, but gives no sight figure; no source gives a sensor trait."
+      },
+      "armament": [
+        {
+          "name": "Handgun",
+          "slot": "primary",
+          "family": "small-arms",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "short",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "summary": "Each of the five carries a pistol that fires short bursts with pauses between them and reaches a little under seven tenths of the reference rifle's reach. By the infobox it barely scratches the game's Light armour class and does next to nothing to heavier mechs or to buildings, so it is only for infantry, and the wiki calls the squad almost helpless in a fight. The plain melee blow every squad has, a shovel here, is weak too (game-wide)."
+        }
+      ],
+      "crew": {
+        "model": "squad",
+        "basis": "in-game",
+        "notes": "In-game squad: the game moves the five soldiers as one unit under one order and with a shared fate, and they lose firepower as they fall; buying lost soldiers back is the game-wide reinforcing. Engineers are also the stock crew of every weapon system a faction builds: a field cannon, heavy machine gun or mortar comes crewed by five of that faction's engineers, three working the gun while the rest guard it (Infantry page; see uncertain). That crew becomes the weapon system's own unit, as when any squad mans an abandoned gun (recover-wreck, game-wide), so nothing of it is recorded here; when the gun is destroyed, the survivors become engineers again. No passenger seats."
+      },
+      "abilities": [
+        {
+          "name": "Sandbags, Barbed Wire and Unarmed Bunker (build menu)",
+          "kind": "active",
+          "source": "innate",
+          "summary": "Part of the build menu among the squad's abilities. It lays sandbag lines that give infantry cover where the map has little, barbed wire that stops infantry crossing, and an unarmed bunker that one infantry squad can garrison and fire out of. Each is placed as an outline and then built by the squad, and fortifications can go up anywhere there is room. Sandbags cost very little iron per stretch and infantry can still vault them; wire costs more and breaks more easily, and exosuits walk through it; mechs flatten both by stepping on them. Since Change Log #08 an engineer can also pull down a stretch of barbed wire, even its own, by right-clicking it. The bunker's facing is set when it is placed, and it can be upgraded into an armed one later (DevBlog #24). Once the squad starts building, nothing spent is refunded (patch 0.11.4).",
+          "patterns": ["build-cover"]
+        },
+        {
+          "name": "Mine (build menu)",
+          "kind": "active",
+          "source": "innate",
+          "summary": "From the same build menu the squad plants a field mine anywhere there is room, each one drawing iron, a little oil and a population slot from the team. The mine is a small machine that lies dormant until an enemy mech enters its wide detection range; then it rises, crawls to the mech and explodes on contact (DevBlog #24; Mine page). Only mechs set it off and its blast hits them very hard, though infantry caught in it are hurt too; it never harms friendly units, and the wiki notes how hard it is to stop before it goes off. The seeker-mine and anti-tank variants of lay-mines.",
+          "patterns": ["lay-mines"]
+        },
+        {
+          "name": "Anti-Air Turret, MG Bunker and Cannon Bunker (build menu)",
+          "kind": "active",
+          "source": "innate",
+          "summary": "The menu's armed defences, which fire on their own. Since DevBlog #41 (September 2021) any faction's engineers can raise an anti-air turret, a base defence allowed only in the Headquarters zone whose quad flak gun tears through aircraft. Veteran engineers can also build a machine-gun bunker outright and elite ones a bunker with an anti-mech cannon; otherwise these come only by upgrading an unarmed bunker (DevBlog #24). Each bunker gun faces forward only, so a garrisoned squad covers its flanks and rear. DevBlog #21 gives every faction an empty bunker, one strong against infantry and one strong against mechs; for Usonia the wiki has veteran engineers build a flame bunker instead (see uncertain).",
+          "patterns": ["deploy-turret"]
+        },
+        {
+          "name": "Headquarters, Barracks and Workshop (build menu)",
+          "kind": "active",
+          "source": "innate",
+          "summary": "The menu's production buildings: a Headquarters, a Barracks or a Workshop of the squad's own faction, which can be placed only inside the player's base zone and which the squad then builds. The Barracks trains infantry (and, once upgraded, weapon systems) and the Workshop mechs, and all construction in a match falls to engineers. For Usonia the wiki also has elite engineers build a paratrooper bunker, whose beacon calls in paratroopers for resources, a call-in that belongs to the building. No pattern fits building structures that serve the team (see fit_notes).",
+          "patterns": []
+        },
+        {
+          "name": "Repair",
+          "kind": "channel",
+          "source": "innate",
+          "summary": "The squad mends a damaged mech, exosuit, weapon system or building, its own side's or, since Change Log #04, an ally's, standing still beside it while a progress bar fills. It cannot work on anything that is being fired at, and each repair draws on the team's resources: DevBlog #30 halved the price of mending exosuits in the field, and DevBlog #37 fixed engineers repairing mechs when too few resources were left. No wait: the squad can start again as soon as it is free. The hands-on and paid-repair variants of repair-allies.",
+          "patterns": ["repair-allies"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "No source shows anything special when the squad dies. Killing enemy infantry can leave a weapon kit behind, here an engineer kit that another squad can pick up to become engineers (game-wide)."
+      },
+      "strengths": [
+        {
+          "ref": "role:engineer",
+          "why": "All construction falls to engineers (Building Construction page): they alone raise the Headquarters, barracks and workshops a side needs to grow, and the fortifications too (its page; Infantry page)."
+        },
+        {
+          "ref": "pattern:repair-allies",
+          "why": "It mends mechs, exosuits, weapon systems and buildings in the field, an ally's too since Change Log #04, sparing them the trip back to base."
+        },
+        {
+          "ref": "pattern:lay-mines",
+          "why": "Its crawling mines wait anywhere, ignore infantry and run down any enemy mech that comes near for a heavy blow, and they are hard to stop before they go off (DevBlog #24; Mine page)."
+        },
+        {
+          "ref": "pattern:build-cover",
+          "why": "Sandbags give its infantry cover on open ground and barbed wire stops enemy infantry, both cheap and buildable anywhere (its page)."
+        },
+        {
+          "ref": "cost:very-low",
+          "why": "The cheapest unit in the game and quick to train, by its page, so losing a squad costs little."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:small-arms",
+          "why": "Its handguns hit feebly and reach only a short way, and its shovels are poor in melee, so in a fight the squad is all but helpless and raiders pick it off (its page)."
+        },
+        {
+          "ref": "speed:slow",
+          "why": "Slower than the rifle squads, so it cannot easily run from a raid (its page's Cons; infobox)."
+        },
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "Unarmoured soldiers, which its page says suffer badly against artillery, other infantry and anti-infantry units."
+        },
+        {
+          "ref": "pattern:repair-allies",
+          "why": "It must stand still to repair and cannot work on anything under fire, so it mends mechs only once the shooting stops (its page's Cons)."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-infantry",
+          "why": "Its page names anti-infantry units first among the things it is very vulnerable to, and its pistols cannot hold them off."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Its page also names other infantry: with handguns this weak, almost any infantry squad outfights it."
+        },
+        {
+          "ref": "role:siege",
+          "why": "Its page lists artillery among its worst threats, and a squad that stands still to build or repair makes an easy target."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:walker",
+          "why": "Its mines are set off only by mechs: they crawl at an approaching mech and burst for heavy damage, a threat the mech can hardly stop in time (DevBlog #24; Mine page)."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:walker",
+          "why": "It repairs mechs in the field, an ally's too (Change Log #04), so a mech push can keep going without a trip back to base."
+        },
+        {
+          "ref": "unit:iron-harvest.shared.field-cannon",
+          "why": "Every field cannon a faction builds comes crewed by five of its engineers, and the Infantry page makes engineers the default crew of every weapon system; engineers repair the guns too. No word-list or pattern link names guns crewed by engineers without far more units, so the link stands alone."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "DevBlog #21 advises garrisoning a bunker with infantry that covers its gap, such as anti-mech gunners inside a machine-gun bunker the engineers built."
+        }
+      ],
+      "memorable": "The only builders in the game: a cheap, near-defenceless squad that raises the base, lays mines that crawl after enemy mechs, mends mechs in the field and comes as the stock crew of every built gun.",
+      "as_player": "A cheap utility squad, nearly useless in a gunfight. Your build keys lay sandbags, barbed wire, bunkers and mines that crawl after enemy mechs, and inside your base raise production buildings and an anti-air turret; once veteran you can build armed bunkers outright. Hold your repair key beside a damaged mech or building to fix it for resources. Your pistols barely hurt infantry, so stay behind the line and leave any fight.",
+      "sources": [
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Polanian_Engineer",
+          "title": "Polanian Engineer, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Marked beta; stat box from August 2019, build list from April 2020 (page history)",
+          "note": "Read through the wiki's API, with its page history; the Saxon, Rusviet and Usonian Engineer pages give the same stat box and say every faction's engineers work alike. The infobox gives squad size, health, armour class, speed, price, the producing buildings, the Handgun's reach, bursts and damage per armour class, and the build list; the prose and Pros and Cons give what engineers do, their weak pistols and slowness, the veteran bunkers and the units they fear. Its italic opening line and Pros and Cons are the wiki's own words.",
+          "supports": [
+            "name",
+            "class",
+            "roles/primary",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "armament/0",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "abilities/2",
+            "abilities/3",
+            "abilities/4",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Mine",
+          "title": "Mine, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "version": "Marked beta",
+          "note": "The engineers' landmine: its price in iron, oil and population, its owner-only harm, the wide sensing range from which it crawls to its target, its being tuned to detect and attack mechs only, and its blast, which also hurts infantry caught in it.",
+          "supports": ["abilities/1", "roles/secondary", "strengths/2", "counters/0"]
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Infantry",
+          "title": "Infantry, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-28",
+          "note": "Calls engineers poorly armed but very versatile: they put up and mend buildings and defences, fix mechs, plant mines, and serve as the default crew of weapon systems. Also gives the squads' lying down, retreat and manning of weapon systems.",
+          "supports": ["roles/primary", "crew/notes", "mobility/notes", "strengths/0", "combos/1"]
+        },
+        {
+          "url": "https://kingart-games.com/article/77",
+          "title": "Iron Harvest DevBlog #24 - April 2020, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "Backer beta, April 2020",
+          "note": "Makes bunkers unarmed by default, upgradable to an MG bunker that only veteran engineers can build outright and then to a cannon bunker that otherwise only elite engineers can build, all of them garrisonable; and lets engineers build field mines, small machines that wait until a bigger enemy mech comes within range, then run at it and blow up on contact.",
+          "supports": ["abilities/0", "abilities/1", "abilities/2", "roles/secondary", "strengths/2", "counters/0"]
+        },
+        {
+          "url": "https://kingart-games.com/article/92",
+          "title": "Iron Harvest Change Log #04, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-28",
+          "version": "Change Log #04, October 2020",
+          "note": "Lets medics and engineers heal and repair allied units, and calls healing and repairing support roles that now reach teammates in multiplayer; base repair and aid stations are left out of the change.",
+          "supports": ["roles/secondary", "abilities/4", "strengths/1", "combos/0"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "faction",
+          "note": "Recorded once under shared, as the weapon systems are: the four engineer pages give the same stat box and say every faction's engineers work alike, and the registry notes put a type every side fields with the same stock parts under shared. The registry's shared faction is described as the common aircraft and weapon systems only, so this use of it is for the merge pass to confirm. The versions are the Polanian Engineers, the Saxon Engineers (https://iron-harvest.fandom.com/wiki/Saxon_Engineer), the Rusviet Engineers (https://iron-harvest.fandom.com/wiki/Rusviet_Engineer) and the Usonian Engineers (https://iron-harvest.fandom.com/wiki/Usonian_Engineer, Usonia from Operation Eagle), those three pages read, not cited; only the buildings they raise carry their faction's name, and Usonia's bunker line differs (see abilities/2)."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Support ranks first through Change Log #04, official text for every side's engineers that has them repair allied units and calls healing and repairing support roles (repair is one of support's aliases); read only as a button every copy has, support would rank at step 2, after anti-armour. Anti-armour comes from the mine button at step 2: only mechs set it off (DevBlog #24; Mine page), and the wiki's voice-line heading names it an anti-armour mine; read as a weapon it is an anti-tank mine, armour-piercing, which meets anti-armour's requires (recorded in atypical). Area denial (mines, wire, bunkers, also step 2) and anti-infantry (the pistols, step 3) are left out by the cap of two. Anti-air is not taken from the anti-air turret: a turret that guards ground is area denial by the engineer-or-area-denial tie-break, and the squad itself hits no aircraft."
+        },
+        {
+          "path": "tier",
+          "note": "The Headquarters gate rests on the four engineer pages' infoboxes and on the Structure page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Structure, read, not cited). Change Log #17 (https://kingart-games.com/article/106, read, not cited) moved the rifle squads off the Headquarters but names no such change for engineers."
+        },
+        {
+          "path": "cost_band",
+          "note": "The Headquarters and Barracks price is the infobox's, unchanged in the Polanian page's history since 2019; Change Log #17 and DevBlog #35 (https://kingart-games.com/article/107, read, not cited) changed only the Advanced Barracks price."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The infobox figure, unchanged since August 2019, gives slow, and the Cons and part of the prose agree; the Pros and another line of the prose call engineers fast.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/range",
+          "note": "A little under seven tenths of the reference rifle's reach, just below the short band's edge; the wiki also calls the pistols short-ranged."
+        },
+        {
+          "path": "abilities/0",
+          "note": "The unarmed bunker is put here as a fortification that shelters a garrison; the garrison itself is carry-passengers on the bunker (registry), not on the engineers. Sandbag and wire details come from the Sandbags and Barbwire pages of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Sandbags and https://iron-harvest.fandom.com/wiki/Barbwire), the build menu and building anywhere from its Building Construction page (https://iron-harvest.fandom.com/wiki/Building_Construction), the bunker from its Polanian Unarmed Bunker page (https://iron-harvest.fandom.com/wiki/Polanian_Unarmed_Bunker), exosuits walking through wire from its Unit page (https://iron-harvest.fandom.com/wiki/Unit), wire cutting from Change Log #08 (https://kingart-games.com/article/96) and the refund rule from patch 0.11.4 (https://kingart-games.com/article/84), all read, not cited."
+        },
+        {
+          "path": "abilities/2",
+          "note": "The anti-air turret rests on DevBlogs #40 and #41 (https://kingart-games.com/article/116 and https://kingart-games.com/article/117) and the Anti-Air Turret page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Anti-Air_Turret), read, not cited; the Polanian and Saxon engineer pages still leave it out of their build lists. The bunker guns come from the Polanian MG Bunker and Polanian Cannon Bunker pages and DevBlog #21 (https://kingart-games.com/article/73), read, not cited. For Usonia, the Usonian Engineer page lists MG and cannon bunkers like the others', but the Usonia page and the Flame Bunker and Paratrooper Bunker pages (https://iron-harvest.fandom.com/wiki/Usonia, https://iron-harvest.fandom.com/wiki/Flame_Bunker, https://iron-harvest.fandom.com/wiki/Paratrooper_Bunker, read, not cited) give it a bunker, a flame bunker for veteran engineers and a paratrooper bunker for elite ones; the latter are followed. The registry note names only build-cover and lay-mines for the engineers' fortifications; these defences fire on their own, so they link deploy-turret.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/3",
+          "note": "That production buildings can go only in the base zone rests on the Building Construction page (read, not cited). The Usonian paratrooper bunker is put here because its job is bringing in troops rather than cover or fire, though it can be garrisoned too."
+        },
+        {
+          "path": "abilities/4",
+          "note": "Channel: the Repair page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Repair, read, not cited) has the engineers stand still until a progress bar fills, and their page's Cons say they cannot repair what is under fire. That repairs cost resources rests on DevBlog #30 (https://kingart-games.com/article/90) and DevBlog #37 (https://kingart-games.com/article/111), read, not cited; no source gives a price for repairs by engineers, nor says whether the order has its own button or is given by clicking the damaged unit."
+        },
+        {
+          "path": "crew/notes",
+          "note": "The stock crew rests on the Infantry page and on the Polanian Field Cannon page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Polanian_Field_Cannon, read, not cited), whose infobox names Polanian Engineers as its default crew of five; the Weapon System page (https://iron-harvest.fandom.com/wiki/Weapon_System, read, not cited) has three work the gun while the rest guard it and the squad give the gun up when too few are left, and the Weapon page (https://iron-harvest.fandom.com/wiki/Weapon, read, not cited) has the survivors of a destroyed gun go back to their own type."
+        },
+        {
+          "path": "on_death",
+          "note": "The kit left by fallen infantry rests on the Weapon page of the Iron Harvest Wiki (read, not cited)."
+        },
+        {
+          "path": "combos/1",
+          "note": "The crew of five comes from the Polanian Field Cannon page's infobox (read, not cited; see crew/notes); the heavy machine gun and mortar pages were not read, and the Infantry page names engineers as the default crew of weapon systems in general."
+        },
+        {
+          "path": "combos/2",
+          "note": "DevBlog #21 (read, not cited) gives this pairing for bunkers in general, naming gunners in an MG bunker as its example."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J13-IRON-HARVEST",
+      "fit_notes": [
+        {
+          "path": "abilities/3/patterns",
+          "used": "none (empty list)",
+          "wanted": "build a structure that serves the team: lay down a production building or base that trains units or opens tech once the builders finish it",
+          "note": "The build menu's Headquarters, Barracks and Workshop (and Usonia's paratrooper bunker) are buildings that serve the team. build-cover is for cover pieces, deploy-turret for defences that fight on their own and host-spawn-point for respawning at the unit, so none fits raising a production building in the base zone."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "roles/secondary",
+          "rule": "roles:anti-armour requires damage:armour-piercing|damage:energy|damage:electric|damage:emp|pattern:infest-vehicle",
+          "note": "Anti-armour comes from the mine button at roles.secondary step 2, which meets the requires through the mine's own armour-piercing blast, read as a weapon; the validator reads requires only from weapons and patterns, and the squad's only weapon is a pistol."
+        }
+      ]
+    }
+  ]
+}

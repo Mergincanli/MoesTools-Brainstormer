@@ -67,7 +67,13 @@ function categoryRole(dir) {
   const all = fs.readdirSync(path.join(dir, 'data/units')).flatMap(f => load(dir, `data/units/${f}`).units)
   const used = new Set([...all.flatMap(u => [u.roles.primary, ...(u.roles.secondary || [])]), c.parts.roles.primary, ...c.parts.roles.secondary])
   const roles = load(dir, VOCAB('roles'))
-  const role = roles.terms.find(t => !t.requires && !t.classes && !used.has(t.id)) ?? assert.fail('no free role without rules')
+  // Once every role without rules is in use (batch R3), add an unused copy of one to this copy's word list.
+  const role = roles.terms.find(t => !t.requires && !t.classes && !used.has(t.id)) ?? (() => {
+    const base = roles.terms.find(t => !t.requires && !t.classes) ?? assert.fail('no role without rules')
+    const copy = { ...structuredClone(base), id: 'test-unused-role', label: 'Unused role (test copy)' }
+    roles.terms.push(copy)
+    return copy
+  })()
   const u = unit(d, 'hammer-tank')
   const linked = new Set([...u.abilities, ...u.armament].flatMap(a => a.patterns || []))
   const have = new Set(reg.filter(p => linked.has(p.id)).map(p => p.category))

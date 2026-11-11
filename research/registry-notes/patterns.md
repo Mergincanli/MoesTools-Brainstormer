@@ -6,6 +6,11 @@
 > - Capturing a control point is a game-mode rule, not a pattern; capture-structure is taking over or sabotaging a building.
 > - A remote-piloted drone is the crew model `remote`, not launch-drones. Firing from inside a vehicle (ports or an open top) goes to passenger-sets-weapon's fire-ports variant, with the seat role `passenger-firing`; for a vehicle, carry-passengers is for riders who cannot act until they get out. A building or bunker garrison stays carry-passengers even when its riders fire from it.
 > - invulnerability-window was renamed become-invulnerable; the tunnel network has its own id, build-linked-exits; new ids fire-countermeasures and confuse-enemies were added.
+>
+> **Corrections from batch R3's patterns, which also win over the text below:**
+> - The horde bonus (stronger in a group, Generals China) is band-together, not a passive variant of rally-allies: every member checks its own neighbours and no single unit gives the bonus.
+> - A soldier who plants himself and steers his one drone by hand links launch-drones through its piloted-drone variant (Tempest Rising's Drone Operator, whose crew is solo). A vehicle that is itself flown from afar keeps the crew model `remote`.
+> - A placed device that heals, repairs or resupplies on its own is deploy-turret's support-station variant; the registry summary now covers it.
 
 # Pattern registry additions (step 1)
 

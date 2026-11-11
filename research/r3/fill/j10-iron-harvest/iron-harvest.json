@@ -1,0 +1,752 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "iron-harvest",
+  "units": [
+    {
+      "id": "iron-harvest.polania.anna-kos",
+      "game": "iron-harvest",
+      "faction": "polania",
+      "name": "Anna Kos",
+      "flavour_affinity": [],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "unique",
+      "roles": {
+        "primary": "anti-infantry",
+        "secondary": ["support", "disabler"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Reserve I",
+        "basis": "In skirmish and multiplayer a hero reaches the field only through a reserve, and KING Art's DevBlog #40 has Anna and Wojtek arrive with Reserve 1, which a player may call in once they own a Barracks or a Workshop (DevBlog #27). That is the tier map's Reserve I gate, t1. The Headquarters named in her wiki infobox is only where reserves are called from and where fallen heroes come back, so it is not her gate. Each player brings one hero, picked with the faction before the match."
+      },
+      "cost_band": {
+        "band": "very-low",
+        "raw": 330,
+        "basis": "Her wiki infobox price, counted as iron plus three times the oil, comes to a little over a third of the anchor line mechs' price, under the low threshold. It has stood since September 2020, and no KING Art post read up to DevBlog #47 changes it. She is called in with Reserve I rather than built, and since DevBlog #35 a reserve's price depends on the units it holds; her population cost is left out."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1,
+        "notes": "Her infobox speed equals the rifle squads', the registry's speed reference, and the wiki says she can outpace almost every mech. Like other infantry she hops over low walls and fences, and DevBlog #24 notes that the bear does too. Strafe is the on-foot default."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "count": 2,
+        "notes": "Two bodies come with the one purchase: Anna, a young soldier on foot, and Wojtek, a huge brown bear with a health pool of his own who stays at her side. The game moves the bear like infantry (he vaults walls as soldiers do, DevBlog #24), so nothing here codes him as a bigger body. The body plan describes Anna; the bear is the beast it cannot also hold (see fit_notes)."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["downed-revive"],
+        "notes": "Step 1 of the armour-class steps decided: her infobox gives Unarmored, which the armour map reads as unarmoured. No source gives Wojtek an armour class; KING Art's posts give him his own health, cut twice (Change Log #17, DevBlog #40). Fallen heroes follow the registry's game-wide rule: at zero health she drops unconscious instead of dying and is out of play, so no enemy can target or finish her, and no source shows her crawling or moving while down. Any friendly infantry squad or hero on foot, an ally's included, brings her round where she lies at no cost, and the Headquarters can also return her. Her four veterancy ranks raise her health (Change Log #04 trimmed those bonuses); cover and lying flat help her as they help every soldier."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "No source gives sight figures for Iron Harvest units (registry), so the band is the medium proposal; the wiki's Pros praise her field of view only in words. No source gives her radar, a detector or stealth. Since DevBlog #35 an unconscious hero lights up less of the map around her."
+      },
+      "armament": [
+        {
+          "name": "Sniper Rifle",
+          "slot": "primary",
+          "family": "sniper",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["stun"],
+          "summary": "A scoped bolt-action rifle that fires one heavy round every few seconds. Each hit is hard on soldiers, and anyone it fails to kill is thrown to the ground for a moment, open to the next blow. Against armour it does only a fifth to two-fifths as much (Change Log #17 cut its damage to light armour), and buildings take little more. It reaches a good deal further than the registry's reference rifle, the longest reach among the infantry heroes by the wiki's account."
+        },
+        {
+          "name": "Ferocious Maul (Wojtek's melee)",
+          "slot": "secondary",
+          "family": "blades",
+          "damage": "melee",
+          "mount": "auto-target",
+          "delivery": "melee",
+          "range": "melee",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["knockback"],
+          "summary": "Wojtek's claws, teeth and bulk at touching distance, a swipe every couple of seconds. The bear charges in by himself once the pair is drawn into a fight, bowling soldiers aside, and stays on his target until it is beaten or Anna calls him back; enemy soldiers then turn on him, which is how he shields her. He hits soldiers harder than armour and buildings harder still; DevBlog #40 cut his damage to infantry. The maul is missing while he waits to return after being killed."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player is Anna. Wojtek is an AI partner, not a second seat or a squad member: he follows her, joins fights on his own and takes her send and recall orders (abilities), he can be sent off alone, he went on fighting after Anna fell until Change Log #17 weakened him, and when killed he comes back after a wait while she lives on. Like the other infantry heroes she can garrison a building, a game-wide mechanic; DevBlog #41 fixed Wojtek's health changing when she does."
+      },
+      "abilities": [
+        {
+          "name": "Piercing Shot",
+          "kind": "active",
+          "cooldown": "medium",
+          "source": "innate",
+          "patterns": ["fire-power-shot"],
+          "summary": "Anna takes a moment to aim, then fires one round that goes through everything on its line, so a squad caught in a row can lose several soldiers at once. It hits soldiers about seven times as hard as her rifle and mechs several times as hard, enough to hurt one shot from behind, and it carries past the rifle's reach, to a little under twice the reference rifle's. A wait of somewhat under a minute follows (medium band). Change Log #20 made it fire more reliably and put it ahead of her other actions. Her wiki infobox lists it in a weapon slot marked as an ability."
+        },
+        {
+          "name": "Ferocious Maul / Call Wojtek",
+          "kind": "active",
+          "source": "innate",
+          "patterns": [],
+          "summary": "One button orders the bear: send him at a chosen enemy to brawl, or call him straight back to Anna when a fight turns too heavy even for him, which also lets her slip away while he holds the enemy's attention. Wojtek is a lasting AI partner: always summoned, fighting by himself whenever the pair is engaged, with health of his own. If he is killed, he can be summoned again only after a long wait (wiki Cons and trivia). Change Log #17 and DevBlog #40 both cut his health, the first because he kept on fighting after Anna went down."
+        },
+        {
+          "name": "Wojtek (passive heal)",
+          "kind": "passive",
+          "source": "innate",
+          "patterns": ["repair-allies"],
+          "summary": "Wojtek slowly heals friendly infantry close to him, Anna included, at no cost, and walks over to wounded soldiers within reach to tend them. Polania trains no medics, so this is the faction's field healing whenever Anna is on the map. Change Log #20 lets him keep tending friendly soldiers while Anna is crouched behind cover. The two wiki pages differ on whether he treats everyone near him at once or one unit after another, and on whether he heals only out of combat (see uncertain)."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "The 3C default for an organic unit. In skirmish and multiplayer she is never removed: she drops unconscious and waits to be revived (armour.models), and the Headquarters can bring a fallen hero back as well (Structure page). Wojtek's own deaths are covered under abilities: he returns after a long wait."
+      },
+      "strengths": [
+        {
+          "ref": "weapon:sniper",
+          "why": "Her rifle is deadly to soldiers, and those it does not kill are knocked to the ground (wiki); DevBlog #40 credits Anna and Wojtek with the edge over most infantry groups of the early game."
+        },
+        {
+          "ref": "pattern:fire-power-shot",
+          "why": "Piercing Shot drives one round through every target in a line, so it can thin a squad before it closes in, and it still hurts a mech struck from behind (wiki)."
+        },
+        {
+          "ref": "pattern:repair-allies",
+          "why": "Wojtek heals nearby friendly soldiers for free, the only field healing a Polanian army has, since the faction trains no medics (wiki)."
+        },
+        {
+          "ref": "weapon:blades",
+          "why": "The bear charges in by himself, scatters soldiers and draws the enemy's fire onto himself, so Anna can shoot from behind him or get away (wiki; Wojtek page)."
+        },
+        {
+          "ref": "armour-model:downed-revive",
+          "why": "At zero health she drops unconscious instead of dying, where no enemy can finish her, and any friendly soldier can revive her for free (registry note on fallen heroes)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "weapon:sniper",
+          "why": "Her rifle does little to armour of any weight (wiki Cons), and Change Log #17 cut its damage to light targets further, so mechs leave her little choice but to back away."
+        },
+        {
+          "ref": "weapon:blades",
+          "why": "Groups of infantry, flamethrowers above all, wear Wojtek down fast, and once killed he takes a long time to return (wiki Cons); KING Art has cut his health twice."
+        },
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "She wears no armour, so fire that gets past the bear hurts her in full; the wiki says that against large numbers or armoured support she can only run."
+        },
+        {
+          "ref": "availability:unique",
+          "why": "One hero per player, picked before the match and called in only with Reserve 1 (DevBlog #40)."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "armour-class:>=medium",
+          "why": "Anything armoured, from light mechs and exosuits up, shrugs off her rifle; the wiki rates her close to helpless against armour of any weight."
+        },
+        {
+          "ref": "unit:iron-harvest.rusviet.kolokol",
+          "why": "The Rusviet Kolokol mech, armoured against her rifle, knocks her off her feet with its blasts (wiki Cons)."
+        },
+        {
+          "ref": "weapon:flamethrower",
+          "why": "Flamethrowers burn through Wojtek's health quickly (wiki Cons), and without the bear in front Anna has no shield."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "Rifle hits that kill or floor soldiers, a round that pierces a whole line and a bear that wades in give the pair the edge over most early infantry groups and the other early-game heroes (DevBlog #40)."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:infantry",
+          "why": "Friendly squads that fight beside Wojtek are healed by him for free, which a Polanian army otherwise lacks; Change Log #20 keeps his healing going while Anna shelters behind cover."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Reasoned: an anti-armour teammate deals with the mechs her rifle cannot hurt, the threat the wiki says she can only run from."
+        }
+      ],
+      "memorable": "A teenage sniper and her bear: she picks soldiers off from afar or spears a whole line with one piercing round, while Wojtek brawls up front, soaks the fire and patches up the troops around him.",
+      "as_player": "A cheap T1 hero: you are Anna, a fragile sniper with a long reach, and an AI bear fights at your side. Left mouse fires the scoped rifle, which kills or floors soldiers but barely dents armour; Q lines up Piercing Shot, one round through everything on its line; E sends Wojtek at a target or calls him home, and on his own he heals hurt teammates near him. Mechs are your cue to pull back, and a downed Anna waits for a teammate to pick her up.",
+      "sources": [
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Anna_Kos",
+          "title": "Anna Kos, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Infobox figures entered 22 September 2020; last stat edit 10 January 2022 (page history)",
+          "note": "Read through the wiki's API, with its page history. Infobox: Unarmored, health, movement speed, price in iron and oil, population, Headquarters, and three weapon slots, the Sniper Rifle, Wojtek's Ferocious Maul and Piercing Shot (marked as an ability), with reach, rate and damage per armour class; the rifle's damage to light armour predates Change Log #17, and the maul's damage to infantry was updated after DevBlog #40. Prose: the rifle knocks surviving soldiers down, Wojtek charges when attacked and returns when called, the three abilities, the bear's respawn wait, Pros and Cons. Its italic opening line, unit type and Pros and Cons are the wiki's own words, which the roles rules do not read as official text.",
+          "supports": [
+            "class",
+            "nature",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour/class",
+            "armament/0",
+            "armament/1",
+            "abilities/0",
+            "abilities/1",
+            "abilities/2",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Wojtek",
+          "title": "Wojtek, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "note": "The bear's own page, read through the API: very strong against soldiers and barely slowed by bullets, he charges in unless Anna orders him back, so enemies focus on him while she shoots; his attack-or-return order, and the passive heal that treats one nearby infantry unit at a time out of combat and then looks for the next wounded one.",
+          "supports": ["armament/1", "abilities/1", "abilities/2", "strengths/3", "body"]
+        },
+        {
+          "url": "https://kingart-games.com/article/116",
+          "title": "Iron Harvest DevBlog #40 - July 2021, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Changelog 23, posted 5 August 2021",
+          "note": "Changelog 23 says that Anna and Wojtek enter with Reserve 1 and that, being strong and versatile, the pair outclasses the rest of the early heroes and most infantry groups then in the field; it cuts Wojtek's health and his damage to infantry while leaving her sniping as strong as before. Read as official text that the pair is strong against infantry (roles step 4) and as the official text that calls her a sniper.",
+          "supports": [
+            "tier",
+            "roles/primary",
+            "roles/secondary",
+            "armament/1",
+            "abilities/1",
+            "counters/0",
+            "weaknesses/3"
+          ]
+        },
+        {
+          "url": "https://kingart-games.com/article/106",
+          "title": "Iron Harvest Change Log #17, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Change Log #17, 11 February 2021",
+          "note": "Cuts Anna's damage to light armour and Wojtek's health, because her damage to armour was judged too high and the bear kept going even once Anna had been knocked out.",
+          "supports": ["armament/0", "abilities/1", "crew", "weaknesses/0", "armour/notes"]
+        },
+        {
+          "url": "https://kingart-games.com/article/110",
+          "title": "Iron Harvest Change Log #20, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Change Log #20, 25 March 2021",
+          "note": "Piercing Shot is made more reliable and put ahead of whatever else she is doing, and Wojtek keeps healing friendly soldiers while Anna sits behind cover.",
+          "supports": ["abilities/0", "abilities/2", "roles/secondary", "combos/0"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "tier",
+          "note": "Reserve I rests on DevBlog #40 alone. Reserve I's condition (a Barracks or a Workshop) comes from DevBlog #27 (https://kingart-games.com/article/81, read, not cited), and no later post read changes it. A hero is unique, and that availability starts at t2 (atypical)."
+        },
+        {
+          "path": "cost_band",
+          "note": "Raw is the infobox's iron plus three times its oil, entered on 22 September 2020; no KING Art post read, DevBlog #20 to DevBlog #47 (articles 67 to 123), changes Anna's price. No page says what that figure buys: she is called in with a reserve, whose price since DevBlog #35 (https://kingart-games.com/article/107, read, not cited) depends on what it holds and stays cheaper than building the units, and heroes also cost reserve coins at the pick (patch 0.11.5, https://kingart-games.com/article/85, read, not cited)."
+        },
+        {
+          "path": "roles/primary",
+          "note": "Anti-infantry rests on reading DevBlog #40's line, that the pair's strength and versatility beat most infantry groups of the early game, as official text that the unit is strong against infantry (roles step 4). No post gives her a bracketed label, and the wiki's unit type (Infantry Support Hero, Sniper Hero in September 2020) and opening line are the wiki's own words. Read otherwise, step 4 finds nothing (the registry finds no bonus in per-class damage figures) and step 5 gives assault: the rifle is no tool, and her pace equals the rifle squads', so she is not fast enough for raider."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Support ranks at step 1: Change Log #20 says the bear now heals friendly infantry when Anna takes cover, and its word 'heals' is read as a word form of the alias healer, the way harasses names harasser. Read more strictly, the heal is a passive, which is no button, mode or weapon, so no step would rank it and support would drop out. Disabler ranks at step 3 on the rifle's stun trait, which rests on one sentence of the wiki. Marksman is left out (fit_notes): DevBlog #40 calls her a sniper, which would put it first, but the role needs a sniper weapon of long reach and her rifle is medium. Scout fails its requires (medium speed and sight, no sensor trait or stealth), although the wiki names scouting among her specialities and the Unit page (https://iron-harvest.fandom.com/wiki/Unit, read, not cited) calls the infantry heroes great scouts; those are the wiki's words."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "Banded from the infobox reach, entered in September 2020: about 1.4 times the registry's reference rifle, so medium, short of long's edge at 1.5. No KING Art post read changes her rifle's reach."
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "Stun rests on the wiki's Weapons section, which says soldiers who live through her hit end up on the ground, exposed; no source gives how long. Knockdowns of this kind come from other heavy hits too (the wiki's Cons have the Kolokol knock Anna down, and DevBlog #40's Changelog 23 makes retreating infantry immune to tumbling), so this may be a general reaction of soldiers to big hits rather than a property of her rifle; without it the rifle has no trait and disabler drops out of roles.secondary."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Structures rest on the infobox's building damage figure; the sniper family leaves them out (atypical). No source says the rifle can attack aircraft, so no air target is listed."
+        },
+        {
+          "path": "armament/0/summary",
+          "note": "The wiki infobox still gives the rifle's damage to light armour from before Change Log #17, which cut it by a third; the summary follows the post. The infobox's other damage figures date from September 2020, and no later post read changes them.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No source says how the round travels; hitscan is the sniper family's default. No damage map exists for the game, so the damage is the family default, kinetic."
+        },
+        {
+          "path": "armament/1",
+          "note": "The maul is coded as the unit's secondary weapon because the bear is always with her and fights whenever the pair is engaged; it is missing while he waits to respawn. Its figures come from the infobox's second slot. Its knockback rests on the wiki's line that he sends soldiers flying out of his way."
+        },
+        {
+          "path": "abilities/1",
+          "note": "No source gives a figure for the order's cooldown or for Wojtek's respawn wait: the wiki's Cons call it long, and its trivia says only that a wait must pass before she can call him back. The Wojtek page rates him much tougher than Anna, while the posts' health figures for him (cut twice, to well under her infobox health) suggest the opposite. DevBlog #41 (https://kingart-games.com/article/117, read, not cited) fixed his health changing when Anna enters a garrison.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/2",
+          "note": "The Anna Kos page says Wojtek treats every soldier near him over time and goes looking for hurt ones within reach; the Wojtek page says he heals one nearby infantry unit at a time, outside combat, and then looks for the next. Change Log #20 has his healing carry on while Anna shelters behind cover. The pattern and kind are the same either way.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/0/cooldown",
+          "note": "Medium rests on the infobox's cooldown for the Piercing Shot slot, which the wiki's Pros repeat; the figure dates from September 2020 and no post read changes it."
+        },
+        {
+          "path": "armour/models",
+          "note": "Downed-revive follows the registry's game-wide note on fallen heroes; Anna's own pages do not describe her downed state. DevBlog #35 (https://kingart-games.com/article/107, read, not cited) lets infantry and foot heroes revive allied heroes who have fallen unconscious; the Admiral Mason page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Admiral_Mason, read, not cited) says that, unlike him, every other hero is brought round at no cost once a friendly unit reaches them; patch 0.11.2 (https://kingart-games.com/article/83, read, not cited) treats unconscious units as out of play; the Structure page (https://iron-harvest.fandom.com/wiki/Structure, read, not cited) lets the Headquarters bring fallen heroes back."
+        },
+        {
+          "path": "on_death",
+          "note": "The 3C proposal default is kept because the downed state is coded as the armour model and no source shows a hero being removed for good in skirmish or multiplayer. If the unconscious body that teammates can revive counted as an outcome of its own, no on-death term would fit: wreck is barred for organic units."
+        },
+        {
+          "path": "body/count",
+          "note": "Two, for Anna and the bear, who has his own health and is always summoned; he is not a squad member (see crew). If a companion is not counted as a body, the count would be left out. DevBlog #24 (https://kingart-games.com/article/77, read, not cited) says the bear vaults low walls the way soldiers do, the one hint read on how the game moves him."
+        },
+        {
+          "path": "class",
+          "note": "Infantry: KING Art calls Anna, Olga and Gunter the infantry heroes (Change Log #04, https://kingart-games.com/article/92, read, not cited) and lists Anna Kos with the infantry whose cover response it improved (Change Log #08, https://kingart-games.com/article/96, read, not cited)."
+        },
+        {
+          "path": "countered_by/1",
+          "note": "The Kolokol link names the unit the wiki's Cons single out; its id follows the DevBlog short name. Massed infantry are left out of countered_by: the wiki says she stands little chance against large numbers, but DevBlog #40 has the pair beat most infantry groups.",
+          "sources_disagree": true
+        },
+        {
+          "path": "combos/1",
+          "note": "Reasoned from the wiki's Cons (hopeless against armour) and its general description (she can only flee from armoured support); no source names this pairing."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles",
+          "used": "anti-infantry, support, disabler",
+          "wanted": "marksman",
+          "note": "KING Art calls her a sniper (DevBlog #40) and every source builds her around a scoped rifle, but marksman needs a sniper weapon that reaches long or further, and hers reaches about 1.4 times the reference rifle, medium. Her long-reaching shot is the Piercing Shot ability, which the role rules do not read as a weapon."
+        },
+        {
+          "path": "roles",
+          "used": "anti-infantry, support, disabler",
+          "wanted": "scout",
+          "note": "The wiki names scouting among her specialities and praises her long field of view, and its Unit page calls the infantry heroes great scouts, but scout's requires fail: she moves at the rifle squads' pace, no source gives a sight figure, and she has no sensor trait, stealth, mark or reveal. Those are the wiki's words, so step 1 of roles.secondary does not read them either."
+        },
+        {
+          "path": "abilities/1/patterns",
+          "used": "none",
+          "wanted": "command-companion: a lasting AI partner, usually an animal, that fights beside you on its own and takes short orders such as attack or come back",
+          "note": "Wojtek is a permanent second body with his own health that charges into fights by himself, takes send and recall orders, shields Anna by drawing fire and respawns after a long wait when killed. launch-drones is for expendable minions released on a key, so it does not fit. reinforce-squad's respawning-followers variant matches only the bear's return after a wait once he is killed, not a partner who fights by himself and obeys orders, and Change Log #17 has him fighting on after Anna fell, so it is not linked; the merge pass may want it beside the new pattern."
+        },
+        {
+          "path": "body/plan",
+          "used": "humanoid",
+          "wanted": "a soldier with an animal partner (a humanoid body plus a beast)",
+          "note": "One body plan holds one shape: Anna is a humanoid, while Wojtek, the second body of the purchase, is a large bear that the beast plan would describe. The pair shows only in body.count and body.notes."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "availability",
+          "rule": "availability:unique min_tier t2",
+          "note": "A named hero, one per player, who enters with Reserve 1 (DevBlog #40), the tier map's t1 gate; our unique availability starts at t2, as the registry note expects for heroes called in with Reserve I."
+        },
+        {
+          "path": "body/plan",
+          "rule": "bodies:humanoid allowed.aim-models auto-target",
+          "note": "The auto-target mount is our proposal for Wojtek's maul: the bear picks his own targets while the player aims Anna's rifle. The humanoid plan describes Anna, who carries no such mount; the break comes from a companion's attack sitting on a soldier's unit."
+        },
+        {
+          "path": "armament/0/family",
+          "rule": "weapon-families:sniper allowed.target-types structure",
+          "note": "Her rifle's infobox gives it damage against buildings, a little more than against mechs, while our sniper family leaves structures out."
+        },
+        {
+          "path": "armament/0/traits",
+          "rule": "weapon-traits:stun min_tier t2",
+          "note": "The rifle throws surviving soldiers to the ground for a moment (wiki), coded as stun; she is a t1 hero, and our stun starts at t2."
+        }
+      ],
+      "researched_by": "batch r3, agent J10-IRON-HARVEST",
+      "review": {
+        "status": "unchecked"
+      }
+    },
+    {
+      "id": "iron-harvest.rusviet.olga-morozova",
+      "game": "iron-harvest",
+      "faction": "rusviet",
+      "name": "Olga Morozova",
+      "flavour_affinity": ["soviet"],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "unique",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["anti-infantry", "scout"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Reserve I",
+        "basis": "In skirmish and multiplayer a hero reaches the field only through a reserve. No source read names Olga's, so Reserve I, the tier map's t1 gate (open once a player owns a Barracks or a Workshop), is the band the evidence best supports: KING Art groups her with Anna and Gunter as the infantry heroes (Change Log #04), and both of those come with the first reserve. The Headquarters is only where reserves are called from. Each player brings one hero, picked with the faction before the match."
+      },
+      "cost_band": {
+        "band": "low",
+        "basis": "No source read gives her price: her wiki page carries no figures, and no KING Art post from DevBlog #20 to DevBlog #47 names one. Low is a judgement from the wiki prices of the other heroes who fight on foot or horseback: Anna's is very low, while Gunter's and the cavalry hero Michał Sikorski's are low, as is that of Victor Popov, the Rusviet exosuit hero. Patch 0.11.5 also gave every tier 1 hero the same reserve-coin price at the pick. No raw figure is stored."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": ["transform"],
+        "speed": "medium",
+        "notes": "No source gives her speed figure. The wiki says she can outrun regular infantry, which under the speed rules gives the rifle squads' band, medium, since it does not say much faster; the wiki's Unit page also calls the infantry heroes fast in general words. She goes faster still on Changa's back (see modes). Strafe is the on-foot default; transform stands for Ride the Tiger, which switches her into the ridden form."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "notes": "A lone agent on foot. Changa, her Siberian tiger, is not a second body on the field most of the time: she keeps out of sight until Olga calls her to ride or until an attack ends the ride, when the tiger fights on her own for a short while (see abilities and modes)."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["downed-revive"],
+        "notes": "Step 1 of the armour-class steps decided: the wiki infobox's Unarmored, read through the armour map. The wiki counts her small health and lack of armour among her weaknesses, and patch 0.11.5 and Change Log #06 both lowered her health; on Changa's back she has more health than on foot (Change Log #06). Fallen heroes follow the registry's game-wide rule: at zero health she drops unconscious instead of dying (DevBlog #30 fixed a bug in her animations that stopped her doing so) and is out of play, so no enemy can finish her, and no source shows her moving while down. Any friendly infantry squad or hero on foot, an ally's included, revives her where she lies for free, and the Headquarters can return her too. Her four veterancy ranks raise her health (bonuses trimmed in Change Log #04)."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "No Iron Harvest source gives sight figures (registry), so the band is the medium proposal. Her camouflage hides her fully on a passive of its own, so it is coded there as the cloak pattern (abilities), not as the stealth sensor trait. No source gives her radar or a detector, and no unit in the game detects hidden ones (registry)."
+      },
+      "armament": [
+        {
+          "name": "Submachine gun",
+          "slot": "primary",
+          "family": "small-arms",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "hitscan",
+          "range": "short",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "summary": "Her main gun: short-ranged, yet one burst can drop a soldier, so she can wipe out a lone squad (wiki; the Rusviet page says the same of single squads). Up close she also cuts soldiers down with her shashka sabre, the melee blow every infantry unit has (see uncertain). Change Log #04 halved the gun's damage to light armour and raised the sabre's, so the gun now does only a small part of what the blade does to light mechs. She cannot shoot while riding Changa."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One player is Olga. Changa is an AI partner who waits out of sight: she is Olga's mount on call, and she fights on her own for a short while after an attack ends the ride. While riding, Olga still counts as an infantry hero: Change Log #04 lets her be healed at barracks and medic stations without leaving the tiger's back, and medics charge the same as when she is on foot."
+      },
+      "abilities": [
+        {
+          "name": "Remote Detonators",
+          "kind": "active",
+          "source": "innate",
+          "patterns": ["throw-explosive"],
+          "summary": "Olga fixes a charge to a chosen mech or building. It blows by itself once she has gone far enough away, or she can fire it by hand, so she can set it while hidden and walk off before it goes. It hurts light and medium armour most, heavy armour a little less, and buildings and soldiers least; since DevBlog #41 its damage scales with her veterancy, lower before her first rank and higher at her top two. Patch 0.11.5 had already weakened it. No source gives a cooldown or how many charges she may have out."
+        },
+        {
+          "name": "Ride the Tiger",
+          "kind": "toggle",
+          "source": "innate",
+          "patterns": ["transform"],
+          "summary": "Calls Changa out of hiding and puts Olga on her back: quicker and tougher than on foot, but in plain view, since her camouflage stays off for as long as she rides. Ordering an attack makes her jump down, and the tiger then joins the fight briefly before slipping away (the triggered entry below). She uses it to travel fast or to escape. Change Log #09 fixed Changa coming straight back after being killed: she now waits out her cooldown first."
+        },
+        {
+          "name": "Ride the Tiger: Changa joins the fight",
+          "kind": "triggered",
+          "source": "innate",
+          "patterns": [],
+          "summary": "When an attack drops Olga off the tiger, Changa stays and fights beside her for a short time, then goes back into hiding. The tiger is a lasting AI partner with health of her own: her claws and teeth hit soldiers hard but mechs barely (Change Log #04), and if she is killed she can be called again only after a cooldown (Change Log #09). The wiki notes that she gives Olga far less active help than Anna's bear or Gunter's wolves give theirs."
+        },
+        {
+          "name": "Camouflage",
+          "kind": "passive",
+          "source": "innate",
+          "patterns": ["cloak"],
+          "summary": "Enemies cannot see Olga while none of them is near. An enemy that gets her within about half its range, or any action of hers, such as using an object, gives her away, and she hides again once no enemy is close; riding Changa keeps it off. Standing still is not needed, only distance. While hidden she is out of play for enemy fire: patch 0.11.2 stopped ground-attack orders from hitting units in stealth mode. The wiki calls her the only base-game unit that could hide this way."
+        }
+      ],
+      "modes": [
+        {
+          "id": "riding-changa",
+          "name": "Riding Changa",
+          "via": "transform",
+          "body": {
+            "plan": "beast"
+          },
+          "summary": "Olga on her tiger's back: faster than on foot and with more health (Change Log #06), but visible, since her camouflage stays off, and unable to shoot, because an attack order makes her jump down and ends the mode. No source gives either form's speed figure, and the wiki's comparison keeps both in the medium band, so the mode records no new mobility. She still counts as infantry for healing (Change Log #04)."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "The 3C default for an organic unit. In skirmish and multiplayer she is not removed: she drops unconscious until revived (armour.models), and the Headquarters can bring her back too (Structure page). Changa's deaths are covered under abilities: she can be called again after a cooldown."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:cloak",
+          "why": "Enemies cannot see her until they come close or she acts, and she hides again once they have gone, so she can scout and set charges unseen; the wiki calls her the only unit of the base game that hides actively."
+        },
+        {
+          "ref": "pattern:throw-explosive",
+          "why": "Her remote charges, left on a mech or building and set off by walking away, hit light and medium mechs hardest and grow with her rank (DevBlog #41); the wiki calls her explosives fairly powerful."
+        },
+        {
+          "ref": "weapon:small-arms",
+          "why": "One burst of her gun can drop a soldier, and with the sabre up close she can cut a single squad apart (wiki)."
+        },
+        {
+          "ref": "pattern:transform",
+          "why": "Calling Changa gives her a quicker, tougher ridden form for getaways and long trips (wiki; Change Log #06)."
+        },
+        {
+          "ref": "armour-model:downed-revive",
+          "why": "At zero health she drops unconscious instead of dying, and any friendly soldier can revive her for free (registry note on fallen heroes)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "Little health and no armour at all (wiki Cons); KING Art cut her health so that, as an assassin, she has to choose her targets instead of joining any fight (Change Log #06)."
+        },
+        {
+          "ref": "pattern:cloak",
+          "why": "Her hiding drops whenever an enemy comes too close, whenever she acts, and for as long as she rides Changa (wiki Cons)."
+        },
+        {
+          "ref": "range:short",
+          "why": "Her gun reaches only a short way, so she must get near what she shoots, which is what gives her hiding away (wiki)."
+        },
+        {
+          "ref": "pattern:transform",
+          "why": "On the tiger she is visible and cannot shoot, and once she drops off, Changa helps only briefly, far less than the other infantry heroes' animals (wiki Cons)."
+        },
+        {
+          "ref": "availability:unique",
+          "why": "One hero per player, picked before the match and called in through a reserve."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-infantry",
+          "why": "The wiki names anti-infantry units among her threats: with little health and no armour she loses a straight fight with them."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Massed infantry overwhelm her (wiki Cons): her gun handles one squad at a time, not several at once."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "A single squad caught alone falls fast to her gun and sabre (wiki; the Rusviet page credits her gun with destroying single squads)."
+        },
+        {
+          "ref": "class:walker",
+          "why": "Reasoned: a charge left on a mech while she stays hidden does heavy damage, most of all to light and medium mechs (wiki; DevBlog #41), and the mech cannot shoot at her while she is hidden."
+        },
+        {
+          "ref": "target:structure",
+          "why": "Reasoned: she can creep up to enemy buildings unseen and leave charges on them that go off when she leaves (wiki; DevBlog #41 lists their damage to buildings)."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:siege",
+          "why": "Reasoned: unseen near the enemy, she can keep targets in view for artillery, which since Change Log #17 loses any target that drops out of sight."
+        }
+      ],
+      "memorable": "A Tsarist agent who stays unseen while no enemy is near, leaves charges on mechs that go off once she walks away, and rides her Siberian tiger out of trouble.",
+      "as_player": "A T1 stealth hero: you are invisible until an enemy comes near or you act, and you vanish again once the coast is clear. Left mouse fires a short-range SMG that drops soldiers; Q sticks a charge on a mech or building that blows when you walk away; E calls Changa to ride, faster and tougher but in plain sight, and attacking jumps you off while the tiger fights briefly beside you. Massed infantry and anti-infantry units are your end; a downed Olga waits for a teammate to revive her.",
+      "sources": [
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Olga_Romanova",
+          "title": "Olga Morozova (page Olga Romanova), Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Last edited 16 October 2025 (page history)",
+          "note": "Read through the wiki's API, with its page history. The page is titled Olga Romanova and displays as Olga Morozova. Its infobox gives only a unit type (the wiki's words) and Unarmored, with no price, health, speed or weapon figures, and the history shows it never had them. Prose: the short-range submachine gun, the sabre, charges planted on mechs or structures and set off by hand or by distance, calling and riding Changa, the Camouflage passive and when it breaks, Pros and Cons.",
+          "supports": [
+            "class",
+            "nature",
+            "armour/class",
+            "mobility",
+            "armament/0",
+            "abilities/0",
+            "abilities/1",
+            "abilities/2",
+            "abilities/3",
+            "modes/0",
+            "roles/secondary",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Changa",
+          "title": "Changa, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "note": "The tiger's own page, read through the API: an ambush predator that fights with claws and teeth and spends most of its time hidden until it can strike or Olga needs it, unlike Anna's bear; it repeats the Ride the Tiger text.",
+          "supports": ["abilities/1", "abilities/2", "modes/0", "body", "crew"]
+        },
+        {
+          "url": "https://kingart-games.com/article/92",
+          "title": "Iron Harvest Change Log #04, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Change Log #04, 8 October 2020",
+          "note": "Olga can now be healed at barracks and medic stations without leaving the tiger's back, and medics charge her the same as on foot; the infantry heroes (Anna, Olga and Gunter) get smaller veterancy bonuses and pay for healing in base; Olga's melee damage to light armour goes up and her ranged damage to it down; Changa's damage to unarmoured, light and medium targets goes down.",
+          "supports": ["class", "tier", "armament/0", "abilities/1", "abilities/2", "modes/0", "crew", "armour/notes"]
+        },
+        {
+          "url": "https://kingart-games.com/article/94",
+          "title": "Iron Harvest Change Log #06, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Change Log #06, 22 October 2020",
+          "note": "KING Art lowers Olga's and Changa's health and raises Olga's health while riding, to stress her job as an assassin, one that has to choose her targets with more care.",
+          "supports": ["armour/notes", "modes/0", "abilities/1", "abilities/2", "weaknesses/0", "strengths/3"]
+        },
+        {
+          "url": "https://kingart-games.com/article/117",
+          "title": "Iron Harvest DevBlog #41 - September 2021, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Changelog 24, 1 September 2021",
+          "note": "Changelog 24 makes Olga's detonator scale with her veterancy, lowers its damage to each armour class and to buildings, and lowers her veteran and elite thresholds.",
+          "supports": ["abilities/0", "strengths/1", "counters/1", "counters/2"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "tier",
+          "note": "No source read says which reserve Olga comes in, so t1 is the band the evidence best supports. Change Log #04 calls Anna, Olga and Gunter the infantry heroes; DevBlog #40 (https://kingart-games.com/article/116, read, not cited) has Anna enter with Reserve 1 ahead of the other early-game heroes; a September 2020 build guide puts Gunter in Reserve I (registry note); patch 0.11.5 (https://kingart-games.com/article/85, read, not cited) speaks of tier 1 and tier 2 heroes without naming them. Neither of Rusviet's other heroes' wiki pages names a reserve: Lev Zubov's (https://iron-harvest.fandom.com/wiki/Lev_Aleksey_Zubov, read, not cited) has him pilot a heavy mech, and Victor Popov's (the Janek Kos page) puts him in an exosuit. If she sat in Reserve II, the band would be t2. A hero is unique, and that availability starts at t2 (atypical)."
+        },
+        {
+          "path": "cost_band",
+          "note": "Her price is a gap. Her wiki page has never carried figures (page history), the Russian-language Iron Harvest Wiki's page for her (titled Olga Romanova in Russian) has a blank stat table, the Iron Harvest Archive wiki's page (https://ironharvest-archive.fandom.com/wiki/Olga) is a stub with no figures, and no KING Art post from DevBlog #20 to DevBlog #47 (articles 67 to 123) or Steam news item for the game names one. Low is judged from the infobox prices on the Gunter von Duisburg, Michal Sikorski and Janek Kos pages of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Gunter_von_Duisburg, https://iron-harvest.fandom.com/wiki/Michal_Sikorski and https://iron-harvest.fandom.com/wiki/Janek_Kos, the last for Victor Popov's exosuit; read, not cited), all low, and on the Anna Kos page (https://iron-harvest.fandom.com/wiki/Anna_Kos, read, not cited), very low. Very low is the other reading. No page says whether any of these prices is what a hero costs through the reserve."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "No figure in any source read. Medium comes from the wiki's comparison with regular infantry (she can outrun them), which gives the rifle squads' band because it does not say much faster. Faster would make step 5 of the roles give raider instead of assault."
+        },
+        {
+          "path": "roles/primary",
+          "note": "Step 1 finds no role: no post gives her a bracketed label, and Change Log #06's word assassin is no role label or alias. The wiki calls her a stealth hero, a stealthy saboteur and a spy (her page, and the Unit, Hero and Rusviet pages, https://iron-harvest.fandom.com/wiki/Unit, https://iron-harvest.fandom.com/wiki/Hero and https://iron-harvest.fandom.com/wiki/Rusviet, read, not cited), but those are the wiki's own words. Step 2 does not apply because her gun does damage, steps 3 and 4 find nothing (a short gun, no official strong-against text), and step 5 gives assault, since she is not fast by the speed rules. See fit_notes."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Anti-infantry ranks at step 3 on her submachine gun, small arms whose damage to light armour Change Log #04 halved to a small part of her sabre's, which reads as doing little to vehicles. Scout ranks at step 4 on her camouflage, stealth with an in-game basis; the wiki also rates her highly as a scout and spy, in its own words. Anti-armour is left out although her charges are how she kills mechs: a button supports an anti role only with a bonus against, a label for, or harm to just that target, the registry reads no bonus from per-class damage figures, and the charges hit buildings too."
+        },
+        {
+          "path": "armament/0",
+          "note": "The sabre is left out of the armament by the registry's game-wide melee note: it is the melee blow every squad has, used when ordered with the modifier key or when attacked in melee, and she is built around the gun, not the blade. The wiki calls the sabre her secondary weapon and the Pros call her deadly in melee, and Change Log #04 raised its damage to light armour; read as a weapon she is built around, it would be a secondary blades entry."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "Short rests on the wiki's words (a short-range gun); no source gives a reach figure."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "Ground vehicles rest on Change Log #04, which gives the gun a damage figure against light armour. Structures are listed by can_target step 4, since the family allows them and no source speaks of the gun and buildings. No source says it attacks aircraft. Hitscan delivery and kinetic damage are the family defaults: no source says how the bullets travel, and the game has no damage map."
+        },
+        {
+          "path": "abilities/0",
+          "note": "The damage comparisons use DevBlog #41's figures. Patch 0.11.5 (https://kingart-games.com/article/85, read, not cited) cut the detonator's damage and her health before that. Whether the charge sticks to a moving mech or only to the spot it is set is not said beyond the wiki's 'on a specific target'; the remote-charge variant of throw-explosive fits either way."
+        },
+        {
+          "path": "abilities/2",
+          "note": "Changa's short fight is described only inside the Ride the Tiger text of the Olga and Changa pages. It is coded as a triggered entry of its own because KING Art's posts give the tiger her own damage (Change Log #04), health (Change Log #06) and respawn cooldown (Change Log #09, https://kingart-games.com/article/97, read, not cited), and the companion is a mechanic no word-list term covers; it could instead be read as part of Ride the Tiger's summary."
+        },
+        {
+          "path": "abilities/3",
+          "note": "Cloak rests on the wiki's Camouflage passive and its Cons. The registry lets her be coded with cloak or with the stealth sensor trait; cloak is used because the wiki says she is invisible until an enemy is close, the full hiding that the sensor trait's own note sends to the cloak pattern. Patch 0.11.2 (https://kingart-games.com/article/83, read, not cited) fixed ground-attack orders that kept firing at units in stealth mode. Whether attacking reveals her is not said in so many words; the wiki says any action does."
+        },
+        {
+          "path": "modes/0",
+          "note": "No source gives either form's speed; the mode keeps the base band. Beast is the shape of a rider on a big cat, which the body plan for war animals covers; her size is left as the base form's, since the game still heals and reinforces her as infantry while she rides (Change Log #04)."
+        },
+        {
+          "path": "armour/models",
+          "note": "Downed-revive follows the registry's game-wide note on fallen heroes. DevBlog #30 (https://kingart-games.com/article/90, read, not cited) fixed a bug in her animations that kept Olga from falling unconscious; DevBlog #35 (https://kingart-games.com/article/107, read, not cited) lets infantry and foot heroes revive allied heroes; the Admiral Mason page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Admiral_Mason, read, not cited) says every hero but him can be brought round at no cost; the Structure page (https://iron-harvest.fandom.com/wiki/Structure, read, not cited) lets the Headquarters bring fallen heroes back."
+        },
+        {
+          "path": "on_death",
+          "note": "The 3C proposal default is kept because the downed state is coded as the armour model and no source shows a hero being removed for good in skirmish or multiplayer."
+        },
+        {
+          "path": "counters/1",
+          "note": "Reasoned from her charges (wiki; DevBlog #41's damage to armour) and her camouflage; no source says she beats mechs."
+        },
+        {
+          "path": "counters/2",
+          "note": "Reasoned from the wiki's line that she can plant charges on structures and DevBlog #41's damage to buildings; no source names a building she destroys."
+        },
+        {
+          "path": "combos/0",
+          "note": "Reasoned from her hiding (wiki) and Change Log #17 (https://kingart-games.com/article/106, read, not cited), under which mechs firing indirectly lose their target once it vanishes from view; no source names this pairing."
+        },
+        {
+          "path": "countered_by/1",
+          "note": "Infantry sit in both lists by the matchup rule on one against several: the wiki's Pros call her deadly against infantry squads and the Rusviet page says her gun can destroy single squads, while the Cons call her easy prey for massed infantry."
+        }
+      ],
+      "fit_notes": [
+        {
+          "path": "roles/primary",
+          "used": "assault",
+          "wanted": "infiltrator (saboteur), or an assassin role; raider if a speed figure showed her fast",
+          "note": "A stealth agent who sets charges on mechs and buildings, whom KING Art calls an assassin and the wiki a saboteur and spy, comes out as frontline assault: her gun does damage, so roles step 2 is skipped, no official text names a role or a target she is strong against, and with no speed figure she reads as medium, so step 5 gives assault rather than raider. Infiltrator's tie-break would also turn away charges set on targets from outside."
+        },
+        {
+          "path": "roles/secondary",
+          "used": "anti-infantry, scout",
+          "wanted": "anti-armour",
+          "note": "Her charges are her way of killing mechs, but a button gives an anti role at roles.secondary step 2 only through a bonus against, a label for, or harm to only that kind of target, and the Iron Harvest notes read no bonus from per-class damage figures."
+        },
+        {
+          "path": "abilities/2/patterns",
+          "used": "none",
+          "wanted": "command-companion: a lasting AI partner, usually an animal, that fights beside you on its own and takes short orders such as attack or come back; here it doubles as a mount",
+          "note": "Changa stays hidden, carries Olga when called, fights briefly on her own after an attack ends the ride, has her own health and respawns after a cooldown when killed. launch-drones is for expendable minions and transform covers only the ridden form, so neither covers the partner. reinforce-squad's respawning-followers variant matches only her return after a cooldown once killed (Change Log #09), so it is not linked; the merge pass may want it beside the new pattern."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "availability",
+          "rule": "availability:unique min_tier t2",
+          "note": "A named hero, one per player; t1 is the evidence's best reading of her reserve (Reserve I, see uncertain), and our unique availability starts at t2."
+        }
+      ],
+      "researched_by": "batch r3, agent J10-IRON-HARVEST",
+      "review": {
+        "status": "unchecked"
+      }
+    }
+  ]
+}

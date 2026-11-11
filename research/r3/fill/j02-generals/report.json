@@ -1,0 +1,373 @@
+{
+ "label": "j02-generals",
+ "game": "generals",
+ "file_written": "data/units/generals.json",
+ "units": [
+  "generals.gla.technical",
+  "generals.china.overlord"
+ ],
+ "validator_result": "OK. The validator printed three ATYPICAL lines for these units, and each one is recorded under its exact rule string with a note. On generals.gla.technical: 'mobility-traits:crush allowed.sizes medium' at mobility/traits, and 'weapon-families:cannon allowed.damage-types kinetic' at armament/1/family. On generals.china.overlord: 'roles:scout requires speed:>=fast|category:stealth-deception|weapon-trait:mark|sight:>=long|sensor:radar|sensor:detector|sensor:lingering-sight|sensor:stealth|pattern:reveal-area|pattern:mark-target' at roles/secondary. The only other warnings are the expected ones: planned patterns (upgrade-in-field, rally-allies), source_units out of date, and a unit link to the unresearched generals.gla.jarmen-kell.",
+ "copy_check_result": "`node scripts/copy-check.mjs . --only` was run on the eight cited URL parts (Technical_(Generals_1), wiki/Salvaging, Overlord_tank_(Generals_1), wiki/Speaker_tower, Gattling_cannon_(Generals_1), generals.str, CNC_Generals_Zero_Hour_Manual, Generals_-_UK_Manual). It exited 0: 8 pages checked from the cache, none skipped, no shared runs. The first run found one copied run in the Technical's mobility/notes; I rewrote it. The two cited manuals are PDFs, which the copy-check cannot read properly (they sit in the cache as binary). I checked them by hand: I made layout and plain text dumps with pdftotext and ran my own 6-word check against all 29 pages read for these units (cited or not, including the PDF dumps and the string table's English lines). It found two runs, one shared with CNCNZ and one with the Zero Hour manual, and I rewrote both. It now finds 0.",
+ "hesitations": [
+  {
+   "unit": "generals.gla.technical",
+   "path": "roles/secondary",
+   "chosen": "[scout, transport]",
+   "alternatives": [
+    "[transport, raider]"
+   ],
+   "reason": "roles.secondary step 1 and the Roles list's rule that official words name a role only through its label or an alias, and only when they describe the unit's own job. The Zero Hour manual (printed p.36) lists Technicals as the GLA's group for 'probing and reconnaissance' attacks. I read that as official text calling it recon, so scout ranks at step 1 and comes before transport in roles-list order. On a stricter reading, transport (step 1, from the Purpose entry) and raider (step 4: very fast, light armour) would fill the two slots."
+  },
+  {
+   "unit": "generals.gla.technical",
+   "path": "roles/primary",
+   "chosen": "anti-infantry",
+   "alternatives": [
+    "transport"
+   ],
+   "reason": "The rule was clear. The Purpose entry names both roles, and roles step 1 picks the one whose target the main weapon has a bonus against; the build tooltip says strong vs. infantry. Transport has no target, so it waits for the secondary roles."
+  },
+  {
+   "unit": "generals.gla.technical",
+   "path": "body/plan",
+   "chosen": "open-mount",
+   "alternatives": [
+    "box-carrier"
+   ],
+   "reason": "The body-plan tie-break was close. The riders are hidden and cannot be hit, which points to box-carrier. But the pickup has no enclosed hull and its gunner stands exposed in the open bed ('open-mount needs crew or riders who sit exposed'), and the vocabulary's gun-truck example fits."
+  },
+  {
+   "unit": "generals.gla.technical",
+   "path": "armament/1/family",
+   "chosen": "cannon",
+   "alternatives": [
+    "autocannon"
+   ],
+   "reason": "Machine gun / autocannon / cannon tie-break. It fires single shells with a pause between them, so cannon. Autocannon would also allow kinetic damage and avoid the atypical, but nothing calls its fire rapid."
+  },
+  {
+   "unit": "generals.gla.technical",
+   "path": "armament/1/damage",
+   "chosen": "kinetic (step 4)",
+   "alternatives": [
+    "explosive (step 5, area blast)",
+    "armour-piercing (cannon default)"
+   ],
+   "reason": "Damage step 4 needs the sources to give 'one game damage category'. The wiki infobox says Comanche Vulcan and Weapon.ini says GATTLING: two names from two sources, but both map to kinetic, so I treated them as one category. The family break is recorded as atypical."
+  },
+  {
+   "unit": "generals.gla.technical",
+   "path": "armament/2/family",
+   "chosen": "rockets",
+   "alternatives": [
+    "guided-missiles"
+   ],
+   "reason": "The rockets / guided-missiles tie-break needs a source saying the missile steers. The wiki calls the weapon both a rocket launcher and a missile launcher, says point-defence lasers intercept it and ECM tanks scramble it, and the Point defense laser page says those lasers stop guided projectiles. None of that says it steers."
+  },
+  {
+   "unit": "generals.gla.technical",
+   "path": "armament/2/traits",
+   "chosen": "[]",
+   "alternatives": [
+    "[splash]",
+    "[min-range]"
+   ],
+   "reason": "A small blast radius and a minimum range appear only in Weapon.ini. The registry research note says terms that only the 1.04 files would set stay unset, while the splash rule counts any radius figure 'in the sources'. I followed the registry and put the facts in the summary instead."
+  },
+  {
+   "unit": "generals.gla.technical",
+   "path": "body/size",
+   "chosen": "medium",
+   "alternatives": [
+    "large"
+   ],
+   "reason": "The sizes rule's truck example decides, since examples win over measurements. Its collision box in GLAVehicle.ini is longer than the Battlemaster's."
+  },
+  {
+   "unit": "generals.gla.technical",
+   "path": "countered_by/1",
+   "chosen": "armour-class:heavy",
+   "alternatives": [
+    "class:vehicle"
+   ],
+   "reason": "Matchups rule (1): tanks in general are class:vehicle, but heavy applies when the sources set tanks apart from lighter vehicles. The tooltip says tanks, the manual rates it effective against light vehicles and the wiki says heavy vehicles."
+  },
+  {
+   "unit": "generals.gla.technical",
+   "path": "countered_by/2",
+   "chosen": "armour-model:interceptor",
+   "alternatives": [
+    "unit:generals.usa.paladin",
+    "leave it out"
+   ],
+   "reason": "The wiki names a device (point-defence lasers), not a kind of unit. It counters only the last salvage step, but it is sourced and gives a reason no other entry gives."
+  },
+  {
+   "unit": "generals.gla.technical",
+   "path": "weaknesses/1",
+   "chosen": "weapon:machine-gun (carries the no-anti-air gap)",
+   "alternatives": [
+    "damage:kinetic",
+    "armour-class:light"
+   ],
+   "reason": "Matchups rule (5) says to hang a gap on the part that causes it. All three of its guns are ground-only."
+  },
+  {
+   "unit": "generals.gla.technical",
+   "path": "sources",
+   "chosen": "Generals manual p.41, Zero Hour manual p.36, wiki Technical, wiki Salvaging, generals.str",
+   "alternatives": [
+    "CNCNZ GLA units in place of the Zero Hour manual or the Salvaging page"
+   ],
+   "reason": "The registry asks for CNCNZ 'rather than a third page of one site', and only two wiki pages are cited. The task says official pages and wikis first, and CNCNZ (a guide) adds nothing unique, so it is read but not cited."
+  },
+  {
+   "unit": "generals.gla.technical",
+   "path": "on_death",
+   "chosen": "bail-out, in-game, 'only when riders are aboard'",
+   "alternatives": [
+    "bail-out as a proposal"
+   ],
+   "reason": "The rule was clear: the registry's garrison note gives exactly this for riders who lose a tenth of their health. The wiki says half; recorded as sources_disagree."
+  },
+  {
+   "unit": "generals.gla.technical",
+   "path": "flavour_affinity",
+   "chosen": "[]",
+   "alternatives": [
+    "[soviet]"
+   ],
+   "reason": "The rule was clear. The GLA has no flavour. Soviet scores only 1 point (the machine-gun family); anti-infantry is not a favoured soviet role, so it falls short of 2."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "roles/secondary",
+   "chosen": "[scout, support]",
+   "alternatives": [
+    "[support, transport]",
+    "[support, buffer]"
+   ],
+   "reason": "roles.secondary step 5 ranks roles by how many options give them, then by roles-list order. Each add-on gives its roles once: Gattling gives scout through its detector, the Propaganda Tower gives support and buffer, the Battle Bunker gives transport. The tooltip's weak line drops anti-infantry and anti-air. Assault fails step 4 because the cannons outreach the main battle tanks' guns. Whether an upgrade's detector fits scout's description, and meets its requires 'through the part', is the open point; the validator shows it as atypical."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "body/size",
+   "chosen": "huge",
+   "alternatives": [
+    "large"
+   ],
+   "reason": "The sizes examples overlap: 'tanks of every weight' are large, 'tanks at least twice a battle tank's size' are huge. ChinaVehicle.ini's collision box is twice the Battlemaster's length, about three times its area. But the same file gives both tanks the same room in a transport. The registry note calls it super-heavy 'by size', and the wiki stresses its massive size."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "armour/class",
+   "chosen": "super-heavy",
+   "alternatives": [
+    "heavy (Tank Armor by the armour_map)"
+   ],
+   "reason": "The rule was clear: check A applies (huge, t3, and the registry note), and it wins over step 1."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "body/plan",
+   "chosen": "hull-turret",
+   "alternatives": [
+    "multi-turret"
+   ],
+   "reason": "Stock values: the stock tank has one turret. The add-on Gattling turret goes in body.notes."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "armament/0/traits",
+   "chosen": "[splash]",
+   "alternatives": [
+    "[splash, magazine]"
+   ],
+   "reason": "The wiki infobox gives a damage radius, so splash. Two shells and then a pause is a fixed burst at the normal rate, which the magazine rule excludes; the clip only shows in a stats line."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "armament/0/range",
+   "chosen": "long",
+   "alternatives": [
+    "off-screen"
+   ],
+   "reason": "The reach is over 1.5 times the reference, but it does not pass the tank's own fog figure, so long."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "armament/1/range",
+   "chosen": "off-screen",
+   "alternatives": [
+    "long"
+   ],
+   "reason": "Off-screen's first reason applies: long by reach, and both the air and ground reach pass the carrier's fog figure ('for an add-on ... the unit that carries it'). The result reads oddly for a Gattling gun on a short-sighted tank."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "armament/1/damage",
+   "chosen": "kinetic (step 5)",
+   "alternatives": [
+    "kinetic via step 4"
+   ],
+   "reason": "The wiki gives two names, Gattling vs. ground and Small Arms vs. air, so the registry sends it to step 5, which gives the family default. The result is the same."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "armament/1/mount",
+   "chosen": "free-aim",
+   "alternatives": [
+    "auto-target",
+    "slow-turret"
+   ],
+   "reason": "Aim / mount tie-break: in a commanded game, an add-on turret goes on to the later steps, and step (5) gives free-aim to any turret other than the main one. The 1.04 add-on turns at the same slow rate as the main turret, which is data only."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "armament/1/can_target",
+   "chosen": "infantry, ground-vehicle, low-air, high-air, structure",
+   "alternatives": [
+    "without structure"
+   ],
+   "reason": "can_target step 4 fills structures: no source labels the gun by its targets (the wiki's label calling it a base defence against infantry and aircraft describes the building's role), and the family allows buildings. No page says how it does against buildings."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "abilities/1/patterns",
+   "chosen": "[rally-allies, repair-allies, upgrade-in-field]",
+   "alternatives": [
+    "also heal-self"
+   ],
+   "reason": "heal-self is a heal on a key. The tower's healing of the tank itself is part of the aura."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "on_death",
+   "chosen": "bail-out, in-game, only with the Battle Bunker fitted and riders aboard",
+   "alternatives": [
+    "bail-out as a proposal"
+   ],
+   "reason": "The registry garrison note names the Overlord's Battle Bunker riders, who lose half their health, as an in-game bail-out. But the riders exist only with a bought add-on, and the outcome rests on ChinaVehicle.ini, which is not cited."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "countered_by/1",
+   "chosen": "weapon:rockets",
+   "alternatives": [
+    "class:infantry",
+    "role:anti-armour"
+   ],
+   "reason": "Matchups rule (1) takes the first fitting link in the order job, weapon, kind, and 'rocket-armed infantry' is the rule's own example."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "weaknesses/3",
+   "chosen": "size:huge (carries the slowness)",
+   "alternatives": [
+    "speed:medium"
+   ],
+   "reason": "Matchups rule (4): its own speed band reads medium while the reason calls it slow among tanks, so the weakness hangs on the part that exposes it."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "countered_by/4",
+   "chosen": "unit:generals.gla.jarmen-kell, standing alone",
+   "alternatives": [
+    "weapon:sniper"
+   ],
+   "reason": "Matchups rule (3): a sniper link would be false for most snipers, which cannot kill a vehicle's crew."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "combos/1",
+   "chosen": "role:anti-air",
+   "alternatives": [
+    "role:anti-armour",
+    "unit:generals.china.tank-hunter"
+   ],
+   "reason": "Tank Hunters do both jobs, but the wiki's point is that riders in the bunker cover the tank against aircraft."
+  },
+  {
+   "unit": "generals.china.overlord",
+   "path": "sources",
+   "chosen": "Generals manual p.35, wiki Overlord, generals.str, wiki Speaker tower, wiki Gattling cannon",
+   "alternatives": [
+    "Zero Hour manual p.37, CNCNZ China units or ChinaVehicle.ini in place of a mechanic page"
+   ],
+   "reason": "Sources priority: official text about the unit, then the pages most of the entry rests on, a mechanic's own page first. The Zero Hour manual is named only in uncertain entries, for two combos."
+  }
+ ],
+ "gaps": [],
+ "unclear_rules": [
+  {
+   "topic": "Scout through an upgrade's sensor (roles.secondary step 5)",
+   "note": "Step 5 lets a role meet its requires through the part that gives it. But an upgrade's detector must go in sensors.notes, and the validator reads requires only from sensors.traits, weapons and patterns. So any role that enters this way always shows as an atypical 'requires' break. The rule's only example is an anti-air option gun, which the validator can see. It is also unclear whether a detector add-on on a slow super-heavy tank should 'fit' scout's description at all. Ties at step 5 then go by roles-list order, which puts scout ahead of support and transport."
+  },
+  {
+   "topic": "Tactics text as a role label (roles.secondary step 1)",
+   "note": "I could not tell whether a manual's general tactics advice counts as official text 'calling the unit' by a role alias. Here the Zero Hour manual lists Technicals for the GLA's probing and reconnaissance attack groups, under the heading Probing and Reconnaissance. The choice decides scout against raider for the Technical."
+  },
+  {
+   "topic": "Off-screen for add-ons",
+   "note": "Range bands say an add-on is judged against the fog figure of the unit that carries it. A short-sighted carrier (the Overlord) therefore makes any long-reach add-on off-screen, including a Gattling gun, which is an odd result for a gun that is not artillery."
+  },
+  {
+   "topic": "Damage step 4 with differing names",
+   "note": "Step 4 needs 'one game damage category'. It does not say what to do when two sources give the same weapon different map keys that map to the same type (Comanche Vulcan on the wiki, GATTLING in Weapon.ini). I treated it as one category, and the result is the same either way."
+  },
+  {
+   "topic": "On-death outcome from upgrade-only seats",
+   "note": "The registry's garrison note codes the Overlord's Battle Bunker riders as an in-game bail-out. The fields doc does not say whether an outcome resting on passenger seats that only an add-on bought for that unit provides counts as the unit's own outcome. It only excludes powers or upgrades bought for the whole faction."
+  },
+  {
+   "topic": "Size stand-ins that disagree",
+   "note": "Two kinds of the game's own size data disagree for the Overlord: its collision box is about twice the Battlemaster's, but it takes the same room in a transport. The sizes rule lists 'a size group in the code or rules' and 'the room it takes in a transport' together, without saying which wins. The examples also overlap: 'tanks of every weight' are large, 'tanks at least twice a battle tank's size' are huge."
+  },
+  {
+   "topic": "Splash from a radius only in the 1.04 files",
+   "note": "The splash rule says a radius figure in the sources counts. The registry research note says terms that only the 1.04 files would set are not set. I followed the registry: the Technical's rockets get no splash (their radius is only in Weapon.ini), while the Overlord's cannons get splash, since the wiki infobox gives a radius."
+  },
+  {
+   "topic": "accessed dates for cached pages",
+   "note": "Pages were read from the shared page cache. I used each page's cache fetch date as 'accessed' (2026-10-19 to 2026-10-27), not the day I read it. The fields doc says only 'date the page was read'."
+  }
+ ],
+ "new_mechanics": [],
+ "pages_read_not_cited": [
+  "https://cncnz.com/games/generals/gla-units/",
+  "https://cncnz.com/games/generals/china-units/",
+  "https://cnc.fandom.com/wiki/Point_defense_laser",
+  "https://cnc.fandom.com/wiki/Veterancy",
+  "https://cnc.fandom.com/wiki/Rodall_Juhziz",
+  "https://cnc.fandom.com/wiki/Junk_Repair",
+  "https://cnc.fandom.com/wiki/Armor-Piercing_Bullets",
+  "https://cnc.fandom.com/wiki/Technical_Training",
+  "https://cnc.fandom.com/wiki/Bunker_(Generals)",
+  "https://cnc.fandom.com/wiki/Tsing_Shi_Tao",
+  "https://cnc.fandom.com/wiki/Emperor_Overlord_tank",
+  "https://cnc.fandom.com/wiki/Nuclear_tanks",
+  "https://cnc.fandom.com/wiki/Isotope_stability",
+  "https://cnc.fandom.com/wiki/Subliminal_messaging",
+  "https://cnc.fandom.com/wiki/Chain_guns_(Generals)",
+  "https://cnc.fandom.com/wiki/Uranium_shells",
+  "https://cnc.fandom.com/wiki/Crusader_tank",
+  "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b1/CNC_Generals_Zero_Hour_Manual_2015.pdf/revision/latest (cited for the Technical; for the Overlord only named in uncertain entries)",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/GLAVehicle.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/ChinaVehicle.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Crate.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Locomotor.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandButton.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Armor.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Upgrade.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/GameData.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/NukeGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/DemoGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/ChemicalGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/StealthGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/InfantryGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/TankGeneral.ini"
+ ],
+ "source_problems": "Contradictions, each recorded in uncertain with sources_disagree where it touches a field:\n(1) Damage names: the Technical wiki infobox names the machine gun's and the salvaged cannon's damage Comanche Vulcan, while Weapon.ini (1.04) has GATTLING for both. Both map to kinetic.\n(2) Riders on the Technical's death: the wiki says they survive at half health; GLAVehicle.ini takes only a tenth of their health.\n(3) Crate drops: the Salvaging page has a crate drop when the enemy destroys a GLA vehicle; Crate.ini makes salvage crates only when a GLA player's salvaging unit is the killer. The Technical page says later crates become money, the Salvaging page says money and experience, and Crate.ini gives a quarter chance of a rank and otherwise a little money.\n(4) Nuclear Tanks speed gain: the wiki and Locomotor.ini give half again; the Generals manual and CNCNZ say a quarter. Only the notes use it.\n(5) The Technical wiki changelog gives Juhziz's price rise as 50 credits at Zero Hour patch 1.02, while its infobox and DemoGeneral.ini give a fifth more than the base price. That fits if the base price was lower before 1.02, so it is not coded as a disagreement.\n(6) Within ChinaVehicle.ini, the Overlord's collision box is twice the Battlemaster's, but both take the same room in a transport.\nOther limits:\n- Both manuals are PDF scans, which the copy-check cannot read. I read them through pdftotext dumps (plus a page image of Zero Hour PDF page 20, to confirm the printed page numbers 36 and 37) and checked our wording against them by hand.\n- No official EA unit pages were reached; the registry notes that web.archive.org resets connections from this session.\n- All pages came from the shared cache and nothing was fetched in this pass."
+}

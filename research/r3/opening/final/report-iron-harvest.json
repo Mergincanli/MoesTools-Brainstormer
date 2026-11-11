@@ -1,0 +1,99 @@
+{
+ "id": "iron-harvest.saxony.kaiser",
+ "file_written": "data/units/iron-harvest.json",
+ "decisions": [
+  {
+   "path": "body/plan",
+   "a": "spider-frame",
+   "b": "casemate",
+   "chosen": "casemate",
+   "why": "Rules: docs/vocabularies.md Body plans says the plan is 'the unit's upper-body shape and silhouette (legs and wheels live in mobility, scale in size)'. Casemate's meaning, 'a chassis with a forward-fixed main gun and no main turret', fits the Kaiser page: the cannon is fixed in place in an armoured housing of its own, which looks like a turret but stays locked facing forward. The Fixed-gun hull / Hull with turret tie-break says to 'decide by where the main gun sits: fixed in the hull is casemate'. Hull-turret is 'the classic tank shape, also on legs', which shows that a tank-like hull keeps its plan when it stands on legs. The vocab intro and the proposal say real units that break combination rules 'are recorded as they are' and listed as atypical; ra3.empire.mecha-tengu is a precedent (humanoid-mech on a hover-class unit, with the class break recorded). Sources: the Saxony Empire wiki page (read, not cited) says Saxon mechs often look like ordinary tanks standing on spider or crab legs. A's own fit_note calls the upper body the casemate shape. The spider-frame reading is kept in uncertain body/plan and the fit_note is kept. Flavour stays soviet under either plan."
+  },
+  {
+   "path": "atypical",
+   "a": "1 entry (legs-multi very-slow)",
+   "b": "4 entries (legs-multi very-slow, plus casemate classes walker, allowed.mobility legs-multi, allowed.sizes huge)",
+   "chosen": "B's 4 entries, notes merged",
+   "why": "These follow from body/plan = casemate. The validator prints exactly these four ATYPICAL lines for the Kaiser, and fields.md atypical[] requires each one under its exact rule string."
+  },
+  {
+   "path": "modes/0/name",
+   "a": "Entrench",
+   "b": "Entrenched",
+   "chosen": "Entrenched",
+   "why": "The mode names the state, like the worked examples' 'Deployed' and 'Deployed (landed)'. The Kaiser page's gallery caption also calls it an 'Entrenched' Kaiser. Entrench stays the name of abilities/0."
+  },
+  {
+   "path": "strengths/1",
+   "a": "damage:armour-piercing",
+   "b": "weapon:cannon",
+   "chosen": "damage:armour-piercing",
+   "why": "Matchups convention: 'pick the link that names the part behind it'. The reason is that the cannon hits every armour class hard and out-duels any mech (Kaiser page), which is its armour-piercing damage. weapon:cannon is left for the slow-firing, small-blast weakness, so the two entries hang on different parts."
+  },
+  {
+   "path": "strengths/3",
+   "a": "pattern:deploy-siege-mode",
+   "b": "mobility-trait:deploy-anchor",
+   "chosen": "pattern:deploy-siege-mode",
+   "why": "The strength is what the Entrench button adds: rocket salvos to the front and flanks, and a dug-in pair making a near-unbreakable line (Kaiser page). That is the ability's pattern, whose summary is 'gain a stronger stationary mode'."
+  },
+  {
+   "path": "weaknesses/3",
+   "a": "pattern:deploy-siege-mode",
+   "b": "mobility-trait:deploy-anchor",
+   "chosen": "mobility-trait:deploy-anchor",
+   "why": "This weakness is the anchoring itself: it cannot walk or turn, the cannon keeps only a narrow arc, and it is exposed while locking down (Kaiser page Cons). That matches the trait's meaning, 'stops to enter a stronger stationary mode; must pack up to move', and keeps it on a different part from strengths/3."
+  },
+  {
+   "path": "weaknesses (order)",
+   "a": "speed, directional, body-aim, deploy, cannon, cost",
+   "b": "speed, body-aim, directional, cannon, deploy, cost",
+   "chosen": "speed:very-slow, mount:body-aim, armour-model:directional, mobility-trait:deploy-anchor, weapon:cannon, cost:high",
+   "why": "Matchups rule 7 ('most important first'; a sixth may stay when it is sourced and gives its own reason). The Kaiser page's faults run: forward-only anti-armour gun, slowness, then flanking to the sides and rear. All six entries are sourced and distinct."
+  },
+  {
+   "path": "countered_by/3",
+   "a": "speed:>=fast",
+   "b": "speed:>=medium",
+   "chosen": "speed:>=medium",
+   "why": "The Kaiser page says nimble units can circle round to its flanks or rear, and that it is among the slowest of all. Against this game's reference (rifle squads, games.json speed_reference), the agile infantry and light mechs that outpace it sit in the medium band (the Smialy is 1.3 by the registry), so >=fast would cover almost no ground unit in Iron Harvest. Per Matchups rule 1, the reason gives only the speed half; the damage half is role:anti-armour. B's uncertain note on this reading is kept."
+  },
+  {
+   "path": "counters/2",
+   "a": "(none)",
+   "b": "armour-class:medium",
+   "chosen": "dropped; the light-mech point is folded into the class:walker reason",
+   "why": "Matchups rule 1: a link that 'covers units the reason is false for'. The Iron Harvest armour_map makes the game's Light class our medium, and the registry says 'the weapon systems are Light, so medium by the map'. Field cannons are in countered_by, because the Kaiser page calls it vulnerable to them (rule 6). A's sources_disagree note on the weapon systems is kept at counters."
+  },
+  {
+   "path": "combos",
+   "a": "5 entries: role:anti-armour, unit:iron-harvest.saxony.wotan, role:siege, role:anti-infantry, unit:iron-harvest.saxony.kaiser",
+   "b": "4 entries (no Wotan link)",
+   "chosen": "5 entries: unit:kaiser, role:anti-armour, unit:wotan, role:siege, role:anti-infantry",
+   "why": "The SKS 156 'Wotan' wiki page (read, named in uncertain combos) names the pairing: the Wotan does well behind a Kaiser that soaks the damage. Matchups rule 3 allows a unit: link next to a word-list link for the same reason, here role:anti-armour. The self-link stands because the Kaiser page advises fielding at least two. The Erlkönig and Grimbart parts come from the Saxony Empire page's Great Wall formation."
+  },
+  {
+   "path": "text fields (summaries, notes, basis, uncertain, fit_notes, memorable, as_player, source notes)",
+   "a": "A wording",
+   "b": "B wording",
+   "chosen": "Started from B and merged in A",
+   "why": "B's text is clearer and better sourced on the disputed field: it adds DevBlog #22 (article/74, official, 'two of the largest ... huge') for size, and the page history showing the May–June 2020 text said 'no weak spot'. A's points that still hold were kept: the Unit, Mech and Sandbags pages for terrain breaking, the size strength resting on uncited pages, crew, armament/1/mount, the April 2020 weapon figures, counters sources_disagree, the combos pages and mobility/traits. Two uncertain entries were added: cost_band (the outdated 'second most expensive' Cons line, from B's report) and a second abilities/0 entry for the rockets-placement rule conflict. as_player was cut to 499 characters (schema maximum 500). Side guns are on right mouse (B), to match the solo crew proposal. I verified every figure-based claim myself: the pages were re-fetched through the wiki API, and the revision history gives health September 2020, speed 23 May 2021, weapon figures April 2020 and price January 2022."
+  },
+  {
+   "path": "sources",
+   "a": "5 pages (Kaiser, Armor, DevBlogs #24, #30, #43)",
+   "b": "same 5",
+   "chosen": "same 5, notes merged",
+   "why": "fields.md sources priority: the official posts about the unit first, then the unit page, then the Armor page, a mechanic page that gives the figure for the doubled rear damage. The Armor page's supports were re-indexed to the merged lists: armour/models, armour/notes, strengths/0, weaknesses/2, countered_by/1 and countered_by/3."
+  }
+ ],
+ "validator_result": "node scripts/validate.mjs . finished with OK, exit 0 and 0 errors.\n\n- **First run:** it failed on schema length, because as_player was 522 characters against a limit of 500. I cut it to 499.\n- **ATYPICAL lines:** the validator printed four for the Kaiser, and each is recorded in its atypical list:\n  - 'mobility:legs-multi allowed.speed-bands very-slow' at mobility/base\n  - 'bodies:casemate classes walker' at body/plan\n  - 'bodies:casemate allowed.mobility legs-multi' at body/plan\n  - 'bodies:casemate allowed.sizes huge' at body/plan\n- **Warnings on the Kaiser:** only the expected ones.\n  - deploy-siege-mode's source_units does not list this unit yet; the merge pass runs npm run sync-patterns.\n  - Links to the unresearched iron-harvest.saxony.wotan and iron-harvest.shared.field-cannon.\n\nnode scripts/format-json.mjs data/units/iron-harvest.json: checked 1 file, rewrote 0.",
+ "copy_check_result": "node scripts/copy-check.mjs . --only SKS_300 --only iron-harvest.fandom.com/wiki/Armor --only kingart-games.com/article/77 --only kingart-games.com/article/90 --only kingart-games.com/article/119 printed 'OK: no shared runs' and exited 0.\n\n- It checked 7 pages: the 5 cited ones, plus the long URLs of DevBlogs #30 and #43 that games.json cites.\n- All 7 came from the workspace cache: 0 fetched, 0 not checked. I had fetched the Kaiser page, the Armor page and article/77 into the cache earlier, two seconds apart.\n\nI also ran an extra check with the copy-check's own word functions (a small script in its notes folder). I tested it first on deliberately copied text, and it caught it.\n\n- It compared all 124 prose strings of the entry against the 21 pages I read: the 5 cited pages and 16 uncited ones.\n- The uncited wiki pages were Unit, Mech, Recycling Wrecks, Sandbags, Saxony Empire, Wotan, Tur, Gulay-Gorod, Samson, Veterancy, Advanced Saxon Workshop and Gunship.\n- The uncited KING Art posts were articles 74, 83, 92 and 121.\n- It found no runs of 6 or more words.\n\nWhile drafting I caught and reworded three runs before they reached the file: phrases close to the Kaiser and Armor pages, on flanking it, on its slowness and on what hurts heavy armour.",
+ "rule_problems": [
+  "Body plan for a walker with a fixed-gun hull. Rule text: casemate is 'A chassis with a forward-fixed main gun and no main turret, like a tank destroyer. classes: Tank / ground vehicle, Hovercraft; only with mobility types: Wheels, Tracks, Hover; only with sizes: Medium, Large'. The vocab intro adds 'a class left out is a hard ban', and the only body tie-break that covers casemate is 'Fixed-gun hull or Hull with turret: Decide by where the main gun sits'. The Kaiser is a fixed-gun hull on four legs at huge size, so the tie-break's answer breaks three combination rules. Nothing ranks spider-frame ('a body slung between several visible legs') against casemate or hull-turret, so two coders followed the rules to different plans. The Wotan's page describes the same build (a boxy hull with a fixed turret and forward cannons on eight crab legs), so this will come up again. Proposed fix: (a) add Walker / mech to casemate's classes (rare on walker), Two legs and Many legs to its mobility types, and Huge to its sizes; (b) add a tie-break: 'Spider frame or Fixed-gun hull or Hull with turret: a walker whose upper body is a tank-like hull takes casemate or hull-turret by where its main gun sits; spider-frame is for a pod or body slung between the legs with no such hull.'",
+  "Registry note against the mode-weapon rule. Rule text: games-r3.md Wiki traps says the infobox puts ability attacks in weapon slots marked '(Ability)', names 'the Kaiser's Rockets', and says 'Record them as abilities, not weapons'. fields.md armament[].slot and armament[].mode say 'A weapon that a mode adds while the primary keeps firing is also secondary, with mode.' Both coders followed the registry. As a result, the entrenched rocket batteries, which keep firing salvos for as long as the mode lasts, exist only in words inside abilities/0, and no weapon entry records the deploy mode's main payoff (rockets family, splash, limited-arc, mode entrenched). I kept that coding and added an uncertain entry at abilities/0. Proposed fix: amend the registry bullet to '...Record them as abilities, not weapons, unless the slot is a weapon that a deploy mode uncovers and that then fires with the attack order while the mode lasts (the Kaiser's Rockets): code that as a secondary weapon with the mode, and keep the deploy button as the ability.'",
+  "Mobility traits from a veteran-only button. Rule text: mobility.traits is only 'Terms from Mobility traits', and Stock values ('Every band describes the stock unit ... no veterancy') covers bands only. By contrast, sensors.traits says 'A sensor from a loadout pick, an upgrade or veterancy goes in sensors.notes'. Both coders kept deploy-anchor, so the trait reads as stock, although an unranked Kaiser cannot entrench. I kept it and added an uncertain entry at mobility/traits. Proposed fix: add one explicit rule to mobility.traits, either 'A key-bound trait whose ability is recorded follows that ability: list it whatever the ability's source, and say in mobility.notes when it needs veterancy or an upgrade', or the sensors-style rule that moves such traits to notes.",
+  "Crew default in commanded games. Rule text, from Crew models driver-gunner: 'If the source doesn't say whether two weapons fire together, count them as one at a time.' RTS wikis rarely say this, even when each weapon plainly fires at its own target: the Kaiser's four side guns cover every side and keep firing as it walks, alongside the cannon. So both coders got solo, and the player version loses the side guns' simultaneous fire. I kept solo and added an uncertain entry at crew. Proposed fix: 'In a commanded game where the source gives each weapon its own reach and reload under one attack order, weapons on separate mounts count as firing together unless a source says otherwise.'",
+  "Many-legs speed bands. Rule text: legs-multi is 'only with speed bands: Slow, Medium, Fast, Very fast', while legs-biped allows Very slow. Iron Harvest's heaviest many-legged walkers are very slow: the Kaiser at 0.45 and the eight-legged Wotan at 0.52 of the rifle squads. Each will carry the same atypical entry, which is evidence the rule is too narrow. Proposed fix: add Very slow to legs-multi's allowed speed bands, perhaps only with sizes Large and Huge."
+ ]
+}

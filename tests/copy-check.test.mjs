@@ -9,7 +9,8 @@ import os from 'node:os'
 import path from 'node:path'
 import { describe, it, after } from 'node:test'
 import {
-  REPO_ROOT, MAX_NETWORK_FAILURES, cachePath, copyCheck, exitCode, formatCopyReport, markdownBlocks, noteFiles, noteTexts, urlsIn,
+  REPO_ROOT, MAX_NETWORK_FAILURES, NO_POST_TEXT, ONLY_MATCHED_NOTHING, cachePath, copyCheck, exitCode, formatCopyReport, markdownBlocks, noteFiles,
+  noteTexts, pageText, steamNewsText, urlsIn,
 } from '../scripts/copy-check.mjs'
 
 const COPY_CHECK = path.join(REPO_ROOT, 'scripts/copy-check.mjs')
@@ -186,6 +187,15 @@ describe('copy-check --also (notes that cite no page)', () => {
     const t = noteTexts(path.join(dir, 'a/c.json'))
     assert.deepEqual(t.texts, [])
   })
+
+  it('drops web addresses from the strings of a .json note, as from a .md note', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'unit-forge-notes-'))
+    tmpDirs.push(dir)
+    writeFiles(dir, { 'n.json': { notes: 'Scan: https://static.example.net/cnc_gamepedia_en/images/b/be/Manual.pdf/revision/latest, read [it](https://x.example/a_(b)) first.', pages_read: ['https://x.example/wiki/Page'] } })
+    const t = noteTexts(path.join(dir, 'n.json'))
+    assert.deepEqual(t.texts.map(x => x.ws.join(' ')), ['scan read it first', ''])
+    assert.deepEqual(t.urls, ['https://static.example.net/cnc_gamepedia_en/images/b/be/Manual.pdf/revision/latest', 'https://x.example/a_(b)', 'https://x.example/wiki/Page'])
+  })
 })
 
 // A local server: `handle` decides what each request gets. Returns its base URL and a request count.
@@ -250,3 +260,85 @@ describe('copy-check on a failing network', () => {
     assert.equal(exitCode(again), 1)
   })
 })
+
+// A Steam news post page as the store serves it: a frame of markup, with the post as JSON in one attribute.
+const STEAM = 'https://store.steampowered.com/news/app/1/view/42'
+const steamPage = events => `<html><head><meta property="og:description" content="A short note about the drone."></head><body><div id="application_config" ` +
+  `data-partnereventstore="${JSON.stringify(events).replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"></div><p>Sign in to add this item to your wishlist.</p></body></html>`
+const POST = [{ event_name: 'Patch notes', announcement_body: { headline: 'Patch notes', body: '[h3]Drones[/h3]\n[list][*]The drone leaps inside an enemy vehicle and eats it from within.[/list]' } }]
+
+describe('copy-check on Steam news posts', () => {
+  it('reads the post from the page\'s data attribute, not the store frame around it', () => {
+    const text = steamNewsText(steamPage(POST))
+    assert.match(text, /The drone leaps inside an enemy vehicle and eats it from within\./)
+    assert.match(text, /A short note about the drone\./)
+    assert.doesNotMatch(text, /\[h3\]|\[\*\]|wishlist/)
+    assert.equal(pageText({ url: STEAM, format: 'html', raw: steamPage(POST) }), text)
+    // the same markup under another address is read as plain HTML, frame and all
+    assert.match(pageText({ url: PAGE, format: 'html', raw: steamPage(POST) }), /wishlist/)
+  })
+
+  it('finds a run a record shares with a Steam post it cites', () => {
+    const root = tempRepo([STEAM], { [STEAM]: steamPage(POST) })
+    const r = cli(root, '--offline')
+    assert.equal(r.status, 1, r.stdout + r.stderr)
+    assert.match(r.stdout, /"drone leaps inside an enemy vehicle and eats it from within" \(11 words\)/)
+  })
+
+  it('does not count a web address in a record as wording, even when a cited page links to the same address', async () => {
+    const link = 'https://store.steampowered.com/news/app/1486920/view/505083956845086898'
+    const post = [{ event_name: 'Notes', announcement_body: { headline: 'Notes', body: `See the earlier notes at ${link} for more.` } }]
+    const root = tempRepo([STEAM], { [STEAM]: steamPage(post) })
+    const file = path.join(root, 'data/units/g.json')
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'))
+    data.units[0].summary = `The older notes (${link}) say the same.`
+    fs.writeFileSync(file, JSON.stringify(data))
+    const res = await copyCheck({ root, offline: true, log: () => {} })
+    assert.deepEqual(res.findings, [])
+    assert.equal(res.pagesChecked, 1)
+  })
+
+  it('lists a Steam news page that holds no post as not checked', async () => {
+    assert.equal(steamNewsText(steamPage([])), null)
+    assert.equal(steamNewsText('<p>no store here</p>'), null)
+    const root = tempRepo([STEAM], { [STEAM]: steamPage([]) })
+    const res = await copyCheck({ root, offline: true, log: () => {} })
+    assert.deepEqual(res.notChecked, [[STEAM, NO_POST_TEXT]])
+    assert.equal(res.pagesChecked, 0)
+    assert.equal(exitCode(res), 3)
+  })
+})
+
+describe('copy-check --only', () => {
+  it('checks only the pages whose address holds the text', async () => {
+    const root = tempRepo([PAGE, OTHER], { [PAGE]: '<p>The drone leaps inside an enemy vehicle and eats it.</p>', [OTHER]: GUIDE })
+    const res = await copyCheck({ root, offline: true, only: ['c.example'], log: () => {} })
+    assert.deepEqual(res.urls, [OTHER])
+    assert.equal(exitCode(res), 0)
+  })
+
+  it('ends incomplete when the text matches no cited, linked or cached page', async () => {
+    const root = tempRepo([PAGE], { [PAGE]: '<p>Nothing shared here.</p>' })
+    const res = await copyCheck({ root, offline: true, only: ['no-such-page'], log: () => {} })
+    assert.deepEqual(res.notChecked, [['no-such-page', ONLY_MATCHED_NOTHING]])
+    assert.equal(exitCode(res), 3)
+    assert.match(formatCopyReport(res, { only: ['no-such-page'] }), /--only matched no cited, linked or cached page/)
+  })
+
+  it('takes a full address that nothing cites as a page to read: not cached and offline, it is not checked', async () => {
+    const root = tempRepo([PAGE], { [PAGE]: '<p>Nothing shared here.</p>' })
+    const res = await copyCheck({ root, offline: true, only: ['https://b.example/named-only'], log: () => {} })
+    assert.deepEqual(res.notChecked, [['https://b.example/named-only', 'offline and not cached']])
+    assert.equal(exitCode(res), 3)
+  })
+
+  it('checks a cached page that only the notes name by title, when its full address is given', async () => {
+    const root = tempRepo([PAGE], { [PAGE]: '<p>Nothing shared here.</p>', [OTHER]: GUIDE })
+    writeFiles(path.join(root, 'notes'), { 'a.md': `The scout buggy is ${COPIED}.` })
+    const res = await copyCheck({ root, offline: true, only: [OTHER], also: [path.join(root, 'notes')], log: () => {} })
+    assert.equal(res.notChecked.length, 0)
+    assert.equal(res.findings.length, 1)
+    assert.deepEqual(res.findings[0].urls, [OTHER])
+  })
+})
+

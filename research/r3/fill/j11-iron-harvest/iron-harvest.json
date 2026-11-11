@@ -1,0 +1,724 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "iron-harvest",
+  "units": [
+    {
+      "id": "iron-harvest.polania.mocny",
+      "game": "iron-harvest",
+      "faction": "polania",
+      "name": "PZM-13 \"Mocny\"",
+      "flavour_affinity": ["soviet"],
+      "class": "walker",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "siege",
+        "secondary": ["anti-infantry", "assault"]
+      },
+      "tier": {
+        "band": "t2",
+        "gate": "Advanced Workshop",
+        "basis": "Built at the Advanced Polanian Workshop, by the wiki's infobox; the basic Polanian Workshop builds only the Rycerz, the Strażnik and the Śmiały. One upgrade beyond the basic buildings is the tier map's Advanced Workshop gate. DevBlog #35 (February 2021) let a reserve hold it for two reserve coins, but the reserve is a side-wide call-in, not its gate."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 700,
+        "basis": "Changelog 26 in DevBlog #45 (June 2022) cut its oil price, and its iron price is the one DevBlog #43 (December 2021) set; the wiki's infobox shows both since June 2022, and no later post read changes them. Counted as iron plus three times the oil, it lands a little under the medium threshold, at about four fifths of the line-mech anchor and a little below the Łowca. Its population cost is a cap, not a price, so it is left out."
+      },
+      "mobility": {
+        "base": "legs-multi",
+        "handling": "pivot",
+        "traits": ["deploy-anchor"],
+        "speed": "very-slow",
+        "speed_raw": 0.5,
+        "notes": "Walks on four legs at half the pace of the rifle squads, the game's speed reference, and turns even more slowly, so its own page calls it easy to rush and to outflank. Iron Harvest has no tanks: it is a little quicker than the Łowca, Polania's line mech, keeps about the Wotan's pace, is slower than the Knox, and outpaces both other factions' artillery mechs, the Erlkönig and the Nakovalnya. Handling stays pivot, the many-legs default: it is no small walker, and no source gives a reason to change it. Planted it cannot move at all (deploy-anchor). As a medium mech it breaks through small buildings as well as light cover: game-wide terrain breaking, not the crush trait."
+      },
+      "body": {
+        "plan": "spider-frame",
+        "size": "large",
+        "notes": "Four legs carry an asymmetric body: a large cabin with view ports and a small machine-gun turret on the right, and on the left a huge cannon, longer than the body that carries it, fixed facing forward. Planting turns the front legs into spikes driven into the ground, and the gun tilts upward; the body plan stays the same. Spider frame by the Iron Harvest notes' interim reading for walkers on many legs whose main gun is fixed facing forward (night decision of 27 October 2026): the fixed gun shows in the cannon's body-aim mount (see uncertain and fit_notes). Large: a medium mech and a self-propelled gun, both large in our size examples."
+      },
+      "armour": {
+        "class": "heavy",
+        "models": ["directional"],
+        "notes": "Step 1 of the armour-class steps decided: the infobox's Medium maps to heavy through the armour map. By the Armor page, that class shrugs off most light weapons but is easy prey for field cannons and anti-mech mechs. Its own page calls it frail for a mech of its class, with little health even at the top rank, though better plated than the lightly armoured Saxon and Rusviet artillery mechs. Directional: hits on a mech's weak rear do about twice the damage (Armor page), and Change Log #06 (October 2020) fixed a bug that had spared the Polanian and Rusviet artillery mechs that extra damage; its page still says it has no rear weakness (see uncertain). Veterancy adds health and base repair is game-wide; neither changes the class."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "No source gives sight figures for Iron Harvest units (the registry's sight reference), so the band is the medium proposal. No source gives it radar, a detector or stealth. Planted, its shells ignore line of sight, but nothing read says it fires beyond its own sight or needs a spotter."
+      },
+      "armament": [
+        {
+          "name": "Cannon (Mobile)",
+          "slot": "primary",
+          "family": "cannon",
+          "damage": "armour-piercing",
+          "mount": "body-aim",
+          "delivery": "projectile",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["splash"],
+          "summary": "The big cannon held level for direct fire while the Mocny walks. It points only where the body faces, so the slow-turning mech swings round to aim it, and it fires one shell at a time with a long pause between shots. It reaches about three quarters further than the reference rifle. By the infobox it hits the game's Light armour class hardest, then the Medium and Heavy classes, infantry a little less and buildings about half as hard as light mechs, and each shell bursts over a small area. The wiki calls the walking Mocny a mobile anti-mech unit that can stand up to lighter mechs; DevBlog #30 (September 2020) and Changelog 26 (DevBlog #45) raised its damage against armour."
+        },
+        {
+          "name": "Cannon (Siege)",
+          "slot": "alternate",
+          "family": "artillery",
+          "damage": "explosive",
+          "mount": "limited-arc",
+          "delivery": "lobbed",
+          "range": "long",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["splash", "min-range"],
+          "condition": "Only while planted in siege mode, which the Deploy order sets up; it replaces the mobile cannon until the Mocny packs up again.",
+          "summary": "Planted, the Mocny tilts the same cannon upward and lobs its shells over obstacles, ignoring line of sight. It reaches nearly three times as far as the reference rifle, but it cannot hit anything inside a dead zone close in, a little under half the reference rifle's reach, and it covers only a narrow cone ahead. A direct hit lands a little softer than the mobile shell, but the blast around it is far stronger, several times so against mechs, so static or slow targets such as dug-in infantry, buildings and heavy mechs suffer most; moving units can get clear before a shell lands. Changelog 24 (DevBlog #41, September 2021) roughly halved its reload and raised its damage against the Medium and Heavy classes, and Changelog 26 (DevBlog #45) raised it again against infantry and Medium armour.",
+          "patterns": ["deploy-siege-mode"],
+          "mode": "siege"
+        },
+        {
+          "name": "Machine Gun",
+          "slot": "secondary",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "limited-arc",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "summary": "A machine gun in a small turret on the right of the cabin, covering only about the right-hand half of the circle. Its bursts hurt infantry and do next to nothing to any armour or to buildings, and it reaches a little short of the reference rifle: close-in defence against soldiers, not a second main gun."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "No player seats: RTS units are ordered, not driven. The cabin with its view ports implies a crew, and the walker class makes it a crewed machine. Solo by decision 2A: no source says the side machine gun fires at the same moment as the cannon, so the two count as firing one at a time and both stay with the driver. It has no passenger seats."
+      },
+      "abilities": [
+        {
+          "name": "Deploy",
+          "kind": "deploy",
+          "source": "innate",
+          "summary": "Plants the Mocny: the front legs become spikes driven into the ground and the cannon tilts up for indirect fire (the siege cannon, armament/1, in place of the mobile one), reaching further and hitting harder, at the cost of a dead zone close in and a narrow cone ahead. It cannot move while planted, and each change of mode takes a while, during which it is open to attack; ordering it again packs it up. No source gives a cooldown or how long the change takes.",
+          "patterns": ["deploy-siege-mode"]
+        },
+        {
+          "name": "Smokescreen",
+          "kind": "active",
+          "source": "innate",
+          "summary": "Walking mode only. Puts up a smoke screen at the Mocny that blocks line of sight, cover for itself and for friendly units nearby. The wiki says it surrounds the mech and works while it walks; Changelog 24 (DevBlog #41, September 2021) made the Mocny's screen static, so it now stays where it was laid instead of moving with the unit, and made smokescreens smaller and shorter-lived in general. Its page says the cooldown runs out about when the smoke clears; no figure is given.",
+          "patterns": ["lay-smoke"]
+        },
+        {
+          "name": "Smoke Canister",
+          "kind": "active",
+          "source": "innate",
+          "summary": "Siege mode only. Lobs a smoke shell at a chosen spot within reach, and a fixed smoke screen that blocks line of sight forms where it lands, to cover friendly units or the Mocny itself. Changelog 24 shrank and shortened every smokescreen. No cooldown figure is given.",
+          "patterns": ["lay-smoke"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "siege",
+          "name": "Siege mode (deployed)",
+          "via": "deploy-siege-mode",
+          "summary": "Planted on its spiked front legs: it cannot move, and the cannon tilts up to lob shells (armament/1) in place of the mobile cannon, with a longer reach, a far stronger blast, a dead zone close in and a narrow cone ahead. The Smoke Canister takes the Smokescreen's place. Nothing read says the machine gun falls silent or that its armour changes."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["wreck"],
+        "basis": "in-game",
+        "notes": "Like every destroyed mech it leaves a wreck that nearly any infantry squad can recycle for a little iron and oil, the same small haul whatever mech it was (Recycling Wrecks page); allies share it. Another mech or exosuit stepping on the wreck, or an explosion such as an artillery strike, removes it first, and wrecks give infantry no cover. No source says its destruction harms anything nearby."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:deploy-siege-mode",
+          "why": "Two guns in one walker: it fights on the move with direct fire, then plants to lob longer, harder-hitting shells, so its page ranks it the most adaptable of Iron Harvest's medium mechs and artillery pieces."
+        },
+        {
+          "ref": "range:long",
+          "why": "Long reach on the move and longer still once planted, where its shells arc over obstacles and pay no heed to line of sight."
+        },
+        {
+          "ref": "pattern:lay-smoke",
+          "why": "Smoke in both modes: a screen laid where it stands while walking, and a canister lobbed onto a chosen spot once planted, to hide itself or friendly units."
+        },
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Its shells hurt every armour class, better against armour all round than the Erlkönig's, so the walking Mocny doubles as a mech hunter."
+        },
+        {
+          "ref": "armour-class:heavy",
+          "why": "Better plated than the lightly armoured Saxon and Rusviet artillery mechs, so on the move it can trade blows with lighter mechs."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "speed:very-slow",
+          "why": "It walks and turns very slowly, so rushers and flankers reach it easily, even before it plants."
+        },
+        {
+          "ref": "mount:body-aim",
+          "why": "The cannon is fixed facing forward, so the slow-turning mech must swing round to aim, and a unit that gets behind it has time to work before it can answer."
+        },
+        {
+          "ref": "weapon-trait:min-range",
+          "why": "Planted, it cannot fire at anything close in and covers only a narrow cone ahead, so units inside its dead zone or off to the sides are safe from the cannon."
+        },
+        {
+          "ref": "mobility-trait:deploy-anchor",
+          "why": "Changing mode takes a while and leaves it open to attack, and once planted it cannot move; units on the move can step out of the way of its slow-landing shells."
+        },
+        {
+          "ref": "armour-class:heavy",
+          "why": "Fragile for a medium mech: its health stays low even at the top rank, so it goes down quickly once it draws fire."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "speed:>=medium",
+          "why": "Anything at the rifle squads' pace or faster, twice its speed, can rush it, slip into its dead zone or round its fixed gun to the flank, and dodge its planted shells."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Field cannons and anti-mech mechs are what its Medium armour class is weak to (Armor page), and its page calls it frail for a mech of that class."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "target:structure",
+          "why": "Planted, its long shells pound buildings, which cannot move out of the blast."
+        },
+        {
+          "ref": "class:infantry",
+          "why": "Soldiers dug in at one spot cannot dodge its planted shells, whose blast covers an area, and the side machine gun keeps infantry off it up close."
+        },
+        {
+          "ref": "armour-class:>=heavy",
+          "why": "Heavy and mega mechs are too slow to leave the impact zone, so its planted shells hit them hard, and on the move its cannon still hurts armour well."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:assault",
+          "why": "Its page says it does best tucked behind other units or with good support while it shells from range: a sturdy frontline keeps away the rushers and flankers it cannot handle."
+        }
+      ],
+      "memorable": "Polania's two-mode artillery walker: it fires a forward-fixed cannon on the move, then spikes its front legs into the ground to lob long shells over cover, hiding itself and friends in smoke.",
+      "as_player": "A mid-tier walking gun with two jobs. Walking, left mouse fires a forward-fixed cannon, a slow, heavy shot that hurts mechs, aimed by turning the whole sluggish walker; a side machine gun guards your right and a smoke key hides you. Deploy to plant: you cannot move, and the cannon lobs long shells over cover into a narrow cone with a blind zone close in, while a second smoke key lobs a screen onto a spot. Keep a frontline ahead: whatever reaches your flank or dead zone wins.",
+      "sources": [
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/PZM-13_%22Mocny%22",
+          "title": "PZM-13 \"Mocny\", Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Last edited 7 June 2022 (Changelog 26 figures); speed from April 2020, cannon reach from November 2020, abilities from September 2020, the rear-armour line from October and November 2020 (page history)",
+          "note": "Read through the wiki's API, with its page history. The infobox gives health, armour class Medium, speed, the Advanced Polanian Workshop, price and population, and three weapon slots, the mobile cannon, the siege cannon with its minimum reach and the machine gun, each with reach, bursts, pauses, damage per armour class and blast. The prose gives the four legs, the cannon fixed facing forward, the side turret, the two modes, the three abilities and the matchups. Its italic opening line, unit type and Pros and Cons are the wiki's own words, which the roles rules do not read as official text.",
+          "supports": [
+            "class",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "armament/0",
+            "armament/1",
+            "armament/2",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "abilities/2",
+            "modes/0",
+            "roles/secondary",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://kingart-games.com/article/121",
+          "title": "Iron Harvest DevBlog #45 - June 2022, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Changelog 26, June 2022, the last balance changes",
+          "note": "The balance list labels the unit Mocny (artillery mech), the newest bracketed label, and cuts its oil price; it raises the walking cannon's damage against Medium armour and the planted cannon's against infantry and Medium armour. No later post read, up to DevBlog #47, changes the Mocny.",
+          "supports": ["name", "roles/primary", "cost_band", "armament/0", "armament/1"]
+        },
+        {
+          "url": "https://kingart-games.com/article/117",
+          "title": "Iron Harvest DevBlog #41 - September 2021, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Changelog 24, September 2021",
+          "note": "Makes the Mocny's and the Isegrim's smokescreens static, so they stop moving with the unit, and makes all smokescreens smaller and shorter. Roughly halves the planted Mocny's reload and raises its planted damage against Medium and Heavy armour, because it had felt weaker than the other artillery mechs.",
+          "supports": ["abilities/1", "abilities/2", "armament/1"]
+        },
+        {
+          "url": "https://kingart-games.com/article/94",
+          "title": "Iron Harvest Change Log #06, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "22 October 2020",
+          "note": "Fixes a bug that had kept the Polanian and Rusviet artillery mechs from taking the extra damage other mechs take from behind.",
+          "supports": ["armour/models", "armour/notes"]
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Armor",
+          "title": "Armor, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "note": "The game's four unit armour classes, Medium being the class of most mechs, little hurt by light weapons but vulnerable to field cannons and anti-mech mechs, and the weak points of many mechs, often at the back, where damage is doubled.",
+          "supports": ["armour/models", "armour/notes", "countered_by/1"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Step 1 reads the newest bracketed label, artillery mech (DevBlog #45), which names siege through half of the Artillery / siege label; DevBlog #43 (https://kingart-games.com/article/119, read, not cited) had labelled it a siege tank, which names the same role. Siege passes its coding rule through the planted mode, whose lobbed gun reaches long and hits an area, so step 1 stops there. The wiki's unit type (a mobile artillery mech) and opening line are the wiki's own words."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Anti-infantry ranks at step 2, through the planted cannon's blast (a splash weapon, the alternate the deploy button switches to); the walking cannon's splash and the machine gun give it again at step 3. Assault ranks at step 4: heavy armour, and a main gun that reaches no further than the anchor line mechs' main guns (as far as the Knox's and a little short of the Wotan's, by the M-19 \"Knox\" and SKS 156 \"Wotan\" pages of the Iron Harvest Wiki, read, not cited). It does outreach the main guns of the other two anchors, the Nagan and the Łowca (the SHM-79 \"Nagan\" and PZM-11 \"Lowca\" pages, read, not cited): read as no further than every anchor's main gun, the clause would drop assault and leave the second slot empty. Its description fits only the direct-fire fighting its page describes, since the page also calls it fragile and best kept behind other units. Anti-armour is no candidate: no official text calls it strong against armour, the registry finds no bonus in the game data, and the wiki's mobile anti-mech unit is a label on the unit, not on the cannon. Read as a label on the walking cannon, it would put anti-armour at step 3, ahead of assault. Scout is no candidate either: the smoke buttons link lay-smoke, a stealth pattern that meets scout's requires, but hiding itself and friends finds or marks no enemy, so scout's description does not fit."
+        },
+        {
+          "path": "tier",
+          "note": "The Advanced Polanian Workshop page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Advanced_Polanian_Workshop) lists the Mocny among the units it builds, and the Polanian Workshop page (https://iron-harvest.fandom.com/wiki/Polanian_Workshop) lists only the Rycerz, Strażnik and Śmiały; both read, not cited. The reserve coin cost comes from DevBlog #35 (https://kingart-games.com/article/107, read, not cited)."
+        },
+        {
+          "path": "cost_band",
+          "note": "DevBlog #43 (https://kingart-games.com/article/119, read, not cited) set its iron price and gave a new oil price lower than the old one DevBlog #45 starts its cut from; the registry's rule takes the newest post's new figure, which the wiki's infobox also shows. Either oil figure leaves it in the low band.",
+          "sources_disagree": true
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The infobox speed has stood since April 2020, and no KING Art post read from DevBlog #10 to #47 changes the Mocny's speed. The comparisons in mobility.notes use the infobox speeds on the PZM-11 \"Lowca\", SKS 156 \"Wotan\", M-19 \"Knox\", SLL 33 \"Erlkönig\" and SHM-68 \"Nakovalnya\" pages of the Iron Harvest Wiki (read, not cited)."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "Breaking through small buildings and light cover rests on the Unit page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Unit, read, not cited), by which a mech of medium size can pass through smaller buildings as well as light cover; the Mocny page says nothing of terrain."
+        },
+        {
+          "path": "body/plan",
+          "note": "Coded spider-frame by the Iron Harvest notes' reading for walkers on many legs whose main gun is fixed facing forward (night decision of 27 October 2026), until a body tie-break for such walkers is settled at the rule-fix round after R4. By the casemate or hull-turret tie-break, a gun fixed in the hull would make a fixed-gun hull, but casemate is listed only for vehicles and hovercraft, so the walker would break its class and mobility rules. Launcher rack is for an exposed rack, mast or mortar, not a long cannon."
+        },
+        {
+          "path": "body/size",
+          "note": "No source gives its footprint. Coded large because it is a medium mech and a self-propelled gun, both large in our size examples; its page notes that the gun outmeasures the body that carries it."
+        },
+        {
+          "path": "armour/models",
+          "note": "Its page's Pros say it has no rear-armour weakness. That line was added on 9 October 2020 and reworded on 6 November 2020 (page history), while Change Log #06 (22 October 2020) fixed the bug that had spared the Polanian and Rusviet artillery mechs extra damage from behind, and no later post read restores the exemption. Directional follows the registry's rule for every mech, with the doubling from the Armor page; the Mech page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Mech, read, not cited) says almost every mech has a weak rear.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/damage",
+          "note": "No damage map: step 5 keeps the cannon default, armour-piercing, read through the wiki's calling the walking Mocny a mobile anti-mech unit, which says the walking cannon is built to kill mechs. If that wording did not count, its blast would give explosive. The rise in its damage against armour that the summary credits to DevBlog #30 (https://kingart-games.com/article/90, read, not cited) is that post's change to the Mocny's weapon damage against the Light, Medium and Heavy classes, whose new figures match the walking cannon's in the infobox; a rise is not a bonus over other targets, so it does not decide the damage type."
+        },
+        {
+          "path": "armament/0/range",
+          "note": "The infobox reach of the walking cannon was cut on 1 November 2020 by an edit with no comment, from a figure a little over twice the reference rifle's, and no KING Art post read mentions its reach; either figure is long. Off-screen does not apply: Iron Harvest has no sight figures and no source says it needs a spotter."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No source says how the shell travels; projectile is the cannon family's default, and hitscan for the machine gun is likewise its family's default."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "No source says any of its weapons attacks aircraft, so none lists air targets; structures are listed from the infobox's building damage figures, for all three weapons."
+        },
+        {
+          "path": "armament/1/family",
+          "note": "Artillery, not cannon: its page has the gun tilted upward in artillery mode, its siege shells ignore line of sight and take long enough to land that moving units dodge them, and the Unit page (read, not cited) gives artillery mechs minimum ranges and narrow cones of fire. That is a shell lobbed over cover onto a ground point (the artillery tie-break), so the delivery is lobbed."
+        },
+        {
+          "path": "armament/1/summary",
+          "note": "The infobox gives the planted cannon the same pause between shots as the walking one, while Changelog 24 (DevBlog #41) says it cut the planted reload to a pause about twice that long; no band uses the figure, so the summary gives only the official change. The infobox's blast figures for the planted shell also equal its direct-hit figures from before Changelog 24 and Changelog 26 raised them, so they may be out of date; either way the planted blast stays far stronger than the walking cannon's.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/1/range",
+          "note": "Long, not off-screen: the reach is nearly three times the reference rifle's, but Iron Harvest gives no sight figures, and unlike the SLL 33 \"Erlkönig\" page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/SLL_33_%22Erlk%C3%B6nig%22, read, not cited), which says that gun reaches past its own sight and wants spotters, nothing read says so of the Mocny."
+        },
+        {
+          "path": "armament/1/mount",
+          "note": "Limited-arc: planted, the mech cannot swing round, and its page gives the gun only a limited cone of fire with a dead zone. Walking, the same cannon is body-aim, since the whole mech turns to aim it."
+        },
+        {
+          "path": "armament/2/mount",
+          "note": "Limited-arc: its page puts the gun in a turret on the right of the cabin and says it covers only about the right-hand half of the circle."
+        },
+        {
+          "path": "crew",
+          "note": "Solo because no source says the machine gun and the cannon fire at the same moment, so the crew rule counts them as one at a time. If they do fire together from their separate mounts, the proposal would be driver-gunner with the machine gun in the gunner seat."
+        },
+        {
+          "path": "abilities/1",
+          "note": "The wiki's ability list (written in September 2020) has the Smokescreen surround the Mocny and work on the move; Changelog 24 in DevBlog #41 (September 2021) made the Mocny's smokescreen static, so it no longer moves with the unit. The entry follows the newer official text; the page was not updated for it.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities",
+          "note": "All three buttons are coded innate, since the tie-break gives veterancy only when a source shows the ability first appearing at a rank. A May 2020 version of the Mocny page guessed the Smokescreen, then not yet in the game, might open at the first veterancy rank, and the Veterancy page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Veterancy, read, not cited) says the first rank opens each unit's own veteran ability, but no source names the Mocny's. The current page flags no ability as locked, as the pages of the SHM-79 \"Nagan\" and the PZM-11 \"Lowca\" (read, not cited) do for theirs. That silence proves little: the PZM-9 \"Straznik\" and SLL 33 \"Erlkönig\" pages (read, not cited) are silent too about the Overdrive and the flare shot, which DevBlog #24 (https://kingart-games.com/article/77, read, not cited) names as those mechs' veteran abilities. If one of the smoke buttons opens only at a rank, its source would be veterancy."
+        },
+        {
+          "path": "on_death",
+          "note": "The wreck rests on the Recycling Wrecks page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Recycling_Wrecks, read, not cited), which says every destroyed mech leaves one and gives who can recycle it and what removes it; the Mocny page says nothing of its wreck."
+        },
+        {
+          "path": "countered_by/1",
+          "note": "Reasoned: the Mocny page names no counter by job, so this rests on the Armor page's line for the Medium class, the Mocny's class by its infobox, together with its own page's word that it is fragile. Field cannons outrange its walking cannon but not its planted one (Polania Field Cannon page of the Iron Harvest Wiki, https://iron-harvest.fandom.com/wiki/Polania_Field_Cannon, read, not cited)."
+        },
+        {
+          "path": "counters",
+          "note": "The Erlkönig is left out: the SLL 33 \"Erlkönig\" page (read, not cited) says the Mocny slightly outguns it and hits armour harder, but the Erlkönig outreaches every other artillery mech, and no page says which wins. Lighter mechs are left out too: the Mocny page says only that it can trade blows with them while walking, not that it beats them."
+        },
+        {
+          "path": "combos/0",
+          "note": "Reasoned: its page says it works best behind other units or with good support but names no job; a frontline (assault) is read from the weaknesses its page gives, being easy to rush and flank, with a dead zone when planted."
+        },
+        {
+          "path": "name",
+          "note": "The page was created under a misspelling (Moncy) and moved in February 2019 (page history), and the PZM-9 \"Straznik\" page's trivia (read, not cited) says the name Mocny once belonged to the Strażnik during development. The posts write Mocny, and the page title gives its type number."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J11-IRON-HARVEST",
+      "fit_notes": [
+        {
+          "path": "body/plan",
+          "used": "spider-frame",
+          "wanted": "a fixed-gun body for walkers on many legs (a gun platform on legs)",
+          "note": "A long cannon fixed facing forward on one side of a four-legged body, beside a crew cabin. Spider frame fits the legs, but the fixed gun shows only in the cannon's body-aim mount; our casemate plan has the fixed gun but is listed only for wheeled, tracked and hover vehicles."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "mobility/base",
+          "rule": "mobility:legs-multi allowed.speed-bands very-slow",
+          "note": "It walks on four legs at half the rifle squads' pace by its infobox speed, and our many-legs type starts at slow; the Kaiser and the eight-legged Wotan, other Iron Harvest walkers on many legs, are very slow too."
+        }
+      ]
+    },
+    {
+      "id": "iron-harvest.saxony.grimbart",
+      "game": "iron-harvest",
+      "faction": "saxony",
+      "name": "Sd. KS 49 \"Grimbart\"",
+      "flavour_affinity": ["soviet"],
+      "class": "walker",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["disabler", "anti-infantry"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Workshop",
+        "basis": "Built at the basic Saxon Workshop with no upgrade, by the wiki's infobox (the Advanced Saxon Workshop builds it too), and Change Log #20 (March 2021) counts it among the light, tier 1 mechs. DevBlog #35 (February 2021) lets it be picked only for the second reserve, Reserve II, where it costs one reserve coin; the reserve is a side-wide call-in, so the production gate decides the tier."
+      },
+      "cost_band": {
+        "band": "low",
+        "raw": 450,
+        "basis": "Changelog 25 in DevBlog #43 (December 2021) cut its iron and oil price to what the wiki's infobox shows, and no later post read changes it. Counted as iron plus three times the oil, it sits a little above the low band's lowest price, at about half the line-mech anchor. Its population cost is a cap, not a price, so it is left out."
+      },
+      "mobility": {
+        "base": "legs-biped",
+        "handling": "pivot",
+        "traits": [],
+        "speed": "very-slow",
+        "speed_raw": 0.52,
+        "notes": "Walks on very short legs at about half the pace of the rifle squads, the game's speed reference, and turns slowly, so faster units outrun and outmanoeuvre it and it reacts poorly to attacks from several sides (its page). Iron Harvest has no tanks: it keeps the pace of the Wotan, Saxony's line mech, is a little quicker than the Łowca, and is far slower than the Strażnik and the Isegrim, the light and medium mechs it is compared with. Handling stays pivot, the two-legs default: it is no small walker. Like other light mechs it breaks through small amounts of cover, game-wide terrain breaking, not the crush trait. The Sweep roots it while it fires."
+      },
+      "body": {
+        "plan": "humanoid-mech",
+        "size": "medium",
+        "notes": "A heavily armoured box that bullets cannot pierce, set on stubby legs, with a thin arm on each side: a large rotary gun on the right and a pinching claw on the left. Its body is much bigger than that of the Strażnik, its Polanian counterpart. Humanoid mech: a two-legged mech with a torso and arms (see uncertain on the legs). Medium: a light mech, and light walkers are medium in our size examples, though a bulky one. No source uses the claw as a weapon: the gun is its sole armament."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["directional"],
+        "notes": "Step 1 of the armour-class steps decided: the infobox's Light maps to medium through the armour map. Its page calls it the most durable of the light-armoured mechs: even massed rifle squads hardly dent it, while field cannons and anti-mech units hurt it badly. Directional: by the Armor page, hits on a mech's weak rear do about twice the damage, and its own page says it takes extra damage from behind. Change Log #20 (March 2021) raised its health; veterancy adds more and base repair is game-wide, and neither changes the class."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "proposal",
+        "notes": "No source gives sight figures for Iron Harvest units (the registry's sight reference), so the band is the medium proposal. No source gives it radar, a detector or stealth."
+      },
+      "armament": [
+        {
+          "name": "Gatling Gun",
+          "slot": "primary",
+          "family": "machine-gun",
+          "damage": "kinetic",
+          "mount": "body-aim",
+          "delivery": "hitscan",
+          "range": "medium",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": ["suppress"],
+          "summary": "A big rotary gun on the right arm, its only weapon. It fires bursts of bullets, each hitting infantry more than three times as hard as a Strażnik bullet; by the infobox it does a quarter of that to the game's Light armour class, less again to Medium and Heavy, and almost nothing to buildings. It reaches a little further than the reference rifle, enough to outrange the Strażnik slightly. The gun points where the slow-turning mech faces. Since DevBlog #35 (February 2021) its ordinary fire suppresses targets too, which KING Art says makes it better against groups; suppressed infantry move and fire far more slowly."
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "No player seats: RTS units are ordered, not driven. The walker class makes it a crewed machine, and a KING Art post's caption (DevBlog #15) speaks of a Grimbart pilot. One weapon, so solo. It has no passenger seats."
+      },
+      "abilities": [
+        {
+          "name": "Sweep",
+          "kind": "active",
+          "source": "innate",
+          "cooldown": "long",
+          "summary": "The Grimbart roots itself and fires without pause across a frontal arc whose width the player sets: the wider the arc, the longer it stays locked in the sweep, firing a far longer burst than an ordinary attack. DevBlog #35 (February 2021) raised the sweep's suppression and its area, so it pins the infantry it rakes harder, while everything in the arc takes the gun's usual damage. Its page counts the rooting among its faults, and the infobox gives it a long wait between uses.",
+          "patterns": ["suppress-with-fire"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["wreck"],
+        "basis": "in-game",
+        "notes": "Like every destroyed mech it leaves a wreck that nearly any infantry squad can recycle for a little iron and oil, the same small haul whatever mech it was (Recycling Wrecks page); allies share it. Another mech or exosuit stepping on the wreck, or an explosion such as an artillery strike, removes it first, and wrecks give infantry no cover. No source says its destruction harms anything nearby."
+      },
+      "strengths": [
+        {
+          "ref": "weapon:machine-gun",
+          "why": "Its rotary gun mows down infantry by the squad and fares fairly well against light mechs, all the more at elite rank."
+        },
+        {
+          "ref": "armour-class:medium",
+          "why": "The most durable of the light-armoured mechs: even big groups of riflemen hardly dent it, so it can wade into infantry."
+        },
+        {
+          "ref": "weapon-trait:suppress",
+          "why": "Since DevBlog #35 its ordinary fire suppresses too, slowing the movement and fire of the infantry it targets and making it better against groups."
+        },
+        {
+          "ref": "pattern:suppress-with-fire",
+          "why": "The Sweep rakes a whole arc at once, damaging groups of targets together and pinning the infantry caught in it."
+        },
+        {
+          "ref": "range:medium",
+          "why": "Its gun slightly outranges the Strażnik's, so Polania's light anti-infantry mech cannot easily kite it."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "speed:very-slow",
+          "why": "Slow to walk and to turn: faster units outrun and outmanoeuvre it, and it struggles to answer attacks from several sides at once."
+        },
+        {
+          "ref": "damage:kinetic",
+          "why": "Its bullets do little to medium or heavy mechs or to buildings, and it has no other weapon to deal with them."
+        },
+        {
+          "ref": "pattern:suppress-with-fire",
+          "why": "The Sweep roots it until the arc is done, the longer the wider the arc, leaving it a sitting target for the guns that hurt it."
+        },
+        {
+          "ref": "armour-model:directional",
+          "why": "Hits from behind do extra damage, about double by the Armor page, and the slow mech is poorly placed to turn and face them."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "role:anti-armour",
+          "why": "Anti-mech units such as the Łowca and field cannons do extra damage to it (its page), and the Armor page names field cannons, gunner squads and anti-mech mechs as the bane of its armour class."
+        },
+        {
+          "ref": "unit:iron-harvest.shared.field-cannon",
+          "why": "Named on its page among its main dangers: field cannons punch through its armour and outreach its gun."
+        },
+        {
+          "ref": "unit:iron-harvest.polania.lowca",
+          "why": "Named on its page as an anti-mech unit that does it extra damage."
+        },
+        {
+          "ref": "role:siege",
+          "why": "Its page calls it vulnerable to artillery, which its slow pace cannot escape."
+        },
+        {
+          "ref": "speed:>=medium",
+          "why": "Units at the rifle squads' pace or faster, about twice its speed, outrun and outmanoeuvre it and can reach its back, where hits do more."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "class:infantry",
+          "why": "It devastates infantry: even large rifle squads such as the Polanian Riflemen and Rusviet Vanguards do little to its armour while it cuts them down, and its suppression pins the survivors."
+        },
+        {
+          "ref": "armour-class:medium",
+          "why": "Light mechs, the game's Light armour class, often lose to it head-on and one on one, outranged and outgunned by its rotary gun."
+        },
+        {
+          "ref": "unit:iron-harvest.polania.straznik",
+          "why": "Named on both pages: its own page says light mechs like the Strażnik often lose to it one on one, and the Strażnik's page says the Grimbart outranges it slightly and outguns it heavily."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:anti-armour",
+          "why": "Its page wants it used with heavier anti-armour units that handle the mechs, while it deals with infantry and light armour."
+        },
+        {
+          "ref": "unit:iron-harvest.saxony.kaiser",
+          "why": "The Saxony page's Great Wall formation sets a Grimbart beside a pair of Kaisers, whose cannons duel the enemy mechs while it keeps infantry away."
+        }
+      ],
+      "memorable": "Saxony's boxy gatling mech: a rotary gun that shreds and pins infantry, and a sweep that roots it to rake a whole arc the player draws.",
+      "as_player": "A cheap, early anti-infantry brawler. Left mouse spins a heavy rotary gun that shreds and suppresses infantry and chips light mechs, aimed by turning your slow, boxy walker. Your key plants you for a sweep: drag out the arc and you rake it with a long burst that pins everyone inside, but the wider the arc, the longer you stand rooted. Anti-mech guns and artillery are your bane, so fight beside teammates who kill mechs and never show the enemy your back.",
+      "sources": [
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Sd._KS_49_%22Grimbart%22",
+          "title": "Sd. KS 49 \"Grimbart\", Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Last edited 10 January 2022 (price from DevBlog #43); speed from 2019, weapon figures from April 2020, health from June 2021, the Sweep text from 2019 (page history)",
+          "note": "Read through the wiki's API, with its page history. The infobox gives health, armour class Light, speed, the Saxon Workshop and the Advanced Saxon Workshop, price and population, and two weapon slots, the Gatling Gun and the Sweep (marked as an ability), each with reach, burst, pause and damage per armour class. The prose gives the box-like body, the gun arm and the claw, the Sweep and the matchups. Its italic opening line, Lore box and Pros and Cons are the wiki's own words, which the roles rules do not read as official text.",
+          "supports": [
+            "class",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "armament/0",
+            "abilities/0",
+            "roles/primary",
+            "roles/secondary",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos/0",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://kingart-games.com/article/107",
+          "title": "Iron Harvest DevBlog #35 - February 2021, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "February 2021",
+          "note": "Adds suppression to the Grimbart's main weapon and raises the Sweep's suppression and area, saying it now handles groups of enemies better. The reserve rework in the same post lets the Grimbart be picked only for Reserve II and sets it at one reserve coin.",
+          "supports": ["armament/0", "abilities/0", "roles/secondary", "tier", "strengths/2", "strengths/3"]
+        },
+        {
+          "url": "https://kingart-games.com/article/119",
+          "title": "Iron Harvest DevBlog #43 - December 2021, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Changelog 25, December 2021",
+          "note": "The mech cost rebalance labels the unit Grimbart (Gatling Mech), the newest bracketed label, which names no role, and cuts its iron and oil price to what the wiki's infobox shows; no later post read, up to DevBlog #47, changes it.",
+          "supports": ["name", "cost_band", "roles/primary"]
+        },
+        {
+          "url": "https://kingart-games.com/article/110",
+          "title": "Iron Harvest Change Log #20, KING Art Games",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "25 March 2021",
+          "note": "Raises the Grimbart's health and cuts its oil price among buffs for the light, tier 1 mechs. The same log reworks suppression: units that are not meant as main sources of it lose some, heavy machine guns gain, and suppressed units now show an icon; it names no unit's new value.",
+          "supports": ["tier", "armour/notes", "armament/0"]
+        },
+        {
+          "url": "https://iron-harvest.fandom.com/wiki/Armor",
+          "title": "Armor, Iron Harvest Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "note": "The game's four unit armour classes, Light being the class of small, fast mechs and exosuits, still hurt by light weapons and very exposed to field cannons, gunner squads and anti-mech mechs, and the weak points of many mechs, often at the back, where damage is doubled.",
+          "supports": ["armour/models", "armour/notes", "countered_by/0", "weaknesses/3"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Step 1 finds no role: the newest bracketed label, Gatling Mech (DevBlog #43, also in Change Log #20 and DevBlog #35), names none. DevBlog #35's line that it now does better against groups of enemies names none of the registry's target words, so step 4 finds no official strong-against text, and the registry finds no bonus in the game data; step 5 gives assault, since it is very slow with medium armour. The wiki calls it an anti-infantry mech (the Saxony Empire page's unit table, https://iron-harvest.fandom.com/wiki/Saxony_Empire, read, not cited) and its opening line aims it at infantry and light armour, but those are the wiki's words. Read as official, step 4 would give anti-infantry."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Disabler ranks at step 2: the Sweep, a button every copy has, links suppress-with-fire, a control pattern, and suppression slows the movement and fire of the infantry it hits. Anti-infantry ranks at step 3, from its only weapon, a machine gun that does little to vehicles; the Sweep harms every kind of target with the same gun, so by itself it gives no anti role at step 2. If the Sweep opened only at a veterancy rank, disabler would rest on nothing that every copy has and would drop, leaving anti-infantry alone."
+        },
+        {
+          "path": "tier",
+          "note": "The Saxon Workshop page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Saxon_Workshop, read, not cited) lists the Grimbart among the units the basic workshop builds. Before DevBlog #35 it could go in the first reserve; the move to Reserve II changes its call-in, not its production gate."
+        },
+        {
+          "path": "mobility/base",
+          "note": "No page read gives the number of its legs: its page describes an armoured box on stubby legs with an arm on each side, and its trivia likens it to the boxy, two-legged Dreadnought walkers of Warhammer 40,000, so two legs is a judgement. If it walks on more, the many-legs type and the spider-frame body (Iron Harvest notes) would follow, and its very slow pace would break the many-legs speed list."
+        },
+        {
+          "path": "body/plan",
+          "note": "Humanoid mech for a two-legged mech whose box body works as a torso with an arm on each side; reverse-joint walker would fit a gun pod on backward-bending legs, which no source describes. The plan stands on the leg count (see mobility/base)."
+        },
+        {
+          "path": "body/size",
+          "note": "No source gives its footprint. Coded medium as a light mech (Change Log #20; the Unit page of the Iron Harvest Wiki, https://iron-harvest.fandom.com/wiki/Unit, read, not cited), since light walkers are medium in our size examples, although its page says its body is much bigger than the Strażnik's; large would follow if it were judged the size of the medium mechs."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The infobox speed has stood since 2019, and no KING Art post read from DevBlog #10 to #47 changes the Grimbart's speed. The comparisons in mobility.notes use the infobox speeds on the SKS 156 \"Wotan\", PZM-11 \"Lowca\", PZM-9 \"Straznik\" and Sd. KS 78 \"Isegrim\" pages of the Iron Harvest Wiki (read, not cited)."
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "Suppress rests on DevBlog #35, which made suppression part of its main weapon's job. A month later Change Log #20 cut suppression on units not meant as main sources of it without naming them, and no later post names the Grimbart's suppression; the wiki never mentions it, its weapon text predating DevBlog #35. Spin-up is left off: its page speaks of the sound of the gun spinning up, not of its rate of fire rising."
+        },
+        {
+          "path": "armament/0/family",
+          "note": "Its page calls the gun an upscaled rotary cannon but also a Gatling-style machine gun and says it fires bullets; a rotary gun firing bullets is a machine gun whatever its name (the family tie-break)."
+        },
+        {
+          "path": "armament/0/mount",
+          "note": "Body-aim: the gun is on the right arm and its page stresses the slow turning and the trouble it has with attacks from all sides; no source says how far the arm or body swings. The Sweep's frontal arc suggests some traverse, which would make it limited-arc."
+        },
+        {
+          "path": "armament/0/delivery",
+          "note": "No source says how the bullets travel; hitscan is the machine-gun family's default."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "No source says the gun attacks aircraft, so no air target is listed; structures are listed from the infobox's building damage figure, tiny as it is."
+        },
+        {
+          "path": "nature",
+          "note": "The pilot in crew.notes rests on a picture caption in DevBlog #15 (https://kingart-games.com/article/61, July 2019, read, not cited), which jokes about a Grimbart mech pilot; without it the walker class would still give crewed-machine, since no source says otherwise."
+        },
+        {
+          "path": "abilities/0",
+          "note": "Coded innate, since the tie-break gives veterancy only when a source shows the ability first appearing at a rank, and no source says the Sweep waits for one. Still, the Veterancy page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Veterancy, read, not cited) says the first rank opens each unit's veteran ability, and the Sweep is the Grimbart's only button. The Strażnik's similar Overdrive, which also roots it while it fires, is a veteran ability by DevBlog #24 (https://kingart-games.com/article/77, read, not cited), yet the PZM-9 \"Straznik\" page (read, not cited) never says so, so the Grimbart page's silence proves little. If the Sweep opens only at the first rank, its source is veterancy and roles/secondary changes as noted there. The long cooldown reads the pause in the infobox's ability slot (entered April 2020) as the wait between uses, as the ability slots on other mech pages give theirs. The suppression in the summary comes from DevBlog #35; the wiki's Sweep text dates from 2019 and never mentions it, and a sweep of the gatling already existed in the alpha (DevBlog #10, https://kingart-games.com/article/55, read, not cited)."
+        },
+        {
+          "path": "countered_by",
+          "note": "The field cannon is the shared weapon system every faction builds (registry), named on the Grimbart page; that it outreaches the gun comes from the Polania Field Cannon page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Polania_Field_Cannon, read, not cited). Speed is reasoned from its page's word that swifter units outrun and outmanoeuvre it and from the Armor page's rear rule."
+        },
+        {
+          "path": "counters/2",
+          "note": "The Strażnik's side rests on the PZM-9 \"Straznik\" page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/PZM-9_%22Straznik%22, read, not cited), whose Cons say the Grimbart slightly outranges and heavily outguns it."
+        },
+        {
+          "path": "combos/1",
+          "note": "Rests on the Saxony Empire page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Saxony_Empire, read, not cited), whose Great Wall formation pairs two Kaisers with a Wotan or a Stiefmutter, a Grimbart and sometimes a field cannon; the reconciled Kaiser entry names the same pairing from the Kaiser's side."
+        },
+        {
+          "path": "on_death",
+          "note": "The wreck rests on the Recycling Wrecks page of the Iron Harvest Wiki (https://iron-harvest.fandom.com/wiki/Recycling_Wrecks, read, not cited), which says every destroyed mech leaves one and gives who can recycle it and what removes it; the Grimbart page says nothing of its wreck."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J11-IRON-HARVEST"
+    }
+  ]
+}

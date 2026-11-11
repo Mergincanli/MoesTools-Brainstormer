@@ -10,8 +10,12 @@ A creativity tool for designing units for **Shamble Frontlines**, a browser team
 
 **Step 3, Research run: in progress.** Batch R1 (Red Alert 1, 2 and 3: 25 units and 33 pattern files) was merged on 23 October 2026 ([research/r1/](research/r1/README.md)). The rule-fix round after it took up 40 of R1's rule problems and turned 39 of them into word lists 1.1.0 (one was dropped), approved on 24 October 2026, and recoded 23 of the 25 R1 units to match ([research/r1/rule-fix/](research/r1/rule-fix/README.md)).
 
-Next: batch R2. The generator and the app have not started.
+On 24 October 2026, Mustafa narrowed the research run to reach the generator sooner: batch R3 (Generals with Zero Hour, Tempest Rising, Iron Harvest), then a new batch R4 (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech), then steps 4 to 6. Batch R2 is paused during its prep, and the other games are shelved until after the app ([proposal, section 2.2](docs/proposal.md#22-the-research-run)).
 
+Now: batch R3. All 27 of its units are coded and checked, and the merge pass and the pattern files are under way. The work paused on 29 October 2026 and moved to a new session on 10 November; [docs/handoff.md](docs/handoff.md) says where it stands and what comes next. The generator and the app have not started.
+
+- [Brief](docs/brief.md): Mustafa's original brief for Unit Forge.
+- [Handoff](docs/handoff.md): where the work stands and how to go on with it.
 - [Proposal](docs/proposal.md): the plan, repository structure, decisions needed. Start here. Its counts (37 word lists at version 0.3.0, 23 planned patterns) are as they were when it was approved.
 - [Samples](docs/samples.md): three researched units (RA3 Terror Drone, Hammer Tank, Multigunner IFV), three mechanic patterns and an example concept card.
 - [Vocabularies](docs/vocabularies.md): the fixed word lists every record uses (version 1.1.0, approved), with each term's coding rule and each list's tie-breaks.
@@ -67,7 +71,7 @@ Options go after `--`, for example `npm run copy-check -- --offline`:
 |---|---|
 | `--offline` | Uses cached pages only; pages not in the cache are listed as not checked. |
 | `--min-words N` | The shortest shared run to report (default 6). |
-| `--only <part of a URL>` | Checks only the pages whose URL contains this text; can be given more than once. |
+| `--only <part of a URL>` | Checks only the pages whose URL contains this text; can be given more than once. A full address that nothing cites is fetched (or listed as not checked), and a text that matches no cited, linked or cached page is listed as not checked. |
 | `--max-fetch N` | Fetches at most N pages in this run; the rest are listed as not checked. |
 | `--refresh` | Fetches pages again even when they are cached. |
 | `--delay MS` | The pause between requests, in milliseconds (default 1500). |
@@ -81,4 +85,4 @@ It ends with one of these exit codes, so a script can tell the results apart:
 | 0 | Every cited page was checked and no record shares a run of words with a page it cites (and no note, with `--also`, shares one with any page). |
 | 1 | Shared runs were found (`FOUND` lines); rewrite them in your own words. Pages that were not checked are listed too. |
 | 2 | Bad options, an `--also` folder that does not exist, or a `.json` file under it that is not valid JSON. |
-| 3 | No shared runs were found, but some pages were not checked (`INCOMPLETE` line): offline and not cached, over `--max-fetch`, an HTTP error or no network. The check is not finished; run it again with the network, or fix the URLs listed. |
+| 3 | No shared runs were found, but some pages were not checked (`INCOMPLETE` line): offline and not cached, over `--max-fetch`, an HTTP error or no network, a Steam news page that holds no post, or an `--only` text that matched nothing. The check is not finished; run it again with the network, or fix the URLs listed. Running again does not help for a Steam page with no post (a placeholder, or a post the store serves empty): name it in the report. |

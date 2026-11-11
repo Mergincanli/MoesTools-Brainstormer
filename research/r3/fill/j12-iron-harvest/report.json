@@ -1,0 +1,557 @@
+{
+ "label": "j12-iron-harvest",
+ "game": "iron-harvest",
+ "file_written": "data/units/iron-harvest.json",
+ "units": [
+  "iron-harvest.usonia.william-mason",
+  "iron-harvest.usonia.stark"
+ ],
+ "validator_result": "OK (node scripts/validate.mjs . exits 0, with no error lines. The validator prints three ATYPICAL lines about these units, and each is recorded in that unit's atypical list under its exact rule string with a note: 'mobility:foot allowed.speed-bands very-slow' and 'on-death:pilot-eject classes infantry' on William Mason, and 'mobility:legs-multi allowed.speed-bands very-slow' on the Stark. The other warnings are expected: planned patterns and source_units, plus one WARN for unit links to units nobody has researched yet, which covers this file's iron-harvest.shared.field-cannon and iron-harvest.usonia.ward. node scripts/format-json.mjs rewrote 0 files.)",
+ "copy_check_result": "Exit 0. Command: node scripts/copy-check.mjs . --only wiki/William_Mason --only article/116 --only article/107 --only wiki/Unit --only wiki/Armor --only 'wiki/M-22_%22Stark%22' --only article/119 --only wiki/Recycling_Wrecks --only wiki/Lech_Kos. It checked 12 pages from the cache, left none unchecked, and found no shared runs. No PDF is cited. As an extra check, both units' prose was compared, at 6 or more words, with every cached Iron Harvest Wiki and KING Art page read for this task, cited or not, and with the downloaded page-history revisions. The only matches were the URL text 'https iron harvest fandom com wiki' inside uncertain notes.",
+ "hesitations": [
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "class",
+   "chosen": "infantry (power-suit trooper)",
+   "alternatives": [
+    "walker"
+   ],
+   "reason": "The rule is clear but the sources disagree. The William Mason page calls him an infantry hero in an exo-suit and the Unit page calls exosuits advanced infantry. Against that, his infobox uses the mech template, the wiki calls the suit his mech, and the Unit page lists the exosuit hero Janek Kos among the mech heroes. The registry note allows 'an exosuit hero coded as infantry' but does not say which class Mason takes, and the brief named both. Recorded as uncertain with sources_disagree. nature, body, mobility.base and the pilot-eject atypical all follow from this choice."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "nature",
+   "chosen": "organic",
+   "alternatives": [
+    "crewed-machine"
+   ],
+   "reason": "This follows the class choice: a soldier inside a suit is flesh. Under the walker reading the suit would be a crewed machine."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "body/plan",
+   "chosen": "power-suit",
+   "alternatives": [
+    "humanoid-mech"
+   ],
+   "reason": "The body tie-break puts a suit worn by one soldier in power-suit. The sources call it an exosuit and the wiki compares it to Space Marine armour. A walker reading could still keep power-suit at medium size, or it could take humanoid-mech."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "body/size",
+   "chosen": "small",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "The size examples make a power-suit trooper small, and no source gives the suit's footprint. The wiki stresses how bulky the suit is (a hulking chest plate, a gun fit for a heavier vehicle), which argues for medium."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "tier",
+   "chosen": "t2, gate Reserve II",
+   "alternatives": [
+    "t1, gate Reserve I"
+   ],
+   "reason": "The registry says to take the tier from a source, or else the band the evidence best supports, with an uncertain entry. No page read says which reserve holds him. Three things point to Reserve II: his price and population match the mech heroes, Change Log #04 calls one of them, Prince Wilhelm, a tier 2 reserve hero, and DevBlog #35 limits exosuit squads to Reserve II. At t1, his unique availability would also need the atypical entry for that rule's t2 floor."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "cost_band",
+   "chosen": "medium (raw 810)",
+   "alternatives": [
+    "low"
+   ],
+   "reason": "The registry rule (infobox iron plus three times oil) is clear. The figure sits just above the 800 threshold, and no page says what a hero's reserve actually pays, since a reserve's price depends on what it holds (DevBlog #35)."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "mobility/base",
+   "chosen": "foot, very-slow (speed_raw 0.54), recorded as atypical",
+   "alternatives": [
+    "legs-biped (walker reading)"
+   ],
+   "reason": "This follows the class choice. The foot type lists no very-slow band, but the speed figure is clear."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "mobility/traits",
+   "chosen": "[transform]",
+   "alternatives": [
+    "[] (leave the form change to modes only)"
+   ],
+   "reason": "Climbing out changes his body, armour, speed and weapon, so the trait records the change and modes/0 records the result. The transform is only partial, though, because the shell stays behind as a turret."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "armour/class",
+   "chosen": "medium",
+   "alternatives": [
+    "heavy (armour map reading of the infobox's Medium)",
+    "lower (the Armor page gives exosuits the game's Light class)"
+   ],
+   "reason": "The registry note names him and steps him down to medium in the suit, so the rule is clear. The sources disagree on which class exosuits carry."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "armour/models",
+   "chosen": "[downed-revive] (also on the dismounted mode); not directional",
+   "alternatives": [
+    "flat-pool for the suit",
+    "a new outer-shell-over-pilot model (fit_note)",
+    "directional (the mech rule under the walker reading)"
+   ],
+   "reason": "Downed-revive is the registry rule for exosuit heroes coded as infantry. The suit itself never goes down, because he climbs out when it fails, and no model covers a shell with its own health over a pilot. The registry says no source gives rear armour to exosuits."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "armament/0/family",
+   "chosen": "autocannon",
+   "alternatives": [
+    "flak",
+    "cannon"
+   ],
+   "reason": "Under the machine gun, autocannon or cannon tie-break, quick three-round bursts of shells read as autocannon. The infobox name 'Flak Cannon' and the game files' 'flak cannon' point to flak, but flak is for air bursts against aircraft, and this gun hits mechs and buildings and is never said to fire at aircraft. Flak or cannon would also have added soviet to flavour_affinity: soviet favours assault, flak and cannon, but not autocannon."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "armament/0/damage",
+   "chosen": "explosive",
+   "alternatives": [
+    "armour-piercing"
+   ],
+   "reason": "There is no damage map, so step 5 keeps the family default. The wiki calls the shells armour-piercing, but no source calls the gun anti-armour, and its per-class figures show no extra harm against armour."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "armament/0/can_target",
+   "chosen": "infantry, ground-vehicle, structure",
+   "alternatives": [
+    "also low-air and high-air"
+   ],
+   "reason": "The registry says air targets are listed per weapon from the unit's own sources. The name 'Flak' suggests aircraft, but no source says the gun can hit them."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "armament/0/range",
+   "chosen": "medium",
+   "alternatives": [
+    "short"
+   ],
+   "reason": "The rule is clear: the infobox reach is about 1.04 times the reference rifle's, which is medium. The wiki's Cons still call his reach relatively short."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "armament/0/mount",
+   "chosen": "free-aim",
+   "alternatives": [
+    "body-aim"
+   ],
+   "reason": "Aim tie-break step 4 gives free-aim to a weapon built into a small body worn by a soldier. Under the walker or medium-size reading, an arm gun with no source on how it turns would count as fixed (step 6)."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "armament/0/summary",
+   "chosen": "The cannon stays as his primary; the summary says the empty suit keeps firing it as a turret after he climbs out",
+   "alternatives": [
+    "give the cannon a mode or condition"
+   ],
+   "reason": "No field rule covers a weapon that stays behind with a deployed shell."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "armament/1/delivery",
+   "chosen": "hitscan",
+   "alternatives": [
+    "projectile"
+   ],
+   "reason": "No source says how the revolver's shots travel, so the small-arms default applies."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "armament/1/slot",
+   "chosen": "alternate, mode dismounted, linked to transform",
+   "alternatives": [
+    "secondary"
+   ],
+   "reason": "He uses the revolver only out of the suit, after the button that switches him. The rule is clear enough; whether to link the pattern on the weapon was a judgement call."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "crew",
+   "chosen": "solo",
+   "alternatives": [
+    "remote"
+   ],
+   "reason": "The solo-or-remote tie-break gives remote only when the operator stays parked on the field. Here the operator runs and the suit is what stays parked. The wiki's opening line says he can control the suit remotely, but no source has him steer it."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "abilities/0/kind",
+   "chosen": "toggle",
+   "alternatives": [
+    "active (with climbing back in as a separate action)"
+   ],
+   "reason": "No source says how he climbs back in. The wiki has him recall the suit and names mounting as a moment of weakness."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "abilities/1/patterns",
+   "chosen": "[transform]",
+   "alternatives": [
+    "deploy-turret (KING Art calls it Turret Relocate)",
+    "leap (the suit's rocket jump)"
+   ],
+   "reason": "No pattern covers sending a parked machine back to its owner, so I used the closest fit and added a fit_note."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "abilities/2/patterns",
+   "chosen": "[drop-in-from-above]",
+   "alternatives": [
+    "transform (shell-and-pilot variant)"
+   ],
+   "reason": "It is the suit that arrives from above, not him, and no source mentions a warning or harm on landing."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "abilities",
+   "chosen": "Exit Strategy has no entry of its own (it is covered by on_death pilot-eject)",
+   "alternatives": [
+    "a passive ability entry linking transform"
+   ],
+   "reason": "The rules do not say whether a passive that an on-death term fully describes also needs an ability entry."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "on_death/outcomes",
+   "chosen": "[pilot-eject], basis in-game, recorded as atypical for infantry",
+   "alternatives": [
+    "no outcome (downed-revive only)",
+    "wreck (rejected: destroyed exosuits leave none)"
+   ],
+   "reason": "The term lists only walkers, aircraft, vehicles and hovercraft. No source says whether the suit is destroyed or left empty when he exits."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "roles/secondary",
+   "chosen": "[anti-infantry, area-denial], both at step 2, in roles-list order",
+   "alternatives": [
+    "anti-armour"
+   ],
+   "reason": "Anti-armour fails the role's requires, because the gun's damage is explosive. Area-denial comes from the Deploy Exosuit button leaving a turret (the summon category). Anti-infantry comes from the revolver it switches to, and the cannon's splash also gives it at step 3."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "weaknesses/3",
+   "chosen": "ref weapon:autocannon for his trouble with crowds",
+   "alternatives": [
+    "record the crowd weakness only as countered_by class:infantry"
+   ],
+   "reason": "No ref fits the wiki's 'copes badly with crowds' exactly. It is also kept as countered_by/0."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "countered_by/1, countered_by/2, combos/1",
+   "chosen": "role:anti-armour, range:>=long, role:support",
+   "alternatives": [
+    "leave them out"
+   ],
+   "reason": "His page names no anti-armour enemy, long-range enemy or repair partner, so these entries are reasoned from the Armor, Unit and Ward pages and are marked uncertain."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "cost_band",
+   "chosen": "low (raw 780, after the DevBlog #43 oil cut)",
+   "alternatives": [
+    "medium (905 before the cut)"
+   ],
+   "reason": "The newest price is used and the rule is clear. The figure sits just under the 800 threshold."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "mobility/speed",
+   "chosen": "very-slow (speed_raw 0.60), recorded as atypical",
+   "alternatives": [
+    "slow"
+   ],
+   "reason": "The rule is clear by the figure, but the source is weak. The infobox speed and health equal the Serp's, which shares its unit type and veterancy figures, so they may have been copied. A true speed of 0.7 or more would make it slow."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "body/plan",
+   "chosen": "spider-frame",
+   "alternatives": [
+    "creature (it is bison-shaped, but the creature plan is for real animals)",
+    "hull-turret (it has no turret)"
+   ],
+   "reason": "This follows the registry's night decision of 27 October 2026 for walkers on many legs whose main weapon does not turn all the way round. That decision is reversible at the rule-fix round after R4."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "body/size",
+   "chosen": "large",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "The size examples make battle mechs large, and no source gives the footprint. The game's 'medium mech' is a weight word, not a size."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "armour/class",
+   "chosen": "heavy",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "The rule is clear: the armour map reads the infobox's Medium as heavy, as for the line mechs. The wiki calls it fragile for its price and says it takes artillery and field-cannon fire worse than heavier mechs."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "armament/0/mount",
+   "chosen": "body-aim",
+   "alternatives": [
+    "limited-arc"
+   ],
+   "reason": "The jackhammer sits on the right of the head, at the front of the hull. Aim tie-break step 3 makes a gun at the front of the hull fixed (step 6), but read as a gun on the side of the hull it would be limited-arc. Either reading keeps spider-frame."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "armament/0/range",
+   "chosen": "melee",
+   "alternatives": [
+    "short"
+   ],
+   "reason": "Under the melee-or-short tie-break the blow lands at touching distance. By infobox reach alone, under a quarter of the rifle's, it would read short."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "armament/0/damage",
+   "chosen": "melee",
+   "alternatives": [
+    "armour-piercing"
+   ],
+   "reason": "The blades family allows only melee, electric or energy damage. The wiki's armour-breaking wording and DevBlog #43's harder hits on heavier armour would otherwise point to armour-piercing."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "armament/1/mount",
+   "chosen": "limited-arc",
+   "alternatives": [
+    "free-aim (a swivel read as a full turret)"
+   ],
+   "reason": "Aim tie-break step 3 applies because the source shows it covering mainly the left side. Against that, a turret whose arc no source states counts as a full turret."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "armament/1/traits",
+   "chosen": "[splash]",
+   "alternatives": [
+    "[]",
+    "zone"
+   ],
+   "reason": "Splash rests on the wiki's 'area effect' against infantry. The infobox gives no radius, and no source mentions burning ground."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "crew",
+   "chosen": "solo",
+   "alternatives": [
+    "driver-gunner"
+   ],
+   "reason": "Under the crew tie-break, two weapons firing at the same time from separate mounts make driver-gunner. No source says whether the jackhammer and flamethrower fire together; the wiki says only that the flamethrower works on the move."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "abilities/0/source",
+   "chosen": "innate",
+   "alternatives": [
+    "veterancy"
+   ],
+   "reason": "The first veterancy rank unlocks a veteran ability for most units (Veterancy page), but no page names the Stark's veteran ability."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "abilities/0/kind",
+   "chosen": "active (no cooldown band; none sourced)",
+   "alternatives": [
+    "toggle"
+   ],
+   "reason": "The shutdown lasts a few seconds and then ends, and no source says it can be cut short."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "abilities/1/patterns",
+   "chosen": "[] with a fit_note (rage-when-wounded)",
+   "alternatives": [
+    "overclock-self"
+   ],
+   "reason": "overclock-self is a short boost on a key, not a lasting passive that scales with lost health."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "roles/primary",
+   "chosen": "assault (step 5)",
+   "alternatives": [
+    "anti-armour"
+   ],
+   "reason": "At step 1, the label 'Melee mech' names no role (registry). The registry rules out a step 4 bonus from Iron Harvest's per-class damage figures, so DevBlog #43's higher damage against heavy armour does not count. Anti-armour would fail its requires anyway, because of the melee damage."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "roles/secondary",
+   "chosen": "[anti-infantry] (step 3, flamethrower splash); second slot left empty",
+   "alternatives": [
+    "add anti-armour"
+   ],
+   "reason": "The jackhammer's purpose fits anti-armour, but its melee damage fails the role's requires. A fit_note is recorded."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "countered_by/2, combos/1",
+   "chosen": "unit refs iron-harvest.shared.field-cannon and iron-harvest.usonia.ward",
+   "alternatives": [
+    "role refs only"
+   ],
+   "reason": "Both units are named on the Stark page. Their ids are guessed from the registry: weapon systems are one design for every faction, hence 'shared'. Neither unit is researched yet (validator WARN)."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "countered_by/3",
+   "chosen": "role:siege (artillery)",
+   "alternatives": [
+    "leave it out"
+   ],
+   "reason": "The wiki's prose names artillery as a danger, but the same page's Pros say the Stark is quick enough to dodge artillery shells."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "abilities/1/patterns",
+   "used": "transform",
+   "wanted": "a recall for a deployed turret or empty suit: the machine jumps or flies back to its owner on a cooldown",
+   "note": "transform covers the change of form, deploy-turret covers placing the turret and leap covers a unit's own jump, but no pattern covers sending a parked machine back to its owner. It could become a pattern (for example recall-deployable). It is not in new_mechanics because its patterns list is not empty."
+  },
+  {
+   "unit": "iron-harvest.usonia.william-mason",
+   "path": "armour/models",
+   "used": "downed-revive",
+   "wanted": "an outer shell with its own health over a pilot who fights on when it breaks",
+   "note": "Downed-revive covers only his last stand on foot. ablative-plates breaks off piece by piece, not as a whole suit."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "roles",
+   "used": "assault, anti-infantry",
+   "wanted": "anti-armour",
+   "note": "The jackhammer is built to break armour and hits heavy armour hardest since DevBlog #43. But the blades family allows no armour-piercing damage, so the weapon fails anti-armour's requires."
+  },
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "abilities/1/patterns",
+   "used": "none",
+   "wanted": "rage-when-wounded: a passive that raises damage as health falls",
+   "note": "Lech Kos's Patriotic Frenzy is a second Iron Harvest example."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Class of exosuit heroes",
+   "note": "The registry allows 'an exosuit hero coded as infantry' but no rule says when an exosuit hero is infantry and when a walker. Mason's infobox uses the mech template, the Unit page puts the exosuit hero Janek Kos among the mech heroes, and his own page calls him an infantry hero. The choice changes his class, nature, mobility type, armour model, on_death and atypicals."
+  },
+  {
+   "unit": "",
+   "topic": "Weapon left with a deployed shell",
+   "note": "No field rule covers a weapon that stays behind on a deployed turret or suit while its owner switches to another weapon. I kept the cannon as the primary and described the hand-over in the summaries."
+  },
+  {
+   "topic": "pilot-eject and power suits",
+   "note": "The pilot-eject term lists only walkers, aircraft, vehicles and hovercraft, so a power-suit trooper who exits a failing suit is atypical. The term may want to allow the power-suit body."
+  },
+  {
+   "topic": "Foot speed bands",
+   "note": "The foot type allows no very-slow band, but heavy power-suit troopers like Mason are slower than the rifle squads. Recorded as atypical."
+  },
+  {
+   "topic": "Melee weapons built against armour",
+   "note": "Blades allow only melee, electric or energy damage, and anti-armour requires armour-piercing, energy, electric or EMP damage. So a hammer or drill built to break armour (the Stark's jackhammer) can never support anti-armour, whatever the sources say."
+  },
+  {
+   "topic": "Passive fully described by an on_death term",
+   "note": "The rules do not say whether Exit Strategy, a named passive whose whole effect is the pilot-eject outcome, also needs an ability entry. I left it out and said why in uncertain."
+  },
+  {
+   "topic": "Toggle with an undocumented reverse",
+   "note": "For Deploy Exosuit no source says how he climbs back in, so toggle versus active plus a separate enter action is decided by judgement."
+  },
+  {
+   "topic": "Crew tie-break when simultaneous fire is unsourced",
+   "note": "The tie-break counts what the unit does, but no source says whether the Stark's two weapons fire at once. Solo is the fallback."
+  },
+  {
+   "topic": "Swivel mount with a sourced side arc",
+   "note": "Aim step 3 (the source shows it covering part of the circle) and the rule that a turret with no stated arc counts as full can both apply to the Stark's swivelling flamethrower. I chose step 3."
+  },
+  {
+   "topic": "Hero tier with no source",
+   "note": "The registry says to use the band the evidence best supports. Mason's reserve rests on comparing his price and population with other heroes, which is a judgement, not a sourced fact."
+  }
+ ],
+ "new_mechanics": [
+  {
+   "unit": "iron-harvest.usonia.stark",
+   "path": "abilities/1",
+   "proposed_id": "rage-when-wounded",
+   "summary": "A passive that raises the unit's damage the more health it has lost, so a badly damaged unit hits hardest (the Stark's Berserk; Lech Kos's Patriotic Frenzy works the same way). Counterplay: finish wounded targets quickly with burst damage or from range, and avoid trading blows with it up close once it is low.",
+   "pages": [
+    "https://iron-harvest.fandom.com/wiki/M-22_%22Stark%22",
+    "https://iron-harvest.fandom.com/wiki/Lech_Kos"
+   ]
+  }
+ ],
+ "pages_read_not_cited": [
+  "https://iron-harvest.fandom.com/wiki/Usonia",
+  "https://iron-harvest.fandom.com/wiki/Hero",
+  "https://iron-harvest.fandom.com/wiki/Admiral_Mason",
+  "https://iron-harvest.fandom.com/wiki/S3-55_%22Ward%22",
+  "https://iron-harvest.fandom.com/wiki/Mech",
+  "https://iron-harvest.fandom.com/wiki/Veterancy",
+  "https://iron-harvest.fandom.com/wiki/Ability",
+  "https://iron-harvest.fandom.com/wiki/Structure",
+  "https://iron-harvest.fandom.com/wiki/Janek_Kos",
+  "https://iron-harvest.fandom.com/wiki/Pkp_17_%22Eisenhans%22",
+  "https://iron-harvest.fandom.com/wiki/Anna_Kos",
+  "https://iron-harvest.fandom.com/wiki/Brunhilde",
+  "https://iron-harvest.fandom.com/wiki/Gunter_von_Duisburg",
+  "https://iron-harvest.fandom.com/wiki/Princess_Sita",
+  "https://iron-harvest.fandom.com/wiki/Prince_Wilhelm_of_Saxony",
+  "https://iron-harvest.fandom.com/wiki/Lev_Aleksey_Zubov",
+  "https://iron-harvest.fandom.com/wiki/Michal_Sikorski",
+  "https://iron-harvest.fandom.com/wiki/Olga_Romanova",
+  "https://iron-harvest.fandom.com/wiki/M-19_%22Knox%22",
+  "https://iron-harvest.fandom.com/wiki/PZM-11_%22Lowca%22",
+  "https://iron-harvest.fandom.com/wiki/SKS_156_%22Wotan%22",
+  "https://iron-harvest.fandom.com/wiki/SHM-79_%22Nagan%22",
+  "https://iron-harvest.fandom.com/wiki/SHM-69_%22Serp%22",
+  "https://iron-harvest.fandom.com/wiki/M-29_%22Salem%22",
+  "Page histories (revisions via the API) of https://iron-harvest.fandom.com/wiki/William_Mason and https://iron-harvest.fandom.com/wiki/M-22_%22Stark%22",
+  "https://iron-harvest.fandom.com/wiki/Recycling_Wrecks (cited for the Stark; for Mason only named in uncertain)",
+  "https://iron-harvest.fandom.com/wiki/Lech_Kos (cited for the Stark; for Mason only named in uncertain)",
+  "https://iron-harvest.fandom.com/wiki/Unit (cited for Mason; for the Stark only named in uncertain)",
+  "https://kingart-games.com/article/81 (DevBlog #27)",
+  "https://kingart-games.com/article/85 (patch 0.11.5)",
+  "https://kingart-games.com/article/90 (DevBlog #30)",
+  "https://kingart-games.com/article/92 (Change Log #04)",
+  "https://kingart-games.com/article/111 (DevBlog #37)",
+  "https://kingart-games.com/article/112 (DevBlog #38)",
+  "https://kingart-games.com/article/113 (Operation Eagle launch post)",
+  "https://kingart-games.com/article/114 (DevBlog #39)",
+  "https://kingart-games.com/article/115 (PC launch post)",
+  "https://kingart-games.com/article/117 (DevBlog #41)",
+  "https://kingart-games.com/article/118 (DevBlog #42)",
+  "https://kingart-games.com/article/120 (DevBlog #44)",
+  "https://kingart-games.com/article/121 (DevBlog #45)",
+  "https://kingart-games.com/article/122 (DevBlog #46)",
+  "https://kingart-games.com/article/123 (DevBlog #47)"
+ ],
+ "source_problems": "1. No source says which reserve holds William Mason, so his tier is judged from other heroes' prices and patch notes.\n2. The wiki contradicts itself on exosuit heroes: the William Mason page calls Janek Kos an infantry hero, while the Unit page lists him among the mech heroes.\n3. Mason's cannon is named 'Flak Cannon' (the game files say flak cannon and autocannon), but no source says it can hit aircraft.\n4. Mason's Exit Strategy wording was changed by an anonymous edit (June 2021). His Requisition line was added only in February 2022, although DevBlog #40 names Turret Requisition in July 2021.\n5. No source says how Mason climbs back into the suit, or gives a cooldown for Deploy Exosuit or Emergency Shutdown.\n6. No source gives the size of Berserk's bonus or the flamethrower's splash radius.\n7. The Stark's infobox health, speed and veterancy figures equal the Serp's and may have been copied.\n8. The wiki has no page for the Usonian Advanced Workshop.\n9. The wiki's opening lines, unit types and Pros/Cons are editors' words, not official text.\n10. A web search for a guide on how Mason re-enters his suit found nothing usable, and a TechRaptor page returned 403.\n11. No source gives sight figures for Iron Harvest units, so sight is the medium proposal."
+}

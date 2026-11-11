@@ -1,0 +1,398 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "tempest-rising",
+  "units": [
+    {
+      "id": "tempest-rising.veti.enlightened",
+      "game": "tempest-rising",
+      "faction": "veti",
+      "name": "Enlightened",
+      "flavour_affinity": [],
+      "class": "infantry",
+      "nature": "organic",
+      "availability": "open",
+      "roles": {
+        "primary": "assault",
+        "secondary": ["support", "buffer"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "Resurrection Anchor",
+        "basis": "Spawned by the Resurrection Anchor, the Veti's construction yard, with no other tech needed; the wiki gives tier 1. The tier 3 Corral spawns them too, and Ambassador captures and Subjugated kills give more, but the Anchor route alone is enough."
+      },
+      "cost_band": {
+        "band": "very-low",
+        "basis": "Never bought: no route to an Enlightened costs credits. The Resurrection Anchor spawns one for free a little less than once a minute (a bit sooner since 2.0.0), the Corral somewhat sooner still and one more when it is first built, each Ambassador capture yields two, and each enemy soldier killed while Subjugated rises as one. Very low stands in for free (see fit_notes)."
+      },
+      "mobility": {
+        "base": "foot",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "medium",
+        "speed_raw": 1.0,
+        "notes": "Exactly the movement figure of the GDF Field Scout, the speed reference, on the wiki's scale. The wiki's prose still calls Enlightened weak and slow; the figure sets the band. The Refined Enlightenment doctrine makes them faster, and the Consecration a Sacrifice gives speeds up its receivers, never the thrall that is spent (both left off)."
+      },
+      "body": {
+        "plan": "humanoid",
+        "size": "small",
+        "notes": "A reanimated human body: by the Codex its brain is gone and a Tempest vine runs through its nerves instead. One soldier's size, in the wiki's standard infantry group."
+      },
+      "armour": {
+        "class": "unarmoured",
+        "models": ["flat-pool"],
+        "notes": "Step 1 of the armour-class order decided: the infobox armour type Infantry maps to unarmoured. A little less health than the Field Scout. It takes full damage from Rifle attacks but only a quarter from Rocket and Cannon ones, and the Unit page rates infantry very weak to Fire and Sniper damage. As standard infantry it can be crushed by medium and heavy vehicles, and by the Unit page it drops prone under sustained fire at low health, taking half damage but unable to move until it gets up (see uncertain). The Refined Enlightenment doctrine gives it half again as much health (left off: a doctrine)."
+      },
+      "sensors": {
+        "sight": "short",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "It sees a little over half as far as the Field Scout (the wiki's figures), so short. No detection of its own; infantry spotting hidden units close by is game-wide. The wide high-ground sight and detection that its Sacrifice can give belong to the receivers' Augury perk (the Augur and the Veti Eye), not to the thrall."
+      },
+      "armament": [
+        {
+          "name": "Melee",
+          "slot": "primary",
+          "family": "blades",
+          "damage": "kinetic",
+          "mount": "free-aim",
+          "delivery": "melee",
+          "range": "melee",
+          "can_target": ["infantry", "ground-vehicle", "structure"],
+          "traits": [],
+          "summary": "Fists: it pummels its target in a frenzy at touching distance, standing still to strike like every unit in the game. Each blow is weak and does Rifle-type damage, the kind meant for soldiers, which tanks mostly shrug off. It attacks only ground targets, never aircraft. Its Subjugating Attack passive marks enemy infantry it hits: a marked soldier cannot receive positive effects, and one that dies while marked rises as an Enlightened for the Veti. The Refined Enlightenment doctrine swaps the fists for the Phantom Caster.",
+          "patterns": []
+        },
+        {
+          "name": "Phantom Caster",
+          "slot": "acquired",
+          "family": "explosives",
+          "damage": "explosive",
+          "mount": "free-aim",
+          "delivery": "projectile",
+          "range": "short",
+          "can_target": ["infantry", "structure"],
+          "traits": ["splash"],
+          "summary": "The Seeker's grenade weapon: it hurls unstable energy grenades that burst on impact and hurt everything in a small area around it, aimed at enemy soldiers and buildings by the makers' own Seeker line. It reaches a little over half as far as the Field Scout's rifle and fires only at ground targets, of which soldiers and buildings are recorded (see uncertain), with the same figures as the Seeker's copy. It keeps the Subjugating Attack passive, so infantry it hits are Subjugated as with the fists.",
+          "condition": "Only with Refined Enlightenment, level 4 of the Veti's Subjugation doctrine tree, bought during a match with credits and time: it replaces the Enlightened's fists, and the same doctrine gives them more health and speed.",
+          "patterns": []
+        }
+      ],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "notes": "One thrall, one player. It rides in Caretakers and Luminaries and garrisons Ascension Anchors (entering is a universal key); those carriers' own Garrison Enlightened buttons call idle thralls in, from twice as far since 2.0.0."
+      },
+      "abilities": [
+        {
+          "name": "Sacrifice",
+          "kind": "active",
+          "cooldown": "per-life",
+          "summary": "Ordered onto an area, the thrall is used up and Consecrates every friendly unit and building there: for a while they take a little less damage and move noticeably faster. Each receiver's own Consecrated perk adds more. Units on limited ammo (the Augur, Constellation, Gorgon, Luminary, Revenant, Subjugator and Vimana) get all missing ammo back and regain it faster; the Golem, Warden and War Ender mend over time; the Caretaker and Luminary gain a short-lived Repair Servitor, and an Enlightened sacrificed near the Ascended leaves a short-lived Combat Servitor; the Augur and Veti Eye see onto high ground and detect hidden units over a wide area; buildings with Consecrated Reaping earn credits. Other Veti units' shared Sacrificial Summons button sends the nearest idle Enlightened to do this onto them. Doctrines: Sacrificial Symbiosis makes Consecration last longer and has Enlightened sacrifice themselves when they die, and Sacred Sacrifice doubles its effects. Since 2.0.0 the Resurrection doctrine's Ascension Anchors consecrate a wider area, which the makers present as a stand-in for Sacrifice.",
+          "patterns": ["rally-allies", "resupply-allies"],
+          "source": "innate"
+        }
+      ],
+      "on_death": {
+        "outcomes": ["respawn"],
+        "basis": "proposal",
+        "notes": "Nothing of its own happens: it is simply gone. Effects from other units and from doctrines: Sacrificial Symbiosis has Enlightened sacrifice themselves automatically as they die; near a unit with Repair Servitor Progenesis (the Ambassador, Caretaker and Luminary) one leaves a Repair Servitor when it dies or sacrifices, and near one with Combat Servitor Progenesis (the Ascended, the Dominance Arc since 2.0.0, and the Dominance Anchor and Host Tower buildings) its death leaves a Combat Servitor; one the Shepherd has Empowered explodes as it dies, hurting enemy ground units nearby."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:rally-allies",
+          "why": "Its Sacrifice makes every allied Veti unit and building in the area take a little less damage and move noticeably faster for a while, and wakes each receiver's own Consecrated bonus."
+        },
+        {
+          "ref": "pattern:resupply-allies",
+          "why": "Sacrifice hands Veti units that fire limited ammo, such as the Revenant's orbs, all their missing ammo and speeds up their refill."
+        },
+        {
+          "ref": "cost:very-low",
+          "why": "Never bought: Veti buildings spawn them for free over time, each Ambassador capture yields two, and enemy soldiers killed while Subjugated rise as more."
+        },
+        {
+          "ref": "weapon:blades",
+          "why": "Its punches Subjugate enemy soldiers: while marked they cannot be buffed, and if they die marked they rise as Enlightened for the Veti."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "armour-class:unarmoured",
+          "why": "A little less health than the Field Scout and no armour against Rifle fire; the wiki calls Enlightened weak fighters that any armed unit dispatches easily."
+        },
+        {
+          "ref": "range:melee",
+          "why": "It fights only with its fists at touching distance and must stand still to strike, so it has to walk through enemy fire before it can land a blow."
+        },
+        {
+          "ref": "sight:short",
+          "why": "It sees only a little over half as far as the Field Scout."
+        },
+        {
+          "ref": "damage:kinetic",
+          "why": "Its punches deal Rifle-type damage, which the wiki rates good against infantry and which tanks mostly shrug off."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "weapon:small-arms",
+          "why": "Rifle fire meets no armour on it, so ordinary riflemen cut it down before its fists arrive; the wiki says any armed unit dispatches it easily."
+        },
+        {
+          "ref": "damage:fire",
+          "why": "Infantry take especially heavy losses from Fire weapons, by the Unit page."
+        },
+        {
+          "ref": "weapon:sniper",
+          "why": "Infantry take especially heavy losses from Sniper damage, by the Unit page."
+        },
+        {
+          "ref": "armour-class:heavy",
+          "why": "Medium and heavy vehicles, the battle tanks among them, can crush standard infantry, and its punches barely hurt them."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "damage:armour-piercing",
+          "why": "Infantry shrug off most Rocket and Cannon damage, so an enemy armed only with anti-tank weapons does little to a free thrall."
+        },
+        {
+          "ref": "role:buffer",
+          "why": "Enemy soldiers its punches Subjugate cannot receive positive effects, so an enemy buffer's boost does nothing for them while the mark lasts."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "role:anti-armour",
+          "why": "The Revenant, a heavy anti-tank and anti-air soldier: by the makers' overview, sacrificing an Enlightened to it restocks its orbs."
+        },
+        {
+          "ref": "role:scout",
+          "why": "The Augur, a recon specialist: by its build line, a nearby Enlightened's Sacrifice gives it far-reaching sight and refills its ammunition."
+        },
+        {
+          "ref": "pattern:carry-passengers",
+          "why": "Veti carriers load Enlightened: the Caretaker spends one to plant an Ascension Anchor, which needs four and then eight more to rise a level, and the Luminary spends them on its own ranged Sacrifice."
+        },
+        {
+          "ref": "unit:tempest-rising.veti.shepherd",
+          "why": "The Shepherd can Empower nearby Enlightened so they explode as they die, hurting enemy ground units around them; no word-list or pattern link names that pairing."
+        }
+      ],
+      "memorable": "A free, mind-wiped human thrall with feeble fists whose real worth is its death: it bursts itself to make the Veti forces around it tougher and faster.",
+      "as_player": "You are free, frail fodder: punch enemy soldiers so the ones your team kills rise as more thralls, but your real job is Sacrifice. Walk into a knot of teammates and burst yourself to make them tougher and faster for a while, refilling ammo, mending or revealing for some of them, and then you are straight back on the buy screen.",
+      "sources": [
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Enlightened",
+          "title": "Enlightened, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Verified at patch 1.8.0+57892 (the second Veti multiplayer beta), with an Upcoming banner left from before release",
+          "note": "Read through the API. Infobox (multiplayer fields): tier 1, made at the Resurrection Anchor and the Corral, Infantry armour and resistances, Foot, health, speed, sight; the Melee weapon (Rifle type, Ground targets, Subjugating Attack) and the Phantom Caster that the Refined Enlightenment doctrine swaps in; the Sacrifice ability and its Consecrated perks. Its Background box copies the game's Codex.",
+          "supports": [
+            "faction",
+            "class",
+            "nature",
+            "availability",
+            "roles/primary",
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "armament/0",
+            "armament/1",
+            "abilities/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by/0",
+            "combos/2",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/701027957162902181",
+          "title": "Veti Faction Overview - Infantry Units, Tempest Rising news on Steam",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Posted 23 September 2026, for the 2.0.0 release",
+          "note": "The makers' list of Veti infantry: the Enlightened's designation (a reanimated sacrificial thrall, which names no role) and its one-line description, and the Revenant's line on restocking its orbs from a sacrificed Enlightened.",
+          "supports": ["roles/primary", "nature", "body", "abilities/0", "strengths/1", "combos/0", "memorable"]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/696524994028504917",
+          "title": "Veti Faction Changes (Since Beta), Tempest Rising news on Steam",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Patch 2.0.0+60710, 29 September 2026",
+          "note": "The makers' Veti changes for release: Enlightened now count as Support units rather than army units for selection; quicker Enlightened spawns at the Resurrection Anchor and the Corral, which also spawns one when built; twice the reach for calling Enlightened into garrisons; Combat Servitor Progenesis for the Dominance Arc; wider Consecration from the Resurrection doctrine's Anchors.",
+          "supports": ["roles/secondary", "tier", "cost_band", "abilities/0", "on_death", "crew"]
+        },
+        {
+          "url": "https://store.steampowered.com/news/app/1486920/view/702143710591189091",
+          "title": "The Veti Multiplayer Public Beta is live! Join for free and play until June 10., Tempest Rising news on Steam",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Veti Multiplayer Public Beta, posted 27 May 2026",
+          "note": "The makers' beta build guide names Enlightened a buff unit, has two appear beside each structure an Ambassador captures, and has the Caretaker load them for Ascension Anchors.",
+          "supports": ["roles/secondary", "cost_band", "combos/2"]
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Status_effect",
+          "title": "Status effect, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "No Verified tag",
+          "note": "Read through the API. Consecration (less damage taken, more speed, extra effects by the receiver's perk, from an Enlightened's Sacrifice or the Vimana), Subjugation (marked infantry cannot be buffed and rise as Enlightened if killed), the Shepherd's Enlightened Empowerment, and the Prone entry listing six soldiers.",
+          "supports": [
+            "abilities/0",
+            "armament/0",
+            "armament/1",
+            "armour",
+            "on_death",
+            "strengths/0",
+            "strengths/3",
+            "counters/1",
+            "combos/3"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/secondary",
+          "note": "Support rests on the 2.0.0 Veti notes, which move Enlightened into the game's Support category instead of the army units (for the All Army hotkey): read here as official text calling the unit by the role label, though it is a selection category. Buffer rests on the beta's build guide calling them a buff unit, with buff read as a word form of buffer; 2.0.0 does not change that job."
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The speed figure comes from the Enlightened page, verified at patch 1.8.0+57892 (the second Veti beta) and still under an Upcoming banner; the 2.0.0 Veti notes name no change to it, so the registry's rule takes the page's figure."
+        },
+        {
+          "path": "sensors/sight",
+          "note": "From the same page and patch as the speed: the sight figure was last checked in the second Veti beta, and the 2.0.0 notes do not change it."
+        },
+        {
+          "path": "armour/notes",
+          "note": "Prone: the Unit page (https://tempestrising.wiki.gg/wiki/Unit) lists the Enlightened among standard infantry, who go prone under sustained fire at low health, but the Status effect page's Prone entry names only six soldiers, and not this one. Crushing by medium and heavy vehicles and the Fire and Sniper weakness of infantry also come from the Unit page and the Crushing page (https://tempestrising.wiki.gg/wiki/Crushing).",
+          "sources_disagree": true
+        },
+        {
+          "path": "armament/0/range",
+          "note": "Melee by the band's coding rule, since the fists land at touching distance. The infobox reach is only a little over one build square, far below the reference rifle's, so the figure alone would give short."
+        },
+        {
+          "path": "armament/0/can_target",
+          "note": "The infobox's Ground targets line and no label give every ground kind (can_target step 4); Subjugation itself works only on infantry."
+        },
+        {
+          "path": "weaknesses/3",
+          "note": "That tanks shrug off most of the punches rests on the Hunter Tank page (https://tempestrising.wiki.gg/wiki/Hunter_Tank), whose armour stops most Rifle damage, and the rating of Rifle damage comes from the Damage page (https://tempestrising.wiki.gg/wiki/Damage); armament/0/summary and countered_by/3 use the same facts."
+        },
+        {
+          "path": "armament/1/can_target",
+          "note": "The makers' Seeker line has the Seeker throw these grenades at infantry and structures, read as a label naming its targets (can_target step 3), so ground vehicles are left out although the infobox line says Ground. The doctrine hands the Enlightened the Seeker's own weapon, and the two infoboxes give it the same figures."
+        },
+        {
+          "path": "armament/1/delivery",
+          "note": "Projectile, as a thrown object: the Seeker's Codex has the grenades hurled into enemy ranks, and the Seeker page (https://tempestrising.wiki.gg/wiki/Seeker) calls them grenade-like projectiles, but no source says they arc onto a point, which lobbed would need. The explosives family lists no projectile delivery (see atypical)."
+        },
+        {
+          "path": "armament/1/patterns",
+          "note": "Refined Enlightenment is bought from the Veti doctrine menu during a match, with credits and time (Doctrine page, https://tempestrising.wiki.gg/wiki/Doctrine, which also gives its extra health and speed), neither on the unit nor at a building, and no page says whether Enlightened already in the field change weapon, so upgrade-in-field is not linked."
+        },
+        {
+          "path": "abilities/0/summary",
+          "note": "Which units hold which Consecrated perk comes from the Ability page (https://tempestrising.wiki.gg/wiki/Ability), the Caretaker page (https://tempestrising.wiki.gg/wiki/Caretaker), the Luminary page (https://tempestrising.wiki.gg/wiki/Luminary) and the makers' Augur and Ascended lines in their specialists overview post (https://store.steampowered.com/news/app/1486920/view/701027957162902189). For Consecrated Reaping, the Enlightened and Status effect pages give twice the income the Ability page gives.",
+          "sources_disagree": true
+        },
+        {
+          "path": "cost_band/basis",
+          "note": "The Resources page (https://tempestrising.wiki.gg/wiki/Resources) gives older, slower spawn rates for the Resurrection Anchor and the Corral than their own pages (https://tempestrising.wiki.gg/wiki/Resurrection_Anchor, https://tempestrising.wiki.gg/wiki/Corral) and the 2.0.0 Veti notes, which set the current ones.",
+          "sources_disagree": true
+        },
+        {
+          "path": "countered_by",
+          "note": "Reasoned from facts the pages give, not from named matchups: small arms from the Enlightened page's remark that any armed unit dispatches it easily and its lack of Rifle armour; fire and sniper weapons from the Unit page's rating of infantry against those damage types; heavy armour from the Unit and Crushing pages, which let medium and heavy vehicles crush standard infantry."
+        },
+        {
+          "path": "counters",
+          "note": "Both reasoned, since no page names a unit it beats: armour-piercing from its infobox resistances and the Unit page's note that infantry resist Rocket and Cannon attacks; buffer from Subjugation, which keeps positive effects off the enemy soldiers it hits (Status effect page)."
+        },
+        {
+          "path": "combos/1",
+          "note": "The Augur's recon designation and its line on sacrificed Enlightened are from the makers' specialists overview post (https://store.steampowered.com/news/app/1486920/view/701027957162902189), and the Ability page gives it the Consecrated Augury and Restocking perks."
+        },
+        {
+          "path": "combos/2",
+          "note": "The Luminary's ranged Sacrifice comes from its own page (https://tempestrising.wiki.gg/wiki/Luminary), and the Anchor steps from the Enlightened page. The 2.0.1 hotfix (https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_2.0.1%2B60808) fixed a bug that let a Caretaker plant an Anchor without spending an Enlightened."
+        },
+        {
+          "path": "combos/3",
+          "note": "The Shepherd's Empower button is in its line in the makers' specialists overview post (https://store.steampowered.com/news/app/1486920/view/701027957162902189); the blast is from the Status effect page."
+        },
+        {
+          "path": "on_death/notes",
+          "note": "Which units carry the Progenesis perks comes from the Ability page (https://tempestrising.wiki.gg/wiki/Ability) and, for the Dominance Arc, the 2.0.0 Veti notes; the Empowered blast from the Status effect page; Sacrificial Symbiosis from the Doctrine page (https://tempestrising.wiki.gg/wiki/Doctrine)."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J09-TEMPEST-RISING",
+      "fit_notes": [
+        {
+          "path": "cost_band/band",
+          "used": "very-low",
+          "wanted": "a free value, or null allowed for a unit that is never bought in a game with costs",
+          "note": "No Enlightened is ever bought: buildings spawn them for nothing, and captures and Subjugated kills give more. The band allows null only in games without purchases and the validator rejects null here, so very-low, the cheapest band, stands in; raw is left out because there is no price."
+        },
+        {
+          "path": "roles/primary",
+          "used": "assault",
+          "wanted": "buffer or support, from its Sacrifice button",
+          "note": "Its designation names no role, and because its weak fists do damage, step 2 (unarmed or tool-only units, read by their main button) never looks at Sacrifice; step 5 then makes it a generalist at medium speed. Assault (leads pushes, soaks damage) fits a frail thrall whose job is to be spent poorly."
+        },
+        {
+          "path": "armament/0/patterns",
+          "used": "none",
+          "wanted": "a Subjugation pattern: hits mark enemy infantry, who cannot be buffed while marked and rise as the attacker's own units if they die marked",
+          "note": "No registered pattern covers the Veti Subjugation that the fists' Subjugating Attack passive applies (registry note, Veti Subjugation): mind-control takes over a living unit and leech-weapon-on-kill gains a weapon, so neither fits."
+        },
+        {
+          "path": "armament/1/patterns",
+          "used": "none",
+          "wanted": "the same Subjugation pattern as armament/0",
+          "note": "The Phantom Caster keeps the Subjugating Attack passive. Upgrade-in-field is not linked either (see uncertain)."
+        },
+        {
+          "path": "abilities/0/patterns",
+          "used": "rally-allies, resupply-allies",
+          "wanted": "a pattern for spending the unit itself to empower allies, with a bonus that depends on each receiver's own perk",
+          "note": "The two links cover the general Consecration boost and the ammo refill. The repairs, short-lived Servitors, high-ground sight and detection, and income some receivers gain come from their own perks, and no pattern covers using up the giver."
+        },
+        {
+          "path": "resources",
+          "used": "none",
+          "wanted": "a way to record that the unit is itself its side's second resource",
+          "note": "The Resources page counts Enlightened as the Veti's secondary resource, spent by Sacrifice, by Caretakers planting Ascension Anchors and by garrisoning Anchors to raise them. Resources describe a gauge on the unit, so none is recorded."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "armament/0/family",
+          "rule": "weapon-families:blades allowed.damage-types kinetic",
+          "note": "The infobox gives the fists the game's Rifle damage type, which the registry's damage map sends to kinetic (damage step 4); the melee-weapon family lists only melee, electric and energy damage."
+        },
+        {
+          "path": "armament/1/family",
+          "rule": "weapon-families:explosives allowed.weapon-delivery projectile",
+          "note": "The Phantom Caster's grenades are hurled at the target, a thrown object with no arc or placing described, which the delivery rule makes projectile; the explosives family lists only place, lobbed, attach and ram."
+        }
+      ]
+    }
+  ]
+}

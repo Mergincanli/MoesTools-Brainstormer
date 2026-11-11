@@ -1,0 +1,560 @@
+{
+ "label": "j08-tempest-rising",
+ "game": "tempest-rising",
+ "file_written": "data/units/tempest-rising.json",
+ "units": [
+  "tempest-rising.veti.thunderhead",
+  "tempest-rising.veti.vimana"
+ ],
+ "validator_result": "OK",
+ "copy_check_result": "exit 0: \"OK: no shared runs\". Ran with --only for the 7 cited pages (701027957162902191, 696524994028504917, wiki/Thunderhead, wiki/Lightning_Rod, wiki/Celestial_Gate, wiki/Vimana, wiki/Ability); all 7 came from cache and none needed fetching. The first run found two 6-word runs: Thunderhead weaknesses/0/why vs the Lightning Rod page, and Vimana sources/3/note vs the Celestial Gate Codex. I rewrote both and the rerun was clean. No PDF is cited. I also ran my own 6-word check against 15 uncited cached pages I paraphrased (Arcing, Garrisoning, Doctrine, Combat Servitor, Caretaker, Golden Cannon, Unit, Damage, Subjugation, Status effect, Skycrane, Hammerhand, Hunter Tank, Tempest Sphere, beta build guide). It only matched URL fragments inside source notes.",
+ "hesitations": [
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "crew/passengers",
+   "chosen": "seats 10: the Lightning Rod's places (a soldier fills 1, a ground vehicle 4)",
+   "alternatives": [
+    "no crew.passengers at all, since nobody ever rides inside the aircraft"
+   ],
+   "reason": "The registry's Transports note leaves it to the coder whether the Rod's places count as the Thunderhead's seats. I counted them because carrying the Rod's garrison is the unit's whole job. Noted in crew.notes and in uncertain."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "roles/primary",
+   "chosen": "transport (step 1: designation 'Heavy Aerial Transport'; requires met through the 10 Rod places)",
+   "alternatives": [
+    "engineer (step 2: main button builds the Rod), if the Rod's places are not counted as seats"
+   ],
+   "reason": "Depends entirely on the seat call above."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "roles/secondary",
+   "chosen": "[engineer] (step 2: the Rod is a building it places that serves the team)",
+   "alternatives": [
+    "area-denial (the Rod is a fortified garrison riders fire from; fails requires, so it could only be a fit_note)",
+    "support (Medical Kits heal riders, but the registry puts them in the seat passive, so no repair-allies)",
+    "empty"
+   ],
+   "reason": "The Engineer/Area denial/Support tie-break separates fortifications that guard ground from buildings that serve the team. A garrison bunker that also teleports its occupants sits between the two. I did not add an area-denial fit_note."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "crew/passengers/kind",
+   "chosen": "passenger-cargo",
+   "alternatives": [
+    "passenger-firing (riders fire out of the Rod's Firing Slits)"
+   ],
+   "reason": "Paired entries pairs passenger-firing with passenger-sets-weapon and cargo with carry-passengers. The pattern notes and the game-wide Garrisons note keep a building garrison on carry-passengers even when riders fire out. The seat-role word list has nothing for riders housed in a separate placed structure; fit_note added."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "abilities/1/kind",
+   "chosen": "active",
+   "alternatives": [
+    "toggle (the one button swaps between Deploy and Recall)"
+   ],
+   "reason": "Under the two-buttons-that-undo-each-other rule it is one entry. Each press is a one-off order and the aircraft never changes mode, so active rather than toggle; the kinds tie-break does not speak to this directly."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "abilities/1/patterns",
+   "chosen": "[build-linked-exits, teleport]",
+   "alternatives": [
+    "build-linked-exits alone (the teleport is only how the exit works)",
+    "teleport alone"
+   ],
+   "reason": "The second-pattern test ('passes on its own') holds for both: teleport's summary includes moving teammates instead of the user, and the task named both. Fit_note: the exit is the moving aircraft, and losing the entrance kills the riders."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "abilities/1/cooldown",
+   "chosen": "spam (from Recall's figure)",
+   "alternatives": [
+    "no band (no figure is given for Deploy)"
+   ],
+   "reason": "Both orders are one entry and only Recall's cooldown is given."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "abilities/2/kind",
+   "chosen": "passive (Arcing)",
+   "alternatives": [
+    "triggered"
+   ],
+   "reason": "The game-wide note says 'Record it as a passive ability', and elsewhere it writes 'triggered passive' for the Consecrated perks. The ability-kinds tie-break would give triggered for a one-off zap per attack. I followed the game-specific note. The same choice applies to the Vimana's abilities/5."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "abilities/3",
+   "chosen": "one passive entry, source commander-power, covering both Engine Tuning perks (Tempest Shielded and Symbiotic Restoration)",
+   "alternatives": [
+    "two separate entries",
+    "leave off as a class-wide doctrine"
+   ],
+   "reason": "The doctrine's note names 14 unit types, which together are every Veti vehicle and aircraft, so the class-wide-power rule could leave it off. But the registry lists Engine Tuning among the doctrines to record. One pick gives both perks. The same choice applies to the Vimana's abilities/8."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "body/plan",
+   "chosen": "rotorcraft",
+   "alternatives": [
+    "disc"
+   ],
+   "reason": "The Codex describes a storm cloud of charged alloy; no source mentions rotors or a saucer shape, and I did not look at images. Neither plan fits; fit_note added."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "body/size",
+   "chosen": "large",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "The size examples put transport helicopters in large, and its counterparts are the Skycrane and Hammerhand. No footprint data exists, because the UnitBox has no size field."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "mobility/speed",
+   "chosen": "fast (900 from the 2.0.0 Veti post, ratio 1.64)",
+   "alternatives": [
+    "medium (the page's 650, ratio 1.18)"
+   ],
+   "reason": "The rule is clear: the post's figure replaces the stale page figure, as the registry says."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "cost_band",
+   "chosen": "very-high (2000, exactly on the threshold)",
+   "alternatives": [
+    "high"
+   ],
+   "reason": "The rule is clear (a price on an edge takes the higher band), but the figure comes from a page with no Verified tag."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "countered_by/0",
+   "chosen": "hits:low-air",
+   "alternatives": [
+    "role:anti-air",
+    "hits:high-air"
+   ],
+   "reason": "In this game only Air-line weapons reach aircraft, and every such weapon is coded low-air plus high-air. Matchups rule (1) says to name the enemy by what it fires when the sources name a weapon capability. Low air is the unit's own layer, but in other games hits:low-air also matches most direct-fire weapons. The same choice applies to the Vimana's air matchups."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "countered_by/1",
+   "chosen": "damage:armour-piercing (the Unit page says aircraft are vulnerable to Rocket attacks, and Rocket maps to armour-piercing)",
+   "alternatives": [
+    "role:anti-air"
+   ],
+   "reason": "The link also covers ground-only Cannon-type weapons that cannot hit air. Matchups rule (1) says to split off the other half, and the hits:low-air entry does that."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "counters",
+   "chosen": "empty",
+   "alternatives": [
+    "an entry for what Arcing punishes, or for defences the recall bypasses"
+   ],
+   "reason": "Arcing harms close attackers a little, so it is not strictly a unit that harms nothing. But no source names a matchup it wins, and the validator allows an empty list for an unarmed unit."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "on_death",
+   "chosen": "bail-out, basis proposal (3C default for a crewed machine)",
+   "alternatives": [
+    "respawn, if read as an uncrewed construct"
+   ],
+   "reason": "No page shows its death. Nature defaults to crewed because the source is silent."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "tier/gate",
+   "chosen": "Veti Eye with Transcendent Awakening (t3)",
+   "alternatives": [
+    "Veti Eye (t2), from the Vimana page's bare requirement"
+   ],
+   "reason": "The registry says to take the level from the production page (Celestial Gate, verified 1.8.0). The 2.0.0 Veti notes do not mention the requirement at all, so they cannot settle the conflict. Recorded as uncertain with sources_disagree."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "roles/primary",
+   "chosen": "assault (step 5: armed, slow, no bonus)",
+   "alternatives": [
+    "buffer at step 1, reading 'aura' in its tooltip as half of the Buffer / aura label"
+   ],
+   "reason": "The registry says the Vimana's designation and line name no role, and its Subjugation aura weakens enemies rather than strengthening allies. Rule clear by registry."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "roles/secondary",
+   "chosen": "[buffer (step 2: Benediction), anti-infantry (step 3: splash cannon)]",
+   "alternatives": [
+    "[scout, buffer]: scout at step 2 through the summoned Servitors, which the makers say can scout, would outrank buffer in word-list order and push out anti-infantry",
+    "scout at step 4 through Detection",
+    "disabler at step 5 through the Vile Subjugation doctrine"
+   ],
+   "reason": "I read the page's remark that they may serve to defend or to scout as a hedge, and it describes the summoned helpers rather than the Vimana. Anti-infantry rests on splash, which only the non-official Weaponbox gives."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "armament/0/family",
+   "chosen": "laser",
+   "alternatives": [
+    "plasma",
+    "cannon"
+   ],
+   "reason": "No source says what the Blessed Golden Cannon fires; its Weaponbox says only 'energy weapon' with area damage. I chose laser by analogy with the Golden Cannon defence turret, whose Codex describes a coherent light beam. The weapon-family tie-breaks need a description of how the shot travels, which is missing. Choosing cannon would make the damage explosive and add the soviet flavour (assault + cannon scores 2)."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "armament/0/delivery",
+   "chosen": "beam (laser default)",
+   "alternatives": [
+    "hitscan",
+    "projectile"
+   ],
+   "reason": "The sources are silent. The shots are discrete (one every few seconds, four held), which reads more like pulses than a held beam."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "armament/0/damage",
+   "chosen": "energy (step 5: family default)",
+   "alternatives": [
+    "explosive (step 5 exception for an area blast)"
+   ],
+   "reason": "Omni is not in the damage map. The explosive exception applies only when the family allows it, and laser does not."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "armament/0/can_target",
+   "chosen": "infantry, ground-vehicle, structure, low-air, high-air",
+   "alternatives": [
+    "leave out structure"
+   ],
+   "reason": "The infobox targets line is 'Ground, Air'. can_target step 4 fills in every ground kind the family allows; no source says whether it damages buildings."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "body/size",
+   "chosen": "huge",
+   "alternatives": [
+    "large"
+   ],
+   "reason": "There is no footprint data. The Codex calls Vimanas vast vessels that blot out the sun, and airships are the nearest size example. This choice decides the armour class."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "armour/class",
+   "chosen": "super-heavy (check A: huge at t3)",
+   "alternatives": [
+    "light (step 1: armour_map maps Aircraft to light)"
+   ],
+   "reason": "Check A wins over every step once size is huge. The registry names only the Tempest Sphere and War Ender as units lifted by size, but the Vimana's health is close to the Sphere's."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "mobility/base",
+   "chosen": "rotor (atypical: slow)",
+   "alternatives": [
+    "airship (allows slow and T3; a looming, tough flier)"
+   ],
+   "reason": "The registry says to use rotor for hovering craft, and rotor covers anti-grav flight. The Vimana is not lighter than air. Its slow speed breaks rotor's speed bands, recorded in atypical."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "body/plan",
+   "chosen": "disc (atypical: huge)",
+   "alternatives": [
+    "envelope (huge and T3, but needs airship mobility and is a blimp)",
+    "rotorcraft"
+   ],
+   "reason": "Nothing fits a flying stepped pyramid. Disc, the flying saucer, is the nearest alien flying shape; fit_note added."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "abilities/3/kind",
+   "chosen": "toggle (Gate Link autocast)",
+   "alternatives": [
+    "passive"
+   ],
+   "reason": "The source calls it an autocast ability that can be switched off, so it is a key with two states. It does not say whether autocast starts on."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "abilities/0/patterns",
+   "chosen": "[launch-drones]",
+   "alternatives": [
+    "no pattern plus a fit_note only"
+   ],
+   "reason": "launch-drones covers the six short-lived Combat Servitors; the lasting Caretaker it calls has no pattern (fit_note). launch-drones mirrors the drone-launcher family, which is fine because this is a keyed ability."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "abilities/7/patterns",
+   "chosen": "[depend-on-relay]",
+   "alternatives": [
+    "no pattern plus a fit_note (death bond)"
+   ],
+   "reason": "depend-on-relay's summary describes shutting down until a relay is rebuilt; the Vimana is destroyed outright. The counterplay is the same (kill the relay), and the task named this pattern. Fit_note records the variant."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "counters",
+   "chosen": "class:infantry and pattern:cloak, both reasoned",
+   "alternatives": [
+    "empty"
+   ],
+   "reason": "No source names a matchup. Both are reasoned from facts on its pages (the Subjugation aura and the area cannon; the Detection perk) and carry an uncertain entry."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "countered_by/1",
+   "chosen": "role:siege, reasoned (kill its Gate, kill the Vimana)",
+   "alternatives": [
+    "leave out"
+   ],
+   "reason": "No source names a unit that hunts the Gate. It rests on the page's statement that the Vimana dies when its Gate falls."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "combos",
+   "chosen": "unit:caretaker and unit:enlightened as stand-alone unit links",
+   "alternatives": [
+    "role:engineer for units that extend the build area"
+   ],
+   "reason": "Rule (3) lets a unit: link stand alone only when every word-list link would be false for most units it covers. role:engineer also covers capturers and repairers, so it would be wrong for most of them."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "nature",
+   "chosen": "crewed-machine (default)",
+   "alternatives": [
+    "uncrewed-machine (its wiki page calls it a 'construct')"
+   ],
+   "reason": "Uncrewed requires the source to say robot, drone or remote. 'Construct' is not that."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "flavour_affinity",
+   "chosen": "[] (allied and soviet score 1 each)",
+   "alternatives": [
+    "[soviet], if the family were cannon"
+   ],
+   "reason": "The result follows from the family call above."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "body/plan",
+   "used": "rotorcraft",
+   "wanted": "a body plan for a floating alien hull with no rotors or wings",
+   "note": "The Codex describes a storm cloud of charged alloy."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "crew/passengers/kind",
+   "used": "passenger-cargo",
+   "wanted": "a seat kind for riders housed in a separate structure the unit places and recalls",
+   "note": "Riders fire out of the Rod, but the garrison rule keeps it under carry-passengers. Nobody rides in the aircraft itself."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "abilities/1/patterns",
+   "used": "build-linked-exits, teleport",
+   "note": "A variant: the exit is the moving aircraft, and destroying the entrance kills everyone inside."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "abilities/2/patterns",
+   "used": "none",
+   "wanted": "retaliate when attacked (a passive that strikes back at close attackers)",
+   "note": "Arcing is neither a weapon nor an armour model."
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "abilities/3/patterns",
+   "used": "none",
+   "wanted": "immunity to one status (Tempest Charge) plus self-repair inside a hazard field",
+   "note": "Engine Tuning doctrine. The self-repair armour model is for stock units only."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "body/plan",
+   "used": "disc",
+   "wanted": "a body plan for a huge flying pyramid or floating fortress",
+   "note": "Disc allows no huge size; recorded in atypical."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "armament/0/damage",
+   "used": "energy",
+   "wanted": "a damage type that ignores every resistance and armour (the game's Omni)",
+   "note": "Omni has no damage_map key, so step 5 gives the family default and loses the weapon's point."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "abilities/0/patterns",
+   "used": "launch-drones",
+   "wanted": "summon a full, lasting unit in the field (mobile production)",
+   "note": "The Caretaker half of Summon Caretaker is not covered."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "abilities/4/patterns",
+   "used": "none",
+   "wanted": "subjugate: an aura that blocks buffs on enemy infantry and turns those who die in it into your units",
+   "note": "The registry has no subjugation id. mind-control takes living units, not dead ones."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "abilities/5/patterns",
+   "used": "none",
+   "wanted": "retaliate when attacked",
+   "note": "Arcing, same as on the Thunderhead."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "abilities/6/patterns",
+   "used": "none",
+   "wanted": "resupply on buff: an ally's buff refills the unit's ammunition at once",
+   "note": "resupply-allies belongs to the giver, not the receiver."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "abilities/7/patterns",
+   "used": "depend-on-relay",
+   "note": "A harsher variant: the unit is destroyed rather than shut down, and each Gate can support only one Vimana."
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "abilities/8/patterns",
+   "used": "none",
+   "wanted": "immunity to one status plus self-repair inside a hazard field",
+   "note": "Engine Tuning doctrine."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Arcing ability kind",
+   "note": "The Tempest Rising game-wide note says 'Record it as a passive ability'. The ability-kinds tie-break (Passive or Triggered) would give triggered, since each attack causes a one-off zap. I followed the game note; the rules should say which wins."
+  },
+  {
+   "topic": "Check A for big aircraft",
+   "note": "With body size huge at t3, check A makes the Vimana super-heavy, overriding the armour_map's Aircraft-to-light mapping. The registry names only the Tempest Sphere and War Ender as lifted by size, and the game has no footprint data, so the size, and with it the armour class, rests on lore words."
+  },
+  {
+   "topic": "Passenger seats in a placed garrison",
+   "note": "The registry leaves it to the coder whether the Lightning Rod's places count as the Thunderhead's seats, and that decides transport's requires. No seat role fits riders in a separate structure. Paired entries pairs passenger-firing with passenger-sets-weapon, while the garrison rule keeps a garrison whose riders fire out on carry-passengers; the two conflict for a garrison carried by a unit."
+  },
+  {
+   "topic": "Doctrine that covers a whole class by naming every unit",
+   "note": "Engine Tuning's note lists all 14 Veti vehicles and aircraft by name. The Shared mechanics rule leaves off powers that change every unit of a class, but the registry explicitly asks for Engine Tuning to be recorded with commander-power. I followed the registry."
+  },
+  {
+   "topic": "Air matchups in a game where only Air weapons reach fliers",
+   "note": "No word-list link means 'has an air-capable weapon' in this game. hits:low-air and hits:high-air both work in TR coding (every Air-line weapon lists both), but their generic meanings differ (most direct-fire weapons reach low air elsewhere). The rules do not say which to use."
+  },
+  {
+   "topic": "depend-on-relay versus a death bond",
+   "note": "The pattern summary describes shutting down until a relay exists again. Whether destruction on relay loss gives the same counterplay is not written. I linked the pattern, with a fit_note."
+  },
+  {
+   "topic": "Gate conflict and the 2.0.0 notes",
+   "note": "The task said the gate conflict needs the 2.0.0 notes, but those notes are silent on the Vimana's requirement. The registry's production-page rule settled it."
+  },
+  {
+   "topic": "Weapon family for an undescribed energy shot",
+   "note": "The family tie-breaks (plasma or laser; plasma or cannon) need words on how the shot travels or what it fires. For the Vimana's cannon only the name and 'energy weapon' exist, so I used an analogy with a same-named defence turret; the rules do not cover analogies."
+  },
+  {
+   "topic": "Summoned helpers and roles.secondary step 2",
+   "note": "The rules do not say whether the job of units a button summons (Servitors the makers say can defend or scout) supports a role for the summoner at step 2, or only through its own parts."
+  }
+ ],
+ "new_mechanics": [
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "abilities/2",
+   "proposed_id": "retaliate-when-attacked",
+   "summary": "A passive field that automatically strikes any enemy that attacks the unit from within a short radius with a small bolt of resistance-ignoring damage. Counterplay: attack from beyond the radius, or with units sturdy enough to shrug off the small return damage. Also on the Vimana (abilities/5).",
+   "pages": [
+    "https://tempestrising.wiki.gg/wiki/Arcing",
+    "https://tempestrising.wiki.gg/wiki/Ability",
+    "https://tempestrising.wiki.gg/wiki/Thunderhead",
+    "https://tempestrising.wiki.gg/wiki/Vimana"
+   ]
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "abilities/4",
+   "proposed_id": "convert-fallen-enemies",
+   "summary": "An always-on aura stops enemy infantry inside it from receiving buffs, and any of them who die there rise as the owner's own units. Counterplay: fight from outside the aura, kill the aura carrier first, and avoid feeding infantry into it.",
+   "pages": [
+    "https://tempestrising.wiki.gg/wiki/Vimana",
+    "https://tempestrising.wiki.gg/wiki/Ability",
+    "https://tempestrising.wiki.gg/wiki/Subjugation",
+    "https://tempestrising.wiki.gg/wiki/Status_effect"
+   ]
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "abilities/0",
+   "proposed_id": "produce-unit-in-field",
+   "summary": "For a large price and a long cooldown, the unit brings a full, lasting unit (here a Caretaker) into play at its side, away from any factory; launch-drones covers only the short-lived escorts. Counterplay: kill the producer, punish the long wait between uses, and hunt the new unit before it starts work.",
+   "pages": [
+    "https://tempestrising.wiki.gg/wiki/Vimana",
+    "https://tempestrising.wiki.gg/wiki/Caretaker",
+    "https://store.steampowered.com/news/app/1486920/view/696524994028504917"
+   ]
+  },
+  {
+   "unit": "tempest-rising.veti.vimana",
+   "path": "abilities/6",
+   "proposed_id": "refill-on-ally-buff",
+   "summary": "When an ally's buff lands on the unit, its spent ammunition comes back at once and refills faster while the buff lasts. Counterplay: catch it while its shots are spent, and kill or keep away the allies who would buff it.",
+   "pages": [
+    "https://tempestrising.wiki.gg/wiki/Ability",
+    "https://tempestrising.wiki.gg/wiki/Vimana"
+   ]
+  },
+  {
+   "unit": "tempest-rising.veti.thunderhead",
+   "path": "abilities/3",
+   "proposed_id": "shrug-off-status",
+   "summary": "The unit cannot receive one hostile status (Tempest Charge) and mends itself inside the hazard field that would normally inflict it. Counterplay: switch to damage that does not rely on that status, and draw it out of the field. Also on the Vimana (abilities/8); doctrine-given on both.",
+   "pages": [
+    "https://tempestrising.wiki.gg/wiki/Doctrine",
+    "https://tempestrising.wiki.gg/wiki/Ability"
+   ]
+  }
+ ],
+ "pages_read_not_cited": [
+  "https://tempestrising.wiki.gg/wiki/Arcing",
+  "https://tempestrising.wiki.gg/wiki/Ability (cited for the Vimana only)",
+  "https://tempestrising.wiki.gg/wiki/Garrisoning",
+  "https://tempestrising.wiki.gg/wiki/Doctrine",
+  "https://tempestrising.wiki.gg/wiki/Combat_Servitor",
+  "https://tempestrising.wiki.gg/wiki/Servitor",
+  "https://tempestrising.wiki.gg/wiki/Caretaker",
+  "https://tempestrising.wiki.gg/wiki/Golden_Cannon",
+  "https://tempestrising.wiki.gg/wiki/Subjugation",
+  "https://tempestrising.wiki.gg/wiki/Status_effect",
+  "https://tempestrising.wiki.gg/wiki/Unit",
+  "https://tempestrising.wiki.gg/wiki/Damage",
+  "https://tempestrising.wiki.gg/wiki/Tier",
+  "https://tempestrising.wiki.gg/wiki/Veti_Arsenal",
+  "https://tempestrising.wiki.gg/wiki/Veti_Eye",
+  "https://tempestrising.wiki.gg/wiki/Skycrane",
+  "https://tempestrising.wiki.gg/wiki/Hammerhand",
+  "https://tempestrising.wiki.gg/wiki/Hunter_Tank",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Sphere",
+  "https://tempestrising.wiki.gg/wiki/War_Ender",
+  "https://tempestrising.wiki.gg/wiki/Template:UnitBox/doc",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_2.0.0%2B60710",
+  "https://store.steampowered.com/news/app/1486920/view/702143710591189091",
+  "https://store.steampowered.com/news/app/1486920/view/696524994028504915"
+ ],
+ "source_problems": "1. Neither unit page has a Verified tag, and both still carry the pre-release Upcoming banner. The Thunderhead page's speed (650) is older than the beta's 700; I used the 2.0.0 post's 900. Its health on the page (900) is also pre-release; the post gives 1300. Its price, sight and resistances have no newer confirmation.\n2. The Vimana's price, speed, sight, health and resistances have no newer source. The 2.0.0 Veti notes name only one Vimana change (six Combat Servitors with Summon Caretaker).\n3. Gate conflict: the Vimana page gives a bare Veti Eye requirement, while the Celestial Gate page (verified 1.8.0+57892) says Transcendent Awakening. Neither 2.0.0 post addresses it.\n4. Arcing damage: the Arcing page's prose says 10 Omni, while its own perk box and the Ability page say 20. The Ability changelog says 1.6.0 set Arcing to 1700 radius 'on all sources', yet both boxes list some sources at 1800.\n5. Garrison death: the Lightning Rod page says everyone inside dies when it is destroyed. The Garrisoning page quotes a 2024 designer remark (before the Veti existed) that garrisons drop their units with 40% health lost.\n6. Caretaker cost: the Vimana page's prose says the Vimana makes Caretakers more cheaply than the Gate. Its ability box asks 3000 credits plus 8 population, against 2500 plus 2 at the Gate on the Caretaker page; the box's price may include the six Servitors added in 2.0.0.\n7. Smaller oddities: the Lightning Rod infobox gives tier 3; the Vimana Limit perk box is commented out on the Vimana page; the Combat Servitor and Caretaker pages are also unverified.\n8. Missing information: no page gives unit footprints (the UnitBox has no size field), and no source describes how the Blessed Golden Cannon's shot travels or what it fires.\n9. All pages were already cached, so nothing was fetched in this session."
+}

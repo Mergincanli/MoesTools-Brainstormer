@@ -1,0 +1,526 @@
+{
+ "label": "j11-iron-harvest",
+ "game": "iron-harvest",
+ "file_written": "data/units/iron-harvest.json",
+ "units": [
+  "iron-harvest.polania.mocny",
+  "iron-harvest.saxony.grimbart"
+ ],
+ "validator_result": "OK. node scripts/validate.mjs . exits 0 with no errors. Only one ATYPICAL line concerns these units: \"iron-harvest.polania.mocny: mobility 'legs-multi' doesn't combine with speed-bands 'very-slow' (rule 'mobility:legs-multi allowed.speed-bands very-slow')\". It is recorded in the Mocny's atypical list under that exact rule string, with a note. The WARN lines about these units are the expected ones: lay-smoke and suppress-with-fire are planned patterns, and deploy-siege-mode's source_units is out of date until the merge pass runs sync-patterns. node scripts/format-json.mjs rewrote nothing.",
+ "copy_check_result": "Exit 0. I ran node scripts/copy-check.mjs . with --only for each of the nine cited URLs: the Mocny and Grimbart wiki pages, the wiki's Armor page, and KING Art articles 94, 107, 110, 117, 119 and 121. It checked 11 cited pages, all from cache, with none fetched and none left unchecked, and found no shared runs of 6+ words. No PDF is cited. As an extra check, I compared both units' prose with all 146 cached Iron Harvest Wiki, KING Art and steamah pages, cited or not. That found two runs, both now rewritten: a 7-word run shared with the uncited Unit page in Mocny uncertain/5, and a run of unit names shared with the Isegrim page in Mocny uncertain/19. The only remaining matches are URL text against a cached wiki api.php page.",
+ "hesitations": [
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "roles/secondary",
+   "chosen": "[\"anti-infantry\", \"assault\"]",
+   "alternatives": [
+    "[\"anti-infantry\"] alone (assault dropped)",
+    "[\"anti-infantry\", \"anti-armour\"]"
+   ],
+   "reason": "Assault's coding rule (roles.secondary step 4) wants a main weapon that reaches no further than the main guns of the game's main battle tanks. Iron Harvest anchors its cost bands on four line mechs. The walking cannon equals the Knox's reach and falls short of the Wotan's, but outreaches the Lowca's and the Nagan's. I read the rule as no further than the longest anchor gun; read as every anchor's gun, assault drops and the second slot stays empty. Anti-armour would rank at step 3 only if the wiki's 'mobile anti-mech unit' counted as a label on the cannon, but can_target step 3 says a label on the unit does not count. Scout: the lay-smoke buttons meet its requires, but its description (finding and marking enemies) does not fit. All of this is recorded in uncertain."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "armament/0/damage",
+   "chosen": "armour-piercing",
+   "alternatives": [
+    "explosive"
+   ],
+   "reason": "No damage map, so damage step 5 applies. The armour-piercing exception rests only on the wiki calling the walking Mocny a 'mobile anti-mech unit', read as saying the walking cannon is built to kill mechs. Without that, the shell's blast would give explosive. This is the same reading the reconciled Kaiser uses. DevBlog #30's damage rise against armour is not a bonus over other targets."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "armament/1/family",
+   "chosen": "artillery",
+   "alternatives": [
+    "cannon"
+   ],
+   "reason": "Physically it is the same cannon as armament/0. Weapon entries rule 1 makes the planted version an alternate entry with the mode. When planted, the gun tilts up, ignores line of sight, has a minimum range and its shells land slowly, so the family tie-break (a shell lobbed over cover onto a ground point) gives artillery and the delivery lobbed."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "armament/1/range",
+   "chosen": "long",
+   "alternatives": [
+    "off-screen"
+   ],
+   "reason": "The rule is clear but the sources are silent. Off-screen needs a sight figure to compare with, or a source saying the gun needs spotters. Iron Harvest has no sight figures (registry), and only the Erlkönig's page, not the Mocny's, says that unit needs spotters."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "armament/1/mount",
+   "chosen": "limited-arc",
+   "alternatives": [
+    "body-aim"
+   ],
+   "reason": "Planted, the mech cannot swing round, and its page gives the gun a narrow cone with a dead zone. Walking, the same cannon is body-aim. The aim tie-break decides, and the mount is a proposal."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "armament/2/mount",
+   "chosen": "limited-arc",
+   "alternatives": [
+    "slow-turret"
+   ],
+   "reason": "The machine gun sits in a turret, but the page says it covers only about the right-hand half of the circle. Aim tie-break."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "body/plan",
+   "chosen": "spider-frame",
+   "alternatives": [
+    "casemate",
+    "hull-turret"
+   ],
+   "reason": "Follows the interim night decision N3 (games-r3.md, walkers on many legs whose main gun is fixed forward). Casemate is listed only for vehicles and hovercraft, and the hull-turret tie-break decides by where the main gun sits, which is fixed, not in the small machine-gun turret. The uncertain entry names the note, and a fit_note asks for a fixed-gun body for walkers."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "body/size",
+   "chosen": "large",
+   "alternatives": [
+    "medium",
+    "huge"
+   ],
+   "reason": "No source gives a footprint. Large follows our size examples for a medium mech and for a self-propelled gun; its page notes the gun is longer than the body."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "armour/models",
+   "chosen": "[\"directional\"]",
+   "alternatives": [
+    "[] (no rear weakness, as its page's Pros say)"
+   ],
+   "reason": "Its page and Change Log #06 disagree. I followed the batch notes' instruction to code directional, with an uncertain entry marked sources_disagree. Page history shows the 'no rear armour' line was added in early October 2020, before the 22 October fix."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "abilities/1",
+   "chosen": "Static screen laid where the Mocny stands (Changelog 24, DevBlog #41, September 2021)",
+   "alternatives": [
+    "A screen that surrounds and moves with the mech (wiki, and the task text)"
+   ],
+   "reason": "The source is unclear rather than the rule. The wiki text dates from September 2020; the newer official post made the Mocny's smokescreen static. I followed the newer official text and marked the point sources_disagree. lay-smoke fits either way."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "abilities/2/patterns",
+   "chosen": "[\"lay-smoke\"]",
+   "alternatives": [
+    "[] with a fit_note"
+   ],
+   "reason": "The Pattern links rule says smoke links lay-smoke only when the sources say it blocks sight or aim. The Smoke Canister line says only that it creates a static smoke screen. I read 'screen' together with the Smokescreen line, which says it obscures line of sight, as saying so."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "abilities (all three source fields)",
+   "chosen": "innate",
+   "alternatives": [
+    "veterancy (for the smoke buttons)"
+   ],
+   "reason": "The ability-sources tie-break gives veterancy only when a source shows the ability first appearing at a rank. Against that, the game-wide note and the Veterancy page say the first rank unlocks each unit's veteran ability, and no source names the Mocny's. A May 2020 version of the page guessed it was the smoke. The page's silence proves little, because the Strażnik and Erlkönig pages also omit locks that DevBlog #24 confirms."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "abilities/1 and abilities/2",
+   "chosen": "two entries (Smokescreen, Smoke Canister)",
+   "alternatives": [
+    "one smoke entry whose behaviour changes by mode"
+   ],
+   "reason": "The abilities[] rule gives one entry per button. The page names two abilities, one for each mode, that do different jobs; whether they share a key slot in the game is unknown."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "abilities/1/cooldown, abilities/2/cooldown",
+   "chosen": "left out",
+   "alternatives": [
+    "short",
+    "medium"
+   ],
+   "reason": "The cooldown rule needs a figure. The page says only that the cooldown runs out about when the smoke clears, and DevBlog #41 shortened the smoke without giving figures."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "crew/model",
+   "chosen": "solo",
+   "alternatives": [
+    "driver-gunner (machine gun in the gunner seat)"
+   ],
+   "reason": "Decision 2A: no source says the side machine gun fires at the same moment as the cannon. This matches how the reconciled Kaiser treats its side machine guns."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "cost_band/raw",
+   "chosen": "700",
+   "alternatives": [
+    "730 (DevBlog #43's oil price)"
+   ],
+   "reason": "DevBlog #45 cuts the oil price starting from a figure that differs from the new oil price DevBlog #43 had set. The registry rule takes the newest post's new figure, which the wiki infobox also shows. Both figures are low; marked sources_disagree."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "weaknesses/4/ref",
+   "chosen": "armour-class:heavy",
+   "alternatives": [
+    "no entry"
+   ],
+   "reason": "The page calls it fragile for a medium mech, with low health even at top rank. No typed-link kind names health or durability, so the armour class is the closest part."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "counters, countered_by, combos",
+   "chosen": "counters: target:structure, class:infantry, armour-class:>=heavy; countered_by: speed:>=medium, role:anti-armour; combos: role:assault",
+   "alternatives": [
+    "adding the Erlkönig or lighter mechs to counters",
+    "role:anti-infantry as the combo partner"
+   ],
+   "reason": "The Matchups rule needs a source that names the matchup, or reasoning from sourced facts. The page says the Mocny out-damages the Erlkönig but never which wins, and only that it can trade blows with lighter mechs, so both stay out. The speed and frontline entries are reasoned and marked uncertain."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "name",
+   "chosen": "PZM-13 \"Mocny\"",
+   "alternatives": [
+    "Mocny"
+   ],
+   "reason": "The name field means the in-game name. The batch notes give the page-title form (type number plus quoted name), the posts write just Mocny, and the reconciled Kaiser uses the page-title form. I could not check how the game itself displays it."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "roles/primary",
+   "chosen": "assault",
+   "alternatives": [
+    "anti-infantry"
+   ],
+   "reason": "Step 1: the newest label, Gatling Mech, names no role. Step 4 needs official strong-against text: DevBlog #35's 'groups of enemies' contains none of the notes' target words, and the wiki's 'anti-infantry mech' and its opening line are the wiki's own words. So step 5 gives assault (very slow, medium armour). If the wiki line counted as official, step 4 would give anti-infantry."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "roles/secondary",
+   "chosen": "[\"disabler\", \"anti-infantry\"]",
+   "alternatives": [
+    "[\"anti-infantry\"] alone"
+   ],
+   "reason": "Disabler ranks at step 2 through the Sweep's suppress-with-fire, a control pattern, but only if the Sweep is innate. The gun's suppress trait is not on disabler's requires list, so if the Sweep were a veteran ability, disabler would drop. Anti-infantry ranks at step 3 (small arms that do little to vehicles)."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "abilities/0/source",
+   "chosen": "innate",
+   "alternatives": [
+    "veterancy"
+   ],
+   "reason": "Per the tie-break, veterancy needs a source showing the ability first appearing at a rank, and none does. Against innate: the Veterancy page says each unit's first rank opens its veteran ability, the Sweep is the Grimbart's only button, and the similar Strażnik Overdrive is a veteran ability (DevBlog #24) even though its own page never says so."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "abilities/0/kind",
+   "chosen": "active",
+   "alternatives": [
+    "channel",
+    "deploy"
+   ],
+   "reason": "Ability-kinds tie-breaks: the sweep runs to its end on its own, with the arc size setting how long, so it is not channel. It roots the mech but enters no mode, so it is not deploy."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "abilities/0/cooldown",
+   "chosen": "long",
+   "alternatives": [
+    "left out"
+   ],
+   "reason": "The cooldown comes from the pause in the infobox's 'Sweep (Ability)' slot, entered in April 2020. I read it as the ability's cooldown, as other mech pages' ability slots give theirs; no official figure exists."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "armament/0/traits",
+   "chosen": "[\"suppress\"]",
+   "alternatives": [
+    "[]"
+   ],
+   "reason": "The game-wide note allows suppress only where a unit's own sources make pinning a main job of the weapon; DevBlog #35 does. Change Log #20 then cut suppression on unnamed weapons not meant to suppress. Spin-up is left off: the page mentions the spin-up sound, not a rising rate of fire."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "armament/0/family",
+   "chosen": "machine-gun",
+   "alternatives": [
+    "autocannon"
+   ],
+   "reason": "The page calls it an upscaled rotary cannon but also a Gatling-style machine gun that fires bullets. Family tie-break: bullets mean machine gun."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "armament/0/mount",
+   "chosen": "body-aim",
+   "alternatives": [
+    "limited-arc"
+   ],
+   "reason": "The mount is a proposal under the aim tie-break, and no source says how far the gun arm traverses. The page stresses slow turning; the Sweep's frontal arc hints at some traverse."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "mobility/base",
+   "chosen": "legs-biped",
+   "alternatives": [
+    "legs-multi"
+   ],
+   "reason": "No page read gives the leg count, and a web search failed. The wiki trivia likens it to the boxy, two-legged Dreadnought walkers of Warhammer 40,000. Many legs would also break that type's speed list."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "body/plan",
+   "chosen": "humanoid-mech",
+   "alternatives": [
+    "spider-frame (if it has many legs)",
+    "chicken-walker"
+   ],
+   "reason": "A two-legged mech whose box body acts as a torso with an arm on each side. Reverse-joint walker needs backward-bending legs, which no source describes. The choice depends on the leg count."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "body/size",
+   "chosen": "medium",
+   "alternatives": [
+    "large"
+   ],
+   "reason": "It is a light mech (Change Log #20, Unit page), and light walkers are medium in our size examples; but its page says its body is much bigger than the Strażnik's."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "tier",
+   "chosen": "t1, gate Workshop",
+   "alternatives": [
+    "t2, gate Reserve II"
+   ],
+   "reason": "DevBlog #35 limits it to Reserve II (t2 in the tier map), but the batch notes say the reserve is a side-wide call-in, so the production gate, the basic Saxon Workshop, decides."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "countered_by/3, counters/1",
+   "chosen": "role:siege for 'artillery'; armour-class:medium for 'light mechs'",
+   "alternatives": [
+    "links to named artillery units",
+    "class:walker"
+   ],
+   "reason": "Matchups naming order: the page names a job (artillery, an alias of siege) and a kind of unit (light mechs, whose Light class maps to medium)."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "name",
+   "chosen": "Sd. KS 49 \"Grimbart\"",
+   "alternatives": [
+    "Grimbart"
+   ],
+   "reason": "Same as the Mocny: the page-title form from the notes and the Kaiser precedent; the posts write just Grimbart."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "sensors/sight",
+   "used": "medium (proposal)",
+   "wanted": "a sight figure",
+   "note": "No Iron Harvest source gives sight figures (registry sight reference)."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "abilities/0",
+   "used": "no cooldown, no switch time",
+   "wanted": "deploy and pack-up time, and any cooldown",
+   "note": "No source gives them; the summary says so."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "abilities/1/cooldown, abilities/2/cooldown",
+   "used": "left out",
+   "wanted": "cooldown figures",
+   "note": "The page says only that the cooldown ends about when the smoke clears."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "abilities (source)",
+   "used": "innate",
+   "wanted": "which ability, if any, is the Mocny's first-rank veteran ability",
+   "note": "The game rule says every unit has one; no source names the Mocny's."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "crew/model",
+   "used": "solo",
+   "wanted": "whether the machine gun fires at the same moment as the cannon",
+   "note": "Decision 2A applied for lack of a source."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "body/size",
+   "used": "large",
+   "wanted": "footprint or a size comparison",
+   "note": "Judged from our size examples."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "modes/0",
+   "used": "summary says nothing read covers it",
+   "wanted": "whether the machine gun keeps firing while planted and whether armour changes",
+   "note": ""
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "armament/1/summary",
+   "used": "official reload change only",
+   "wanted": "current planted reload and blast figures",
+   "note": "The infobox's planted pause and blast figures look stale against DevBlog #41 and #45 (sources_disagree)."
+  },
+  {
+   "unit": "iron-harvest.polania.mocny",
+   "path": "armament/0/delivery, armament/2/delivery",
+   "used": "family defaults (projectile, hitscan)",
+   "wanted": "how the shots travel",
+   "note": ""
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "mobility/base, body/plan",
+   "used": "legs-biped, humanoid-mech",
+   "wanted": "the number of legs",
+   "note": "No page states it, and a web search failed."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "abilities/0/source",
+   "used": "innate",
+   "wanted": "whether the Sweep is the Grimbart's veteran ability",
+   "note": "This decides whether disabler stays in roles.secondary."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "abilities/0/cooldown",
+   "used": "long, from the infobox ability slot (April 2020)",
+   "wanted": "an official or current cooldown",
+   "note": ""
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "armament/0/traits",
+   "used": "suppress",
+   "wanted": "the Grimbart's suppression after Change Log #20's cut",
+   "note": "No source names the Grimbart's suppression after Change Log #20."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "armament/0/mount",
+   "used": "body-aim",
+   "wanted": "how far the gun arm traverses",
+   "note": ""
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "body/size",
+   "used": "medium",
+   "wanted": "footprint",
+   "note": ""
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "sensors/sight",
+   "used": "medium (proposal)",
+   "wanted": "a sight figure",
+   "note": "None exists for Iron Harvest."
+  },
+  {
+   "unit": "iron-harvest.saxony.grimbart",
+   "path": "roles/primary",
+   "used": "assault (step 5)",
+   "wanted": "readable official unit text, such as the in-game Codex comparison or 'effective against' display",
+   "note": "The notes say the wiki has these screens only as pictures."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Assault's reach clause with several anchor tanks",
+   "note": "roles.secondary step 4 and assault's coding rule say a main weapon that 'reaches no further than the main guns of the game's main battle tanks'. With four anchors whose reaches run from about the rifle's to about twice it (Iron Harvest), it is unclear whether that means the longest anchor gun or every one. The Mocny's assault slot depends on it."
+  },
+  {
+   "topic": "Veteran abilities when the sources do not say which button it is",
+   "note": "The Iron Harvest game-wide note says each unit's first rank unlocks its veteran ability (record it with source veterancy). The ability-sources tie-break says veterancy only when a source shows the ability first appearing at a rank. Wiki pages are known to omit such locks (the Strażnik and Erlkönig pages versus DevBlog #24). Nothing says what to do for a unit whose only button is unmarked, like the Grimbart's Sweep, and that choice also decides the every-copy test in roles."
+  },
+  {
+   "topic": "Damage step 5's armour-piercing exception and labels on the unit",
+   "note": "It is unclear whether a wiki phrase about the unit ('mobile anti-mech unit', or the Kaiser's 'main anti-armour firepower') counts as the sources saying the weapon is built to kill vehicles. can_target step 3 says a label on the unit does not count, but damage step 5 has no such sentence."
+  },
+  {
+   "topic": "lay-smoke's 'blocks sight or aim' condition",
+   "note": "It is unclear whether the words 'smoke screen' alone count as saying the smoke blocks sight (the Mocny's Smoke Canister)."
+  },
+  {
+   "topic": "Abilities tied to one mode",
+   "note": "abilities[] has no mode field, so a mode-bound button (the Mocny's Smokescreen and Smoke Canister) carries its mode only in prose. Both count toward the key budget although only one is usable at a time."
+  },
+  {
+   "topic": "In-game name for Iron Harvest",
+   "note": "The name field wants the in-game name, but the notes only describe the page-title form (type number plus quoted name), while the posts use the bare name. Which one the game shows is not settled."
+  },
+  {
+   "topic": "Suppression and the disabler role",
+   "note": "Iron Harvest's suppression slows the fire and movement of infantry, like slow or pin, but disabler's requires list has no suppress trait. So a weapon whose main job is suppressing gives no disabler role; only the ability pattern does. That may be intended, but it is worth a look."
+  },
+  {
+   "topic": "Cooldown from the infobox's '(Ability)' slots",
+   "note": "The notes say to record those slots as abilities, but not whether the slot's cooldown field is the ability's cooldown. I read it so by comparison with other pages."
+  },
+  {
+   "topic": "No link kind for health or durability",
+   "note": "A 'fragile' weakness has to borrow armour-class (Mocny weaknesses/4)."
+  },
+  {
+   "topic": "Body plan for fixed-gun walkers on many legs",
+   "note": "Still the interim N3 reading, pending the rule-fix round after R4 (Mocny fit_note)."
+  },
+  {
+   "topic": "Contradictions inside one wiki page",
+   "note": "The r3 research note says to record every contradiction with sources_disagree. It does not say whether a wiki infobox figure that looks stale against an official patch note (Mocny planted pause and blast) counts; I recorded it as one."
+  }
+ ],
+ "new_mechanics": [],
+ "pages_read_not_cited": [
+  "https://iron-harvest.fandom.com/wiki/Advanced_Polanian_Workshop",
+  "https://iron-harvest.fandom.com/wiki/Polanian_Workshop",
+  "https://iron-harvest.fandom.com/wiki/Saxon_Workshop",
+  "https://iron-harvest.fandom.com/wiki/Advanced_Saxon_Workshop",
+  "https://iron-harvest.fandom.com/wiki/Mech",
+  "https://iron-harvest.fandom.com/wiki/Unit",
+  "https://iron-harvest.fandom.com/wiki/Veterancy",
+  "https://iron-harvest.fandom.com/wiki/Ability",
+  "https://iron-harvest.fandom.com/wiki/Fog_of_War",
+  "https://iron-harvest.fandom.com/wiki/Polania_Republic",
+  "https://iron-harvest.fandom.com/wiki/Saxony_Empire",
+  "https://iron-harvest.fandom.com/wiki/Recycling_Wrecks",
+  "https://iron-harvest.fandom.com/wiki/Weapon_System",
+  "https://iron-harvest.fandom.com/wiki/PZM-11_%22Lowca%22",
+  "https://iron-harvest.fandom.com/wiki/SKS_156_%22Wotan%22",
+  "https://iron-harvest.fandom.com/wiki/M-19_%22Knox%22",
+  "https://iron-harvest.fandom.com/wiki/SHM-79_%22Nagan%22",
+  "https://iron-harvest.fandom.com/wiki/PZM-9_%22Straznik%22",
+  "https://iron-harvest.fandom.com/wiki/SLL_33_%22Erlk%C3%B6nig%22",
+  "https://iron-harvest.fandom.com/wiki/SHM-68_%22Nakovalnya%22",
+  "https://iron-harvest.fandom.com/wiki/Sd._KS_78_%22Isegrim%22",
+  "https://iron-harvest.fandom.com/wiki/Polania_Field_Cannon",
+  "https://iron-harvest.fandom.com/wiki/Saxon_Field_Cannon",
+  "https://kingart-games.com/article/55 (DevBlog #10)",
+  "https://kingart-games.com/article/61 (DevBlog #15)",
+  "https://kingart-games.com/article/73 (DevBlog #21)",
+  "https://kingart-games.com/article/77 (DevBlog #24)",
+  "https://kingart-games.com/article/83 (patch 0.11.2)",
+  "https://kingart-games.com/article/90 (DevBlog #30)",
+  "https://kingart-games.com/article/98 (Change Log #10)",
+  "https://kingart-games.com/article/99 (DevBlog #32)",
+  "https://kingart-games.com/article/107 (DevBlog #35; cited for the Grimbart, not for the Mocny)",
+  "https://kingart-games.com/article/119 (DevBlog #43; cited for the Grimbart, not for the Mocny)",
+  "https://kingart-games.com/article/122 (DevBlog #46) and https://kingart-games.com/article/123 (DevBlog #47), checked for later changes",
+  "https://kingart-games.com/article/60 to /123: every post searched for both units' names; those that name them are listed above or cited",
+  "https://steamah.com/iron-harvest-1v1-saxony-r1-gunter-grimbart-build/ (guide, September 2020)",
+  "Revision histories of the two cited unit pages, read through https://iron-harvest.fandom.com/api.php"
+ ],
+ "source_problems": "1. The wiki lags the patches. The Mocny's Smokescreen text, written in September 2020, says the smoke surrounds the mech and moves with it, and the task text follows that. DevBlog #41 (Changelog 24, September 2021) made the Mocny's smokescreen static and all smokescreens smaller and shorter. I coded the newer text and marked the point sources_disagree.\n2. The Mocny page's Pros say it has no rear-armour weakness. That line was added on 9 October 2020, before Change Log #06's fix (22 October 2020), and reworded in November; I coded directional, marked sources_disagree.\n3. DevBlog #45 cuts the Mocny's oil price from a figure that does not match the new oil price DevBlog #43 had set. Both give the low band.\n4. The Mocny infobox gives the planted cannon the same pause between shots as the walking one, while DevBlog #41 cut the planted reload to a pause about twice that. Its planted blast figures equal the cannon's direct-hit figures from before DevBlog #41 and #45, so they may be stale. Recorded with sources_disagree.\n5. The infobox reach of the walking cannon was cut on 1 November 2020 by an edit with no comment and no matching post; both figures give the long band.\n6. The Grimbart page's Sweep and weapon text dates from 2019 and 2020 and never mentions the suppression DevBlog #35 added. Change Log #20 cut suppression on unnamed weapons, and no later source states the Grimbart's.\n7. No source gives the Grimbart's leg count, and a web search for it failed.\n8. Wiki pages omit veteran-ability locks that official posts confirm (Strażnik Overdrive and Erlkönig flare in DevBlog #24). So the Mocny and Grimbart pages' silence does not show their abilities are innate.\n9. No official unit text is readable: the in-game Codex appears on the wiki only as pictures, so step 1 relies on bracketed post labels and the wiki's opening lines cannot be used for roles.\n10. The Mocny page was created under a misspelling (Moncy), and per the Strażnik page's trivia the name Mocny once belonged to the Strażnik during development.\nNo page failed to fetch: the copy-check read all 11 pages from cache."
+}

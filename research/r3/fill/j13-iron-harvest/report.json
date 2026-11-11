@@ -1,0 +1,466 @@
+{
+ "label": "j13-iron-harvest",
+ "game": "iron-harvest",
+ "file_written": "data/units/iron-harvest.json",
+ "units": [
+  "iron-harvest.rusviet.nakovalnya",
+  "iron-harvest.shared.engineer"
+ ],
+ "validator_result": "OK (exit 0). The only warnings left are the expected ones: source_units out of date, planned patterns build-cover and deploy-turret, and unit links to units not researched yet (iron-harvest.saxony.erlkonig, iron-harvest.shared.field-cannon). There are two ATYPICAL lines for my units, and each is recorded in that unit's atypical list under its exact rule string: 'mobility:wheels allowed.speed-bands very-slow' (Nakovalnya, at mobility/base) and 'roles:anti-armour requires damage:armour-piercing|damage:energy|damage:electric|damage:emp|pattern:infest-vehicle' (Engineer, at roles/secondary). `node scripts/format-json.mjs data/units/iron-harvest.json` makes no changes.",
+ "copy_check_result": "Exit 0: \"OK: no shared runs\". The run used `--only` for all ten cited URLs (SHM-68, wiki/Armor, article/119, article/94, id=2223610703, wiki/Polanian_Engineer, wiki/Mine, wiki/Infantry, article/77, article/92). It checked 19 pages, all from the cache, and none were left unchecked. The first run found 9 shared runs, which I rewrote. I also checked the prose of both units with my own script (<scratch> which uses the copy-check's own word splitting) against all 97 cached Iron Harvest wiki, KING Art, Steam-guide and TheGamer pages I read, cited or not. After one more rewrite (a 6-word run shared with the Mocny page) it finds 0 shared runs. No PDF was cited.",
+ "hesitations": [
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "class",
+   "chosen": "vehicle",
+   "alternatives": [
+    "walker"
+   ],
+   "reason": "The classes list classes units by how they move. The wiki says two big wheels carry it, pushed along by three small legs at the back, and the game calls it a mech. Neither class covers a wheel-and-leg drive."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "mobility/base",
+   "chosen": "wheels",
+   "alternatives": [
+    "legs-multi"
+   ],
+   "reason": "Both mobility types leave out very-slow speed, so either one breaks a rule; the break is recorded as atypical and noted in fit_notes."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "mobility/handling",
+   "chosen": "steer",
+   "alternatives": [
+    "pivot"
+   ],
+   "reason": "The Handling tie-break says an RTS model turning on the spot is no reason to change the default. The wiki's Pros say it turns fairly fast."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "abilities/0",
+   "chosen": "Bombardment coded as an innate active ability (bombard-area, cooldown medium); the base armament has no weapon",
+   "alternatives": [
+    "Bombardment as the primary weapon (rockets, lobbed, long, splash)"
+   ],
+   "reason": "The infobox lists Bombardment in an unmarked weapon slot. The rule that 'a rocket volley on a cooldown is an ability', plus the wiki's Abilities section, its Cons (aimed by hand outside Sentry Mode) and the guide's cooldown, point to an ability. Coded as a weapon it would add anti-infantry as a secondary role."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "armament/0/slot",
+   "chosen": "alternate (mode sentry)",
+   "alternatives": [
+    "secondary with mode"
+   ],
+   "reason": "The slot rule speaks of 'the weapon it replaces', but here no weapon is replaced: only the Bombardment button goes quiet in Sentry Mode, and that rests only on the guide's advice to leave the mode to fire a barrage."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "armament/0/traits",
+   "chosen": "splash",
+   "alternatives": [
+    "no traits",
+    "splash and min-range"
+   ],
+   "reason": "No source gives a blast or a dead zone for the sentry fire itself. Splash rests on the wiki's Weapons section, which gives all of the mech's rockets a broad blast. Min-range is left off because the sentry fires only into its chosen circle."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "armament/0/range",
+   "chosen": "long (from the Bombardment's reach)",
+   "alternatives": [
+    "family default medium"
+   ],
+   "reason": "No source gives a sentry reach. The wiki says the circle is placed within the mech's range, so the barrage's reach was used."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "armament/0/delivery",
+   "chosen": "lobbed",
+   "alternatives": [
+    "projectile"
+   ],
+   "reason": "The source is unclear for sentry fire specifically. The wiki says its rockets fly over terrain and buildings, and the rockets/artillery tie-break says rockets fired in an arc stay rockets with lobbed delivery."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "armament/0/family",
+   "chosen": "rockets",
+   "alternatives": [
+    "guided-missiles"
+   ],
+   "reason": "The guide calls them 'missiles of perfect accuracy', but no source says they steer. Under the rockets/guided-missiles tie-break they stay rockets."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "armament/0/mount",
+   "chosen": "auto-target",
+   "alternatives": [
+    "limited-arc",
+    "free-aim"
+   ],
+   "reason": "Aim tie-break step 2: it fires by itself like a deployed sentry gun."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "roles/primary",
+   "chosen": "siege",
+   "alternatives": [
+    "assault (if an innate button could not carry siege's coding rule)"
+   ],
+   "reason": "Siege comes from the label 'Rocket Artillery'. Step 1 counts innate buttons, so the lobbed, long Bombardment meets the coding rule and the requires. The validator, which reads only weapons, is satisfied only through the veteran Sentry Mode rockets."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "roles/secondary",
+   "chosen": "[] (empty)",
+   "alternatives": [
+    "anti-infantry",
+    "area-denial"
+   ],
+   "reason": "Step 2 lists the ways a button gives an anti role, and splash is not among them. Sentry Mode is a veteran button, so not every copy has it. The guide calls Sentry Mode 'area denial', but the area-denial-or-siege tie-break makes a gun that holds ground only by the threat of its fire siege."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "body/size",
+   "chosen": "large",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "The self-propelled guns of the size examples are large. The Rusviet Workshop page calls what it produces 'light mechs', and light mechs are medium, but a weight word is not a size. No source gives a footprint."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "armour/class",
+   "chosen": "medium (infobox Light)",
+   "alternatives": [
+    "heavy (the intro's 'medium-armored')"
+   ],
+   "reason": "The sources disagree. Page history shows Light since 27 September 2020, and the intro line is older. Recorded with sources_disagree."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "mobility/traits",
+   "chosen": "deploy-anchor kept",
+   "alternatives": [
+    "no traits"
+   ],
+   "reason": "Only a veteran can anchor, and mobility traits have no stock-only rule. I kept it to match the reconciled Kaiser entry."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "abilities/0/cooldown",
+   "chosen": "medium",
+   "alternatives": [],
+   "reason": "The infobox figure (April 2020) and the guide's (September 2020) differ, but both fall in the medium band."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "abilities/1/cooldown",
+   "chosen": "medium (the wait after leaving the mode, Change Log #06)",
+   "alternatives": [
+    "leave out"
+   ],
+   "reason": "The only figure is the post-exit wait. No source gives set-up time."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "confidence",
+   "chosen": "medium",
+   "alternatives": [
+    "high"
+   ],
+   "reason": "TheGamer (uncited) and the Steam guide may count as a second established site. However, a contradiction within one site (Light vs Medium armour) decides the armour class, so the High-or-Medium tie-break gives medium."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "counters",
+   "chosen": "class:infantry, speed:<=slow, unit:iron-harvest.shared.field-cannon, target:structure",
+   "alternatives": [
+    "add unit:iron-harvest.saxony.kaiser"
+   ],
+   "reason": "The guide's claim that 'Sentry Mode can kill a Kaiser' predates the Change Log #06 and #20 nerfs, so I left the Kaiser out. The Erlkönig is slow yet sits in countered_by; rule 6 is met because the situations differ (out of reach vs in reach)."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "countered_by",
+   "chosen": "class:aircraft left out",
+   "alternatives": [
+    "class:aircraft by matchups rule 5"
+   ],
+   "reason": "The gap (lobbed rockets never hit fliers) follows from our delivery coding, not from any source. No source names aircraft as a threat to it."
+  },
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "sources",
+   "chosen": "Cited the Armor page; Change Log #20 is named only in an uncertain entry",
+   "alternatives": [
+    "cite Change Log #20 instead of the Armor page"
+   ],
+   "reason": "The rule against citing a third page of one site when another established site (the Steam guide) covers the unit."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "faction",
+   "chosen": "shared (one entry)",
+   "alternatives": [
+    "one entry per faction (polania, saxony, rusviet, usonia)"
+   ],
+   "reason": "The stat boxes are identical, but Usonia's bunker line differs, and the registry's shared faction is described as aircraft and weapon systems only. The task said to record it once; flagged for the merge pass."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "roles/secondary",
+   "chosen": "[support, anti-armour]",
+   "alternatives": [
+    "[anti-armour, support]",
+    "area-denial",
+    "anti-infantry",
+    "anti-air"
+   ],
+   "reason": "Support ranks at step 1 only if Change Log #04 ('repair allied units', 'support roles') counts as official text calling the engineers by an alias. Otherwise it ranks at step 2, after anti-armour. Area denial and anti-infantry drop out at the cap of two. Anti-air from the AA turret is refused by the engineer-or-area-denial tie-break (turrets that guard ground are area denial)."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "tier/gate",
+   "chosen": "Headquarters",
+   "alternatives": [
+    "Barracks"
+   ],
+   "reason": "Both are t1 gates. Engineers are trained at the Headquarters from the start."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "cost_band/raw",
+   "chosen": "150 (Headquarters and Barracks price)",
+   "alternatives": [
+    "125 (Advanced Barracks, DevBlog #35)"
+   ],
+   "reason": "The registry tells coders to take the price at the unit's own gate. Both prices are very-low."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "armament/0/range",
+   "chosen": "short",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "A reach of 16 against the reference 23 gives a ratio of 0.696, just under the 0.7 edge. The wiki also calls the pistols short-ranged."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "abilities/0",
+   "chosen": "The unarmed bunker is grouped with the build-cover items",
+   "alternatives": [
+    "carry-passengers",
+    "a separate entry"
+   ],
+   "reason": "The pattern notes put a bunker's garrison under carry-passengers on the bunker itself. The registry's game-wide note lists only build-cover and lay-mines for the engineers' fortifications."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "abilities/2",
+   "chosen": "deploy-turret entry (Anti-Air Turret, MG Bunker, Cannon Bunker), source innate",
+   "alternatives": [
+    "fold the armed bunkers into build-cover",
+    "source veterancy"
+   ],
+   "reason": "Armed bunkers and the AA turret fire on their own, which is the deploy-turret summary. The registry note names only build-cover and lay-mines. The entry mixes an item every engineer has (AA turret, since DevBlog #41) with veteran- and elite-only bunkers, and only one source term can be given per entry."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "abilities/3",
+   "chosen": "Usonian Paratrooper Bunker placed in the no-pattern production-building entry",
+   "alternatives": [
+    "build-cover entry (it is a garrisonable bunker)"
+   ],
+   "reason": "Its distinctive job is calling in paratroopers. The registry assigns that call-in to the building, not the engineer."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "abilities/4",
+   "chosen": "Repair as an innate channel ability (repair-allies)",
+   "alternatives": [
+    "active",
+    "a repair-tool weapon"
+   ],
+   "reason": "The Repair page says the engineers stand still until a progress bar fills, and the Cons say they cannot repair anything under fire, which matches the active-or-channel tie-break's 'stops when you move or are interrupted'. Repair is not fired with the attack button. No source says whether it has its own button or is a right-click order."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "abilities/0",
+   "chosen": "Barbed-wire cutting (Change Log #08, right-click) folded into the build-cover summary",
+   "alternatives": [
+    "its own ability entry"
+   ],
+   "reason": "It is a context order, not a button."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "mobility/speed",
+   "chosen": "slow (speed_raw 0.8)",
+   "alternatives": [],
+   "reason": "The rule is clear from the figure, but the page contradicts itself: Pros and part of the prose say 'fast', Cons say 'slower than standard infantry'. Recorded with sources_disagree."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "counters/0",
+   "chosen": "class:walker",
+   "alternatives": [
+    "target:ground-vehicle"
+   ],
+   "reason": "Mines trigger on mechs (DevBlog #24: 'a larger enemy mech'). Matchups rule 1 names a kind of unit by its class. Wheeled mechs such as the Nakovalnya, coded as vehicles, fall outside the link."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "combos",
+   "chosen": "class:walker, unit:iron-harvest.shared.field-cannon (standing alone), role:anti-armour (DevBlog #21 bunker garrison)",
+   "alternatives": [
+    "also unit links for the heavy machine gun and mortar",
+    "drop the DevBlog #21 bunker pairing"
+   ],
+   "reason": "The ids of the heavy machine gun and mortar entries are unknown (field-cannon matches the reconciled Kaiser entry). DevBlog #21 names the bunker plus gunners pairing for bunkers in general."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "lineage",
+   "chosen": "left out",
+   "alternatives": [
+    "engineer (shared with the Red Alert engineers)"
+   ],
+   "reason": "These are generic engineers across unrelated franchises, not the same design. The lineage examples are all within one series."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "sources",
+   "chosen": "Cited the Infantry page (stock crew); Building Construction is named only in uncertain entries",
+   "alternatives": [
+    "cite Building Construction instead"
+   ],
+   "reason": "Five slots are allowed. The Mine page ranks ahead as the mechanic's own page with figures the entry uses."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "iron-harvest.rusviet.nakovalnya",
+   "path": "mobility/base",
+   "used": "wheels",
+   "wanted": "a wheel-and-leg drive: big wheels shoved along by small legs",
+   "note": "It rolls on two big wheels pushed by three small legs, and the game counts it a mech. Wheels fits the rolling, legs-multi fits the legs, and both types exclude its very slow speed. The class (vehicle vs walker) follows from this choice."
+  },
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "abilities/3/patterns",
+   "used": "none (empty list)",
+   "wanted": "build a structure that serves the team (a production building or base that trains units or opens tech once the builders finish it)",
+   "note": "Covers the Headquarters, Barracks and Workshop in the build menu (and Usonia's paratrooper bunker). build-cover, deploy-turret and host-spawn-point do not fit."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Siege for a unit whose only stock attack is an innate button",
+   "note": "roles.primary step 1 counts innate buttons, but siege's coding rule and requires speak of weapons, and the validator reads requires only from weapons. For the Nakovalnya the validator is satisfied only through a veteran-only alternate weapon."
+  },
+  {
+   "topic": "Alternate slot when no weapon is replaced",
+   "note": "The slot rule assumes the mode silences a weapon. For the Nakovalnya it silences only a button (the Bombardment ability)."
+  },
+  {
+   "topic": "Infobox weapon slots not marked (Ability)",
+   "note": "The registry note lists the marked ability slots, but the Nakovalnya's Bombardment sits in an unmarked slot and still behaves as an ability. The note could say which evidence wins."
+  },
+  {
+   "topic": "Hybrid wheel-and-leg movers",
+   "note": "There is no class or mobility type for a mech that rolls on wheels pushed by legs. Also, both wheels and legs-multi leave out very-slow speed."
+  },
+  {
+   "topic": "Mobility traits from veteran buttons",
+   "note": "deploy-anchor is kept for a button only veterans get, because mobility traits have no stock-only rule like the one for sensor traits. The opening check (Kaiser) did the same."
+  },
+  {
+   "topic": "roles.secondary step 2 for buttons",
+   "note": "It is unclear whether a splash button supports anti-infantry, and whether a turret built from a menu can give anti-air (I applied the engineer-or-area-denial tie-break instead)."
+  },
+  {
+   "topic": "Official text naming support",
+   "note": "Change Log #04 remarks that players enjoy support roles, about medics' and engineers' healing and repairing. Whether that is official text calling the unit by the role (step 1) or only describes play style decides the order [support, anti-armour] vs [anti-armour, support]."
+  },
+  {
+   "topic": "Shared faction scope",
+   "note": "The registry's 'shared' faction is described as the common aircraft and weapon systems only. The Ids convention and the registry's kit-squad note would put the engineers there too, yet Usonia's bunker line differs. The merge pass should confirm."
+  },
+  {
+   "topic": "Build menus: pattern per item and one source per entry",
+   "note": "The registry's game-wide note names only build-cover and lay-mines for the engineers' fortifications. Unclear: does a garrisonable bunker serve build-cover or carry-passengers, and does an armed bunker serve deploy-turret? Also, a pattern entry that mixes items every engineer has with veteran-only items can carry only one source term."
+  },
+  {
+   "topic": "Context orders vs buttons",
+   "note": "Repair and barbed-wire cutting may be right-click orders rather than buttons. The abilities rule counts buttons."
+  },
+  {
+   "topic": "Unit links to unresearched shared weapon systems",
+   "note": "The ids for the heavy machine gun and mortar ('heavy-machine-gun'? 'field-mortar'?) are not fixed. I linked only iron-harvest.shared.field-cannon, as the reconciled Kaiser entry did."
+  }
+ ],
+ "new_mechanics": [
+  {
+   "unit": "iron-harvest.shared.engineer",
+   "path": "abilities/3",
+   "proposed_id": "build-structure",
+   "summary": "The unit lays down a building from a build menu, such as a headquarters, barracks or workshop, that then serves the team by training units or opening tech. It must go in an allowed zone, costs resources and needs the builders to work on it while it goes up. Counterplay: kill or drive off the builders while it rises, or destroy the unfinished or finished building.",
+   "pages": [
+    "https://iron-harvest.fandom.com/wiki/Building_Construction",
+    "https://iron-harvest.fandom.com/wiki/Polanian_Engineer"
+   ]
+  }
+ ],
+ "pages_read_not_cited": [
+  "https://iron-harvest.fandom.com/wiki/Mech",
+  "https://iron-harvest.fandom.com/wiki/Veterancy",
+  "https://iron-harvest.fandom.com/wiki/Ability",
+  "https://iron-harvest.fandom.com/wiki/Recycling_Wrecks",
+  "https://iron-harvest.fandom.com/wiki/Rusviet",
+  "https://iron-harvest.fandom.com/wiki/Rusviet_Workshop",
+  "https://iron-harvest.fandom.com/wiki/Advanced_Rusviet_Workshop",
+  "https://iron-harvest.fandom.com/wiki/PZM-13_%22Mocny%22",
+  "https://iron-harvest.fandom.com/wiki/SLL_33_%22Erlk%C3%B6nig%22",
+  "https://iron-harvest.fandom.com/wiki/Saxon_Engineer",
+  "https://iron-harvest.fandom.com/wiki/Rusviet_Engineer",
+  "https://iron-harvest.fandom.com/wiki/Usonian_Engineer",
+  "https://iron-harvest.fandom.com/wiki/Sandbags",
+  "https://iron-harvest.fandom.com/wiki/Barbwire",
+  "https://iron-harvest.fandom.com/wiki/Repair",
+  "https://iron-harvest.fandom.com/wiki/Building_Construction",
+  "https://iron-harvest.fandom.com/wiki/Contruction_(Buildings)",
+  "https://iron-harvest.fandom.com/wiki/Structure",
+  "https://iron-harvest.fandom.com/wiki/Weapon_System",
+  "https://iron-harvest.fandom.com/wiki/Weapon",
+  "https://iron-harvest.fandom.com/wiki/Unit",
+  "https://iron-harvest.fandom.com/wiki/Polanian_Field_Cannon",
+  "https://iron-harvest.fandom.com/wiki/Polanian_Unarmed_Bunker",
+  "https://iron-harvest.fandom.com/wiki/Polanian_MG_Bunker",
+  "https://iron-harvest.fandom.com/wiki/Polanian_Cannon_Bunker",
+  "https://iron-harvest.fandom.com/wiki/Usonian_Bunker",
+  "https://iron-harvest.fandom.com/wiki/Flame_Bunker",
+  "https://iron-harvest.fandom.com/wiki/Paratrooper_Bunker",
+  "https://iron-harvest.fandom.com/wiki/Anti-Air_Turret",
+  "https://iron-harvest.fandom.com/wiki/Usonia",
+  "https://iron-harvest.fandom.com/wiki/Polanian_Rifleman",
+  "https://iron-harvest.fandom.com/wiki/Usonian_Volunteer",
+  "https://kingart-games.com/article/73",
+  "https://kingart-games.com/article/84",
+  "https://kingart-games.com/article/90",
+  "https://kingart-games.com/article/96",
+  "https://kingart-games.com/article/99",
+  "https://kingart-games.com/article/106",
+  "https://kingart-games.com/article/107",
+  "https://kingart-games.com/article/108",
+  "https://kingart-games.com/article/110",
+  "https://kingart-games.com/article/111",
+  "https://kingart-games.com/article/116",
+  "https://kingart-games.com/article/117",
+  "https://www.thegamer.com/iron-harvest-best-powerful-mechs-to-use-tips/",
+  "KING Art posts https://kingart-games.com/article/67 to /article/123 were all fetched and searched for Nakovalnya and engineer mentions; only the ones listed above, plus the five cited ones, were used"
+ ],
+ "source_problems": "No official unit text exists beyond the patch notes. KING Art's posts give only the bracketed label 'Rocket Artillery' and balance changes; the wiki's italic opening lines, unit_type and Pros and Cons are the wiki's own words.\n\nThe Iron Harvest Wiki is partly beta, with figures entered in 2019 and April 2020.\n\nNakovalnya problems:\n- The infobox says Light, but the intro prose still says 'medium-armored'; that line predates the 27 September 2020 edit.\n- The infobox lists Bombardment as an unmarked weapon slot, while the page's Abilities section and Cons treat it as an ability.\n- No source gives the Sentry Mode fire its own reach, blast or rate.\n- The cited Steam guide (September 2020, patch 1.0.1) predates the Change Log #06 and #20 Sentry Mode nerfs.\n\nEngineer problems:\n- The pages contradict themselves on speed: Pros say 'Fast', Cons say 'Slower than standard infantry'.\n- The Polanian and Saxon Engineer pages omit the Anti-Air Turret that DevBlog #40 says every faction's engineers can build.\n- The Usonian Engineer page lists MG and Cannon bunkers, using a copied Polanian template with Polanian icons. The Usonia, Flame Bunker and Paratrooper Bunker pages give Usonia a Bunker, then a Flame Bunker (veteran engineers), then a Paratrooper Bunker (elite engineers).\n- The Rusviet Engineer page links its Barracks and Workshop to the Polanian pages.\n- The European engineer prices on the wiki are right for the Headquarters and Barracks, but miss the Advanced Barracks changes in Change Log #17 and DevBlog #35.\n- No source gives a price for repairs by engineers. That repairs cost anything at all is only implied by DevBlogs #30 and #37.\n\nAll pages came from the local cache (fetched 27–28 October 2026); no fetch failures and no 429s."
+}

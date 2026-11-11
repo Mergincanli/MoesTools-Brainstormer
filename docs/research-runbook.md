@@ -114,7 +114,7 @@ After every workflow, before you use any result:
 
 ### 2. Opening check (only when the rules changed)
 
-**When to run it:** when `git log <commit of the last agreement report>..HEAD -- data/vocab schemas scripts/build-docs.mjs scripts/validate.mjs` prints a commit. The last agreement report is R1's `research/r1/opening/agreement.md`, at ef62f3a. Rules never change at night, so at night this check never runs.
+**When to run it:** when `git log <commit of the last agreement report>..HEAD -- data/vocab schemas scripts/build-docs.mjs scripts/validate.mjs` prints a commit. The last agreement report is the newest `research/r<N>/opening/agreement.md`: R1's, at ef62f3a, until R3 has one. Rules never change at night, so at night this check never runs.
 
 When it runs:
 1. Two agents code the same two units, each in its own copy of the repository (`code-units.js`, mode `opening`).
@@ -160,6 +160,7 @@ Keep both codings, the agreement report and the hesitations in `research/r<N>/op
 - Each one gets a registry entry and a proposed pattern file (`data/patterns/<id>.json`, per `schemas/pattern.schema.json`). Do the same for registered ids that the batch's units link and that have no file yet.
 - Use `patterns.js`: a writer, then a skeptic, then the writer applies the confirmed corrections.
 - Link the units to the new ids, replacing the fit notes that asked for them. Run `npm run sync-patterns`, then `npm run docs`.
+- When `sync-patterns` changes the `source_units` of a pattern file whose review status is `checked` (here or in the merge pass), take `source_units` and every `source_units/N` out of its `review.checked_paths`, and say in `review.notes` which units the checker saw and which ones the batch added.
 
 ### 6. Checker
 
@@ -206,10 +207,10 @@ The pilot used this shape (research/pilot/README.md, Final review).
 3. `npm run check:merge`.
 4. The online copy-check, in three parts, each with zero FOUND lines:
    1. `npm run copy-check -- --also research/r<N> --also research/registry-notes`. Every record file lists the URLs of the pages its agent read, so the check fetches them.
-   2. For each page named in the batch's uncertain entries but not cited, run `npm run copy-check -- --also data/units --only <url>` and read the FOUND lines on the batch's units.
+   2. For each page named in the batch's uncertain entries but not cited, run `npm run copy-check -- --also data/units --only <url>` and read the FOUND lines on the batch's units. A page named only by title counts too: give its full address. If the run ends INCOMPLETE, read its NOT CHECKED line. For a full address it gives the fetch error (or "offline and not cached"); for a part of an address it gives "--only matched no cited, linked or cached page". Either way, compare the URL with the entry, copy it exactly, and run again.
    3. For every cited PDF or wiki `File:` page (the cache holds only the page's licence text; list them with `grep -rhoE '"url": "[^"]*(\.pdf|/wiki/File:)[^"]*"' data/units data/patterns research/r<N> | sort -u`), extract the text with `pdftotext`. Compare it with the prose that cites it using a six-word check (copy-check's `words`, `grams` and `sharedRuns`). List each one in the report as checked by hand.
 
-   The report lists every page that could not be fetched, with the reason. `https://cnc.fandom.com/wiki/` and `.../CnC_Remastered_Collection/master/REDALERT/` always appear there: they are placeholders in the notes, not pages.
+   The report lists every page that could not be fetched, with the reason. `https://cnc.fandom.com/wiki/`, `https://iron-harvest.fandom.com/wiki/`, `.../CnC_Remastered_Collection/master/REDALERT/`, `.../GameFilesOriginalZH/Data/INI/` and `https://store.steampowered.com/news/app/1486920/view/` (the notes' pattern for Steam posts, listed as a Steam news page that holds no post text) always appear there: they are placeholders or folders in the notes, not pages.
 5. A search of the record for local paths: `grep -rnE "file://|/home/user|/tmp/|scratchpad" research/r<N>`.
 
 **`research/r<N>/README.md` contains:**
@@ -247,11 +248,11 @@ The pilot used this shape (research/pilot/README.md, Final review).
 2. Run `git fetch origin`. Then `git log -1 --format=%P origin/main` must show two parents, the second being the merged head; otherwise stop and report. If CI on the merge commit is still running, end the turn and check it on the next wake-up; if it failed, stop and report.
 3. Restart the branch, only when `git status --porcelain` and `git log origin/main..HEAD` both print nothing: `git checkout -B claude/quirky-cray-tih1w4 origin/main && git push origin claude/quirky-cray-tih1w4`. After a merge commit this is a fast-forward; no force is ever needed.
 4. Start the next batch's prep, or first a rule-fix round when Mustafa chose one for this batch's rule problems (section 10). Open its pull request from its first commit (section 1, step 4), because GitHub refuses a pull request that has no commits.
-5. After R6 is merged, the night shift stops. Plan step 4 waits for Mustafa.
+5. The batches run in the order of the table in `docs/proposal.md`, section 2.2: R3, then R4 (plan change of 24 October 2026). R2 stays paused and the shelved games are not started. After R4 is merged, the night shift runs the rule-fix round Mustafa chose for the rule problems of R3 and R4 (section 10) and stops after it. Plan step 4 waits for Mustafa.
 
 ### 10. A rule-fix round between batches
 
-When Mustafa sends a batch's rule problems to a rule-fix round (after R1 he chose one, before R2's fill), it runs after that batch's merge and before the next batch's prep, in a pull request of its own.
+When Mustafa sends a batch's rule problems to a rule-fix round, it runs after that batch's merge and before the next batch's prep, in a pull request of its own. After R1 he chose one. For R3 and R4 he chose one round for both, after R4's merge and before plan step 4, unless a rule problem blocks R4 (24 October 2026).
 1. **Scope and groups.** Take the items his decision names. Group them by theme, a handful per group, and save the groups in the state file.
 2. **Run `rule-fix.js`** with the round (`id`, `after`: the batch, `version`: the next word-list version), the rule-problems file, the groups, `ws: <scratchpad>/r<N>/rulefix` and `progress: <scratchpad>/r<N>/progress/rule-fix`. Each group's analyst drafts the exact edits and the units they recode; its skeptic applies them in a scratch copy and runs the checks; one reviewer applies the whole confirmed set together. Count what came back (the quality bar). Nothing in the repository changes.
 3. **The proposal.** In `research/r<N>/rule-fix/`, write for Mustafa, per item: the rule now, the change in plain words, the units it recodes and the recommendation; and save the whole set as one patch, made from the scratch copy that holds it. The pull request puts the set under "Decisions needed". The word lists, field rules and validator checks stay as they are until he approves, by day and by night (see Decisions).
@@ -270,8 +271,8 @@ When Mustafa sends a batch's rule problems to a rule-fix round (after R1 he chos
 - **Branch:** push only to `claude/quirky-cray-tih1w4`, with `git push -u origin claude/quirky-cray-tih1w4`. Retry up to four times with backoff on a network error.
 - **Commits:**
   - Write plain messages that say what changed and why.
-  - End the message with the attribution lines exactly as the session's instructions give them.
-  - Put no model names in files, pull-request text or comments.
+  - End the message with the session's attribution lines, with the model's name left out of the co-author line: `Co-Authored-By: Claude <noreply@anthropic.com>`, then the session link (Mustafa, 11 November 2026).
+  - Put no model names in files, commit messages, pull-request text or comments.
 - **Never force-push.** If a push is refused, stop and report.
 - **Never rewrite history,** never skip, weaken or delete a test or a check, and never push only to make CI run.
 - **Red CI, or any failed gate, gets two attempts per night:**

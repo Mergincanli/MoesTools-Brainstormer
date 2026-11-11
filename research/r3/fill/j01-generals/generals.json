@@ -1,0 +1,781 @@
+{
+  "$schema": "../../schemas/source-unit.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "game": "generals",
+  "units": [
+    {
+      "id": "generals.gla.battle-bus",
+      "game": "generals",
+      "introduced_in": "generals-zero-hour",
+      "faction": "gla",
+      "name": "Battle Bus",
+      "flavour_affinity": [],
+      "class": "vehicle",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "transport",
+        "secondary": ["anti-infantry", "anti-armour"]
+      },
+      "tier": {
+        "band": "t3",
+        "gate": "Palace",
+        "basis": "Built at the Arms Dealer once the player owns a Palace: its 1.04 Object file lists both buildings as prerequisites, and the wiki infobox and CNCNZ name the Palace. The Palace is the GLA's single tech building, which the tier map puts at t3. All three Zero Hour GLA generals field it from their own Arms Dealer and Palace, so none lacks it, and every copy keeps the same seats, health and second life. Only two differ beyond price (see cost_band): once the Demolition General's side-wide Demolitions upgrade is bought, his copy gets a button to blow itself up, left out here because this entry follows the main GLA version; and the Stealth General's command set names a disguise button, but its next line gives that slot to an unload button and his bus has no disguise module, so it never disguises (the wiki's trivia says the disguise was dropped and does nothing if restored; see uncertain)."
+      },
+      "cost_band": {
+        "band": "medium",
+        "raw": 1000,
+        "basis": "Its list price, the same in the wiki infobox, on CNCNZ and in its 1.04 Object file, falls between the medium and high thresholds, about a third above the mean price of the three anchor tanks, so medium. The Toxin General's copy costs a tenth more and the Demolition General's a fifth more (their 1.04 Object files), which would be high, but the registry bands the main faction's price; the Stealth General's costs the same."
+      },
+      "mobility": {
+        "base": "wheels",
+        "handling": "steer",
+        "traits": ["crush"],
+        "speed": "very-fast",
+        "speed_raw": 3.5,
+        "notes": "The wiki infobox gives a land speed three and a half times the Ranger's, so very fast: more than twice the Crusader tank's pace and a little quicker than a Humvee (1.04 locomotors; see uncertain), on four wheels. Zero Hour patch 1.03 made it slightly slower (wiki changelog), and like most units it slows down when badly hurt, a game-wide rule the band leaves out. A campaign briefing line in the game's text calls it slow-moving; a speed word alone does not set the band (see uncertain). It runs over enemy soldiers like every Generals ground vehicle (crusher level in its 1.04 Object file; the wiki lists the lines it calls out while running them down), though CNCNZ ties crushing to its second salvage step (see uncertain). As a bunker it never moves again (modes/0). Steer is the default for wheels."
+      },
+      "body": {
+        "plan": "box-carrier",
+        "size": "medium",
+        "notes": "A reinforced civilian bus that looks more like a van (wiki), with its riders seated inside and firing from the windows: an enclosed troop compartment and no turret, so box-carrier. Medium, the size of trucks and APCs; no source gives its footprint. The first salvage step patches up its battered frame and the second fixes a ram to the front (wiki), changes of looks and armour only."
+      },
+      "armour": {
+        "class": "medium",
+        "models": ["flat-pool"],
+        "notes": "Step 4 of the armour-class steps decided (see uncertain): its set, Battle Bus Truck Armor (wiki infobox; 1.04 Object file), is one of the one-off sets the registry maps by what the unit is, and as an improvised armoured troop carrier it is an APC, which the class descriptions make medium. The set lets through only a quarter of gunfire, half of infantry rockets, flame and radiation, three quarters of jet missiles and most of a tank shell, while snipers, microwaves and melee do nothing to it (1.04 Armor.ini); its health matches a Battlemaster's. Each of its two salvage steps, from crates left by destroyed enemy vehicles, trims the damage it takes a little more (wiki): numbers only, so they stay here rather than as an ability. Junk Repair, a Black Market upgrade for every GLA vehicle, lets it mend itself slowly, even as a bunker (wiki): side-wide, so left off. It never ranks up, so the self-healing of the top ranks never reaches it. Each life has one health bar; the second life, a bunker with fresh, larger health and a building's armour set, is abilities/1 and modes/0 (see fit_notes)."
+      },
+      "sensors": {
+        "sight": "short",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its fog-clearing figure, the second sight figure in the wiki infobox and the one the registry uses, is half the Ranger's, so short, as the registry's sight note says for the Battle Bus. The first figure, how far it picks targets, is a quarter shorter still. Riders inside a transport see nothing (game-wide), so the bus's own sight is all its load gets. No sensor traits."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "passengers": {
+          "seats": 8,
+          "kind": "passenger-firing"
+        },
+        "notes": "No player seats in the source, so solo is our proposal: the buyer drives. The bus has a driver of its own, whom Jarmen Kell's snipe can kill (wiki). Eight seats for infantry only (build tooltip; 1.04 Object file), copied from the source; riders fire their own weapons from the windows (manual, wiki), so passenger-firing. Angry Mobs cannot ride (Zero Hour manual), and a Pilot who climbs in just rides along, since the bus cannot be promoted (see uncertain). Riders keep their own upgrades (wiki)."
+      },
+      "abilities": [
+        {
+          "name": "Firing ports (passenger seats)",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Up to eight infantry ride inside and shoot their own weapons out of the windows, so what the bus can hit, how hard and how far depends wholly on who is aboard; empty, it cannot attack at all. Since Zero Hour patch 1.03 the riders can aim straight at aircraft, and a bus with anyone aboard can no longer be taken over by a Hijacker (wiki changelog). Riders keep their own upgrades. Loading, unloading and its Evacuate button are universal keys and stay off; what happens to the riders when the hull dies is abilities/1.",
+          "patterns": ["passenger-sets-weapon"]
+        },
+        {
+          "name": "Bunker (second life)",
+          "kind": "triggered",
+          "source": "innate",
+          "cooldown": "per-life",
+          "summary": "The first blow that would destroy the bus does not: it is flung into the air, comes down and stays put for good as a bunker, its health refilled to a larger pool and its armour swapped for a building's set (modes/0). Each rider loses half his full health, so healthy riders live on inside and keep firing. If it was empty, or everyone gets out, the hulk is gone within about a second; when the bunker falls, everyone still inside dies with it (wiki, CNCNZ; the manual and two campaign lines describe the bunker too). It happens once per bus.",
+          "patterns": ["passenger-sets-weapon"]
+        }
+      ],
+      "modes": [
+        {
+          "id": "bunker",
+          "name": "Bunker (after the first destruction)",
+          "via": "passenger-sets-weapon",
+          "target": "structure",
+          "summary": "Cannot move again. The hull becomes a fixed bunker with fresh health, more than half again the bus's, and a building's armour set: mines and Jarmen Kell's snipe no longer harm it, weapons that disable buildings now affect it while vehicle-disabling ones do not, and particle beams and Aurora bombs hit it twice as hard (1.04 Armor.ini). The riders stay inside and go on shooting; emptied, it breaks up within about a second, and destroyed, it kills everyone inside. Junk Repair, if bought, still mends it (wiki). Class and body stay the bus's (see fit_notes)."
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "No on-death term fits what the source shows: the first lethal hit turns a loaded bus into a bunker instead of killing it (abilities/1), an empty one is simply gone about a second later, and when the bunker falls every rider still inside dies, since its 1.04 Object file makes them lose all their health (the wiki agrees). Nobody gets out on their own and no unit repairs, recrews or salvages the remains, so the 3C proposal applies: bail-out, which is also how passenger-sets-weapon's wreck-bunker variant handles the player version, throwing everyone out hurt while the hull stays as cover (see fit_notes). The Demolition General's side-wide Demolitions upgrade gives his bus a blast when it is finally destroyed."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "Up to eight soldiers shoot their own weapons out of its windows, so a mixed load of riflemen and rocket troops can be fitted to almost any enemy (wiki); its build tooltip rates it strong against infantry and buildings."
+        },
+        {
+          "ref": "passengers:8",
+          "why": "Eight seats put a whole load of infantry fire into one armoured hull that carries them to the front (manual, build tooltip)."
+        },
+        {
+          "ref": "armour-class:medium",
+          "why": "Tough for a carrier: its hull lets through only a quarter of gunfire and has as much health as a Battlemaster, two salvage steps add more armour, and the wiki finds its mix of speed and armour sound."
+        },
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "Destroyed with riders aboard, it comes back as a parked bunker with fresh health, and the hurt riders go on firing from it until it falls, which the wiki finds handy for holding an isolated spot (manual, wiki)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "All its firepower is its riders': empty it cannot attack at all, a load of Rebels alone is easy prey for vehicles and a load of RPG Troopers alone does little to infantry, and anything that outranges the riders, jets above all, can hit it without reply (wiki)."
+        },
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "The bunker can never move again, everyone still inside dies when it falls, and once the riders get out it is gone within moments (wiki, CNCNZ)."
+        },
+        {
+          "ref": "nature:crewed-machine",
+          "why": "Weapons that kill crews empty it: Jarmen Kell's snipe kills the driver and the riders spill out into the open, and neutron mines and shells kill riders and crew alike, leaving the bus free for the enemy to take (wiki)."
+        },
+        {
+          "ref": "armour-class:medium",
+          "why": "It never ranks up (1.04 Object file; Pilot page), so unlike most units it never gains the extra health and self-healing that ranks bring, however many kills its riders make."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "range:>=long",
+          "why": "The wiki calls it very weak against attack from a distance: units that outreach its riders' guns pick it apart without reply."
+        },
+        {
+          "ref": "target:high-air",
+          "why": "Jets strike it from far beyond its riders' reach before they can fire back, and the wiki rates them a match for, or better than, a fully loaded bus."
+        },
+        {
+          "ref": "pattern:hijack-vehicle",
+          "why": "Jarmen Kell's crew-killing snipe kills its driver, which makes every rider get out, where they are easy to pick off (wiki)."
+        },
+        {
+          "ref": "unit:generals.gla.jarmen-kell",
+          "why": "The same reason: the wiki names Kell, whose snipe empties the bus."
+        },
+        {
+          "ref": "unit:generals.china.nuke-cannon",
+          "why": "Its Neutron shells kill the passengers and crew together and leave the bus open to capture, as Neutron mines also do (wiki); no word-list or pattern link names crew-killing shells, and most artillery cannot do this, so the unit link stands alone."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "pattern:hijack-vehicle",
+          "why": "Hijackers: since Zero Hour patch 1.03 they cannot take a bus while anyone is aboard (wiki changelog), so a loaded one is safe from them."
+        },
+        {
+          "ref": "unit:generals.gla.hijacker",
+          "why": "The same reason: the wiki's changelog names the Hijacker."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "class:infantry",
+          "why": "Any soldier but an Angry Mob can ride and fire from the windows with his own weapon and upgrades; loaded, its build tooltip rates it strong against infantry and buildings (manual, wiki)."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Rocket troops aboard answer enemy vehicles, which a load of Rebels alone cannot (wiki)."
+        },
+        {
+          "ref": "unit:generals.gla.rpg-trooper",
+          "why": "The same reason: the wiki names RPG Troopers."
+        },
+        {
+          "ref": "role:anti-infantry",
+          "why": "Riflemen aboard deal with enemy soldiers, which a load of RPG Troopers alone handles badly (wiki)."
+        },
+        {
+          "ref": "unit:generals.gla.rebel",
+          "why": "The same reason: the wiki names Rebels."
+        }
+      ],
+      "memorable": "A reinforced civilian bus whose eight riders shoot out of its windows, and which, when destroyed, slams down as a bunker they keep fighting from.",
+      "as_player": "You drive a tough T3 bus with eight seats for teammates on foot, who shoot their own weapons out of the windows: the bus is as dangerous as its load, and alone you can only run soldiers over. When the hull is destroyed it crashes down as a parked bunker with fresh health, and your hurt riders fight on from it until it falls; anyone who climbs out leaves it to crumble. It never ranks up, so keep it loaded and away from long-range guns and jets.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b1/CNC_Generals_Zero_Hour_Manual_2015.pdf/revision/latest",
+          "title": "Command & Conquer: Generals - Zero Hour manual (2015 scan), hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour manual",
+          "note": "EA's printed manual; the Command & Conquer Wiki hosts the scan. Its table of new GLA units on printed page 14 describes the Battle Bus as a reinforced civilian bus that takes infantry to the front, whose riders fire from the windows and which, once immobilised, shelters the troops still inside like a bunker; a note on the same page says Angry Mobs cannot be transported. Read in a layout text dump of the PDF; paraphrases checked by hand, since the copy-check cannot read it.",
+          "supports": [
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "modes/0",
+            "strengths/1",
+            "strengths/3",
+            "combos/0",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Battle_bus_(Zero_Hour)",
+          "title": "Battle bus (Zero Hour), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour",
+          "note": "Read through the MediaWiki API, from the page cache's copy (fetched 2026-10-19). Infobox: the three Zero Hour GLA generals beside the main faction, health for the bus and the bunker, both armour sets, price, build time, the Arms Dealer and Palace, land speed, both sight figures and Junk Repair. Prose: the only GLA transport whose riders fire from inside; the bunker it becomes when destroyed, its riders left at half health, their death when it falls and its loss once they get out; loads of Rebels, RPG Troopers or a mix; its counters (attack from range, Neutron mines and shells, Jarmen Kell, fixed-wing aircraft); the two salvage steps; the Zero Hour 1.03 changes (riders can target aircraft, a little slower, no hijacking while occupied). Its quotes include lines for crushing; its trivia covers the full repair as a bunker, the empty bus vanishing and the Stealth General's dropped disguise. A quote box copies the Zero Hour manual's description.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "body",
+            "armour",
+            "sensors",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "modes/0",
+            "on_death",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable",
+            "uncertain"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/a65f341431e95e926fca3ad7bbdce32bc6912d6d/Patch104pZH/GameFilesEdited/Data/generals.str",
+          "title": "generals.str, first plain-text copy of the Zero Hour 1.04 English string table, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour 1.04 (the file's first version, which matches the binary original)",
+          "note": "Copies the in-game text, as the registry note says; read from the page cache's copy (fetched 2026-10-20). All four Battle Bus build buttons in the unedited 1.04 CommandButton.ini of the same repository (main GLA, Toxin, Demolition and Stealth Generals) point to CONTROLBAR:ToolTipGLABuildBattleBus: it can take eight infantry and is strong against infantry and buildings, with no weak line. The campaign lines DIALOGEVENT:UnitDescriptXGLA027Subtitle and DIALOGEVENT:UnitDescriptXChina026Subtitle describe a carrier for eight infantry who fire out of it and whose hull stays behind as a bunker when it is destroyed; the first calls it slow-moving. MAP:MD-CHI05_Hint10 tells the player to stop Battle Buses before they reach the base, GUI:BioFeatures_GLA lists the Battle Bus among the GLA's Zero Hour features, and OBJECT:BattleBus gives its name.",
+          "supports": [
+            "roles",
+            "mobility/notes",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "modes/0",
+            "strengths/0",
+            "strengths/1",
+            "combos/0"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/GLAVehicle.ini",
+          "title": "GLAVehicle.ini, unedited Zero Hour 1.04 game files, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour 1.04",
+          "note": "The bus's object, GLAVehicleBattleBus: display name, eight transport slots for infantry only, riders allowed to fire and given its weapon bonuses, two sets of dummy weapons and no real one, the bus and bunker armour sets with both salvage steps, price, build time, both sight figures, the Arms Dealer and Palace as prerequisites, crusher and crushable levels, the vehicle, transport and salvager kinds, health and second-life health, never trainable, self-repair behind Junk Repair, its locomotor, and the second-life death behaviour that throws it up, takes half of each rider's health and destroys the hulk once it has stood empty for a moment; riders lose all their health when it is finally destroyed.",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility/traits",
+            "body",
+            "armour",
+            "sensors",
+            "armament",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "modes/0",
+            "on_death",
+            "weaknesses/3"
+          ]
+        },
+        {
+          "url": "https://cncnz.com/games/zero-hour/gla-units/",
+          "title": "Command & Conquer: Generals - Zero Hour - GLA Units, CNCNZ",
+          "kind": "guide",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour",
+          "note": "A long-standing fan site's unit list, cited as the second site, as the sources rule and the registry's CNCNZ note ask. Its Battle Bus entry agrees on the price, the Palace, eight infantry firing from the windows and the bunker that shelters the troops still inside, and lists Evacuate, which wrecks the remains at once when the bus is immobilised. It says the bunker comes when the bus is badly damaged, and that the second of its two salvage steps lets it crush infantry (see uncertain). Read from the page cache's copy (fetched 2026-10-27).",
+          "supports": ["tier", "cost_band", "crew", "abilities/0", "abilities/1", "modes/0", "weaknesses/1", "uncertain"]
+        }
+      ],
+      "confidence": "medium",
+      "uncertain": [
+        {
+          "path": "confidence",
+          "note": "Medium comes only from the High or Medium tie-break over one point, the crush trait (mobility/traits), on which the cited CNCNZ page contradicts the cited 1.04 Object file, with no official text to settle it. The rest of the entry rests on cited official text (the Zero Hour manual, and the build tooltip and campaign lines through a faithful copy) and on pages that agree."
+        },
+        {
+          "path": "mobility/traits",
+          "note": "Crush follows the registry's game-wide rule: the bus's 1.04 Object file gives it, from the start, the crusher level every Generals ground vehicle has, and the wiki's quote list has lines it calls out while running soldiers down. CNCNZ says instead that only the second of its salvage steps lets it crush infantry; the wiki ties that step only to a ram and more armour, and in the Object file the step changes only the armour set. On a medium vehicle the trait breaks its size rule (atypical).",
+          "sources_disagree": true
+        },
+        {
+          "path": "mobility/speed",
+          "note": "The band rests on the wiki infobox's land speed and the registry's Ranger figure. Locomotor.ini of the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Locomotor.ini, read, not cited) agrees with the wiki and gives the Crusader's and Humvee's figures that mobility.notes compares it with. The campaign line DIALOGEVENT:UnitDescriptXGLA027Subtitle in the cited string table calls it a slow-moving transport, which the figures do not bear out; by the speed-band rules a speed word alone stays in notes.",
+          "sources_disagree": true
+        },
+        {
+          "path": "armour/class",
+          "note": "Step 4 needs the kind of unit, since the registry lists the Battle Bus among the one-off armour sets that map by what the unit is. Read as an improvised armoured personnel carrier (the manual's reinforced bus that carries infantry to the front and lets them fire from the windows; the wiki's heavy infantry transport and moving bunker), it is medium. Read as a civilian bus, nearer the class descriptions' trucks, it would be light, and the set's own name says truck. Toughness does not decide at step 4, but its health matches the Battlemaster's in ChinaVehicle.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/ChinaVehicle.ini, read, not cited), and its set lets through as little gunfire as the Tank Armor set does."
+        },
+        {
+          "path": "armour/notes",
+          "note": "The set's values for the bus, the two salvage steps and the bunker come from Armor.ini of the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Armor.ini, read, not cited). The Salvaging page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Salvaging, read, not cited) lists the bus's two steps as better and better armour, as the cited Battle bus page does."
+        },
+        {
+          "path": "roles/primary",
+          "note": "Step 1 finds no role: as a Zero Hour unit it has no Purpose entry, and the opening line of its build tooltip only says it takes eight infantry, which the registry note reads as naming no role. Step 2 applies because it carries no weapon of its own (its riders fire their own), and its main action, carrying infantry, is transport, which its eight seats allow. The campaign line DIALOGEVENT:UnitDescriptXGLA027Subtitle also calls it a transport."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Both rest on step 5, the riders, ranked by how many GLA infantry types give each: anti-infantry from Rebels and Jarmen Kell (and the Toxin General's Toxin Rebels), with the build tooltip's strong-against-infantry line behind it; anti-armour and anti-air each from the RPG Trooper alone, and marksman from Kell alone, so the tie goes by the order of the roles list and anti-armour takes the second slot. The sources show no fire from the windows by Workers, Hijackers, Saboteurs or Terrorists, so they add nothing. Anti-armour meets its requires only through the RPG Troopers' rockets, which the validator cannot see (atypical). The tooltip's buildings part matches no role. Area denial would fit the bunker, but its requires fail (fit_notes)."
+        },
+        {
+          "path": "armament",
+          "note": "Empty, because riders who fire their own guns from ports give no weapon entries. Weapon.ini of the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini, read, not cited) shows that the two weapons in its Object file are dummies that do no real damage: they only let the bus take attack orders for its riders, one of them against aircraft alone, which fits the 1.03 change that let riders target aircraft."
+        },
+        {
+          "path": "abilities/0",
+          "note": "That riders see nothing from inside is the registry's game-wide note, from EA's Object.cpp. The Hijacker change and air targeting come from the cited wiki's changelog; the 1.04 Object file passes the bus's own weapon bonuses on to its riders."
+        },
+        {
+          "path": "abilities/1",
+          "note": "The second life's mechanics come from EA's released Zero Hour source code, read, not cited. Source/GameLogic/Object/Body/UndeadBody.cpp (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Body/UndeadBody.cpp) catches the first lethal hit, unless it is of a kind nothing resists, fully heals the bus to its second-life health and swaps in the second armour set. Source/GameLogic/Object/Behavior/BattleBusSlowDeathBehavior.cpp (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Behavior/BattleBusSlowDeathBehavior.cpp) throws it up, takes half of each rider's full health, holds it in place for good once it lands, and destroys it after it has stood empty for the delay its Object file sets, about a second, unless someone gets back in first. The sources name the trigger differently: the wiki says when destroyed, the manual when immobilised, CNCNZ when badly damaged; the code bears out the wiki. CNCNZ has its Evacuate button wreck the remains at once, the wiki shortly after.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/1/cooldown",
+          "note": "Per-life: the second life comes once per bus and no source gives a wait."
+        },
+        {
+          "path": "modes/0/target",
+          "note": "Structure follows the cited wiki page and the Garrisoning page of the same wiki (https://cnc.fandom.com/wiki/Garrisoning, read, not cited), which both say it becomes a structure, and the second-life armour set, a building's set in Armor.ini (address under armour/notes). The 1.04 Object file keeps the vehicle kind for the bunker form and the code adds no structure kind, so the game may still pick targets for it as for a vehicle."
+        },
+        {
+          "path": "tier",
+          "note": "How the generals' copies differ rests on uncited 1.04 files of the same repository: Object/ChemicalGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/ChemicalGeneral.ini), Object/DemoGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/DemoGeneral.ini) and Object/StealthGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/StealthGeneral.ini) give each copy that general's Arms Dealer and Palace, the same seats, health and second life, the Toxin and Demolition copies higher prices, and the Demolition copy a suicide weapon and death blasts behind the Demolitions upgrade. CommandSet.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini) puts a build button in each general's Arms Dealer, gives the Demolition copy its suicide button after the upgrade, and fills slot 1 of the Stealth copy's set first with a disguise button and then with an unload button; the Stealth object has no disguise module. CommandButton.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandButton.ini) shows every version's build button using the same tooltip, so that text counts as official for every version."
+        },
+        {
+          "path": "crew",
+          "note": "That a Pilot can only ride in it rests on the Pilot page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Pilot, read, not cited), which counts Battle Buses among the transports that cannot be promoted."
+        },
+        {
+          "path": "weaknesses/3",
+          "note": "Besides the cited Object file, which marks it as never trainable, the Pilot page (address under crew) says the bus can never gain a rank."
+        },
+        {
+          "path": "countered_by/4",
+          "note": "The wiki names Neutron mines and the Nuke Cannon's Neutron shells. No word-list or pattern link describes weapons that kill a vehicle's crew and riders and leave the hull, and most artillery cannot do it, so the unit link stands alone; the Nuke Cannon's id is the one its entry would get."
+        },
+        {
+          "path": "counters",
+          "note": "Counters holds only what the bus foils by itself, since it harms no enemy with a weapon or an ability of its own (Matchups rule 5): its tooltip rates it strong against infantry and buildings, but that fire is the riders', so it sits in combos. pattern:hijack-vehicle names the enemy in countered_by as well: a Hijacker trying to climb in is foiled, while Jarmen Kell's crew-killing snipe still empties the bus, two different situations."
+        },
+        {
+          "path": "combos",
+          "note": "The Rebel and RPG Trooper links rest on the wiki's advice about loads; their ids, like Jarmen Kell's, the Hijacker's and the Nuke Cannon's elsewhere in this entry, are the ones their entries would get."
+        },
+        {
+          "path": "lineage",
+          "note": "None: the wiki says its design influenced the Reckoner of Kane's Wrath, but the names differ and no source presents the two as one unit."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J01-GENERALS",
+      "fit_notes": [
+        {
+          "path": "on_death/outcomes",
+          "used": "bail-out (proposal)",
+          "wanted": "a second-life outcome: the lethal hit turns the hull into a static bunker with fresh health whose riders survive hurt and keep fighting until it falls",
+          "note": "No on-death term covers what the source shows. Wreck needs remains that a unit repairs, recrews or salvages, and leaves out remains that only give cover; bail-out needs crew or riders getting out on their own. The 3C default stands, and passenger-sets-weapon's wreck-bunker variant throws the players out hurt too."
+        },
+        {
+          "path": "modes/0",
+          "used": "no class or body change",
+          "wanted": "a structure class and body plan for a vehicle's static bunker form",
+          "note": "As a bunker it is a fixed fortification, which no unit class or body plan describes, so the mode keeps the bus's class and body."
+        },
+        {
+          "path": "armour/models",
+          "used": "flat-pool",
+          "wanted": "a second-life armour model: a lethal hit starts one more, larger health pool in a new form",
+          "note": "Each life has a single health bar, but the first life's lethal hit starts a second one in the bunker form; abilities/1 and modes/0 record it."
+        },
+        {
+          "path": "roles",
+          "used": "transport, anti-infantry, anti-armour",
+          "wanted": "area-denial",
+          "note": "The bunker is a fortification left on the ground that riders fight from, which the wiki finds handy for holding an isolated spot, but area denial needs a lingering-zone weapon or an area or summon pattern, which the bus lacks."
+        }
+      ],
+      "atypical": [
+        {
+          "path": "mobility/traits",
+          "rule": "mobility-traits:crush allowed.sizes medium",
+          "note": "Every Generals ground vehicle whose crusher level is above zero runs over soldiers, as the registry's game-wide note asks to code, and this one is medium, the size of trucks and APCs."
+        },
+        {
+          "path": "roles/secondary",
+          "rule": "roles:anti-armour requires damage:armour-piercing|damage:energy|damage:electric|damage:emp|pattern:infest-vehicle",
+          "note": "Anti-armour enters at roles.secondary step 5 through its riders: RPG Troopers firing their rockets from the windows meet the role's need for armour-piercing damage, which step 5 allows, but riders who fire their own guns give the bus no weapon entry, so the validator cannot see them."
+        }
+      ]
+    },
+    {
+      "id": "generals.usa-air-force.combat-chinook",
+      "game": "generals",
+      "introduced_in": "generals-zero-hour",
+      "faction": "usa-air-force",
+      "name": "Combat Chinook",
+      "flavour_affinity": ["allied"],
+      "class": "aircraft",
+      "nature": "crewed-machine",
+      "availability": "open",
+      "roles": {
+        "primary": "transport",
+        "secondary": ["logistics", "anti-infantry"]
+      },
+      "tier": {
+        "band": "t1",
+        "gate": "War Factory",
+        "basis": "Built at the Air Force General's Supply Center once a War Factory stands: its 1.04 Object file lists the War Factory as its prerequisite, the Supply Center builds it beside the ordinary Chinook, and the manual, the wiki and CNCNZ say the same. Both are basic production buildings, which the tier map puts at t1, so no tech building or promotion is needed; the gate names the War Factory, the extra building it waits for. Only the Air Force General fields it."
+      },
+      "cost_band": {
+        "band": "high",
+        "raw": 1200,
+        "basis": "Its list price, the same in the wiki infobox, on CNCNZ and in its 1.04 Object file, falls between the high and very-high thresholds, about half again the anchor tanks' mean price, so high. The same general's ordinary Chinook costs about a fifth less (Chinook page)."
+      },
+      "mobility": {
+        "base": "rotor",
+        "handling": "strafe",
+        "traits": [],
+        "speed": "very-fast",
+        "speed_raw": 7.5,
+        "notes": "The wiki infobox gives a flying speed seven and a half times the Ranger's land speed, so very fast; like most units it slows down badly when heavily hurt, a game-wide rule the band leaves out. Among Generals aircraft it outflies the Comanche and doubles the Helix, and only jets such as the Raptor are quicker (1.04 locomotors; see uncertain); the wiki calls it fast and agile. It lands only to take riders on or let them off, or to be repaired (wiki). Strafe is the default for hovering flight."
+      },
+      "body": {
+        "plan": "rotorcraft",
+        "size": "large",
+        "notes": "A twin-rotor transport helicopter, the ordinary Chinook given side ports for its riders (manual, wiki): large, as the sizes list puts transport helicopters. No source gives its footprint."
+      },
+      "armour": {
+        "class": "light",
+        "models": ["interceptor"],
+        "notes": "Step 1 decided: its set is Chinook Armor (wiki infobox; 1.04 Object file), which the armour_map makes light. The set takes half damage from most weapons and a quarter from infantry missiles, poison and radiation, while snipers, microwaves and melee do nothing to it (1.04 Armor.ini); it has a little more health than the ordinary Chinook (Chinook page), and Zero Hour patch 1.03 stopped flash-bangs hurting Chinooks. Its point-defence laser, which every Air Force General aircraft carries (manual), fires by itself at incoming missiles, several times a second and over a short reach; the wiki says it can stop a great many anti-air missiles, but bullets, shells and EMP pass it by, so it is the interceptor model. Countermeasures, an Air Field upgrade that gives flares to every USA aircraft (CNCNZ), is side-wide and left off. It never ranks up, so the self-healing of the top ranks never reaches it."
+      },
+      "sensors": {
+        "sight": "medium",
+        "traits": [],
+        "basis": "in-game",
+        "notes": "Its fog-clearing figure, the second sight figure in the wiki infobox, is exactly one and a half times the Ranger's, which still counts as medium, as the registry's sight note says for the Chinook. Its first figure, how far it picks targets, is half that. Riders inside see nothing (game-wide), and a Pathfinder's stealth detection does not work from inside it (wiki). No sensor traits."
+      },
+      "armament": [],
+      "crew": {
+        "model": "solo",
+        "basis": "proposal",
+        "passengers": {
+          "seats": 8,
+          "kind": "passenger-firing"
+        },
+        "notes": "No player seats in the source, so solo is our proposal: the buyer flies it. Eight transport slots, copied from the source: a soldier fills one, a vehicle three and a construction dozer five (Chinook page; CNCNZ gives one and three), and aircraft cannot board. Soldiers fire their own weapons from the side ports, even in flight (manual, in-game hint), so passenger-firing; vehicles ride as cargo, though soldiers inside a carried Humvee fire from the ports too (wiki). Only Rangers can rope down in a Combat Drop (abilities/1). It lands to take riders on or let them off."
+      },
+      "abilities": [
+        {
+          "name": "Gun ports (passenger seats)",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Up to eight soldiers, or fewer when vehicles take up room, ride inside; the soldiers shoot their own weapons out of the side ports even while it flies, so its firepower is whatever its riders bring, and empty it cannot attack. The manual and CNCNZ have the riders firing at ground targets. Everyone aboard dies if it is shot down (Chinook page). Loading, unloading and its Evacuate button are universal keys and stay off; it lands to unload.",
+          "patterns": ["passenger-sets-weapon"]
+        },
+        {
+          "name": "Combat Drop",
+          "kind": "active",
+          "source": "innate",
+          "summary": "Pointed at a building or a spot on the ground, the helicopter flies over it and hovers while its Rangers slide down four ropes, one after another, without it landing; other riders stay aboard, and it drops any supplies it holds. Into an empty building the Rangers garrison it. Into one held by enemy soldiers they kill the troops inside and then hold it themselves: the build tooltip and CNCNZ say the whole garrison is cleared, while the wiki has it cost one Ranger for each soldier inside (see uncertain). It needs at least one Ranger aboard and has no wait between uses (CNCNZ).",
+          "patterns": ["drop-in-from-above"]
+        },
+        {
+          "name": "Supply runs",
+          "kind": "passive",
+          "source": "innate",
+          "summary": "Flown empty to a supply dock, it lowers a cargo net without landing, lifts a load of supply boxes and flies them to a Supply Center, where they become team money; it carries more per trip than any other gatherer, and the manual calls the Chinook the quickest and best of them. Only one Chinook works a dock at a time. It cannot collect while carrying anyone, and troops boarding make it drop the load it holds, which is lost (Chinook page). Supply Lines, bought at the Strategy Center, makes each load worth a little more (CNCNZ, wiki).",
+          "patterns": ["gather-resources"]
+        }
+      ],
+      "on_death": {
+        "outcomes": ["bail-out"],
+        "basis": "proposal",
+        "notes": "In the source it spirals down, crashes and is simply gone; every rider dies with it, since its 1.04 Object file makes them lose all their health (the Chinook page agrees). It cannot rank up, so no Pilot ever ejects from it (Chinook page). So the 3C proposal applies: bail-out."
+      },
+      "strengths": [
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "Soldiers inside fire from its side ports even in flight (in-game hint, manual); the wiki says a load of Missile Defenders and a Pathfinder makes it dangerous to almost any kind of unit."
+        },
+        {
+          "ref": "armour-model:interceptor",
+          "why": "Its point-defence laser shoots incoming missiles down by itself, and the wiki says it can stop a great many anti-air missiles (manual, wiki)."
+        },
+        {
+          "ref": "speed:very-fast",
+          "why": "Fast and nimble: it outflies the Comanche, and the wiki praises it for quick raids that strike and pull back."
+        },
+        {
+          "ref": "pattern:gather-resources",
+          "why": "Flown empty it hauls the largest supply load of any gatherer, straight over the terrain and without landing, so far-off or contaminated docks are no trouble (Chinook page, manual)."
+        },
+        {
+          "ref": "pattern:drop-in-from-above",
+          "why": "Combat Drop ropes its Rangers into a building without landing, clearing out an enemy garrison and taking the building over (build tooltip, CNCNZ)."
+        }
+      ],
+      "weaknesses": [
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "With no soldiers aboard it cannot attack, and arming it well is costly and needs careful handling near anti-air (wiki)."
+        },
+        {
+          "ref": "passengers:8",
+          "why": "Everyone aboard dies when it is shot down (Chinook page), so a full load is a lot to lose."
+        },
+        {
+          "ref": "pattern:gather-resources",
+          "why": "It cannot collect while carrying anyone, and troops boarding make it drop a load it was holding, which is lost (Chinook page)."
+        },
+        {
+          "ref": "mobility:rotor",
+          "why": "It has to land to load or unload troops, and while landed any ground unit can hit it (Chinook page, CNCNZ)."
+        },
+        {
+          "ref": "armour-model:interceptor",
+          "why": "The laser only stops missiles: massed bullets and EMP get straight through, and the wiki calls it wide open to anti-air that does not fire missiles."
+        },
+        {
+          "ref": "armour-class:light",
+          "why": "It never ranks up (Chinook page), so it never gains the extra health and self-healing that ranks bring."
+        }
+      ],
+      "countered_by": [
+        {
+          "ref": "weapon:machine-gun",
+          "why": "Gun-armed anti-air in numbers, the GLA Quad Cannon and the Chinese Gattling tank and Gattling Cannon, shoots it down, since its laser stops only missiles (wiki)."
+        },
+        {
+          "ref": "damage:emp",
+          "why": "EMP weapons such as the EMP Patriot are a grave threat: one blast close by brings it down (wiki)."
+        },
+        {
+          "ref": "role:anti-air",
+          "why": "Anti-air units in groups take it down easily, Avengers above all (wiki)."
+        },
+        {
+          "ref": "unit:generals.usa.avenger",
+          "why": "The same reason: the wiki singles out the Avenger."
+        }
+      ],
+      "counters": [
+        {
+          "ref": "weapon:guided-missiles",
+          "why": "Its laser shoots down incoming missiles by itself, so missile-firing anti-air (Patriots, Stinger Sites, missile infantry) and missile-armed fighters struggle against it; the wiki says it is weapons other than missiles that bring it down."
+        }
+      ],
+      "combos": [
+        {
+          "ref": "unit:generals.usa.ranger",
+          "why": "Combat Drop works only with Rangers aboard: they rope down into a building and clear out the enemy soldiers holding it (build tooltip, CNCNZ, Chinook page); no other soldier can do it, so no word-list link covers the pairing."
+        },
+        {
+          "ref": "role:anti-armour",
+          "why": "Missile Defenders massed in its ports devastate vehicles and buildings (wiki)."
+        },
+        {
+          "ref": "unit:generals.usa.missile-defender",
+          "why": "The same reason: the wiki names the Missile Defender."
+        },
+        {
+          "ref": "role:anti-infantry",
+          "why": "One Pathfinder aboard is enough against infantry (wiki), though his stealth detection does not work from inside."
+        },
+        {
+          "ref": "unit:generals.usa.pathfinder",
+          "why": "The same reason: the wiki names the Pathfinder."
+        },
+        {
+          "ref": "pattern:passenger-sets-weapon",
+          "why": "A Humvee carried inside lets its own riders fire from the Chinook's ports as well, so up to twelve soldiers can fight from one helicopter (wiki)."
+        },
+        {
+          "ref": "unit:generals.usa.humvee",
+          "why": "The same reason: the wiki names the Humvee."
+        }
+      ],
+      "memorable": "The Air Force General's armed Chinook: soldiers shoot from its ports in flight, a laser knocks missiles out of the air, and Rangers rope down from it into enemy-held buildings.",
+      "as_player": "A fast T1 transport helicopter with eight seats: teammates on foot fire their own weapons from its side ports even in flight, while you fly and a point-defence laser shoots down missiles aimed at you; alone you have no gun. Q (Combat Drop) ropes Ranger teammates down into a building, clearing out the enemy soldiers holding it, or onto open ground. Flown empty you can haul supplies for team money; gun-armed anti-air and EMP are what bring you down.",
+      "sources": [
+        {
+          "url": "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b1/CNC_Generals_Zero_Hour_Manual_2015.pdf/revision/latest",
+          "title": "Command & Conquer: Generals - Zero Hour manual (2015 scan), hosted by the Command & Conquer Wiki",
+          "kind": "official",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour manual",
+          "note": "EA's printed manual; the Command & Conquer Wiki hosts the scan. Printed page 19, General Granger's army: the Combat Chinook entry (ordinary Chinooks fared badly behind enemy lines for want of defences; this one has side ports so that riders can target ground threats, and needs both a War Factory and a Supply Center) and his army modifications (every aircraft gets a laser point-defence system; Combat Chinooks can be built beside ordinary ones once both buildings stand). Printed page 35, among the multiplayer tips, calls the Chinook the quickest and best gatherer. Read in a layout text dump of the PDF; paraphrases checked by hand, since the copy-check cannot read it.",
+          "supports": [
+            "tier",
+            "armour/models",
+            "crew",
+            "abilities/0",
+            "abilities/2",
+            "strengths/0",
+            "strengths/1",
+            "strengths/3",
+            "memorable"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Combat_Chinook",
+          "title": "Combat Chinook, Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour",
+          "note": "Read through the MediaWiki API, from the page cache's copy (fetched 2026-10-19). Infobox: the Air Force General, the Chinook as its base unit, Chinook Armor, price, build time, health, eight infantry or vehicles, the Supply Center with a War Factory, flying speed, the laser's figures against missiles, both sight figures, Combat Drop and Supply Lines. Prose: everything an ordinary Chinook does plus gun ports, no gathering while carrying, Combat Drop into civilian buildings and its use on enemy-held ones without saying what happens there, the gathering figures, tactics (Missile Defenders and a Pathfinder aboard, raids, the laser against missile anti-air, Humvees inside) and counters (gun-armed anti-air, EMP, Avengers, fighters, the cost of arming it).",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "armour",
+            "sensors",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "abilities/2",
+            "strengths",
+            "weaknesses",
+            "countered_by",
+            "counters",
+            "combos",
+            "memorable",
+            "variant_of"
+          ]
+        },
+        {
+          "url": "https://cnc.fandom.com/wiki/Chinook_(Generals)",
+          "title": "Chinook (Generals), Command & Conquer Wiki",
+          "kind": "wiki",
+          "accessed": "2026-10-27",
+          "version": "Generals and Zero Hour",
+          "note": "Read through the MediaWiki API, from the page cache's copy (fetched 2026-10-21). The ordinary Chinook's page, read for what the Combat Chinook shares: slots (vehicles three, dozers five), Combat Drop (Rangers only, the building cleared at one Ranger per enemy soldier), supplies dropped when troops board and no gathering while carrying, landing to load and unload, riders killed when it is destroyed, never ranking up, the Air Force General's cheaper Chinook and the Combat Chinook's extra health and longer build, and the Zero Hour 1.03 flash-bang change. Its quote box copies the base-game manual's description of the ordinary Chinook.",
+          "supports": [
+            "cost_band",
+            "armour",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "abilities/2",
+            "on_death",
+            "strengths/3",
+            "weaknesses",
+            "combos/0",
+            "uncertain"
+          ]
+        },
+        {
+          "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/a65f341431e95e926fca3ad7bbdce32bc6912d6d/Patch104pZH/GameFilesEdited/Data/generals.str",
+          "title": "generals.str, first plain-text copy of the Zero Hour 1.04 English string table, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+          "kind": "database",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour 1.04 (the file's first version, which matches the binary original)",
+          "note": "Copies the in-game text, as the registry note says; read from the page cache's copy (fetched 2026-10-20). The Combat Chinook's build button in the unedited 1.04 CommandButton.ini of the same repository (AirF_Command_ConstructAmericaVehicleChinook, object AirF_AmericaVehicleChinook) points to CONTROLBAR:AirF_ToolTipUSABUildChinook: an assault transport helicopter that collects supplies and teams up with Rangers for Combat Drop attacks. CONTROLBAR:ToolTipUSACombatDrop has Rangers rappel onto an enemy target and, on a garrisoned building, kill every enemy soldier inside. HELP:CombatChinooks-01 says infantry inside can fire in flight; GUI:BioFeatures_Pos0 lists Combat Chinooks and laser point defences among the Air Force General's features; OBJECT:AirF_Chinook gives the name.",
+          "supports": ["roles", "armour/models", "abilities/0", "abilities/1", "strengths/0", "strengths/4", "combos/0"]
+        },
+        {
+          "url": "https://cncnz.com/games/zero-hour/grangers-units/",
+          "title": "Command & Conquer: Generals - Zero Hour - Granger's Units, CNCNZ",
+          "kind": "guide",
+          "accessed": "2026-10-27",
+          "version": "Zero Hour",
+          "note": "A long-standing fan site's unit list, cited as the second site, as the sources rule and the registry's CNCNZ note ask. Its Combat Chinook entry agrees on the price and the War Factory, gives it every function of the ordinary Chinook plus ports for its infantry to fire at ground units, and lists Evacuate (it lands for a moment and is exposed) and Combat Drop (at least one Ranger aboard, no wait, an enemy garrison cleared before the Rangers move in); its ordinary Chinook entry gives eight slots, one per soldier and three per vehicle, and the size of a supply load; Supply Lines and Countermeasures are its upgrades. Read from the page cache's copy (fetched 2026-10-27).",
+          "supports": [
+            "tier",
+            "cost_band",
+            "armour",
+            "crew",
+            "abilities/0",
+            "abilities/1",
+            "abilities/2",
+            "weaknesses/3",
+            "uncertain"
+          ]
+        }
+      ],
+      "confidence": "high",
+      "uncertain": [
+        {
+          "path": "roles/primary",
+          "note": "Step 1 reads the opening line of its build tooltip, which names transport ('Assault Transport') and logistics ('Collects supplies'), as the registry note says; neither role has a target, so step 1 goes on. Step 2 applies because it has no weapon of its own, and transport is taken as its main action: the tooltip names it first, the Air Force General also fields the cheaper ordinary Chinook for supplies, and the manual and the wiki present the gun ports as what sets this one apart. Logistics would win if supply runs were read as its main action."
+        },
+        {
+          "path": "roles/secondary",
+          "note": "Logistics ranks at step 1 (the tooltip's supply line). Anti-infantry ranks at step 2: Combat Drop, a button every copy has, harms only the soldiers inside a building. The tie-break between the anti roles and engineer asks what it does once in: it kills the soldiers (anti-infantry) and then holds the building (engineer), and the tooltip's stated aim is the killing; anti-infantry also comes first in the roles list. Riders would add anti-armour and anti-air only at step 5. Raider fits the wiki's praise of it for raids, but those are the wiki's own words, and raider needs a weapon of the unit's own."
+        },
+        {
+          "path": "tier",
+          "note": "The 1.04 Object file named across this entry is Object/AirforceGeneral.ini of the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AirforceGeneral.ini, read, not cited), object AirF_AmericaVehicleChinook: display name, the War Factory as prerequisite, price, build time, both sight figures, never trainable, Chinook Armor, health, the Chinook supply module with its four ropes, eight transport slots that take infantry and vehicles but not aircraft or the largest vehicles, riders allowed to fire and losing all their health when it dies, a helicopter death spiral and the point-defence laser. CommandSet.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini, read, not cited) has the Air Force General's Supply Center build it beside his ordinary Chinook and gives it the ordinary Chinook's buttons: one exit button per rider, unload, Combat Drop and stop."
+        },
+        {
+          "path": "abilities/1",
+          "note": "What clearing a garrison costs: the cited Chinook page and the Garrisoning page of the same wiki (https://cnc.fandom.com/wiki/Garrisoning, read, not cited) trade one Ranger for each soldier inside; the build tooltip and CNCNZ say only that the garrison is cleared; EA's released source code, read, not cited (Source/GameLogic/AI/AIStates.cpp, https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/AI/AIStates.cpp), has each Ranger who lands kill up to two soldiers inside, dying himself when he kills two and otherwise going in, or landing beside the building when it is full. Source/GameLogic/Object/Update/AIUpdate/ChinookAIUpdate.cpp (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Update/AIUpdate/ChinookAIUpdate.cpp, read, not cited) lets the drop aim at a spot on the ground as well as a building, sends down only riders able to rappel, and makes the Chinook drop its supplies; CommandButton.ini of the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandButton.ini, read, not cited) lets the button aim at enemy, neutral or allied objects or at a position. The Combat Chinook page itself says only that the drop also works on enemy-held buildings. The four ropes come from the cited wiki pages.",
+          "sources_disagree": true
+        },
+        {
+          "path": "abilities/1/patterns",
+          "note": "drop-in-from-above, a planned pattern, for riders arriving on a chosen spot from a carrier that hovers over it. carry-passengers' hot-drop variant fits the rope drop too, but the passenger seats already link passenger-sets-weapon and Paired entries keeps the two patterns apart. capture-structure's take-over variant was weighed for clearing an enemy-held building, but the building is a civilian one the enemy only occupies, garrisoning is game-wide, and taking a neutral building is not that pattern (see fit_notes)."
+        },
+        {
+          "path": "abilities/2",
+          "note": "The 1.04 Object file (address under tier) gives it the same supply-gathering module as the ordinary Chinook, with eight boxes a load and a bonus behind Supply Lines, and ChinookAIUpdate.cpp (address under abilities/1) keeps it off supply runs while anyone is aboard. The rest rests on the cited pages."
+        },
+        {
+          "path": "abilities/2/kind",
+          "note": "Passive, as the wiki lists supply gathering: it has no button of its own and is ordered by sending the helicopter to a supply dock. A player version would put it on a key, as the gather-resources pattern's own kinds do."
+        },
+        {
+          "path": "armour/models",
+          "note": "The laser's working comes from uncited 1.04 files: its Object file (address under tier) gives the Combat Chinook a point-defence module that scans around it for incoming missiles, and Weapon.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini, read, not cited) gives the laser a quick rate of fire and a short reach and lets it hit only small missiles. Armor.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Armor.ini, read, not cited) gives the Chinook set's values in armour.notes."
+        },
+        {
+          "path": "mobility/notes",
+          "note": "The comparisons with the Comanche, the Helix and the Raptor use Locomotor.ini of the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Locomotor.ini, read, not cited); the Chinook's own figure there matches the wiki's."
+        },
+        {
+          "path": "crew",
+          "note": "That aircraft cannot board, and that riders lose all their health when it is destroyed, rest on its Object file (address under tier) as well as the cited Chinook page. The manual and CNCNZ say the riders fire at ground targets; no source says whether they can also shoot at aircraft from it."
+        },
+        {
+          "path": "on_death",
+          "note": "The spiral and crash come from the helicopter death behaviour in its Object file (address under tier), which leaves a hull of rubble that no source shows anyone using; the riders' deaths rest on the cited Chinook page and the same file."
+        },
+        {
+          "path": "weaknesses/5",
+          "note": "That it never ranks up rests on the cited Chinook page's trivia and on the Pilot page of the same wiki (https://cnc.fandom.com/wiki/Pilot, read, not cited); its 1.04 Object file marks it as never trainable."
+        },
+        {
+          "path": "countered_by/0",
+          "note": "The wiki names the Quad Cannon, Gattling tanks and the Gattling Cannon. weapon:machine-gun follows the weapon-family tie-break for rotary guns that fire bullets: Weapon.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini, read, not cited) gives their anti-air guns small-arms damage, a bullet category in the registry's damage notes. None of the three is coded yet."
+        },
+        {
+          "path": "counters",
+          "note": "Counters holds only what it foils by itself, since it harms no enemy with a weapon or ability of its own (Matchups rule 5); its riders' and Rangers' work sits in combos. Missile anti-air, foiled by the laser alone, is in counters, while gun-armed anti-air and anti-air in groups, Avengers above all, are in countered_by: different enemies and situations."
+        },
+        {
+          "path": "variant_of",
+          "note": "The base unit is the ordinary USA Chinook, which the wiki's infobox names as its base unit; its id, like the ids of the Rangers, Missile Defenders, Pathfinders, Humvees and Avengers linked here, is the one its entry would get."
+        },
+        {
+          "path": "lineage",
+          "note": "None: Tiberian Dawn's transport helicopter is a Chinook in looks, but its in-game name differs and no source presents it as this unit, and the ordinary Chinook is in this same game."
+        }
+      ],
+      "review": {
+        "status": "unchecked"
+      },
+      "researched_by": "batch r3, agent J01-GENERALS",
+      "variant_of": "generals.usa.chinook",
+      "fit_notes": [
+        {
+          "path": "abilities/1/patterns",
+          "used": "drop-in-from-above",
+          "wanted": "a pattern for clearing an occupied building from above: troops dropped onto it kill the soldiers inside, at a cost in attackers, and then hold it",
+          "note": "drop-in-from-above covers only the arrival on a chosen spot; nothing in the registry covers clearing and taking over an enemy-held garrison, the very button the Shared mechanics convention names as doing more than the enter key."
+        }
+      ]
+    }
+  ]
+}

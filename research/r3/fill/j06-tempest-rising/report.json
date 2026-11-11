@@ -1,0 +1,360 @@
+{
+ "label": "j06-tempest-rising",
+ "game": "tempest-rising",
+ "file_written": "data/units/tempest-rising.json",
+ "units": [
+  "tempest-rising.gdf.shieldmaiden",
+  "tempest-rising.dynasty.line-officer"
+ ],
+ "validator_result": "OK. node scripts/validate.mjs . reports no errors and no ATYPICAL lines for either unit. The only warnings about these units are expected: repair-allies source_units out of date (the merge pass runs sync-patterns), and rally-allies is planned, not filled in yet. node scripts/format-json.mjs data/units/tempest-rising.json was run first. Before the final pass the validator rejected both memorable lines for being over 200 characters, so I shortened them.",
+ "copy_check_result": "Exit 0, 'OK: no shared runs'. Command: node scripts/copy-check.mjs . with --only wiki/Shieldmaiden, wiki/Vehicle_Bay, wiki/Missile_Interference, wiki/Repair_Turret, view/680754149992699178, wiki/Line_Officer, wiki/Dynasty_Barracks, view/696524994028504915, wiki/Veterancy and wiki/Status_effect. 12 pages were in scope and all came from the cache. The first run flagged one 6-word run in the Shieldmaiden's sources/2/note, shared with the Missile Interference page; I rewrote it and the re-run passed. No PDF is cited. As an extra check, a script compared all prose against every cached Tempest Rising wiki page and Steam post, cited or not. It found two incidental runs (a generic tank phrase shared with the Hunter Tank page, and a run of unit names). I reworded both and the script is now clean.",
+ "hesitations": [
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "roles/primary",
+   "chosen": "anti-air",
+   "alternatives": [
+    "support"
+   ],
+   "reason": "The rule was clear here. The build tooltip (official, copied on the Vehicle Bay page) names two roles: 'Defensive support unit' (support, whose requires the Repair Turret meets) and an anti-air label on the main weapon (the registry says such a label names the unit's role). Step 1's tie-break takes the role whose target the main weapon has a bonus against: the laser can hit only Air, which step 4 counts as a bonus. Support has no target, so it cannot win."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "roles/secondary",
+   "chosen": "[support, scout]",
+   "alternatives": [
+    "[support] with the second slot left empty",
+    "disabler (fails requires: the Missile Interference aura has no pattern; a passive perk also supports no roles.secondary step)"
+   ],
+   "reason": "Support is step 1 (the tooltip says support unit; so do the 5 August 2025 notes). Scout enters at step 5 only, through the acquired laser that the Pinpoint Weaknesses doctrine makes mark. The rules count doctrines and acquired weapons at step 5, but it is a stretch to call it a scout for marking aircraft under a side-wide doctrine."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "armament/1",
+   "chosen": "an acquired weapon entry, 'FLASHPOINT Laser (Pinpoint Weaknesses)', with traits anti-air and mark, no patterns, and the doctrine named in condition",
+   "alternatives": [
+    "mention the doctrine only in armament/0's summary",
+    "a passive ability with source commander-power linking mark-target (rejected: mark-target mirrors the mark trait, and a weapon effect takes the term)"
+   ],
+   "reason": "The registry note says Pinpoint Weaknesses ('lasers mark') is recorded on each unit it names, with source commander-power. A weapon has no source field, and the acquired slot's definition names bought upgrades, research and ranks, not commander powers. The doctrine is not bought at a building or on the unit, so no upgrade-in-field."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "armament/0/delivery",
+   "chosen": "beam",
+   "alternatives": [
+    "hitscan"
+   ],
+   "reason": "The rule was clear but the source was not. No page says how the shot travels, so the laser family's default (beam) applies; rate of fire and name do not count as saying. The notes speak of damage 'per shot' and the infobox gives a short pause between shots, so it fires pulses; hitscan would fit if each pulse is read as instant light."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "armament/0/mount",
+   "chosen": "slow-turret",
+   "alternatives": [
+    "free-aim"
+   ],
+   "reason": "Aim tie-break step 5: the main turret of a large unit that moves on the ground (hover counts) is slow-turret. Its own turret would be free-aim if the size were medium, so this follows the doubtful body/size."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "body/size",
+   "chosen": "large",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "No size example covers a hovercraft and no page gives a footprint. The stand-in rule's transport-room test gives large (the Skycrane gives every vehicle the same room as the Hunter Tank), but that data cannot tell vehicles apart. The picture looks tank-sized. The rule technically decides it; the evidence is weak."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "body/plan",
+   "chosen": "hull-turret",
+   "alternatives": [
+    "launcher-rack",
+    "box-carrier"
+   ],
+   "reason": "Only the unit page's picture shows the shape: an armoured hull on an air cushion with a laser turret on top. The launcher-rack description names 'mobile anti-air', but the tie-break goes by what the vehicle is built around (an exposed rack or mast), and this is a turreted hull. The source shows the shape only in an image, which cannot be cited."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "abilities/0/patterns",
+   "chosen": "[repair-allies], plus a fit_note asking for a placed-device pattern",
+   "alternatives": [
+    "[deploy-turret, repair-allies], as the task text suggested"
+   ],
+   "reason": "The task text listed deploy-turret, but the batch r3 registry note (Game-wide mechanics, which coders follow) says the Repair Turret only repairs and does not fight, so it is not deploy-turret, and a placed-device need goes in a fit_note. deploy-turret's summary also requires a device that fights."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "abilities/1",
+   "chosen": "a passive, innate ability with patterns [] and a fit_note",
+   "alternatives": [
+    "link leave-hazard-zone",
+    "no ability entry, the effect described in notes only"
+   ],
+   "reason": "abilities[] allows a passive entry for a named perk that adds a mechanic no term covers. leave-hazard-zone is a zone laid on a key and mirrors the zone trait (Granularity), so it does not fit an always-on field. Whether halving enemy fire rate is 'a mechanic' or 'just numbers' could be argued; I treated it as a mechanic because it acts on enemies in an area."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "strengths/4",
+   "chosen": "immune:lay-mines (it sets off no mines)",
+   "alternatives": [
+    "leave mines in mobility.notes only"
+   ],
+   "reason": "The registry says to mention Hover's mine rule in mobility.notes and uncrushability in strengths. It does not forbid a mine-immunity strength, and immune: accepts a pattern id (lay-mines). Not setting off mines is not quite immunity to a mine that someone else sets off."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "weaknesses/1",
+   "chosen": "read the missing armorcannon infobox line as no resistance to cannon fire",
+   "alternatives": [
+    "treat cannon resistance as unknown and leave it out of weaknesses/1 and countered_by/0"
+   ],
+   "reason": "The source is unclear. The template documentation gives no default, and other pages list zero resistances sometimes but not always. I recorded it in uncertain."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "countered_by",
+   "chosen": "[class:vehicle] (reasoned)",
+   "alternatives": [
+    "add class:infantry",
+    "damage:armour-piercing"
+   ],
+   "reason": "No page names a counter. Matchups rule 5 puts the enemy that exploits its gap (no ground attack) in countered_by. Cannon-armed vehicles exploit it most (no cannon resistance). Rifle infantry hurt it slowly (three quarters resisted), so I kept a single entry."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "counters",
+   "chosen": "[class:aircraft]",
+   "alternatives": [
+    "add weapon:rockets or weapon:guided-missiles for the units its aura slows (rejected: it cannot kill ground rocket units, so that point went to combos/0)"
+   ],
+   "reason": "Matchups rule 1(3) says a link must not cover units the reason is false for: a weapon:rockets link would include ground rocket units, which it only slows and cannot beat."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "combos/1",
+   "chosen": "role:anti-air (reasoned from the 1.9.0 notes' call for mixed compositions)",
+   "alternatives": [
+    "leave it out, since the notes name no units"
+   ],
+   "reason": "The notes ask for 'mixed compositions for air defense' without naming partners. I read that as other anti-air units, recorded it as reasoned, and added an uncertain entry."
+  },
+  {
+   "unit": "tempest-rising.dynasty.line-officer",
+   "path": "armament/0/family",
+   "chosen": "sniper",
+   "alternatives": [
+    "small-arms"
+   ],
+   "reason": "The two tie-breaks pull apart. The small-arms or sniper tie-break makes it sniper when the game gives it the sniper damage category (its w1_type is Sniper). The small-arms or machine-gun tie-break says pistols are always small arms, but that tie-break settles another pair. Family affects only flavour scoring (allied would score 1, still under 2) and the anti-infantry clause."
+  },
+  {
+   "unit": "tempest-rising.dynasty.line-officer",
+   "path": "roles/primary",
+   "chosen": "assault (roles.primary step 5)",
+   "alternatives": [
+    "anti-infantry (step 4)",
+    "marksman (fails: the pistol reaches only medium)"
+   ],
+   "reason": "Step 1: the tooltip names no role ('combat support' means firepower; 'boost' is no buffer alias). Step 3: marksman needs long reach. Step 4: the only strength words are the wiki's Weaponbox ('devastating damage against infantry'), which is not official, and the pre-launch official site could not be read. So step 5 gives assault at medium speed. Official text from the old site could change this."
+  },
+  {
+   "unit": "tempest-rising.dynasty.line-officer",
+   "path": "roles/secondary",
+   "chosen": "[buffer (step 2: Inspire Troops, Supervise Crew), anti-infantry (step 3)]",
+   "alternatives": [
+    "[buffer] alone"
+   ],
+   "reason": "Anti-infantry rests on roles.secondary's clause 'small arms (rifles, pistols, machine guns, shotguns) that do little to vehicles'. The weapon is a pistol, and vehicles resist half to three quarters of Sniper damage, but its family is coded sniper. It is unclear whether the clause reads the weapon kind or the family term."
+  },
+  {
+   "unit": "tempest-rising.dynasty.line-officer",
+   "path": "armour/class",
+   "chosen": "unarmoured",
+   "alternatives": [
+    "light"
+   ],
+   "reason": "Step 1 (armour_map: Infantry to unarmoured), and the registry note says the label is enough for the class. His game data resists a quarter of rifle, explosive, fire and sniper damage where the Field Scout resists none, which the soldier rule's 'tougher infantry armour ... attribute' could read as light."
+  },
+  {
+   "unit": "tempest-rising.dynasty.line-officer",
+   "path": "abilities/1/patterns",
+   "chosen": "[] with a fit_note",
+   "alternatives": [
+    "rally-allies",
+    "passenger-sets-weapon",
+    "earn-veterancy"
+   ],
+   "reason": "Each alternative fails the same-interaction-and-counterplay test. rally-allies is an aura or timed call around the buffer; earn-veterancy is rank earned by fighting; passenger-sets-weapon changes a vehicle's weapon or job, not its rank. Here one vehicle is promoted while he rides, and he survives its destruction."
+  },
+  {
+   "unit": "tempest-rising.dynasty.line-officer",
+   "path": "countered_by/2",
+   "chosen": "class:infantry (massed rifle infantry at equal cost; reasoned)",
+   "alternatives": [
+    "class:infantry in counters"
+   ],
+   "reason": "Matchups rule 6: with no sourced outcome, place the enemy where the head-on fight at equal cost ends. His price buys several Field Scouts, whose combined rifle fire, from the wiki's figures, kills him while his one shot every few seconds drops only one or two. That sits uneasily with his anti-infantry secondary role."
+  },
+  {
+   "unit": "tempest-rising.dynasty.line-officer",
+   "path": "counters/0",
+   "chosen": "role:engineer (unarmed builders and capturers; reasoned)",
+   "alternatives": [
+    "class:infantry",
+    "an empty list (the validator forbids it for an armed unit)"
+   ],
+   "reason": "The validator needs a counter for an armed unit, and no page names one. Unarmed Engineers, whose health is far below one pistol shot, are the clearest reasoned win."
+  },
+  {
+   "unit": "tempest-rising.dynasty.line-officer",
+   "path": "weaknesses/1",
+   "chosen": "sight:short (reasoned)",
+   "alternatives": [
+    "availability:limited (the specialist cap)",
+    "leave it out"
+   ],
+   "reason": "No official weakness text exists apart from the 2.0.0 survivability note (used in weaknesses/2). His sight is a little over half the reference's, which is a real handicap under fog of war but not a sourced weakness."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "abilities/0/patterns",
+   "used": "repair-allies",
+   "wanted": "a placed-device pattern: a temporary, destructible device that works on its own without fighting (here it repairs vehicles)",
+   "note": "deploy-turret needs a device that fights, and the registry note keeps the Repair Turret off it. repair-allies alone does not show that the repairs come from a timed structure the enemy can shoot. This fit_note is in the file."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "abilities/1/patterns",
+   "used": "none",
+   "wanted": "an always-on aura that slows the fire of one kind of enemy weapon (rocket and missile launchers) around the unit, here only while it stands still",
+   "note": "leave-hazard-zone is a zone laid on a key, and it mirrors the zone trait. No armour model or sensor trait slows enemy fire; interceptor shoots missiles down instead. This fit_note is in the file."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "armament/1/slot",
+   "used": "acquired",
+   "wanted": "a slot or source that can say a commander power (a doctrine) added a weapon effect",
+   "note": "This fit_note is in the file."
+  },
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "armament/1/traits",
+   "used": "mark",
+   "wanted": "a mark that pays out resources when the marked target dies",
+   "note": "In Tempest Rising, Marked gives Intel on the kill and extra damage from Networked weapons. No page describes the team-wide reveal that the mark trait includes. This fit_note is in the file."
+  },
+  {
+   "unit": "tempest-rising.dynasty.line-officer",
+   "path": "abilities/1/patterns",
+   "used": "none",
+   "wanted": "a pattern for boarding a friendly vehicle to raise its rank while aboard, with the rider getting out alive when it is destroyed",
+   "note": "This fit_note is in the file."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Doctrine effects on weapons",
+   "note": "The registry says a doctrine that gives named units a new weapon, button or effect is recorded on each of them 'with source commander-power', but weapons have no source field. The acquired slot also names only bought upgrades, research, ranks and kills, not commander powers. I recorded Pinpoint Weaknesses as an acquired weapon with the doctrine in condition. Because acquired weapons count at roles.secondary step 5, that weapon's mark trait also makes scout a secondary role, which may not be intended."
+  },
+  {
+   "topic": "Small arms or sniper for a pistol",
+   "note": "The small-arms or machine-gun tie-break says pistols are always small arms. The small-arms or sniper tie-break makes a weapon sniper when the game gives it the sniper damage category, as the Line Officer's handgun has. roles.secondary's anti-infantry clause also lists 'pistols' among small arms that do little to vehicles. It is unclear whether that clause still applies once the pistol is coded as the sniper family."
+  },
+  {
+   "topic": "Soldier rule against the registry's 'the label is enough'",
+   "note": "The Line Officer's armour type is Infantry, but his resistances beat the Field Scout's in four damage types. The soldier rule lifts a soldier to light for 'a tougher infantry armour type or attribute'. The Tempest Rising note says the label alone decides the class. I followed the registry."
+  },
+  {
+   "topic": "Task text against registry note for the Repair Turret",
+   "note": "The task text said deploy-turret and repair-allies. The batch r3 registry note (Game-wide mechanics) says the Repair Turret only repairs and is not deploy-turret. I followed the registry and added a fit_note."
+  },
+  {
+   "topic": "Size stand-in using transport room",
+   "note": "On the Skycrane every vehicle takes the same four places, so the room-in-a-transport stand-in calls every Tempest Rising vehicle the same size as the main battle tank (large). Whether data that cannot tell vehicles apart should count is not said."
+  },
+  {
+   "topic": "Mine immunity as a strength",
+   "note": "The registry says to mention Hover's mine rule in mobility.notes and to put uncrushability in strengths. It does not say whether 'does not set off mines' may also be a strength, as immune:lay-mines."
+  },
+  {
+   "topic": "Counters for an armed unit with no sourced matchup",
+   "note": "The validator requires at least one counter for any unit with a harmful weapon. Matchups rule 6 places an enemy where the head-on fight at equal cost ends. For the Line Officer that put massed rifle infantry in countered_by, so the only counter is a reasoned one (unarmed Engineers)."
+  },
+  {
+   "topic": "Passive auras and roles.secondary",
+   "note": "A passive perk (the Missile Interference Aura) is not a button, so no roles.secondary step supports a role from it. A role such as disabler therefore stays out even if a matching control pattern is added later, unless official text names that role."
+  }
+ ],
+ "new_mechanics": [
+  {
+   "unit": "tempest-rising.gdf.shieldmaiden",
+   "path": "abilities/1",
+   "proposed_id": "dampen-enemy-fire-aura",
+   "summary": "An always-on field around the unit makes enemy weapons of one kind, such as rocket and missile launchers, fire at a reduced rate; in the Shieldmaiden's version it works only while the unit stands still. The counterplay is to kill or outrange the emitter, force it to move, or fight with weapons the field does not touch.",
+   "pages": [
+    "https://tempestrising.wiki.gg/wiki/Shieldmaiden",
+    "https://tempestrising.wiki.gg/wiki/Missile_Interference",
+    "https://tempestrising.wiki.gg/wiki/Vehicle_Bay",
+    "https://tempestrising.wiki.gg/wiki/Ability",
+    "https://tempestrising.wiki.gg/wiki/Status_effect"
+   ]
+  },
+  {
+   "unit": "tempest-rising.dynasty.line-officer",
+   "path": "abilities/1",
+   "proposed_id": "join-vehicle-crew",
+   "summary": "Climb into a friendly vehicle (one rider each) and raise it to top rank for as long as you ride; when the vehicle is destroyed the rider gets out alive and can repeat it after a cooldown. The counterplay is to kill the rider before he boards, or to focus or avoid the boosted vehicle and then catch the rider when it dies.",
+   "pages": [
+    "https://tempestrising.wiki.gg/wiki/Line_Officer",
+    "https://tempestrising.wiki.gg/wiki/Veterancy",
+    "https://tempestrising.wiki.gg/wiki/Dynasty_Barracks"
+   ]
+  }
+ ],
+ "pages_read_not_cited": [
+  "https://tempestrising.wiki.gg/wiki/Ability (named in Shieldmaiden uncertain entries)",
+  "https://tempestrising.wiki.gg/wiki/Doctrine (named in Shieldmaiden uncertain entries; also has the Body Armor, Training Regimen and Officers doctrines for the Line Officer)",
+  "https://tempestrising.wiki.gg/wiki/Specialist (named in availability uncertain entries for both units)",
+  "https://tempestrising.wiki.gg/wiki/Status_effect (cited for the Line Officer; named in a Shieldmaiden uncertain entry)",
+  "https://tempestrising.wiki.gg/wiki/Skycrane (named in Shieldmaiden body/size uncertain)",
+  "https://tempestrising.wiki.gg/wiki/Template:UnitBox/doc (named in Shieldmaiden cost_band uncertain)",
+  "https://tempestrising.wiki.gg/wiki/Unit (named in Line Officer uncertain entries)",
+  "https://tempestrising.wiki.gg/wiki/Crushing (named in Line Officer uncertain entries)",
+  "https://tempestrising.wiki.gg/wiki/Field_Scout (named in Line Officer uncertain entries)",
+  "https://tempestrising.wiki.gg/wiki/Dynasty_Guard (named in Line Officer uncertain entries)",
+  "https://tempestrising.wiki.gg/wiki/Hunter_Tank (named in Line Officer countered_by uncertain)",
+  "https://tempestrising.wiki.gg/wiki/Engineer (named in Line Officer counters/0 uncertain)",
+  "https://store.steampowered.com/news/app/1486920/view/505083956845086898 (5 August 2025 notes; named in Shieldmaiden roles/secondary uncertain)",
+  "https://tempestrising.wiki.gg/wiki/Specialist_Bureau",
+  "https://tempestrising.wiki.gg/wiki/Specialist_Pod (redirects to Satellite_Uplink)",
+  "https://tempestrising.wiki.gg/wiki/Damage",
+  "https://tempestrising.wiki.gg/wiki/Repairing",
+  "https://tempestrising.wiki.gg/wiki/Healing",
+  "https://tempestrising.wiki.gg/wiki/Sniper",
+  "https://tempestrising.wiki.gg/wiki/Riot_Van",
+  "https://tempestrising.wiki.gg/wiki/Havoc",
+  "https://tempestrising.wiki.gg/wiki/GDF_Arsenal",
+  "https://tempestrising.wiki.gg/wiki/Dynasty_Arsenal",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.4.0%2B50185",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.5.0%2B51028",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.5.1%2B51139",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.5.1%2B51229",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.6.0%2B53407",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.6.0%2B53654",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.6.0%2B53840",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.7.0%2B55422",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.7.1%2B55792",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.8.0%2B57140",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.8.0%2B57892",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.8.0%2B58218",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.9.0%2B58877",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.9.1%2B59012",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_2.0.0%2B60710",
+  "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_2.0.1%2B60808"
+ ],
+ "source_problems": "1) The old official sites the wiki cites are gone (404 after a 2026 rebuild): tempestrising.com/factions/tempest-dynasty and the GDF page. The wiki cites them for the Line Officer escaping a destroyed vehicle and for the Repair Turret's background. web.archive.org reset the connection through the proxy, though the archive.org availability API shows snapshots exist. Any pre-launch official text about either unit, including strength or weakness wording that could change the Line Officer's primary role, is unread.\n2) Several pages are out of date. The Line Officer page is verified at 1.4.0 and still shows his reach before 2.0.0; the official 2.0.0 notes settle it. Dynasty Barracks is verified at 1.2.0. The Missile Interference, Repair Turret, Veterancy, Status effect, Ability and Specialist pages have no Verified tag.\n3) Pages disagree, and each case is recorded in uncertain with sources_disagree:\n- Repair radius: the Shieldmaiden page's prose gives 5.5 build units, smaller than the 1500 in its ability box and on the Repair Turret page.\n- What the turret repairs: vehicles (Shieldmaiden page), vehicles and structures (Repair Turret page), or vehicles and aircraft (Ability page).\n- Missile Interference strength: a flat halving (Missile Interference and Status effect pages) or an effect that grows the longer a unit stays in it (Ability page).\n- Missile Interference condition: only the Shieldmaiden page's prose says the unit must stand still.\n- Prone: the Status effect page names six units, while the Unit page covers all standard infantry, the Line Officer included.\n4) The Shieldmaiden infobox has a cost.st field that the template documentation does not explain, and it has no armorcannon line, which I read as none.\n5) The Shieldmaiden changelog says patch 1.3.0+48710 'increased' its attack speed, yet the gap between shots went from 0.3 to 0.4 seconds, which reads as slower. I summarised it as 'retimed its shots'.\n6) The Veterancy page gives 1.3 times own cost as the damage needed per rank, while its quoted Discord reference says 1.5. Neither figure is used.\n7) The batch note names only the Tempest Rising Wiki; I did not look for a second established site. So all wiki facts come from one site, and both units' high confidence rests on the build-tooltip copies the registry names as game text, plus the makers' Steam notes."
+}

@@ -1,0 +1,371 @@
+{
+ "label": "j03-generals",
+ "game": "generals",
+ "file_written": "data/units/generals.json",
+ "units": [
+  "generals.china.red-guard",
+  "generals.china.hacker"
+ ],
+ "validator_result": "OK. node scripts/validate.mjs . reports no errors. Neither unit has an ATYPICAL line, so neither has an atypical list. The only warnings are the expected ones: patterns that are still planned, including upgrade-in-field on the Red Guard's Capture Building; pattern source_units out of date for capture-structure and deploy-siege-mode; and unit links to units not researched yet (generals.china.tank-hunter, generals.china.troop-crawler, generals.gla.terrorist, generals.usa.ranger). node scripts/format-json.mjs data/units/generals.json ran cleanly. The first Hacker draft failed the schema's length limits on strengths/0/why (over 300 characters) and memorable (over 200). I shortened both.",
+ "copy_check_result": "Exit 0. I ran: node scripts/copy-check.mjs . --only 'Red_Guard_(Generals_1)' --only 'cnc.fandom.com/wiki/Hacker' --only 'generals.str' --only 'Object/ChinaInfantry.ini' --only 'cncnz.com/games/generals/china-units'. All 5 pages were checked, none was left unchecked, and no runs were found. The first run found 3 runs and I rewrote them: Red Guard strengths/3 and countered_by/3 (both shared with the Red Guard wiki page) and the Hacker's sources/0 note (shared with CNCNZ). Both units also cite the base-game manual PDF, which the copy-check cannot read. I checked it by hand with a 6-word script, <scratch> run against a layout text dump of the PDF split into its columns. The same script also covered the Zero Hour manual dump and every uncited wiki page, INI file and source file I read, plus the cached C&C Wiki, CNCNZ and GitHub pages. It found one run shared with the manual (Red Guard uncertain/1, the bayonet sentence) and three with uncited pages (Red Guard sources/2 note and uncertain/6, and one generic phrase in uncertain/5 that also appears on an unrelated cached Tiberium Wars page). I rewrote all four and the final run found no shared runs.",
+ "hesitations": [
+  {
+   "unit": "generals.china.red-guard",
+   "path": "confidence",
+   "chosen": "medium",
+   "alternatives": [
+    "high"
+   ],
+   "reason": "The High or Medium tie-break applies only when no official text settles a contradicted point. On the bayonet, the official manual (and CNCNZ, which repeats it) says one thing, while the wiki and the 1.04 data say the opposite. I read the outdated manual as not settling it, because the game data contradict it. The point decides whether the unit has a second weapon entry, so I dropped to medium. If the manual counts as settling the point, the level would be high, but the entry would then need a bayonet weapon."
+  },
+  {
+   "unit": "generals.china.red-guard",
+   "path": "armament",
+   "chosen": "one weapon only (the rifle); no bayonet entry",
+   "alternatives": [
+    "a second weapon: melee weapon family, melee delivery, the bayonet from the manual"
+   ],
+   "reason": "The rule is clear but the sources are not: official text (manual p34) against the wiki's trivia and the 1.04 weapon set, command set and Weapon.ini. Recorded in uncertain with sources_disagree."
+  },
+  {
+   "unit": "generals.china.red-guard",
+   "path": "roles/secondary",
+   "chosen": "[engineer] at step 5 (the Capture Building upgrade)",
+   "alternatives": [
+    "empty"
+   ],
+   "reason": "The engineer tie-break asks for enemy buildings taken over and kept. Capture Building does that, but only after an upgrade, so engineer ranks at step 5 rather than step 2."
+  },
+  {
+   "unit": "generals.china.red-guard",
+   "path": "abilities/1/kind",
+   "chosen": "channel",
+   "alternatives": [
+    "active"
+   ],
+   "reason": "Active or Channel tie-break: the capture runs a long time and the Capture building page says moving or dying ends it, which is channel's 'stops if you move or are interrupted'. Read as a timed action that runs to its end, it would be active."
+  },
+  {
+   "unit": "generals.china.red-guard",
+   "path": "abilities/1/cooldown",
+   "chosen": "medium",
+   "alternatives": [
+    "short"
+   ],
+   "reason": "The rule was clear: SpecialPower.ini and CNCNZ both give 15 s, exactly on the short/medium edge, and an edge value takes the higher band."
+  },
+  {
+   "unit": "generals.china.red-guard",
+   "path": "abilities/0/patterns",
+   "chosen": "none, with a fit_note",
+   "alternatives": [
+    "rally-allies"
+   ],
+   "reason": "The registry's Generals notes and the task say no pattern. research/registry-notes/patterns.md folds the horde bonus into rally-allies, but the pattern-links convention says the pattern's summary wins over that note, and rally-allies needs one unit that raises the others."
+  },
+  {
+   "unit": "generals.china.red-guard",
+   "path": "strengths/2",
+   "chosen": "weapon:small-arms (reason: faster fire in a horde)",
+   "alternatives": [
+    "leave the horde out of strengths",
+    "unit:generals.china.red-guard"
+   ],
+   "reason": "The horde passive has no pattern to link, so the strength hangs on the part it boosts. No rule names a link for a passive that has no pattern."
+  },
+  {
+   "unit": "generals.china.red-guard",
+   "path": "countered_by",
+   "chosen": "6 entries, keeping unit:generals.usa.ranger beside weapon-trait:splash",
+   "alternatives": [
+    "5 entries without the unit link"
+   ],
+   "reason": "Matchups rule 7 says about two to five as a guide, not a cap. Rule 3 allows a unit: link for a same-game rival the source names (the wiki singles out the Ranger's flash-bangs) beside the word-list link."
+  },
+  {
+   "unit": "generals.china.red-guard",
+   "path": "armament/0/family",
+   "chosen": "small-arms",
+   "alternatives": [
+    "machine-gun"
+   ],
+   "reason": "The rule was clear: the small arms or machine gun tie-break says rifles are always small arms, and the manual and wiki call it a bolt-action rifle. Only the internal 1.04 weapon name says machine gun, and names do not decide families."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "roles/primary",
+   "chosen": "logistics (step 1)",
+   "alternatives": [
+    "no role at step 1, going on to step 2 (unarmed: logistics or infiltrator by the main action)"
+   ],
+   "reason": "Whether the Purpose entry 'Collect Funds' names logistics through its alias collector is a reading the registry note makes and asks to be recorded at roles. The roles rule alone would leave it open, because 'Collect' is a verb form and the alias is a noun."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "roles/secondary",
+   "chosen": "[infiltrator] at step 2 (Disable Building)",
+   "alternatives": [
+    "empty",
+    "disabler (fails requires; recorded only here)"
+   ],
+   "reason": "Infiltrator's description names shutting down buildings, but the engineer/infiltrator/logistics tie-break says sabotage 'from inside'. The Hacker hacks from a short distance with a virus. I read the virus as sabotage from inside the building's systems. Disabler fails its requires (no control pattern, no stun or silence trait) and its tie-break is about units, so I added no fit_note for it."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "abilities/0/kind",
+   "chosen": "channel",
+   "alternatives": [
+    "active",
+    "deploy"
+   ],
+   "reason": "The building stays down only while he keeps hacking, and a new order or his death ends it, which fits the Active or Channel tie-break. He also stands still with his laptop unpacked, but the Toggle or Deploy tie-break is about two-state modes, not a targeted hack."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "abilities/0/patterns",
+   "chosen": "capture-structure",
+   "alternatives": [
+    "capture-structure plus disable-machine"
+   ],
+   "reason": "The task asks for the 'sabotage variant', but capture-structure has no variant with that id. The nearest are switch-off (stops a function for a time) and hack-from-range (works from a short distance). Source units record pattern ids only, so no variant is stored. disable-machine is for vehicles and drones, not buildings."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "abilities/0/cooldown",
+   "chosen": "spam",
+   "alternatives": [
+    "leave cooldown out (a lasting hack with almost no wait)"
+   ],
+   "reason": "SpecialPower.ini gives a 0.5 s reload and the cited CNCNZ page gives 4 s. Both band as spam, so I recorded the disagreement with sources_disagree. Neither the cooldown rule nor the channel kind says whether a near-instant re-arm counts as 'no wait'."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "abilities/1/patterns",
+   "chosen": "[deploy-siege-mode] plus a fit_note for the income",
+   "alternatives": [
+    "[deploy-siege-mode, gather-resources] as on the Slave Miner",
+    "[] with a fit_note"
+   ],
+   "reason": "Pattern-link test: deploy-siege-mode's summary covers a stationary mode that 'works only while it stays put'. gather-resources rests its interaction and counterplay on a field, a route and a drop-off, and the Hacker has none of them."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "abilities/1/kind",
+   "chosen": "deploy",
+   "alternatives": [
+    "channel",
+    "toggle"
+   ],
+   "reason": "Toggle or Deploy tie-break: he cannot move in the hacking state and must pack up first (HackInternetAIUpdate.cpp)."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "mobility/traits",
+   "chosen": "[deploy-anchor]",
+   "alternatives": [
+    "[]"
+   ],
+   "reason": "deploy-anchor reads 'stops to enter a stronger stationary mode'. The hacking mode is only for income, not stronger in a fight. The pattern's generator implies the trait, and every deploy ability in the worked examples carries it, so I followed them."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "modes",
+   "chosen": "one mode, 'hacking', via deploy-siege-mode, with no mobility block",
+   "alternatives": [
+    "no modes"
+   ],
+   "reason": "Modes cover 'deploy, siege and transform modes'. Every deploy example in the data has one, so I added it. The mode summary says he cannot move."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "abilities/1/patterns (earn-veterancy)",
+   "chosen": "not linked; the ranking-by-hacking and the rising pay are in the summary",
+   "alternatives": [
+    "add earn-veterancy"
+   ],
+   "reason": "The registry says veterancy is game-wide and that a unit ranking through its own action says so in that ability's summary. Paired entries links earn-veterancy only for a weapon that comes with a rank."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "abilities/1/cooldown",
+   "chosen": "left out",
+   "alternatives": [
+    "spam"
+   ],
+   "reason": "The rule was clear: a mode switch that only takes time has no band, and CNCNZ lists it as instant."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "weaknesses/0",
+   "chosen": "having no weapon hangs on armour-class:unarmoured",
+   "alternatives": [
+    "pattern:capture-structure (the ability that is its only tool)",
+    "body:humanoid (the laptop as a device)"
+   ],
+   "reason": "Matchups rule 5 allows several hooks for a unit with no weapon. The Hacker has two tools, so neither ability is 'the' only tool."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "countered_by/3",
+   "chosen": "class:aircraft",
+   "alternatives": [
+    "leave it out"
+   ],
+   "reason": "The Hacker page names only infantry, vehicles and toxins. Aircraft rest on matchups rule 5 (nothing he has reaches them) and on the uncited Super hacker page, which is about the Infantry General's version and says it otherwise behaves like the normal Hacker."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "combos",
+   "chosen": "unit:generals.china.hacker (from the ZH manual) plus two reasoned escorts, role:anti-infantry and role:anti-armour",
+   "alternatives": [
+    "empty combos",
+    "only the self-link",
+    "one escort"
+   ],
+   "reason": "The self-link needs sources saying the unit works best in numbers. The ZH manual says so only for Hackers inside the Internet Center. The escorts are reasoned from the tooltip's weak line and the wiki's warning that Hackers need protection, which the matchups rule allows when the entry is marked reasoned."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "confidence",
+   "chosen": "high",
+   "alternatives": [
+    "medium"
+   ],
+   "reason": "High or Medium tie-break. The cited pages contradict each other on how fast payments come and how long the hack button takes to re-arm, but neither decides a term (the cooldown is spam either way). The cited official text includes the manual row and the tooltip through a faithful copy."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "cost_band",
+   "chosen": "low (625)",
+   "alternatives": [
+    "medium (the Tank General's 780)"
+   ],
+   "reason": "The rule was clear: the registry uses the main faction's list price. The Tank General's surcharge is in the basis."
+  }
+ ],
+ "gaps": [
+  {
+   "unit": "generals.china.red-guard",
+   "path": "abilities/0/patterns",
+   "used": "none",
+   "wanted": "a pattern for a group bonus that each member earns by standing close to enough others of its kind (horde or swarm bonus), with no unit that hands it out",
+   "note": "rally-allies needs one unit that raises the others (an aura or a timed call). Recorded as a fit_note."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "abilities/1/patterns",
+   "used": "deploy-siege-mode",
+   "wanted": "a pattern for income earned in place: set up anywhere, with no field, haul or drop-off, and trickle team money while staying put, more as the unit ranks up",
+   "note": "deploy-siege-mode covers only the planting. gather-resources depends on a field, a route and a drop-off, and rob-it takes money from an enemy structure. Recorded as a fit_note."
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "combos",
+   "used": "no link for the Internet Center",
+   "wanted": "a link kind for a friendly building a unit works with",
+   "note": "The hints, the Academy text and the ZH manual pair Hackers with the Internet Center (up to eight inside, faster earning). Typed links name units, and target:structure is only for enemy buildings in counters and countered_by, so the pairing is described in abilities/1 and strengths/0 instead. Recorded as a fit_note."
+  }
+ ],
+ "unclear_rules": [
+  {
+   "topic": "Confidence tie-break with outdated official text",
+   "note": "The High or Medium tie-break applies when 'no official text settles' a contradiction. On the Red Guard's bayonet, official text (the 2003 manual) contradicts the wiki and the 1.04 game data. The rule does not say whether official text the game data disprove still 'settles' the point. If it does, the entry should keep a bayonet weapon at high confidence. I coded medium with no bayonet."
+  },
+  {
+   "topic": "Pattern variants named in a task",
+   "note": "The task asked for capture-structure's 'sabotage variant', but the pattern has no variant with that id (the nearest are switch-off and hack-from-range), and the source-unit schema has no field to record a variant. Only the pattern id is stored."
+  },
+  {
+   "topic": "Infiltrator 'from inside' for remote hacks",
+   "note": "The engineer/infiltrator/logistics tie-break gives infiltrator for sabotage 'from inside'. A hacker who shuts a building down with a virus from a short distance is not covered either way. The role's own description ('shuts down buildings') fits, so I read the virus as from inside."
+  },
+  {
+   "topic": "deploy-anchor for a non-combat stationary mode",
+   "note": "The trait says 'a stronger stationary mode', while the deploy-siege-mode summary also covers 'a field or building that works only while it stays put'. It is unclear whether an income-only set-up (the Hacker's laptop) takes the trait. I followed the pattern and the Slave Miner precedent."
+  },
+  {
+   "topic": "Cooldown of a lasting channelled hack",
+   "note": "The Hacker's building hack re-arms in half a second (CNCNZ: four seconds) but keeps running while he stays at it. The cooldown rule does not say whether a near-instant re-arm on a channel counts as 'no wait' (leave it out) or as spam."
+  },
+  {
+   "topic": "new_mechanics when a pattern covers only part of an ability",
+   "note": "The report schema describes new mechanics as abilities left with an empty patterns list. Hack Internet links deploy-siege-mode for the planting, but its core mechanic (income in place) has no pattern, so I listed it in new_mechanics anyway."
+  },
+  {
+   "topic": "Horde bonus wording in the registry",
+   "note": "The Generals game-wide note says the bonus comes with 'at least four other allied soldiers of any kind'. EA's HordeUpdate.cpp counts only allied units that carry a horde module of their own and match its infantry kind, and the wiki's Horde Bonus page agrees. The Red Guard entry follows the code and records the difference in uncertain."
+  },
+  {
+   "topic": "Ranking through an ability",
+   "note": "The registry asks that ranking by hacking be stated in the ability summary. It does not say whether an innate ability whose output rises with rank should also link earn-veterancy; Paired entries ties that link only to weapons that come with a rank. I did not link it."
+  }
+ ],
+ "new_mechanics": [
+  {
+   "unit": "generals.china.red-guard",
+   "path": "abilities/0",
+   "proposed_id": "group-up-for-bonus",
+   "summary": "Each member of certain unit types fires faster while enough other members stand close by, and none of them grants the bonus to the rest, so the strength comes from staying in a crowd. Counterplay: splash and area weapons such as flash-bang grenades punish the clump, and picking off members or splitting the group breaks the count.",
+   "pages": [
+    "https://cnc.fandom.com/wiki/Horde_Bonus",
+    "https://cnc.fandom.com/wiki/Red_Guard_(Generals_1)",
+    "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Update/HordeUpdate.cpp",
+    "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b8/Command_and_Conquer_-_Generals_-_UK_Manual_-_PC.pdf/revision/latest"
+   ]
+  },
+  {
+   "unit": "generals.china.hacker",
+   "path": "abilities/1",
+   "proposed_id": "earn-income-in-place",
+   "summary": "The unit sets up anywhere, with no resource field, haul or drop-off, and sends its team a steady trickle of money for as long as it stays put; it earns more per payment as the work ranks it up. Counterplay: find and kill the stationary, defenceless earner or catch it while it packs up, because there is no route or bank to raid, only the unit itself.",
+   "pages": [
+    "https://cnc.fandom.com/wiki/Hacker",
+    "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/ChinaInfantry.ini",
+    "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Update/AIUpdate/HackInternetAIUpdate.cpp",
+    "https://cncnz.com/games/generals/china-units/"
+   ]
+  }
+ ],
+ "pages_read_not_cited": [
+  "https://cnc.fandom.com/wiki/Horde_Bonus",
+  "https://cnc.fandom.com/wiki/Capture_building",
+  "https://cnc.fandom.com/wiki/Garrisoning",
+  "https://cnc.fandom.com/wiki/Super_hacker",
+  "https://cnc.fandom.com/wiki/Internet_center",
+  "https://cnc.fandom.com/wiki/Mini-Gunner_(Zero_Hour)",
+  "https://cnc.fandom.com/wiki/Red_Guard",
+  "https://cnc.fandom.com/wiki/Chinese_barracks",
+  "https://cnc.fandom.com/wiki/Nationalism",
+  "https://cnc.fandom.com/wiki/Patriotism",
+  "https://cnc.fandom.com/wiki/Propaganda_center_(Generals_1)",
+  "https://cnc.fandom.com/wiki/Red_Guard_training",
+  "https://cnc.fandom.com/wiki/Satellite_hack",
+  "https://cnc.fandom.com/wiki/Shin_Fai",
+  "https://cnc.fandom.com/wiki/Stealth",
+  "https://cnc.fandom.com/wiki/Tank_hunter_(Generals_1)",
+  "https://cnc.fandom.com/wiki/Troop_crawler",
+  "https://cnc.fandom.com/wiki/Veterancy",
+  "https://cnc.fandom.com/wiki/Flash-bang_grenades",
+  "https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b1/CNC_Generals_Zero_Hour_Manual_2015.pdf/revision/latest",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandButton.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Armor.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Locomotor.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/SpecialPower.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Upgrade.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/GameData.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Default/Object.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AmericaInfantry.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/FactionBuilding.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/InfantryGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/NukeGeneral.ini",
+  "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/TankGeneral.ini",
+  "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Update/HordeUpdate.cpp",
+  "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Update/AIUpdate/HackInternetAIUpdate.cpp",
+  "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Update/SpecialAbilityUpdate.cpp",
+  "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/Common/RTS/Player.cpp",
+  "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Object.cpp"
+ ],
+ "source_problems": "Contradictions between sources, all recorded in uncertain with sources_disagree where they apply:\n(1) Red Guard bayonet: the base-game manual (p34) and CNCNZ give him a bayonet for close fighting. The wiki's trivia says it was cut, and the 1.04 files have no bayonet in his weapon set or command set. This drops the Red Guard to medium.\n(2) Hacker income rate: the wiki says payments come faster at each rank, up to one a second at Heroic, and CNCNZ gives the base income per second. The 1.04 Object file and EA's HackInternetAIUpdate.cpp keep one fixed interval (two seconds, shorter only inside a building) and raise only the amount per payment, 5/6/8/10.\n(3) Hacker building-hack cooldown: SpecialPower.ini gives 0.5 s and CNCNZ gives 4 s. Both band as spam.\n(4) Horde bonus: the registry's game-wide note says 'four other allied soldiers of any kind'. HordeUpdate.cpp and the wiki's Horde Bonus page count only Mini-Gunners, Tank Hunters and Red Guards. The Red Guard wiki's strategy text also has Red Guards keeping Battlemasters horded, which the code and the Horde Bonus page contradict.\nAccess problems: the manual PDFs cannot be read by the copy-check, so I checked them by hand through layout text dumps. The cached manual PDFs were raw binary and had to be downloaded again for text extraction (pdftotext) in the first session. No page fetch failed in this session; all 5 copy-check pages came from the cache.\nProcess note: a usage-limit restart happened after the Red Guard was written. Work resumed from the progress notes, and the Red Guard was re-validated and copy-checked in this session."
+}

@@ -1,0 +1,136 @@
+{
+ "generals": {
+  "changes": "Every skeptic correction was re-checked in the local copies of the 1.04 INI files, string table and EA code and held, so no page was fetched again.\n- Applied V5, V10, V16, V18, V20, V22, V26, V27, V28, V30, V33, V38, V39 and V41, and added M0-M9. The Toxin Tractor's Heroic weapon goes in the stock weapon's summary (same damage name and reach, so a numbers-only change, not a weapon linking earn-veterancy); the Pilot's slower Heroic speed is left out (Pilots are not researched).\n- Own checks added: the 82 HELP: hints in the 1.04 string table (also in the binary csf) are official text (the Emperor's adds infantry to its strong targets, the Toxin Terrorist's is its only target text, one is out of date). Zero Hour units with no tooltip opening line now read their Zero Hour manual entry at roles step 1, as games-r1.md does for RA1 and RA3, instead of getting nothing (Microwave and ECM Tank: disabler; the ECM Tank, a batch candidate, is disabler through step 2 either way). Manual role words count at roles.secondary step 1. The Combat Cycle is off the immune:crush list (it is crushable like any ground vehicle; only the heroes' SquishCollide is commented out). Salvage crates stay out of on_death.notes. Three generals get a free promotion unit, two of them change band.\n- Ids follow the in-game DisplayName, so the old examples crusader-tank and emperor-overlord become crusader and emperor; 11 generals' units with names of their own are units of their own; five versions (not ten) have tooltip text of their own.\n- Cut background and what the field rules already say (transport seats, the atypical line for lasers, unranked bands); split long sentences.\n- Registry: sight_reference replaced, with the skeptic's two caveats; two sources added (the 0.35 threshold put on GameData.ini, StealthDetectorUpdate.cpp added). The MOLOTOV_COCKTAIL finding needs no edit: the key stays fire for the Molotovs, and the guns and rocks get a step-3 exception in the notes. validate.mjs on a copy with the edits prints OK.\n- No Generals unit is coded yet (data/units holds only ra1 to ra3), so nothing recodes. Six-word copy-check: only URL and file-name hits.",
+  "open_questions": [
+   "Generals tier map (choice 1 in research/registry-notes/games-r3.md). Keep the current map, or move the tech building to t2? Now: basic production t1; a General's Promotion alone t2 (Paladin, Stealth Fighter and Marauder at 1-star, Pathfinder at 3-star); the one tech building per side (Strategy Center, Propaganda Center, Palace), alone or with a promotion, t3. Facts from the 1.04 files: the tech building is one step past a factory and also opens the superweapon; every player starts at rank 1 with one point to spend, so a 1-star unit can come in the first minute; of the wiki pages read, only the Overlord, Hacker and Super hacker infoboxes give a tier (3), and the Marauder's (2). Two of choice 1's t3 examples are wrong: the Avenger needs only the War Factory and the Saboteur only the Barracks with an Arms Dealer standing, so both are t1 under either map. Choice 2 is short by one: besides the Air Force General's Stealth Fighter (t2 to t1), the Stealth General's Hijacker needs only the Barracks (t3 to t1); both are recorded under the main faction, so the bands stay and tier.basis names the exception. Options: A keep the map; B tech building alone t2, tech building plus a promotion t3, promotion alone t2 (t3 would then hold only the Nuke Cannon, SCUD Launcher and Hijacker). Recommendation: A. The tech building is each side's top tech (it opens the superweapons), which fits t3's 'top-level tech'; the wiki's own labels agree; B leaves t3 almost empty. No Generals unit is coded yet, so either choice recodes nothing.",
+   "Should Generals' laser weapons count as energy damage, as the Tempest Rising note makes every laser? In the 1.04 data the Laser Tank's gun carries ARMOR_PIERCING and the Avenger's anti-air lasers SMALL_ARMS, so armament[].damage step 4 makes them armour-piercing and kinetic, and the laser family's rule (energy or fire only) is broken and recorded in atypical. Options: A follow the damage map (the notes as written: no laser exception); B add a step-3 exception that records every Generals laser weapon as energy. Recommendation: A. The mapped types keep the game's counterplay: the Avenger's lasers are built to down light aircraft, which kinetic is strong against and energy is not, and armour-piercing and energy read the same against tanks. It affects the Avenger, a candidate of this batch, and the Laser Tank. The Angry Mob's guns and rocks, whose MOLOTOV_COCKTAIL name would make them fire, get a step-3 exception to kinetic either way, because that name says they burn and they do not.",
+   "Do the base-game manual's Purpose entries count for the Zero Hour generals' versions of a unit (Uncertain item 'Purpose lines and the generals' in research/registry-notes/games-r3.md)? Official text counts for a unit recorded once for several sides only when every side's version carries it, and the 2003 manual predates the nine generals. Options: A yes: a version keeps the main unit's in-game name and is the unit the manual describes, so its Purpose entry counts for every version (the notes as written); B no: roles step 1 would then skip the Purpose entry of nearly every base-game unit, since most are also fielded by a general. Recommendation: A, because B would throw away the game's main role text for almost every unit. A general's unit of its own (its own in-game name, such as the Laser Tank or the Toxin Rebel) has no Purpose entry either way and reads its build tooltip."
+  ],
+  "registry_edits": [
+   {
+    "path": "/sight_reference",
+    "op": "replace",
+    "reason": "Confirmed wrong (skeptic verdict on the sight_reference finding). The Ranger's 100 and 400 are its VisionRange and ShroudClearingRange in the 1.04 files, and the engine clears the fog only out to ShroudClearingRange; VisionRange is the targeting range and, for detectors with no detection range of their own, the detection radius. A one-figure infobox is usually the fog figure (the Angry Mob's members are 150 and 150), so comparing it with 100 mixes two scales; the skeptic's caveat (the Biohazard Technician page lists only its vision figure) is why the text sends one-figure units to the Object file.",
+    "value": "Ranger: sight 100-400 in the wiki infobox, which are the VisionRange (100) and ShroudClearingRange (400) of its object in the unedited 1.04 files. The engine clears the fog of war out to ShroudClearingRange; VisionRange clears no fog (it is how far the unit targets and, for a detector with no detection range of its own, how far it reveals stealthed units). So use 400, and the second figure of every unit that lists two. Where the infobox lists one figure, read ShroudClearingRange in the unit's 1.04 Object file; an object without one clears the fog to its VisionRange"
+   },
+   {
+    "path": "/sources/4",
+    "op": "add",
+    "reason": "Confirmed missing: no current source backs the engine figures behind speed_reference and sight_reference (the runbook asks for an engine check of the speed reference).",
+    "value": {
+     "url": "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/AmericaInfantry.ini",
+     "title": "AmericaInfantry.ini, unedited Zero Hour 1.04 game files, TheSuperHackers' GeneralsGamePatch repository on GitHub",
+     "kind": "database",
+     "accessed": "2026-10-24",
+     "version": "Zero Hour 1.04",
+     "supports": [
+      "speed_reference",
+      "sight_reference",
+      "range_reference"
+     ],
+     "note": "The Ranger's object: locomotor BasicHumanLocomotor, VisionRange 100, ShroudClearingRange 400, BuildCost 225, main weapon RangerAdvancedCombatRifle. In the same folder, Locomotor.ini gives that locomotor Speed 20 and SpeedDamaged 10 (the Rebel uses it too; the Red Guard's own locomotor is 25), and Weapon.ini gives the rifle AttackRange 100 and the flash-bang weapon 175."
+    }
+   },
+   {
+    "path": "/sources/5",
+    "op": "add",
+    "reason": "Confirmed missing: the code that shows which sight figure clears the fog and that the listed Speed is the real top speed. The 0.35 threshold is attributed to GameData.ini, as the skeptic corrected (ActiveBody.cpp only compares health with it), and the detection-radius use of VisionRange is added from StealthDetectorUpdate.cpp.",
+    "value": {
+     "url": "https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Object.cpp",
+     "title": "Object.cpp, Command & Conquer: Generals - Zero Hour source code, Electronic Arts on GitHub",
+     "kind": "official",
+     "accessed": "2026-10-24",
+     "supports": [
+      "speed_reference",
+      "sight_reference"
+     ],
+     "note": "A new object whose ShroudClearingRange is unset takes its VisionRange instead. The look routine lifts the fog of war for the owner and its allies out to the shroud-clearing figure; the vision figure is how far the object counts as a target or a threat, not a fog figure. Riders in transports and tunnels do not look. Other files of the same release: Source/GameLogic/Object/Update/StealthDetectorUpdate.cpp (a detector with no DetectionRange of its own detects out to its VisionRange); Source/Common/INI/INI.cpp with Include/Common/GameCommon.h (a Speed in the INI files is a distance per second, turned into a step per logic frame at 30 frames a second); Source/GameLogic/Object/Locomotor.cpp (a walking soldier speeds up to its Speed, slowing only to turn or stop, and moves at SpeedDamaged once ActiveBody.cpp finds its health at or below GameData.ini's UnitReallyDamagedThreshold, 0.35); Source/GameLogic/Object/Update/PhysicsUpdate.cpp (no forward friction acts while a unit drives itself, so the listed Speed is its real top speed)."
+    }
+   }
+  ],
+  "removed_lines": 29
+ },
+ "tempest-rising": {
+  "changes": "Applied every confirmed correction: V5 (one rule for step 1, below), V7 (Arsenal list completed; five rows only reworded), V9 (the Drone Mauler, not its drones), V12, V14 (the Augur's control names disabler, kept only if its requires pass), V20 (Ground read through can_target), V26 (prone: both pages, uncertain entry), V27 (Hover holders from unit pages), V29 (Repair Turret is repair-allies, not deploy-turret), V40 (Tempest Shielded and Reliable Systems holders; Warden uncertain), V43 (Consecrated perks; the Luminary's and Vimana's own buttons), V45 and V46 (Progenesis and Arcing holders; doctrine-only Arcing), V49 (pads only for the five ammo aircraft), V53, V54, V59 (Omni list), V68 (the copied run reworded), and the optional additions of V0, V1, V3, V44 and V66. Added all 13 missing items; M8 needs no registry edit because no Mercenary Outpost unit is a candidate, and M9's turret doctrine is left out (structures only).\nDecisions where the evidence was not plain (pages checked from the skeptic's downloads):\n- V5: step 1 reads the build tooltip for every GDF and Dynasty unit. The July 2024 TactiCon type lines come from a demo post nine months before launch, so they count like the other pre-launch posts (roles.secondary step 1, strong and weak, matchups), never as current designations. The Veti overview posts (release week) are the Veti designations.\n- V10: anti labels count at step 1 (when in the line step 1 reads) and at roles.secondary step 1; step 4 and the drop rule read only strength and weakness wording.\n- V15: buffs allies with an aura names buffer (Comms Officer); combat control names disabler (Sniper), subject to requires; air control and zone control name no role, stated as this note's reading and put to Mustafa (open question).\n- New reading: an anti label tied to a weapon other than the main one names no step-1 role, since the word list counts only words about the unit's own job; it counts for that weapon under roles.secondary (Hammerhand; Demolitionist, whose default is the Pile Driver).\n- V19: a bonus tied to a status counts against the kinds of target that can carry it: Tempest Affinity against armour and air, Voltaic Reaction against armour; Marked and Vulnerability name no target. So the Acolyte takes anti-armour (named first) and the Operative anti-armour over marksman.\n- V24: passenger-sets-weapon only for the Skycrane (passenger-module) and the Riot Van (passenger-firing, drone riders only); bail-out, basis in-game, for the Riot Van and Havoc on the 2024 quote; the Luminary only by its own page or with an uncertain entry; the aircraft only by their pages.\n- V25: crush on every crusher, size break in atypical, as R1 did. V38: Networked weapons are banded by their unmarked reach, stated as an editor's rule (Marked is a passing status other units apply).\n- M2: each pad aircraft's Land button is recorded, linking retreat-to-base; Auto Restock gives magazine, and the Condor (no Auto Restock) gets limited-ammo. Tempest Dynamos from the Martial Plan: source commander-power (a side-wide switch, not bought). Voltaic weapons need no damage step-3 exception; lasers are known by a type ending in - Laser or a laser in the weapon's name.\nRegistry: version_researched replaced with the skeptic's \"first full release\" wording (a December 2025 test branch and the May to June 2026 beta had the Veti earlier); the Corral Awakening gate added. No Mercenary Outpost gate or shared faction, as no candidate needs one.\nRemoved from games-r3.md: the Uncertain bullet on Veti numbers (now under Research notes, Veti figures and Tiers), the \"no list yet\" line (it also names Iron Harvest, whose edit replaces the same line; keep an Iron Harvest-only line if that list is not merged with this one) and the Tempest Rising \"Mechanics worth a look\" line (now the game-wide list).\nChecks: six-word copy-check of every text here against the 951 cached pages and posts finds no shared run.",
+  "open_questions": [
+   "Tempest Rising: does 'control' of a place name the disabler role? The build tooltips call the Peacekeeper an \"air control\" helicopter and the Physicist a \"zone control\" specialist. The roles entry in docs/vocabularies.md lets control name disabler and makes an exception only for mind control and a control point. A (what the note now says): control of a place (air control, zone control) names no role, like a control point; both units take their roles from their other words and the later steps (the Physicist still gets area denial from its line's deny areas). B: read the word list literally: both lines name disabler, which step 1 keeps only if the unit's stock parts meet disabler's requires (stun, root, silence or slow traits, cryo or emp damage, or a control pattern). C: A now, and add control of a place to the word list's no-role words at the next rule round (a change to the approved word lists 1.1.0). Recommendation: A for batch R3, then C, because these words mean holding the sky or the ground, not stopping enemies from acting, which is disabler's job. The Sniper's \"combat control\" names disabler under every option."
+  ],
+  "registry_edits": [
+   {
+    "path": "/version_researched",
+    "op": "replace",
+    "value": "Patch 2.0.1+60808 (7 October 2026), a bug-fix hotfix on patch 2.0.0+60710 (29 September 2026), the first full release with the Veti in skirmish and multiplayer; multiplayer values, not campaign ones, as described by the Tempest Rising Wiki and the official patch notes in October 2026",
+    "reason": "2.0.1 is not the first version with the Veti: it is a bug-fix hotfix on 2.0.0+60710 (29 September 2026), the release that brought them to skirmish and multiplayer after a December 2025 test branch and the May to June 2026 public beta. Sources: https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_2.0.0%2B60710, https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_2.0.1%2B60808, https://store.steampowered.com/news/app/1486920/view/705532825431968132 (Hotfix Update #13, bug fixes only). The entry's 2.0.0 source already supports version_researched."
+   },
+   {
+    "path": "/tier_map/28",
+    "op": "add",
+    "value": {
+     "gate": "Corral with Initial, Elevated or Transcendent Awakening",
+     "band": "t3",
+     "faction": "veti"
+    },
+    "reason": "The Phantom Artillery, Gorgon and War Ender (https://tempestrising.wiki.gg/wiki/War_Assembly) and the Ascended (https://tempestrising.wiki.gg/wiki/Ziggurat) need the Corral tethered to an anchor at Initial, Elevated or Transcendent Awakening. The validator accepts a tier.gate only when the tier_map holds it with the same band and a fitting faction, so without this entry they could name only the bare Corral. One combined gate follows the style of the Veti Eye gates; every level stays in t3, as the r3 note keeps the wiki's tier 3.5 in t3 (https://tempestrising.wiki.gg/wiki/Tier). Appended as the 29th entry; node scripts/validate.mjs on a scratch copy with both edits prints OK."
+   }
+  ],
+  "removed_lines": 3
+ },
+ "iron-harvest": {
+  "changes": "Skeptic corrections applied: Mech Hunter and Mech destroyer name no role (uncertain entry, rule problem in the open question); exosuits reinforce at base by DevBlog #30; the medics' Heal links reinforce-squad from Change Log #06 with a sources_disagree entry (the Infantry and Polania Republic pages back the post); a weapon system's crew getting out is bail-out, basis in-game, in any class; per-bullet cover cited to DevBlog #21; melee lines hold damage only; nineteen (Ability) slots on eighteen pages; Saxony's kit-only squads; the rifle-range dating, with the Series games analogy dropped.\nMissing items added: Sikorski unarmoured; the Mocny's rear (its page history shows the no-rear-armour line was written on 8-9 October 2020, before Change Log #06's fix of 22 October, so the post wins); the min_tier floors as expected atypical entries; weapon systems Light with five engineers as crew; the isDeployedBy trap; near-labels; units' own call-ins; Admiral Mason's armour.\nDecided myself: rear armour is the game's rule for every mech (Mech page: almost all; Change Log #06 calls a missing one a bug), with an uncertain entry where the unit's page is silent, and it also covers the weapon systems' shields and Admiral Mason's prow, which the draft said no source gives. Admiral Mason stays heavy by the map, not medium as the draft proposed: his health equals a line mech's and medium takes no huge body. Gunship, Airlift, Eisenhans and William Mason's suit step to medium; Brunhilde stays heavy. Weapon systems also get wreck for the gun left for any squad to man.\nCut: background, the population, speed and sight checks, the reserve's slot rules, and the leave-it-off tails the Conventions already give.\nRegistry: range_reference moved to the Usonian Volunteers' 23; the Usonian Volunteer page replaces the Polanian Rifleman page at sources/5 and DevBlog #27 is appended, giving seven sources instead of the nine the finding proposed (patch 0.11.5 is named in the notes instead); the sources/0 and sources/3 notes fixed. The armour_map stays, because the armour-class steps read the steps the registry notes name. No Iron Harvest unit is coded yet, so nothing needs recoding.",
+  "open_questions": [
+   "Iron Harvest: should 'mech hunter', 'mech destroyer' and 'anti-mech' count as anti-armour words? KING Art's newest type labels call the Lowca and Wotan Mech Hunters and the Knox a Mech destroyer (DevBlog #43, https://kingart-games.com/article/119), and its game page calls the field cannons anti-mech cannons. In this game the armoured fighting machines are mechs, not tanks, so the labels mean what tank hunter and anti-tank mean elsewhere. But the roles word list names a role only through a label or alias in any word form, and anti-armour's aliases are anti-tank, anti-vehicle, anti-armor, tank hunter and tank destroyer. As written, roles step 1 gives these units nothing; the R3 notes tell coders to add an uncertain entry and report it as a rule problem. Options: (A) keep the rule, and these units take their role at a later step; (B) in the rule-fix round after R4, add 'mech hunter', 'mech destroyer' and 'anti-mech' to anti-armour's aliases and recode the units whose step 1 changes; (C) in that round, let a registry note name a game's own word for its armoured units, so that word stands in for tank or vehicle inside any alias. Recommendation: B. It is the narrowest fix, it follows the makers' own words, and the uncertain entries the R3 coders add make the recoding easy to find. C only pays off if a later game shows the same gap."
+  ],
+  "registry_edits": [
+   {
+    "path": "/range_reference",
+    "op": "replace",
+    "value": "Usonian Volunteers' bolt rifle: maximum range 23 (metres) in the wiki's stat box, entered in August 2021; no later post changes that rifle. The Polanian Riflemen's 26 is not used: it has stood since 2019, and patch 0.11.5 (August 2020) lengthened their rifle without giving the new reach. The Saxon Stormtroopers' 20 and the Rusviet Vanguards' 16 date from August 2019. Every weapon is compared with the 23",
+    "reason": "The reference figure must be current. The Polanian 26 predates patch 0.11.5, which lengthened that rifle without a figure (https://kingart-games.com/article/85); the Volunteers' 23 was entered on 30 August 2021 (revision 6923) and no post changes their rifle. Dating per the skeptic: the 26 has stood since February 2019, the 20 and 16 since August 2019."
+   },
+   {
+    "path": "/sources/5",
+    "op": "replace",
+    "value": {
+     "url": "https://iron-harvest.fandom.com/wiki/Usonian_Volunteer",
+     "title": "Usonian Volunteer, Iron Harvest Wiki",
+     "kind": "wiki",
+     "accessed": "2026-10-25",
+     "supports": [
+      "range_reference",
+      "speed_reference"
+     ],
+     "note": "Infobox, entered in August 2021: movement speed 5 (metres per second); bolt rifle maximum range 23 (metres). It replaces the Polanian Rifleman page as the range source: that page's 26 has stood since 2019, and patch 0.11.5 (August 2020) lengthened the Polanian rifle without a figure; its price (200 iron) and its Headquarters are out of date too (Change Log #17)."
+    },
+    "reason": "The range_reference now rests on this page (https://iron-harvest.fandom.com/api.php?action=parse&page=Usonian%20Volunteer&prop=wikitext&format=json: unit_movementSpeed 5, weapon1_maxRange 23). The Polanian Rifleman page no longer backs any registry figure: speed_reference keeps the Saxon Stormtrooper page and gains this one. Replacing rather than appending keeps the entry at seven sources, near the registry's guide of one to four."
+   },
+   {
+    "path": "/sources/0/note",
+    "op": "replace",
+    "value": "Infantry come from the Barracks and mechs from the Workshop; the stronger ones need the Advanced Barracks or Advanced Workshop upgrade. Weapon systems use the same designs for every faction. The page has heroes produced at the Headquarters, which is where the reserves are called from: in skirmish and multiplayer each player picks one hero before the match and calls it in with a reserve (DevBlog #27), so the Headquarters is never a hero's gate.",
+    "reason": "The old note sent heroes to the Headquarters gate (t1). DevBlog #27 (https://kingart-games.com/article/81) has the hero, picked with the faction, take the field through a reserve deployed from the Headquarters; patch 0.11.5 prices tier 1 heroes in reserve points and Change Log #04 calls Prince Wilhelm a tier 2 reserve hero. No official source describes building a hero any other way."
+   },
+   {
+    "path": "/sources/3/note",
+    "op": "replace",
+    "value": "Reserve rework: Reserve II used to need an advanced building plus a basic one; from this patch either a single advanced building or a pair of basic buildings will do. Reserve I's condition, a Barracks or a Workshop, comes from DevBlog #27, and no later post changes it. A unit that can also be built normally takes its production gate, so the Reserve gates are only for units that cannot be built any other way, which in skirmish and multiplayer means the heroes. Reserve II stays t2 for them by judgement, since KING Art calls the heroes that need it tier 2 (Change Log #04, patch 0.11.5), even though two basic buildings also open it.",
+    "reason": "The old note said no source gives Reserve I's condition; DevBlog #27 does (a Barracks or a Workshop), and only DevBlog #27, patch 0.11.5 and DevBlog #35 ever change the reserve conditions (skeptic's sweep of articles 81 to 123). The tier 2 wording is in https://kingart-games.com/article/92 and https://kingart-games.com/article/85."
+   },
+   {
+    "path": "/sources/6",
+    "op": "add",
+    "value": {
+     "url": "https://kingart-games.com/article/81-iron-harvest-devblog-27-july-2020",
+     "title": "Iron Harvest DevBlog #27 - July 2020, KING Art Games",
+     "kind": "official",
+     "accessed": "2026-10-25",
+     "supports": [
+      "tier_map"
+     ],
+     "note": "Brings in the reserves and the hero pick for skirmish and multiplayer. Reserves are called in from the Headquarters: the first once the player has a Barracks or a Workshop, the second after one of them is upgraded (changed later; see DevBlog #35). The hero, picked with the faction, takes the field through a reserve."
+    },
+    "reason": "The Reserve I gate (t1) and the hero call-in had no source in the entry. Appended as the seventh source; the page loads at this address (its own canonical link)."
+   }
+  ],
+  "removed_lines": 5
+ }
+}
