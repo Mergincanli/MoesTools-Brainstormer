@@ -517,7 +517,7 @@ One entry in the games registry, `data/games.json`. Schema: `schemas/game.schema
 | `scope` | one of `starting`, `added` | yes |  | starting = in the brief's list; added = added during research. |
 | `added_reason` | text |  |  | Required for added games: the new mechanic it teaches. |
 | `teaches_patterns` | list of ids |  |  | For added games: the patterns that justified adding it. |
-| `status` | one of `planned`, `in-progress`, `done` | yes |  |  |
+| `status` | one of `planned`, `in-progress`, `done` | yes |  | Where the research of this game stands. planned: no batch has coded its units yet. in-progress: its batch is running. done: its batch is merged. |
 | `sources[]` | list of groups |  |  | A citation. Paraphrase only; never copy text or images. When another established site covers the unit, cite it rather than a third page of the same site. |
 | `sources[].url` | URL | yes |  | The page actually read (https only; never an image). |
 | `sources[].title` | text | yes |  | Page title and site. |
