@@ -26,8 +26,10 @@
 // most twice; other network errors are not retried. After three network failures in a row the network
 // counts as unavailable: nothing more is fetched and the remaining uncached pages are listed as not checked.
 // A Steam news post is read from the page's data attribute (its markup holds only the store's frame), and web
-// addresses in a record's prose are not wording. A site can ask for a longer pause (HOST_MIN_DELAY). Set
-// COPY_CHECK_CONTACT to add a contact to the User-Agent header for sites whose terms ask for one.
+// addresses in a record's prose are not wording. A site can ask for a longer pause (HOST_MIN_DELAY), which also
+// holds between two runs in one process. Set COPY_CHECK_CONTACT to add a contact to the User-Agent header: a site
+// whose terms ask for one (NEEDS_CONTACT) is not asked for anything without it, and its pages are never fetched
+// as HTML.
 // scripts/plant.mjs tests whether the check reads what a reader of a page sees: run it on one page of
 // every new site before a batch cites it.
 //
@@ -177,13 +179,14 @@ export function htmlToText(h) {
   return decodeEntities(h)
 }
 
+const FOOTNOTE_MARK = /<sup\b[^>]*\bclass="[^"]*\breference\b[^"]*"[\s\S]*?<\/sup\s*>/gi
 const BLOCK_TAGS = 'p|div|li|ul|ol|dl|dt|dd|tr|td|th|table|thead|tbody|h[1-6]|br|hr|section|article|blockquote|pre|figure|figcaption|caption|nav|header|footer|aside'
 
 /** The visible lines of an HTML page or fragment: one per block of text (paragraph, list item, table cell, heading). */
 export function visibleLines(html) {
   let h = html.replace(/<!--[\s\S]*?-->/g, ' ')
   h = h.replace(/<(script|style|noscript|svg|template|head)\b[\s\S]*?<\/\1\s*>/gi, ' ')
-  h = h.replace(/<sup\b[^>]*\bclass="[^"]*\breference\b[^"]*"[\s\S]*?<\/sup\s*>/gi, ' ') // footnote marks
+  h = h.replace(FOOTNOTE_MARK, ' ')
   h = h.replace(new RegExp(`</?(?:${BLOCK_TAGS})\\b[^>]*>`, 'gi'), '\n')
   return h.split('\n').map(line => htmlToText(line).replace(/\s+/g, ' ').trim()).filter(Boolean)
 }
@@ -218,7 +221,11 @@ export function steamNewsText(h) {
  */
 export function pageTexts(page) {
   if (page.format === 'wikitext') {
-    return typeof page.rendered === 'string' ? [wikitextToText(page.raw), htmlToText(page.rendered)] : [wikitextToText(page.raw)]
+    if (typeof page.rendered !== 'string') return [wikitextToText(page.raw)]
+    // The rendered page twice: as it is, and without its footnote marks, since a reader who copies a sentence leaves
+    // out the "[1]" in the middle of it.
+    const noMarks = page.rendered.replace(FOOTNOTE_MARK, ' ')
+    return [wikitextToText(page.raw), htmlToText(page.rendered), ...(noMarks === page.rendered ? [] : [htmlToText(noMarks)])]
   }
   if (STEAM_NEWS.test(page.url || '')) { const t = steamNewsText(page.raw); return t === null ? null : [t] }
   return [htmlToText(page.raw)]
@@ -242,6 +249,13 @@ export function pageGrams(page, n) {
 /** A wiki page cached with its source only: what a reader sees was not read. */
 export const sourceOnly = page => page.format === 'wikitext' && typeof page.rendered !== 'string'
 export const SOURCE_ONLY_OFFLINE = 'offline, and the cache holds the page source but not the rendered page'
+export const SOURCE_ONLY_CACHE = 'only the cache names this page, and it holds the page source but not the rendered page; give its address with --only to read it again'
+
+// True when the cache holds the page and, for a wiki page, its rendered version too.
+function cachedInFull(file) {
+  if (!fs.existsSync(file)) return false
+  try { return !sourceOnly(JSON.parse(fs.readFileSync(file, 'utf8'))) } catch { return false }
+}
 export const NO_POST_TEXT = 'a Steam news page that holds no post text'
 export const ONLY_MATCHED_NOTHING = '--only matched no cited, linked or cached page'
 
@@ -288,6 +302,19 @@ const sleep = ms => new Promise(r => setTimeout(r, ms))
 // Liquipedia's API terms (liquipedia.net/api-terms-of-use, read on 11 November 2026) allow one action=parse
 // request per 30 seconds.
 export const HOST_MIN_DELAY = Object.freeze({ 'liquipedia.net': 30000 })
+// Sites whose terms ask for a contact in the User-Agent and forbid automated reading of their pages (the same
+// terms): without COPY_CHECK_CONTACT nothing is asked of them, and their pages are never fetched as HTML.
+export const NEEDS_CONTACT = Object.freeze(new Set(['liquipedia.net']))
+export const NO_CONTACT = 'not fetched: this site\'s terms ask for a contact in the User-Agent; set COPY_CHECK_CONTACT'
+
+/** The shortest pause before the next request to a host: the site's own minimum, or the override a test passes. */
+export function hostPause(host, state = {}) {
+  return (state.hostDelay || HOST_MIN_DELAY)[host] || 0
+}
+
+// The clock that paces requests is shared by every run in one process (the plant test runs the copy-check once per
+// page), so a site's pause also holds between two runs. A test that needs a clock of its own passes `pace`.
+const PACE = { lastRequest: 0, lastByHost: {} }
 
 // Network errors worth one more try: a dropped connection, a timeout or a temporary DNS failure. Anything
 // else (connection refused, host not found, a bad certificate) fails the same way the next time.
@@ -310,15 +337,19 @@ function networkCode(e) {
 async function politeGet(url, state) {
   for (let busy = 1, net = 0; ;) {
     const host = new URL(url).hostname
-    const hostDelay = (state.hostDelay || HOST_MIN_DELAY)[host] || 0
-    const wait = Math.max(state.lastRequest + state.delay, ((state.lastByHost ||= {})[host] || 0) + hostDelay) - Date.now()
+    const pace = state.pace || PACE
+    const wait = Math.max(pace.lastRequest + state.delay, (pace.lastByHost[host] || 0) + hostPause(host, state)) - Date.now()
     if (wait > 0) await sleep(wait)
-    state.lastRequest = state.lastByHost[host] = Date.now()
     state.requests++
     let res
+    // The pause counts from the moment the site answered (or the request failed), so that the site never sees two
+    // requests closer together than the pause, however long a connection takes to open.
+    const stamp = () => { pace.lastRequest = pace.lastByHost[host] = Date.now() }
     try {
       res = await fetch(url, { headers: { 'User-Agent': USER_AGENT }, redirect: 'follow', signal: AbortSignal.timeout(30000) })
+      stamp()
     } catch (e) {
+      stamp()
       const code = networkCode(e)
       if (!TRANSIENT.has(code) || net >= NETWORK_RETRIES) throw new NetworkError(`network error: ${code}`)
       net++
@@ -350,6 +381,8 @@ async function bodyText(res) {
 }
 
 export async function fetchPage(url, state) {
+  const host = new URL(url).hostname
+  if (NEEDS_CONTACT.has(host) && !CONTACT) throw new Error(NO_CONTACT)
   const wiki = mediaWikiTarget(url)
   if (wiki) {
     for (const api of wiki.apis) {
@@ -367,6 +400,7 @@ export async function fetchPage(url, state) {
       if (typeof raw === 'string') return { format: 'wikitext', via: q, raw, ...(typeof rendered === 'string' ? { rendered } : {}) }
     }
   }
+  if (NEEDS_CONTACT.has(host)) throw new Error('the wiki API gave no page, and this site\'s pages are not fetched as HTML (its terms)')
   const res = await politeGet(url, state)
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   return { format: 'html', via: url, raw: await bodyText(res) }
@@ -593,9 +627,9 @@ export async function copyCheck(options = {}) {
   // An --only text that is a full web address which nothing cites and the cache lacks (a page the notes name only by
   // title): fetch it, or list it as not checked, so that the run cannot pass without having read it.
   for (const t of opts.only) {
-    if (/^https?:\/\//.test(t) && !allUrls.some(u => u.includes(t)) && !fs.existsSync(cachePath(cacheDir, t)) && !urls.includes(t)) urls.push(t)
+    if (/^https?:\/\//.test(t) && !allUrls.some(u => u.includes(t)) && !cachedInFull(cachePath(cacheDir, t)) && !urls.includes(t)) urls.push(t)
   }
-  const state = { delay: opts.delay, retryWait: opts.retryWait, log: opts.log, lastRequest: 0, lastByHost: {}, hostDelay: opts.hostDelay, requests: 0 }
+  const state = { delay: opts.delay, retryWait: opts.retryWait, log: opts.log, pace: opts.pace, hostDelay: opts.hostDelay, requests: 0 }
   const pages = new Map() // url -> gram set
   const notChecked = [] // [url, reason]
   const partly = [] // [url, reason]: wiki pages compared with their source only, not with the rendered page
@@ -668,7 +702,11 @@ export async function copyCheck(options = {}) {
       seen.add(url)
       if (all.has(url)) continue
       const pg = pageGrams({ url, ...page }, n)
-      if (pg !== null) all.set(url, pg)
+      if (pg === null) continue
+      all.set(url, pg)
+      // A page that only the cache holds is not fetched here. Cached with its source only, it is listed, so that the
+      // run cannot pass as complete: give its address with --only to read its rendered page.
+      if (sourceOnly(page)) partly.push([url, SOURCE_ONLY_CACHE])
     }
     notePages = all.size
     const own = ownWordingGrams(opts.root, n, opts.also)

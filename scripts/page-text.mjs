@@ -70,7 +70,7 @@ export async function readPage(url, options = {}) {
   }
   const hostDelay = (opts.hostDelay || HOST_MIN_DELAY)[host] || 0
   await waitForSite(cacheDir, host, Math.max(opts.delay, hostDelay))
-  const state = { delay: 0, retryWait: opts.retryWait, log: opts.log, lastRequest: 0, lastByHost: {}, hostDelay: {}, requests: 0 }
+  const state = { delay: 0, retryWait: opts.retryWait, log: opts.log, pace: { lastRequest: 0, lastByHost: {} }, hostDelay: {}, requests: 0 }
   try {
     page = { url, fetched: new Date().toISOString(), ...(await fetchPage(url, state)) }
   } catch (e) {

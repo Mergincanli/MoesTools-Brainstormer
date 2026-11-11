@@ -1,12 +1,13 @@
 // Tests for the plant test (scripts/plant.mjs): how it takes a reader's lines from a page, how it picks the
 // passages to plant, and the whole test on a seeded cache and against a local wiki (no real network, no browser).
 import assert from 'node:assert/strict'
+import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import http from 'node:http'
 import os from 'node:os'
 import path from 'node:path'
 import { describe, it, after } from 'node:test'
-import { cachePath } from '../scripts/copy-check.mjs'
+import { REPO_ROOT, cachePath } from '../scripts/copy-check.mjs'
 import {
   MIN_LINE_WORDS, NO_BROWSER, PASSAGES, PASSAGE_WORDS, VIEW_BROWSER, VIEW_WIKI, exitCode, formatPlantReport, pickPassages, plantTest, visibleLines,
 } from '../scripts/plant.mjs'
@@ -141,8 +142,93 @@ describe('plant test: the whole test, offline on a seeded cache', () => {
     assert.equal(exitCode([r]), 0)
   })
 
-  it('does not open a browser on a site whose terms do not allow it', () => {
+})
+
+// A stand-in for the browser: plantTest gets the lines and the status this gives, and the calls are counted.
+function fakeBrowser(answer) {
+  const calls = []
+  return { calls, browser: {}, browserLines: async (b, url) => { calls.push(url); if (answer instanceof Error) throw answer; return answer } }
+}
+const LONG = Array.from({ length: 6 }, (_, i) => `Line ${i} ` + PARAS[i % 4])
+
+describe('plant test: the reader\'s view', () => {
+  it('takes the browser\'s view of a wiki page that holds the wiki\'s content block', async () => {
+    const root = tempRoot()
+    seed(root, WIKI, { format: 'wikitext', raw: SOURCE, rendered: RENDERED })
+    const fb = fakeBrowser({ status: 200, wiki: true, lines: [...PARAS, BOX] })
+    const r = await plantTest(WIKI, { root, offline: true, browser: fb.browser, browserLines: fb.browserLines })
+    assert.deepEqual(fb.calls, [WIKI])
+    assert.equal(r.view, VIEW_BROWSER)
+    assert.equal(r.browser_status, 200)
+    assert.equal(r.flagged.length, 5)
+  })
+
+  for (const [what, answer, saw] of [
+    ['an error status', { status: 403, wiki: false, lines: LONG }, /the browser got 403/],
+    ['a page of a few words', { status: 200, wiki: true, lines: ['Just a moment...'] }, /the browser got 200/],
+    ['a bot page that answers 200 without the wiki\'s content', { status: 200, wiki: false, lines: LONG }, /the browser got 200/],
+    ['a browser that fails', new Error('net::ERR_FAILED'), /the browser got error: net::ERR_FAILED/],
+  ]) {
+    it(`falls back to the wiki's rendered page when the browser gives ${what}`, async () => {
+      const root = tempRoot()
+      seed(root, WIKI, { format: 'wikitext', raw: SOURCE, rendered: RENDERED })
+      const fb = fakeBrowser(answer)
+      const r = await plantTest(WIKI, { root, offline: true, browser: fb.browser, browserLines: fb.browserLines })
+      assert.equal(fb.calls.length, 1)
+      assert.equal(r.view, VIEW_WIKI)
+      assert.equal(r.flagged.length, 5)
+      assert.match(formatPlantReport([r]), saw)
+    })
+  }
+
+  it('never opens a browser on a site whose terms do not allow it', async () => {
     assert.ok(NO_BROWSER.has('liquipedia.net'))
+    const root = tempRoot()
+    const url = 'https://liquipedia.net/starcraft2/Test_Drone'
+    seed(root, url, { format: 'wikitext', raw: SOURCE, rendered: RENDERED })
+    const fb = fakeBrowser({ status: 200, wiki: true, lines: LONG })
+    const r = await plantTest(url, { root, offline: true, browser: fb.browser, browserLines: fb.browserLines })
+    assert.deepEqual(fb.calls, [], 'the browser was asked for a page')
+    assert.equal(r.view, VIEW_WIKI)
+    assert.equal(r.flagged.length, 5)
+  })
+
+  it('says what happened when there is no reader\'s view', async () => {
+    const plain = 'https://p.example/page'
+    const root = tempRoot()
+    seed(root, plain, { format: 'html', raw: `<p>${PARAS[0]}</p>` })
+    const fb = fakeBrowser({ status: 503, wiki: false, lines: [] })
+    const blocked = await plantTest(plain, { root, offline: true, browser: fb.browser, browserLines: fb.browserLines })
+    assert.match(blocked.reason, /^no reader's view: the browser got HTTP 503, and a page that is not a wiki needs a browser/)
+    const none = await plantTest(plain, { root, offline: true })
+    assert.match(none.reason, /^no reader's view: no browser was used, and a page that is not a wiki needs a browser/)
+    const root2 = tempRoot()
+    const lq = 'https://liquipedia.net/starcraft2/Old'
+    seed(root2, lq, { format: 'wikitext', raw: SOURCE })
+    const terms = await plantTest(lq, { root: root2, offline: true, browser: fb.browser, browserLines: fb.browserLines })
+    assert.match(terms.reason, /^no reader's view: the site's terms do not allow a browser, and the wiki gave no rendered page/)
+  })
+
+  it('passes the copy-check\'s progress lines on to the caller', async () => {
+    const lines = []
+    await plantTest(WIKI, { root: tempRoot(), offline: true, log: m => lines.push(m) }).catch(() => {})
+    const root = tempRoot()
+    const srv = http.createServer((req, res) => { res.writeHead(404); res.end('no') })
+    await new Promise(resolve => srv.listen(0, '127.0.0.1', resolve))
+    after(() => { srv.closeAllConnections(); srv.close() })
+    const r = await plantTest(`http://127.0.0.1:${srv.address().port}/page`, { root, delay: 0, retryWait: 1, log: m => lines.push(m) })
+    assert.equal(r.read, false)
+    assert.ok(lines.some(m => m.startsWith('fetching http://127.0.0.1')), lines.join(' | '))
+  })
+})
+
+describe('plant test: the command line', () => {
+  const run = (...args) => spawnSync(process.execPath, [path.join(REPO_ROOT, 'scripts/plant.mjs'), ...args], { encoding: 'utf8' })
+  it('exits 2 on no address, on a bad address and on --json without a file', () => {
+    assert.equal(run().status, 2)
+    assert.equal(run('https://exa mple.com/wiki/X', '--no-browser').status, 2)
+    assert.equal(run('not-an-address').status, 2)
+    assert.equal(run('https://w.example/wiki/X', '--json').status, 2)
   })
 })
 

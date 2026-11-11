@@ -10,8 +10,10 @@ import path from 'node:path'
 import { describe, it, after } from 'node:test'
 import {
   REPO_ROOT, MAX_NETWORK_FAILURES, NO_POST_TEXT, ONLY_MATCHED_NOTHING, cachePath, copyCheck, exitCode, formatCopyReport, markdownBlocks, noteFiles,
-  noteTexts, pageGrams, pageText, pageTexts, sourceOnly, steamNewsText, urlsIn, HOST_MIN_DELAY, SOURCE_ONLY_OFFLINE, USER_AGENT,
+  noteTexts, pageGrams, pageText, pageTexts, sourceOnly, steamNewsText, urlsIn, hostPause, HOST_MIN_DELAY, NEEDS_CONTACT, NO_CONTACT, SOURCE_ONLY_CACHE,
+  SOURCE_ONLY_OFFLINE, USER_AGENT,
 } from '../scripts/copy-check.mjs'
+import { plantTest } from '../scripts/plant.mjs'
 
 const COPY_CHECK = path.join(REPO_ROOT, 'scripts/copy-check.mjs')
 const PAGE = 'https://a.example/p'
@@ -498,5 +500,92 @@ describe('copy-check on rendered wiki pages', () => {
     await copyCheck({ ...quick(tempRepo(urls)), hostDelay: { '127.0.0.1': 400 } })
     const slow = Date.now() - t0
     assert.ok(slow >= 400, `two requests to one site took ${slow} ms, the second should wait 400 ms`)
+  })
+})
+
+// Found by the review of the change that made the copy-check read rendered pages (11 November 2026).
+describe('copy-check: pauses, contacts and cache-only pages', () => {
+  // A local wiki that notes when each request arrives.
+  async function timedWiki() {
+    const times = []
+    const s = await server((req, res) => {
+      const u = new URL(req.url, 'http://x')
+      if (u.pathname !== '/api.php') { res.writeHead(404); res.end('no'); return }
+      times.push(Date.now())
+      res.writeHead(200, { 'content-type': 'application/json' })
+      res.end(JSON.stringify({ parse: { title: u.searchParams.get('page'), wikitext: { '*': WIKI_SOURCE }, text: { '*': WIKI_RENDERED } } }))
+    })
+    return { ...s, times }
+  }
+
+  it('keeps a site\'s pause between two runs in one process, as the plant test makes them', async () => {
+    const { base, times } = await timedWiki()
+    const opts = { delay: 0, retryWait: 1, hostDelay: { '127.0.0.1': 400 } }
+    await plantTest(`${base}/wiki/A`, opts)
+    await plantTest(`${base}/wiki/B`, opts)
+    assert.equal(times.length, 2)
+    assert.ok(times[1] - times[0] >= 400, `the second page was asked for ${times[1] - times[0]} ms after the first`)
+  })
+
+  it('counts the pause from the answer, so the site never sees two requests closer than the pause', async () => {
+    const { base, times } = await timedWiki()
+    await copyCheck({ ...quick(tempRepo([`${base}/wiki/A`, `${base}/wiki/B`, `${base}/wiki/C`])), hostDelay: { '127.0.0.1': 300 } })
+    const gaps = times.slice(1).map((t, i) => t - times[i])
+    assert.ok(gaps.every(g => g >= 300), `gaps the site saw: ${gaps.join(', ')} ms`)
+  })
+
+  it('takes a site\'s pause from its terms unless a test overrides it', () => {
+    assert.equal(hostPause('liquipedia.net'), 30000)
+    assert.equal(hostPause('liquipedia.net', { hostDelay: {} }), 0)
+    assert.equal(hostPause('cnc.fandom.com'), 0)
+    assert.equal(hostPause('a.example', { hostDelay: { 'a.example': 7 } }), 7)
+  })
+
+  it('asks nothing of a site whose terms want a contact while none is set', async () => {
+    assert.ok(NEEDS_CONTACT.has('liquipedia.net'))
+    assert.equal(process.env.COPY_CHECK_CONTACT, undefined, 'this test needs COPY_CHECK_CONTACT unset')
+    const url = 'https://liquipedia.net/starcraft2/No_Such_Test_Page'
+    const res = await copyCheck(quick(tempRepo([url])))
+    assert.equal(res.requests, 0, 'a request went out')
+    assert.deepEqual(res.notChecked, [[url, NO_CONTACT]])
+    assert.equal(exitCode(res), 3)
+  })
+
+  it('compares a sentence copied across a footnote mark', () => {
+    const page = { url: WIKI, format: 'wikitext', raw: 'x', rendered: '<p>The drone leaps inside an enemy<sup id="c1" class="reference"><a href="#n1">[1]</a></sup> vehicle and eats it from within.</p>' }
+    const texts = pageTexts(page)
+    assert.equal(texts.length, 3, 'the source, the rendered page, and the rendered page without footnote marks')
+    assert.ok(pageGrams(page, 6).has('leaps inside an enemy vehicle and'))
+    assert.ok(pageGrams(page, 6).has('inside an enemy 1 vehicle and'), 'the page as it is stays compared too')
+    assert.equal(pageTexts({ url: WIKI, format: 'wikitext', raw: 'x', rendered: '<p>No marks here.</p>' }).length, 2)
+    const root = tempRepo([WIKI])
+    seedWiki(root, WIKI, { rendered: page.rendered })
+    const r = cli(root, '--offline')
+    assert.equal(r.status, 1, r.stdout)
+    assert.match(r.stdout, /"drone leaps inside an enemy vehicle and eats it from within"/)
+  })
+
+  it('lists a page that only the cache holds, with its source only, when notes are checked against it', () => {
+    const root = tempRepo([])
+    seedWiki(root, WIKI)
+    fs.mkdirSync(path.join(root, 'notes'))
+    fs.writeFileSync(path.join(root, 'notes/n.md'), 'A note that cites nothing and copies nothing from any page at all.\n')
+    const r = cli(root, '--offline', '--also', path.join(root, 'notes'))
+    assert.equal(r.status, 3, r.stdout)
+    assert.ok(r.stdout.includes(`SOURCE ONLY (${SOURCE_ONLY_CACHE}): 1 wiki page(s)`), r.stdout)
+    assert.doesNotMatch(r.stdout, /^OK/m)
+  })
+
+  it('reads such a page again when its full address is given with --only', async () => {
+    const { base, times } = await timedWiki()
+    const url = `${base}/wiki/Test_Drone`
+    const root = tempRepo([])
+    seedWiki(root, url)
+    fs.mkdirSync(path.join(root, 'notes'))
+    fs.writeFileSync(path.join(root, 'notes/n.md'), 'A report says the drone leaps inside an enemy vehicle and eats it from within.\n')
+    const res = await copyCheck({ ...quick(root), also: [path.join(root, 'notes')], only: [url] })
+    assert.equal(times.length, 1, 'the page was not fetched again')
+    assert.equal(res.partly.length, 0)
+    assert.equal(res.findings.length, 1)
   })
 })

@@ -83,12 +83,13 @@ async function browserLines(browser, url) {
   try {
     const res = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 })
     await page.waitForTimeout(4000) // let scripts draw the page
-    const lines = await page.evaluate(() => {
+    const seen = await page.evaluate(() => {
       document.querySelectorAll('style, script, .mw-editsection, sup.reference').forEach(e => e.remove())
-      const el = document.querySelector('#mw-content-text') || document.querySelector('article') || document.querySelector('main') || document.body
-      return el.innerText.split('\n').map(s => s.trim()).filter(Boolean)
+      const wiki = document.querySelector('#mw-content-text')
+      const el = wiki || document.querySelector('article') || document.querySelector('main') || document.body
+      return { wiki: !!wiki, lines: el.innerText.split('\n').map(s => s.trim()).filter(Boolean) }
     })
-    return { status: res ? res.status() : null, lines }
+    return { status: res ? res.status() : null, lines: seen.lines, wiki: seen.wiki }
   } finally {
     await page.close()
   }
@@ -99,13 +100,14 @@ const count = lines => lines.reduce((n, line) => n + words(line).length, 0)
 /**
  * Tests one page. Options: root (a throwaway folder; made when not given), browser (a launched Playwright
  * browser, or null), offline (use only what root's cache holds), lines (the reader's view, given by a test),
- * and the copy-check's own options delay, retryWait, hostDelay and log.
+ * and the copy-check's own options delay, retryWait, hostDelay, pace and log.
  * Returns { url, read, reason, view, browser_status, reader_words, planted, flagged, partly, missed, source_only }.
  */
 export async function plantTest(url, options = {}) {
   const root = options.root || fs.mkdtempSync(path.join(os.tmpdir(), 'unit-forge-plant-'))
-  const quiet = { root, log: () => {}, ...(options.delay === undefined ? {} : { delay: options.delay }),
-    ...(options.retryWait === undefined ? {} : { retryWait: options.retryWait }), ...(options.hostDelay ? { hostDelay: options.hostDelay } : {}) }
+  const quiet = { root, log: options.log || (() => {}), ...(options.delay === undefined ? {} : { delay: options.delay }),
+    ...(options.retryWait === undefined ? {} : { retryWait: options.retryWait }), ...(options.hostDelay ? { hostDelay: options.hostDelay } : {}),
+    ...(options.pace ? { pace: options.pace } : {}) }
   const out = { url, read: false, reason: null, view: null, browser_status: null, reader_words: 0, planted: [], flagged: [], partly: [], missed: [], source_only: false }
   try {
     // 1. The copy-check fetches the page its own way.
@@ -119,20 +121,28 @@ export async function plantTest(url, options = {}) {
 
     // 2. The reader's view.
     let lines = null
+    let browserSaw = 'no browser was used' // what the browser gave, for the reason when there is no reader's view
+    const isWiki = cached.format === 'wikitext'
     if (options.lines) { lines = options.lines; out.view = options.view || VIEW_BROWSER }
-    if (!lines && options.browser && !NO_BROWSER.has(new URL(url).hostname)) {
+    if (!lines && NO_BROWSER.has(new URL(url).hostname)) browserSaw = 'the site\'s terms do not allow a browser'
+    else if (!lines && options.browser) {
       try {
-        const seen = await browserLines(options.browser, url)
+        const seen = await (options.browserLines || browserLines)(options.browser, url)
         out.browser_status = seen.status
-        if (seen.status !== null && seen.status < 400 && count(seen.lines) >= MIN_VIEW_WORDS) { lines = seen.lines; out.view = VIEW_BROWSER }
+        if (seen.status === null || seen.status >= 400) browserSaw = `the browser got HTTP ${seen.status}`
+        else if (count(seen.lines) < MIN_VIEW_WORDS) browserSaw = `the browser got a page of under ${MIN_VIEW_WORDS} words`
+        // A wiki answers a headless browser with a bot or consent page now and then, with status 200: only a page
+        // that holds the wiki's own content block is the reader's view.
+        else if (isWiki && !seen.wiki) browserSaw = 'the browser got a page without the wiki\'s content'
+        else { lines = seen.lines; out.view = VIEW_BROWSER }
       } catch (e) {
         out.browser_status = `error: ${String(e.message || e).split('\n')[0]}`
+        browserSaw = 'the browser failed to open the page'
       }
     }
-    if (!lines && cached.format === 'wikitext' && typeof cached.rendered === 'string') { lines = visibleLines(cached.rendered); out.view = VIEW_WIKI }
+    if (!lines && isWiki && typeof cached.rendered === 'string') { lines = visibleLines(cached.rendered); out.view = VIEW_WIKI }
     if (!lines) {
-      out.reason = cached.format === 'wikitext' ? 'no reader\'s view: the browser got no page and the wiki gave no rendered page'
-        : options.browser ? 'no reader\'s view: the browser got an error page or a bot page' : 'no reader\'s view: a page that is not a wiki needs a browser (Playwright with Chromium)'
+      out.reason = `no reader's view: ${browserSaw}, and ${isWiki ? 'the wiki gave no rendered page' : 'a page that is not a wiki needs a browser (Playwright with Chromium)'}`
       return out
     }
     out.reader_words = count(lines)
@@ -187,7 +197,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     const a = argv[i]
     if (a === '--json') json = argv[++i]
     else if (a === '--no-browser') useBrowser = false
-    else if (/^https?:\/\//.test(a)) urls.push(a)
+    else if (/^https?:\/\//.test(a) && URL.canParse(a)) urls.push(a)
     else { console.error(`not a page address or an option: '${a}'\n${usage}`); process.exit(2) }
   }
   if (!urls.length || (json !== null && !json)) { console.error(usage); process.exit(2) }
@@ -195,12 +205,24 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   if (status !== null) process.exit(status)
   const chromium = useBrowser ? findBrowser() : null
   if (useBrowser && !chromium) console.error('no browser (Playwright is not installed): only wiki pages can be tested, from the wiki\'s rendered page')
-  const browser = chromium ? await chromium.launch() : null
+  let browser = null
+  if (chromium) {
+    try { browser = await chromium.launch() } catch (e) {
+      console.error(`the browser did not start (${String(e.message || e).split('\n')[0]}): only wiki pages can be tested, from the wiki's rendered page`)
+    }
+  }
   const results = []
   try {
-    for (const url of urls) results.push(await plantTest(url, { browser }))
+    for (const url of urls) {
+      try {
+        results.push(await plantTest(url, { browser, log: m => console.error(m) }))
+      } catch (e) {
+        // One page that fails must not lose the results of the others.
+        results.push({ url, read: false, reason: `error: ${String(e.message || e).split('\n')[0]}`, view: null, browser_status: null, reader_words: 0, planted: [], flagged: [], partly: [], missed: [], source_only: false })
+      }
+    }
   } finally {
-    if (browser) await browser.close()
+    if (browser) await browser.close().catch(() => {})
   }
   if (json) fs.writeFileSync(json, JSON.stringify(results, null, 1) + '\n')
   console.log(formatPlantReport(results))
