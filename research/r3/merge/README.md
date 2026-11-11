@@ -6,8 +6,8 @@ This is the record of merge pass steps 2 and 3 for batch R3 (runbook, section 4)
 
 - Four finders looked at the 27 units, one per dimension. A skeptic then tried to refute each finding.
 - They raised 37 findings. The skeptics confirmed 33 and rejected 4. Every verdict carries its evidence.
-- The confirmed fixes to the game notes and the registry are applied with this record. The fixes to the units follow in the next commit.
-- Everything is in [consistency.json](consistency.json): each finding, its verdict and its status.
+- The confirmed fixes are applied: to the game notes and the registry (commit 527724f) and to the units.
+- [consistency.json](consistency.json) holds each finding, its verdict and its status. [fixes.json](fixes.json) holds what was changed on the units and how it was checked.
 
 ## Counts
 
@@ -47,16 +47,33 @@ Each change below is a decision about the notes (runbook, "Decisions"). Each was
 
 **`data/games.json`:** the name of Iron Harvest's shared faction now includes the engineers (REG-06).
 
-## What follows in the units
+## What changed in the units
 
-The next commit applies the unit fixes per game: 11 items for Generals, 13 for Tempest Rising and 4 for Iron Harvest. Each game has a fixer, then a verifier that compares every change with the brief.
+The unit fixes are applied: 11 items for Generals, 13 for Tempest Rising and 4 for Iron Harvest, 28 in all. Each game had a fixer in its own copy of the repository, then a verifier that compared every change with the brief. The verifiers found 26 items right at the first check. The fixers repaired the other 2, which were wording in an uncertain entry and stale source notes. The record is [fixes.json](fixes.json).
 
-The largest are:
+No ability, weapon or fit note moved, apart from the two Engine Tuning entries that were removed, which were the last in their lists. The validator reports no error and the same 39 atypical lines as before, all recorded.
 
-- the Line Officer's armour class (REG-01);
-- four Generals units' splash, friendly-fire and delivery terms (REG-02);
-- the Engine Tuning ability coming off the Thunderhead and the Vimana (REG-03);
-- the Vimana's cannon range, which its page now gives as longer (facts-01).
+**Coded values that changed:**
+
+| Unit | Change | Finding |
+|---|---|---|
+| Line Officer | armour class unarmoured to light | REG-01 |
+| Technical | the cannon gains friendly-fire; the rocket gains splash, min-range and friendly-fire | REG-02 |
+| Overlord, Aurora Bomber | the main gun and the bomb gain friendly-fire | REG-02 |
+| Sentry Drone | the gun's delivery goes from hitscan to projectile | REG-02 |
+| Thunderhead, Vimana | the Engine Tuning ability is removed; Arcing goes from passive to triggered | REG-03, REG-04 |
+| Vimana | the cannon's range goes from short to medium, and the weakness that hung on its short range is removed | facts-01 |
+| Vimana | its combos gain the resupply-allies pattern beside the Enlightened | L3 |
+| Overlord | its countered_by list gains the hijack-vehicle pattern beside Jarmen Kell | L1 |
+| Battle Bus | its counters lose the hijack-vehicle pattern; the Hijacker link stands alone | L2 |
+| Enlightened | its counters lose the armour-piercing damage link | L4 |
+| Technical, Enlightened | a countered_by link widens from heavy armour to heavy armour or more | L6 |
+
+**Text and sources only:**
+
+- Jarmen Kell, the Red Guard and the Hacker now cite CNCNZ's Zero Hour page, and the Overlord cites it in place of a third wiki page (conv-2, conv-3).
+- The Thunderhead's and the Vimana's notes follow the figures their wiki pages have shown since 7 November 2026 (facts-02, facts-03).
+- The other items reword notes, reasons and uncertain entries.
 
 ## Not confirmed
 

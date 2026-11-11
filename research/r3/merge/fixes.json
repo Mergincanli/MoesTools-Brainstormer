@@ -1,0 +1,518 @@
+{
+  "batch": "r3",
+  "what": "Merge pass step 3: the confirmed consistency fixes applied to the units, per game. A fixer applied each game's items in its own copy of the repository, a verifier compared every change with the brief, and the fixer repaired what the verifier found.",
+  "ran": "10 and 11 November 2026, on the units as of commit 6c817f1 with the note fixes of commit 527724f.",
+  "counts": {
+    "items": 28,
+    "ok_at_first_check": 26,
+    "repaired": 2
+  },
+  "left_out": "5 side remarks by the agents about the repository's branches, which concern no unit.",
+  "games": [
+    {
+      "game": "generals",
+      "fixer": {
+        "applied": [
+          {
+            "id": "REG-02",
+            "what": "Unit part only; the registry note was already changed in the workspace (games-r3.md line 373). The splash coding rule, the friendly-fire and min-range definitions in docs/vocabularies.md, and the delivery rule in docs/fields.md were read first. Each term was set only where its own rule is met. generals.gla.technical: armament/1/traits [splash] -> [splash, friendly-fire]. armament/2/traits [] -> [splash, min-range, friendly-fire]. In uncertain armament/2/summary, dropped the clause saying the tiny blast radius is not coded as splash. Two new uncertain entries: armament/1/traits (friendly-fire rests only on Weapon.ini) and armament/2/traits. The second names Weapon.ini and the figures: splash from a blast radius a fifth of the cannon's, with no source calling it tiny or single-target; friendly-fire because the blast also hurts allies; min-range from MinimumAttackRange 5 against an AttackRange of 150. generals.usa.sentry-drone: armament/0/delivery hitscan -> projectile. Rewrote uncertain armament/0/delivery: Weapon.ini (URL, read, not cited) gives the gun its own travel speed, not the huge 'instant' value, and no projectile object. generals.usa.aurora-bomber: armament/0/traits [splash] -> [splash, friendly-fire], and uncertain armament/0/traits rewritten. One dependent text edit the item does not name: in armament/0/summary, 'so no friendly-fire trait is set' became '(see uncertain)'. Without it the summary would contradict the new code. generals.china.overlord: armament/0/traits [splash] -> [splash, friendly-fire], plus a new uncertain at armament/0/traits naming Weapon.ini with its URL. MinimumAttackRange report: only TechnicalRPGWeapon has one (5). The Technical cannon, the Sentry Drone gun, the Aurora bomb and the Overlord gun have none, so nothing else changed. Dependent checks: no role's requires uses friendly-fire, min-range or splash, and the only role that reads delivery is siege (lobbed, drop or long range). No link in the file names friendly-fire, min-range or a delivery. The Technical already matched weapon-trait:splash through its cannon. No new ATYPICAL lines."
+          },
+          {
+            "id": "REG-05",
+            "what": "Unit part only; the registry note was already changed in the workspace. In generals.china.red-guard uncertain abilities/0, deleted the sentence contrasting the registry's 'soldiers of any kind' wording with the code. No coded value changed."
+          },
+          {
+            "id": "L1",
+            "what": "generals.china.overlord: countered_by/4 (unit:generals.gla.jarmen-kell, alone) is replaced by two entries in order. countered_by/4 is pattern:hijack-vehicle. Its why: weapons that kill a vehicle's crew beat it whatever its armour; Kell snipes its crew and leaves the tank neutral for enemy infantry; and the Nuke Cannon's Neutron shells, which empty vehicles the same way, are especially effective against it (wiki). countered_by/5 is unit:generals.gla.jarmen-kell ('The same reason: the wiki names Jarmen Kell, whose snipe empties it.'). damage:emp moves to countered_by/6. I added better_fix's optional Neutron-shells clause because the Overlord page I re-read supports it: its Counters say Neutron Shells work especially well on it and its escorts, and Kell's snipe removes its crew and opens it to capture. A new uncertain at countered_by/4 says the crew-and-rider kill comes from the Neutron shells page (https://cnc.fandom.com/wiki/Neutron_shells, read, not cited). No path pointed at the old countered_by/4 or /5."
+          },
+          {
+            "id": "L2",
+            "what": "generals.gla.battle-bus: deleted counters/0 (pattern:hijack-vehicle), so the Hijacker unit link is now counters/0. Its why is rewritten to the fix's text minus one clause, 'so a loaded one is safe from them'. The full text was 314 characters and the schema allows 300 for a why (common.schema.json); the clause repeats the first sentence. It is now 279 characters. Deleted the last sentence of the uncertain entry at counters (from 'pattern:hijack-vehicle names the enemy...' to '...two different situations'). No index paths pointed at the old counters/0 or /1."
+          },
+          {
+            "id": "L5",
+            "what": "generals.gla.battle-bus: the whys of countered_by/2 (pattern:hijack-vehicle) and countered_by/4 (unit:generals.china.nuke-cannon) are rewritten as the fix gives them. The uncertain at countered_by/4 is rewritten as the fix gives it, with better_fix's addition: it names the Neutron shells page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Neutron_shells, read, not cited). The cited Battle bus page groups the Neutron shells with Kell as ways to empty the bus and leave it open to capture."
+          },
+          {
+            "id": "L6",
+            "what": "generals.gla.technical countered_by/1: ref armour-class:heavy -> armour-class:>=heavy; the why is unchanged. Only this file's unit was changed. The Overlord (super-heavy) now matches it, which fits the Overlord's own counters/0 class:vehicle."
+          },
+          {
+            "id": "L9",
+            "what": "generals.usa-air-force.combat-chinook: counters/0 (weapon:guided-missiles) why is rewritten as given, leaving out the missile-armed fighters. A new uncertain at counters/0 is added as given. The cited Combat Chinook page I re-read says, under Counters, that Raptors and MiGs can deter it, less well because of its point-defence lasers."
+          },
+          {
+            "id": "conv-2",
+            "what": "generals.china.overlord sources/3: the Speaker tower page is replaced with https://cncnz.com/games/zero-hour/china-units/. Kind guide, title 'Command & Conquer: Generals - Zero Hour - China Units, CNCNZ', version Zero Hour, accessed 2026-11-10. The note lists what its Overlord entry agrees on: price, Propaganda Center, a large slow twin-cannon tank that drives over vehicles, and three add-ons that rule each other out. Its supports are tier, cost_band, mobility, crew, armament/1, abilities/0, abilities/1, roles/secondary, strengths/1 and uncertain. The Speaker tower page moved into a new uncertain at abilities/1 (https://cnc.fandom.com/wiki/Speaker_tower, read, not cited). It covers the quarter-faster fire, half the static tower's healing on mobile towers, allies and aircraft benefiting, and no stacking. better_fix: the mobility/notes uncertain (sources_disagree) now names the cited Zero Hour page. No code rests on the Speaker tower page alone: rally-allies, repair-allies and the support role also rest on the cited Overlord page and CNCNZ. Confidence stays high. Re-read: the Zero Hour Overlord entry is the base-game one, and it differs from the wiki only on Nuclear Tanks (+25% against +50%), already in that uncertain entry."
+          },
+          {
+            "id": "conv-3",
+            "what": "After re-reading both editions, sources/4 of three units now points to CNCNZ's Zero Hour pages. Jarmen Kell: https://cncnz.com/games/zero-hour/gla-units/. Red Guard and Hacker: https://cncnz.com/games/zero-hour/china-units/. Each has the Zero Hour title, version 'Zero Hour', accessed 2026-11-10, and a note rewritten for that page (same entry as the base-game page; read from the page cache's copy fetched 2026-11-10). supports is unchanged. A text diff shows the Kell, Red Guard and Hacker entries are identical on the base-game and Zero Hour pages. So there is no difference to report, and no code or confidence changed."
+          },
+          {
+            "id": "conv-5",
+            "what": "generals.gla.technical tier/basis: the end is reworded as proposed. The Toxin and Stealth Generals' Technicals match the main one. The Demolition General's costs more and, after his side-wide Demolitions upgrade, gets a button to blow itself up; it is left out because the entry follows the main version (see on_death.notes). Checked in CommandSet.ini (1.04): Demo_GLAVehicleTechnicalCommandSetUpgrade has Demo_Command_TertiarySuicide in slot 9; GLAVehicleTechnicalCommandSet and Demo_GLAVehicleTechnicalCommandSet do not."
+          },
+          {
+            "id": "conv-7",
+            "what": "Done as the integrator ruled: the Battle Bus is left as it is. generals.usa.sentry-drone armour/notes now says step 4 decided: its own set is one of the registry's one-off sets, which are not keys of the armour map, so the kind of unit decides, and a drone no bigger than a soldier is light by the class descriptions. The class stays light. None of its uncertain entries named step 1, so none changed."
+          }
+        ],
+        "not_applied": [
+          {
+            "id": "REG-02 (registry part)",
+            "why": "The note text in research/registry-notes/games-r3.md was already changed in the workspace by the integrator. This job covers data/units/generals.json only."
+          },
+          {
+            "id": "REG-05 (registry part)",
+            "why": "Same reason: the Horde Bonus note is already changed in the workspace. Only the unit's uncertain sentence was mine."
+          },
+          {
+            "id": "L6 (Tempest Rising part)",
+            "why": "tempest-rising.veti.enlightened countered_by/3 is in data/units/tempest-rising.json, outside this file and outside units_in_this_file."
+          },
+          {
+            "id": "conv-7 (flag part)",
+            "why": "Flagging the registry note's loose wording for the rule-fix round is a registry matter, not a unit-file edit: the note's step-1 exception for one-off sets conflicts with its line sending unlisted sets to steps 3 and 4. It is reported here and not changed."
+          },
+          {
+            "id": "none (word lists / field rules)",
+            "why": "No item needed a change to data/vocab, schemas, the Conventions or the validator's rule checks."
+          }
+        ],
+        "pages_read": [
+          "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini (cache, fetched 2026-11-10): TechnicalRPGWeapon PrimaryDamageRadius 5, AttackRange 150, MinimumAttackRange 5, RadiusDamageAffects ALLIES ENEMIES NEUTRALS; TechnicalCannonWeapon radius 25, ALLIES; SentryDroneGun radius 0, WeaponSpeed 600, ProjectileObject NONE; AuroraBombWeapon radius 20, ALLIES ENEMIES NEUTRALS NOT_SIMILAR; OverlordTankGun radius 5 (secondary 10), ALLIES; no MinimumAttackRange except the Technical rocket",
+          "https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini (cache): Demo Technical upgrade set adds the suicide button in slot 9",
+          "https://cnc.fandom.com/wiki/Overlord_tank_(Generals_1) (cache): Counters section; Kell snipes its crew and opens it to capture; Neutron Shells particularly effective against it and escorts",
+          "https://cnc.fandom.com/wiki/Neutron_shells (cache, fetched 2026-11-10): kills crew and passengers, vehicle neutral until infantry take it",
+          "https://cnc.fandom.com/wiki/Speaker_tower (cache): 25% faster fire, mobile towers heal 1% against 2%, allies and aircraft benefit, bonuses do not stack",
+          "https://cnc.fandom.com/wiki/Combat_Chinook (cache): Counters section; Raptors and MiGs deter it, less well because of point-defence lasers",
+          "https://cnc.fandom.com/wiki/Battle_bus_(Zero_Hour) (cache): Neutron mines and shells, and Kell's driver kill, empty it for capture; changelog on Hijackers",
+          "https://cnc.fandom.com/wiki/Technical_(Generals_1) (cache): cannon deals splash damage; rocket has no area or single-target words",
+          "https://cnc.fandom.com/wiki/Salvaging (cache): no area words for the rocket",
+          "https://cncnz.com/games/zero-hour/china-units/ (cache, fetched 2026-11-10): Overlord, Red Guard and Hacker entries",
+          "https://cncnz.com/games/generals/china-units/ (cache): Overlord, Red Guard and Hacker entries, identical to the Zero Hour ones",
+          "https://cncnz.com/games/zero-hour/gla-units/ (cache, fetched 2026-11-10): Jarmen Kell entry",
+          "https://cncnz.com/games/generals/gla-units/ (cache): Jarmen Kell entry, identical to the Zero Hour one",
+          "docs/vocabularies.md: splash coding rule, friendly-fire and min-range definitions, armour-class steps and class descriptions",
+          "docs/fields.md: armament delivery rule, sources[] and uncertain rules",
+          "research/registry-notes/games-r3.md (workspace copy): new 1.04 files note, line 373",
+          "schemas/common.schema.json: why maxLength 300"
+        ],
+        "checks": "All checks ran in the workspace . data/units/generals.json is rebuilt from a pristine copy of the repository file by .progress/fix/apply.cjs, which checks every old value before it edits. Notes are in .progress/fix/progress.md (ends with DONE).\n(1) node scripts/format-json.mjs data/units/generals.json: exit 0. The first run rewrote 1 file; a second run rewrote 0.\n(2) node scripts/validate.mjs .: exit 0, OK, no errors. There are 39 ATYPICAL lines across the repository, and every one is recorded in its unit's atypical list (checked by script). The 7 on Generals units all existed before: Kell sniper/structure, Battle Bus anti-armour requires and crush/medium, Technical crush/medium and cannon/kinetic, Overlord scout requires, Sentry Drone tracks/very-fast. The only output change from the pre-fix run: a WARN line \"pattern 'hijack-vehicle' is planned, not filled in yet\" moved from the Battle Bus (counters/0 deleted) to the Overlord (new countered_by/4).\n(3) node scripts/copy-check.mjs . --delay 2000 with 27 --only parts: cnc.fandom.com/wiki/Jarmen_Kell, generals.str, Object/GLAInfantry.ini, cnc.fandom.com/wiki/Battle_bus_(Zero_Hour), Object/GLAVehicle.ini, cncnz.com/games/zero-hour/gla-units, cnc.fandom.com/wiki/Technical_(Generals_1), cnc.fandom.com/wiki/Salvaging, cnc.fandom.com/wiki/Overlord_tank_(Generals_1), cnc.fandom.com/wiki/Gattling_cannon_(Generals_1), cnc.fandom.com/wiki/Red_Guard_(Generals_1), Object/ChinaInfantry.ini, cncnz.com/games/zero-hour/china-units, cnc.fandom.com/wiki/Hacker, cnc.fandom.com/wiki/Aurora, Object/AmericaAir.ini, cncnz.com/games/zero-hour/usa-units, cnc.fandom.com/wiki/Sentry_drone, Object/AmericaVehicle.ini, cnc.fandom.com/wiki/Combat_Chinook, cnc.fandom.com/wiki/Chinook_(Generals), cncnz.com/games/zero-hour/grangers-units, Weapon.ini, Neutron_shells, Speaker_tower, CommandSet.ini, cncnz.com/games/generals/. Result: exit 0, 23 of 648 cited pages checked, all from the cache, none fetched, no shared runs. Before the fixes: 24 pages, exit 0.\nCopy-check reads only cited pages. So a scratch six-word check (.progress/fix/sixword.mjs, built on copy-check's own words/grams/sharedRuns; a positive control found the planted copies) compared the 31 new or changed prose strings with all 306 cached Generals pages, cited or not. These include Weapon.ini, CommandSet.ini, the Neutron shells and Speaker tower pages and both CNCNZ editions. Result: 0 shared runs.\nNo local paths in the file. Compared with the repository copy, only the 11 items' paths changed (55 path-level changes); unit order and every abilities, weapon and fit_notes index are unchanged. the repository was not edited.\nOn your note about research/r3 and CLAUDE.md: both exist in the repository (research/r3 holds fill, merge, opening and prep; CLAUDE.md is at the root), and the repository is a link to the same folder. That folder is not a git checkout. If you were looking at GitHub's main branch, R3 lives on the batch branch claude/quirky-cray-tih1w4 (pull request #6), per CLAUDE.md."
+      },
+      "verifier": {
+        "verdicts": [
+          {
+            "id": "REG-02",
+            "ok": false,
+            "reason": "I checked every code against the cached 1.04 Weapon.ini (.cache/sources/raw.githubusercontent.com/...Patch-b7cdfc0679.json, commit 6c7f40d). All of them are right. TechnicalRPGWeapon: PrimaryDamageRadius 5, AttackRange 150, MinimumAttackRange 5 (the file's comment says rockets must not blow up in your face), RadiusDamageAffects ALLIES ENEMIES NEUTRALS. So Technical armament/2 is [splash, min-range, friendly-fire]. TechnicalCannonWeapon: radius 25 with ALLIES, so armament/1 is [splash, friendly-fire]. SentryDroneGun: WeaponSpeed 600 'dist/sec' and ProjectileObject NONE, while instant guns carry 999999 'huge value == effectively instant'. So its delivery is projectile. AuroraBombWeapon: radius 20, ALLIES ENEMIES NEUTRALS NOT_SIMILAR, so friendly-fire. OverlordTankGun: radius 5, secondary 10, ALLIES, so friendly-fire. As the fixer reported, only the RPG has a MinimumAttackRange. Each code meets its own rule as written (vocabularies.md:766 splash, :783 min-range, :784 friendly-fire; fields.md:79 delivery; registry note games-r3.md:373). In the cached Technical wiki page only the cannon 'can deal splash damage', and nothing there or on the Salvaging page calls the rocket single-target or its area tiny. Every code that rests only on Weapon.ini has an uncertain entry at its path, either naming the URL or pointing to the path that holds it. The old clause in the Technical's uncertain armament/2/summary is gone. validate.mjs: exit 0, no new ATYPICAL lines. One defect: the new Technical uncertain at armament/2/traits writes reach values as figures: 'its MinimumAttackRange of 5, against an AttackRange of 150'. fields.md line 20 (Bands with numbers) says every text field, uncertain notes included, gives reaches in words, never as figures. A scan of all unit strings finds 0 such figures in the repo file and 2 after the fix, both in this note. The integrator asked to name 'the file and the figure', and naming MinimumAttackRange without its value does that.",
+            "correction": "In generals.gla.technical, uncertain entry at path armament/2/traits: replace 'Min-range: its MinimumAttackRange of 5, against an AttackRange of 150, leaves a dead zone of a thirtieth of its reach, so it cannot fire at a target almost touching the truck.' with 'Min-range: its MinimumAttackRange there leaves a dead zone of a thirtieth of its reach, so it cannot fire at a target almost touching the truck.' No coded value changes."
+          },
+          {
+            "id": "REG-05",
+            "ok": true,
+            "reason": "In generals.china.red-guard, uncertain/6 (path abilities/0) lost exactly the sentence 'The registry's Generals game-wide note words it as four other allied soldiers of any kind; by the code, soldiers without the module do not count.' The rest of the note is byte-identical. No coded value changed, and no 'any kind' wording is left in the unit. The workspace registry note at line 226 already has the new Horde Bonus wording; it is identical to repo HEAD, where commit 527724f added it."
+          },
+          {
+            "id": "L1",
+            "ok": true,
+            "reason": "Overlord countered_by is now [class:aircraft, weapon:rockets, role:anti-armour, delivery:ram, pattern:hijack-vehicle, unit:generals.gla.jarmen-kell, damage:emp], in the order the brief gives. The Kell why matches the brief word for word. The pattern why is the brief's text plus the optional Neutron shells clause. The cached Overlord page (cnc.fandom.com/wiki/Overlord_tank_(Generals_1), fetched 2026-11-10) supports the clause. Its Counters section has Kell snipe the vehicle, remove its crew and open it to capture, and calls Nuclear Cannons with Neutron Shells 'particularly effective' against it and its escorts. So the integrator's condition is met. The words 'empty vehicles the same way' rest on the uncited Neutron shells page (cached: crew and passengers killed, vehicle neutral until infantry take it). A new uncertain entry at countered_by/4 names that page with its URL. No supports, uncertain, fit_notes or atypical path pointed at the old countered_by/4 or /5 (checked by .progress/verify/paths.cjs). The validator's only change is the planned-pattern WARN moving from the Battle Bus to the Overlord."
+          },
+          {
+            "id": "L2",
+            "ok": true,
+            "reason": "Battle Bus counters is now [unit:generals.gla.hijacker]: the pattern entry is deleted, and the last sentence of the uncertain entry at 'counters' is cut exactly as asked. The why is the brief's text minus ', so a loaded one is safe from them'. The full text is 314 characters, and schemas/common.schema.json:169 caps a why at 300. The applied text is 279 characters and keeps the point: Hijackers cannot take the bus while anyone is aboard. The cached Battle bus page's changelog confirms this: since Zero Hour patch 1.03, occupied buses cannot be captured by hijackers. countered_by/2, which the why cites, is still the pattern entry. No path pointed at the old counters/0 or /1."
+          },
+          {
+            "id": "L5",
+            "ok": true,
+            "reason": "The whys of countered_by/2 and countered_by/4 match the fix text word for word. The uncertain entry at countered_by/4 is the fix's text plus better_fix's naming: 'the Neutron shells page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Neutron_shells, read, not cited)'. Both pages back it. The cached Battle bus page groups Neutron mines and Neutron shells (they kill passengers and crew, leaving the bus open for capture) with Kell's driver kill. The cached Neutron shells page has crew and passengers killed and the vehicle left neutral until infantry take it over."
+          },
+          {
+            "id": "L6",
+            "ok": true,
+            "reason": "In generals.gla.technical, countered_by/1 changed from armour-class:heavy to armour-class:>=heavy, and its why is unchanged. Matchups rule 4 (fields.md:11) allows a comparator in countered_by for a group. The super-heavy Overlord now matches the link, which fits its own counters/0 class:vehicle. The Tempest Rising half of the item was rightly left to that game's file."
+          },
+          {
+            "id": "L9",
+            "ok": true,
+            "reason": "The why of counters/0 and the new uncertain entry at counters/0 match the brief's text word for word. The cached Combat Chinook page backs them. Its Counters section calls the Chinook completely vulnerable to non-missile units and says Raptors and MiGs can deter it, though less well because of its PDLs. Its Tactics section has the PDLs intercept missiles from Patriots, Stinger Sites and missile infantry. The variant_of and lineage uncertain entries only moved down one index (to 15 and 16); their text is unchanged."
+          },
+          {
+            "id": "conv-2",
+            "ok": true,
+            "reason": "Overlord sources/3 is now https://cncnz.com/games/zero-hour/china-units/: kind guide, version 'Zero Hour', accessed 2026-11-10, with a title in the same form as the four existing Zero Hour CNCNZ citations. The cached page (fetched 2026-11-10T23:00) backs the new note and every supports entry (tier, cost_band, mobility, crew, armament/1, abilities/0, abilities/1, roles/secondary, strengths/1, uncertain). Its Overlord entry gives $2000, the Propaganda Center prerequisite, a large slow tank with twin cannons that runs over enemy vehicles, and three add-ons that each block the others: a bunker that seats five soldiers, with an Evacuate button, a Gattling that fires the base defence's shells at ground and air, and a speaker tower that speeds nearby friendly fire and slowly heals or repairs. It gives Nuclear Tanks +25%. The Speaker tower page moved into a new uncertain entry at abilities/1, with its URL, as 'read, not cited'. Its claims match the cached Speaker tower page: 25% faster fire, healing that applies to allies and aircraft, no stacking, and mobile towers healing 1% against 2%. They also match the Overlord page: the Propaganda Tower heals and speeds fire for the tank and nearby friends, and patch 1.02 fixed the healing stacking. The sources_disagree entry at mobility/notes now names the cited Zero Hour URL, and confidence stays high. Low nit: the note calls the entry 'the same as on its base-game China page', but the Zero Hour entry adds 'and Helices' to its Subliminal Messaging line. No Overlord fact differs.",
+            "correction": "Optional wording nit only: 'the same, for the Overlord, as on its base-game China page'."
+          },
+          {
+            "id": "conv-3",
+            "ok": true,
+            "reason": "For Kell, the Red Guard and the Hacker, sources/4 now has the Zero Hour URL and title, version 'Zero Hour', and accessed 2026-11-10. Each note is rewritten with a 'same as on its base-game page' clause and the cache date 2026-11-10; supports is unchanged. I compared the cached pages word by word (.progress/verify/entries.cjs). The Kell entry on zero-hour/gla-units is identical to the one on generals/gla-units. The Red Guard and Hacker entries on zero-hour/china-units are identical to those on generals/china-units. So the integrator's fallback (keep the base-game page) does not apply. Cache fetch times: Zero Hour GLA page 2026-11-10T22:03, Zero Hour China page 2026-11-10T23:00. Each note's list of facts is on its entry."
+          },
+          {
+            "id": "conv-5",
+            "ok": true,
+            "reason": "The end of tier.basis matches the brief's text word for word. In the cached 1.04 CommandSet.ini, Demo_GLAVehicleTechnicalCommandSetUpgrade has slot 9 = Demo_Command_TertiarySuicide. GLAVehicleTechnicalCommandSet and Demo_GLAVehicleTechnicalCommandSet do not have it, and no Toxin or Stealth Technical command set exists. on_death.notes already names the detonate order."
+          },
+          {
+            "id": "conv-7",
+            "ok": true,
+            "reason": "Sentry Drone armour.notes now says step 4 decided: a one-off set is not a key of the armour map, so the kind of unit decides. That kind is light by the class descriptions ('drones and robots no bigger than a soldier', vocabularies.md:283; step 4 is the kind of unit, :290). The class stays light. No Sentry Drone uncertain entry names armour step 1; the only 'step 1' in the unit is a roles step. The Battle Bus armour and its uncertain entries are untouched, as ruled. Flagging the note's wording for the rule-fix round belongs to the registry, so it is reported and not edited."
+          }
+        ],
+        "unexpected_changes": [
+          "generals.usa.aurora-bomber armament/0/summary: 'which only that file says, so no friendly-fire trait is set' became 'which only that file says (see uncertain)'. No item names this edit, but it is a needed dependent change: the old words contradict the new friendly-fire code. The fixer disclosed it, and it is correct.",
+          "Three new uncertain entries that the brief does not spell out but fields.md sources[] requires, because each covers a code or claim that rests only on an uncited page: generals.gla.technical armament/1/traits (friendly-fire from Weapon.ini), generals.china.overlord armament/0/traits (friendly-fire from Weapon.ini) and generals.china.overlord countered_by/4 (the Neutron shells page). All three are correct. They push later uncertain entries down without breaking any path: Technical combos/1 is now uncertain/9; the Overlord's armament/1/range, armament/1/damage, armament/1/can_target, combos/0 and combos/3 are now 5, 6, 7, 10 and 11. Every supports, uncertain, fit_notes and atypical path still resolves to the right target; only 'lineage' does not resolve, and that was already true before the fix.",
+          "No ability, weapon, fit_note, atypical, strength, weakness or combo moved, appeared or disappeared (checked by matching entry contents). Unit order and every abilities, armament and fit_notes index are unchanged. The checks run in the workspace: validate.mjs exits 0 (OK), and its only output change is the planned-pattern WARN moving from the Battle Bus to the Overlord. format-json --check, build-docs --check and sync-patterns --check all pass. node --test passes 296 of 297; the one failure (vocab-diff 'reads a folder and a git commit alike') comes from the workspace having no git history. My six-word check (.progress/verify/sixword.mjs) compared 26 new or changed strings with 315 cached Generals pages: 0 shared runs, and a planted copy was caught. No local paths are in the file.",
+          "Outside generals.json, and not the fixer's doing: the workspace's docs/research-runbook.md is older than the repository's (repo commit 9b65b5e changed lines 273-274 after the copy), and research/r3/merge exists only in the repository. games-r3.md and data/games.json are now identical in both, because repo commit 527724f added the registry fixes, so they no longer 'differ on purpose'. Copy back only data/units/generals.json: copying the whole workspace would undo the runbook change."
+        ]
+      },
+      "repair": {
+        "applied": [
+          {
+            "id": "REG-02",
+            "what": "In data/units/generals.json, unit generals.gla.technical, the uncertain entry at path armament/2/traits (uncertain/8): replaced 'Min-range: its MinimumAttackRange of 5, against an AttackRange of 150, leaves a dead zone of a thirtieth of its reach, so it cannot fire at a target almost touching the truck.' with 'Min-range: its MinimumAttackRange there leaves a dead zone of a thirtieth of its reach, so it cannot fire at a target almost touching the truck.' No coded value changed. A leaf diff against the pre-repair copy (.progress/repair/generals.before-repair.json) shows this one string as the only change. I made the same text change in the fixer's rebuild script (.progress/fix/apply.cjs, line 52). Rebuilding from the untouched copy and then running format-json gives a file byte-identical to the direct edit. I re-read the cached 1.04 Weapon.ini: TechnicalRPGWeapon has AttackRange 150 and MinimumAttackRange 5, so 'a thirtieth of its reach' is still right."
+          }
+        ],
+        "not_applied": [
+          {
+            "id": "undo: Aurora armament/0/summary",
+            "why": "Kept. REG-02 required it: REG-02 recodes the Aurora bomb as friendly-fire, and the old words ('so no friendly-fire trait is set') would contradict that code. The verifier judged the edit correct."
+          },
+          {
+            "id": "undo: three new uncertain entries (Technical armament/1/traits, Overlord armament/0/traits, Overlord countered_by/4)",
+            "why": "Kept. The first two follow REG-02's friendly-fire recodes. The third follows L1's optional Neutron shells clause, which the integrator allowed once the Overlord page supported it. fields.md line 140 (sources[]) says a code that rests only on an uncited page gets an uncertain entry at its own path. The verifier judged all three correct and checked that every path still resolves."
+          },
+          {
+            "id": "undo: index shifts and the 'nothing moved' check",
+            "why": "Nothing to undo. The verifier confirmed that no ability, weapon, fit_note, atypical, strength, weakness or combo moved, and that the later uncertain entries shifted without breaking any path."
+          },
+          {
+            "id": "outside generals.json (runbook, research/r3/merge, games-r3.md, games.json)",
+            "why": "Not the fixer's doing, and I changed nothing there. The workspace runbook is older than the repo's (repo commit 9b65b5e). research/r3/merge exists only in the repo. games-r3.md and data/games.json are now byte-identical in the workspace and the repo. Copy back only data/units/generals.json: copying the whole workspace would undo the runbook change."
+          }
+        ],
+        "checks": "All commands ran in the workspace .\n\n(1) Format. `npm run format` checked 92 files and rewrote 0. `npm run format:check` reports all 92 files formatted.\n\n(2) Validate. `node scripts/validate.mjs` exits 0 with OK. Its output (.progress/repair/validate.txt) is byte-identical to the fixer's post-fix run (.progress/fix/validate-after.txt): 39 ATYPICAL lines, the same as before. The only difference from the repo's run is still the planned-pattern WARN moving from the Battle Bus to the Overlord.\n\n(3) Copy-check. `node scripts/copy-check.mjs $(cat .progress/fix/only-args.txt) --delay 2000` exits 0. It checked 23 of 648 cited pages, all from the cache with 0 fetched, and found no shared runs (.progress/repair/copycheck.txt).\n\n(4) Extra six-word checks on uncited pages too:\n- The fixer's sixword.mjs compared 31 new or changed strings with 306 cached Generals pages (including Weapon.ini, CommandSet.ini, Neutron shells and Speaker tower) and found 0 shared runs.\n- control.mjs caught 3 of 3 planted copies.\n- The verifier's sixword.mjs compared 26 strings with 315 pages and found 0 runs; its positive control was found.\n\n(5) Figure scan of every unit string for reach figures: 0 now, 2 before the repair (both in this note), 0 in the repo file.\n\n(6) No local paths in generals.json (grep exit 1).\n\n(7) Other checks:\n- `build-docs --check`: all 3 docs up to date.\n- `sync-patterns --check`: all 36 files up to date.\n- `node --test`: 296 of 297 pass. The one failure is vocab-diff's 'reads a folder and a git commit alike' test (\"'HEAD' is neither a folder nor a git commit\"); it fails because the workspace has no git history.\n\n(8) Rebuild cross-check: running apply.cjs and then format-json gives the same bytes (cmp) as the direct edit.\n\nNotes are in .progress/repair/progress.md, which ends with DONE."
+      }
+    },
+    {
+      "game": "tempest-rising",
+      "fixer": {
+        "applied": [
+          {
+            "id": "REG-01",
+            "what": "tempest-rising.dynasty.line-officer: armour/class unarmoured -> light. armour/notes rewritten: the soldier rule decided. Step 1 alone gives unarmoured from his Infantry label, but the registry note's test makes him light: no resistance below the Field Scout's and four above it (rifle, explosive, fire, sniper), with rocket and cannon the same. uncertain armour/class rewritten to name the registry note's Tempest Rising armour entry, keeping the Field Scout page (read, not cited). Rechecked: primary assault comes from step 5 (medium speed, so never raider) and has no requires. The secondaries buffer and anti-infantry have no requires either. None of his own strengths, weaknesses, counters, countered_by or combos uses an armour-class link, and no counters, countered_by or combos link of another unit in this file covers him by armour class. He has no atypical entries, and the validator prints no new ATYPICAL line."
+          },
+          {
+            "id": "REG-03",
+            "what": "Thunderhead: abilities/3 (Tempest Shielded and Symbiotic Restoration, Engine Tuning doctrine) deleted. fit_note abilities/3/patterns deleted. uncertain abilities/3 deleted, and its page naming (Doctrine page checked for 1.9.0, Ability page) moved into uncertain armour/notes. armour/notes now ends: Engine Tuning reaches every Veti vehicle and aircraft, makes it immune to Tempest Charge and lets it mend inside Tempest fields, a side-wide change left out here. Vimana: abilities/8 and fit_note abilities/8/patterns deleted, the same Engine Tuning sentence added to armour/notes, and sources/4 (Ability page) supports abilities/8 -> armour/notes. Both removed abilities and fit notes were last in their lists, so no index moved, and no other path pointed at them. I read the better_fix's 'Doctrine page citation' as this Ability-page support: neither unit cites the Doctrine page as a source."
+          },
+          {
+            "id": "REG-04",
+            "what": "Thunderhead abilities/2 (Arcing) kind passive -> triggered. Vimana abilities/5 (Arcing) kind passive -> triggered. Summaries and fit_notes left as they were. Servitor check: no unit in this file codes a Progenesis or Servitor-spawn perk as an ability. The perk appears only in the Enlightened's text, so nothing else was recoded."
+          },
+          {
+            "id": "REG-07",
+            "what": "Tempest Sphere: armour/notes now says check A decided through its registry clause: a t3 unit with more than twice the health of either main battle tank (nearly four times the Hunter Tank's), and the note decides no size. uncertain armour/class now rests on the registry clause (Hunter Tank page read, not cited; the body stays large). uncertain body/size no longer says the note counts it among the biggest units. Vimana: armour/notes now uses the same registry clause, giving health only as comparisons, never as a figure from the finding. uncertain armour/class rests on the registry clause (its armour map gives aircraft light; the huge size would give the same class by check A's other clause). uncertain body/size now says large would no longer change its class. No class or size changed."
+          },
+          {
+            "id": "REG-09",
+            "what": "tempest-rising.dynasty.voltaic-tank: uncertain roles/secondary now cites the registry note's list of tooltip role words instead of the note's silence: 'disables' names disabler, as the Generals note reads 'disable', and the cannon's silence trait meets disabler's requires. Roles unchanged."
+          },
+          {
+            "id": "L3",
+            "what": "tempest-rising.veti.vimana combos: inserted at combos/4 {ref pattern:resupply-allies, why 'An Enlightened that sacrifices itself onto the Vimana sets off Consecrated Restocking, refilling the cannon's four shots at once and speeding their return (Vimana page).'}. The Enlightened unit link, now combos/5, has its why changed to 'The same reason: the Vimana page names the Enlightened's Sacrifice.' No path pointed at combos/4."
+          },
+          {
+            "id": "L4",
+            "what": "tempest-rising.veti.enlightened: counters/0 damage:armour-piercing deleted, so role:buffer is now counters/0 and counters is still not empty. The uncertain note at path counters is set to the item's text. Status effect source supports counters/1 -> counters/0. No other path pointed at counters."
+          },
+          {
+            "id": "L6",
+            "what": "tempest-rising.veti.enlightened countered_by/3 ref armour-class:heavy -> armour-class:>=heavy, why unchanged. I accepted the side effect: the link now also matches the Vimana. The Generals Technical was not touched."
+          },
+          {
+            "id": "conv-1",
+            "what": "tempest-rising.dynasty.line-officer: new uncertain entry at sensors/notes, added at the end of the list. It says the note is true at the version researched. Patch 2.0.2+60956 (29 October 2026) came out during the batch and is not covered: it lengthens his pistol's reach a little again, so on the live game the pistol reaches slightly past his sight, and the band stays medium. It names the wiki's 2.0.2 page (read, not cited). Shieldmaiden unchanged."
+          },
+          {
+            "id": "facts-01",
+            "what": "Read the Vimana page again first, as asked: live API on 10 Nov 2026, revid 14252 of 7 Nov 2026, the same as the cache. Figures: weapon range 3000 (campaign 1500); hp 3300 (campaign 3000); armour fields: rifle 50, rocket 25, explosive 0, cannon 25 (campaign 0), fire 0 and sniper 75; speed 400, sight 3000, cost 4000, tier 3, Upcoming banner, no Verified tag. History: the 5 Nov edit (14057->14202) fixed a typo only. The 7 Nov edit (14202->14252) changed armorcannon 0->25, hp 2000->3300 and w1_range 1500->3000, each with a .sp value. 3000/2500 = 1.2, so medium. Applied: armament/0/range short -> medium. The summary sentence now says it reaches about a fifth further than the Field Scout's rifle, exactly as far as the Vimana sees. weaknesses/2 (range:short) deleted, leaving four, and sources/3 (Celestial Gate) supports weaknesses/4 -> weaknesses/3. as_player 'but reaches only a short way' -> ', reaches about as far as a rifle'. New uncertain entry at armament/0/range: no Verified tag; until the 7 Nov edit the page showed only the lower figure (about three fifths of the rifle, which would band short), now the campaign value; the registry ignores campaign figures; the 2.0.0 notes name no change to the cannon. sources/2 accessed 2026-10-27 -> 2026-11-10, and its version adds that since the 7 November 2026 edit the page gives multiplayer and campaign figures side by side. Rechecked: assault, buffer and anti-infantry have no requires and none depends on range, no other link in the file uses range, and there is no new ATYPICAL line."
+          },
+          {
+            "id": "facts-02",
+            "what": "Vimana armour/notes: full damage from Explosive and Fire, three quarters from Rocket and Cannon, half from Rifle and a quarter from Sniper. Health about five and a half times a Hunter Tank's and half again the Tempest Sphere's. uncertain armour/notes (index 4) now says: since the 7 November 2026 edit the page gives multiplayer and campaign figures side by side, and the multiplayer ones are used. That edit raised the health by about two thirds and added the Cannon resistance. Still no Verified tag. Class unchanged."
+          },
+          {
+            "id": "facts-03",
+            "what": "Thunderhead, using the page compare 13919->14249 (7 Nov 2026): armorrifle 75->25 with .sp 75, hp 900->1300 with .sp 900, speed 650->900 with .sp 700. armour/notes resistance sentence now reads: full from Cannon, three quarters from Rocket and Rifle, half from Explosive, a quarter from Fire and Sniper; 'the page still shows the older figure' dropped. mobility/notes, uncertain mobility/speed (index 3) and sources/2/version now say the page shows the 2.0.0 speed (and health) with the campaign values beside them. The version also notes the 10 Nov re-read. uncertain armour/notes (index 6) also says the Rifle resistance comes from the 7 Nov edit, which has no Verified tag and no official confirmation, unlike the health and speed. speed_raw 1.64 and the bands are unchanged."
+          },
+          {
+            "id": "facts-04",
+            "what": "Vimana abilities/4 summary: 'Aura Amplifiers' -> 'Subjugation Amplifiers'. The Doctrine page in the cache (10 Nov 2026) names the level 1 Subjugation doctrine this way. The stated effect, half wider, is unchanged."
+          }
+        ],
+        "not_applied": [
+          {
+            "id": "REG-01, REG-03, REG-04, REG-07, REG-09, conv-1, facts-04 (note parts)",
+            "why": "The changes to games-r3.md and data/games.json are not this step: the integrator notes say the registry note is already changed in the workspace. Only data/units/tempest-rising.json was edited. The repository copy at the repository now holds the same games-r3.md and games.json text as the workspace."
+          },
+          {
+            "id": "L6 (Technical part)",
+            "why": "generals.gla.technical countered_by/1 belongs to another game's file. This step changes only the units listed in units_in_this_file."
+          },
+          {
+            "id": "facts-03 (optional weakness wording)",
+            "why": "The better_fix allows the Thunderhead's weaknesses/2 text ('Cannon hits hurt it at full strength and Rocket hits nearly so') to stay, and makes adding Rifle optional. I left it as it was."
+          },
+          {
+            "id": "facts-03 (stale text not named)",
+            "why": "These Thunderhead fields are not named by the item, so I left them, but they now read as stale. sources/2 note still lists 'an old speed' among the infobox fields. sources/1 note still says '(its speed figure replaces the page's)'. sources/2 accessed stays 2026-10-27, while the version text records the 10 November re-read. Flagged for the integrator."
+          },
+          {
+            "id": "REG-04 (fit_note wording)",
+            "why": "The item says the fit_notes stay. The wanted text of Thunderhead fit_note abilities/2/patterns and Vimana fit_note abilities/5/patterns still says 'a passive that strikes back', although both abilities are now triggered."
+          },
+          {
+            "id": "facts-01/facts-02 (run docs)",
+            "why": "I did not run npm run docs as a write, because only the unit file is in scope. node scripts/build-docs.mjs --check reports all 3 generated docs up to date: no generated doc uses Tempest Rising units. No item needed a change to the word lists or field rules."
+          }
+        ],
+        "pages_read": [
+          "https://tempestrising.wiki.gg/wiki/Vimana (live API revid 14252 of 7 Nov 2026, revision list, compares 14057->14202 and 14202->14252)",
+          "https://tempestrising.wiki.gg/wiki/Thunderhead (revision list, compare 13919->14249 of 7 Nov 2026, cache refreshed 10 Nov 2026)",
+          "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_2.0.2%2B60956 (API revid 14355: Line Officer reach 2000 -> 2100, no Vimana or Thunderhead line)",
+          "https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_2.0.0%2B60710 (cache: Thunderhead health 1300 from 900, speed 900 from 700; Vimana only the Servitors; Line Officer reach 1800 -> 2000)",
+          "https://tempestrising.wiki.gg/wiki/Doctrine (cache, 10 Nov 2026: level 1 Subjugation Amplifiers; Engine Tuning lists Thunderhead and Vimana)",
+          "https://tempestrising.wiki.gg/wiki/Ability (cache, 10 Nov 2026: Engine Tuning perks; still says Aura Amplifiers)",
+          "Cached text read for the six-word check: Arcing, Field_Scout, Hunter_Tank, Crushing, Unit, Veti_Arsenal, Caretaker, War_Ender, Dynasty_Guard, Subjugation, Tempest, Tempest_Charge and patch 2.0.1 pages on tempestrising.wiki.gg"
+        ],
+        "checks": "All run in .\n\n(1) node scripts/format-json.mjs data/units/tempest-rising.json: 'checked 1 file(s), rewrote 0', exit 0.\n\n(2) node scripts/validate.mjs .: exit 0, OK, no ERROR lines. The 9 Tempest Rising ATYPICAL lines are the same as before the fixes, and each is recorded in its unit's atypical list (no missing-atypical error): Drone Operator 2, Voltaic Tank 1, Tempest Sphere 2, Enlightened 2, Vimana 2 (rotor + slow; disc + huge). One new WARN: the Vimana's new combo links the planned pattern resupply-allies. The Enlightened has the same warning, and matchups rule 7 allows links to planned patterns. Output saved at .progress/fix/validate-after.txt.\n\n(3) node scripts/copy-check.mjs . --only tempestrising.wiki.gg/wiki/Vimana --only tempestrising.wiki.gg/wiki/Thunderhead --only tempestrising.wiki.gg/wiki/Ability --only tempestrising.wiki.gg/wiki/Line_Officer --only tempestrising.wiki.gg/wiki/Tempest_Sphere --only tempestrising.wiki.gg/wiki/Machine_Shop --only tempestrising.wiki.gg/wiki/Enlightened --only tempestrising.wiki.gg/wiki/Status_effect --only tempestrising.wiki.gg/wiki/Celestial_Gate --only 1486920/view/696524994028504917 --only 1486920/view/701027957162902191: 11 of 649 cited pages, all from the cache refreshed on 10 Nov 2026, 'OK: no shared runs', exit 0.\n\nExtra checks:\n- Six-word check of all 25 changed prose strings against 20 pages, including uncited ones (Doctrine, Arcing, Field Scout, Hunter Tank, Crushing, Unit, Veti Arsenal, Caretaker, War Ender, Dynasty Guard, Subjugation, Tempest, Tempest Charge, patch pages 2.0.0, 2.0.1 and 2.0.2, and the live Vimana fetch): 0 shared runs.\n- the search for local paths in the unit file: nothing found.\n- Changed text gives no stat figures, only dates and patch numbers.\n- build-docs --check: up to date.\n- node --test: 296 of 297 pass. The one failure is vocab-diff's git test, which fails because the workspace has no git history.\n- Only data/units/tempest-rising.json differs from the repository in the files the task covers. The repository's research-runbook.md is newer than the workspace copy; I did not touch it.\n\nSide note on your remark about research/r3 and CLAUDE.md: origin/main has neither research/r3 nor CLAUDE.md. Both exist only on branch claude/quirky-cray-tih1w4 (pull request #6), which the checkout at the repository is on, and in the repository. They will appear on main when that pull request merges."
+      },
+      "verifier": {
+        "verdicts": [
+          {
+            "id": "REG-01",
+            "ok": true,
+            "reason": "I compared tempest-rising.dynasty.line-officer between the workspace and the repository with a field-by-field Node diff (.progress/verify/diff.cjs, output diff-raw.txt). armour/class changed from unarmoured to light. armour/notes now says the soldier rule decided: step 1 alone gives unarmoured, but under the registry note's test (games-r3.md line 89: no resistance below the Field Scout's and at least one above) he is light. uncertain/5 (armour/class) now names the note's Tempest Rising armour entry and keeps the Field Scout page as read, not cited. The cached wiki pages (fetched 10 Nov) back this. Line_Officer: rifle 25, rocket 75, explosive 25, cannon 75, fire 25, sniper 25, hp 550. Field_Scout: rifle 0, rocket 75, cannon 75, hp 120. That is four resistances above his, none below, and 550/120 is more than four times. I rechecked what depends on the class. In data/vocab/roles.json, assault, buffer and anti-infantry have no requires. Raider needs speed:>=fast and his speed is medium, so the primary stays assault at step 5. None of his links uses armour-class, and the only armour-class link in the file's counters, countered_by or combos is the Enlightened's >=heavy, which does not cover him. The validator shows no new ATYPICAL line."
+          },
+          {
+            "id": "REG-03",
+            "ok": true,
+            "reason": "Thunderhead: abilities/3, fit_note abilities/3/patterns and the uncertain entry at abilities/3 (old uncertain/8) are all removed. That entry's naming of the Doctrine and Ability pages moved into uncertain/6 (armour/notes), and armour/notes now names Engine Tuning as a side-wide change left out. Vimana: abilities/8 and fit_note abilities/8/patterns are removed, and armour/notes carries the same sentence. In sources/4 (the Ability page), 'abilities/8' is gone and 'armour/notes' was added. The Vimana cites no Doctrine page, and its old record had no uncertain entry for abilities/8, so moving the Ability page's support is a fair reading of better_fix. Both removed abilities and fit notes were last in their lists, so no ability index moved, and no source support pointed at either. The Thunderhead's later uncertain entries shifted down by one, but nothing in the file refers to an uncertain index (grep 'uncertain/[0-9]' finds nothing). I checked that every supports, uncertain, fit_notes and atypical path still resolves. The cached Doctrine page (10 Nov) gives Engine Tuning as making Veti vehicles immune to Charge and repairing them inside Tempest fields, and its list names the Thunderhead and the Vimana. The new sentence matches that and shares no six-word run with the page."
+          },
+          {
+            "id": "REG-04",
+            "ok": true,
+            "reason": "Thunderhead abilities/2 (Arcing) and Vimana abilities/5 (Arcing) changed kind from passive to triggered, and nothing else in either entry changed, as the brief and integrator note ask. This fits the Passive or Triggered tie-break in vocabularies.md (one strike back per attack) and registry note line 291. I listed every ability in the file: no unit codes a Progenesis or Servitor-spawn perk as an ability. The perk is mentioned only in text on the Enlightened and the Vimana. Optional polish, not asked for: the 'wanted' text of fit_notes abilities/2/patterns (Thunderhead) and abilities/5/patterns (Vimana) still says 'a passive that strikes back'. The brief kept the fit notes on purpose."
+          },
+          {
+            "id": "REG-07",
+            "ok": true,
+            "reason": "Tempest Sphere: armour/notes, uncertain/6 (armour/class) and uncertain/1 (body/size) now rest the super-heavy class on check A's registry clause. That is a t3 unit with more than twice the health of either main battle tank, as games-r3.md line 89 now says. They also say the note decides no size, so the size stays large. Vimana: armour/notes, uncertain/6 (armour/class) and uncertain/5 (body/size) were reworded the same way. Its health appears only as comparisons: about five and a half times a Hunter Tank's and half again the Tempest Sphere's, which meets the integrator note. uncertain/5 rightly says large would no longer change its class, since super-heavy allows Large. The figures check out. Cache: Sphere hp 2200 against Hunter Tank 590, which is 3.7 times ('nearly four'). Live Vimana page (API, revid 14252): hp 3300, so 3300/590 is 5.6 and 3300/2200 is 1.5. No class or size changed."
+          },
+          {
+            "id": "REG-09",
+            "ok": true,
+            "reason": "Only the Voltaic Tank's uncertain/7 (roles/secondary) changed. It now cites the registry note's list of role words for the GDF and Dynasty tooltips, where 'disables' is read as disabler, as the Generals note reads disable (games-r3.md line 165). It no longer cites the note's silence. Disabler's requires include weapon-trait:silence, and armament/0 carries silence. The roles stay anti-armour and then [disabler, anti-infantry]."
+          },
+          {
+            "id": "L3",
+            "ok": true,
+            "reason": "Vimana combos/4 is now {pattern:resupply-allies}, with exactly the brief's 'why'. The Enlightened unit link moved to combos/5 with exactly the brief's 'why'. No path pointed at combos/4: the Vimana page supports 'combos', the Steam post supports 'combos/1', and the uncertain entry is at 'combos'. The link correctly describes the teammate: the Enlightened's abilities/0 links resupply-allies. The live Vimana page (revid 14252) says an Enlightened's Sacrifice gives the Vimana Consecrated Restocking, which refills its ammo fully and makes Auto Restock 100% faster, and ammo is 4. The validator adds one WARN (planned pattern), which matchups rule 7 allows. The list now has six entries carrying four distinct reasons, and rule 7's count is a guide, not a cap."
+          },
+          {
+            "id": "L4",
+            "ok": true,
+            "reason": "Enlightened counters/0 (damage:armour-piercing) is removed, leaving counters = [role:buffer], so the list is still not empty. The uncertain note at 'counters' is exactly the brief's text. The Status effect source's support was re-indexed from counters/1 to counters/0. No other source supported the old counters/0, so no path now points at the wrong entry. The armour/notes facts behind the old entry were rightly left alone."
+          },
+          {
+            "id": "L6",
+            "ok": true,
+            "reason": "Enlightened countered_by/3's ref changed from armour-class:heavy to armour-class:>=heavy, and its 'why' is unchanged. The Generals Technical was not touched, as the integrator note requires. The accepted side effect holds: the link now also matches the super-heavy Vimana."
+          },
+          {
+            "id": "conv-1",
+            "ok": true,
+            "reason": "The Line Officer gained one uncertain entry, appended at the end, at sensors/notes. It says the note holds for the version researched, and that patch 2.0.2+60956 (29 October 2026) lengthens the pistol's reach a little, so it now reaches slightly past his sight while the band stays medium. It names the 2.0.2 page as read, not cited, and gives no figures. I fetched that page through the API (revid 14355): Line Officer range rises to 2100 from 2000. His sight on the cached page is 2000, and 2100/2500 is 0.84, which is medium. The Shieldmaiden is unchanged, as the integrator note says."
+          },
+          {
+            "id": "facts-01",
+            "ok": true,
+            "reason": "I re-read the Vimana page myself through the API on 10 Nov (revid 14252): w1_range 3000 (.sp 1500), sight 3000, Upcoming banner and no Verified tag. Through the query API, the history shows revisions 13959, 14057 and 14202 all had w1_range 1500 and no .sp fields, and the 7 November edit (14251) added 3000 with .sp 1500. The 2.0.0 page names no Vimana range change. 3000/2500 is 1.2, which is medium. The changes landed: armament/0/range is medium; the summary says about a fifth further than the rifle and exactly as far as it sees; weaknesses/2 (range:short) is deleted, leaving four; the Celestial Gate source's support is re-indexed to weaknesses/3 (availability:limited); and as_player now reads 'reaches about as far as a rifle'. A new uncertain entry at armament/0/range covers the missing Verified tag, the lower figure before the edit (now the campaign value) and the 2.0.0 notes. sources/2 now has accessed 2026-11-10 and its version mentions the split figures. No other text uses the short reach, no role depends on it, and format --check, build-docs --check and the validator all pass."
+          },
+          {
+            "id": "facts-02",
+            "ok": true,
+            "reason": "The live Vimana page (revid 14252) gives armorrifle 50, rocket 25, explosive 0, cannon 25 (.sp 0), fire 0 and sniper 75. So armour/notes is right: full damage from Explosive and Fire, three quarters from Rocket and Cannon, half from Rifle, a quarter from Sniper. Health is 3300 (.sp 3000): 3300/590 is 5.6 and 3300/2200 is 1.5. uncertain/4 (path armour/notes) now covers the 7 November split, the multiplayer figures being used, the health rise (2000 to 3300, about two thirds, confirmed against revision 14202) and the Cannon resistance added with campaign value 0. It keeps the note that the page has no Verified tag. The class is unchanged."
+          },
+          {
+            "id": "facts-03",
+            "ok": false,
+            "reason": "The edits the brief asked for landed and are true to the page. The live Thunderhead page (revid 14249) against revision 13919 shows armorrifle 75 to 25 (.sp 75), hp 900 to 1300 (.sp 900) and speed 650 to 900 (.sp 700), and the 2.0.0 page confirms 1300 and 900. armour/notes now reads full from Cannon, three quarters from Rocket and Rifle, half from Explosive, a quarter from Fire and Sniper, and 'the page still shows the older figure' is gone. mobility/notes, uncertain/3, uncertain/6 (including the unconfirmed Rifle cut) and sources/2/version were updated, and speed_raw 1.64 is unchanged. But the record still misdescribes the page in places this item exists to clean up, and the fix made them contradict sources/2/version. sources/2/note still lists 'an old speed' among the infobox fields. sources/1/note still says '(its speed figure replaces the page's)'. sources/2/accessed stays 2026-10-27, although the version now says the page was read again on 10 November and armour/notes' Rifle figure exists only since the 7 November edit. The fixer flagged these three but left them.",
+            "correction": "In tempest-rising.veti.thunderhead: (1) in sources/2/note, replace 'an old speed' with something like 'speed (the 2.0.0 figure since its edit of 7 November 2026, with the beta's beside it as the campaign value)'; (2) in sources/1/note, drop or reword '(its speed figure replaces the page's)', for example '(its page has shown the same speed since 7 November 2026)'; (3) set sources/2/accessed to 2026-11-10, the re-read date, as was done for the Vimana's sources/2 under facts-01. Then run format and the validator."
+          },
+          {
+            "id": "facts-04",
+            "ok": true,
+            "reason": "Vimana abilities/4/summary now says 'Subjugation Amplifiers' where it said 'Aura Amplifiers', and the effect ('widens it by half') is kept. The cached Doctrine page (10 Nov) names level 1 of the Subjugation tree Subjugation Amplifiers and gives the aura radius +50%. The live Vimana page's doctrines list links [[Subjugation Amplifiers]] (its revision 13959 had [[Aura Amplifiers]]). No 'Aura Amplifiers' remains in the unit file."
+          }
+        ],
+        "unexpected_changes": [
+          "Thunderhead sources/2/version also gained '(read again on 10 November 2026)'. facts-03 did not ask for this. It is accurate, but it clashes with sources/2/accessed, which stays 2026-10-27 (see the facts-03 correction).",
+          "Vimana sources/4/supports was reordered as well as edited: 'armour/notes' was put first instead of replacing 'abilities/8' in place, so entries 0 to 5 shifted. The contents are what REG-03 asked for, so only the order is unasked. It is harmless, since the order of supports carries no meaning.",
+          "Thunderhead uncertain entries 9 to 15 moved to 8 to 14. This follows from deleting the uncertain entry at abilities/3, which REG-03 asked for. Their texts and sources_disagree flags are unchanged, and nothing refers to an uncertain index.",
+          "No ability, weapon, fit_note, weakness, counter or combo appeared, moved or disappeared without an item asking for it. The other three units (drone-operator, sentinel, shieldmaiden), the top-level fields and the unit order are unchanged. node scripts/validate.mjs . in the workspace exits 0 with OK. Against a run on the repository it shows the same 39 ATYPICAL lines and one extra WARN (the Vimana's planned pattern resupply-allies, from L3). There are no ERROR lines. The offline copy-check of all 38 cited Tempest Rising pages finds no shared runs, my six-word check of the 24 changed strings finds only URL and title runs, and there are no local paths or stat figures in the changed text.",
+          "Outside the unit file, and not the fixer's doing: the workspace's docs/research-runbook.md is the older copy (still dated 21:16, from workspace creation; the repository's version is from 23:21), and the repository has research/r3/merge/README.md and research/r3/merge/consistency.json, which the workspace lacks. Copy back only data/units/tempest-rising.json, never the whole workspace. Also, games-r3.md and data/games.json are now identical in the workspace and the repository, although the task says they should differ."
+        ]
+      },
+      "repair": {
+        "applied": [
+          {
+            "id": "facts-03 (correction 1)",
+            "what": "data/units/tempest-rising.json, tempest-rising.veti.thunderhead sources/2/note (https://tempestrising.wiki.gg/wiki/Thunderhead): 'an old speed' becomes 'speed (the 2.0.0 figure since its edit of 7 November 2026, with the beta's beside it as the campaign value)'. I re-read the page through the API on 10-11 November 2026. The live revision is still 14249 of 7 November, and the cached copy is identical to it. It shows speed 900 (campaign value 700, the beta's figure), health 1300 (campaign 900) and Rifle resistance 25 (campaign 75). Diffing it against revision 13919 shows that only those three fields changed; every other difference is whitespace."
+          },
+          {
+            "id": "facts-03 (correction 2)",
+            "what": "Same unit, sources/1/note (the Steam post 'Veti Faction Changes (Since Beta)'): '(its speed figure replaces the page's)' becomes '(its wiki page has shown the same health and speed since 7 November 2026)'. The cached post gives health 1300 (from 900) and speed 900 (from 700), which match the page's multiplayer figures."
+          },
+          {
+            "id": "facts-03 (correction 3)",
+            "what": "Same unit, sources/2/accessed: 2026-10-27 becomes 2026-11-10, the re-read date. This matches the Vimana's sources/2 under facts-01."
+          },
+          {
+            "id": "unexpected-1 (undone)",
+            "what": "Same unit, sources/2/version: I removed the parenthetical '(read again on 10 November 2026)' because facts-03 did not ask for it, and the accessed field now carries the date. It now reads 'No Verified tag; since its edit of 7 November 2026 it shows the 2.0.0 speed and health, with the campaign values beside them'. That part of the change is what facts-03 asked for, so it stays."
+          },
+          {
+            "id": "unexpected-2 (undone)",
+            "what": "tempest-rising.veti.vimana sources/4/supports (the Ability page): back to the repository's order, with 'armour/notes' in the slot 'abilities/8' had. It now reads [\"sensors\", \"armament/0/traits\", \"abilities/4\", \"abilities/5\", \"abilities/6\", \"armour/notes\"]. REG-03's content change stays."
+          }
+        ],
+        "not_applied": [
+          {
+            "id": "unexpected-3",
+            "why": "I kept this. The Thunderhead's uncertain entries 9-15 moved to 8-14 only because REG-03 required deleting uncertain abilities/3. Their texts are unchanged, and nothing refers to an uncertain index."
+          },
+          {
+            "id": "unexpected-4",
+            "why": "Nothing to do: this item is the verifier's note that nothing else moved."
+          }
+        ],
+        "checks": "All commands ran in .\n- Format: 'node scripts/format-json.mjs' rewrote 0 of 92 files, and 'node scripts/format-json.mjs --check' passed.\n- Validator: 'node scripts/validate.mjs' exits 0 with OK and 0 ERROR lines. Its output is byte-identical to the verifier's workspace run (.progress/verify/validate-ws.txt): 39 ATYPICAL and 145 WARN lines. Against the repository's run, the only difference is one extra WARN, for the Vimana's planned pattern resupply-allies, which comes from L3.\n- Copy-check on the cited pages: 'node scripts/copy-check.mjs . --offline --only tempestrising.wiki.gg --only store.steampowered.com/news/app/1486920' checked 38 pages, all from cache, and exits 0 with no shared runs.\n- House-rule copy-check: 'node scripts/copy-check.mjs . --offline --also research/r3 --also research/registry-notes' found no shared runs in the 927 pages it checked, but exits 3. The 36 pages it skipped are linked only from the notes, are not cached, and none is cited by any data file (one is a Tempest Rising page, tempestrising.com/factions/tempest-dynasty, cited by no data file). None bears on the changed unit text.\n- Six-word check: the verifier's sixword.cjs compared the 26 strings that differ from the repository with 130 cached Tempest Rising pages plus the live Thunderhead page. It found only URL and page-title runs.\n- Other checks: no local paths in the unit file (the search for local paths); build-docs --check and sync-patterns --check pass; node --test passes 296 of 297, and the one failure is the vocab-diff git subtest, because the workspace has no git.\n- Diff against the verifier's snapshots: the Thunderhead changed only in sources/1/note and sources/2 accessed, version and note; the Vimana only in the sources/4 supports order; the other edited units have not changed since the verifier's check. drone-operator, sentinel, shieldmaiden, the top-level fields and the unit order are still equal to the repository's.\nNotes and logs are in .progress/repair/ (progress.md ends with DONE)."
+      }
+    },
+    {
+      "game": "iron-harvest",
+      "fixer": {
+        "applied": [
+          {
+            "id": "REG-06",
+            "what": "Unit part only (the integrator note says the registry text is already changed). In data/units/iron-harvest.json, unit iron-harvest.shared.engineer, uncertain entry at path faction: removed the sentence that said the registry describes shared as aircraft and weapon systems only, with this use for the merge pass to confirm. In its place: 'The games registry's shared faction names the engineers too, and the registry note says why: only the bunkers of veteran and elite engineers may differ by side, and those are not stock.' This matches the workspace's data/games.json (shared = 'All factions (common aircraft, weapon systems and engineers)') and games-r3.md choice 8 (line 21). The rest of the entry is unchanged (the per-faction pages read but not cited, and the Usonia bunker line). No recode."
+          },
+          {
+            "id": "REG-13",
+            "what": "Unit part only. In iron-harvest.shared.engineer, uncertain entry at abilities/2: dropped the remark 'The registry note names only build-cover and lay-mines for the engineers' fortifications'. The last sentence now reads: 'As the registry note says, these defences fire on their own, so they link deploy-turret; the entry's source is innate, that of the turret every squad can build, and its summary names the ranks the bunkers need.' This follows games-r3.md line 320. As the integrator note asked, abilities/2 itself is untouched: still one entry, source innate, patterns [deploy-turret], and its summary already names the veteran and elite ranks. sources_disagree stays true. No recode."
+          },
+          {
+            "id": "REG-15",
+            "what": "Unit part only. In iron-harvest.polania.anna-kos, uncertain entry at armament/0/traits: replaced the clause that said the knockdown 'may be a general reaction of soldiers to big hits rather than a property of her rifle' with a citation of the registry's new Tumbling entry (games-r3.md line 323). New text: the registry note's game-wide entry on tumbling leaves the general reaction off, but gives the stun trait to a weapon whose own sources count knocking soldiers down as part of what it does, and it names her rifle, so stun stays. If the wiki's line describes only the general reaction, the rifle has no trait and disabler drops out of roles.secondary. The traits, roles, atypical entries and the weapon summary are unchanged. The summary already says survivors are thrown to the ground, as the entry asks."
+          },
+          {
+            "id": "conv-6",
+            "what": "In iron-harvest.usonia.william-mason, armour.notes: replaced 'Veterancy adds about a third to his health and then half; healing at the base is game-wide.' with 'Heroes have four veterancy ranks (registry; Change Log #04 names the infantry heroes); his infobox gives only the first two steps, about a third more health and then half. Healing at the base is game-wide.' Added a new uncertain entry at armour/notes, placed right after his armour/models entry: 'The four ranks rest on the registry's game-wide note on veterancy, which cites Change Log #04 (https://kingart-games.com/article/92, read, not cited); that post, from October 2020, before Usonia joined the game, trims the rank bonuses of the infantry heroes it names, Anna, Olga and Gunter. His infobox, like the other hero infoboxes read (Anna's too), has only two steps, and no post read gives his bonuses beyond them.' As the integrator note asked, tier.basis is left as it is. No coded value changes."
+          }
+        ],
+        "not_applied": [
+          {
+            "id": "REG-06 (registry and notes part)",
+            "why": "The integrator note says the registry note and data/games.json are already changed in the workspace, so only the unit part applies. I checked: games-r3.md line 21 already has the engineer sentence with the better_fix wording about the anti-air turret, and the games.json shared faction name already includes engineers. The j13 hesitation and unclear-rules files fall outside data/units/iron-harvest.json, so I did not touch them."
+          },
+          {
+            "id": "REG-13 (note part, and the better_fix split of abilities/2)",
+            "why": "The note text is already in the workspace (games-r3.md line 320, including the rule for a mixed build-menu entry). The integrator note says to keep abilities/2 as one entry with source innate, so I did not split it or change its source."
+          },
+          {
+            "id": "REG-15 (note part)",
+            "why": "The Tumbling bullet is already in the workspace's games-r3.md (line 323). Only Anna's uncertain entry was in scope."
+          },
+          {
+            "id": "conv-6 (tier.basis sentence)",
+            "why": "The integrator note says apply only the armour.notes change and its uncertain entry and leave tier.basis as it is. The skeptic also found the one-hero limit is already in weaknesses (availability:unique)."
+          }
+        ],
+        "pages_read": [
+          "https://iron-harvest.fandom.com/wiki/William_Mason (from the cache, fetched 2026-11-10). His infobox has only two veterancy steps, with health factors of about a third more and then half (1.3 and 1.5) and two damage factors. The page says nothing about four ranks.",
+          "https://kingart-games.com/article/92 (Change Log #04, dated Oct 8, 2020, from the cache). Under Hero Veterancy it lowers the health and damage bonuses of the infantry heroes it names (Anna, Olga, Gunter): health bonuses for ranks I to IV, damage bonuses for ranks I to III. It does not name Mason.",
+          "https://iron-harvest.fandom.com/wiki/Polanian_Engineer, https://iron-harvest.fandom.com/wiki/Saxon_Engineer, https://iron-harvest.fandom.com/wiki/Rusviet_Engineer, https://iron-harvest.fandom.com/wiki/Usonian_Engineer (from the cache). The four stat boxes are identical, and each page says every faction's engineers work the same. Only the Rusviet and Usonian build lists include the anti-air tower.",
+          "Hero infoboxes from the cache: Anna_Kos, Gunter_von_Duisburg, Lech_Kos, Lev_Aleksey_Zubov, Prince_Wilhelm_of_Saxony, Princess_Sita, Admiral_Mason. Each shows only two veterancy steps. Anna's two steps match Change Log #04's old values for ranks I and II.",
+          "https://iron-harvest.fandom.com/wiki/Veterancy (two levels: veteran and elite) and https://iron-harvest.fandom.com/wiki/Hero (nothing on ranks), both from the cache.",
+          "I searched all 45 cached KING Art posts (kingart-games.com) for Mason. Only https://kingart-games.com/article/116 (DevBlog #40) names him, and it only raises his ability cooldowns. No post gives his rank bonuses.",
+          "Workspace research/registry-notes/games-r3.md lines 21, 308, 320 and 323, and the shared faction name in data/games.json: the new text that the unit edits rely on."
+        ],
+        "checks": "All commands ran in . I did not edit the repository the repository.\n(1) node scripts/format-json.mjs data/units/iron-harvest.json: 'checked 1 file(s), rewrote 0'. --check: 'all 1 file(s) formatted'. I edited the file as text with exact replacements, so it never went through a JSON parse and rewrite.\n(2) node scripts/validate.mjs .: exit 0, 0 ERROR lines, ends with OK. The output matches the run made before the edits line for line. A script matched all 39 ATYPICAL lines (12 of them for iron-harvest units) against each unit's atypical list by exact rule string: 39 of 39 recorded.\n(3) node scripts/copy-check.mjs . --only for 17 URL parts: iron-harvest.fandom.com/wiki/William_Mason, kingart-games.com/article/92, iron-harvest.fandom.com/wiki/Anna_Kos, kingart-games.com/article/116, /article/117, /article/73, /article/77, the iron-harvest.fandom.com pages of the four factions' engineers, the Anti-Air Turret, Polania's MG bunker and cannon bunker, the Flame Bunker and the Paratrooper Bunker, iron-harvest.fandom.com/wiki/Usonia. Result: exit 0, '8 of 649 cited page(s)', all 8 from the cache, 0 not checked, 'OK: no shared runs'. Copy-check only compares a record with the pages that record cites, and Mason does not cite article/92. So I also ran my own check with copy-check's own word and run functions (script: .progress/fix/sixword.mjs). It compared the 5 changed strings with all 127 cached Iron Harvest wiki pages and KING Art posts: 0 shared runs of 6 or more words. I first confirmed the script catches known copies.\n(4) Extra: node scripts/build-docs.mjs --check says 'all 3 generated docs up to date'. The local-path grep on the unit file found nothing. node --test: 296 of 297 pass. The one failure is the vocab-diff test 'reads a folder and a git commit alike', which needs a git HEAD, and this workspace copy has no .git folder. It is not related to these edits.\n(5) The diff against the repository's copy of data/units/iron-harvest.json has 5 hunks only: Anna line 283; Mason line 2318 plus the new entry at lines 2590-2593; Engineer lines 3297 and 3326. No coded value, source, supports path, ability, weapon or fit_note changed, and no other unit was touched.\n(6) The task said the workspace's games-r3.md and data/games.json would differ from the repository's on purpose. In fact both are byte-identical to the repository's current copies, and both already carry the confirmed fixes. Only docs/research-runbook.md differs, and the repository also has a research/r3/merge folder that the workspace lacks.\n(7) On the user's remark: this workspace does have research/r3 (with fill, opening and prep; merge exists only in the repository) and a CLAUDE.md at its root, as the repository does.\nProgress notes, ending in DONE: .progress/fix/progress.md"
+      },
+      "verifier": {
+        "verdicts": [
+          {
+            "id": "REG-06",
+            "ok": true,
+            "reason": "Compared the workspace data/units/iron-harvest.json with data/units/iron-harvest.json (text diff, plus a field-by-field script at .progress/verify/sdiff.mjs). The only change for this item is in iron-harvest.shared.engineer, uncertain/0 (path faction, unchanged). The caveat sentence ('...described as the common aircraft and weapon systems only, so this use of it is for the merge pass to confirm') is gone. In its place: 'The games registry's shared faction names the engineers too, and the registry note says why: only the bunkers of veteran and elite engineers may differ by side, and those are not stock.' This matches the workspace's data/games.json, whose shared faction name is 'All factions (common aircraft, weapon systems and engineers)', and games-r3.md line 21, which already carries the better_fix wording about the anti-air turret. Pages, from the cache: the Polanian, Saxon, Rusviet and Usonian Engineer stat boxes are identical (only the faction, the images and the building names differ), and each page says the engineers work the same way in every faction. Only the Rusviet and Usonian lists add the Anti-Air Tower. The Flame_Bunker page (veteran Usonian engineers) and the Paratrooper_Bunker page (elite) confirm that the only items that differ by side need a rank. The rest of the entry, every coded value and every supports path are unchanged, with no recode. Under the integrator note the registry part was already done, so the fixer rightly left it alone. The replacement sentence goes beyond a bare 'drop', but it is needed because the old premise is now false, and it is accurate. Checks: node scripts/validate.mjs . gives exit 0, 0 ERROR lines and ends with OK, and its output is byte-identical to a run on the repository. A six-word check of the new text against all 127 cached Iron Harvest wiki pages and KING Art posts found 0 shared runs."
+          },
+          {
+            "id": "REG-13",
+            "ok": true,
+            "reason": "In iron-harvest.shared.engineer, uncertain/7 (path abilities/2, unchanged), the remark 'The registry note names only build-cover and lay-mines for the engineers' fortifications' is gone. The entry now ends: 'As the registry note says, these defences fire on their own, so they link deploy-turret; the entry's source is innate, that of the turret every squad can build, and its summary names the ranks the bunkers need.' This matches games-r3.md line 320: the armed defences link deploy-turret, and a mixed build-menu entry takes the source of the item every squad has (innate), with its summary saying which items need a rank. The structural diff shows abilities/2 untouched, as the integrator note asks: still one entry, source innate, patterns [deploy-turret], and its summary names veteran engineers for the MG bunker and elite ones for the cannon bunker. sources_disagree stays true, which is right because it is about the Usonia bunker line. Pages, from the cache: DevBlog #40 (kingart-games.com/article/116) says all factions can build the turret using engineers, in the HQ zone only, with no rank needed. The Anti-Air_Turret page calls it a factionless base defence. So 'the turret every squad can build' and the innate source both hold. The added clause about the source goes beyond the literal 'drop the remark', but it only restates the note and the integrator's decision. Six-word check: 0 runs. Validator: OK."
+          },
+          {
+            "id": "REG-15",
+            "ok": true,
+            "reason": "In iron-harvest.polania.anna-kos, uncertain/5 (path armament/0/traits, unchanged), the clause '...so this may be a general reaction of soldiers to big hits rather than a property of her rifle' is replaced by a citation of the registry's Tumbling entry. The entry leaves the general reaction off but gives stun to a weapon whose own sources count knocking soldiers down as part of what it does. It names her rifle, so stun stays, and the fallback is kept: if the wiki line describes only the general reaction, the trait and disabler drop. This matches games-r3.md line 323. Pages, from the cache: the Anna_Kos page (line 67) says those who survive her hit are thrown to the ground and left open to attack, which meets the rule's condition from her own page. Line 25 has the Kolokol knock her down. DevBlog #40 makes retreating infantry immune to tumbling. Unchanged in the diff: traits [stun], roles (primary anti-infantry; secondary support and disabler), the atypical stun entry, and the weapon summary. The summary already says that anyone the shot fails to kill is thrown to the ground for a moment, as line 323 asks. Six-word check: 0 runs. Validator: OK."
+          },
+          {
+            "id": "conv-6",
+            "ok": true,
+            "reason": "In iron-harvest.usonia.william-mason, armour.notes now ends: 'Heroes have four veterancy ranks (registry; Change Log #04 names the infantry heroes); his infobox gives only the first two steps, about a third more health and then half. Healing at the base is game-wide.' That is the brief's text word for word. The old '; healing' became '. Healing' because the replacement ends with a full stop. A new uncertain entry at armour/notes sits at index 7, after armour/models and before armament/0/family. The new list minus index 7 equals the old list exactly. Facts checked in the cache: kingart-games.com/article/92 is Change Log #04, dated Oct 8, 2020. Its Hero Veterancy item cuts the health bonuses (ranks I to IV) and damage bonuses (ranks I to III) of the heroes who fight on foot, naming Anna, Olga and Gunter. DevBlog #40 (Aug 2021) already speaks of Operation Eagle as released, so the post came before Usonia. William Mason's infobox has only two veterancy steps (health 1.3, then 1.5), and so do all the cached hero infoboxes. Anna's two steps (1.5 and 2) are Change Log #04's old values for ranks I and II. Of the 45 cached KING Art posts, only article/116 names William Mason, and only for ability cooldowns, so 'no post read gives his bonuses beyond them' holds. Mason does not cite article/92, so 'read, not cited' is correct, and his job record (research/r3/fill/j12-iron-harvest/report.json) already lists it among the pages read. tier.basis is unchanged, as the integrator note asks. The text gives only counts and dates, no stat figures. Checks: format-json --check passes; build-docs --check says all 3 docs are up to date; the local-path grep finds nothing; the validator gives OK; the six-word check finds 0 runs. The offline copy-check (--also data/units, Iron Harvest pages) found no shared run in iron-harvest.json."
+          }
+        ],
+        "unexpected_changes": [
+          "None outside the four items' own entries. The unit-file diff has exactly 5 hunks: Anna uncertain/5, Mason armour.notes, the new Mason uncertain entry, Engineer uncertain/0 and Engineer uncertain/7. No ability, weapon, fit_note, supports path, source, coded value or other unit moved, appeared or disappeared. Mason's later uncertain entries move down one place because of the insertion, and nothing refers to them by index.",
+          "Small wording additions inside the items' own entries go beyond the literal fix text. REG-06 gets a new sentence where the brief said only 'drop'. REG-13 gets an added clause on the innate source and on the summary naming the ranks. Both are accurate and fit the registry and the integrator notes, so no action is needed.",
+          "Outside the unit file, and not the fixer's work: docs/research-runbook.md differs because the repository's copy changed at 23:21, after the workspace was copied (commit 9b65b5e, 'Runbook: commit messages carry no model name'). The repository also has research/r3/merge, which the workspace lacks. The workspace's games-r3.md and data/games.json are byte-identical to the repository's, and both already carry the fixes."
+        ]
+      },
+      "repair": {
+        "applied": [
+          {
+            "id": "unexpected-2 / REG-06",
+            "what": "data/units/iron-harvest.json, unit iron-harvest.shared.engineer, uncertain[0] (path faction). I removed the sentence the fixer had added: 'The games registry's shared faction names the engineers too, and the registry note says why: only the bunkers of veteran and elite engineers may differ by side, and those are not stock.' The note is now the repo text minus the whole old caveat sentence ('The registry's shared faction is described as the common aircraft and weapon systems only, so this use of it is for the merge pass to confirm.'). That is the plain drop the brief asked for. Removing only the caveat clause would have left a half-sentence that the new registry makes false, so the whole sentence went. Nothing else in the entry changed. Why I undid it although the verifier said no action was needed: the task's test is whether the brief required the text, and REG-06's fix and integrator note ask only for the drop."
+          },
+          {
+            "id": "unexpected-2 / REG-13",
+            "what": "Same file and unit, uncertain[7] (path abilities/2). I removed the clause the fixer had added: '; the entry's source is innate, that of the turret every squad can build, and its summary names the ranks the bunkers need'. The note now ends 'As the registry note says, these defences fire on their own, so they link deploy-turret.' It equals the repo text with the remark 'The registry note names only build-cover and lay-mines for the engineers' fortifications;' dropped. I kept the lead-in 'As the registry note says': the verifier did not list it, and games-r3.md line 320 bears it out. The removed clause only repeated line 320's rule for mixed entries, and the integrator note says that dropping the remark is the only change to the uncertain entry. sources_disagree stays true."
+          }
+        ],
+        "not_applied": [
+          {
+            "id": "problems",
+            "why": "The verifier listed no problems (Problems: []), so there was nothing to correct and no page to re-read."
+          },
+          {
+            "id": "unexpected-1",
+            "why": "No fixer change exists outside the four items' own entries. conv-6 requires the new Mason entry at uncertain[7] (path armour/notes), and the leaf diff shows it as the only addition (22 to 23 entries). His later entries move down one place, and nothing refers to uncertain entries by index. Left as is."
+          },
+          {
+            "id": "unexpected-2 / REG-15 and conv-6 wording",
+            "why": "The verifier did not flag these as going beyond the brief. Anna's note cites the Tumbling bullet as the item asks. Mason's armour.notes uses the fix text word for word, and his new entry names Change Log #04 as read but not cited, which fields.md requires. Left as is."
+          },
+          {
+            "id": "unexpected-3",
+            "why": "These differences come from the repository, not from the fixer. In the repo, commit 9b65b5e (10 Nov 23:21) changed docs/research-runbook.md after the workspace was copied, and commit 527724f added research/r3/merge. I did not touch either in the workspace. For the merge: take only data/units/iron-harvest.json from this workspace. Copying the workspace's older runbook over the repo's would undo 9b65b5e."
+          }
+        ],
+        "checks": "All commands ran in . (1) Format: npm run format checked 92 files and rewrote 0; npm run format:check reports all 92 formatted. (2) Validate: node scripts/validate.mjs . exits 0 and ends OK, with 0 ERROR lines and 39 ATYPICAL lines, all recorded. Its output is byte-identical to the fixer's run after the fixes and to the verifier's run on the repo (.progress/repair/validate.txt). (3) Copy-check: node scripts/copy-check.mjs . --offline --only iron-harvest.fandom.com --only kingart-games.com --only https://steamcommunity.com/sharedfiles/filedetails/?id=2223610703 covers every host the Iron Harvest units cite. It checked 38 of 649 cited pages, all from the cache, with 0 left unchecked: OK, exit 0 (.progress/repair/copycheck.txt). The same command with --also data/units exits 1 on a single FOUND, in data/units/ra1.json /units/7/weaknesses/3/why ('and takes a long time to', shared with the Brunhilde page). ra1.json is byte-identical to the repo's copy and outside this batch, and the verifier saw the same hit. There is none in iron-harvest.json (.progress/repair/copycheck-also.txt). (4) Six-word checks of the 5 strings that differ from the repo: the fixer's and the verifier's scripts compared them with 127 cached Iron Harvest wiki and KING Art pages and found 0 runs; the self-test catches a planted copy. My script .progress/repair/sixall.mjs compared them with all 927 cached pages and found 0 runs once web addresses are dropped, as copy-check drops them. With the addresses kept it finds 7 hits, all the address text of the wiki links inside a Steam news API page, not prose. (5) Leaf diff (.progress/repair/leafdiff.mjs): against the repo, only Anna's uncertain armament/0/traits, Mason's armour.notes, his one inserted uncertain entry and the Engineer's uncertain faction and abilities/2 notes differ. Against the pre-repair copy (.progress/repair/iron-harvest.before-repair.json, kept so the repair can be reversed), only the 2 Engineer notes differ, and each equals the repo text with only the brief's drop applied. (6) Other checks: npm run docs:check OK (3 docs); sync-patterns:check OK (36 files); 0 local paths in the unit file; data/vocab, schemas, scripts/build-docs.mjs and scripts/validate.mjs are identical to the repo. node --test passes 296 of 297; the one failure is the vocab-diff test, which needs a git HEAD that the workspace does not have. The repaired file's sha256 starts 2de5510a. Notes: .progress/repair/progress.md, which ends with DONE."
+      }
+    }
+  ]
+}

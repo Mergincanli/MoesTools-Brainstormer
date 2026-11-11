@@ -297,11 +297,12 @@
           ]
         },
         {
-          "url": "https://cncnz.com/games/generals/gla-units/",
-          "title": "Command & Conquer: Generals – GLA Units, CNCNZ",
+          "url": "https://cncnz.com/games/zero-hour/gla-units/",
+          "title": "Command & Conquer: Generals - Zero Hour - GLA Units, CNCNZ",
           "kind": "guide",
-          "accessed": "2026-10-26",
-          "note": "A long-standing fan site's unit list, cited as the second site in place of a third page of TheSuperHackers' repository, as the sources rule and the registry's CNCNZ note ask. Its Kell entry agrees on the price, the Palace, camouflage while he holds fire, unseen garrisoning, the one-per-player cap and a snipe after which any infantry may take the vehicle. It gives the snipe an instant cooldown and lists the demolition charges without naming the Demolition General (see uncertain). Read from the page cache's copy (fetched 2026-10-19).",
+          "accessed": "2026-11-10",
+          "version": "Zero Hour",
+          "note": "A long-standing fan site's unit list, cited as the second site in place of a third page of TheSuperHackers' repository, as the sources rule and the registry's CNCNZ note ask. Its Kell entry, the same as on its base-game GLA page, agrees on the price, the Palace, camouflage while he holds fire, unseen garrisoning, the one-per-player cap and a snipe after which any infantry may take the vehicle. It gives the snipe an instant cooldown and lists the demolition charges without naming the Demolition General (see uncertain). Read from the page cache's copy (fetched 2026-11-10).",
           "supports": ["tier", "cost_band", "availability", "abilities/0", "abilities/1", "uncertain"]
         }
       ],
@@ -538,7 +539,7 @@
         },
         {
           "ref": "pattern:hijack-vehicle",
-          "why": "Jarmen Kell's crew-killing snipe kills its driver, which makes every rider get out, where they are easy to pick off (wiki)."
+          "why": "Weapons that kill a vehicle's crew empty it and leave it open to capture: Jarmen Kell's snipe kills its driver so every rider gets out where they are easy to pick off, and the Nuke Cannon's Neutron shells kill riders and crew together (wiki)."
         },
         {
           "ref": "unit:generals.gla.jarmen-kell",
@@ -546,17 +547,13 @@
         },
         {
           "ref": "unit:generals.china.nuke-cannon",
-          "why": "Its Neutron shells kill the passengers and crew together and leave the bus open to capture, as Neutron mines also do (wiki); no word-list or pattern link names crew-killing shells, and most artillery cannot do this, so the unit link stands alone."
+          "why": "The same reason: the wiki names the Nuke Cannon's Neutron shells."
         }
       ],
       "counters": [
         {
-          "ref": "pattern:hijack-vehicle",
-          "why": "Hijackers: since Zero Hour patch 1.03 they cannot take a bus while anyone is aboard (wiki changelog), so a loaded one is safe from them."
-        },
-        {
           "ref": "unit:generals.gla.hijacker",
-          "why": "The same reason: the wiki's changelog names the Hijacker."
+          "why": "Hijackers: since Zero Hour patch 1.03 they cannot take a bus while anyone is aboard (wiki changelog). The unit link stands alone because pattern:hijack-vehicle would also name Jarmen Kell's snipe and the Nuke Cannon's Neutron shells, which do empty a loaded bus (countered_by/2)."
         }
       ],
       "combos": [
@@ -749,11 +746,11 @@
         },
         {
           "path": "countered_by/4",
-          "note": "The wiki names Neutron mines and the Nuke Cannon's Neutron shells. No word-list or pattern link describes weapons that kill a vehicle's crew and riders and leave the hull, and most artillery cannot do it, so the unit link stands alone; the Nuke Cannon's id is the one its entry would get."
+          "note": "The wiki names Neutron mines and the Nuke Cannon's Neutron shells. The Neutron shells page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Neutron_shells, read, not cited) has them kill a vehicle's crew and riders and leave it neutral for capture, which hijack-vehicle covers, as the Sentry Drone entry also reads them. The Nuke Cannon's id is the one its entry would get."
         },
         {
           "path": "counters",
-          "note": "Counters holds only what the bus foils by itself, since it harms no enemy with a weapon or an ability of its own (Matchups rule 5): its tooltip rates it strong against infantry and buildings, but that fire is the riders', so it sits in combos. pattern:hijack-vehicle names the enemy in countered_by as well: a Hijacker trying to climb in is foiled, while Jarmen Kell's crew-killing snipe still empties the bus, two different situations."
+          "note": "Counters holds only what the bus foils by itself, since it harms no enemy with a weapon or an ability of its own (Matchups rule 5): its tooltip rates it strong against infantry and buildings, but that fire is the riders', so it sits in combos."
         },
         {
           "path": "combos",
@@ -823,7 +820,7 @@
       "tier": {
         "band": "t1",
         "gate": "Arms Dealer",
-        "basis": "Built at the Arms Dealer, the GLA's basic vehicle factory, with nothing else needed (its Prerequisites in the 1.04 files), so t1. Every GLA general fields it: the Toxin, Demolition and Stealth Generals' Technicals match the main one apart from the Demolition General's higher price (see cost_band)."
+        "basis": "Built at the Arms Dealer, the GLA's basic vehicle factory, with nothing else needed (its Prerequisites in the 1.04 files), so t1. Every GLA general fields it: the Toxin and Stealth Generals' Technicals match the main one, and the Demolition General's costs more (see cost_band) and, once his side-wide Demolitions upgrade is bought, gets a button to blow itself up, left out here because this entry follows the main GLA version (see on_death.notes)."
       },
       "cost_band": {
         "band": "low",
@@ -876,7 +873,7 @@
           "delivery": "projectile",
           "range": "medium",
           "can_target": ["infantry", "ground-vehicle", "structure"],
-          "traits": ["splash"],
+          "traits": ["splash", "friendly-fire"],
           "condition": "Taken from salvage: the first crate the truck picks up replaces the machine gun with it for the rest of its life.",
           "summary": "A light gun firing single shells that burst over an area, far slower than the machine gun but better against lightly armoured vehicles (wiki). An early Generals patch moved its damage from explosive to a bullet class so that it would hurt tanks less, and the game still files its hits as gunfire, so heavy armour shrugs them off. Same reach as the machine gun. Armour-Piercing Bullets add a quarter.",
           "patterns": ["leech-weapon-on-kill"]
@@ -890,7 +887,7 @@
           "delivery": "projectile",
           "range": "medium",
           "can_target": ["infantry", "ground-vehicle", "structure"],
-          "traits": [],
+          "traits": ["splash", "min-range", "friendly-fire"],
           "condition": "Taken from salvage: the second crate replaces the cannon with it for the rest of the truck's life.",
           "summary": "A rocket launcher that hits vehicles harder still (wiki). Its rockets fly to the target, so point-defence lasers can shoot them down and the ECM Tank can throw them off course. It cannot fire at aircraft, nor at a target almost touching the truck (1.04 data). Same reach as the earlier guns. Since Zero Hour patch 1.03 Armour-Piercing Bullets raise its damage too.",
           "patterns": ["leech-weapon-on-kill"]
@@ -976,7 +973,7 @@
           "why": "Nothing it carries can shoot upward, and both the tooltip and the wiki single out aircraft as its bane."
         },
         {
-          "ref": "armour-class:heavy",
+          "ref": "armour-class:>=heavy",
           "why": "Tanks: the tooltip lists them as a weak point, and the wiki says even a fully salvaged Technical needs a lot of support to beat heavy vehicles, while the manual rates it only against light ones."
         },
         {
@@ -1108,7 +1105,15 @@
         },
         {
           "path": "armament/2/summary",
-          "note": "That it cannot fire at aircraft or at a target almost touching it comes only from Weapon.ini in the unedited 1.04 files; its tiny blast radius there is not coded as splash, since no cited page says the hit spreads."
+          "note": "That it cannot fire at aircraft or at a target almost touching it comes only from Weapon.ini in the unedited 1.04 files."
+        },
+        {
+          "path": "armament/1/traits",
+          "note": "Friendly-fire rests only on Weapon.ini of the unedited 1.04 files (address under armament/0/damage), as the registry's Generals note allows: the cannon's blast, which the wiki calls splash damage, hurts allies as well as enemies."
+        },
+        {
+          "path": "armament/2/traits",
+          "note": "All three traits rest only on Weapon.ini of the unedited 1.04 files (address under armament/0/damage), as the registry's Generals note allows. Splash: the rocket's hit has a blast radius, a fifth of the salvaged cannon's, and no source calls that area tiny or says the rocket hits one target at a time. Friendly-fire: the blast hurts allies as well as enemies. Min-range: its MinimumAttackRange there leaves a dead zone of a thirtieth of its reach, so it cannot fire at a target almost touching the truck."
         },
         {
           "path": "combos/1",
@@ -1189,7 +1194,7 @@
           "delivery": "projectile",
           "range": "long",
           "can_target": ["infantry", "ground-vehicle", "structure"],
-          "traits": ["splash"],
+          "traits": ["splash", "friendly-fire"],
           "summary": "Two heavy shells fired close together from the main turret, then a pause before the next pair; each hit also hurts whatever stands right around the target. Strong against vehicles and buildings (tooltip), and it outreaches the main battle tanks' guns, but the turret turns slowly, the shells can stray against soldiers (1.04 data) and it cannot fire at aircraft. Uranium Shells, a side-wide upgrade at the Nuclear Missile, add a quarter to its damage; the Nuke General's version fires shells that leave radiation where they land (wiki)."
         },
         {
@@ -1298,8 +1303,12 @@
           "why": "Suicide attackers such as Terrorists and Bomb Trucks blow up when it tries to run them over, and a lone Overlord can neither kill nor outrun them before they reach it (wiki)."
         },
         {
+          "ref": "pattern:hijack-vehicle",
+          "why": "Weapons that kill a vehicle's crew take it out however thick its armour: Jarmen Kell snipes its crew and leaves the tank neutral for enemy infantry to claim, and the Nuke Cannon's Neutron shells, which empty vehicles the same way, are especially effective against it (wiki)."
+        },
+        {
           "ref": "unit:generals.gla.jarmen-kell",
-          "why": "He snipes its crew and leaves it empty for the enemy to take (wiki). It stands alone because a sniper link would be false for most snipers, which cannot kill a vehicle's crew."
+          "why": "The same reason: the wiki names Jarmen Kell, whose snipe empties it."
         },
         {
           "ref": "damage:emp",
@@ -1391,13 +1400,24 @@
           ]
         },
         {
-          "url": "https://cnc.fandom.com/wiki/Speaker_tower",
-          "title": "Speaker tower, Command & Conquer Wiki",
-          "kind": "wiki",
-          "accessed": "2026-10-27",
-          "version": "Zero Hour 1.04",
-          "note": "The tower's fire-rate bonus and healing, that mobile towers such as the Overlord's give the same fire-rate bonus but half the healing, that allies and aircraft benefit, and that bonuses do not stack.",
-          "supports": ["abilities/1", "roles/secondary"]
+          "url": "https://cncnz.com/games/zero-hour/china-units/",
+          "title": "Command & Conquer: Generals - Zero Hour - China Units, CNCNZ",
+          "kind": "guide",
+          "accessed": "2026-11-10",
+          "version": "Zero Hour",
+          "note": "A long-standing fan site's unit list, cited as the second site, as the sources rule and the registry's CNCNZ note ask. Its Overlord entry, the same as on its base-game China page, agrees on the price, the Propaganda Center, a large, slow tank with twin cannons that drives over enemy vehicles, and three add-ons that rule each other out: a bunker for five soldiers, with Evacuate to let them out; a Gattling cannon that hits ground and air targets alike, as the base defence does; and a speaker tower that makes nearby friendly units fire faster and slowly heals or repairs them. It gives Nuclear Tanks a smaller speed gain than the wiki (see uncertain). Read from the page cache's copy (fetched 2026-11-10).",
+          "supports": [
+            "tier",
+            "cost_band",
+            "mobility",
+            "crew",
+            "armament/1",
+            "abilities/0",
+            "abilities/1",
+            "roles/secondary",
+            "strengths/1",
+            "uncertain"
+          ]
         },
         {
           "url": "https://cnc.fandom.com/wiki/Gattling_cannon_(Generals_1)",
@@ -1425,8 +1445,12 @@
         },
         {
           "path": "mobility/notes",
-          "note": "The wiki has Nuclear Tanks raise its speed by half; the Generals manual and CNCNZ's China units page (https://cncnz.com/games/generals/china-units/) say by a quarter. Locomotor.ini of the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Locomotor.ini) matches the wiki. Only the notes use it.",
+          "note": "The wiki has Nuclear Tanks raise its speed by half; the Generals manual and the cited CNCNZ page (https://cncnz.com/games/zero-hour/china-units/) say by a quarter. Locomotor.ini of the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Locomotor.ini) matches the wiki. Only the notes use it.",
           "sources_disagree": true
+        },
+        {
+          "path": "armament/0/traits",
+          "note": "Friendly-fire rests only on Weapon.ini of the unedited 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini, read, not cited), as the registry's Generals note allows: the shells' blast, whose radius the wiki infobox gives too, hurts allies as well as enemies."
         },
         {
           "path": "armament/1/range",
@@ -1439,6 +1463,14 @@
         {
           "path": "armament/1/can_target",
           "note": "Structures come from can_target step 4 (no source labels the gun by its targets, and the family allows buildings); no page says how it does against buildings."
+        },
+        {
+          "path": "abilities/1",
+          "note": "The quarter-faster fire, the healing at half the static Speaker Tower's rate, the benefit to allied players' units and aircraft, and the bonuses of several towers not stacking rest on the Speaker tower page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Speaker_tower, read, not cited), which gives mobile towers such as the Overlord's the static tower's fire-rate bonus with less healing. The cited Overlord page and CNCNZ give the add-on its healing and faster fire for the tank and the friendly units near it, and the Overlord page's changelog has an early patch stop its healing from stacking."
+        },
+        {
+          "path": "countered_by/4",
+          "note": "That the Neutron shells empty a vehicle comes from the Neutron shells page of the Command & Conquer Wiki (https://cnc.fandom.com/wiki/Neutron_shells, read, not cited): they kill its crew and riders and leave it neutral until infantry claim it, as hijack-vehicle covers. The cited Overlord page names them only as especially effective against the tank and its escorts."
         },
         {
           "path": "combos/0",
@@ -1747,11 +1779,12 @@
           ]
         },
         {
-          "url": "https://cncnz.com/games/generals/china-units/",
-          "title": "Command & Conquer: Generals – China Units, CNCNZ",
+          "url": "https://cncnz.com/games/zero-hour/china-units/",
+          "title": "Command & Conquer: Generals - Zero Hour - China Units, CNCNZ",
           "kind": "guide",
-          "accessed": "2026-10-27",
-          "note": "A long-standing fan site's unit list, cited as the second site in place of a third page of TheSuperHackers' repository, as the sources rule and the registry's CNCNZ note ask. Its Red Guard entry agrees on the price of a pair, no prerequisite, the horde bonus at five or more, training in pairs, the capture's recharge and its unlock at the Barracks, its exposure during a capture, and the Red Guard Training and Nationalism upgrades. It repeats the manual's bayonet, which the wiki says was never in the game (see uncertain).",
+          "accessed": "2026-11-10",
+          "version": "Zero Hour",
+          "note": "A long-standing fan site's unit list, cited as the second site in place of a third page of TheSuperHackers' repository, as the sources rule and the registry's CNCNZ note ask. Its Red Guard entry, the same as on its base-game China page, agrees on the price of a pair, no prerequisite, the horde bonus at five or more, training in pairs, the capture's recharge and its unlock at the Barracks, its exposure during a capture, and the Red Guard Training and Nationalism upgrades. It repeats the manual's bayonet, which the wiki says was never in the game (see uncertain). Read from the page cache's copy (fetched 2026-11-10).",
           "supports": ["tier", "cost_band", "body", "abilities/0", "abilities/1", "uncertain"]
         }
       ],
@@ -1784,7 +1817,7 @@
         },
         {
           "path": "abilities/0",
-          "note": "Who counts toward the horde rests on EA's Zero Hour source code, HordeUpdate.cpp (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Update/HordeUpdate.cpp, official, read, not cited): it counts only allied objects within the module's radius that carry a horde module themselves and match its infantry kind, needs one fewer than the module's count of five, and lets a unit within the wider rub-off reach of a full member share the bonus. The wiki's Horde Bonus page (https://cnc.fandom.com/wiki/Horde_Bonus, read, not cited) agrees that any mix of Red Guards, Mini-Gunners and Tank Hunters counts and Battlemasters do not, and gives the bonus as half again the rate of fire, as GameData.ini does (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/GameData.ini, read, not cited). The registry's Generals game-wide note words it as four other allied soldiers of any kind; by the code, soldiers without the module do not count. The rule for troops in buildings comes from the Garrisoning page (https://cnc.fandom.com/wiki/Garrisoning, read, not cited)."
+          "note": "Who counts toward the horde rests on EA's Zero Hour source code, HordeUpdate.cpp (https://raw.githubusercontent.com/electronicarts/CnC_Generals_Zero_Hour/main/GeneralsMD/Code/GameEngine/Source/GameLogic/Object/Update/HordeUpdate.cpp, official, read, not cited): it counts only allied objects within the module's radius that carry a horde module themselves and match its infantry kind, needs one fewer than the module's count of five, and lets a unit within the wider rub-off reach of a full member share the bonus. The wiki's Horde Bonus page (https://cnc.fandom.com/wiki/Horde_Bonus, read, not cited) agrees that any mix of Red Guards, Mini-Gunners and Tank Hunters counts and Battlemasters do not, and gives the bonus as half again the rate of fire, as GameData.ini does (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/GameData.ini, read, not cited). The rule for troops in buildings comes from the Garrisoning page (https://cnc.fandom.com/wiki/Garrisoning, read, not cited)."
         },
         {
           "path": "abilities/1",
@@ -2084,11 +2117,12 @@
           ]
         },
         {
-          "url": "https://cncnz.com/games/generals/china-units/",
-          "title": "Command & Conquer: Generals – China Units, CNCNZ",
+          "url": "https://cncnz.com/games/zero-hour/china-units/",
+          "title": "Command & Conquer: Generals - Zero Hour - China Units, CNCNZ",
           "kind": "guide",
-          "accessed": "2026-10-27",
-          "note": "A long-standing fan site's unit list, cited as the second site in place of a third page of TheSuperHackers' repository, as the sources rule and the registry's CNCNZ note ask. Its Hacker entry agrees on the price and the Propaganda Center, describes both hacks (close range, standing still and exposed while he works), lists their recharges and the income at each rank, and repeats the manual's description. It gives the starting income per second and quicker payments at each rank, which the 1.04 data do not show (see uncertain).",
+          "accessed": "2026-11-10",
+          "version": "Zero Hour",
+          "note": "A long-standing fan site's unit list, cited as the second site in place of a third page of TheSuperHackers' repository, as the sources rule and the registry's CNCNZ note ask. Its Hacker entry, the same as on its base-game China page, agrees on the price and the Propaganda Center, describes both hacks (close range, standing still and exposed while he works), lists their recharges and the income at each rank, and repeats the manual's description. It gives the starting income per second and quicker payments at each rank, which the 1.04 data do not show (see uncertain). Read from the page cache's copy (fetched 2026-11-10).",
           "supports": ["tier", "cost_band", "abilities/0", "abilities/1", "weaknesses/1", "weaknesses/2", "uncertain"]
         }
       ],
@@ -2221,8 +2255,8 @@
           "delivery": "drop",
           "range": "long",
           "can_target": ["infantry", "ground-vehicle", "structure"],
-          "traits": ["splash"],
-          "summary": "One heavy bomb per sortie, let go on the supersonic attack run from about three times a rifle's reach short of the target and carried on ahead onto the target point; a comment in the 1.04 weapon file says the reach is set high because the plane flies so fast. Its blast hurts everything in a wide area (wiki; the infobox gives a radius and the Aurora Bomb damage name), and the wiki ranks it among the most destructive single weapons in the game. Being no missile, it cannot be jammed or shot down in flight, but it falls where it was aimed and does not follow a target that keeps moving, so a fast vehicle can drive out of the blast; it suits buildings, vehicles that have stopped or bunched up, and slow tanks such as the Overlord (wiki). It cannot attack aircraft. The 1.04 weapon file also lets the blast hurt friendly units, which only that file says, so no friendly-fire trait is set. After the drop the plane flies back to its Air Field and reloads the bomb on its pad in a few seconds (the limited-ammo resource). Granger's version carries the same bomb; the wiki's prose calls it a fuel-air bomb, while its infobox lists a single conventional bomb, and the two-stage fuel-air bomb belongs to Alexander's Aurora Alpha Bomber (see uncertain)."
+          "traits": ["splash", "friendly-fire"],
+          "summary": "One heavy bomb per sortie, let go on the supersonic attack run from about three times a rifle's reach short of the target and carried on ahead onto the target point; a comment in the 1.04 weapon file says the reach is set high because the plane flies so fast. Its blast hurts everything in a wide area (wiki; the infobox gives a radius and the Aurora Bomb damage name), and the wiki ranks it among the most destructive single weapons in the game. Being no missile, it cannot be jammed or shot down in flight, but it falls where it was aimed and does not follow a target that keeps moving, so a fast vehicle can drive out of the blast; it suits buildings, vehicles that have stopped or bunched up, and slow tanks such as the Overlord (wiki). It cannot attack aircraft. The 1.04 weapon file also lets the blast hurt friendly units, which only that file says (see uncertain). After the drop the plane flies back to its Air Field and reloads the bomb on its pad in a few seconds (the limited-ammo resource). Granger's version carries the same bomb; the wiki's prose calls it a fuel-air bomb, while its infobox lists a single conventional bomb, and the two-stage fuel-air bomb belongs to Alexander's Aurora Alpha Bomber (see uncertain)."
         }
       ],
       "crew": {
@@ -2442,7 +2476,7 @@
         },
         {
           "path": "armament/0/traits",
-          "note": "No friendly-fire: only Weapon.ini (address under armament/0/range) lets the blast hurt allies, and the registry's Generals note says a term that only those files would set is not set. No homing: the wiki says the bomb will not follow a target on the move, and its bomb object (address under armament/0/range) does not follow its target."
+          "note": "Friendly-fire rests only on Weapon.ini (address under armament/0/range), which lets the bomb's blast hurt allies as well as enemies, as the registry's Generals note allows. No homing: the wiki says the bomb will not follow a target on the move, and its bomb object (address under armament/0/range) does not follow its target."
         },
         {
           "path": "armament/0/summary",
@@ -2538,7 +2572,7 @@
       "armour": {
         "class": "light",
         "models": ["flat-pool"],
-        "notes": "Step 1 decided, through the registry's exception for one-off sets: its own Sentry Drone Armor (wiki infobox; 1.04 Object file) maps by what the unit is, and a drone no bigger than a soldier is light. Its health is a quarter more than a Humvee's and about five eighths of a Crusader's (1.04 files). The set halves damage from small arms, gattling and vulcan guns, infantry missiles, flame and crushing, lets through under a third of jet missile damage, and takes nothing from poison, lasers, sniper fire, microwaves or crew-killing shots (1.04 Armor.ini). One health bar, and no self-healing, since it never ranks. Drone Armor (CNCNZ calls it Scout Armour), bought once at the Strategy Center for every USA drone, adds a quarter to its health and, since Zero Hour patch 1.03, reaches the Sentry Drone too; the wiki says it then matches a Scorpion tank's toughness."
+        "notes": "Step 4 of the armour-class steps decided: its own set, Sentry Drone Armor (wiki infobox; 1.04 Object file), is one of the one-off sets the registry maps by what the unit is, and such a set is not a key of the armour map, so the kind of unit decides: a drone no bigger than a soldier is light by the class descriptions. Its health is a quarter more than a Humvee's and about five eighths of a Crusader's (1.04 files). The set halves damage from small arms, gattling and vulcan guns, infantry missiles, flame and crushing, lets through under a third of jet missile damage, and takes nothing from poison, lasers, sniper fire, microwaves or crew-killing shots (1.04 Armor.ini). One health bar, and no self-healing, since it never ranks. Drone Armor (CNCNZ calls it Scout Armour), bought once at the Strategy Center for every USA drone, adds a quarter to its health and, since Zero Hour patch 1.03, reaches the Sentry Drone too; the wiki says it then matches a Scorpion tank's toughness."
       },
       "sensors": {
         "sight": "medium",
@@ -2553,7 +2587,7 @@
           "family": "machine-gun",
           "damage": "kinetic",
           "mount": "free-aim",
-          "delivery": "hitscan",
+          "delivery": "projectile",
           "range": "medium",
           "can_target": ["infantry", "ground-vehicle", "structure"],
           "traits": [],
@@ -2779,7 +2813,7 @@
         },
         {
           "path": "armament/0/delivery",
-          "note": "Hitscan is the machine-gun family's default, since no cited page says how the shots travel. Weapon.ini of the 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini, read, not cited) gives the gun no projectile object but a travel speed, a fact only those files give, so the registry's note leaves it unset. The same file confirms its Comanche Vulcan damage name and that it hits one target at a time."
+          "note": "Projectile rests only on Weapon.ini of the 1.04 files (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Weapon.ini, read, not cited), as the registry's Generals note allows: it gives the gun no projectile object but a travel speed of its own, not the huge value the file uses for hits that land at once, and the delivery rule counts a travel speed as saying the shot travels. No cited page says how the shots travel; without the file it would be hitscan, the machine-gun family's default. The same file confirms its Comanche Vulcan damage name and that it hits one target at a time."
         },
         {
           "path": "armament/0/condition",
@@ -3005,7 +3039,7 @@
       "counters": [
         {
           "ref": "weapon:guided-missiles",
-          "why": "Its laser shoots down incoming missiles by itself, so missile-firing anti-air (Patriots, Stinger Sites, missile infantry) and missile-armed fighters struggle against it; the wiki says it is weapons other than missiles that bring it down."
+          "why": "Its laser shoots down incoming missiles by itself, so missile-firing anti-air (Patriots, Stinger Sites, missile infantry) struggles against it; the wiki says it is weapons other than missiles that bring it down."
         }
       ],
       "combos": [
@@ -3194,6 +3228,10 @@
         {
           "path": "counters",
           "note": "Counters holds only what it foils by itself, since it harms no enemy with a weapon or ability of its own (Matchups rule 5); its riders' and Rangers' work sits in combos. Missile anti-air, foiled by the laser alone, is in counters, while gun-armed anti-air and anti-air in groups, Avengers above all, are in countered_by: different enemies and situations."
+        },
+        {
+          "path": "counters/0",
+          "note": "weapon:guided-missiles also covers missile-armed fighters such as the Raptor and MiG, which the Combat Chinook page counts among its counters, though weakened by the laser."
         },
         {
           "path": "variant_of",
