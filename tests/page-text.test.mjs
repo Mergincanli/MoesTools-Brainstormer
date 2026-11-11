@@ -65,6 +65,12 @@ describe('page reader: what it prints', () => {
     assert.match(pageAsText({ url: WIKI, format: 'wikitext', raw: SOURCE }), /== RENDERED ==\n\(not in the cache: only the page source was read; run again online\)/)
   })
 
+  it('prints the Steam news feed as its posts, not as the JSON that carries them', () => {
+    const url = 'https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=1&count=40&maxlength=0&format=json'
+    const raw = JSON.stringify({ appnews: { newsitems: [{ gid: '77', title: 'Balance notes', date: 1785024000, feedlabel: 'Community Announcements', contents: '[h2]Drones[/h2][p]The drone is [b]faster[/b] now.[/p]' }] } })
+    assert.equal(pageAsText({ url, format: 'html', raw }), 'Balance notes\n(post 77, 2026-07-26, Community Announcements)\nDrones\nThe drone is faster now.\n')
+  })
+
   it('prints a plain web page as its visible lines, and gives nothing for a PDF', () => {
     assert.equal(pageAsText({ url: 'https://p.example/a', format: 'html', raw: '<html><head><title>T</title></head><body><h1>Dox</h1><p>Fast &amp; cheap.</p></body></html>' }), 'Dox\nFast & cheap.\n')
     assert.equal(pageAsText({ url: 'https://p.example/m.pdf', format: 'html', raw: '%PDF-1.5 ...' }), null)

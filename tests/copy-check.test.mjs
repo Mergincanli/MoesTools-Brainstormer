@@ -10,7 +10,7 @@ import path from 'node:path'
 import { describe, it, after } from 'node:test'
 import {
   REPO_ROOT, MAX_NETWORK_FAILURES, NO_POST_TEXT, ONLY_MATCHED_NOTHING, cachePath, copyCheck, exitCode, formatCopyReport, markdownBlocks, noteFiles,
-  noteTexts, pageGrams, pageText, pageTexts, sourceOnly, steamNewsText, urlsIn, covers, hostPause, refusal, HOST_MIN_DELAY, RESTRICTED, RESTRICTED_SITES,
+  noteTexts, pageGrams, pageText, pageTexts, sourceOnly, steamFeedLines, steamNewsText, urlsIn, covers, hostPause, refusal, HOST_MIN_DELAY, RESTRICTED, RESTRICTED_SITES,
   SOURCE_ONLY_CACHE, SOURCE_ONLY_OFFLINE, USER_AGENT,
 } from '../scripts/copy-check.mjs'
 import { plantTest } from '../scripts/plant.mjs'
@@ -318,6 +318,46 @@ describe('copy-check on Steam news posts', () => {
     assert.deepEqual(res.notChecked, [[STEAM, NO_POST_TEXT]])
     assert.equal(res.pagesChecked, 0)
     assert.equal(exitCode(res), 3)
+  })
+})
+
+// The Steam news feed as the API serves it: JSON with every post's title and body, the body in the store's own
+// markup or, for a post from another site, in HTML.
+const FEED = 'https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=1&count=40&maxlength=0&format=json'
+const feed = items => JSON.stringify({ appnews: { appid: 1, newsitems: items } })
+const FEED_POSTS = [
+  { gid: '77', title: 'Balance notes', date: 1785024000, feedlabel: 'Community Announcements',
+    contents: '[h2]Drones[/h2][p]Our drone leaps inside an [b]enemy vehicle[/b] and eats it\nfrom within, then leaves.[/p][list][*][p]\\[NEW] Range < 40 for now <spoilers>.[/p][/*][/list][img]https://cdn.example/a/long/picture/address/of/six/words.png[/img]' },
+  { gid: '78', title: 'A site writes', date: 1785110400, feedlabel: 'Some Site',
+    contents: '<p>The walker <strong>crushes</strong> light tanks &amp; infantry.</p><p>It is slow.</p>' },
+]
+
+describe('copy-check on the Steam news feed', () => {
+  it('reads the feed as its posts: titles, a date line and the body as lines of plain text', () => {
+    assert.deepEqual(steamFeedLines(feed(FEED_POSTS)), [
+      'Balance notes', '(post 77, 2026-07-26, Community Announcements)', 'Drones',
+      'Our drone leaps inside an enemy vehicle and eats it', 'from within, then leaves.', '\\[NEW] Range < 40 for now <spoilers>.',
+      'A site writes', '(post 78, 2026-07-27, Some Site)', 'The walker crushes light tanks & infantry.', 'It is slow.',
+    ])
+    assert.equal(pageText({ url: FEED, format: 'html', raw: feed(FEED_POSTS) }), steamFeedLines(feed(FEED_POSTS)).join('\n'))
+  })
+
+  it('gives null for what is not a feed, and such a page is then read as it is', () => {
+    assert.equal(steamFeedLines('<p>Service unavailable for now.</p>'), null)
+    assert.equal(steamFeedLines('{"appnews":{}}'), null)
+    assert.equal(pageText({ url: FEED, format: 'html', raw: '<p>Service unavailable for now.</p>' }), ' Service unavailable for now. ')
+    // the same JSON under another address is not taken for a feed
+    assert.match(pageText({ url: PAGE, format: 'html', raw: feed(FEED_POSTS) }), /newsitems/)
+  })
+
+  it('finds a run that crosses a bold tag and a line break of a post, which the JSON as it is would hide', () => {
+    const root = tempRepo([FEED], { [FEED]: feed(FEED_POSTS) })
+    const r = cli(root, '--offline')
+    assert.equal(r.status, 1, r.stdout + r.stderr)
+    assert.match(r.stdout, /"our drone leaps inside an enemy vehicle and eats it from within then leaves" \(14 words\)/)
+    // the proof that the raw JSON hides it: the same text under an address that is not a feed shares no run at all
+    const plain = cli(tempRepo([PAGE], { [PAGE]: feed(FEED_POSTS) }), '--offline')
+    assert.equal(plain.status, 0, plain.stdout + plain.stderr)
   })
 })
 

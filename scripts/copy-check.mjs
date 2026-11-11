@@ -25,7 +25,8 @@
 // when the site gives one). A dropped connection, a timeout or a temporary DNS failure is tried again at
 // most twice; other network errors are not retried. After three network failures in a row the network
 // counts as unavailable: nothing more is fetched and the remaining uncached pages are listed as not checked.
-// A Steam news post is read from the page's data attribute (its markup holds only the store's frame), and web
+// A Steam news post is read from the page's data attribute (its markup holds only the store's frame), the Steam
+// news feed (api.steampowered.com) is read as its posts, not as the JSON that carries them, and web
 // addresses in a record's prose are not wording. A site can ask for a longer pause (HOST_MIN_DELAY), which also
 // holds between two runs in one process. Set COPY_CHECK_CONTACT to add a contact to the User-Agent header: a site
 // whose terms restrict automated reading (RESTRICTED_SITES: Liquipedia) is asked for nothing until Mustafa has
@@ -219,6 +220,41 @@ export function steamNewsText(h) {
   return parts.join('\n').replace(/\[\/?[a-z0-9*]+(?:=[^\]]*)?\]/gi, ' ') // [h3], [/url], [url=...], [*]
 }
 
+// The Steam news feed (api.steampowered.com/ISteamNews/GetNewsForApp/...) answers with JSON: every post of a game
+// with its title and its body, the body in the store's own markup ([h2], [p], [*]) or, for a post from another
+// site, in HTML. Read as it is, a line break is the two characters \n and a [b] sits inside a sentence, so a
+// copied run that crosses either would go unseen.
+const STEAM_FEED = /^https?:\/\/api\.steampowered\.com\/ISteamNews\/GetNewsForApp\//
+const STORE_BLOCK = /\[\/?(?:p|h[1-6]|list|olist|\*|table|tr|td|th|quote|code|hr|br)(?:=[^\]]*)?\]/gi
+const STORE_INLINE = /\[\/?(?:b|i|u|s|strike|spoiler|url|c|noparse|color|size|dynamiclink)(?:=[^\]]*)?\]/gi // any other [word] is the post's own text
+const HTML_POST = /<\/?(?:p|br|div|a|img|strong|em|b|i|u|ul|ol|li|h[1-6]|span|table|tr|td|th|blockquote|iframe)\b[^>]*>/i
+
+/**
+ * The posts of a Steam news feed as lines of plain text: for each post its title, a line with its date, feed and
+ * number, then its body, one line per block. Null when the text is not a feed.
+ */
+export function steamFeedLines(raw) {
+  let items
+  try { items = JSON.parse(raw)?.appnews?.newsitems } catch { return null }
+  if (!Array.isArray(items)) return null
+  const lines = []
+  for (const item of items) {
+    if (typeof item?.title === 'string' && item.title.trim()) lines.push(item.title.trim())
+    const day = Number.isFinite(item?.date) ? new Date(item.date * 1000).toISOString().slice(0, 10) : null
+    lines.push(`(post ${item?.gid ?? '?'}${day ? `, ${day}` : ''}${item?.feedlabel ? `, ${item.feedlabel}` : ''})`)
+    if (typeof item?.contents !== 'string') continue
+    // A post from another site is HTML. The store's own markup is text: a "<" in it is the post's own.
+    if (HTML_POST.test(item.contents)) { lines.push(...visibleLines(item.contents)); continue }
+    const body = item.contents
+      .replace(/\[img\b[^\]]*\][\s\S]*?\[\/img\]/gi, ' ') // a picture's address is not wording
+      .replace(/\[previewyoutube\b[^\]]*\][\s\S]*?\[\/previewyoutube\]/gi, ' ')
+      .replace(STORE_BLOCK, '\n')
+      .replace(STORE_INLINE, ' ')
+    for (const part of body.split('\n')) { const line = part.replace(/\s+/g, ' ').trim(); if (line) lines.push(line) }
+  }
+  return lines
+}
+
 /**
  * The plain texts of a cached page, or null when it has none to compare (a Steam news page without its post).
  * A wiki page gives two: its source, and its rendered page when the cache holds it (what a reader sees,
@@ -233,6 +269,7 @@ export function pageTexts(page) {
     return [wikitextToText(page.raw), htmlToText(page.rendered), ...(noMarks === page.rendered ? [] : [htmlToText(noMarks)])]
   }
   if (STEAM_NEWS.test(page.url || '')) { const t = steamNewsText(page.raw); return t === null ? null : [t] }
+  if (STEAM_FEED.test(page.url || '')) { const lines = steamFeedLines(page.raw); if (lines !== null) return [lines.join('\n')] }
   return [htmlToText(page.raw)]
 }
 

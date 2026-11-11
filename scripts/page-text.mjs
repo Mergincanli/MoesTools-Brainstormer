@@ -27,7 +27,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
-  DEFAULT_OPTIONS, REPO_ROOT, RESTRICTED_SITES, cachePath, fetchPage, htmlToText, refusal, rerunWithProxy, sourceOnly, steamNewsText, visibleLines,
+  DEFAULT_OPTIONS, REPO_ROOT, RESTRICTED_SITES, cachePath, fetchPage, htmlToText, refusal, rerunWithProxy, sourceOnly, steamFeedLines, steamNewsText, visibleLines,
 } from './copy-check.mjs'
 
 export const NO_FETCH = RESTRICTED_SITES // the sites this reader does not fetch (see the copy-check)
@@ -84,6 +84,9 @@ export function pageAsText(page, part, why) {
   }
   if (/^%PDF-/.test(page.raw)) return null // a PDF: its text needs pdftotext
   if (/^https?:\/\/store\.steampowered\.com\/news\/app\//.test(page.url || '')) return steamNewsText(page.raw)
+  // The Steam news feed: its posts, each with its title and date, not the JSON that carries them.
+  const feed = /^https?:\/\/api\.steampowered\.com\/ISteamNews\/GetNewsForApp\//.test(page.url || '') ? steamFeedLines(page.raw) : null
+  if (feed !== null) return feed.join('\n') + '\n'
   const lines = visibleLines(page.raw)
   return (lines.length ? lines.join('\n') : htmlToText(page.raw)) + '\n'
 }
