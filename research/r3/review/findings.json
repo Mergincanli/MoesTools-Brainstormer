@@ -426,7 +426,7 @@
     "refuted": 0,
     "fixed": 5
    },
-   "note": "Fixed in the commit that adds this entry. The recheck reads only the sentences that changed after the claims check.",
+   "note": "The recheck reads only the sentences that changed after the claims check.",
    "findings": [
     {
      "angle": "recheck",
@@ -440,6 +440,7 @@
       "reason": "Confirmed. Part 1's 1172 checked pages hold 10 PDF addresses for 9 files, not 9 addresses for 8 files. The tenth is https://store.steampowered.com/manual/56400, the manual of Dawn of War II: Retribution. Only research/registry-notes/games-r5.md (line 274) links it, and this pull request does not change that file. The claims check counted with '--only .pdf', and this address has no '.pdf' in it, so it was missed. The copy-check turns its bytes into meaningless words, as it does for the Generals manuals. No other kind of unreadable page is among the 1172. The result itself holds. The proposed fix to README line 160 and PR draft line 8 is correct, and no other file states the count (I searched the README, the PR draft and docs/handoff.md)."
      },
      "status": "fixed",
+     "commit": "8217585",
      "how": "Fixed as proposed. The manual of Dawn of War II: Retribution was then extracted and compared by hand as well: no shared run."
     },
     {
@@ -455,6 +456,7 @@
       "better_fix": "README line 115: '- **Others** (6 lines): the Sentry Drone is very fast on tracks. The Vimana is a huge flying pyramid, slow for a hovering craft (two lines). Two soldiers come with a partner that fights on its own: the Drone Operator's drone attacks whatever he attacks, and Anna Kos's bear Wojtek picks his own targets. William Mason's suit lets its pilot out as a vehicle would.' This is the finder's text, with 'fights on its own' in place of 'fires by itself', since a bear does not fire."
      },
      "status": "fixed",
+     "commit": "8217585",
      "how": "Fixed with the skeptic's wording: a partner that fights on its own."
     },
     {
@@ -470,6 +472,7 @@
       "better_fix": "Line 159: '**The full copy-check** (runbook section 8, step 4) ran in three parts on 4920f1a, after the fixes of the final review, of its follow-up check and of the claims check. Part 1 ran online. Part 2 ran offline, on the saved copies of the pages; an earlier online run on the same units had fetched the four new ones:'. Line 166, as the finder proposes: 'That gave 48 pages, most of them also cited or named by address elsewhere. The first run fetched four of them for the first time (...).' Part 3: save a log of the manuals check over data/patterns (0 runs; the patterns are the same at 4920f1a and HEAD) beside copy-check-claims-part3.txt. Or else drop 'the patterns' from line 157."
      },
      "status": "fixed",
+     "commit": "8217585",
      "how": "Fixed: the report says which parts ran online and which on saved pages, and the hand check of the manuals now covers all of data/."
     },
     {
@@ -485,6 +488,7 @@
       "better_fix": "README line 171: simply drop the claim: '**Taken during the batch** (each can be reversed; the units it affects are named):'. Line 12 and item 8 already say which ones used the recommended option. PR draft line 44, shorter than the finder's: '**Taken during the batch, each reversible, all with the recommended option except two of the rule problems in item 12.**'"
      },
      "status": "fixed",
+     "commit": "8217585",
      "how": "Fixed as the skeptic's better fix says, in the report and the draft."
     },
     {
@@ -500,7 +504,67 @@
       "better_fix": "As proposed. If shorter is wanted on line 3: 'It ran by docs/research-runbook.md. The prep ran from 24 to 26 October 2026. The opening check and the fill ran at night from 26 to 29 October. On 29 October the merge pass's first step (6c817f1) also ran, with two of its finders and two of the nine pattern writers (8 of the 33 drafts).' Optionally split lines 124 (62 words) and 158 (53) as a follow-up."
      },
      "status": "fixed",
+     "commit": "8217585",
      "how": "Fixed with the skeptic's shorter split."
+    }
+   ]
+  },
+  {
+   "run": "research/workflows/verify-fixes.js, angle recheck, on the sentences changed since 1e6a63d, on 11 November 2026",
+   "counts": {
+    "claims_checked": 59,
+    "claims_that_held": 55,
+    "found": 3,
+    "real": 3,
+    "refuted": 0,
+    "fixed": 3
+   },
+   "note": "Fixed in the commit that adds this entry, with the wording and the figures the recheck gave, so no further run followed (runbook section 8).",
+   "findings": [
+    {
+     "angle": "recheck",
+     "id": "F1",
+     "severity": "minor",
+     "file": "research/r3/README.md (lines 12, 159, after 183) and the draft pull-request description (line 66)",
+     "summary": "The new decision on making the copy-check read rendered wiki pages appears only in the PR draft (lines 60-62, options A and B). The README calls it 'proposed for R4's prep', but its Decisions section and TL;DR never offer the choice. The draft's 'For Mustafa' list also leaves it out, although option B needs an answer before the merge.",
+     "fix": "README: after line 183, add the paragraph '**Left for you, for R4's prep:** the copy-check reads a wiki page's source text, so it misses text that a template kept on another page draws in (see [Copied wording](#copied-wording)). Recommended: change the copy-check to read the rendered page too, with tests, as the first step of R4's prep. The other option is to change it in this pull request before the merge, which adds a tool change and one more review round here.' README line 159: replace 'That change is proposed for R4's prep.' with 'That change is proposed for R4's prep; the choice is yours (see [Decisions](#decisions)).' README line 12: after 'whether to fold the Voltaic Tank's charge pattern into `freeze-and-shatter`.' insert ' One more is for R4's prep: whether the copy-check learns to read rendered wiki pages there (recommended) or in this pull request.' PR draft line 66: replace '1. Answer item 1 (approve and merge), and items 2 to 7 if you want a different answer.' with '1. Answer item 1 (approve and merge), and items 2 to 7 if you want a different answer. If you want the copy-check changed in this pull request (option B under \"For R4's prep\"), say so before the merge.'",
+     "verdict": {
+      "real": true,
+      "reason": "Partly confirmed, Low. The part that holds: the README's Decisions section (lines 171-197) has no entry for the copy-check choice. The PR draft offers that choice in lines 60-62, with options A and B and a recommendation. Line 159 of the README gives only the recommended path ('proposed for R4's prep') and never says the choice is his. Every other open block in the draft has a README counterpart, including the pattern review (line 183), which also needs no answer now. The house rules say reports carry their decisions, and runbook lines 216-223 say the README contains 'the decisions'. So the fix round opened a gap between the two texts. Two parts of the finding are weak. First, TL;DR line 12 is not a full list: it also leaves out the StarCraft II count (PR item 2, README line 185), and it points to Decisions. Second, the PR's 'For Mustafa' list leaves the block out, but that matches the block's own words '(no answer is needed to merge)'. Item 1's option B, 'tell me what to change first', already lets him ask for a change before the merge. Missing the choice costs little: if he says nothing, option A applies and the tool change still happens at R4's prep.",
+      "better_fix": "The core fix is the proposed paragraph after README line 183, plus the pointer on line 159. The sentence for PR line 66 is optional but does no harm. For TL;DR line 12, either leave it as it is or name the StarCraft II count too. The proposed 'One more is for R4's prep' reads as the full list of open choices, but the count is missing. For example: 'Two more wait for you in pull request #6. One is the StarCraft II count in the plan. The other is whether the copy-check learns to read rendered wiki pages at R4's prep (recommended) or in this pull request.'"
+     },
+     "status": "fixed",
+     "how": "Fixed: the report's Decisions section has the choice, its summary names it beside the StarCraft II count, and the draft's list for Mustafa says when to ask for option B."
+    },
+    {
+     "angle": "recheck",
+     "id": "F2",
+     "severity": "minor",
+     "file": "research/r3/README.md (line 169)",
+     "summary": "Part 4's breakdown sentence is 62 words long, the longest sentence the fixes added. It also says '7 in the record's quoted evidence', but 2 of the 7 sit in one finding's proposed fixes, not in quoted evidence.",
+     "fix": "README line 169: replace 'All 16 are reworded, in text only: 2 in this batch's units (the Sentinel and the Voltaic Tank, with their copies in the fill record), 1 in the batch's notes, 1 in the new pattern file `retaliate-on-hit`, 7 in the record's quoted evidence, and 5 in older files (`deploy-siege-mode`, two notes of the games registry and two lines of the step-1 notes).' with 'All 16 are reworded, in text only. Two are in this batch's units, the Sentinel and the Voltaic Tank, and their copies in the fill record were reworded too. One is in the batch's notes and one in the new pattern file `retaliate-on-hit`. Seven are in the record: five in quoted evidence and two in the proposed fixes of one finding. The last five are in older files: `deploy-siege-mode`, two notes of the games registry and two lines of the step-1 notes.'",
+     "verdict": {
+      "real": true,
+      "reason": "Both points confirmed, Low. The sentence has 62 words by a hand count and by my counter. It is the longest sentence in the README, and the fixes added it. The same fix round split a 62-word sentence on line 124, and the earlier findings C10 and R5 treated sentences of this length as Low defects against the house rule on short sentences. Of the 7 runs in the record, 5 are in evidence fields: patterns/result.json twice, findings[2], and findings[18] twice. The other 2 are findings[26].fix and findings[26].verdict.better_fix. Those are proposed wording for the PR draft ('Replace item 2 with: ...' and 'Item 2: ...'). They matched the StarCraft Wiki's Liberator page only by chance. So they are not quoted evidence. The proposed rewrite keeps all 16 figures, and each figure checks out.",
+      "better_fix": "Use the rewrite as proposed. Two optional changes while the sentence is open: (1) 'five in the evidence of verdicts', because two of the five are summaries without quotation marks; (2) 'two notes of the games registry' is loose. One of the two is the Foxhole speed_reference, a free-text field and not a note. 'two text fields of the games registry' would be exact. PR line 87 says 'two notes in data/games.json' too."
+     },
+     "status": "fixed",
+     "how": "Fixed with the proposed split and the skeptic's two more exact words."
+    },
+    {
+     "angle": "recheck",
+     "id": "F3",
+     "severity": "minor",
+     "file": "research/r3/README.md (line 161)",
+     "summary": "A nit. 'Only the step-1 registry notes link it' is no longer literally true. Since 8217585 the review record also names the Dawn of War II manual's address, so that address would stay in part 1's list even without games-r5.md.",
+     "fix": "README line 161: replace 'Only the step-1 registry notes link it.' with 'The step-1 registry notes link it, and the review record names it in the finding that counted it.'",
+     "verdict": {
+      "real": true,
+      "reason": "Confirmed, Low (a nit, as the finding says). Using the copy-check's own functions, I found that no record cites https://store.steampowered.com/manual/56400. Two note files link it: research/registry-notes/games-r5.md (line 274) and research/r3/review/findings.json (lines 436 and 440). The findings.json lines are the recheck finding R1 and its verdict, added in 8217585; the file did not mention the address at 1e6a63d. copy-check.mjs line 536 builds part 1's address list from record sources plus every note file's addresses. Its noteTexts function calls those addresses 'the pages it links to'. The README itself uses 'the notes link' for addresses written in note text (line 158). So the address would stay in part 1's list even without games-r5.md, and the claim does not hold as written. No figure depends on it. The fix only states a fact this recheck found, so it needs no new run.",
+      "better_fix": "Use the proposed sentence, or simply drop 'Only': 'The step-1 registry notes link it.' The shorter version avoids describing the record's reference to itself. The sentences around it already say this batch does not cite the manual and that it was checked by hand."
+     },
+     "status": "fixed",
+     "how": "Fixed with the skeptic's shorter sentence."
     }
    ]
   }
