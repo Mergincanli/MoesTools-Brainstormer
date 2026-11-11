@@ -65,6 +65,14 @@ describe('page reader: what it prints', () => {
     assert.match(pageAsText({ url: WIKI, format: 'wikitext', raw: SOURCE }), /== RENDERED ==\n\(not in the cache: only the page source was read; run again online\)/)
   })
 
+  it('leaves no piece of a tag that runs over several lines of the page\'s source, and keeps a "<" of the text', () => {
+    const raw = '<html><body><p>The status light <span class="dot" :class="{\n\t\'green\': $store.status === \'online\',\n\t\'red\': $store.status === \'offline\'\n}"></span> shows the server.</p>' +
+      '<select id="pick" class="wide"\n\tx-data x-on:change="location.href = \'/notes/\' + $event.target.value"><option>One</option></select>' +
+      '<p>Heat &lt; 50 is safe, and 5 < 6 here.</p><p>The next block <b>stays</b> whole.</p></body></html>'
+    assert.equal(pageAsText({ url: 'https://a.example/p', format: 'html', raw }),
+      'The status light shows the server.\nOne\nHeat < 50 is safe, and 5 < 6 here.\nThe next block stays whole.\n')
+  })
+
   it('prints the Steam news feed as its posts, not as the JSON that carries them', () => {
     const url = 'https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=1&count=40&maxlength=0&format=json'
     const raw = JSON.stringify({ appnews: { newsitems: [{ gid: '77', title: 'Balance notes', date: 1785024000, feedlabel: 'Community Announcements', contents: '[h2]Drones[/h2][p]The drone is [b]faster[/b] now.[/p]' }] } })

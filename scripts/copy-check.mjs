@@ -193,8 +193,12 @@ export function visibleLines(html) {
   let h = html.replace(/<!--[\s\S]*?-->/g, ' ')
   h = h.replace(/<(script|style|noscript|svg|template|head)\b[\s\S]*?<\/\1\s*>/gi, ' ')
   h = h.replace(FOOTNOTE_MARK, ' ')
-  h = h.replace(new RegExp(`</?(?:${BLOCK_TAGS})\\b[^>]*>`, 'gi'), '\n')
-  return h.split('\n').map(line => htmlToText(line).replace(/\s+/g, ' ').trim()).filter(Boolean)
+  h = h.replace(new RegExp(`</?(?:${BLOCK_TAGS})\\b[^>]*>`, 'gi'), '\u0001')
+  // Every other tag goes before the text is cut into lines: a tag may run over several lines of the page's source
+  // (a long list of attributes), and cut first it would leave its pieces among the lines. A tag starts with a
+  // letter, "/" or "!" and never crosses a block's end, so a "<" of the text takes at most the rest of its block.
+  h = h.replace(/<[a-zA-Z\/!][^>\u0001]*>/g, ' ')
+  return h.split(/[\u0001\n]/).map(line => decodeEntities(line).replace(/\s+/g, ' ').trim()).filter(Boolean)
 }
 
 // A Steam news post (store.steampowered.com/news/app/<id>/view/<post>) is drawn by a script: the page's markup holds
