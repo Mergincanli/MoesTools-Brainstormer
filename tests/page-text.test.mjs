@@ -55,6 +55,12 @@ describe('page reader: what it prints', () => {
     assert.doesNotMatch(cli(WIKI, '--offline', '--root', root, '--source').stdout, /RENDERED|Jumps inside/)
   })
 
+  it('marks text inside an HTML comment of the source as hidden from readers', () => {
+    const text = pageAsText({ url: WIKI, format: 'wikitext', raw: 'Shown text.\n<!-- A unit list the editors\nswitched off. -->\nMore shown text.', rendered: '<p>Shown text.</p>' })
+    assert.match(text, /Shown text\.\n\[HIDDEN COMMENT, not shown to readers: A unit list the editors\nswitched off\. \]\nMore shown text\./)
+    assert.doesNotMatch(text, /<!--/)
+  })
+
   it('says so when a wiki page is cached with its source only', () => {
     assert.match(pageAsText({ url: WIKI, format: 'wikitext', raw: SOURCE }), /== RENDERED ==\n\(not in the cache: only the page source was read; run again online\)/)
   })

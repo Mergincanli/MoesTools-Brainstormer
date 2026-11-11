@@ -72,7 +72,10 @@ export async function readPage(url, options = {}) {
 export function pageAsText(page, part, why) {
   const out = []
   if (page.format === 'wikitext') {
-    if (part !== 'rendered') out.push('== SOURCE (wikitext) ==', page.raw.trim(), '')
+    // Text inside an HTML comment never shows to a reader (and the copy-check does not compare it): it is marked, so
+    // that nobody takes it for the page's text. It may still hold an editor's remark worth knowing.
+    const source = page.raw.replace(/<!--([\s\S]*?)-->/g, (m, inner) => `[HIDDEN COMMENT, not shown to readers:${inner}]`)
+    if (part !== 'rendered') out.push('== SOURCE (wikitext) ==', source.trim(), '')
     if (part !== 'source') {
       if (typeof page.rendered === 'string') out.push('== RENDERED (what a reader sees, one line per block) ==', ...visibleLines(page.rendered), '')
       else out.push('== RENDERED ==', why && why !== 'offline' ? `(the rendered page could not be read: ${why})` : '(not in the cache: only the page source was read; run again online)', '')
