@@ -7,7 +7,8 @@ Written on 10 November 2026, when the project moved from the session that ran it
 - **The project:** Unit Forge, a tool for Mustafa that turns a researched database of real RTS and shooter units into original unit concepts for his game, Shamble Frontlines. The brief is [docs/brief.md](brief.md) and the plan is [docs/proposal.md](proposal.md).
 - **Where it stands:** plan step 3, the research run, batch R3 (Command & Conquer: Generals with Zero Hour, Tempest Rising, Iron Harvest).
   - All 27 R3 units are coded, checked and in `data/units/` (commit 6c817f1).
-  - The merge pass, the patterns, the checker, the rule problems and the report followed on 10 and 11 November (section 3). The report is [research/r3/README.md](../research/r3/README.md).
+  - The merge pass, the patterns, the checker, the rule problems, the report, the final review and the claims check followed on 10 and 11 November (section 3). The report is [research/r3/README.md](../research/r3/README.md).
+  - R3 is finished. It waits for Mustafa's approval of the pull request, and R4 waits for his word.
 - **Everything is on one branch, `claude/quirky-cray-tih1w4`, in [pull request #6](https://github.com/Mergincanli/MoesTools-Brainstormer/pull/6).** That pull request also holds Mustafa's plan change of 24 October, and it waits for his approval (section 4).
 - **First thing to do in the new session:** section 7.
 
@@ -57,6 +58,10 @@ Written on 10 November 2026, when the project moved from the session that ran it
 | e05e5c4 | R3 rule problems (18 settled) and the report |
 | 7142f5c | Handoff updated; the saved work in progress deleted |
 | bc3d69a, 43f6abb | R3 final review: the 40 confirmed findings fixed, and the findings recorded |
+| a199319, 9fe2a4e, c04f1a1 | R3 follow-up check: 9 fixes, its record, and the report's copy-check figures |
+| 4920f1a, 1e6a63d | R3 claims check: the 11 confirmed findings fixed |
+| 8217585, 50f85f5 | R3 recheck: its 5 fixes, and 16 rewordings from the comparison with the rendered wiki pages |
+| f9f4a18 and the commit after it | R3 second recheck: its 3 fixes; the report names the commit the copy-check ran on; this file updated |
 
 CI runs four check jobs on every push; it was green on each head it has finished on. `npm run check:merge` passes, with 305 of 305 tests.
 
@@ -88,12 +93,17 @@ CI runs four check jobs on every push; it was green on each head it has finished
 3. **Checker** (8e1746f, 9ce1f96, 6556887): seed `r3-2026-11-11`; every game passes; 23 confirmed fields fixed. Record: `research/r3/checker/`.
 4. **Rule problems and report** (e05e5c4): `research/r3/rule-problems.md` and `research/r3/README.md`.
 5. **Final review** (bc3d69a, 43f6abb): 48 findings, 40 confirmed, 8 answered. A follow-up check on the fixes confirmed 10 more. All are fixed but one, a line of the plan that waits for Mustafa (pull request #6, item 2). The copy-check now reads Steam news posts. Record: `research/r3/review/` and the report's "Copied wording".
+6. **Claims check and rechecks** (4920f1a, 8217585, f9f4a18): the claims check recomputed 147 claims of the report and the pull-request description and raised 11 findings. A recheck of the changed sentences raised 5, and a second recheck 3. Skeptics confirmed all of them, and all are fixed. The description is posted on pull request #6. Record: `research/r3/review/findings.json`, under `follow_ups`.
+7. **Comparison with the rendered wiki pages** (8217585): the copy-check reads a wiki page's source text, so it does not see text that a template kept on another page draws in, such as an ability box. A one-off script fetched the rendered version of all 982 wiki pages in the cache, and the unchanged copy-check compared the data, the record and the notes with them. It found 16 shared runs of six or seven words; all are reworded, text only. The report's "Copied wording" describes it as part 4.
 
 **What is left:**
 
-1. **The claims check** (runbook section 8) on the report and the pull-request description, then its recheck, then posting the description.
-2. **Merge** (section 9): only when every gate passes, and only with Mustafa's approval of pull request #6, which also holds the plan change.
-3. **Then R4** (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech), from its prep, and only when Mustafa says so. Before any fill, test the copy-check on one page from each site R4 will cite, and show that it reads the page's real text.
+1. **Mustafa's approval of pull request #6**, which also holds the plan change. Then the merge (runbook section 9): only when every gate passes on the same wake-up, and with a merge commit, never a squash.
+2. **Then R4** (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech), from its prep, and only when Mustafa says so. Before any fill:
+   - **The copy-check and rendered pages.** Pull request #6 asks Mustafa whether the copy-check should learn to read the rendered wiki page as R4's first prep step (recommended) or in that pull request. Until the tool can, repeat the one-off comparison before a batch is called clean: ask each wiki's `api.php` for `action=parse` with `prop=text` instead of `prop=wikitext`, save the result as an html page in a throwaway root's cache, copy `data/`, `schemas/` and the batch's `research/` folders beside it, and run the copy-check there with `--offline`.
+   - **The site test.** Test the copy-check on one page from each site R4 will cite, and show that it reads the page's real text: open the page in a browser, plant passages of what a reader sees in a throwaway record that cites the page, and see that the copy-check flags them. For a wiki that shows a headless browser a bot page (Fandom, Liquipedia), take the wiki's own rendered page from its API as the reader's view.
+   - **The test of 11 November** (run ahead, as a tool check): all planted passages were flagged on www.halopedia.org, halo.fandom.com, www.sarna.net, mwo.fandom.com, planetaryannihilation.fandom.com, palobby.com, news.blizzard.com and www.halowaypoint.com (its news index; test a Halo Wars 2 page too). On starcraft.fandom.com only 2 of 5 were flagged: its ability and upgrade boxes are templates kept on other pages. liquipedia.net: 4 of 5 on a saved page; the site limits automated reading, so read its API terms before citing it at volume. mwomercs.com: 4 of 5 (the miss is a cookie notice). planetaryannihilation.com refuses the request (HTTP 403): check by hand if it is cited. A Steam news index page holds no post; single posts are read. Repeat the test for every site the prep adds.
+   - **A line for the agent briefs,** proposed to Mustafa on 11 November and not in the runbook until he approves: "Evidence: give the page's address and say in your own words what it shows. Never copy six or more words in a row from a page, in any field of your answer, your notes or a file, the evidence included; give a figure or a name as it is, and paraphrase everything else."
 
 **Known and left alone:** `npm run copy-check -- --offline --also data/units` finds coincidental six-word runs in R1's units (13 on 11 November 2026; the count depends on the cache), against pages that other records cite or name, most of them cited by R1's own pattern files, such as "while it is in the air" (Halopedia's Plasma grenade page, cited by throw-explosive). None is a page those units cite, and none is in R3's units.
 
@@ -110,6 +120,7 @@ CI runs four check jobs on every push; it was green on each head it has finished
 4. Taken during the batch with the recommended option, each reversible: night decisions N1 to N4 (above), the consistency check's fixes, three choices about the new patterns, the Vimana's second roles and 18 settled rule problems. The report's "Decisions" lists them.
 5. Left for him at the pattern review (plan step 4): whether to fold `stack-to-overload` into `freeze-and-shatter`.
 6. For the rule-fix round after R4, no answer needed now: the 83 rule problems in `research/r3/rule-problems.md`, among them the walker body-plan tie-break and the confidence rule (`research/r3/opening/splits.json`).
+7. For R4's prep, no answer needed to merge: whether the copy-check learns to read rendered wiki pages as R4's first prep step (A, recommended) or in pull request #6 (B); and the one-line rule on evidence for the agent briefs (section 3, "What is left").
 
 ## 5. How the work is done
 
@@ -119,6 +130,7 @@ The procedure is [docs/research-runbook.md](research-runbook.md): its sections 1
 - **At most two workflows at once.** Mustafa wants efficient use of tokens. A fill job of two units costs about 0.5 to 1 million tokens; the R3 fill as a whole cost about 11 million.
 - **The copy-check finds six-word runs in agent text every time.** This happens most in reports, hesitations and uncertain notes, and in older text once a new page is cited. Run it on the whole record before every commit, and reword only the text, never a coded value.
 - **Tests that read the live data can break when units are added.** Fix the test without weakening it, as in 6c817f1.
+- **The copy-check reads a wiki page's source text, not the page a reader sees.** Text that a template kept on another page draws in is missed (section 3, item 7). A script-drawn page can be missed too, as Steam news posts were. Test each new site before a fill.
 - **The page cache** (`.cache/sources/`, 271 MB, not committed) does not move to a new machine. Agents and the copy-check fetch pages again as needed, through the wiki APIs, two seconds apart.
 
 ## 6. What did not move, and what to do about it
