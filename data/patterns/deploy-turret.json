@@ -1,0 +1,626 @@
+{
+  "$schema": "../../schemas/pattern.schema.json",
+  "schema_version": "1.0.0",
+  "vocab_version": "1.1.0",
+  "id": "deploy-turret",
+  "status": "proposed",
+  "name": "Deploy a turret",
+  "aliases": ["sentry gun", "auto-turret", "place a turret", "emplacement", "deployable device", "support station"],
+  "source_terms": [
+    "Deploy Exosuit",
+    "Turret Relocate",
+    "Anti-Air Turret",
+    "MG Bunker",
+    "Cannon Bunker",
+    "Deploy Repair Turret",
+    "Healing Turret",
+    "Auto-Turret",
+    "Tarantula Turret",
+    "Machine Gun Emplacement",
+    "Point Defense",
+    "Rifle Pillbox",
+    "Sentry Gun",
+    "Dispenser",
+    "Spitfire Auto-Turret",
+    "Deploy Turret",
+    "Healing Pylon",
+    "LMG Gun Platform",
+    "A12 Enforcer",
+    "Machine Gun Sentry",
+    "Auto-Titan",
+    "D.O.C. Heal Drone"
+  ],
+  "category": "summon",
+  "also_in": ["area"],
+  "summary": "The unit sets down a fixed machine, such as a gun turret, a bunker gun or a sentry, that holds that spot and works on its own: it picks targets in its reach and shoots them while its owner moves on or fights elsewhere. The machine is plainly visible and has its own health, so enemies can outrange it, blow it up, flank a fixed firing arc, or disable or take it over with special tools. The owner can usually repair, rearm or upgrade it, and sometimes pick it up or call it back. In shooters each owner keeps only one or a few out at a time; RTS versions are mostly held back by what they cost instead. A support variant heals, repairs or resupplies nearby allies instead of fighting.",
+  "counterplay": [
+    "Outrange it: a turret can't move or chase, so artillery, snipers and long-range guns kill it from outside its reach (Supreme Commander point defences fall to artillery that outranges them).",
+    "Use splash and explosives: rockets, grenades and shelling break turrets fast, and a cluster of turrets or of players around a support station takes splash together.",
+    "Flank the firing arc: emplacements that face one way (Company of Heroes machine-gun nests, Dawn of War II Tarantulas, the Battlefield 2142 sentry) can't cover their sides or rear.",
+    "Disable or steal it: EMP grenades switch PlanetSide 2 and Battlefield 2142 sentries off for a moment, a Team Fortress 2 Spy's sapper shuts a sentry down, and a PlanetSide 2 Infiltrator can hack one to fight for his side.",
+    "Fool it: a fighting turret fires at whatever comes first, so a decoy, a drone or a tough unit can soak its fire while the team moves past or kills it (PlanetSide 2 decoy grenades throw off the Spitfire's aim).",
+    "Go after the owner: without its engineer a turret gets no repairs or ammo, and a timed one simply runs out; wait out a short-lived turret before pushing.",
+    "Bring air or stealth where it can't answer: many ground turrets can't hit aircraft, and PlanetSide 2's Spitfire ignores cloaked Infiltrators and vehicles."
+  ],
+  "source_units": ["iron-harvest.shared.engineer", "iron-harvest.usonia.william-mason", "tempest-rising.gdf.shieldmaiden"],
+  "other_examples": [
+    {
+      "game": "sc2",
+      "franchise": "StarCraft",
+      "unit": "Auto-Turret (Terran Raven)",
+      "note": "The Raven spends energy to drop an immobile turret that shoots ground and air targets in reach by itself and expires after a short timed life; in Legacy of the Void it became a quick harassment tool with a shorter life and more damage. The Raven is free to leave once it lands. Players drop it on enemy workers, use it to body-block melee units, to soak fire and to give vision, and it can be repaired.",
+      "sources": [
+        {
+          "url": "https://starcraft.fandom.com/wiki/Auto-turret",
+          "title": "Auto-turret, StarCraft Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        },
+        {
+          "url": "https://liquipedia.net/starcraft2/Auto-Turret",
+          "title": "Auto-Turret, Liquipedia StarCraft II Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10",
+          "version": "Legacy of the Void"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "game": "dow2",
+      "franchise": "Warhammer 40,000",
+      "unit": "Tarantula Turret (Space Marine Techmarine)",
+      "note": "The Techmarine hero builds a Tarantula turret for requisition and power, which takes time to build. Its heavy bolters pin down infantry within a limited firing arc, and an upgrade swaps them for missile launchers against vehicles. The wiki remarks that beginners lean on it too much.",
+      "sources": [
+        {
+          "url": "https://dow.fandom.com/wiki/Dawn_of_War_II/Techmarine",
+          "title": "Dawn of War II/Techmarine, Dawn of War Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        },
+        {
+          "url": "https://dow.fandom.com/wiki/Dawn_of_War_II/Tarantula_Turret",
+          "title": "Dawn of War II/Tarantula Turret, Dawn of War Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "coh1",
+      "franchise": "Company of Heroes",
+      "unit": "Machine Gun Emplacement (American Engineer Squad)",
+      "note": "Engineers pay manpower and fuel to raise a sandbagged machine-gun nest. Its facing is fixed when it is placed, so the gun only covers a forward arc and its sides and rear stay open; it shreds and suppresses infantry, can't have its gunner sniped, and friendly soldiers can garrison it to cover the flanks.",
+      "sources": [
+        {
+          "url": "https://companyofheroes.fandom.com/wiki/Machine_Gun_Emplacement",
+          "title": "Machine Gun Emplacement, Company of Heroes Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "supcom",
+      "franchise": "Supreme Commander",
+      "unit": "Point defense (engineer-built turrets)",
+      "note": "Engineers build static turrets that are tougher and hit harder than mobile units of their tech level, but cost a lot and take time to put up, so building them under attack is a gamble. They can't hit aircraft or submarines, artillery and missile launchers outrange them, and turrets packed together die to splash; walls in front of them slow attackers while they fire over.",
+      "sources": [
+        {
+          "url": "https://supcom.fandom.com/wiki/Point_defense",
+          "title": "Point defense, Supreme Commander Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "tempest-rising",
+      "franchise": "Tempest Rising",
+      "unit": "Healing Turret (GDF Riot Medic)",
+      "note": "A support device: the Riot Medic deploys a temporary turret that does no fighting, and for its short timed life it heals friendly infantry in a radius around it. Patch 1.9.0 cut its health and shortened its life.",
+      "sources": [
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Healing_Turret",
+          "title": "Healing Turret, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        },
+        {
+          "url": "https://tempestrising.wiki.gg/wiki/Riot_Medic",
+          "title": "Riot Medic, Tempest Rising Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "foxhole",
+      "franchise": "Foxhole",
+      "unit": "Rifle Pillbox (player-built automated defence)",
+      "note": "Players build this dugout with a hammer and materials; while a garrison source is in range it fires a rifle at enemies around it by itself and turns on anyone who shoots it. Its firing range is shown while placing it, and one friendly player can climb in to fight from it.",
+      "sources": [
+        {
+          "url": "https://foxhole.wiki.gg/wiki/Rifle_Pillbox",
+          "title": "Rifle Pillbox, Official Foxhole Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        }
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "shooter_analogues": [
+    {
+      "game": "extra:Team Fortress 2",
+      "franchise": "Team Fortress",
+      "unit": "Sentry Gun and Dispenser (Engineer)",
+      "note": "The Engineer spends metal to build a sentry that shoots the closest enemy in range and sight, sees its range while placing and can turn it first, and hits his buildings with the wrench to repair, rearm and level them up through three levels. A Spy's sapper disables and drains a building until the Engineer knocks it off. He can pack a building up and carry it, moving slower, and loses it if he dies on the way. His Dispenser fights not at all: it hands health and ammo to teammates standing near it, which anchors a hold but also bunches the team up for splash.",
+      "sources": [
+        {
+          "url": "https://wiki.teamfortress.com/wiki/Sentry_Gun",
+          "title": "Sentry Gun, Official Team Fortress Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        },
+        {
+          "url": "https://wiki.teamfortress.com/wiki/Buildings",
+          "title": "Buildings, Official Team Fortress Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        },
+        {
+          "url": "https://wiki.teamfortress.com/wiki/Dispenser",
+          "title": "Dispenser, Official Team Fortress Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "ps2",
+      "franchise": "PlanetSide",
+      "unit": "Spitfire Auto-Turret (Engineer)",
+      "note": "An Engineer deployable on a cooldown that engages infantry in range one at a time and beeps loudly before it fires, which warns its owner as well as the target. It can't track vehicles or see cloaked Infiltrators; decoy grenades fool it, EMP grenades switch it off briefly and an Infiltrator can hack it to fight for the other side.",
+      "sources": [
+        {
+          "url": "https://planetside.fandom.com/wiki/Spitfire_Auto-Turret",
+          "title": "Spitfire Auto-Turret, PlanetSide 2 Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "game": "extra:Overwatch 2",
+      "franchise": "Overwatch",
+      "unit": "Torbjörn's Deploy Turret and Illari's Healing Pylon",
+      "note": "Torbjörn throws a turret that builds itself and shoots the closest enemy in sight until it is destroyed or replaced; his hammer repairs it, shooting an enemy turns the turret onto that target, and losing it in a fight means a longer wait for the next one. Illari throws a fragile pylon that heals the most hurt ally in range, with the same rule of one at a time and a longer wait when the enemy destroys it.",
+      "sources": [
+        {
+          "url": "https://overwatch.fandom.com/wiki/Torbj%C3%B6rn",
+          "title": "Torbjörn, Overwatch Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        },
+        {
+          "url": "https://overwatch.fandom.com/wiki/Illari",
+          "title": "Illari, Overwatch Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "extra:Deep Rock Galactic",
+      "franchise": "Deep Rock Galactic",
+      "unit": "LMG Gun Platform (Engineer)",
+      "note": "The Engineer places a hologram and anyone on the team builds the tripod by holding the use key, faster with several players. It fires bursts until its ammo runs out and Engineers refill it. Holding reload recalls it: the sentry packs itself up and flies back to him from any distance with its ammo, or he re-places the hologram to move it, and it must then be built again.",
+      "sources": [
+        {
+          "url": "https://deeprockgalactic.wiki.gg/wiki/LMG_Gun_Platform",
+          "title": "LMG Gun Platform, Deep Rock Galactic Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "battlefield",
+      "franchise": "Battlefield",
+      "unit": "A12 Enforcer sentry gun (Battlefield 2142 Support)",
+      "note": "A Support gadget, slow to set up, that engages infantry, light vehicles and enemy sentries in a forward cone one target at a time. Explosives destroy it and EMP grenades switch it off for a few seconds.",
+      "sources": [
+        {
+          "url": "https://battlefield.fandom.com/wiki/Sentry_gun",
+          "title": "Sentry gun, Battlefield Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10",
+          "version": "Battlefield 2142"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "game": "extra:Helldivers 2",
+      "franchise": "Helldivers",
+      "unit": "A/MG-43 Machine Gun Sentry",
+      "note": "A sentry called down from orbit with a call-in delay, a cooldown and a limited ammo supply. It keeps firing even when teammates stand in its line of fire, so players drop prone, and heavy enemies go for sentries first, which turns them into a distraction.",
+      "sources": [
+        {
+          "url": "https://helldivers.wiki.gg/wiki/A/MG-43_Machine_Gun_Sentry",
+          "title": "A/MG-43 Machine Gun Sentry, Helldivers Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "game": "extra:Titanfall / Titanfall 2",
+      "franchise": "Titanfall",
+      "unit": "Auto-Titan (a Titan with no pilot inside), with the Assault and Guardian chips",
+      "note": "A pilot can leave his Titan to fight on its own with its main weapon while he moves on foot; chips make the empty Titan aim better or use its abilities, but it still fights worse than a piloted one.",
+      "sources": [
+        {
+          "url": "https://titanfall.fandom.com/wiki/Assault_Chip",
+          "title": "Assault Chip, Titanfall Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10",
+          "version": "Titanfall"
+        },
+        {
+          "url": "https://titanfall.fandom.com/wiki/Guardian_Chip",
+          "title": "Guardian Chip, Titanfall Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10",
+          "version": "Titanfall"
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "game": "extra:Apex Legends",
+      "franchise": "Apex Legends",
+      "unit": "D.O.C. Heal Drone (Lifeline)",
+      "note": "A support device on a cooldown: a hovering drone that heals players close to it over time for a fixed time, and can be set to follow a teammate. Crypto's EMP destroys it and Caustic's gas stops it working.",
+      "sources": [
+        {
+          "url": "https://apexlegends.fandom.com/wiki/Lifeline",
+          "title": "Lifeline, Apex Legends Wiki",
+          "kind": "wiki",
+          "accessed": "2026-11-10"
+        }
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "player_translation": {
+    "summary": "A builder-type unit (an engineer, a combat walker, a hero whose suit can stand on its own) carries one turret, places it where enemies must come, and goes on fighting or building while the turret guards that spot. The turret is loud and visible, has a clear range ring, and fights worse than a player would, so it denies ground and buys time rather than winning fights alone. The enemy team gets clear jobs: outrange it, blow it up, flank its arc, or disable it, and the owner gets the job of keeping it repaired and placed well.",
+    "as_user": [
+      "You carry one turret (two at the top tier), shown on your HUD with its health. Press Q to show a ghost of it at your aim point, with its range ring and, for an emplacement, its firing arc; click to place it. It builds itself over a second or two, and it is weak while it builds.",
+      "The turret shoots the first or closest enemy in range and sight by itself. Your own shots mark its target, so you can steer it onto the enemy you are fighting, as Torbjörn's turret does.",
+      "Your repair tool (or a wrench hit) mends it and refills its ammo; some variants take your resource to upgrade it. Its kills and assists count as yours.",
+      "If it is destroyed, the cooldown for the next one is longer than if you had picked it up yourself, so you are rewarded for moving it before it dies.",
+      "Your variant decides what it shoots: an anti-infantry sentry, an anti-air emplacement, or a support station that heals or repairs teammates instead of fighting."
+    ],
+    "as_target": [
+      "You see an enemy turret from far away: a team-coloured silhouette, a range ring once you come close, and a warning beep when it locks on to you, so walking into it is a choice.",
+      "Right now you can back off out of its ring, shoot it from beyond its reach, throw an explosive at it, circle to the side its arc doesn't cover, or use an EMP or a sapping tool to switch it off for a few seconds.",
+      "It shoots whatever it sees first, so a tough teammate or a decoy can soak its fire while you run past or kill it.",
+      "Killing the turret gives you points, and killing the engineer behind it stops the repairs."
+    ],
+    "teammates": [
+      "The owner's team builds around it: sandbags in front of it, mines on the side paths, and a sniper or a second gun covering the flank its arc leaves open.",
+      "Support players keep the turret fed and repaired; around a support station, teammates gather to heal before the next push.",
+      "The enemy team splits jobs: an artillery or long-range player removes it, a scout marks where it stands, and a flanker or saboteur disables it before the push.",
+      "Bait and trap: the turret's team retreats through its ring so chasers run into its fire."
+    ],
+    "controls": [
+      "Move with WASD and aim with the mouse; left mouse fires the unit's own weapon.",
+      "Q: hold to show the ghost turret, its range ring and arc at the aim point (within a short placement range); turn it with the mouse wheel; release or left click to place. Tap Q again near your turret to pick it up, which refunds most of the cooldown.",
+      "Your turret's target follows your shots: whatever you hit last, it shoots next, if it can see it.",
+      "Repair: aim at your turret and hold the repair tool's fire (or the universal interact key) to mend and rearm it.",
+      "The pattern spends one counted key (Q); the recall variant puts the call-back on holding Q, and the leave-the-machine variant uses the unit's existing enter and exit key."
+    ],
+    "feedback": [
+      "Placement: a ghost turret, green when the spot is allowed and red when it isn't, with its range ring and firing arc drawn on the ground.",
+      "Building: a short assembly animation and a filling ring; the turret can't fire until the ring is full.",
+      "Lock-on: a laser line or a cone flash toward its target and a rising beep that enemies hear before it fires, as PlanetSide 2's Spitfire and Team Fortress 2's sentry warn before shooting.",
+      "Owner's HUD: the turret's health and ammo, a ping when it takes damage or is sapped, and a kill-feed icon for its kills.",
+      "Disabled: sparks and a blue EMP flicker; destroyed: a clear wreck that stays for a few seconds so both teams see the ground is open again."
+    ],
+    "changes_from_rts": [
+      "RTS turrets and bunkers are base buildings that need a build menu, resources and an allowed zone (Iron Harvest's anti-air turret only in the Headquarters zone). Here the turret is a key on the unit with a cooldown and a cap of one or two per player, so a single player can carry it into the fight.",
+      "RTS turrets often outclass mobile units of their tier (Supreme Commander point defences). Against people, a turret must shoot worse than a player and announce itself, or a solo engineer locks a lane; it denies ground and buys time.",
+      "Fixed arcs, set facing and limited target types come from Company of Heroes and Dawn of War II; here the card must say which variant it is, and the ghost shows the arc before placing.",
+      "The RTS player can micro every turret. A player has one body, so the turret gets simple rules (closest target, or the owner's last target) and the owner gets a ping when it needs help.",
+      "Turrets vanish when their owner switches unit or leaves, and they can't be placed inside spawn areas, so the map doesn't fill up with stale guns.",
+      "From a top-down camera range rings and arcs are easy to draw, which makes this one of the most readable patterns; the warning beep and the lock line replace the RTS player's habit of hovering over a turret to read its range."
+    ]
+  },
+  "team_play": {
+    "potential": "high",
+    "hooks": ["bait-and-trap", "protector", "counter-pick", "escort-dependency"],
+    "notes": "A turret anchors a team's hold and creates jobs on both sides: the owner and the support players who repair and feed it and build cover around it, against the artillery, flankers and saboteurs whose job is to remove it. Support stations add a protector role, and the turret's beep and fire tell its team where the enemy is coming from."
+  },
+  "build_difficulty": {
+    "level": "medium",
+    "notes": [
+      "Placing a static entity with health is simple; its targeting (range, line of sight, target priority, owner's mark) must run on the server and stay cheap with dozens of turrets.",
+      "Rules for caps per player and per team, ownership for kill credit, cleanup on owner switch or disconnect, and no-build areas such as spawns.",
+      "Interactions: repair and rearm with the repair tool, EMP and sapping states, hacking (if allowed), splash damage, and pick-up or recall.",
+      "Variants add a fixed firing arc, upgrades, timed life, and a support aura that heals or repairs, each with its own UI.",
+      "UI: placement ghost with range ring and arc, the lock-on beep and line, and the owner's health and ammo readout."
+    ]
+  },
+  "risks": {
+    "balance": {
+      "level": "high",
+      "notes": [
+        "Turret stacking at a choke or objective can lock a lane; cap turrets per player and per team and keep their damage below a player's.",
+        "A turret that is too strong rewards passive play (the Dawn of War II wiki calls the Tarantula overused by beginners); one that is too weak is never placed.",
+        "Support stations that heal without limit make a hold unbreakable; give them a timed life or a healing pool and make them fragile, as Overwatch's pylon and Tempest Rising's repair turret are.",
+        "Instant placement in a duel turns the turret into a burst weapon; a build-up time and a placement range stop that."
+      ]
+    },
+    "readability": {
+      "level": "low",
+      "notes": [
+        "Turrets are big, static and team-coloured, and range rings read well from above.",
+        "Players need to tell an anti-infantry sentry from an anti-air one and a fighting turret from a support station; distinct silhouettes and icons do it.",
+        "Who owns a turret and whether it is disabled must be clear at a glance."
+      ]
+    }
+  },
+  "variants": [
+    {
+      "id": "fixed-arc-emplacement",
+      "name": "Fixed-arc emplacement",
+      "summary": "A sturdy gun nest whose facing is set when it is placed: it hits hard inside a forward arc but can't turn to cover its sides or rear, and a teammate may climb in to guard them.",
+      "min_spice": 1,
+      "seen_in": "Company of Heroes Machine Gun Emplacement, Iron Harvest MG and cannon bunkers, Dawn of War II Tarantula Turret, Battlefield 2142 A12 Enforcer",
+      "overrides": {
+        "countered_by": [
+          {
+            "ref": "role:raider",
+            "why": "A fast flanker circles to the side or rear that the fixed arc can't cover and kills the nest there."
+          },
+          {
+            "ref": "range:>=long",
+            "why": "A turret can't move or chase, so long-range guns and artillery kill it from outside its reach."
+          },
+          {
+            "ref": "weapon-trait:splash",
+            "why": "Explosives and shelling break a static emplacement quickly."
+          }
+        ]
+      }
+    },
+    {
+      "id": "anti-air-emplacement",
+      "name": "Anti-air emplacement",
+      "summary": "The turret only engages aircraft and drones, shredding them in its reach, and ignores ground units, which can walk up and destroy it.",
+      "min_spice": 1,
+      "seen_in": "Iron Harvest Anti-Air Turret (engineer build menu)",
+      "overrides": {
+        "counters": [
+          {
+            "ref": "class:aircraft",
+            "why": "Its flak tears through aircraft that fly into its reach, so it denies air space over the spot it guards."
+          }
+        ],
+        "countered_by": [
+          {
+            "ref": "class:infantry",
+            "why": "It can't shoot ground targets, so soldiers walk up and destroy it."
+          },
+          {
+            "ref": "class:vehicle",
+            "why": "It can't shoot ground targets, so vehicles shell or ram it freely."
+          }
+        ]
+      }
+    },
+    {
+      "id": "timed-drop",
+      "name": "Timed drop",
+      "summary": "A cheap turret on a cooldown that runs out on its own: it expires after a short life or when its limited ammo is spent, so it is a burst of pressure, not a fortification, and needs no upkeep.",
+      "min_spice": 1,
+      "seen_in": "StarCraft II Raven Auto-Turret, Helldivers 2 Machine Gun Sentry, Tempest Rising Repair Turret"
+    },
+    {
+      "id": "support-station",
+      "name": "Support station",
+      "summary": "The device does no fighting: for its short life it heals soldiers, repairs vehicles or hands out ammo to allies in a radius, and it is fragile, so the enemy must shoot it while the defenders lean on it.",
+      "min_spice": 2,
+      "seen_in": "Tempest Rising Shieldmaiden Repair Turret and Riot Medic Healing Turret, Team Fortress 2 Dispenser, Overwatch Illari's Healing Pylon, Apex Legends D.O.C. Heal Drone",
+      "overrides": {
+        "adds_strengths": [
+          {
+            "ref": "pattern:deploy-turret",
+            "why": "Keeps healing or repairing allies around a spot while you fight elsewhere, so a hold outlasts chip damage."
+          }
+        ],
+        "adds_weaknesses": [
+          {
+            "ref": "pattern:deploy-turret",
+            "why": "The station can't defend itself, lives only a short time and draws the team into one cluster."
+          }
+        ],
+        "counters": [
+          {
+            "ref": "weapon-trait:damage-over-time",
+            "why": "Steady healing in its radius undoes burning and poison, so damage that works over time is wasted on the hold (reasoned from the healing aura)."
+          }
+        ],
+        "countered_by": [
+          {
+            "ref": "weapon-trait:splash",
+            "why": "Teammates bunch up around the station, so a shell or grenade hits them and the station together (the Team Fortress 2 wiki notes this for the Dispenser)."
+          },
+          {
+            "ref": "range:>=long",
+            "why": "The station is fragile and stands still, so a sniper or long-range gun removes it before the push."
+          }
+        ]
+      }
+    },
+    {
+      "id": "upgradable-sentry",
+      "name": "Upgradable sentry",
+      "summary": "The owner spends a resource on the turret in the field to level it up or swap its gun (machine guns to missiles), so a well-tended turret grows into a real threat.",
+      "min_spice": 2,
+      "seen_in": "Team Fortress 2 Sentry Gun levels, Dawn of War II Tarantula missile upgrade",
+      "overrides": {
+        "min_tier": "t2"
+      }
+    },
+    {
+      "id": "team-assembled",
+      "name": "Team-assembled",
+      "summary": "The owner only places the frame; anyone on the team finishes it by holding the interact key beside it, faster with more hands, so a squad decides together where the gun goes.",
+      "min_spice": 2,
+      "seen_in": "Deep Rock Galactic LMG Gun Platform, Battlefield V fortifications (several builders work faster)"
+    },
+    {
+      "id": "recall-to-owner",
+      "name": "Recall to owner",
+      "summary": "The owner calls the parked machine back: it packs up and flies or rocket-jumps to a spot beside them on a cooldown, keeping its health and ammo, and it can't fire while it travels.",
+      "min_spice": 2,
+      "seen_in": "Iron Harvest William Mason's Relocate (the empty suit jumps to him), Deep Rock Galactic sentry recall, Team Fortress 2 hauling (the Engineer carries a packed building)"
+    },
+    {
+      "id": "leave-machine-as-turret",
+      "name": "Leave the machine as a turret",
+      "summary": "The unit's own suit or vehicle is the turret: the pilot climbs out and the empty machine stays put and keeps shooting on its own, worse than when crewed, while the pilot fights on foot; the pilot can climb back in, and if the machine is destroyed the pilot fights on without it.",
+      "min_spice": 3,
+      "seen_in": "Iron Harvest William Mason's Deploy Exosuit, Titanfall's Auto-Titan",
+      "overrides": {
+        "classes": ["infantry", "walker", "vehicle"],
+        "kinds": ["toggle", "deploy"],
+        "min_tier": "t2",
+        "adds_strengths": [
+          {
+            "ref": "pattern:deploy-turret",
+            "why": "Fights in two places at once: the empty machine holds and draws fire while the pilot slips away or flanks."
+          }
+        ],
+        "adds_weaknesses": [
+          {
+            "ref": "pattern:deploy-turret",
+            "why": "Out of the machine the pilot is a fragile soldier, and climbing in or out leaves them exposed for a moment."
+          }
+        ]
+      }
+    }
+  ],
+  "generator": {
+    "classes": ["infantry", "vehicle", "walker", "hover", "aircraft", "drone"],
+    "class_rarity": {
+      "aircraft": "uncommon",
+      "drone": "rare"
+    },
+    "min_tier": "t1",
+    "kinds": ["active"],
+    "slot": "any",
+    "rarity": "common",
+    "adds_strengths": [
+      {
+        "ref": "pattern:deploy-turret",
+        "why": "Its turret holds and shoots at a spot it is no longer watching, so one player covers two places."
+      }
+    ],
+    "adds_weaknesses": [
+      {
+        "ref": "pattern:deploy-turret",
+        "why": "The turret can't move, is easy to see and outrange, and the owner loses time placing and repairing it."
+      }
+    ],
+    "counters": [
+      {
+        "ref": "role:raider",
+        "why": "A turret on a side path catches flankers who slip around the front line, as a guard that never looks away."
+      },
+      {
+        "ref": "class:infantry",
+        "why": "Most turrets are anti-infantry guns that shred and pin soldiers in their reach (PlanetSide 2 Spitfire, Company of Heroes machine-gun nest)."
+      }
+    ],
+    "countered_by": [
+      {
+        "ref": "range:>=long",
+        "why": "A turret can't move or chase, so artillery, snipers and long-range guns kill it from outside its reach."
+      },
+      {
+        "ref": "weapon-trait:splash",
+        "why": "Explosives and shelling break turrets quickly, and turrets placed together die together."
+      },
+      {
+        "ref": "weapon:emp",
+        "why": "EMP switches a turret off for a few seconds (PlanetSide 2, Battlefield 2142), opening a window to push or destroy it."
+      },
+      {
+        "ref": "role:infiltrator",
+        "why": "Saboteurs sap or hack turrets, shutting them down or turning them on their owners (Team Fortress 2 Spy, PlanetSide 2 Infiltrator)."
+      }
+    ]
+  },
+  "related": [
+    {
+      "id": "lay-mines",
+      "kind": "often-confused-with"
+    },
+    {
+      "id": "launch-drones",
+      "kind": "often-confused-with"
+    },
+    {
+      "id": "build-cover",
+      "kind": "combos-with"
+    },
+    {
+      "id": "repair-allies",
+      "kind": "combos-with"
+    },
+    {
+      "id": "draw-fire",
+      "kind": "combos-with"
+    },
+    {
+      "id": "transform",
+      "kind": "often-confused-with"
+    },
+    {
+      "id": "resupply-allies",
+      "kind": "combos-with"
+    },
+    {
+      "id": "drop-in-from-above",
+      "kind": "combos-with"
+    }
+  ],
+  "open_questions": [
+    "One turret per player, or two at the top tier? And a team-wide cap on top?",
+    "Does a turret stay after its owner dies, and for how long? This draft removes it when the owner switches unit or leaves.",
+    "May enemies hack a turret to use it (PlanetSide 2), or only disable it?",
+    "Should the support station (the Shieldmaiden's repair turret) stay a variant here, or become its own pattern? This draft keeps it here, because placement, health, caps and most of the counterplay are the same, and rewords the registry summary to cover devices that heal, repair or resupply. A pattern of its own would keep apart the counterplay that only fits a turret that shoots (flanking its arc, fooling its targeting, flying or cloaking past it).",
+    "For the leave-the-machine variant: may an enemy climb into the empty suit or vehicle, or is it locked to its pilot?"
+  ],
+  "shooter_fit": {
+    "score": 5,
+    "reason": "A staple of team shooters (Team Fortress 2, Overwatch, PlanetSide 2, Battlefield, Helldivers 2) that gives builders a job, the enemy a clear counter-pick and the map a readable range ring from above; it needs caps and weak damage to avoid lane-locking."
+  },
+  "confidence": "medium",
+  "review": {
+    "status": "unchecked"
+  }
+}

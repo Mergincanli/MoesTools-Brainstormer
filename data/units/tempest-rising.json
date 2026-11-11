@@ -87,7 +87,7 @@
           "name": "Remote Control Drone / Autonomous Drone",
           "kind": "deploy",
           "source": "innate",
-          "summary": "One toggle made of two buttons. Remote Control Drone roots the operator where he stands and gives the player direct control of the drone, which may fly anywhere within a fixed radius of him, a little longer than the Field Scout's rifle reach: over cliffs and rivers that stop soldiers, over high ground to uncover it for friendly artillery, or close enough to strike anti-infantry defences while he stays out of their reach (StrategyWiki). Autonomous Drone ends it: he can walk again, and the drone goes back to trailing him and attacking his targets. If the drone is shot down while flown, control returns to him. No source gives a cooldown or how long the switch takes. Coded as the piloted variant of launch-drones; his rooting is part of that interaction, so deploy-siege-mode is not linked (see uncertain).",
+          "summary": "One toggle made of two buttons. Remote Control Drone roots the operator where he stands and gives the player direct control of the drone, which may fly anywhere within a fixed radius of him, a little longer than the Field Scout's rifle reach: over cliffs and rivers that stop soldiers, over high ground to uncover it for friendly artillery, or close enough to strike anti-infantry defences while he stays out of their reach (StrategyWiki). Autonomous Drone ends it: he can walk again, and the drone goes back to trailing him and attacking his targets. If the drone is shot down while flown, control returns to him. No source gives a cooldown or how long the switch takes. Coded as the piloted-drone variant of launch-drones; his rooting is part of that interaction, so deploy-siege-mode is not linked (see uncertain).",
           "patterns": ["launch-drones"]
         },
         {
@@ -313,7 +313,7 @@
         },
         {
           "path": "abilities/0/kind",
-          "note": "Deploy by the toggle-or-deploy tie-break, because the operator cannot move at all while he flies the drone, even though the drone itself moves. Deploy-siege-mode and the deploy-anchor trait were considered and left out: the registry's pattern notes fold a soldier who parks to pilot a drone into launch-drones' piloted variant (see abilities/0/patterns), so linking both would count the parking twice."
+          "note": "Deploy by the toggle-or-deploy tie-break, because the operator cannot move at all while he flies the drone, even though the drone itself moves. Deploy-siege-mode and the deploy-anchor trait were considered and left out: the registry's pattern notes fold a soldier who parks to pilot a drone into launch-drones' piloted-drone variant (see abilities/0/patterns), so linking both would count the parking twice."
         },
         {
           "path": "armament/1/range",
@@ -368,7 +368,7 @@
         },
         {
           "path": "abilities/0/patterns",
-          "note": "launch-drones is linked as the batch brief names it (piloted variant) and as the table in the registry's pattern notes (research/registry-notes/patterns.md) folds piloting a remote drone into it, but a correction at the top of those notes says a remote-piloted drone is the crew model remote, not launch-drones, and the pattern's summary speaks of releasing drones on a key, which he does not do: his drone is always out. Remote is not used for crew because the unit coded is the soldier, organic infantry, which that model excludes (see crew.notes)."
+          "note": "launch-drones is linked through its piloted-drone variant, as the batch brief names it: the pattern registry's summary covers taking one drone over and steering it by hand from a planted spot, which is what he does (his drone is always out, so he releases nothing). The corrections from batch R3's patterns at the top of research/registry-notes/patterns.md say the same for a soldier who plants himself and steers his one drone, and keep the crew model remote for a vehicle that is itself flown from afar. Remote is not used for crew because the unit coded is the soldier, organic infantry, which that model excludes (see crew.notes)."
         }
       ],
       "fit_notes": [
@@ -496,7 +496,7 @@
           "kind": "passive",
           "source": "commander-power",
           "summary": "Not stock. Once the GDF player buys EM Interference, the fifth step of the Comms doctrine tree, every enemy that is Marked, by this car's fire among others, is also silenced while the mark lasts. In this game silence shuts off a unit's active and passive abilities; the pages do not say it stops attacks. The Doctrine page names the Sentinel among the markers this applies to.",
-          "patterns": []
+          "patterns": ["block-abilities"]
         }
       ],
       "on_death": {
@@ -752,12 +752,6 @@
           "used": "open-mount",
           "wanted": "a scout car or armoured car body with one gun mount",
           "note": "A light scout car with one gun and no passenger room, whose gun mount and crew exposure no source describes, fits neither the tank turret nor the troop carrier, and only loosely the exposed gun truck."
-        },
-        {
-          "path": "abilities/1/patterns",
-          "used": "none",
-          "wanted": "a pattern for shutting off a target's abilities (here through a mark)",
-          "note": "No registered pattern stops an enemy from using its abilities while leaving it free to move and fire; the weapon trait silence also stops firing, and disable-machine covers only machines hit by electric or EMP effects."
         }
       ],
       "review": {
@@ -850,14 +844,14 @@
           "kind": "active",
           "cooldown": "short",
           "summary": "Each use draws Intel from the side's stock, half the Shieldmaiden's own Intel price. Its onboard factory sets a small Repair Turret down at a spot the player picks. The turret is a temporary structure with a little over half the Shieldmaiden's health that does no fighting; for its short life, twice as long as the button's cooldown, it quickly mends the allied vehicles within about three fifths of the Field Scout rifle's reach, and then its battery is spent. The pages differ on whether it also mends structures or aircraft (see uncertain). The GDF's Efficient Intel doctrine cuts the cooldown of Intel-priced buttons, a side-wide change left out here.",
-          "patterns": ["repair-allies"],
+          "patterns": ["repair-allies", "deploy-turret"],
           "source": "innate"
         },
         {
           "name": "Missile Interference Aura",
           "kind": "passive",
           "summary": "A perk, always on, with no button. While the Shieldmaiden stands still it projects a wide interference field, reaching about as far as it can see; enemy units and defences inside it whose weapons are of the game's Rocket type fire at half their usual rate. Other weapons are untouched. The Comms Officer carries the same perk with a smaller field, and the Haywire Turret with one as wide. The patch 1.9.0 notes count the field, with the Repair Turret, among the tools that should carry its air-defence job.",
-          "patterns": [],
+          "patterns": ["dampen-missile-fire"],
           "source": "innate"
         }
       ],
@@ -1061,18 +1055,6 @@
       "researched_by": "batch r3, agent J06-TEMPEST-RISING",
       "fit_notes": [
         {
-          "path": "abilities/0/patterns",
-          "used": "repair-allies",
-          "wanted": "a placed-device pattern: a temporary, destructible device that works on its own without fighting (here it mends vehicles)",
-          "note": "deploy-turret needs a device that fights, so the registry's batch r3 note keeps the Repair Turret off it; repair-allies alone does not show that the mending comes from a timed structure the enemy can shoot."
-        },
-        {
-          "path": "abilities/1/patterns",
-          "used": "none",
-          "wanted": "an always-on aura that slows the fire of one kind of enemy weapon (rocket and missile launchers) around the unit, here only while it stands still",
-          "note": "leave-hazard-zone is a zone laid on a key, and as a pattern that mirrors the zone weapon trait it is the home for the ability version only. No armour model or sensor trait slows enemy fire; interceptor shoots missiles down instead. Disabler's requires would need such a pattern in the control category."
-        },
-        {
           "path": "armament/1/slot",
           "used": "acquired",
           "wanted": "a way to mark a weapon change that a commander power (a doctrine) adds",
@@ -1166,7 +1148,7 @@
           "kind": "active",
           "cooldown": "medium",
           "summary": "He climbs into a friendly vehicle the player targets and takes direct charge of it, and while he rides it counts as Elite, the top veterancy rank. By the Veterancy page an Elite unit carries the gains of all three ranks: from Hardened, a tenth more armour resistance and a tenth faster fire; from Veteran, about a seventh more damage per shot and sight, with Charge draining off about a third faster on vehicles; from Elite itself, a quarter more health, mending on its own out of combat and another tenth on damage per shot. Only one Line Officer can supervise a given vehicle. If the vehicle is destroyed he is thrown clear alive and returns to the player's control. The Codex names the button Commandeer Vehicle, and the build tooltip speaks of providing a single powerful vehicle.",
-          "patterns": [],
+          "patterns": ["join-ally-crew"],
           "source": "innate"
         }
       ],
@@ -1356,15 +1338,7 @@
       "review": {
         "status": "unchecked"
       },
-      "researched_by": "batch r3, agent J06-TEMPEST-RISING",
-      "fit_notes": [
-        {
-          "path": "abilities/1/patterns",
-          "used": "none",
-          "wanted": "a pattern for boarding a friendly vehicle to lift its rank while aboard, the rider getting out alive when it is destroyed",
-          "note": "rally-allies is an aura or a timed call around the buffer, earn-veterancy is rank earned by fighting, and passenger-sets-weapon changes a vehicle's weapon or job, not its rank."
-        }
-      ]
+      "researched_by": "batch r3, agent J06-TEMPEST-RISING"
     },
     {
       "id": "tempest-rising.dynasty.voltaic-tank",
@@ -1425,7 +1399,7 @@
           "can_target": ["infantry", "ground-vehicle", "structure"],
           "traits": ["chain", "splash", "silence"],
           "summary": "A Tempest-powered particle beam. The tank spends a brief moment building charge before every shot, so its fire comes as slow, visible blasts, one every few seconds. Each blast hurts an area and its arcs leap to enemies close to the target, so tightly grouped vehicles suffer most. Voltaic Reaction: a vehicle already in Tempest Overflow dies to the hit outright, whatever its health. The tank lays no Tempest Charge itself: five stacks of Charge from Tempest fields or from teammates' Charge weapons (Matchstick grenades, the Machinist's sensor, Trebuchet shells, the Salvage Center's gun and others) push a vehicle into Overflow (a few weapons, such as the GDF Sniper's shot from stealth, inflict Overflow directly), and units immune to Charge or Overflow, such as harvesters and the Boar Tank, can never be finished this way. Structural Overload: any building it hits is forced to power down for a short time, so defences stop firing, yet the beam barely damages the structure itself. It reaches about a quarter further than the Field Scout's rifle, further than the Hunter Tank's gun against unmarked targets, and fires at ground targets only. Coded tesla for the arcing beam; its damage is armour-piercing because the game types it as Cannon.",
-          "patterns": ["execute-target", "disable-machine"]
+          "patterns": ["execute-target", "disable-machine", "stack-to-overload"]
         }
       ],
       "crew": {
@@ -1514,12 +1488,16 @@
       ],
       "combos": [
         {
+          "ref": "pattern:stack-to-overload",
+          "why": "Teammates whose weapons build Tempest Charge push vehicles into Overflow, and one Voltaic shot then destroys them."
+        },
+        {
           "ref": "unit:tempest-rising.dynasty.matchstick",
-          "why": "Its grenades build Tempest Charge on enemy vehicles; once stacked into Overflow those vehicles die to one Voltaic shot. No word-list link names units that build Charge."
+          "why": "Its grenades build Tempest Charge on enemy vehicles; once stacked into Overflow those vehicles die to one Voltaic shot."
         },
         {
           "ref": "unit:tempest-rising.dynasty.machinist",
-          "why": "His Searchlight Sensor builds Tempest Charge on enemy vehicles, setting up Overflow kills for the tank's beam. No word-list link names units that build Charge."
+          "why": "His Searchlight Sensor builds Tempest Charge on enemy vehicles, setting up Overflow kills for the tank's beam."
         },
         {
           "ref": "unit:tempest-rising.dynasty.voltaic-tank",
@@ -1596,7 +1574,7 @@
           "accessed": "2026-10-29",
           "version": "Patch 1.6.0+53407, 2 December 2025",
           "note": "Design notes: a massed group of Voltaic Tanks had won ground fights too easily, so its health and blast area were cut to make it easier to counter; silencing effects no longer switch Tempest Dynamos off; the Salvage Center's new Charge attacks are meant to make Voltaic Reaction more valuable. A UI fix removed the Harvester unit type shown in the tank's armour tab. The wiki's patch page copies it.",
-          "supports": ["armour", "abilities/0", "strengths/1", "weaknesses/3", "countered_by/1", "combos/2", "armament/0"]
+          "supports": ["armour", "abilities/0", "strengths/1", "weaknesses/3", "countered_by/1", "combos/3", "armament/0"]
         },
         {
           "url": "https://tempestrising.wiki.gg/wiki/Ability",
@@ -1604,7 +1582,7 @@
           "kind": "wiki",
           "accessed": "2026-10-29",
           "note": "Passive lists: Voltaic Reaction (Voltaic attacks destroy Overflowing vehicles outright) and Structural Overload (struck buildings are forced into a powered-down state) both list the Voltaic Tank's cannon; the Tempest Charge passive lists the weapons that build Charge, the Matchstick's grenade launcher and the Machinist's Searchlight Sensor among them.",
-          "supports": ["armament/0", "strengths/0", "strengths/3", "combos/0", "combos/1"]
+          "supports": ["armament/0", "strengths/0", "strengths/3", "combos/0", "combos/1", "combos/2"]
         }
       ],
       "confidence": "high",
@@ -1655,11 +1633,11 @@
           "note": "Reasoned from the infobox resistances and the 1.6.0 design note; no source names a counter by weapon type."
         },
         {
-          "path": "combos/3",
+          "path": "combos/4",
           "note": "Reasoned from the infobox figures: its sight is much shorter than its cannon's reach."
         },
         {
-          "path": "combos/4",
+          "path": "combos/5",
           "note": "Reasoned from the cannon's Ground-only target line; no source names an escort."
         },
         {
@@ -1673,12 +1651,6 @@
           "used": "none for the wind-up",
           "wanted": "a trait for an automatic wind-up before every shot",
           "note": "The beam charges for a moment before each shot by itself; charge-up needs the player to hold the trigger, so it is left off and the wind-up is described in the summary."
-        },
-        {
-          "path": "combos",
-          "used": "unit links alone",
-          "wanted": "a term for weapons that build a stacking status (Tempest Charge) that another unit cashes in",
-          "note": "No damage type, weapon trait or pattern names units that build Tempest Charge, so the Matchstick and Machinist links stand alone."
         }
       ],
       "atypical": [
@@ -1773,7 +1745,7 @@
           "kind": "passive",
           "source": "innate",
           "summary": "A perk unique to the Sphere: Tempest Charge that builds up on it, from Tempest fields or from enemy Charge weapons, is used up to repair it, a modest share of its health each time. It gives no protection from Overflow, which hurts the Sphere faster than the Plating can mend it.",
-          "patterns": []
+          "patterns": ["heal-from-debuff"]
         }
       ],
       "on_death": {
@@ -1987,18 +1959,6 @@
           "note": "Mark is closest, but it also reveals the target to the whole team; Vulnerability only raises the damage the target takes, from anyone."
         },
         {
-          "path": "abilities/0/patterns",
-          "used": "dash",
-          "wanted": "a charge that also rams and crushes along its line",
-          "note": "Dash is a burst of speed alone; the Tempest Engine charge also crushes or slams whatever it meets on the way."
-        },
-        {
-          "path": "abilities/1/patterns",
-          "used": "none",
-          "wanted": "a pattern for turning a harmful status on yourself into healing",
-          "note": "Tempest Plating repairs the Sphere by using up the Tempest Charge that slows other vehicles. The self-repair model is steady healing with no trigger and heal-self is a key, so neither fits."
-        },
-        {
           "path": "on_death/outcomes",
           "used": "bail-out",
           "wanted": "an outcome in which the dying vehicle leaves a full combat unit",
@@ -2092,7 +2052,7 @@
           "can_target": ["infantry", "ground-vehicle", "structure"],
           "traits": [],
           "summary": "Fists: it pummels its target in a frenzy at touching distance, standing still to strike like every unit in the game. Each blow is weak and does Rifle-type damage, the kind meant for soldiers, which tanks mostly shrug off. It attacks only ground targets, never aircraft. Its Subjugating Attack passive marks enemy infantry it hits: a marked soldier cannot receive positive effects, and one that dies while marked rises as an Enlightened for the Veti. The Refined Enlightenment doctrine swaps the fists for the Phantom Caster.",
-          "patterns": []
+          "patterns": ["convert-on-kill"]
         },
         {
           "name": "Phantom Caster",
@@ -2106,7 +2066,7 @@
           "traits": ["splash"],
           "summary": "The Seeker's grenade weapon: it hurls unstable energy grenades that burst on impact and hurt everything in a small area around it, aimed at enemy soldiers and buildings by the makers' own Seeker line. It reaches a little over half as far as the Field Scout's rifle and fires only at ground targets, of which soldiers and buildings are recorded (see uncertain), with the same figures as the Seeker's copy. It keeps the Subjugating Attack passive, so infantry it hits are Subjugated as with the fists.",
           "condition": "Only with Refined Enlightenment, level 4 of the Veti's Subjugation doctrine tree, bought during a match with credits and time: it replaces the Enlightened's fists, and the same doctrine gives them more health and speed.",
-          "patterns": []
+          "patterns": ["convert-on-kill"]
         }
       ],
       "crew": {
@@ -2120,7 +2080,7 @@
           "kind": "active",
           "cooldown": "per-life",
           "summary": "Ordered onto an area, the thrall is used up and Consecrates every friendly unit and building there: for a while they take a little less damage and move noticeably faster. Each receiver's own Consecrated perk adds more. Units on limited ammo (the Augur, Constellation, Gorgon, Luminary, Revenant, Subjugator and Vimana) get all missing ammo back and regain it faster; the Golem, Warden and War Ender mend over time; the Caretaker and Luminary gain a short-lived Repair Servitor, and an Enlightened sacrificed near the Ascended leaves a short-lived Combat Servitor; the Augur and Veti Eye see onto high ground and detect hidden units over a wide area; buildings with Consecrated Reaping earn credits. Other Veti units' shared Sacrificial Summons button sends the nearest idle Enlightened to do this onto them. Doctrines: Sacrificial Symbiosis makes Consecration last longer and has Enlightened sacrifice themselves when they die, and Sacred Sacrifice doubles its effects. Since 2.0.0 the Resurrection doctrine's Ascension Anchors consecrate a wider area, which the makers present as a stand-in for Sacrifice.",
-          "patterns": ["rally-allies", "resupply-allies"],
+          "patterns": ["rally-allies", "resupply-allies", "sacrifice-for-allies"],
           "source": "innate"
         }
       ],
@@ -2383,24 +2343,6 @@
           "note": "Its designation names no role, and because its weak fists do damage, step 2 (unarmed or tool-only units, read by their main button) never looks at Sacrifice; step 5 then makes it a generalist at medium speed. Assault (leads pushes, soaks damage) fits a frail thrall whose job is to be spent poorly."
         },
         {
-          "path": "armament/0/patterns",
-          "used": "none",
-          "wanted": "a Subjugation pattern: hits mark enemy infantry, who cannot be buffed while marked and rise as the attacker's own units if they die marked",
-          "note": "No registered pattern covers the Veti Subjugation that the fists' Subjugating Attack passive applies (registry note, Veti Subjugation): mind-control takes over a living unit and leech-weapon-on-kill gains a weapon, so neither fits."
-        },
-        {
-          "path": "armament/1/patterns",
-          "used": "none",
-          "wanted": "the same Subjugation pattern as armament/0",
-          "note": "The Phantom Caster keeps the Subjugating Attack passive. Upgrade-in-field is not linked either (see uncertain)."
-        },
-        {
-          "path": "abilities/0/patterns",
-          "used": "rally-allies, resupply-allies",
-          "wanted": "a pattern for spending the unit itself to empower allies, with a bonus that depends on each receiver's own perk",
-          "note": "The two links cover the general Consecration boost and the ammo refill. The repairs, short-lived Servitors, high-ground sight and detection, and income some receivers gain come from their own perks, and no pattern covers using up the giver."
-        },
-        {
           "path": "resources",
           "used": "none",
           "wanted": "a way to record that the unit is itself its side's second resource",
@@ -2498,7 +2440,7 @@
           "kind": "triggered",
           "source": "innate",
           "summary": "Whenever an enemy attacks it from within a radius of about two thirds of a rifle's reach, a bolt of Omni damage, which ignores resistances, strikes that attacker straight back. The damage is small (its pages disagree on how small; see uncertain). The Tempest Cells doctrine widens and strengthens it by about a third, and Lifeblood Curse makes it put Tempest Charge on vehicles it hurts and adds about a third to the unit's maximum health. It is the only way the Thunderhead harms anything.",
-          "patterns": []
+          "patterns": ["retaliate-on-hit"]
         }
       ],
       "on_death": {
@@ -2728,17 +2670,6 @@
           "used": "passenger-cargo",
           "wanted": "a seat kind for riders housed in a separate structure that the unit places and recalls",
           "note": "Riders shoot out of the Rod's slits, which passenger-firing would describe, but the Rod is a building garrison, which the pattern notes keep under carry-passengers, and carry-passengers pairs with cargo seats. Inside the aircraft itself nobody rides at all."
-        },
-        {
-          "path": "abilities/1/patterns",
-          "used": "build-linked-exits, teleport",
-          "note": "A variant: the exit is the moving aircraft itself rather than a second placed entrance, and losing the entrance kills everyone inside instead of only closing it."
-        },
-        {
-          "path": "abilities/2/patterns",
-          "used": "none",
-          "wanted": "a passive that strikes back at anyone who attacks the unit from close by (retaliate when attacked)",
-          "note": "Arcing is not a weapon, since it fires only in answer to an attack, and no armour model covers damage returned to an attacker."
         }
       ],
       "review": {
@@ -2757,7 +2688,7 @@
       "availability": "limited",
       "roles": {
         "primary": "assault",
-        "secondary": ["buffer", "anti-infantry"]
+        "secondary": ["support", "buffer"]
       },
       "tier": {
         "band": "t3",
@@ -2819,7 +2750,7 @@
           "source": "innate",
           "cooldown": "long",
           "summary": "Calls a Caretaker, the Veti utility aircraft that heals infantry and can set up a build area, to the Vimana's side, and since 2.0.0 six Combat Servitors with it: fast, fragile flying constructs whose spike launchers hit ground and air targets and which expire after a short while; the makers say they can defend or scout. Each use draws a large sum of credits and population from the player's stock, then needs a long wait.",
-          "patterns": ["launch-drones"]
+          "patterns": ["launch-drones", "produce-unit-in-field"]
         },
         {
           "name": "Relocate Vimana",
@@ -2834,8 +2765,8 @@
           "kind": "active",
           "source": "innate",
           "cooldown": "long",
-          "summary": "Consecrates every friendly unit and building in a target area for a time: they take somewhat less damage and move about a third faster. Unlike an Enlightened's Sacrifice it costs no Enlightened; each use draws credits from the player's stock instead, then needs a long wait. The Vimana does not consecrate itself this way.",
-          "patterns": ["rally-allies"]
+          "summary": "Consecrates every friendly unit and building in a target area for a time: they take somewhat less damage and move about a third faster, and each receiver's own Consecrated perk adds its extra, so Veti units with Consecrated Restocking get all their missing ammo back. Unlike an Enlightened's Sacrifice it costs no Enlightened; each use draws credits from the player's stock instead, then needs a long wait. The Vimana does not consecrate itself this way.",
+          "patterns": ["rally-allies", "resupply-allies"]
         },
         {
           "name": "Gate Link",
@@ -2849,21 +2780,21 @@
           "kind": "passive",
           "source": "innate",
           "summary": "Enemy infantry in a wide circle around it, as far as it sees, are Subjugated: they cannot receive any buffs, and those who die while Subjugated rise as Enlightened for the Veti, both a unit and the side's second resource. Golden rays show the aura. Doctrines change it: Subjugation Amplifiers widens it by half, and Vile Subjugation makes Subjugation also silence its victims and slow their attacks by a quarter.",
-          "patterns": []
+          "patterns": ["convert-on-kill"]
         },
         {
           "name": "Arcing",
           "kind": "triggered",
           "source": "innate",
           "summary": "Whenever an enemy attacks it from within a radius of about two thirds of a rifle's reach, a bolt of Omni damage strikes that attacker straight back; the damage is small (its pages disagree on how small). The Tempest Cells doctrine widens and strengthens it by about a third, and Lifeblood Curse makes it put Tempest Charge on vehicles it hurts and adds maximum health.",
-          "patterns": []
+          "patterns": ["retaliate-on-hit"]
         },
         {
           "name": "Consecrated Restocking",
           "kind": "triggered",
           "source": "innate",
           "summary": "Each time the Vimana is Consecrated, by a Sacrifice from an Enlightened (the Veti-wide Sacrificial Summons button can call one over) or by a Benediction cast by a second Vimana, it regains all its missing cannon shots at once, and Auto Restock works twice as fast while the buff lasts.",
-          "patterns": []
+          "patterns": ["refill-on-ally-buff"]
         },
         {
           "name": "Bound to its Celestial Gate (Vimana Limit)",
@@ -3036,7 +2967,15 @@
           "kind": "wiki",
           "accessed": "2026-10-27",
           "note": "Lists the game's perks with figures and the units that have them: the Vimana's Arcing radius and damage, Auto Restock, Consecrated Restocking, Detection radius and Subjugation Aura radius, and the Tempest Shielded and Symbiotic Restoration perks it gains with Engine Tuning. Its changelog gives patch 1.6.0's Arcing cut.",
-          "supports": ["sensors", "armament/0/traits", "abilities/4", "abilities/5", "abilities/6", "armour/notes"]
+          "supports": [
+            "sensors",
+            "armament/0/traits",
+            "abilities/2",
+            "abilities/4",
+            "abilities/5",
+            "abilities/6",
+            "armour/notes"
+          ]
         }
       ],
       "confidence": "high",
@@ -3110,7 +3049,7 @@
         },
         {
           "path": "roles/secondary",
-          "note": "Anti-infantry rests on the splash trait, which only the weapon box gives (see armament/0/traits). Scout, from its Detection perk, ranks lower at step 4 and is left out; the 2.0.0 note that the summoned Servitors can scout hedges, so it is not read as a step 2 role."
+          "note": "Support and buffer both rest on the Sacrificial Benediction button at step 2: its Consecration is a timed boost, and receivers with Consecrated Restocking get their ammunition back; inside a step the roles list puts support first. Anti-infantry, from the splash trait that only the weapon box gives (see armament/0/traits), ranks third at step 3 and is left out. Scout, from its Detection perk, ranks lower at step 4 and is left out; the 2.0.0 note that the summoned Servitors can scout hedges, so it is not read as a step 2 role."
         },
         {
           "path": "counters",
@@ -3149,30 +3088,6 @@
           "used": "energy",
           "wanted": "a damage type that ignores every resistance and armour (the game's Omni)",
           "note": "Omni is not in the damage map, so step 5 gives the laser family's default. The point of the weapon, that no armour or resistance blunts it, is lost."
-        },
-        {
-          "path": "abilities/0/patterns",
-          "used": "launch-drones",
-          "wanted": "a pattern for summoning a full unit in the field (mobile production)",
-          "note": "launch-drones fits the six short-lived Combat Servitors; the Caretaker it calls is a full, lasting unit that no pattern covers."
-        },
-        {
-          "path": "abilities/4/patterns",
-          "used": "none",
-          "wanted": "an aura that stops enemy infantry from being buffed and turns those who die in it into your own units (subjugate)",
-          "note": "mind-control takes living units; here only the dead change sides, and they come back as the Veti's Enlightened."
-        },
-        {
-          "path": "abilities/5/patterns",
-          "used": "none",
-          "wanted": "a passive that strikes back at anyone who attacks the unit from close by (retaliate when attacked)",
-          "note": "Arcing is not a weapon, since it fires only in answer to an attack, and no armour model covers damage returned to an attacker."
-        },
-        {
-          "path": "abilities/6/patterns",
-          "used": "none",
-          "wanted": "an ally's buff that refills the unit's ammunition at once (resupply on buff)",
-          "note": "resupply-allies is the pattern for the one who refills others; nothing covers a unit whose ammunition comes back when an ally's buff lands on it."
         },
         {
           "path": "abilities/7/patterns",

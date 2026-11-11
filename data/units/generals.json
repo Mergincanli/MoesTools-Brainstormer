@@ -360,7 +360,7 @@
         },
         {
           "path": "abilities/0/patterns",
-          "note": "hijack-vehicle, as research/registry-notes/patterns.md folds a snipe that kills a vehicle's crew into it: the snipe removes the crew so that the vehicle can be taken, while the taking itself is the game-wide rule for empty vehicles. execute-target (its ranged-shot variant) was weighed, since the shot takes one kind of target out of the fight whatever its armour, but the vehicle is not destroyed and either side can claim it afterwards, which is hijack-vehicle's interaction. The pattern's summary has the attacker take the vehicle over, which Kell never does himself (see fit_notes)."
+          "note": "hijack-vehicle, as research/registry-notes/patterns.md folds a snipe that kills a vehicle's crew into it: the snipe removes the crew so that the vehicle can be taken, while the taking itself is the game-wide rule for empty vehicles. execute-target (its ranged-shot variant) was weighed, since the shot takes one kind of target out of the fight whatever its armour, but the vehicle is not destroyed and either side can claim it afterwards, which is hijack-vehicle's interaction. The pattern's summary has the attacker take the vehicle over, which Kell never does himself; the pattern's crew-snipe variant covers that."
         },
         {
           "path": "abilities/1",
@@ -381,14 +381,6 @@
         {
           "path": "countered_by/2",
           "note": "The wiki names only the Sentry Drone as an uncrewed counter; Armor.ini (address under armament/0/can_target) shows that its armour set takes neither crew-kill nor sniper damage. Whether every other drone resists the snipe is not covered by the sources read."
-        }
-      ],
-      "fit_notes": [
-        {
-          "path": "abilities/0/patterns",
-          "used": "hijack-vehicle",
-          "wanted": "a crew-kill variant: kill a vehicle's crew from range and leave the empty hull neutral for anyone to claim",
-          "note": "The registry folds this snipe into hijack-vehicle, whose summary has the attacker take the vehicle over by removing its crew. Kell never takes it himself: the hull goes neutral, and the first soldier of either side to climb in gets it, so the victim's own infantry can win it back."
         }
       ],
       "atypical": [
@@ -475,14 +467,14 @@
           "source": "innate",
           "cooldown": "per-life",
           "summary": "The first blow that would destroy the bus does not: it is flung into the air, comes down and stays put for good as a bunker, its health refilled to a larger pool and its armour swapped for a building's set (modes/0). Each rider loses half his full health, so healthy riders live on inside and keep firing. If it was empty, or everyone gets out, the hulk is gone within about a second; when the bunker falls, everyone still inside dies with it (wiki, CNCNZ; the manual and two campaign lines describe the bunker too). It happens once per bus.",
-          "patterns": ["passenger-sets-weapon"]
+          "patterns": ["fortify-on-death"]
         }
       ],
       "modes": [
         {
           "id": "bunker",
           "name": "Bunker (after the first destruction)",
-          "via": "passenger-sets-weapon",
+          "via": "fortify-on-death",
           "target": "structure",
           "summary": "Cannot move again. The hull becomes a fixed bunker with fresh health, more than half again the bus's, and a building's armour set: mines and Jarmen Kell's snipe no longer harm it, weapons that disable buildings now affect it while vehicle-disabling ones do not, and particle beams and Aurora bombs hit it twice as hard (1.04 Armor.ini). The riders stay inside and go on shooting; emptied, it breaks up within about a second, and destroyed, it kills everyone inside. Junk Repair, if bought, still mends it (wiki). Class and body stay the bus's (see fit_notes)."
         }
@@ -506,7 +498,7 @@
           "why": "Tough for a carrier: its hull lets through only a quarter of gunfire and has as much health as a Battlemaster, two salvage steps add more armour, and the wiki finds its mix of speed and armour sound."
         },
         {
-          "ref": "pattern:passenger-sets-weapon",
+          "ref": "pattern:fortify-on-death",
           "why": "Destroyed with riders aboard, it comes back as a parked bunker with fresh health, and the hurt riders go on firing from it until it falls, which the wiki finds handy for holding an isolated spot (manual, wiki)."
         }
       ],
@@ -516,7 +508,7 @@
           "why": "All its firepower is its riders': empty it cannot attack at all, a load of Rebels alone is easy prey for vehicles and a load of RPG Troopers alone does little to infantry, and anything that outranges the riders, jets above all, can hit it without reply (wiki)."
         },
         {
-          "ref": "pattern:passenger-sets-weapon",
+          "ref": "pattern:fortify-on-death",
           "why": "The bunker can never move again, everyone still inside dies when it falls, and once the riders get out it is gone within moments (wiki, CNCNZ)."
         },
         {
@@ -1566,7 +1558,7 @@
           "kind": "passive",
           "source": "innate",
           "summary": "Always on, with no button. When at least four other allied foot soldiers that carry the horde bonus themselves (Red Guards, Tank Hunters, or the Infantry General's Mini-Gunners) stand close around it, it fires half again as fast, and a red star appears beneath it. A Red Guard a little further out shares the bonus while it stays near one in the thick of the group. Other soldiers do not count, and Battlemasters horde only with each other. Troops who walk into a building keep the bonus they had on entering but cannot gain it inside. Nationalism, a side-wide upgrade bought at the Propaganda Center, raises it further.",
-          "patterns": []
+          "patterns": ["band-together"]
         },
         {
           "name": "Capture Building",
@@ -1860,14 +1852,6 @@
           "note": "That Red Guards and Tank Hunters horde together rests on the wiki and on HordeUpdate.cpp (address under abilities/0); the wiki's strategy text also has Red Guards keeping Battlemasters horded, which the code and the Horde Bonus page contradict, so that part is left out."
         }
       ],
-      "fit_notes": [
-        {
-          "path": "abilities/0/patterns",
-          "used": "none",
-          "wanted": "a pattern for a group bonus that each member earns by standing close to enough others of its kind (a horde or swarm bonus), with no unit that hands it to the rest",
-          "note": "As the registry's Generals notes say, rally-allies does not fit, because no single unit raises the others: every horde soldier checks its own neighbours. research/registry-notes/patterns.md folds the horde bonus into rally-allies, but that pattern's summary (an aura or a timed call from one unit) wins over the note."
-        }
-      ],
       "review": {
         "status": "unchecked"
       },
@@ -1889,7 +1873,7 @@
       "tier": {
         "band": "t3",
         "gate": "Propaganda Center",
-        "basis": "Trained at the Chinese Barracks once a Propaganda Center stands: his 1.04 Object file lists both buildings as prerequisites, the wiki infobox gives tier 3 and names the Propaganda Center, CNCNZ names it too, and the base-game manual tags him Structure Upgrade, a unit the tech building opens. The Propaganda Center is China's tech building, which the tier map puts at t3. The main Chinese side and all three Chinese generals field him; the Nuke General's copy matches the main one and the Tank General's costs more. The Infantry General, Shin Fai, fields a version that its build button calls the Super Hacker, otherwise the same unit: it is camouflaged, hidden from enemies except while it uses a hack, and idle enemies close by go for it when it shows itself; it starts at Veteran like all of that general's soldiers; it earns a little faster inside an Internet Center; its armour lets less toxin, radiation and microwave harm through; and it has a third button, Vehicle Hack, which knocks an enemy vehicle out for a while without having to stay at it (tooltip, 1.04 files, wiki; see uncertain)."
+        "basis": "Trained at the Chinese Barracks once a Propaganda Center stands: his 1.04 Object file lists both buildings as prerequisites, the wiki infobox gives tier 3 and names the Propaganda Center, CNCNZ names it too, and the base-game manual tags him Structure Upgrade, a unit the tech building opens. The Propaganda Center is China's tech building, which the tier map puts at t3. The main Chinese side and all three Chinese generals field him; the Nuke General's copy matches the main one and the Tank General's costs more. The Infantry General, Shin Fai, fields a version that its build button calls the Super Hacker, otherwise the same unit: it is camouflaged and stays hidden even while it hacks the Internet, showing itself only while it uses its building or vehicle hack, and idle enemies close by go for it when it shows itself; it starts at Veteran like all of that general's soldiers; it earns a little faster inside an Internet Center; its armour lets less toxin, radiation and microwave harm through; and it has a third button, Vehicle Hack, which knocks an enemy vehicle out for a while without having to stay at it (tooltip, 1.04 files, wiki; see uncertain)."
       },
       "cost_band": {
         "band": "low",
@@ -1940,7 +1924,7 @@
           "kind": "deploy",
           "source": "innate",
           "summary": "He sits down wherever he stands, takes several seconds to unpack his laptop and then draws money out of the world economy online: a small payment reaches his side every couple of seconds for as long as he stays set up (1.04 data; see uncertain). Any new order makes him pack up first, which takes a few seconds. Hacking is how he ranks up: each payment earns him a little experience, so he climbs to Veteran, Elite and Heroic without fighting, and each rank raises the sum per payment until a Heroic Hacker brings in twice what a new one does. He can also hack from inside an Internet Center, a Zero Hour building that holds up to eight Hackers, and earns slightly faster there (hint, wiki); inside any other building he cannot (wiki).",
-          "patterns": ["deploy-siege-mode"]
+          "patterns": ["deploy-siege-mode", "generate-income"]
         }
       ],
       "modes": [
@@ -2142,7 +2126,7 @@
         },
         {
           "path": "tier",
-          "note": "Which generals field him and how their versions differ rests on uncited 1.04 files of the same repository. CommandSet.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini, read, not cited) gives the main, Nuke and Tank Generals' Barracks a Hacker build button and the Infantry General's a button for his own version, whose command set adds Vehicle Hack. Object/NukeGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/NukeGeneral.ini, read, not cited) and Object/TankGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/TankGeneral.ini, read, not cited) give their copies the same prerequisites, the Tank General's at a higher price. Object/InfantryGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/InfantryGeneral.ini, read, not cited) gives Shin Fai's version that general's soldier armour, a Veteran start, innate stealth that its hacks switch off and that sends idle enemies after it when it shows, the vehicle hack and a quicker payout inside an Internet Center. The wiki's Super hacker page (https://cnc.fandom.com/wiki/Super_hacker, read, not cited) and that version's build tooltip in the cited string table agree, and the string table's hint HELP:InfantryHacker-01 says that general's Hackers hack money faster."
+          "note": "Which generals field him and how their versions differ rests on uncited 1.04 files of the same repository. CommandSet.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/CommandSet.ini, read, not cited) gives the main, Nuke and Tank Generals' Barracks a Hacker build button and the Infantry General's a button for his own version, whose command set adds Vehicle Hack. Object/NukeGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/NukeGeneral.ini, read, not cited) and Object/TankGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/TankGeneral.ini, read, not cited) give their copies the same prerequisites, the Tank General's at a higher price. Object/InfantryGeneral.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/Object/InfantryGeneral.ini, read, not cited) gives Shin Fai's version that general's soldier armour, a Veteran start, innate stealth that only its building and vehicle hacks switch off and that sends idle enemies after it when it shows, the vehicle hack and a quicker payout inside an Internet Center. The wiki's Super hacker page (https://cnc.fandom.com/wiki/Super_hacker, read, not cited) and that version's build tooltip in the cited string table agree, and the string table's hint HELP:InfantryHacker-01 says that general's Hackers hack money faster."
         },
         {
           "path": "abilities/1",
@@ -2180,12 +2164,6 @@
         }
       ],
       "fit_notes": [
-        {
-          "path": "abilities/1/patterns",
-          "used": "deploy-siege-mode",
-          "wanted": "a pattern for income earned in place: a unit that sets up anywhere, with no field, haul or drop-off, and sends money to its team for as long as it stays put, more as it ranks up",
-          "note": "deploy-siege-mode covers only the planting and packing up, through its stationary mode that works only while the unit stays put. gather-resources does not fit: its interaction and its counterplay rest on a field, a route and a drop-off that the enemy can contest, raid or destroy, and the Hacker has none of them, so the only answer left is to find and kill him. The rob-it variant of capture-structure takes money out of an enemy structure, which this hack never touches."
-        },
         {
           "path": "combos",
           "used": "no link for the Internet Center",
@@ -2485,7 +2463,7 @@
         },
         {
           "path": "abilities/0/patterns",
-          "note": "become-invulnerable: for the run enemy fire cannot touch it, paid for by a slow, exposed trip home, and the counterplay is to let the bomb fall and strike the plane afterwards, as the pattern's summary has it. The immunity is not complete: the cited Object file makes attackers aim behind it and miss for a couple of seconds after each attack rather than ignoring damage, so a wide blast bursting beside it still hurts it (wiki), and the manual says ground fire can reach a large group. overclock-self was weighed for the speed burst and the slump afterwards, but the speeds alone are numbers, and the sources describe the immunity as the state; the slump is in the summary. See fit_notes."
+          "note": "become-invulnerable: for the run enemy fire cannot touch it, paid for by a slow, exposed trip home, and the counterplay is to let the bomb fall and strike the plane afterwards, as the pattern's summary has it. The immunity is not complete: the cited Object file makes attackers aim behind it and miss for a couple of seconds after each attack rather than ignoring damage, so a wide blast bursting beside it still hurts it (wiki), and the manual says ground fire can reach a large group. overclock-self was weighed for the speed burst and the slump afterwards, but the speeds alone are numbers, and the sources describe the immunity as the state; the slump is in the summary. The attack-run variant of become-invulnerable covers this."
         },
         {
           "path": "abilities/0/summary",
@@ -2517,14 +2495,6 @@
         {
           "path": "on_death/notes",
           "note": "That the crash is only for show: the cited Object file's death modules call a list in ObjectCreationList.ini (https://raw.githubusercontent.com/TheSuperHackers/GeneralsGamePatch/6c7f40d6af6a4babb77a33a4502ec7656446c13e/Patch104pZH/GameFilesOriginalZH/Data/INI/ObjectCreationList.ini, read, not cited) that throws out a hulk and nothing else, and no page says the crash hurts anything nearby, so no death blast. The pilot's parachute and ground lists are in the same file."
-        }
-      ],
-      "fit_notes": [
-        {
-          "path": "abilities/0/patterns",
-          "used": "become-invulnerable",
-          "wanted": "an attack-run variant of become-invulnerable: aimed fire misses a very fast plane during its run and a moment after, while area blasts still hurt it, and it is slowed afterwards",
-          "note": "The registry's summary makes the user immune to damage for a moment at a cost. The Aurora's immunity comes with every attack order rather than a chosen moment, works by making aimed shots miss, and is paid for by a slow trip home rather than a cooldown."
         }
       ],
       "review": {
@@ -3191,7 +3161,7 @@
         },
         {
           "path": "abilities/1/patterns",
-          "note": "drop-in-from-above, a planned pattern, for riders arriving on a chosen spot from a carrier that hovers over it. carry-passengers' hot-drop variant fits the rope drop too, but the passenger seats already link passenger-sets-weapon and Paired entries keeps the two patterns apart. capture-structure's take-over variant was weighed for clearing an enemy-held building, but the building is a civilian one the enemy only occupies, garrisoning is game-wide, and taking a neutral building is not that pattern (see fit_notes)."
+          "note": "drop-in-from-above, for riders arriving on a chosen spot from a carrier that hovers over it. carry-passengers' hot-drop variant fits the rope drop too, but the passenger seats already link passenger-sets-weapon and Paired entries keeps the two patterns apart. capture-structure's take-over variant was weighed for clearing an enemy-held building, but the building is a civilian one the enemy only occupies, garrisoning is game-wide, and taking a neutral building is not that pattern; drop-in-from-above's storm-a-garrison variant covers the clearing."
         },
         {
           "path": "abilities/2",
@@ -3246,15 +3216,7 @@
         "status": "unchecked"
       },
       "researched_by": "batch r3, agent J01-GENERALS",
-      "variant_of": "generals.usa.chinook",
-      "fit_notes": [
-        {
-          "path": "abilities/1/patterns",
-          "used": "drop-in-from-above",
-          "wanted": "a pattern for clearing an occupied building from above: troops dropped onto it kill the soldiers inside, at a cost in attackers, and then hold it",
-          "note": "drop-in-from-above covers only the arrival on a chosen spot; nothing in the registry covers clearing and taking over an enemy-held garrison, the very button the Shared mechanics convention names as doing more than the enter key."
-        }
-      ]
+      "variant_of": "generals.usa.chinook"
     }
   ]
 }

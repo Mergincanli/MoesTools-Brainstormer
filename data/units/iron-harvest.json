@@ -96,7 +96,7 @@
           "name": "Ferocious Maul / Call Wojtek",
           "kind": "active",
           "source": "innate",
-          "patterns": [],
+          "patterns": ["command-companion"],
           "summary": "One button orders the bear: send him at a chosen enemy to brawl, or call him straight back to Anna when a fight turns too heavy even for him, which also lets her slip away while he holds the enemy's attention. Wojtek is a lasting AI partner: always summoned, fighting by himself whenever the pair is engaged, with health of his own. If he is killed, he can be summoned again only after a long wait (wiki Cons and trivia). Change Log #17 and DevBlog #40 both cut his health, the first because he kept on fighting after Anna went down."
         },
         {
@@ -351,12 +351,6 @@
           "used": "anti-infantry, support, disabler",
           "wanted": "scout",
           "note": "The wiki names scouting among her specialities and praises her long field of view, and its Unit page calls the infantry heroes great scouts, but scout's requires fail: she moves at the rifle squads' pace, no source gives a sight figure, and she has no sensor trait, stealth, mark or reveal. Those are the wiki's words, so step 1 of roles.secondary does not read them either."
-        },
-        {
-          "path": "abilities/1/patterns",
-          "used": "none",
-          "wanted": "command-companion: a lasting AI partner, usually an animal, that fights beside you on its own and takes short orders such as attack or come back",
-          "note": "Wojtek is a permanent second body with his own health that charges into fights by himself, takes send and recall orders, shields Anna by drawing fire and respawns after a long wait when killed. launch-drones is for expendable minions released on a key, so it does not fit. reinforce-squad's respawning-followers variant matches only the bear's return after a wait once he is killed, not a partner who fights by himself and obeys orders, and Change Log #17 has him fighting on after Anna fell, so it is not linked; the merge pass may want it beside the new pattern."
         },
         {
           "path": "body/plan",
@@ -1614,7 +1608,7 @@
           "name": "Ride the Tiger: Changa joins the fight",
           "kind": "triggered",
           "source": "innate",
-          "patterns": [],
+          "patterns": ["command-companion"],
           "summary": "When an attack drops Olga off the tiger, Changa stays and fights beside her for a short time, then goes back into hiding. The tiger is a lasting AI partner with health of her own: her claws and teeth hit soldiers hard but mechs barely (Change Log #04), and if she is killed she can be called again only after a cooldown (Change Log #09). The wiki notes that she gives Olga far less active help than Anna's bear or Gunter's wolves give theirs."
         },
         {
@@ -1820,7 +1814,7 @@
         },
         {
           "path": "abilities/2",
-          "note": "Changa's short fight is described only inside the Ride the Tiger text of the Olga and Changa pages. It is coded as a triggered entry of its own because KING Art's posts give the tiger her own damage (Change Log #04), health (Change Log #06) and respawn cooldown (Change Log #09, https://kingart-games.com/article/97, read, not cited), and the companion is a mechanic no word-list term covers; it could instead be read as part of Ride the Tiger's summary."
+          "note": "Changa's short fight is described only inside the Ride the Tiger text of the Olga and Changa pages. It is coded as a triggered entry of its own because KING Art's posts give the tiger her own damage (Change Log #04), health (Change Log #06) and respawn cooldown (Change Log #09, https://kingart-games.com/article/97, read, not cited), and the companion is a mechanic of its own, which command-companion's mount-partner variant covers; it could instead be read as part of Ride the Tiger's summary."
         },
         {
           "path": "abilities/3",
@@ -1867,12 +1861,6 @@
           "used": "anti-infantry, scout",
           "wanted": "anti-armour",
           "note": "Her charges are her way of killing mechs, but a button gives an anti role at roles.secondary step 2 only through a bonus against, a label for, or harm to only that kind of target, and the Iron Harvest notes read no bonus from per-class damage figures."
-        },
-        {
-          "path": "abilities/2/patterns",
-          "used": "none",
-          "wanted": "command-companion: a lasting AI partner, usually an animal, that fights beside you on its own and takes short orders such as attack or come back; here it doubles as a mount",
-          "note": "Changa stays hidden, carries Olga when called, fights briefly on her own after an attack ends the ride, has her own health and respawns after a cooldown when killed. launch-drones is for expendable minions and transform covers only the ridden form, so neither covers the partner. reinforce-squad's respawning-followers variant matches only her return after a cooldown once killed (Change Log #09), so it is not linked; the merge pass may want it beside the new pattern."
         }
       ],
       "atypical": [
@@ -2370,8 +2358,8 @@
           "kind": "active",
           "cooldown": "long",
           "source": "innate",
-          "summary": "Sends the empty suit on a rocket jump to a spot he picks close to himself, so that once he has slipped away he can get his armour back, provided the suit still stands. KING Art's patch notes call it Turret Relocate and in July 2021 stretched its wait to most of a minute (DevBlog #40). Linked to transform as the way from the pilot form back to the suited one.",
-          "patterns": ["transform"]
+          "summary": "Sends the empty suit on a rocket jump to a spot he picks close to himself, so that once he has slipped away he can get his armour back, provided the suit still stands. KING Art's patch notes call it Turret Relocate and in July 2021 stretched its wait to most of a minute (DevBlog #40). Linked to transform as the way from the pilot form back to the suited one, and to deploy-turret's recall-to-owner variant for calling the parked turret to his side.",
+          "patterns": ["transform", "deploy-turret"]
         },
         {
           "name": "Requisition",
@@ -2616,7 +2604,7 @@
         },
         {
           "path": "abilities/1/patterns",
-          "note": "Transform, as the step that lets the pilot form get back into the suited form. KING Art's own name, Turret Relocate, frames it as moving a turret, which would be deploy-turret, and the suit's rocket jump on its own would be leap, but the jump is the suit's, not his (fit_notes)."
+          "note": "Transform, as the step that lets the pilot form get back into the suited form, and deploy-turret's recall-to-owner variant, for sending the parked turret to his side (KING Art calls the button Turret Relocate). The suit's rocket jump on its own would be leap, but the jump is the suit's, not his."
         },
         {
           "path": "abilities/2/patterns",
@@ -2652,12 +2640,6 @@
         }
       ],
       "fit_notes": [
-        {
-          "path": "abilities/1/patterns",
-          "used": "transform",
-          "wanted": "a recall for a deployed turret or an empty suit: the machine jumps or flies back to its owner on a cooldown",
-          "note": "Transform covers the change of form, deploy-turret the placing of the turret and leap a unit's own jump; none covers sending your parked machine to your side."
-        },
         {
           "path": "armour/models",
           "used": "downed-revive",
@@ -2774,7 +2756,7 @@
           "kind": "passive",
           "source": "innate",
           "summary": "A damage bonus that grows as its health drops: the harder the enemy hits it, the harder it hits back, so a badly damaged Stark is at its most dangerous and should be finished quickly. No source gives the size of the bonus. Lech Kos, Polania's mech hero, has the same passive under the name Patriotic Frenzy (Lech Kos page).",
-          "patterns": []
+          "patterns": ["rage-when-wounded"]
         }
       ],
       "on_death": {
@@ -2994,7 +2976,7 @@
         },
         {
           "path": "abilities/1",
-          "note": "Its own entry: the wiki names it as a passive ability, and damage that grows as health falls is a mechanic, not just a number, that no word-list term covers (fit_notes)."
+          "note": "Its own entry: the wiki names it as a passive ability, and damage that grows as health falls is a mechanic, not just a number, that no word-list term covers; the pattern rage-when-wounded does."
         },
         {
           "path": "armour/class",
@@ -3019,12 +3001,6 @@
           "used": "assault, anti-infantry",
           "wanted": "anti-armour",
           "note": "The jackhammer is built to break armour and hurts mechs most, but the melee family allows only melee, electric or energy damage, so the weapon codes melee and fails anti-armour's requires (armour-piercing, energy, electric or EMP damage, or infest-vehicle)."
-        },
-        {
-          "path": "abilities/1/patterns",
-          "used": "none",
-          "wanted": "rage-when-wounded: a passive that raises the unit's damage as its health falls",
-          "note": "No pattern covers damage that grows with lost health; overclock-self is a short boosted state on a key, not a lasting passive. Lech Kos's Patriotic Frenzy is a second Iron Harvest example."
         }
       ],
       "atypical": [
@@ -3132,8 +3108,8 @@
           "name": "Headquarters, Barracks and Workshop (build menu)",
           "kind": "active",
           "source": "innate",
-          "summary": "The menu's production buildings: a Headquarters, a Barracks or a Workshop of the squad's own faction, which can be placed only inside the player's base zone and which the squad then builds. The Barracks trains infantry (and, once upgraded, weapon systems) and the Workshop mechs, and all construction in a match falls to engineers. For Usonia the wiki also has elite engineers build a paratrooper bunker, whose beacon calls in paratroopers for resources, a call-in that belongs to the building. No pattern fits building structures that serve the team (see fit_notes).",
-          "patterns": []
+          "summary": "The menu's production buildings: a Headquarters, a Barracks or a Workshop of the squad's own faction, which can be placed only inside the player's base zone and which the squad then builds. The Barracks trains infantry (and, once upgraded, weapon systems) and the Workshop mechs, and all construction in a match falls to engineers. For Usonia the wiki also has elite engineers build a paratrooper bunker, whose beacon calls in paratroopers for resources, a call-in that belongs to the building. The production-building variant of build-structure.",
+          "patterns": ["build-structure"]
         },
         {
           "name": "Repair",
@@ -3355,14 +3331,6 @@
         "status": "unchecked"
       },
       "researched_by": "batch r3, agent J13-IRON-HARVEST",
-      "fit_notes": [
-        {
-          "path": "abilities/3/patterns",
-          "used": "none (empty list)",
-          "wanted": "build a structure that serves the team: lay down a production building or base that trains units or opens tech once the builders finish it",
-          "note": "The build menu's Headquarters, Barracks and Workshop (and Usonia's paratrooper bunker) are buildings that serve the team. build-cover is for cover pieces, deploy-turret for defences that fight on their own and host-spawn-point for respawning at the unit, so none fits raising a production building in the base zone."
-        }
-      ],
       "atypical": [
         {
           "path": "roles/secondary",

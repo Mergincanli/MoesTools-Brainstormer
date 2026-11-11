@@ -461,7 +461,7 @@ The pattern itself is uncommon, so on a rolled card these variants appear from s
 - Countered by: Sustained anti-infantry fire stops a fragile infester before it connects. *[Machine gun (weapon)]*
 - Countered by: Repair tools pull the infester out of the host. *[Repair tool (weapon)]*
 - Countered by: Out of its reach: it can't latch onto or hit aircraft in flight, and they can shoot it freely. *[Aircraft (class)]*
-- Related: Disable a machine (combos with), Hijack a vehicle (planned; often confused with).
+- Related: Disable a machine (combos with), Hijack a vehicle (often confused with).
 
 **Open design questions**
 
@@ -608,7 +608,7 @@ The pattern itself is uncommon, so on a rolled card these variants appear from s
 - Countered by: Ground claimers usually can't reach aircraft or their wrecks, and have no anti-air until they gain some. *[Aircraft (class)]*
 - Countered by: Fast targets get away before they die near it, leaving nothing to claim. *[at least Fast (speed)]*
 - Countered by: Punishes it while it is busy claiming. *[Anti-armour (role)]*
-- Related: Drain health (planned; combos with), Hijack a vehicle (planned; often confused with), Infest a vehicle (combos with), Switch weapon mode (combos with).
+- Related: Drain health (planned; combos with), Hijack a vehicle (often confused with), Infest a vehicle (combos with), Switch weapon mode (combos with).
 
 **Open design questions**
 
