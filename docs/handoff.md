@@ -1,16 +1,13 @@
 # Handoff: continuing Unit Forge in a new session
 
-Written on 10 November 2026, when the project moved from the session that ran it from 17 October to a new account. Read this first, then [CLAUDE.md](../CLAUDE.md) and the [research runbook](research-runbook.md).
+Written on 10 November 2026, when the project moved from the session that ran it from 17 October to a new account. Read this first, then [CLAUDE.md](../CLAUDE.md) and the [research runbook](research-runbook.md). Updated on 11 November 2026: the phases that were open then are done, and the saved work in progress (`research/handoff/`) has been used and deleted.
 
 ## TL;DR
 
 - **The project:** Unit Forge, a tool for Mustafa that turns a researched database of real RTS and shooter units into original unit concepts for his game, Shamble Frontlines. The brief is [docs/brief.md](brief.md) and the plan is [docs/proposal.md](proposal.md).
 - **Where it stands:** plan step 3, the research run, batch R3 (Command & Conquer: Generals with Zero Hour, Tempest Rising, Iron Harvest).
   - All 27 R3 units are coded, checked and in `data/units/` (commit 6c817f1).
-  - Two phases were half done when the work paused on 29 October:
-    - the merge pass's consistency check;
-    - the pattern files.
-  - Their partial results are saved in [research/handoff/r3-wip/](../research/handoff/r3-wip/README.md).
+  - The merge pass, the patterns, the checker, the rule problems and the report followed on 10 and 11 November (section 3). The report is [research/r3/README.md](../research/r3/README.md).
 - **Everything is on one branch, `claude/quirky-cray-tih1w4`, in [pull request #6](https://github.com/Mergincanli/MoesTools-Brainstormer/pull/6).** That pull request also holds Mustafa's plan change of 24 October, and it waits for his approval (section 4).
 - **First thing to do in the new session:** section 7.
 
@@ -52,9 +49,14 @@ Written on 10 November 2026, when the project moved from the session that ran it
 | 48629b8 | R3 opening check, and night decisions N1 to N4 |
 | a9cd648, 2ccc323, 2870003, bcdfa81 | R3 fill: 13 jobs, 25 units, and the fill hesitations |
 | 6c817f1 | R3 merge pass step 1: the 27 units into `data/units/` |
-| (this commit) | Handoff: this file, the brief, CLAUDE.md, and the saved work in `research/handoff/` |
+| 71d7e67 | Handoff: this file, the brief and CLAUDE.md |
+| 527724f, 3618824 | R3 merge pass, steps 2 and 3: the consistency check and its fixes |
+| 9b65b5e | Runbook: commit messages carry no model name |
+| ef2460e | R3 patterns: 33 proposed pattern files and the units' links |
+| 8e1746f, 9ce1f96, 6556887 | R3 checker: the seed, the 23 confirmed fixes, the record |
+| e05e5c4 | R3 rule problems (18 settled) and the report |
 
-CI was green on 6c817f1 (four check jobs). `npm run check:merge` passes, with 297 of 297 tests.
+CI runs four check jobs on every push; it was green on each head it has finished on. `npm run check:merge` passes, with 297 of 297 tests.
 
 ## 3. Batch R3 in detail
 
@@ -77,37 +79,19 @@ CI was green on 6c817f1 (four check jobs). `npm run check:merge` passes, with 29
 - **N3:** until the rule-fix round, a walker on many legs with a fixed main gun is `spider-frame` (the Kaiser, the Mocny, the Stark).
 - **N4:** confidence keeps the current practice, and every contradiction between pages is logged.
 
-**What is left, in runbook order:**
+**Done since the handoff, in runbook order:**
 
-1. **Merge pass, steps 2 and 3 (half done).**
-   - A consistency check with four finders, each with a skeptic, ran on 29 October.
-     - The `registry` finder (15 findings) and the `links` finder (9 findings) finished. **No skeptic has checked them yet.**
-     - The `conventions` and `facts` finders never ran.
-   - Saved: `research/handoff/r3-wip/merge-consistency/` (findings and the workflow script).
-   - Next:
-     1. run a skeptic on the 24 findings;
-     2. run the two missing finders and their skeptics;
-     3. apply the confirmed fixes per game: `r1-merge-fixes-template.js` is R1's script for this, to adapt;
-     4. commit.
-   - Findings that change the registry or the notes are decisions about the notes (runbook, "Decisions"). Any that would change the word lists or field rules go to the rule-fix round instead.
-2. **Patterns (runbook section 5, 8 of 35 files drafted).**
-   - There are 35 pattern files in 9 groups: 17 registered ids the R3 units link with no file yet, and 18 new ids.
-   - The arguments are saved in `research/handoff/r3-wip/args/patterns.json`.
-   - The writers of groups g1 and g2 finished. Their 8 drafted files, notes and reports are saved under `research/handoff/r3-wip/patterns/`. No skeptic has checked them.
-   - Groups g3 to g9 have not started.
-   - How to go on is in [research/handoff/r3-wip/README.md](../research/handoff/r3-wip/README.md).
-   - Then integrate:
-     1. add the pattern files and the registry entries;
-     2. add the unit links and remove the fit notes that asked for them;
-     3. run `npm run sync-patterns`, `npm run docs` and `npm run check:merge`;
-     4. commit.
-3. **Checker** (section 6): seed `r3-<date>`, committed before drawing; 1 unit in 5 per game and 1 proposed pattern in 3; a 15% limit per game.
-4. **Report and final review** (section 7):
-   - `research/r3/README.md`;
-   - `research/r3/rule-problems.md`, built the way `research/r1/rule-problems.md` was, from the opening's `splits.json` items, the reconciler's six remaining rule problems and the fill reports;
-   - the final review, then `verify-fixes.js`.
-5. **Checks and claims check** (section 8): the online copy-check in three parts, the PDF manuals by hand, the local-path grep, then the claims check.
-6. **Merge** (section 9): only when every gate passes. Pull request #6 also needs Mustafa's approval of the plan change.
+1. **Merge pass, steps 2 and 3** (527724f, 3618824): four finders and their skeptics, 33 of 37 findings confirmed and fixed. Record: `research/r3/merge/`.
+2. **Patterns** (ef2460e): 33 proposed pattern files, 16 of them new ids, each checked by a skeptic; the units link them. Record: `research/r3/patterns/`.
+3. **Checker** (8e1746f, 9ce1f96, 6556887): seed `r3-2026-11-11`; every game passes; 23 confirmed fields fixed. Record: `research/r3/checker/`.
+4. **Rule problems and report** (e05e5c4): `research/r3/rule-problems.md` and `research/r3/README.md`.
+
+**What is left:**
+
+1. **The final review** (runbook section 7), then `verify-fixes.js`.
+2. **Checks and claims check** (section 8): the online copy-check in three parts, the PDF manuals by hand, the local-path search, then the claims check on the report and the pull-request description.
+3. **Merge** (section 9): only when every gate passes, and only with Mustafa's approval of pull request #6, which also holds the plan change.
+4. **Then R4** (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech), from its prep.
 
 **Known and left alone:** `npm run copy-check -- --offline --also data/units` finds 19 coincidental six-word runs in R1's units, against pages only R3 caches, such as "one of them at a time". None is a page those units cite, and none is in R3's units.
 
@@ -138,7 +122,7 @@ The procedure is [docs/research-runbook.md](research-runbook.md): its sections 1
 
 | Item | Where it was | What to do |
 |---|---|---|
-| Scratchpad (state file, night log, workspaces, agent results) | the old session's machine | What matters is in `research/handoff/r3-wip/`. Copy `session/state.json` and `session/night-log.md` into the new scratchpad's `r3/` folder if you keep the night shift |
+| Scratchpad (state file, night log, workspaces, agent results) | the session's machine | It does not move. What a later session needs is in the repository: the record under `research/r3/` and this file |
 | Workflow runs | the old session | They cannot be resumed from a new session: re-run (section 3) |
 | Page cache | `.cache/sources/` on the old machine | Rebuilt as pages are fetched again |
 | Night-shift routine | the old account (disabled on 29 October) | Recreate it on the new account if wanted ([appendix](#appendix-the-night-shift-routine)); delete the old one |
@@ -149,8 +133,8 @@ The procedure is [docs/research-runbook.md](research-runbook.md): its sections 1
 1. Make sure the Claude GitHub app can reach `Mergincanli/MoesTools-Brainstormer`, with push access.
 2. Run `npm install` (Node.js 22 or newer), then `npm run check:merge`. It should pass 297 of 297 tests.
 3. Check out `claude/quirky-cray-tih1w4` at this handoff commit or later.
-4. Read this file, CLAUDE.md, the runbook and `research/handoff/r3-wip/README.md`.
-5. Go on with section 3, "What is left": first the merge pass's consistency check, then the patterns. Both can run at the same time.
+4. Read this file, CLAUDE.md and the runbook.
+5. Go on with section 3, "What is left".
 
 ## Appendix: the night-shift routine
 
