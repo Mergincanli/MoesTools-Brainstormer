@@ -18,11 +18,11 @@ const B = args.batch
 
 // Rules every agent gets with its brief, word for word (docs/research-runbook.md, "The quality bar"): the rule on
 // evidence that Mustafa approved on 11 November 2026, tool problems reported apart from the hesitations, and how to
-// read a wiki page. args.batch.rules (args.round.rules in a rule-fix round) adds a batch's own rules, such as a
+// read a page (scripts/page-text.mjs). args.batch.rules (args.round.rules in a rule-fix round) adds a batch's own rules, such as a
 // site that must not be fetched.
 const EVIDENCE_RULE = 'Evidence: give the page\'s address and where on the page it is (the section or box), and say in your own words what it shows. Never copy six or more words in a row from a page, in any field of your answer, your notes or a file, the evidence included; give a figure or a name as it is, and paraphrase everything else.'
 const TOOL_RULE = 'Tool problems: when a tool fails you or cannot do its job (a script that crashes, a check that cannot read a page, a site that refuses you), list it in tool_problems, apart from your hesitations: the tool, what you asked of it and what happened. Leave the list empty when there were none.'
-const WIKI_RULE = 'Wiki pages: a page\'s source (prop=wikitext) leaves out what a template kept on another page draws in, such as an ability box. Ask the wiki\'s API for prop=wikitext|text and read the rendered text as well.'
+const WIKI_RULE = 'Reading pages: read a page with `node scripts/page-text.mjs <page address>`, run from the root of the repository or of your workspace. It prints the page as plain text: for a wiki page its source and then the rendered page, which also holds what templates kept on other pages draw in, such as an ability box. It reads the page cache first and keeps what it fetches there. Do not fetch a rendered wiki page as HTML yourself: it is ten to twenty times the size.'
 const BATCH_RULES = (args.batch && args.batch.rules) || (args.round && args.round.rules) || ''
 const RULES = `## Rules for every answer\n- ${EVIDENCE_RULE}\n- ${TOOL_RULE}\n- ${WIKI_RULE}${BATCH_RULES ? `\n- For this batch: ${BATCH_RULES}` : ''}`
 const TOOL_PROBLEMS = { type: 'array', items: { type: 'string' }, description: 'tool problems, one line each: the tool, what you asked of it and what happened; empty when there were none' }
@@ -43,7 +43,7 @@ Pages fetched before are cached in ${root}/.cache/sources/<site>/ (one JSON file
 
 const COMMON = `Unit Forge (repository ${REPO}; read only for you, never edit a file there) is a research database of real RTS and shooter units, coded with fixed word lists (data/vocab/, rendered in docs/vocabularies.md, version 1.1.0, approved) and field rules (docs/fields.md, Conventions first), that feeds a generator of original unit concepts for Shamble Frontlines, a top-down team shooter where each player buys and becomes one unit. Step 3 of the plan is the research run; batch ${B.id.toUpperCase()} covers ${B.scope} (docs/proposal.md, section 2.2, says how a batch runs; decision 8B sets about 9 units per game). docs/research-runbook.md is the procedure. Your game: ${G.name} (registry id \`${G.id}\`, ${G.scope}).
 
-House rules: paraphrase only, never copy six or more words from a page; no images; mechanics over numbers; cite every claim with its page URL. Read wikis through their MediaWiki API (for the Command & Conquer Wiki: https://cnc.fandom.com/api.php?action=parse&page=<Title>&prop=wikitext|text&format=json; the batch's registry note names other wikis' endpoints), space requests about two seconds apart and wait and retry after a 429.`
+House rules: paraphrase only, never copy six or more words from a page; no images; mechanics over numbers; cite every claim with its page URL. Read pages with the page reader (see the rules at the end of this brief); to find a page's title, ask the wiki's own API (action=query or opensearch; the batch's registry note names the wikis), about two seconds between requests, and wait and retry after a 429.`
 
 const NOTES = {
   type: 'object', required: ['role_line', 'game_wide', 'registry_findings', 'other_notes', 'pages_read'],

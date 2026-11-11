@@ -25,6 +25,7 @@ The night shift's work must be as good as the work done with Mustafa awake. Each
   - The copy-check (section 8, step 4) finds no shared run.
   - The record has no local paths.
 - **Paraphrase only.** Never copy six or more words from a page, use no images, and prefer mechanics over numbers. Real unit names are for reference only.
+- **Agents read pages with `node scripts/page-text.mjs <page address>`.** It prints a page as plain text, the way the copy-check reads it: for a wiki page, the source and the rendered page. It uses the page cache first, spaces out requests to one site, and never fetches a site whose terms do not allow it. A rendered wiki page fetched as HTML is ten to twenty times the size, so agents do not fetch it by hand.
 - **Evidence.** Every agent's brief carries this line, word for word (Mustafa, 11 November 2026; `research/workflows/*.js`, `EVIDENCE_RULE`): "Evidence: give the page's address and where on the page it is (the section or box), and say in your own words what it shows. Never copy six or more words in a row from a page, in any field of your answer, your notes or a file, the evidence included; give a figure or a name as it is, and paraphrase everything else."
 
 ## Where things are

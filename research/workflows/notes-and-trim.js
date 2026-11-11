@@ -18,11 +18,11 @@ const B = args.batch
 
 // Rules every agent gets with its brief, word for word (docs/research-runbook.md, "The quality bar"): the rule on
 // evidence that Mustafa approved on 11 November 2026, tool problems reported apart from the hesitations, and how to
-// read a wiki page. args.batch.rules (args.round.rules in a rule-fix round) adds a batch's own rules, such as a
+// read a page (scripts/page-text.mjs). args.batch.rules (args.round.rules in a rule-fix round) adds a batch's own rules, such as a
 // site that must not be fetched.
 const EVIDENCE_RULE = 'Evidence: give the page\'s address and where on the page it is (the section or box), and say in your own words what it shows. Never copy six or more words in a row from a page, in any field of your answer, your notes or a file, the evidence included; give a figure or a name as it is, and paraphrase everything else.'
 const TOOL_RULE = 'Tool problems: when a tool fails you or cannot do its job (a script that crashes, a check that cannot read a page, a site that refuses you), list it in tool_problems, apart from your hesitations: the tool, what you asked of it and what happened. Leave the list empty when there were none.'
-const WIKI_RULE = 'Wiki pages: a page\'s source (prop=wikitext) leaves out what a template kept on another page draws in, such as an ability box. Ask the wiki\'s API for prop=wikitext|text and read the rendered text as well.'
+const WIKI_RULE = 'Reading pages: read a page with `node scripts/page-text.mjs <page address>`, run from the root of the repository or of your workspace. It prints the page as plain text: for a wiki page its source and then the rendered page, which also holds what templates kept on other pages draw in, such as an ability box. It reads the page cache first and keeps what it fetches there. Do not fetch a rendered wiki page as HTML yourself: it is ten to twenty times the size.'
 const BATCH_RULES = (args.batch && args.batch.rules) || (args.round && args.round.rules) || ''
 const RULES = `## Rules for every answer\n- ${EVIDENCE_RULE}\n- ${TOOL_RULE}\n- ${WIKI_RULE}${BATCH_RULES ? `\n- For this batch: ${BATCH_RULES}` : ''}`
 const TOOL_PROBLEMS = { type: 'array', items: { type: 'string' }, description: 'tool problems, one line each: the tool, what you asked of it and what happened; empty when there were none' }

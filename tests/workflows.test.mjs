@@ -139,8 +139,8 @@ describe('workflow scripts', () => {
       for (const { label, prompt, schema } of prompts) {
         assert.ok(prompt.includes(`- ${EVIDENCE}\n`), `${label}: the rule on evidence is missing or reworded`)
         assert.match(prompt, /\n- Tool problems: when a tool fails you or cannot do its job/, label)
-        assert.match(prompt, /\n- Wiki pages: a page's source \(prop=wikitext\) leaves out what a template kept on another page draws in/, label)
-        assert.ok(prompt.trimEnd().endsWith('read the rendered text as well.'), `${label}: the rules are not the end of the brief`)
+        assert.match(prompt, /\n- Reading pages: read a page with `node scripts\/page-text\.mjs <page address>`/, label)
+        assert.ok(prompt.trimEnd().endsWith('it is ten to twenty times the size.'), `${label}: the rules are not the end of the brief`)
         assert.equal(schema?.properties?.tool_problems?.type, 'array', `${label}: no tool_problems list in the answer`)
         assert.ok(!(schema.required || []).includes('tool_problems'), `${label}: tool_problems must not be required`)
       }

@@ -33,7 +33,9 @@ import os from 'node:os'
 import path from 'node:path'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
-import { cachePath, copyCheck, htmlToText, rerunWithProxy, words } from './copy-check.mjs'
+import { cachePath, copyCheck, rerunWithProxy, visibleLines, words } from './copy-check.mjs'
+
+export { visibleLines } // the reader's lines of a rendered page
 
 export const PASSAGES = 5 // passages planted per page
 export const PASSAGE_WORDS = 10 // words in a row per passage
@@ -46,17 +48,6 @@ export const NO_BROWSER = Object.freeze(new Set(['liquipedia.net']))
 
 export const VIEW_BROWSER = 'the page in a browser'
 export const VIEW_WIKI = 'the wiki\'s rendered page, from its API'
-
-const BLOCK = 'p|div|li|ul|ol|dl|dt|dd|tr|td|th|table|thead|tbody|h[1-6]|br|hr|section|article|blockquote|pre|figure|figcaption|caption|nav|header|footer|aside'
-
-/** The visible lines of an HTML page or fragment: one per block of text (paragraph, list item, table cell, heading). */
-export function visibleLines(html) {
-  let h = html.replace(/<!--[\s\S]*?-->/g, ' ')
-  h = h.replace(/<(script|style|noscript|svg|template|head)\b[\s\S]*?<\/\1\s*>/gi, ' ')
-  h = h.replace(/<sup\b[^>]*\bclass="[^"]*\breference\b[^"]*"[\s\S]*?<\/sup\s*>/gi, ' ') // footnote marks
-  h = h.replace(new RegExp(`</?(?:${BLOCK})\\b[^>]*>`, 'gi'), '\n')
-  return h.split('\n').map(line => htmlToText(line).replace(/\s+/g, ' ').trim()).filter(Boolean)
-}
 
 /**
  * Up to `count` passages of `len` words in a row, spread evenly over the lines that have at least `minLine`

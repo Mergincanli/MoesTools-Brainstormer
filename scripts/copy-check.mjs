@@ -177,6 +177,17 @@ export function htmlToText(h) {
   return decodeEntities(h)
 }
 
+const BLOCK_TAGS = 'p|div|li|ul|ol|dl|dt|dd|tr|td|th|table|thead|tbody|h[1-6]|br|hr|section|article|blockquote|pre|figure|figcaption|caption|nav|header|footer|aside'
+
+/** The visible lines of an HTML page or fragment: one per block of text (paragraph, list item, table cell, heading). */
+export function visibleLines(html) {
+  let h = html.replace(/<!--[\s\S]*?-->/g, ' ')
+  h = h.replace(/<(script|style|noscript|svg|template|head)\b[\s\S]*?<\/\1\s*>/gi, ' ')
+  h = h.replace(/<sup\b[^>]*\bclass="[^"]*\breference\b[^"]*"[\s\S]*?<\/sup\s*>/gi, ' ') // footnote marks
+  h = h.replace(new RegExp(`</?(?:${BLOCK_TAGS})\\b[^>]*>`, 'gi'), '\n')
+  return h.split('\n').map(line => htmlToText(line).replace(/\s+/g, ' ').trim()).filter(Boolean)
+}
+
 // A Steam news post (store.steampowered.com/news/app/<id>/view/<post>) is drawn by a script: the page's markup holds
 // only the store's frame, and the post itself sits as JSON in one attribute. Read as plain HTML, every such page
 // gives the same frame and none of the post.
@@ -338,7 +349,7 @@ async function bodyText(res) {
   }
 }
 
-async function fetchPage(url, state) {
+export async function fetchPage(url, state) {
   const wiki = mediaWikiTarget(url)
   if (wiki) {
     for (const api of wiki.apis) {
