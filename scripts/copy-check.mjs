@@ -28,8 +28,11 @@
 // A Steam news post is read from the page's data attribute (its markup holds only the store's frame), and web
 // addresses in a record's prose are not wording. A site can ask for a longer pause (HOST_MIN_DELAY), which also
 // holds between two runs in one process. Set COPY_CHECK_CONTACT to add a contact to the User-Agent header: a site
-// whose terms ask for one (NEEDS_CONTACT) is not asked for anything without it, and its pages are never fetched
-// as HTML.
+// whose terms restrict automated reading (RESTRICTED_SITES: Liquipedia) is asked for nothing until Mustafa has
+// decided how it is read: then UNIT_FORGE_ALLOW_HOSTS names the site and COPY_CHECK_CONTACT gives the contact. Its
+// pages are never fetched as HTML, and a redirect is followed only where the same rules allow it. The pause for a
+// site also holds between several processes at once (research agents reading pages): a small file per site in
+// the system's temporary folder says when the site may next be asked.
 // scripts/plant.mjs tests whether the check reads what a reader of a page sees: run it on one page of
 // every new site before a batch cites it.
 //
@@ -58,14 +61,16 @@
 import crypto from 'node:crypto'
 import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 // Some sites' terms ask for a contact in the User-Agent (Liquipedia's API terms do). It is not kept in the
 // repository: set COPY_CHECK_CONTACT (a web address or an email address) to add one.
-const CONTACT = (process.env.COPY_CHECK_CONTACT || '').trim()
-export const USER_AGENT = `UnitForgeCopyCheck/1.1 (checks research notes for copied wording; one request at a time${CONTACT ? `; ${CONTACT}` : ''})`
+const contact = () => (process.env.COPY_CHECK_CONTACT || '').trim()
+const userAgent = () => `UnitForgeCopyCheck/1.1 (checks research notes for copied wording; one request at a time${contact() ? `; ${contact()}` : ''})`
+export const USER_AGENT = userAgent() // as it was when the script started
 
 // Keys whose values are names, titles, ids or citations rather than our own prose.
 const NOT_PROSE = new Set([
@@ -302,14 +307,75 @@ const sleep = ms => new Promise(r => setTimeout(r, ms))
 // Liquipedia's API terms (liquipedia.net/api-terms-of-use, read on 11 November 2026) allow one action=parse
 // request per 30 seconds.
 export const HOST_MIN_DELAY = Object.freeze({ 'liquipedia.net': 30000 })
-// Sites whose terms ask for a contact in the User-Agent and forbid automated reading of their pages (the same
-// terms): without COPY_CHECK_CONTACT nothing is asked of them, and their pages are never fetched as HTML.
-export const NEEDS_CONTACT = Object.freeze(new Set(['liquipedia.net']))
-export const NO_CONTACT = 'not fetched: this site\'s terms ask for a contact in the User-Agent; set COPY_CHECK_CONTACT'
+// Sites whose terms restrict automated reading. Liquipedia's (the same terms): no automated reading of its pages,
+// an API meant for editors, and a contact in the User-Agent. Nothing is asked of such a site until Mustafa has
+// decided how it is read; UNIT_FORGE_ALLOW_HOSTS (host names, separated by commas) then names it, and
+// COPY_CHECK_CONTACT gives the contact. Its pages are never fetched as HTML and never opened in a browser.
+export const RESTRICTED_SITES = Object.freeze(new Set(['liquipedia.net']))
+export const RESTRICTED = 'not fetched: this site\'s terms restrict automated reading, and Mustafa decides how it is read; ' +
+  'once he has, set UNIT_FORGE_ALLOW_HOSTS to the site and COPY_CHECK_CONTACT to a contact'
+
+/** True when the set holds the host or a domain the host is under (www.liquipedia.net is under liquipedia.net). */
+export function covers(set, host) {
+  for (const d of set) if (host === d || host.endsWith(`.${d}`)) return true
+  return false
+}
+
+/** Why a host may not be asked for anything now, or null when it may. */
+export function refusal(host) {
+  if (!covers(RESTRICTED_SITES, host)) return null
+  const allowed = new Set((process.env.UNIT_FORGE_ALLOW_HOSTS || '').split(',').map(h => h.trim()).filter(Boolean))
+  return covers(allowed, host) && contact() ? null : RESTRICTED
+}
 
 /** The shortest pause before the next request to a host: the site's own minimum, or the override a test passes. */
 export function hostPause(host, state = {}) {
-  return (state.hostDelay || HOST_MIN_DELAY)[host] || 0
+  for (const [d, ms] of Object.entries(state.hostDelay || HOST_MIN_DELAY)) if (host === d || host.endsWith(`.${d}`)) return ms
+  return 0
+}
+
+// Between processes: one small file per site says when the site was last answered and whether a request is on its
+// way. A process claims the site under a lock, so two that wake together cannot both go.
+export const STAMP_DIR = path.join(os.tmpdir(), 'unit-forge-pace')
+const BUSY_MS = 35000 // a request in flight holds the site this long at most (the request's own limit is 30 s)
+
+function writeStamp(file, value) {
+  const tmp = `${file}.${process.pid}`
+  try { fs.writeFileSync(tmp, JSON.stringify(value)); fs.renameSync(tmp, file) } catch {
+    try { fs.writeFileSync(file, JSON.stringify(value)) } catch { /* pacing is best effort when the folder is not writable */ }
+    try { fs.unlinkSync(tmp) } catch { /* nothing to clean */ }
+  }
+}
+
+/** The file that paces requests to a site (host name and port) between processes. */
+export const stampFile = (site, dir = STAMP_DIR) => path.join(dir, site.replace(/[^A-Za-z0-9.-]+/g, '_'))
+
+// Waits until the site is free and its last answer is at least `gap` ms old, then marks a request as on its way.
+async function claimSite(dir, site, gap) {
+  const file = stampFile(site, dir), lock = `${file}.lock`
+  try { fs.mkdirSync(dir, { recursive: true }) } catch { return null }
+  for (;;) {
+    let fd
+    try { fd = fs.openSync(lock, 'wx') } catch (e) {
+      if (e.code !== 'EEXIST') return null // no lock can be made here: go on without pacing between processes
+      try { if (Date.now() - fs.statSync(lock).mtimeMs > 120000) fs.unlinkSync(lock) } catch { /* another process removed it */ }
+      await sleep(50)
+      continue
+    }
+    let wait, inFlight
+    try {
+      let last = 0, busy = 0
+      try { ({ last = 0, busy = 0 } = JSON.parse(fs.readFileSync(file, 'utf8'))) } catch { /* no stamp yet */ }
+      wait = Math.max(busy, last + gap) - Date.now()
+      inFlight = busy > last + gap // another process's request is on its way: its answer may come any moment
+      if (wait <= 0) writeStamp(file, { last, busy: Date.now() + BUSY_MS })
+    } finally {
+      fs.closeSync(fd)
+      try { fs.unlinkSync(lock) } catch { /* already gone */ }
+    }
+    if (wait <= 0) return file
+    await sleep(Math.min(wait, inFlight ? 100 : 5000))
+  }
 }
 
 // The clock that paces requests is shared by every run in one process (the plant test runs the copy-check once per
@@ -334,19 +400,28 @@ function networkCode(e) {
 
 // One request at a time. A 429 or 503 is retried with a growing wait (Retry-After if given); a transient
 // network error is retried at most NETWORK_RETRIES times; any other network error throws a NetworkError.
+// Redirects are followed here, one hop at a time, so that every hop is paced and checked like a first request.
+const MAX_REDIRECTS = 5
 async function politeGet(url, state) {
-  for (let busy = 1, net = 0; ;) {
-    const host = new URL(url).hostname
+  for (let busy = 1, net = 0, hops = 0; ;) {
+    const u = new URL(url), host = u.hostname
+    const why = refusal(host)
+    if (why) throw new Error(why)
     const pace = state.pace || PACE
     const wait = Math.max(pace.lastRequest + state.delay, (pace.lastByHost[host] || 0) + hostPause(host, state)) - Date.now()
     if (wait > 0) await sleep(wait)
+    // Between processes too (stampDir null switches that off).
+    const slot = state.stampDir === null ? null : await claimSite(state.stampDir || STAMP_DIR, u.host, Math.max(state.delay, hostPause(host, state)))
     state.requests++
     let res
     // The pause counts from the moment the site answered (or the request failed), so that the site never sees two
     // requests closer together than the pause, however long a connection takes to open.
-    const stamp = () => { pace.lastRequest = pace.lastByHost[host] = Date.now() }
+    const stamp = () => {
+      pace.lastRequest = pace.lastByHost[host] = Date.now()
+      if (slot) writeStamp(slot, { last: Date.now(), busy: 0 })
+    }
     try {
-      res = await fetch(url, { headers: { 'User-Agent': USER_AGENT }, redirect: 'follow', signal: AbortSignal.timeout(30000) })
+      res = await fetch(url, { headers: { 'User-Agent': userAgent() }, redirect: 'manual', signal: AbortSignal.timeout(30000) })
       stamp()
     } catch (e) {
       stamp()
@@ -367,6 +442,17 @@ async function politeGet(url, state) {
       busy++
       continue
     }
+    const to = res.status >= 300 && res.status < 400 && res.headers.get('location')
+    if (to) {
+      await res.body?.cancel()
+      if (++hops > MAX_REDIRECTS) throw new Error(`more than ${MAX_REDIRECTS} redirects`)
+      const next = new URL(to, url)
+      if (covers(RESTRICTED_SITES, next.hostname) && !/\/api\.php$/.test(next.pathname)) {
+        throw new Error(`redirected to ${next.hostname}, whose pages are not fetched as HTML (its terms)`)
+      }
+      url = next.href
+      continue
+    }
     return res
   }
 }
@@ -382,7 +468,8 @@ async function bodyText(res) {
 
 export async function fetchPage(url, state) {
   const host = new URL(url).hostname
-  if (NEEDS_CONTACT.has(host) && !CONTACT) throw new Error(NO_CONTACT)
+  const why = refusal(host)
+  if (why) throw new Error(why)
   const wiki = mediaWikiTarget(url)
   if (wiki) {
     for (const api of wiki.apis) {
@@ -400,7 +487,7 @@ export async function fetchPage(url, state) {
       if (typeof raw === 'string') return { format: 'wikitext', via: q, raw, ...(typeof rendered === 'string' ? { rendered } : {}) }
     }
   }
-  if (NEEDS_CONTACT.has(host)) throw new Error('the wiki API gave no page, and this site\'s pages are not fetched as HTML (its terms)')
+  if (covers(RESTRICTED_SITES, host)) throw new Error('the wiki API gave no page, and this site\'s pages are not fetched as HTML (its terms)')
   const res = await politeGet(url, state)
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   return { format: 'html', via: url, raw: await bodyText(res) }
@@ -629,7 +716,7 @@ export async function copyCheck(options = {}) {
   for (const t of opts.only) {
     if (/^https?:\/\//.test(t) && !allUrls.some(u => u.includes(t)) && !cachedInFull(cachePath(cacheDir, t)) && !urls.includes(t)) urls.push(t)
   }
-  const state = { delay: opts.delay, retryWait: opts.retryWait, log: opts.log, pace: opts.pace, hostDelay: opts.hostDelay, requests: 0 }
+  const state = { delay: opts.delay, retryWait: opts.retryWait, log: opts.log, pace: opts.pace, hostDelay: opts.hostDelay, stampDir: opts.stampDir, requests: 0 }
   const pages = new Map() // url -> gram set
   const notChecked = [] // [url, reason]
   const partly = [] // [url, reason]: wiki pages compared with their source only, not with the rendered page
@@ -697,6 +784,7 @@ export async function copyCheck(options = {}) {
   const seen = new Set(urls) // every address the run looked at or listed, for the --only check below
   if (notes.length) {
     const all = new Map(pages)
+    const listed = new Set(urls) // cited, linked or named with --only: the main loop has said what became of them
     for (const [url, page] of cachedPages(cacheDir)) {
       if (!inScope(url)) continue
       seen.add(url)
@@ -706,7 +794,7 @@ export async function copyCheck(options = {}) {
       all.set(url, pg)
       // A page that only the cache holds is not fetched here. Cached with its source only, it is listed, so that the
       // run cannot pass as complete: give its address with --only to read its rendered page.
-      if (sourceOnly(page)) partly.push([url, SOURCE_ONLY_CACHE])
+      if (sourceOnly(page) && !listed.has(url)) partly.push([url, SOURCE_ONLY_CACHE])
     }
     notePages = all.size
     const own = ownWordingGrams(opts.root, n, opts.also)

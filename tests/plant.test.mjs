@@ -14,6 +14,16 @@ import {
 
 const tmpDirs = []
 after(() => { for (const d of tmpDirs) fs.rmSync(d, { recursive: true, force: true }) })
+
+// No test may reach a real site: any request that is not to this machine fails here, before it leaves. (A guard in
+// the code under test must not be the only thing between a test and a site whose terms forbid automated reading.)
+const realFetch = globalThis.fetch
+globalThis.fetch = (input, ...rest) => {
+  const host = new URL(typeof input === 'string' ? input : input.url).hostname
+  if (host !== '127.0.0.1') throw new Error(`a test tried to reach ${host}`)
+  return realFetch(input, ...rest)
+}
+after(() => { globalThis.fetch = realFetch })
 const tempRoot = () => { const d = fs.mkdtempSync(path.join(os.tmpdir(), 'unit-forge-plant-test-')); tmpDirs.push(d); return d }
 
 // Five paragraphs a reader sees; the ability box is drawn by a template, so the page source does not hold it.

@@ -33,7 +33,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
-import { cachePath, copyCheck, rerunWithProxy, visibleLines, words } from './copy-check.mjs'
+import { RESTRICTED_SITES, cachePath, copyCheck, covers, rerunWithProxy, visibleLines, words } from './copy-check.mjs'
 
 export { visibleLines } // the reader's lines of a rendered page
 
@@ -42,9 +42,9 @@ export const PASSAGE_WORDS = 10 // words in a row per passage
 export const MIN_LINE_WORDS = 14 // a line must have this many words to be planted from
 const MIN_VIEW_WORDS = 80 // a browser view with fewer words is an error page or a bot page, not the page
 
-// Sites whose terms do not allow automated reading of their pages: the reader's view comes from the API.
-// Liquipedia's API terms (liquipedia.net/api-terms-of-use, read on 11 November 2026) say so.
-export const NO_BROWSER = Object.freeze(new Set(['liquipedia.net']))
+// Sites whose terms do not allow automated reading of their pages (the copy-check's RESTRICTED_SITES, subdomains
+// included): no browser opens them, and the reader's view comes from the wiki's API.
+export const NO_BROWSER = RESTRICTED_SITES
 
 export const VIEW_BROWSER = 'the page in a browser'
 export const VIEW_WIKI = 'the wiki\'s rendered page, from its API'
@@ -81,6 +81,12 @@ export function findBrowser() {
 async function browserLines(browser, url) {
   const page = await browser.newPage()
   try {
+    // A page may pull in, or redirect to, a site that no browser may open: such requests are dropped.
+    await page.route('**/*', route => {
+      let host = ''
+      try { host = new URL(route.request().url()).hostname } catch { /* not a web address */ }
+      return covers(NO_BROWSER, host) ? route.abort() : route.continue()
+    })
     const res = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 })
     await page.waitForTimeout(4000) // let scripts draw the page
     const seen = await page.evaluate(() => {
@@ -100,14 +106,14 @@ const count = lines => lines.reduce((n, line) => n + words(line).length, 0)
 /**
  * Tests one page. Options: root (a throwaway folder; made when not given), browser (a launched Playwright
  * browser, or null), offline (use only what root's cache holds), lines (the reader's view, given by a test),
- * and the copy-check's own options delay, retryWait, hostDelay, pace and log.
+ * and the copy-check's own options delay, retryWait, hostDelay, pace, stampDir and log.
  * Returns { url, read, reason, view, browser_status, reader_words, planted, flagged, partly, missed, source_only }.
  */
 export async function plantTest(url, options = {}) {
   const root = options.root || fs.mkdtempSync(path.join(os.tmpdir(), 'unit-forge-plant-'))
   const quiet = { root, log: options.log || (() => {}), ...(options.delay === undefined ? {} : { delay: options.delay }),
     ...(options.retryWait === undefined ? {} : { retryWait: options.retryWait }), ...(options.hostDelay ? { hostDelay: options.hostDelay } : {}),
-    ...(options.pace ? { pace: options.pace } : {}) }
+    ...(options.pace ? { pace: options.pace } : {}), ...(options.stampDir === undefined ? {} : { stampDir: options.stampDir }) }
   const out = { url, read: false, reason: null, view: null, browser_status: null, reader_words: 0, planted: [], flagged: [], partly: [], missed: [], source_only: false }
   try {
     // 1. The copy-check fetches the page its own way.
@@ -124,7 +130,7 @@ export async function plantTest(url, options = {}) {
     let browserSaw = 'no browser was used' // what the browser gave, for the reason when there is no reader's view
     const isWiki = cached.format === 'wikitext'
     if (options.lines) { lines = options.lines; out.view = options.view || VIEW_BROWSER }
-    if (!lines && NO_BROWSER.has(new URL(url).hostname)) browserSaw = 'the site\'s terms do not allow a browser'
+    if (!lines && covers(NO_BROWSER, new URL(url).hostname)) browserSaw = 'the site\'s terms do not allow a browser'
     else if (!lines && options.browser) {
       try {
         const seen = await (options.browserLines || browserLines)(options.browser, url)
