@@ -390,16 +390,44 @@ function paceKey(u, state) {
 
 // Between processes: one small file per site says when the site was last answered and whether a request is on its
 // way. A process claims the site under a lock, so two that wake together cannot both go.
-// The folder is the user's own, so that another user of the machine cannot put something else in its place.
+// The folder sits in the system's temporary folder, which other users of the machine can write to. So it is named
+// after the user, made for this user alone, and used only when it is a real folder (not a link) that belongs to
+// this user; and no pacing file is ever written through a link (stampFolder, writeStamp).
 const userName = () => { try { return os.userInfo().username.replace(/[^A-Za-z0-9._-]+/g, '_') } catch { return 'user' } }
 export const STAMP_DIR = path.join(os.tmpdir(), `unit-forge-pace-${userName()}`)
 const BUSY_MS = 35000 // a request in flight holds the site this long at most (the request's own limit is 30 s)
 
+/**
+ * The folder for the pacing files when it is safe to use, or null: then requests are not paced between processes.
+ * It is made for this user alone when it is missing. A link put in its place, or a folder that belongs to another
+ * user, is refused; a folder of this user that others can write to is closed to them.
+ */
+export function stampFolder(dir = STAMP_DIR) {
+  try {
+    fs.mkdirSync(dir, { recursive: true, mode: 0o700 })
+    const st = fs.lstatSync(dir)
+    if (!st.isDirectory()) return null
+    if (typeof process.getuid === 'function') { // not on Windows, where the temporary folder is the user's own
+      if (st.uid !== process.getuid()) return null
+      if (st.mode & 0o022) fs.chmodSync(dir, 0o700)
+    }
+    return dir
+  } catch { return null }
+}
+
+// Writes a pacing file: a new file of this process's own (never one that is already there, so never through a
+// link), then moved over the old one. Pacing is best effort: when that fails twice, the file stays as it was.
 function writeStamp(file, value) {
   const tmp = `${file}.${process.pid}`
-  try { fs.writeFileSync(tmp, JSON.stringify(value)); fs.renameSync(tmp, file) } catch {
-    try { fs.writeFileSync(file, JSON.stringify(value)) } catch { /* pacing is best effort when the folder is not writable */ }
-    try { fs.unlinkSync(tmp) } catch { /* nothing to clean */ }
+  for (let i = 0; i < 2; i++) {
+    try {
+      const fd = fs.openSync(tmp, 'wx', 0o600)
+      try { fs.writeSync(fd, JSON.stringify(value)) } finally { fs.closeSync(fd) }
+      fs.renameSync(tmp, file)
+      return
+    } catch {
+      try { fs.unlinkSync(tmp) } catch { /* nothing to clean */ }
+    }
   }
 }
 
@@ -409,9 +437,9 @@ export const stampFile = (site, dir = STAMP_DIR) => path.join(dir, site.replace(
 // Takes the lock beside a stamp file: the open file, or null when no lock can be made in this folder.
 async function lockStamp(lock, tries = Infinity) {
   for (let i = 0; i < tries; i++) {
-    try { return fs.openSync(lock, 'wx') } catch (e) {
+    try { return fs.openSync(lock, 'wx', 0o600) } catch (e) {
       if (e.code !== 'EEXIST') return null
-      try { if (Date.now() - fs.statSync(lock).mtimeMs > 120000) fs.unlinkSync(lock) } catch { /* another process removed it */ }
+      try { if (Date.now() - fs.lstatSync(lock).mtimeMs > 120000) fs.unlinkSync(lock) } catch { /* another process removed it */ }
       await sleep(50)
     }
   }
@@ -430,7 +458,7 @@ function sweepStamps(dir) {
   try {
     for (const f of fs.readdirSync(dir)) {
       const file = path.join(dir, f)
-      if (Date.now() - fs.statSync(file).mtimeMs > 24 * 3600 * 1000) fs.unlinkSync(file)
+      if (Date.now() - fs.lstatSync(file).mtimeMs > 24 * 3600 * 1000) fs.unlinkSync(file)
     }
   } catch { /* best effort */ }
 }
@@ -438,7 +466,7 @@ function sweepStamps(dir) {
 // Waits until the site is free and its last answer is at least `gap` ms old, then marks a request as on its way.
 async function claimSite(dir, site, gap) {
   const file = stampFile(site, dir), lock = `${file}.lock`
-  try { fs.mkdirSync(dir, { recursive: true }) } catch { return null }
+  if (stampFolder(dir) === null) return null // not a folder of this user's own: go on without pacing between processes
   sweepStamps(dir)
   for (;;) {
     const fd = await lockStamp(lock)

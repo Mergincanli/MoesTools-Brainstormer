@@ -11,7 +11,7 @@ import { describe, it, after } from 'node:test'
 import {
   REPO_ROOT, MAX_NETWORK_FAILURES, NO_POST_TEXT, ONLY_MATCHED_NOTHING, cachePath, copyCheck, exitCode, formatCopyReport, markdownBlocks, noteFiles,
   noteTexts, pageGrams, pageText, pageTexts, sourceOnly, steamFeedLines, steamNewsText, urlsIn, covers, hostPause, refusal, HOST_MIN_DELAY, RESTRICTED, RESTRICTED_SITES,
-  SOURCE_ONLY_CACHE, SOURCE_ONLY_OFFLINE, USER_AGENT,
+  SOURCE_ONLY_CACHE, SOURCE_ONLY_OFFLINE, USER_AGENT, stampFile, stampFolder,
 } from '../scripts/copy-check.mjs'
 import { plantTest } from '../scripts/plant.mjs'
 
@@ -716,5 +716,47 @@ describe('copy-check: pauses, contacts and cache-only pages', () => {
     assert.equal(log.filter(e => e.path.startsWith('/api.php')).length, 1, 'the page was not fetched again')
     assert.equal(res.partly.length, 0)
     assert.equal(res.findings.length, 1)
+  })
+})
+
+// The pacing files sit in the system's temporary folder, which other users of a machine can write to: the folder
+// must be this user's own, and nothing may be written through a link that someone put there.
+describe('copy-check: the folder of the pacing files', () => {
+  const posix = typeof process.getuid === 'function'
+  const scratch = () => { const d = fs.mkdtempSync(path.join(os.tmpdir(), 'unit-forge-stamp-')); tmpDirs.push(d); return d }
+  const page = (req, res) => res.end('<p>A page with a few plain words on it.</p>')
+
+  it('makes the folder for this user alone, and closes one of the user\'s own that others could write to', { skip: !posix }, () => {
+    const dir = path.join(scratch(), 'pace')
+    assert.equal(stampFolder(dir), dir)
+    assert.equal(fs.statSync(dir).mode & 0o777, 0o700)
+    fs.chmodSync(dir, 0o777)
+    assert.equal(stampFolder(dir), dir)
+    assert.equal(fs.statSync(dir).mode & 0o777, 0o700)
+  })
+
+  it('refuses a link put where the folder should be, and still reads the page, with no pacing file', { skip: !posix }, async () => {
+    const base = scratch(), elsewhere = path.join(base, 'elsewhere'), dir = path.join(base, 'pace')
+    fs.mkdirSync(elsewhere)
+    fs.symlinkSync(elsewhere, dir)
+    assert.equal(stampFolder(dir), null)
+    const site = await server(page)
+    const res = await copyCheck({ ...quick(tempRepo([`${site.base}/p`])), hostDelay: {}, stampDir: dir })
+    assert.equal(res.pagesChecked, 1)
+    assert.deepEqual(fs.readdirSync(elsewhere), [], 'a pacing file was written through the link')
+  })
+
+  it('never writes a pacing file through a link that sits at its temporary name', { skip: !posix }, async () => {
+    const base = scratch(), dir = path.join(base, 'pace'), other = path.join(base, 'someone-elses-file.txt')
+    fs.writeFileSync(other, 'keep me')
+    fs.mkdirSync(dir, { mode: 0o700 })
+    const site = await server(page)
+    const stamp = stampFile(new URL(site.base).host, dir)
+    fs.symlinkSync(other, `${stamp}.${process.pid}`) // where this process writes before it moves the file in place
+    const res = await copyCheck({ ...quick(tempRepo([`${site.base}/p`])), hostDelay: {}, stampDir: dir })
+    assert.equal(res.pagesChecked, 1)
+    assert.equal(fs.readFileSync(other, 'utf8'), 'keep me')
+    assert.equal(fs.lstatSync(stamp).isFile(), true, 'the pacing file is a plain file of its own')
+    assert.ok(JSON.parse(fs.readFileSync(stamp, 'utf8')).last > 0)
   })
 })
