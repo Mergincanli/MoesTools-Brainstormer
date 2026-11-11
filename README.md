@@ -71,7 +71,7 @@ Options go after `--`, for example `npm run copy-check -- --offline`:
 |---|---|
 | `--offline` | Uses cached pages only; pages not in the cache are listed as not checked. |
 | `--min-words N` | The shortest shared run to report (default 6). |
-| `--only <part of a URL>` | Checks only the pages whose URL contains this text; can be given more than once. |
+| `--only <part of a URL>` | Checks only the pages whose URL contains this text; can be given more than once. A full address that nothing cites is fetched (or listed as not checked), and a text that matches no cited, linked or cached page is listed as not checked. |
 | `--max-fetch N` | Fetches at most N pages in this run; the rest are listed as not checked. |
 | `--refresh` | Fetches pages again even when they are cached. |
 | `--delay MS` | The pause between requests, in milliseconds (default 1500). |
@@ -85,4 +85,4 @@ It ends with one of these exit codes, so a script can tell the results apart:
 | 0 | Every cited page was checked and no record shares a run of words with a page it cites (and no note, with `--also`, shares one with any page). |
 | 1 | Shared runs were found (`FOUND` lines); rewrite them in your own words. Pages that were not checked are listed too. |
 | 2 | Bad options, an `--also` folder that does not exist, or a `.json` file under it that is not valid JSON. |
-| 3 | No shared runs were found, but some pages were not checked (`INCOMPLETE` line): offline and not cached, over `--max-fetch`, an HTTP error or no network. The check is not finished; run it again with the network, or fix the URLs listed. |
+| 3 | No shared runs were found, but some pages were not checked (`INCOMPLETE` line): offline and not cached, over `--max-fetch`, an HTTP error or no network, a Steam news page that holds no post, or an `--only` text that matched nothing. The check is not finished; run it again with the network, or fix the URLs listed. Running again does not help for a Steam page with no post (a placeholder, or a post the store serves empty): name it in the report. |

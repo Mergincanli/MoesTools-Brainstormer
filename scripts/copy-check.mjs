@@ -21,6 +21,8 @@
 // when the site gives one). A dropped connection, a timeout or a temporary DNS failure is tried again at
 // most twice; other network errors are not retried. After three network failures in a row the network
 // counts as unavailable: nothing more is fetched and the remaining uncached pages are listed as not checked.
+// A Steam news post is read from the page's data attribute (its markup holds only the store's frame), and web
+// addresses in a record's prose are not wording.
 //
 // This needs the network, so CI does not run it: research agents and checkers run it by hand. Behind a
 // proxy it needs Node.js 22.21 or newer (see rerunWithProxy below).
@@ -29,7 +31,8 @@
 //   root               the repository to check (default: this one)
 //   --offline          use cached pages only; uncached pages are listed as not checked
 //   --min-words N      shortest shared run to report (default 6)
-//   --only TEXT        only check pages whose URL contains TEXT (repeatable)
+//   --only TEXT        only check pages whose URL contains TEXT (repeatable); a full address that nothing cites is
+//                      fetched (or listed as not checked), and a TEXT that matches nothing is listed as not checked
 //   --max-fetch N      fetch at most N pages from the network in this run; the rest count as not checked
 //   --refresh          fetch again even when a page is cached
 //   --delay MS         pause between network requests (default 1500)
@@ -40,7 +43,8 @@
 //   1  shared runs were found (FOUND lines; pages that were not checked are listed as well)
 //   2  bad arguments, an --also folder that does not exist, or a file under it that is not valid JSON
 //   3  no shared runs were found, but some pages were not checked (offline and not cached, over
-//      --max-fetch, an HTTP or network error, or the network unavailable), so the check is incomplete
+//      --max-fetch, an HTTP or network error, the network unavailable, a Steam news page that holds no post,
+//      or an --only TEXT that matched nothing), so the check is incomplete
 import crypto from 'node:crypto'
 import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'

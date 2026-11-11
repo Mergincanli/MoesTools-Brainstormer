@@ -55,8 +55,10 @@ Written on 10 November 2026, when the project moved from the session that ran it
 | ef2460e | R3 patterns: 33 proposed pattern files and the units' links |
 | 8e1746f, 9ce1f96, 6556887 | R3 checker: the seed, the 23 confirmed fixes, the record |
 | e05e5c4 | R3 rule problems (18 settled) and the report |
+| 7142f5c | Handoff updated; the saved work in progress deleted |
+| bc3d69a, 43f6abb | R3 final review: the 40 confirmed findings fixed, and the findings recorded |
 
-CI runs four check jobs on every push; it was green on each head it has finished on. `npm run check:merge` passes, with 297 of 297 tests.
+CI runs four check jobs on every push; it was green on each head it has finished on. `npm run check:merge` passes, with 305 of 305 tests.
 
 ## 3. Batch R3 in detail
 
@@ -85,28 +87,29 @@ CI runs four check jobs on every push; it was green on each head it has finished
 2. **Patterns** (ef2460e): 33 proposed pattern files, 16 of them new ids, each checked by a skeptic; the units link them. Record: `research/r3/patterns/`.
 3. **Checker** (8e1746f, 9ce1f96, 6556887): seed `r3-2026-11-11`; every game passes; 23 confirmed fields fixed. Record: `research/r3/checker/`.
 4. **Rule problems and report** (e05e5c4): `research/r3/rule-problems.md` and `research/r3/README.md`.
+5. **Final review** (bc3d69a, 43f6abb): 48 findings, 40 confirmed, 8 answered. A follow-up check on the fixes confirmed 10 more. All are fixed but one, a line of the plan that waits for Mustafa (pull request #6, item 2). The copy-check now reads Steam news posts. Record: `research/r3/review/` and the report's "Copied wording".
 
 **What is left:**
 
-1. **The final review** (runbook section 7), then `verify-fixes.js`.
-2. **Checks and claims check** (section 8): the online copy-check in three parts, the PDF manuals by hand, the local-path search, then the claims check on the report and the pull-request description.
-3. **Merge** (section 9): only when every gate passes, and only with Mustafa's approval of pull request #6, which also holds the plan change.
-4. **Then R4** (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech), from its prep.
+1. **The claims check** (runbook section 8) on the report and the pull-request description, then its recheck, then posting the description.
+2. **Merge** (section 9): only when every gate passes, and only with Mustafa's approval of pull request #6, which also holds the plan change.
+3. **Then R4** (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech), from its prep, and only when Mustafa says so. Before any fill, test the copy-check on one page from each site R4 will cite, and show that it reads the page's real text.
 
 **Known and left alone:** `npm run copy-check -- --offline --also data/units` finds coincidental six-word runs in R1's units (13 on 11 November 2026; the count depends on the cache), against pages that other records cite or name, most of them cited by R1's own pattern files, such as "while it is in the air" (Halopedia's Plasma grenade page, cited by throw-explosive). None is a page those units cite, and none is in R3's units.
 
 ## 4. What waits for Mustafa (pull request #6, "Decisions needed")
 
-1. Approve the plan change. The pull request now also holds R3's units, which the checker has not re-checked yet. The recommendation (A) is to approve the plan now and merge once R3 has passed its checks.
-2. The StarCraft II count: about 15 units, 5 per race.
+1. Approve the plan change and merge. R3 has passed its checker and its final review. His approval also covers a one-line wording change in `schemas/game.schema.json` (no rule changes); the merge commit message records it.
+2. The StarCraft II count: about 15 units, 5 per race (A, recommended: keep it; B: another number before R4's prep). The plan lists this count among his answers of 24 October, but the saved record of that day has no count; the plan's line stands until he says which it is.
 3. The five questions from R3's prep. Coding follows the recommended answers:
    - the Generals tier map (A, keep it);
    - Generals lasers (A, follow the game's damage types);
    - Purpose lines for generals' versions (A);
-   - Tempest Rising's "air control" and "zone control" (A, they name no role);
+   - Tempest Rising's "air control" and "zone control" (A now: they name no role; then C: write that into the word list at the rule-fix round);
    - Iron Harvest's "mech hunter" (B, add to anti-armour at the rule-fix round).
-4. Night decisions N1 to N4 (above), each reversible.
-5. For the rule-fix round after R4, no answer needed now: the walker body-plan tie-break and the confidence rule (`research/r3/opening/splits.json`).
+4. Taken during the batch with the recommended option, each reversible: night decisions N1 to N4 (above), the consistency check's fixes, three choices about the new patterns, the Vimana's second roles and 18 settled rule problems. The report's "Decisions" lists them.
+5. Left for him at the pattern review (plan step 4): whether to fold `stack-to-overload` into `freeze-and-shatter`.
+6. For the rule-fix round after R4, no answer needed now: the 83 rule problems in `research/r3/rule-problems.md`, among them the walker body-plan tie-break and the confidence rule (`research/r3/opening/splits.json`).
 
 ## 5. How the work is done
 
@@ -131,7 +134,7 @@ The procedure is [docs/research-runbook.md](research-runbook.md): its sections 1
 ## 7. First steps in the new session
 
 1. Make sure the Claude GitHub app can reach `Mergincanli/MoesTools-Brainstormer`, with push access.
-2. Run `npm install` (Node.js 22 or newer), then `npm run check:merge`. It should pass 297 of 297 tests.
+2. Run `npm install` (Node.js 22 or newer), then `npm run check:merge`. It should pass 305 of 305 tests.
 3. Check out `claude/quirky-cray-tih1w4` at this handoff commit or later.
 4. Read this file, CLAUDE.md and the runbook.
 5. Go on with section 3, "What is left".

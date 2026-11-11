@@ -207,10 +207,10 @@ The pilot used this shape (research/pilot/README.md, Final review).
 3. `npm run check:merge`.
 4. The online copy-check, in three parts, each with zero FOUND lines:
    1. `npm run copy-check -- --also research/r<N> --also research/registry-notes`. Every record file lists the URLs of the pages its agent read, so the check fetches them.
-   2. For each page named in the batch's uncertain entries but not cited, run `npm run copy-check -- --also data/units --only <url>` and read the FOUND lines on the batch's units. If the run ends INCOMPLETE with "--only matched no cited, linked or cached page", the URL matched nothing: copy it exactly from the entry.
+   2. For each page named in the batch's uncertain entries but not cited, run `npm run copy-check -- --also data/units --only <url>` and read the FOUND lines on the batch's units. A page named only by title counts too: give its full address. If the run ends INCOMPLETE, read its NOT CHECKED line. For a full address it gives the fetch error (or "offline and not cached"); for a part of an address it gives "--only matched no cited, linked or cached page". Either way, compare the URL with the entry, copy it exactly, and run again.
    3. For every cited PDF or wiki `File:` page (the cache holds only the page's licence text; list them with `grep -rhoE '"url": "[^"]*(\.pdf|/wiki/File:)[^"]*"' data/units data/patterns research/r<N> | sort -u`), extract the text with `pdftotext`. Compare it with the prose that cites it using a six-word check (copy-check's `words`, `grams` and `sharedRuns`). List each one in the report as checked by hand.
 
-   The report lists every page that could not be fetched, with the reason. `https://cnc.fandom.com/wiki/`, `https://iron-harvest.fandom.com/wiki/`, `.../CnC_Remastered_Collection/master/REDALERT/` and `.../GameFilesOriginalZH/Data/INI/` always appear there: they are placeholders or folders in the notes, not pages.
+   The report lists every page that could not be fetched, with the reason. `https://cnc.fandom.com/wiki/`, `https://iron-harvest.fandom.com/wiki/`, `.../CnC_Remastered_Collection/master/REDALERT/`, `.../GameFilesOriginalZH/Data/INI/` and `https://store.steampowered.com/news/app/1486920/view/` (the notes' pattern for Steam posts, listed as a Steam news page that holds no post text) always appear there: they are placeholders or folders in the notes, not pages.
 5. A search of the record for local paths: `grep -rnE "file://|/home/user|/tmp/|scratchpad" research/r<N>`.
 
 **`research/r<N>/README.md` contains:**
