@@ -70,7 +70,7 @@ CI runs four check jobs on every push; it was green on each head it has finished
 **The record so far** ([research/r3/](../research/r3/)):
 - `prep/`: the trim and the editors' changes;
 - `opening/`:
-  - the opening check (54 of 56 fields agreed);
+  - the opening check (54 of the 56 measured fields reached 80% agreement);
   - the drafted fixes for its two splits (`splits.json`);
   - the reconciled entries;
 - `fill/`: one folder per job (unit file and report) and `hesitations.md`, with 416 hesitations, 90 gaps and 128 unclear rules.
