@@ -163,6 +163,6 @@ The 33 files carry 162 open questions between them. Most are design questions fo
 | The two Generals manuals, by hand | no shared run |
 | Local paths in the record | none |
 
-The copy-check first found shared runs in the record only: the skeptics had quoted pages in their evidence. 55 such wordings in [result.json](result.json) and 4 mentions of a page title in the merge record were reworded, text only. It found none in the pattern files or the units.
+The copy-check first found shared runs in the record only: the skeptics had quoted pages in their evidence. 56 such wordings in [result.json](result.json) and 4 mentions of a page title in the merge record were reworded, text only (the last one after the checker fetched a page nothing had cached before). It found none in the pattern files or the units.
 
 Not checked: 36 addresses this machine cannot reach, the same as in the merge pass. They are 23 pages of modenc.renegadeprojects.com and 8 of web.archive.org (batch R1's notes and one Generals page), one tempestrising.com page, and four placeholder or folder addresses.
