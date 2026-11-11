@@ -155,7 +155,16 @@ Meanwhile the units are coded by the current rules, and the coders recorded thei
 
 - Each research agent ran the copy-check on its own file before finishing, and each record was checked again when it was committed. The agents' reports and the skeptics' evidence often quote pages, so the rewording was in the record's text and in a few notes, never in a coded value.
 - **The game manuals, by hand.** The copy-check cannot read PDFs, so the text of the two cited manuals (the Generals manual and the Zero Hour manual) was extracted and compared, six words at a time, with every prose string in the units, the patterns, the registry notes and the record. The few runs found during the batch were reworded; none is left.
-- **The online copy-check** on the data, the whole record and the registry notes (`npm run copy-check -- --also research/r3 --also research/registry-notes`) finds no shared run in the 1173 pages it could read. 36 addresses could not be read from this machine, and no R3 unit or pattern cites any of them: 23 ModEnc pages, which refuse the request, and 8 archived pages on web.archive.org, which resets the connection (batch R1's notes and one Generals page); one page of tempestrising.com that no longer exists; and four placeholder or folder addresses in the notes, which are not pages.
+- **Steam news posts.** The final review found that the copy-check had never read them: Steam draws a post with a script, so the check saw only the store's page frame. Thirteen such posts are cited by the nine Tempest Rising units. The check now reads the post itself (bc3d69a), and every run below includes them.
+- **The full online copy-check** (runbook section 8, step 4) ran in three parts on bc3d69a, after the final review's fixes:
+  1. **The data, the whole record and the registry notes** (`npm run copy-check -- --also research/r3 --also research/registry-notes`): no shared run in the 1171 pages it could read. 38 addresses could not be read, and no R3 unit or pattern cites any of them:
+     - four placeholders or folders in the notes, not pages: `https://cnc.fandom.com/wiki/`, `https://iron-harvest.fandom.com/wiki/`, the `REDALERT/` folder of EA's source-code release and the `Data/INI/` folder of the Generals 1.04 files;
+     - 23 ModEnc pages, which refuse the request (HTTP 403); batch R1's notes name them;
+     - 8 archived pages on web.archive.org, where the connection is reset: seven pages of the official Red Alert 2 site (batch R1's notes) and the official Generals home page (this batch's notes);
+     - `https://tempestrising.com/factions/tempest-dynasty`, which no longer exists; the Line Officer's uncertain entry names it;
+     - two Steam news addresses that hold no post: the news index of Tempest Rising, a placeholder in the notes, and one Company of Heroes 3 post in the games registry, whose page came back empty.
+  2. **The 159 pages named in the batch's uncertain entries but not cited** (`npm run copy-check -- --also data/units --only <url>` for each): no shared run with an R3 unit. One of the 159 could not be read: the tempestrising.com page above. The run does find one coincidental six-word run, in two weapon summaries of a Red Alert 3 unit of batch R1, against a Tempest Rising page that unit never cited.
+  3. **The two cited manuals:** the hand check above, with no shared run.
 
 ## Decisions
 

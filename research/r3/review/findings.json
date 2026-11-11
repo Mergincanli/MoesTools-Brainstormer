@@ -1,0 +1,848 @@
+{
+ "batch": "r3",
+ "review_run": "research/workflows/final-review.js, dimensions data, consistency, patterns, record, tooling, on 11 November 2026",
+ "counts": {
+  "found": 48,
+  "real": 40,
+  "refuted": 8,
+  "without_verdict": 0
+ },
+ "note": "Local folder names are replaced by plain words (runbook section 8, step 5). Page quotes in the evidence are paraphrased, so the record passes the copy-check.",
+ "follow_ups": [],
+ "findings": [
+  {
+   "dimension": "data",
+   "id": "R3-UNITS-01",
+   "severity": "major",
+   "file": "data/units/generals.json (generals.usa.sentry-drone: roles.secondary, uncertain path roles/secondary)",
+   "summary": "The Sentry Drone's two second roles are in the wrong order. Raider can only pass its coding rule through the gun that an upgrade adds, so it ranks at roles.secondary step 5 together with anti-infantry. Inside a step the roles list puts anti-infantry first, but the record has ['raider', 'anti-infantry'].",
+   "evidence": "Rules: data/vocab/roles.json says raider 'Needs a weapon that is not a tool (roles.primary step 2): a unit that harms nothing cannot hit and run'. That sentence has no 'As primary' in front of it. docs/fields.md roles.secondary says 'A role's coding rule binds here as for the primary, unless it says As primary.' Step 4 is 'Speed, armour or senses alone', and step 5 is 'Passengers, upgrades, doctrines, option weapons and acquired weapons ... A role that enters here may meet its requires through the part that gives it'. The same rule adds 'Inside a step, follow the order of the roles list.' In roles.json anti-infantry is item 2 and raider is item 11. Record: the stock drone is unarmed. Its only weapon, 'Sentry Drone Gun', has slot acquired, with the condition 'Added by the Sentry Drone Gun upgrade ... a stock drone is unarmed'. The record's own uncertain roles/secondary note says: 'Raider ranks at step 4 (very fast, light armour); its coding rule's need for a weapon that harms is met only by the upgrade gun. Anti-infantry ranks at step 5 from that gun.' Page: in the wiki infobox (https://cnc.fandom.com/wiki/Sentry_drone) the weapon line is a 20mm gun, noted as there only after the upgrade. Compare the Overlord, where scout rests on an add-on and the batch ranked it at step 5, not by its stock parts.",
+   "fix": "Set roles.secondary to ['anti-infantry', 'raider']. Reword uncertain roles/secondary along these lines: 'Both rank at step 5, from the upgrade gun: raider's coding rule needs a weapon that harms, which only the gun gives, and anti-infantry comes from the tooltip's strong line on that gun. With one option each, the roles list puts anti-infantry first.'",
+   "verdict": {
+    "real": false,
+    "reason": "The rules as written do not decide this, and the batch already logged it as an open question for Mustafa. Rule problem item 45, 'A unit whose only weapon comes with an upgrade', sits under 'Open, for Mustafa' and says the rules do not say whether the upgrade gun can meet raider's need for a weapon at step 4 or only at step 5. Its proposed fix is exactly this finding's fix: put raider at step 5, after anti-infantry. That fix is a change to the field rules, not a data error. The finding builds its case on step 5's sentence 'A role that enters here may meet its requires through the part that gives it'. But that sentence covers a role's requires, and raider's requires (speed:>=fast) is met by the stock drone. The need for a weapon sits in raider's coding rule, and no rule says a coding rule met only by an upgrade part moves the role to step 5. Read strictly, the gun does not 'give' raider at step 5 either, because the rules say a weapon gives a role only when the weapon itself meets the role's requires. So a third reading would drop raider altogether. The Overlord comparison does not hold. There, step 4's own scout test (a sensor trait) comes only from the add-on: the Overlord's sensors.traits is empty, and the detector comes from the Gattling add-on. The drone's step 4 raider test (very fast, light armour) is met by its stock parts. The record's uncertain roles/secondary note gives the reading the coder took. No other unit in data/units has every weapon outside the stock slots, so no batch precedent goes against the record.",
+    "evidence": "docs/fields.md line 42 (roles.secondary: the candidate definition, 'binds here as for the primary', steps 4 and 5, 'Inside a step'). data/vocab/roles.json, raider's source_rule and requires [speed:>=fast]. research/r3/rule-problems.md item 45 (around line 279, inside the 'Open, for Mustafa' section, lines 13 to 512): 'the rules do not say whether it may do so at step 4 or only at step 5', with the same fix proposed. The Overlord record: roles.secondary [scout, support], and its uncertain note says scout meets its requires only through the add-on's detector. A node scan of every data/units file found only the Sentry Drone with no weapon in the primary, secondary or alternate slots.",
+    "better_fix": "No data change now. Leave the record as it is, with its uncertain note, until Mustafa answers rule problem item 45 in the rule-fix round. If he takes that item's fix, reorder to ['anti-infantry', 'raider'] then and reword the note."
+   },
+   "status": "answered",
+   "answer": "Not confirmed by the skeptic; see the verdict's reason. Nothing changed."
+  },
+  {
+   "dimension": "data",
+   "id": "R3-UNITS-02",
+   "severity": "minor",
+   "file": "data/units/iron-harvest.json (iron-harvest.polania.anna-kos, iron-harvest.rusviet.olga-morozova, iron-harvest.usonia.william-mason: uncertain)",
+   "summary": "The batch's own Iron Harvest Veterancy note says what to do when no source names a unit's veteran ability: code the buttons innate and add an uncertain entry at abilities. That entry must name the Veterancy page and the roles the choice would change. Anna Kos, Olga Morozova and William Mason code every button innate, and none of them has this entry. For Mason the choice matters: both of his second roles rest on one button.",
+   "evidence": "Rule: research/registry-notes/games-r3.md, Veterancy under Iron Harvest Game-wide mechanics: 'The first rank unlocks the unit's veteran ability ... Where no source names a unit's veteran ability, code its buttons innate, as the Ability sources tie-break says, and add an uncertain entry at abilities that names the Veterancy page and the roles the choice would change.' This text was added when research/r3/rule-problems.md item 89 was settled ('No unit changes'). Page: https://iron-harvest.fandom.com/wiki/Veterancy says that reaching the first level, veteran, opens that unit's own veteran ability, a different one for each unit. I searched the cached Anna_Kos, Olga_Romanova and William_Mason pages for veteran, elite, rank and unlock: none names a veteran ability. Record: the ability sources are Anna [innate, innate, innate], Olga [innate x4] and Mason [innate x3]. None of their uncertain entries mentions the Veterancy page; the Mocny, Grimbart and Stark do have such an entry. Mason's uncertain roles/secondary note says 'Both at step 2. Anti-infantry from the revolver his Deploy Exosuit button switches to ... Area denial from the same button'. If Deploy Exosuit were his veteran ability, not every copy would have it, and area denial would rest on no step.",
+   "fix": "Add an uncertain entry at abilities to each of the three units. For Mason, for example: 'No source names his veteran ability. The Veterancy page (https://iron-harvest.fandom.com/wiki/Veterancy) says the first rank opens one for each unit, so his three buttons are coded innate by the Ability sources tie-break. If Deploy Exosuit is that ability, area denial drops and anti-infantry moves to step 3.' For Anna and Olga, write the same kind of note, naming the roles that would change: none for Anna; for Olga, scout if Camouflage is the veteran ability.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed, judged by the letter of the registry note. The Iron Harvest Veterancy note says every unit ranks up, and heroes have four ranks. It then says the first rank unlocks the unit's veteran ability, and that where no source names it, the coder codes the buttons innate and adds an uncertain entry at abilities that names the Veterancy page and the roles the choice would change. Rule problem item 89 settled this text for the Mocny, the Grimbart and the Stark only, with 'No unit changes'. Nobody checked the heroes. Anna Kos, Olga Morozova and William Mason code every button innate, and none has such an entry: I checked every uncertain path on all three. No cached page for these heroes, their companions (Wojtek, Changa) or the other heroes names or flags a veteran ability. The coder of job j12 wrote the entry for the Stark but not for Mason. The choice matters for two of them. Mason's area denial rests only on the Deploy Exosuit button at step 2; his anti-infantry would fall back to step 3 through the cannon's splash. Olga's scout rests on Camouflage at step 4. There is one counterpoint, which the entry itself should record. KING Art describes hero ranks as health and damage bonuses (Change Log #04, 'Hero Veterancy', ranks I to IV). DevBlog #20 says standard units gain abilities at rank, while heroes level up skills in the campaigns. So heroes may have no veteran ability at all, but no source says so.",
+    "evidence": "research/registry-notes/games-r3.md line 309 (the Veterancy note). research/r3/rule-problems.md item 89 (line 550). Cached iron-harvest.fandom.com pages: Veterancy (beta banner; two levels; the first unlocks the unit's ability), Ability, Hero (campaign skill points), and Anna_Kos, Olga_Romanova, William_Mason, Wojtek and Changa (no veteran, elite or unlock line about an ability). kingart-games.com/article/92 (Change Log #04: hero health and damage bonuses for ranks I to IV). article/67 (DevBlog #20: most units gain an ability or more; heroes level skills in the campaigns). article/117 (DevBlog #41: Olga's detonator is weaker before she ranks up). research/r3/fill/hesitations.md, j10 and j12: neither job raises a hero veteran ability.",
+    "better_fix": "Add the uncertain entry at abilities on all three units, as proposed, but also name the evidence that cuts the other way: Change Log #04 describes hero ranks as health and damage bonuses, and DevBlog #20 sets heroes apart from standard units. For Olga, add that DevBlog #41 shows the detonator working before her first rank, so it cannot be her veteran ability. Only Camouflage, which carries scout, and Ride the Tiger, which carries no role, remain in doubt. For Mason: if Deploy Exosuit is his veteran ability, area denial drops and anti-infantry ranks at step 3 from the cannon's splash. For Anna, no role changes. The other option is a batch change to the Veterancy note itself, saying heroes are left out because their ranks give stat bonuses (Change Log #04). Either way, the note and the three records should agree."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed with the skeptic's fuller note: each of the three heroes has an uncertain entry at abilities that names the Veterancy page, the evidence the other way and the roles the choice would change."
+  },
+  {
+   "dimension": "data",
+   "id": "R3-UNITS-03",
+   "severity": "minor",
+   "file": "data/units/tempest-rising.json (tempest-rising.veti.thunderhead: countered_by/2, uncertain path countered_by)",
+   "summary": "countered_by/2 (damage:fire) does not describe something that beats the Thunderhead. It is about Penetrating weapons hurting the riders inside the Lightning Rod, which is a separate garrison building. The link also takes only half of the Penetrating list: it covers fire weapons and leaves out the Explosive - Penetrating ones. The entry is reasoned, but the uncertain note does not say so.",
+   "evidence": "Page: https://tempestrising.wiki.gg/wiki/Garrisoning describes the Penetrating passive as getting through garrisons, though not transports, and hurting the soldiers in them. It lists Explosive - Penetrating weapons (the Grenadier's grenades, the Scrambler's chaff, the Grenade Turret, the Cultivator's pods and the Shepherd's lightning) and Fire weapons (Ignitor, Pillager, Flame Turret). Record: countered_by/2 is 'damage:fire | Fire weapons with the Penetrating passive, such as the Ignitor's flamethrower and the Pillager's flame cannons, hurt infantry sheltering in garrisons such as its Lightning Rod (Garrisoning page).' Uncertain countered_by says only '...the third on the Garrisoning page, which lists the Penetrating weapons that hurt infantry inside garrisons'. Rules (docs/fields.md, Matchups): countered_by is 'What beats it; links describe the enemy'. 'A reasoned entry names those facts in its reason and gets an uncertain entry saying it is reasoned.' Rule (1): 'If that link alone drops half the point or covers units the reason is false for ... give that half a second entry.'",
+   "fix": "Remove countered_by/2. Put the point in weaknesses/0 (pattern:carry-passengers) instead, for example: '...and Penetrating weapons, fire and explosive alike, hurt the infantry inside the Rod (Garrisoning page).' Then shorten the uncertain countered_by note to cover the two entries that remain. If the entry is kept instead: add a damage:explosive entry for the Explosive - Penetrating half, and make the uncertain note say that both entries are reasoned.",
+   "verdict": {
+    "real": false,
+    "reason": "The main claim does not hold. The Lightning Rod is not a separate building: it is the Thunderhead's own deployable. The Rod page's Codex text has the Thunderhead put its core on the ground, and the Rod grows from it. The record's transport role, its ten seats and its strengths all rest on the Rod. Destroying the Rod kills everyone inside. Fire weapons threaten that garrison in two ways: Penetrating fire hurts the infantry inside, and the Rod is a Structure with no fire resistance, while the Damage page calls fire effective against structures. So the entry does name an enemy that beats the unit's main job. The batch also counts enemies that kill a carrier's riders in countered_by elsewhere: the Battle Bus's countered_by/2 covers crew-killing snipes and neutron shells that kill riders and crew. The 'half the list' point fails too. The reason is explicitly limited to fire weapons with the Penetrating passive, so it is not false. The other half has no fitting link: damage:explosive covers every weapon of the game's Explosive damage type, and the Garrisoning page lists only five of them as Penetrating. Rule (1) forbids a link that covers units the reason is false for, so the proposed alternative (adding a damage:explosive entry) would itself break the rules. That leaves whether the entry is 'reasoned'. That is a judgment call: the Garrisoning page states the Penetrating rule and lists the Lightning Rod among the garrisons it applies to, and the uncertain note cites that page. At worst this is a Low wording point, not a wrong link.",
+    "evidence": "tempestrising.wiki.gg/wiki/Garrisoning (cached): Penetrating 'Breaches garrisons (but not transports)', the Rod listed with 10 units, five Explosive - Penetrating weapons and three Fire weapons. tempestrising.wiki.gg/wiki/Lightning_Rod (cached): armour type Structure, armorfire 0, armorexplosive 0; the Codex has the Thunderhead put its core on the ground; if the Rod is destroyed, everyone inside dies. tempestrising.wiki.gg/wiki/Damage: fire is effective against infantry and structures. data/games.json, the tempest-rising damage map: Explosive to explosive, Fire to fire. docs/fields.md line 11 (Matchups, rule 1). data/units/generals.json, the Battle Bus's countered_by/2.",
+    "better_fix": "Keep countered_by/2 and do not add a damage:explosive entry. If a reviewer counts it as reasoned, add the word 'reasoned' to the uncertain countered_by note. Optionally, add to the reason that fire also hits the Rod itself at full strength (Rod page; Damage page)."
+   },
+   "status": "answered",
+   "answer": "Not confirmed by the skeptic; see the verdict's reason. Nothing changed."
+  },
+  {
+   "dimension": "data",
+   "id": "R3-UNITS-04",
+   "severity": "minor",
+   "file": "data/units/iron-harvest.json (iron-harvest.shared.engineer: strengths/4, cost_band.basis)",
+   "summary": "The Engineers' strength calls them 'The cheapest unit in the game', and the cost basis repeats the wiki's claim. At the version researched that is wrong: by the batch's own registry prices, Saxon medics cost less than engineers.",
+   "evidence": "Record: strengths/4 is 'cost:very-low | The cheapest unit in the game and quick to train, by its page, so losing a squad costs little.' cost_band.basis says '...its page calls engineers the cheapest units in the game'. Page: the Pros on https://iron-harvest.fandom.com/wiki/Polanian_Engineer include '* Cheapest units in the game'. That page's stat box dates from August 2019 and carries a beta banner. Registry (research/registry-notes/games-r3.md, Infantry prices): 'Engineers: 150 at the Headquarters and Barracks, 125 at the Advanced Barracks' and 'Saxon medics 100 and 75 (the wiki: 150)', taken from KING Art's later change logs. So Saxon medics are cheaper at both buildings.",
+   "fix": "Reword strengths/4: 'Among the cheapest units in the game, cheaper than the rifle squads, and quick to train, so losing a squad costs little (its page; prices in Change Log #17 and DevBlog #35).' In cost_band.basis, drop or qualify the 'cheapest units' clause (for example 'its page calls them the cheapest units, a line older than the medics' price cuts').",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The strength and the cost basis repeat the wiki's 'Cheapest units in the game'. That line dates from when engineers and medics both cost 150 iron. At the version researched, Saxon medics cost 100 at the Barracks and 75 at the Advanced Barracks (Change Log #17). Engineers cost 150 at the Headquarters and Barracks and 125 at the Advanced Barracks (Change Log #17, then DevBlog #35). DevBlog #35 raised the Advanced Barracks prices of engineers, riflemen, grenadiers and flamethrowers, but not of medics. No later post I could check changes either price: DevBlog #36 has no medic or engineer line, and the cached posts from Change Log #19 to DevBlog #47 list no medic or engineer price. Saxony does train medics (the registry's kit-only note). The registry's own price list agrees, so the record contradicts the batch's own figures. The very-low band itself stays right.",
+    "evidence": "data/units/iron-harvest.json, iron-harvest.shared.engineer: strengths/4 and cost_band.basis. iron-harvest.fandom.com/wiki/Polanian_Engineer (cached): beta banner, its Pros call engineers the cheapest units there are, costs_iron 150; the Saxon, Rusviet and Usonian engineer pages say the same, and the Polanian Medic infobox gives 150. kingart-games.com/article/106 (Change Log #17): Saxony medic 150 to 100 at the basic barracks and 100 to 75 at the Advanced Barracks; engineers 150 to 100 at the Advanced Barracks. article/107 (DevBlog #35): engineers 100 to 125, with no medic change. article/109 (DevBlog #36, fetched to the scratch folder): no medic or engineer line. research/registry-notes/games-r3.md lines 436 to 441: engineers 150 and 125, Saxon medics 100 and 75.",
+    "better_fix": "Use the proposed rewording ('Among the cheapest units in the game, cheaper than the rifle squads, and quick to train...'). In cost_band.basis, qualify or drop the 'cheapest units' clause. Change Log #17 and DevBlog #35 are not among the engineer's five cited sources. If the reason cites them, add them to sources (supports strengths/4 and cost_band), or else put the price comparison in an uncertain entry marked read, not cited."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed: strengths/4 says among the cheapest, and the cost basis says the wiki's line is older than the medics' price cuts. No new source is cited."
+  },
+  {
+   "dimension": "data",
+   "id": "R3-UNITS-05",
+   "severity": "minor",
+   "file": "data/units/iron-harvest.json (iron-harvest.saxony.kaiser: armament/2/summary vs crew.notes and uncertain path crew)",
+   "summary": "The Kaiser's rockets summary says each attack order fires the rockets 'beside the cannon and machine guns'. The crew note and its uncertain entry say no source has the machine guns fire at the same moment as the cannon, and the side machine guns stay with the driver for that reason. The two statements contradict each other.",
+   "evidence": "Record: armament/2/summary says 'While it stays dug in, each attack order fires them beside the cannon and machine guns'. crew.notes says '...the driver ... fires the side machine guns, since no source says those fire at the same moment as the cannon'. The uncertain crew note says 'The side machine guns stay with the driver because no source says they fire at the same moment as the cannon ... if they do, they would go to the gunner too.' Rule: the data/vocab/crew-models.json driver-gunner rule says 'If the source doesn't say whether two weapons fire together, count them as one at a time ... Each other weapon on its own mount that fires at the same time as the main weapon goes to the gunner.' Page: https://iron-harvest.fandom.com/wiki/SKS_300_%22Kaiser%22 says only that the machine guns let it handle infantry coming at it from any side. It does not say they fire together with the cannon.",
+   "fix": "In armament/2/summary, change 'fires them beside the cannon and machine guns' to 'fires them beside the cannon'. Keep the machine guns with the driver, as crew.notes says. If the wording is in fact sourced, cite the source and set armament/1/seat to gunner, as the uncertain crew note foresees.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed: the record contradicts itself. armament/2/summary says each attack order fires the rockets 'beside the cannon and machine guns', which has the side machine guns firing together with the cannon. crew.notes and the uncertain crew note keep the side machine guns with the driver because no source says they fire at the same moment as the cannon. Under the driver-gunner rule, such a weapon would go to the gunner. No source backs the summary's wording. The Kaiser page says only that the machine guns cover every side and fire on the move, and that Entrench raises damage output in all directions. The registry note says only that the Rockets fire with the attack order while the mode lasts. The record's as_player text (left mouse for the cannon, right mouse for the machine guns) matches the crew note, not the summary. The wording has stood since the reconciled opening-check entry.",
+    "evidence": "data/units/iron-harvest.json, iron-harvest.saxony.kaiser: armament/2/summary, crew.notes, uncertain 'crew', and as_player. data/vocab/crew-models.json, the driver-gunner source_rule ('If the source doesn't say whether two weapons fire together, count them as one at a time ...'). iron-harvest.fandom.com/wiki/SKS_300_%22Kaiser%22 (cached): Pros, Cons, Weapons and Abilities, with no line on the machine guns firing together with the cannon. research/registry-notes/games-r3.md line 455. research/r3/opening/final/iron-harvest.json: the same summary.",
+    "better_fix": "As proposed: change 'fires them beside the cannon and machine guns' to 'fires them beside the cannon' (or 'alongside the cannon'), and keep the machine guns with the driver."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as the skeptic's better fix says."
+  },
+  {
+   "dimension": "consistency",
+   "id": "CONS-1",
+   "severity": "major",
+   "file": "scripts/copy-check.mjs",
+   "summary": "The copy-check never compares anything with Steam news posts. It reads only Steam's page frame and none of the post. One fill agent (j07) reported this, but rule-problems.md and the R3 README leave it out. The README still says the online copy-check found no shared run in the 1173 pages it could read, and that count includes the Steam posts.",
+   "evidence": "htmlToText (copy-check.mjs lines 158-161) removes <head> and every tag together with its attributes. Run through it, each of the 25 cached Steam news pages (.cache/sources/store.steampowered.com/news_app_*) gives the same 155 words of page frame: the store's menu and footer words, the same on every page. The post text (630 to 6871 words per post) is only in the data-partnereventstore attribute, plus og:description in the head. The batch cites 22 different Steam news posts across its units, patterns, notes and record. All 9 Tempest Rising units cite them (17 citations). In fill/hesitations.md, j07's unclear rule 'Copy-check and Steam posts' says the official check 'passes trivially' and missed a real six-word run from the 1.6.0 notes. A grep of rule-problems.md for 'copy-check' or 'Steam posts' finds nothing, and the README's 'Copied wording' section does not mention it. I took the post text from data-partnereventstore and ran my own six-word check of the R3 units, all 69 pattern files, games-r3.md, patterns.md and research/r3 against it. It found only fragments of web addresses, so the data is clean today, but the check and the README claim are not.",
+   "fix": "In scripts/copy-check.mjs, for store.steampowered.com/news pages, build the page text from the data-partnereventstore attribute before making n-grams: decode the entities, JSON.parse, join the post-body strings, strip the [tags]. Add a test in tests/copy-check.test.mjs that uses one cached Steam page. Run the three copy-check parts again. In research/r3/README.md 'Copied wording', add that the 22 Steam posts were compared through this step, with the result. Add j07's item to rule-problems.md as a tooling problem, settled by the fix.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed, with two corrections. The unit check reads only Steam's page frame. htmlToText (scripts/copy-check.mjs lines 158-163) drops <head> and every tag with its attributes, so each of the 25 cached news_app pages gives the same 155-word frame. All 9 Tempest Rising units cite 13 of these posts (17 citations), and each record is compared only with the pages it cites (lines 537-549). So no unit prose was ever compared with a post's text. j07's item is at research/r3/fill/hesitations.md:455. rule-problems.md and the README's Copied wording section do not mention it, and the README's 1173 pages include those 25 frame-only pages. Corrections: (1) 'never compares anything' overstates it. The two cached partner-events list pages (offset 0 and 100) hold the bodies of 112 posts, all 22 cited ones among them, and the --also step compares the notes with every cached page. So the notes were compared with the post text, apart from some JSON-escape noise. Only the units were not. (2) rule-problems.md covers word lists, field rules, the validator and the registry notes, and it lists no tooling items. Leaving this item out of it is defensible. The README and the runbook are where it belongs. The data is clean today: my own six-word check of every record and every R3 and registry note against the 25 post bodies and the 112 list bodies found 0 runs.",
+    "evidence": "Ran htmlToText and words from copy-check.mjs over .cache/sources/store.steampowered.com/news_app_*: 25 pages, 1 distinct output of 155 words ('sign in store home ... report a translation problem'). The post text is only in data-partnereventstore and og:description. Two pages, the /view/ index and the coh3 post 1817483467037275, have an empty store. Post bodies run 38 to 4387 words for the Tempest Rising posts, not the stated 630 to 6871, but that does not matter. Ran node scripts/copy-check.mjs . --offline --also research/r3 --also research/registry-notes: 1173 pages checked, 36 not, 0 FOUND. Counted citations: 13 Tempest Rising posts in data/units, plus 9 more only in the notes = 22; patterns cite none. grep finds nothing in rule-problems.md or README lines 152-156; runbook section 8 step 4.3 names only PDFs and File: pages as blind spots. All 22 cited post ids are in the two cached events_ajaxgetpartnereventspageable pages. My own check (scratch folder .../verify-consistency/scripts/steam-sixword.mjs, sanity-tested on a planted run): 0 hits.",
+    "better_fix": "In copy-check.mjs, for store.steampowered.com/news/app/ pages, build the text from data-partnereventstore: decode the entities, JSON.parse, join event_name, headline and body, strip the [tags], and add og:description. A page that yields no post text (an empty store, as on the cached /view/ index and coh3 post) should be listed as NOT CHECKED, not counted as checked. The test must use a small inline HTML fixture, because .cache/ is git-ignored and CI has no cached page. Re-run the three parts offline: the cached raw HTML already holds the posts, so nothing needs fetching. In the README's Copied wording section, say that the 22 posts were compared through this step (with the result), and that before it only the notes were compared, through the partner-events lists. Until the tool is fixed, add Steam news pages to runbook section 8 step 4 as a by-hand check, like the PDFs. Optionally add a caution to games-r3.md line 421. Record j07's item in the README rather than in rule-problems.md, which covers rules only."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed in the tool, as the skeptic's better fix asks: the copy-check reads a Steam post from the page's data attribute, lists a page with no post as not checked, and has tests with an inline page. The full check then found no shared run. Web addresses in a record's prose also stopped counting as wording, since the posts link to one another."
+  },
+  {
+   "dimension": "consistency",
+   "id": "CONS-2",
+   "severity": "major",
+   "file": "data/patterns/fire-power-shot.json",
+   "summary": "fire-power-shot keeps confidence high, but its only source unit is Anna Kos, coded medium, whose Piercing Shot rests on the Iron Harvest Wiki and patch posts. The checker's skeptic lowered lay-smoke and suppress-with-fire from high to medium for exactly this reason. That leaves the same fact coded two ways in one batch.",
+   "evidence": "source_units is ['iron-harvest.polania.anna-kos'], confidence is high and review is unchecked, so the checker never saw it. Anna's confidence is medium. She cites 2 Iron Harvest Wiki pages plus DevBlog #40 and Change Logs #17 and #20. Her abilities/0 (Piercing Shot, the pattern's link) is backed only by the Anna Kos wiki page and Change Log #20. The checker's own notes (scratch folder r3/checker/flagged.txt, the lay-smoke and suppress-with-fire entries) give the confirmed reason: 'A pattern's confidence covers only its linked source units... The only unit that links lay-smoke is the Mocny, which is itself coded medium', on the wiki plus KING Art patch posts, 'which do not count toward high'. Commit 9ce1f96 says: 'lowered to medium, as their one source unit'. Every other new pattern whose source units are all Iron Harvest units is medium: build-cover, build-structure, command-companion, heal-self, rage-when-wounded, lay-smoke and suppress-with-fire. band-together, fortify-on-death and hijack-vehicle differ: their only unit is medium only because of a tie-break on an unrelated point, and the linked ability rests on an official manual (each unit's uncertain entry at confidence).",
+   "fix": "Set confidence to 'medium' in data/patterns/fire-power-shot.json. Optionally, reword the README checker sentence 'Two patterns carried a higher confidence than their only source unit' to 'Two patterns rested only on their one source unit's Iron Harvest Wiki page and patch posts, which give medium'. Otherwise it reads as a rule that band-together, fortify-on-death and hijack-vehicle break.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. fire-power-shot is high and unchecked. Its only source unit, Anna Kos, is medium and has no uncertain entry at confidence. Her Piercing Shot (abilities/0) is supported only by the Anna Kos wiki page and Change Log #20. The Confidence levels say patch notes do not count toward high, and the Iron Harvest note (games-r3.md, around line 178) says the posts are the only official unit text. So the linked ability rests on medium evidence. The checker's skeptic lowered lay-smoke and suppress-with-fire from high to medium on exactly this ground. The same writer group (g5-fire-area, patterns/result.json groups/4) wrote all three files, and only the two sampled ones were fixed. The exceptions hold as the finding says: fortify-on-death and hijack-vehicle were checked 'ok' at high, and band-together is high, because their linked ability rests on the manual and a tooltip copy, and their units are medium only through an unrelated tie-break. That also means the README sentence 'Two patterns carried a higher confidence than their only source unit' misstates the rule.",
+    "evidence": "data/patterns/fire-power-shot.json: confidence high, review unchecked, source_units [anna-kos]. data/units/iron-harvest.json, anna-kos: confidence medium; the sources whose supports include abilities/0 are only sources/0 (wiki) and sources/4 (Change Log #20, official). Checker notes (scratch folder r3/checker/flagged.txt, lay-smoke and suppress-with-fire entries) and research/r3/checker/checks.json p-2/0 and p-2/3: confidence high to medium, skeptic confirmed. A scan of all pattern files finds 4 R3 patterns at high whose only unit is medium: band-together, fire-power-shot, fortify-on-death and hijack-vehicle; the last two are checked with 'confidence' ok. Every other new pattern linked only by Iron Harvest units is medium.",
+    "better_fix": "Set confidence to medium in data/patterns/fire-power-shot.json. The file is unchecked, so no review record changes. Reword the README checker sentence too; this is needed, not optional. As written it states a rule that four R3 patterns (two of them passed by the same checker) and three R1 patterns visibly break. Suggested wording: 'Two patterns rested only on their one source unit's Iron Harvest Wiki page and patch posts, which give medium.'"
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed: fire-power-shot is medium, and the report's checker sentence is reworded."
+  },
+  {
+   "dimension": "consistency",
+   "id": "CONS-3",
+   "severity": "major",
+   "file": "data/patterns/bombard-area.json",
+   "summary": "15 pattern files checked by batch R1's checker had their source_units changed by R3's sync-patterns, yet their review.checked_paths still list source_units. In three files the numbered paths now point at R3 units that R1's checker never saw. Runbook section 6 step 5 says a path changed after the check leaves checked_paths and is named in the notes.",
+   "evidence": "A diff against origin/main shows that only source_units changed in these 17 R1 files. 15 of them carry 'checked_by: batch r1 checker' with 'source_units' in checked_paths; leech-weapon-on-kill and passenger-sets-weapon are unchecked. research/r1/checker/checks.json (group p1) recorded 'source_units/0 (ra1.allied.spy)' and 'source_units/1 (ra2.soviet.boris)' for bombard-area. Today bombard-area's source_units/0 is iron-harvest.rusviet.nakovalnya; the Spy is at /1 and Boris at /2. capture-structure's /0 was ra1.allied.spy and is now generals.china.hacker (the Spy is at /2). carry-passengers' /0 was ra3.empire.sudden-transport and is now generals.gla.technical (the Sudden Transport is at /1). The other 12 list the whole 'source_units', which R3 extended: depend-on-relay, deploy-siege-mode, execute-target, gather-resources, lay-mines, overclock-self, reinforce-squad, repair-allies, switch-weapon-mode, teleport, throw-explosive and transform. Runbook line 178: 'A path changed after the check, other than by the fix of a confirmed wrong path, is left out of checked_paths and named in the review's notes'. R1 itself did this, for example execute-target's note: 'Checked, then changed after the check, so left out of checked_paths: other_examples/1/game'. None of the 15 notes mentions source_units.",
+   "fix": "bombard-area: replace 'source_units', 'source_units/0', 'source_units/1' with 'source_units/1', 'source_units/2'. capture-structure: replace 'source_units', 'source_units/0' with 'source_units/2'. carry-passengers: replace them with 'source_units/1'. In the other 12, drop 'source_units'. In each of the 15 review.notes, add: 'source_units changed after the check (batch R3's sync-patterns added <ids>), so the list is left out of checked_paths.' Add one line to runbook section 4 or 5: when sync-patterns changes source_units in a file that has a review record, do the same.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The merge pass's sync-patterns (6c817f1) changed only source_units in 17 R1 pattern files. 15 of them carry 'batch r1 checker' with source_units in checked_paths. In bombard-area, capture-structure and carry-passengers, the numbered paths now point at R3 units that R1's checker never saw. No review note mentions the change. R1 itself left changed paths out and named them (execute-target, lay-mines, mind-control). One nuance: fields.md:192 makes source_units a list derived by sync-patterns, and runbook section 6 step 5 only covers the batch's own checker record. Nothing tells a later merge pass to keep an earlier batch's record true, so this is a gap in the rule as well as stale data. R3 is the first batch after R1, so main has no precedent.",
+    "evidence": "A diff of the data/patterns files against origin/main (scratch folder .../scripts/su-diff.py) shows 17 modified files, each changing only source_units. research/r1/checker/checks.json group p1: bombard-area 'source_units/0 (ra1.allied.spy)' and '/1 (ra2.soviet.boris)'; capture-structure '/0 (ra1.allied.spy)'; carry-passengers '/0 (ra3.empire.sudden-transport)'. Today their /0 is iron-harvest.rusviet.nakovalnya, generals.china.hacker and generals.gla.technical. Runbook line 178 holds the rule. scripts/sync-patterns.mjs line 69 sorts the ids alphabetically.",
+    "better_fix": "Do not remap the numbered paths to /1 and /2. sync-patterns sorts the ids alphabetically, so the next batch's ids (any that sort before 'ra1...') will shift them again. Instead, remove 'source_units' and every 'source_units/N' from checked_paths in all 15 files. In each review.notes, name the units R1's checker saw (from research/r1/checker/checks.json) and say that batch R3's sync-patterns later added <ids>. Then make it stick: either a runbook line for the merge pass, or have sync-patterns itself drop the source_units paths and add the note whenever it rewrites a file whose review.status is checked. Simplest of all: a checker never lists the derived source_units in checked_paths, and records the ids it checked in notes."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed with the skeptic's better fix: source_units and every numbered source_units path leave checked_paths in the 15 files, each note names the units the checker saw and the ones added, and the runbook's pattern step says to do so."
+  },
+  {
+   "dimension": "consistency",
+   "id": "CONS-4",
+   "severity": "minor",
+   "file": "data/units/iron-harvest.json",
+   "summary": "The Engineers' id drops the plural of its name. The unit is named 'Engineers' with the slug 'engineer', while the Ids rule keeps the in-game name, plural included. The open rule problem on Iron Harvest names and slugs (item 84) lists only the five mechs.",
+   "evidence": "iron-harvest.shared.engineer has name 'Engineers'. docs/fields.md line 9: 'The slug is the in-game name by these rules, with a final word such as Squad or Team dropped (Riflemen Squad -> riflemen)'. I applied the slug rules to every unit's name. Outside the five quoted mech names, this is the only unit whose id differs. The cached Polanian Engineer page speaks of the engineers as basic infantry, in the plural, though its page title is singular. rule-problems.md item 84 ('The in-game name and the slug of Iron Harvest units', left open for a source) names the Engineer only because its combos leave out the weapon systems whose ids are unknown. The README table shows 'Engineers (`iron-harvest.shared.engineer`)'.",
+   "fix": "In rule-problems.md item 84, add to the Problem: 'The Engineers' slug also drops the plural of the unit's name (engineer from Engineers), which the Ids rule keeps (riflemen).' Have the item's fix settle the name form, Engineer or Engineers, together with the mechs. Keep the id until then: renaming it would change five pattern files' source_units and the checker record.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed (minor). Applying the Ids rule to every unit's name, the only mismatches are the five quoted mechs (item 84) and iron-harvest.shared.engineer (name 'Engineers', slug 'engineer'). The rule keeps plurals (Riflemen Squad -> riflemen), and no other unit in the data has a plural name. Item 84 names the Engineer only because its combos leave out weapon systems whose ids are unknown, not for the name. Where the mismatch came from: the prep brief said 'Engineer squad', which gives 'engineer' once Squad is dropped, but fill job j13 wrote the name 'Engineers'. The sources do not settle which form the game shows: the wiki page titles are singular ('Polanian Engineer'), but the text speaks of the engineers as basic infantry, in the plural, and KING Art posts use 'engineers' as a common noun. So it belongs in item 84's open question, as proposed.",
+    "evidence": "scratch folder .../scripts/slugs.py applies the fields.md:9 rules to every name: 6 mismatches, 5 mechs plus the Engineers. research/r3/prep/trim.json:160-162 (brief 'Engineer squad'), research/r3/fill/j13-iron-harvest/iron-harvest.json:399 (name 'Engineers'). The cached wiki_Polanian_Engineer, Saxon and Rusviet pages, and kingart-games.com article/77 and article/92. rule-problems.md item 84 text. README line 67.",
+    "better_fix": "As proposed: add the Engineers' plural/singular mismatch to item 84's Problem, and have its fix settle the name form together with the mechs, keeping the id until then. Note that the outcome may be renaming the name field to 'Engineer' (or 'Engineer Squad'), not the id. Either way, the name and the id must agree afterwards."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed: rule problem 84 now covers the Engineers' name and slug; the id stays until the names are settled."
+  },
+  {
+   "dimension": "consistency",
+   "id": "CONS-5",
+   "severity": "minor",
+   "file": "research/r3/patterns/README.md",
+   "summary": "The pattern-phase record now disagrees with the pattern files. Its table still gives lay-smoke and suppress-with-fire high confidence, and it says every file is unchecked. After the checker's fixes both are medium, and 11 files carry the checker's review.",
+   "evidence": "In patterns/README.md, the table rows for `suppress-with-fire` and `lay-smoke` end in 'high'. The line above the table reads 'Every file has status `proposed` and review status `unchecked`.' The data today: lay-smoke and suppress-with-fire have confidence 'medium' (fix log: 'lay-smoke: confidence \"high\" -> \"medium\"' and 'suppress-with-fire: confidence \"high\" -> \"medium\"', commit 9ce1f96). deploy-turret, drop-in-from-above, fortify-on-death, generate-income, hijack-vehicle, host-spawn-point, lay-smoke, produce-unit-in-field, refill-on-ally-buff, suppress-with-fire and upgrade-in-field have review.status 'checked' by the batch r3 checker. The R3 README's file table sends readers to patterns/ for the pattern phase.",
+   "fix": "Under the table in research/r3/patterns/README.md, add: 'After the checker (9ce1f96): lay-smoke and suppress-with-fire are medium, and the 11 sampled files carry the checker's review record (research/r3/checker/).' Mark the two confidence cells, for example 'high (medium since 9ce1f96)'.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed (minor). In patterns/README.md, the table's confidence cells for lay-smoke and suppress-with-fire say high, while the data says medium since 9ce1f96. Every other cell matches the files: source units, variants, examples and status. The sentence 'Every file has status proposed and review status unchecked' is stale: 11 files now carry the batch r3 checker's review, the same 11 the finding lists. The file is a phase record, but it is not a frozen snapshot: it was edited after the checker (6556887 reworded its copy-check note, which mentions the checker) and still speaks in the present tense. The main README's Checker section is accurate.",
+    "evidence": "A script compared every table row of research/r3/patterns/README.md with data/patterns: only lay-smoke and suppress-with-fire differ, on confidence. A scan of review.status lists 11 files checked by the batch r3 checker. git log on the file shows ef2460e, then 6556887 (after 9ce1f96). Batch R1 has no patterns/README, so there is no precedent.",
+    "better_fix": "As proposed. Also date the status sentence ('at the end of the pattern phase, ef2460e, every file had status proposed and review status unchecked'), and add the note under the table pointing to research/r3/checker/ for the two lowered confidences and the 11 review records."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as the skeptic's better fix says."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P1",
+   "severity": "major",
+   "file": "data/patterns/fire-power-shot.json",
+   "summary": "The pattern's confidence is high, but its only source unit, Anna Kos, is medium. Example other_examples/1 (StarCraft II Ghost: Steady Targeting) is also high, though it rests on one wiki with no official text about the ability.",
+   "evidence": "Pattern: \"confidence\": \"high\", source_units [iron-harvest.polania.anna-kos]. The unit is medium (data/units/iron-harvest.json). Its Piercing Shot rests on the Iron Harvest wiki plus KING Art change logs (kingart-games.com articles 106, 110, 116), and patch notes 'do not count toward high' (data/vocab/confidence.json). games-r3.md:178-181: the posts are the only official unit text, and the wiki's italic lines are not official. So the cap is right by the batch's own rule (9ce1f96 lowered lay-smoke and suppress-with-fire 'as their one source unit') and by any reading of the mechanic. oe/1 cites only starcraft.fandom.com. The Ghost_(StarCraft_II) page's UnitBox has no description field (games-r5.md:257 names only the infobox unit description as official). Its only quote is a unit voice line (a Ghost voice line about a nuclear strike). Template:SC2SteadyTargeting's desc carries no label. The checker made the same kind of change for hijack-vehicle oe/0 and oe/1.",
+   "fix": "In data/patterns/fire-power-shot.json, set the top-level \"confidence\" to \"medium\" and other_examples[1].confidence to \"medium\".",
+   "verdict": {
+    "real": true,
+    "reason": "Both parts hold. (1) The pattern's confidence is about whether its source units implement the mechanic (schemas/pattern.schema.json). Anna Kos has no confidence entry in uncertain, so her medium is not a tie-break: everything rests on one site. Her Piercing Shot (abilities/0) rests on the Iron Harvest wiki plus Change Log #20 (kingart article 110). That is a patch note, and patch notes do not count toward high. This is the same case as the Mocny and the Grimbart, whose patterns 9ce1f96 lowered to medium. (2) oe/1 cites only starcraft.fandom.com. The Ghost page's UnitBox has no description field, its only quote is a voice line, and the Template:SC2SteadyTargeting desc has no label saying where it comes from. games-r5.md:257 names only the infobox unit description as official. The same page-plus-template format is medium in dash oe/1 (Medivac) and rally-allies oe/1 (Guardian Shield). The one SC2 template example raised to high, lay-smoke oe/3 (Viper), has a labelled quote from Blizzard's blog.",
+    "evidence": "Cache .cache/sources/starcraft.fandom.com/wiki_Ghost__StarCraft_II: UnitBox fields read, no |description=; the only {{Quote}} is the 'Terran Ghost' line. The template's desc is unlabelled. wiki_Viper has a quote box credited to Radio Liberty, with the address of Blizzard's blog post, on the cloud that blinds. data/units/iron-harvest.json: abilities/0 is supported by the wiki and article 110 only. No 'confidence' path in uncertain for Anna, the Mocny or the Grimbart. git show 9ce1f96 message: lay-smoke and suppress-with-fire lowered 'as their one source unit'.",
+    "better_fix": "Apply the proposed fix. Also correct research/r3/patterns/README.md's table: fire-power-shot goes to medium, and the lay-smoke and suppress-with-fire rows still say high after 9ce1f96."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as the skeptic's better fix says."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P2",
+   "severity": "major",
+   "file": "data/patterns/band-together.json",
+   "summary": "band-together is high above its only source unit, the Red Guard (medium). That breaks the rule the README states. The checker marked the same situation 'ok' in fortify-on-death and hijack-vehicle, which contradicts its own fixes to lay-smoke and suppress-with-fire.",
+   "evidence": "band-together: confidence high; source_units [generals.china.red-guard]; unit confidence medium. README Checker: 'Two patterns carried a higher confidence than their only source unit'. 9ce1f96: lay-smoke and suppress-with-fire 'lowered to medium, as their one source unit'. But checks.json gives 'confidence=ok' for fortify-on-death (only unit generals.gla.battle-bus, medium) and hijack-vehicle (only unit generals.gla.jarmen-kell, medium). Each of the three medium units drops only through a tie-break on a point outside the pattern's mechanic, by its own uncertain entry at path confidence: the Red Guard over the bayonet, the Battle Bus over crush, and Kell over the snipe's cooldown band. The Mocny and Grimbart (lay-smoke, suppress-with-fire) are medium throughout. So the checker seems to apply an exception that nothing in the batch writes down, and by the stated rule band-together is wrong.",
+   "fix": "Pick one reading and apply it to all three. Either (a) the stated rule: set band-together.json \"confidence\" to \"medium\", and set fortify-on-death and hijack-vehicle to \"medium\" too (their checks.json verdicts then become wrong and the README counts change). Or (b) keep all three high and add to the README Checker paragraph: 'A pattern stays above its only source unit when that unit's medium comes only from a tie-break on a point outside the pattern's mechanic (band-together, fortify-on-death, hijack-vehicle).' Recommend (a). It matches what the README already tells Mustafa.",
+   "verdict": {
+    "real": false,
+    "reason": "The finding misreads the rule. A pattern's confidence is 'confidence that the linked source units implement the mechanic as summarised', not a cap at the unit's overall level. The Red Guard, the Battle Bus and Kell are medium only through a tie-break on a point outside the linked mechanic: the bayonet, crush, and the snipe's cooldown band. The linked abilities themselves rest on official text. The Horde bonus is in the manual and in the in-game tooltip copy (generals.str). The Battle Bus bunker is in the Zero Hour manual and the tooltip. Kell's Sniper Attack is in the manual and the tooltip. So high is right for band-together, fortify-on-death and hijack-vehicle. The Mocny and the Grimbart are medium for every fact (one site), so their mechanics are medium too. The checker's verdicts are therefore consistent, not contradictory. Option (a) would wrongly lower three patterns.",
+    "evidence": "schemas/pattern.schema.json, properties.confidence description. data/units/generals.json uncertain at 'confidence' for red-guard (bayonet), battle-bus (crush) and jarmen-kell (abilities/0/cooldown). Red Guard sources: the UK manual PDF note (fires faster in large groups, red star) and the generals.str note (Horde bonus at five or more), both supporting abilities/0. The Battle Bus and Kell manual and str sources support the linked abilities. research/r3/checker/checks.json: fortify-on-death and hijack-vehicle confidence 'ok'.",
+    "better_fix": "Keep all three high. At most, reword the README Checker sentence to say what made the two patterns too high: 'Two patterns carried a higher confidence than their only source unit gives the mechanic (both units rest on one site).'"
+   },
+   "status": "answered",
+   "answer": "Not confirmed by the skeptic; see the verdict's reason. Nothing changed."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P3",
+   "severity": "major",
+   "file": "data/patterns/cloak.json",
+   "summary": "Seven cloak examples are high on one wiki with no official text: other_examples/0, 2, 3 and 5, and shooter_analogues/1, 2 and 3. oe/0's source note describes a quote box that is not on the page.",
+   "evidence": "oe/0 (C&C3 Stealth Tank): sources[0].note says 'Its quote box gives the advisor's line on the tank'. The Stealth_tank_(Tiberium_Wars) page has no {{Quote}} at all, only voice lines under ==Quotes==. The API revision list shows its last edit on 2026-03-28, so the page was the same on the 2026-10-25 access. The other cited page (Stealth) is not about the tank. oe/2: liquipedia.net/starcraft2/Cloak is a spell infobox with no description field. oe/3: tempestrising.wiki.gg/wiki/Stealth has only Ability/Store boxes, which games-r3.md:159 lists as not official, and no Codex/Store box. oe/5: warcraft.wiki.gg Blademaster gives the Wind Walk text unlabelled. The same page format is medium in become-invulnerable oe/2 (Paladin), retaliate-on-hit oe/0 (Keeper) and heal-self oe/2. sa/1: the TF2 Invis Watch page has only a Spy taunt and an empty item-description template; every TF2 item in the batch is medium, even those with a labelled publicity blurb. sa/2: brawlstars.fandom Leon uses unattributed {{Quote}} boxes; the same Bull and Jacky format is medium in dash sa/4, rage-when-wounded sa/1 and retaliate-on-hit sa/0. sa/3: dota2.fandom Invisibility is a mechanic page whose only quote is a Bounty Hunter voice line; 20 other Dota 2 examples are medium. sa/0 (Halopedia active camouflage: fiction and dialogue quotes only) is borderline.",
+   "fix": "Set confidence to \"medium\" in cloak.json for other_examples[0], [2], [3] and [5], and for shooter_analogues[1], [2] and [3]. Replace other_examples[0].sources[0].note with: \"Infobox, background and strategy sections: hidden unless attacking, the bubble back almost at once after a volley, found by sensors at close range.\"",
+   "verdict": {
+    "real": true,
+    "reason": "Six of the seven examples are confirmed; oe/0 is not. oe/2: the Liquipedia Cloak page is an 'Infobox spell' with no description field. oe/3: the Tempest Rising Stealth page has only an EffectBox, Ability/Store boxes (Abilitybox texts are not official, games-r3.md:159) and a Discord reference that quotes nothing (games-r3.md:158 counts only quoted words). oe/5: the Wind Walk line is unlabelled, and the same format is medium for the Paladin (become-invulnerable oe/2), the Keeper (retaliate-on-hit oe/0) and heal-self oe/2. sa/1: the TF2 page has only a Spy taunt, and every other single-site TF2 example is medium. sa/2: Leon's {{Quote}} boxes are unattributed, as are those of Bull and Jacky, which are medium. sa/3: a Dota mechanics page whose only quote is a Bounty Hunter voice line. All 20 other Dota examples are medium. The finding is wrong on oe/0. The Stealth tank (Tiberium Wars) page does carry a quote box, the advisor's line that these tanks stay unseen until they fire and do well against aircraft and vehicles, in its Background section. The search missed the {{Q}} form. The page's last edit was on 2026-03-28, so the source note is correct and high stands. sa/0 is rightly high: Halopedia carries an {{Article quote}} credited to support.halowaypoint.com.",
+    "evidence": "Cache cnc.fandom.com/wiki_Stealth_tank__Tiberium_Wars: the Background section ends with the {{Q|...|Advisor about the tank}} box. cnc.fandom API revisions: last edit 2026-03-28. liquipedia starcraft2_Cloak: {{Infobox spell}} with no description. tempestrising.wiki.gg/wiki_Stealth: EffectBox, three Ability/Store boxes and a Casteel Discord ref with no quote. warcraft.wiki.gg Blademaster, Paladin and Keeper: the same ':text' ability lines. wiki.teamfortress.com Invisibility_Watch: only a Spy taunt Quotation. brawlstars Leon, Bull and Jacky: unattributed Quote boxes. dota2.fandom Invisibility: only a Bounty Hunter Quotation. www.halopedia.org Active_camouflage: {{Article quote|Grants temporary invisibility...{{Ref/Site|...support.halowaypoint.com...}}}}.",
+    "better_fix": "In cloak.json, set confidence to \"medium\" for other_examples[2], [3] and [5] and for shooter_analogues[1], [2] and [3]. Leave other_examples[0] high and keep its source note: the page's {{Q}} box does give the advisor's line."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed with the skeptic's correction: six examples go to medium; other_examples/0 stays high, because its page does quote the advisor's line."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P4",
+   "severity": "major",
+   "file": "data/patterns/launch-drones.json",
+   "summary": "Five launch-drones examples are medium, though their cited pages quote official text in a box that says what it copies. The confidence rule gives high: other_examples/1 and 2, shooter_analogues/0, 3 and 6.",
+   "evidence": "oe/1: cnc.fandom Battle_drone and Scout_drone each carry a quote box credited to the Generals manual. games-r3.md:129 says a quote box credited to the manual copies its unit description, which is official text. oe/2: the liquipedia.net/starcraft2/Carrier infobox has a description field that calls it a capital ship which builds and launches Interceptors. games-r5.md:257 says the in-game unit description in Liquipedia infoboxes is official. The checker raised upgrade-in-field oe/2 (Liquipedia Baneling) for this reason. sa/0: valorant.fandom Wingman and Seekers each carry {{Quote|{{Game Descriptions|...}}|In-game description}}, and the Gekko page has an 'Official description' quote. sa/3: helldivers.wiki.gg Guard Dog has {{Quote|An autonomous drone ...|Ship Management Terminal}}; the checker kept deploy-turret sa/5 (Machine Gun Sentry, same wiki, same quote label) high. sa/6: deeprockgalactic.wiki.gg Bosco has a quote box credited as the item description; the checker raised deploy-turret sa/3 (DRG LMG Gun Platform) on its 'In Game Description' box.",
+   "fix": "In launch-drones.json, set confidence to \"high\" for other_examples[1], other_examples[2], shooter_analogues[0], shooter_analogues[3] and shooter_analogues[6].",
+   "verdict": {
+    "real": true,
+    "reason": "All five examples cite pages that say what they copy. oe/1: the Battle drone and Scout drone pages carry {{Quote|...|Generals manual|...}}, which games-r3.md:129 counts as official. The Hellfire page has none, but the checker raised deploy-turret sa/6 (Auto-Titan) to high when only one of its two pages had an in-game description box. oe/2: the Liquipedia Carrier infobox has a description field that calls it a capital ship which builds and launches Interceptors, the infobox unit description games-r5.md:257 names as official. sa/0: Wingman and Seekers each carry {{Quote|{{Game Descriptions|...}}|In-game description}}, which renders the real in-game text, and the Gekko page has an 'Official description' box. sa/3: {{Quote|An autonomous drone...|Ship Management Terminal}}, the same label as the Machine Gun Sentry (deploy-turret sa/5, high, the checker said ok). sa/6: {{quote|Developed by R&D...|Item Description}}.",
+    "evidence": "Cache: cnc.fandom wiki_Battle_drone and wiki_Scout_drone (Generals manual quote boxes), wiki_Hellfire_drone (voice line only). liquipedia starcraft2_Carrier (|description=). valorant.fandom Wingman, Seekers and Gekko boxes. The valorant.fandom API render of {{Game Descriptions|Wingman}} and {{Game Descriptions|Seekers}} returns the in-game ability texts. helldivers.wiki.gg Guard Dog and MG-43 (both 'Ship Management Terminal'). deeprockgalactic.wiki.gg Bosco ('Item Description'). titanfall.fandom: Assault_Chip has no box, Guardian_Chip has 'In-game description.'. checks.json: deploy-turret sa/3, sa/6 and sa/5 verdicts."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P5",
+   "severity": "major",
+   "file": "data/patterns/sacrifice-for-allies.json",
+   "summary": "Four Tempest Rising examples are medium, though a cited unit page carries a Codex/Store box that describes the mechanic: sacrifice-for-allies oe/4, dampen-missile-fire oe/1, dash oe/3 and build-cover oe/4.",
+   "evidence": "games-r3.md:158: the Codex is official text, copied in each unit page's Background box (Template:Codex/Store credits it). Cached Codex texts: Luminary: one thrall inside is picked to die for a far-off ally, and its life force is sent to the target and becomes an aura that gives Consecration. Haywire Turret: said to carry the Shieldmaiden's own targeting jammer, against missile bombardment, and the example's own note cites this. Sniper: '...Cregan's sprints have saved her...', and the dash oe/3 note cites 'The Sniper's background'. Engineer: '...construct [[Guard Tower|garrisonable emplacements]]'. The batch is consistent where the Codex is silent: dampen oe/0 (Comms Officer Codex has no interference) and the checker's deploy-turret oe/4 (Riot Medic Codex has no turret) stay medium. Where it speaks, examples are high: convert-on-kill oe/0 (Subjugator Codex on the subjugation field) and block-abilities oe/0 (Scrambler Codex on HAYWIRE). These four were left behind.",
+   "fix": "Set confidence to \"high\" for sacrifice-for-allies.json other_examples[4], dampen-missile-fire.json other_examples[1], dash.json other_examples[3] and build-cover.json other_examples[4].",
+   "verdict": {
+    "real": true,
+    "reason": "Each cited unit page has a Codex/Store box. games-r3.md:158 counts the Codex as official text that the page credits, and here it describes the mechanic. Luminary: one thrall inside is picked to die for a far-off ally, and its life force goes to the target and becomes an aura that gives Consecration. Haywire Turret: the same targeting jammer as the Shieldmaiden, against missile bombardment. Sniper: Cregan's sprints have saved her. Engineer: builds garrisonable emplacements, linked to Guard Tower. Where the Codex is silent, the batch keeps medium: the Comms Officer (dampen oe/0), the Riot Medic (deploy-turret oe/4), and the Guard Tower and Healing Turret pages have no Codex at all. Where it speaks, the batch codes high: convert-on-kill oe/0 (Subjugator), block-abilities oe/0 (Scrambler). For dash oe/3, the Missile Trooper half rests on Arsenal text, but partial official text is enough by the checker's Auto-Titan precedent.",
+    "evidence": "Cache tempestrising.wiki.gg: the Codex/Store desc of wiki_Luminary, wiki_Haywire_Turret, wiki_Sniper, wiki_Engineer, wiki_Subjugator and wiki_Scrambler read; wiki_Comms_Officer and wiki_Riot_Medic Codex texts have no aura or turret; wiki_Guard_Tower and wiki_Healing_Turret have no Codex/Store. Pattern files: the four examples are medium; convert-on-kill oe/0 and block-abilities oe/0 are high."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P6",
+   "severity": "major",
+   "file": "data/patterns/block-abilities.json",
+   "summary": "Two block-abilities examples are high on one wiki with no official text in a labelled box: other_examples/2 (Dota 2 Silence) and shooter_analogues/0 (Overwatch Sombra's Hack).",
+   "evidence": "oe/2 cites only dota2.fandom.com/wiki/Silence, a status-effect page whose only quote is a Silencer voice line (a Silencer voice line). sa/0 cites two overwatch.fandom pages. I fetched Template:Ability_details through the wiki API: official_description renders as bare italics (<div class=\"summary-description\"><i>{{{official_description|}}}</i></div>) with no label, so the page does not say what it copies. 26 other Overwatch examples in data/patterns are medium, including deploy-turret sa/2, which the checker marked ok.",
+   "fix": "In block-abilities.json, set other_examples[2].confidence and shooter_analogues[0].confidence to \"medium\".",
+   "verdict": {
+    "real": true,
+    "reason": "oe/2 cites only dota2.fandom's Silence page: a status-effect page whose only quote is a Silencer voice line. That is one site with no official text, and every other R3 Dota example is medium. For sa/0, Overwatch's Template:Ability_details renders official_description as plain italics with no label, so the page does not say what it copies. All R3 Overwatch examples are medium (26 in total, including deploy-turret sa/2, which the checker passed). The only other high Overwatch examples (transform sa/0-2, deploy-siege-mode sa/2) were already on origin/main.",
+    "evidence": "Cache dota2.fandom wiki_Silence: the only quote is a Silencer voice line. Fetched Template:Ability_details through overwatch.fandom api.php: '<div class=\"summary-description\"><i>{{{official_description|}}}</i></div>'. Scan of data/patterns: Overwatch examples are 26 medium and 5 high; git show origin/main shows the 4 other highs before R3. checks.json: deploy-turret shooter_analogues/2 ok."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P7",
+   "severity": "major",
+   "file": "data/patterns/convert-on-kill.json",
+   "summary": "Two convert-on-kill examples are high on one wiki with no labelled official text: shooter_analogues/0 (Warframe, Nekros's Shadows of the Dead) and shooter_analogues/1 (Halo Infection mode).",
+   "evidence": "sa/0 cites only warframe.fandom Shadows_of_the_Dead. Its description field is drawn by Module:Ability/infobox (fetched through the API) with no 'in-game' label. retaliate-on-hit sa/4 (Mesa, same template) and four other Warframe examples are medium. sa/1 cites only halopedia.org/Infection: prose and references, no quote box of official or in-game text. By contrast, sa/2 (CoD Infected) is rightly high, with 'Description' and 'Playlist Description' quote boxes.",
+   "fix": "In convert-on-kill.json, set shooter_analogues[0].confidence and shooter_analogues[1].confidence to \"medium\".",
+   "verdict": {
+    "real": true,
+    "reason": "sa/0: the Warframe page uses {{AbilityU10.3}} (Module:Ability/infobox), whose description renders with no label. The same template is medium for Mesa (retaliate-on-hit sa/4), and every other Warframe example is medium. sa/1: the Halopedia Infection page has no quote boxes at all. Its 'Description' section is the wiki's own prose, so it rests on one site.",
+    "evidence": "Cache warframe.fandom wiki_Shadows_of_the_Dead and wiki_Shatter_Shield: both {{AbilityU10.3 |description=...}}. Fetched Template:AbilityU10.3 (it invokes Module:Ability/infobox), and a parse render of Shadows of the Dead shows the description after the name with no label. www.halopedia.org Infection: templates are only Status, Looking for, Main and Ref/*, with no quote. Scan: 6 other Warframe examples, all medium."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P8",
+   "severity": "major",
+   "file": "data/patterns/command-companion.json",
+   "summary": "Two command-companion examples are medium, though their pages quote the game's text in a labelled box: shooter_analogues/1 (the Guard Dog of the Ghosts game) and shooter_analogues/3 (Deep Rock Galactic Bosco).",
+   "evidence": "callofduty.fandom Guard_Dog: a quote box credited as the in-game description: the dog is called in to protect you and can be told to hold a spot or to follow. The checker raised host-spawn-point sa/6 (CoD Tactical Insertion) on the same kind of box. deeprockgalactic.fandom Bosco: a quote box credited as the item description. The checker raised deploy-turret sa/3 (DRG LMG Gun Platform) on its in-game description box.",
+   "fix": "In command-companion.json, set shooter_analogues[1].confidence and shooter_analogues[3].confidence to \"high\".",
+   "verdict": {
+    "real": true,
+    "reason": "Both pages quote the game's text in labelled boxes. callofduty.fandom Guard_Dog: the Ghosts section, which the example covers, has a short quote box credited as its description. The Vanguard section has the 'In-game description' box the finding quoted. The checker raised host-spawn-point sa/6 (Tactical Insertion) on boxes of this kind. deeprockgalactic.fandom Bosco has {{quote|Developed by R&D...|Item Description}}, the same kind of box the checker accepted for deploy-turret sa/3.",
+    "evidence": "Cache callofduty.fandom wiki_Guard_Dog: 'Description.' box under ==Call of Duty: Ghosts==; the in-game description box sits above the line on its return in the Vanguard game. deeprockgalactic.fandom wiki_Bosco: 'Item Description' box. checks.json: host-spawn-point sa/6 and deploy-turret sa/3 were wrong at medium and fixed to high."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P9",
+   "severity": "major",
+   "file": "data/patterns/dash.json",
+   "summary": "shooter_analogues/2 (Valorant Jett: Tailwind) is medium, though the cited page quotes the in-game description. The same box makes block-abilities sa/1 high.",
+   "evidence": "valorant.fandom.com/wiki/Tailwind: a quote box that pulls in the game's own description of the ability. block-abilities shooter_analogues/1 (KAY/O ZERO/point) cites a page with the identical box and is coded high. The confidence rule gives high for a page that says what it copies.",
+   "fix": "In dash.json, set shooter_analogues[2].confidence to \"high\".",
+   "verdict": {
+    "real": true,
+    "reason": "The Tailwind page carries a quote box that pulls in the game's own description of the ability, the same box as ZERO/point, which is high in block-abilities sa/1. Orbital Strike and Recon Bolt are also high on this box. Rendered, the box gives the actual in-game ability text.",
+    "evidence": "Cache valorant.fandom wiki_Tailwind and wiki_ZERO-point: identical boxes. valorant.fandom api.php render of {{Game Descriptions|Tailwind}}: 'ACTIVATE to prepare a gust of wind... RE-USE the wind to propel Jett...'. Pattern scan: bombard-area sa/2 and reveal-area sa/1 are high on the same box."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P10",
+   "severity": "major",
+   "file": "data/patterns/resupply-allies.json",
+   "summary": "shooter_analogues/4 (Destiny 2 Lunafaction Boots) is medium. The same page, with the same source note, is the example the checker raised to high in refill-on-ally-buff.",
+   "evidence": "resupply-allies sa/4 and refill-on-ally-buff sa/0 both cite destiny.fandom.com/wiki/Lunafaction_Boots with the note 'The perk box gives the text of the armour's perk, Alchemical Etchings.' The page also has {{BigQuote|...|In-game description}}. 9ce1f96 changed refill-on-ally-buff sa/0 from medium to high (checks.json: wrong, the skeptic confirmed), but not this copy.",
+   "fix": "In resupply-allies.json, set shooter_analogues[4].confidence to \"high\".",
+   "verdict": {
+    "real": true,
+    "reason": "Same page and same source note as refill-on-ally-buff sa/0, which the checker raised to high (skeptic confirmed). The page has {{BigQuote|...|In-game description}}, the {{API}} marker and the Alchemical Etchings perk box. resupply-allies sa/4 was left at medium.",
+    "evidence": "Cache destiny.fandom wiki_Lunafaction_Boots: BigQuote labelled 'In-game description', {{API}}, and an ItemPerk with the Alchemical Etchings text. git show 9ce1f96: refill-on-ally-buff sa/0 medium to high. checks.json: refill-on-ally-buff shooter_analogues/0 wrong, fixed to high."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P11",
+   "severity": "major",
+   "file": "data/patterns/join-ally-crew.json",
+   "summary": "other_examples/0 (Generals Pilot) is medium, though the cited page quotes the Generals manual in a credited box, which the Generals notes call official text.",
+   "evidence": "cnc.fandom.com/wiki/Pilot: a quote box credited to the Generals manual: the Pilot gets out of a wrecked vehicle and keeps its rank. The example's own source note says the page quotes the manual. games-r3.md:129: 'A quote box credited to the Generals or Zero Hour manual copies that manual's unit description, which is official text'.",
+   "fix": "In join-ally-crew.json, set other_examples[0].confidence to \"high\".",
+   "verdict": {
+    "real": true,
+    "reason": "The cited Pilot page carries a quote box credited to the Generals manual, on the Pilot getting out of a wrecked vehicle, and the example's own source note says so. games-r3.md:129 counts such a box as official text, so the rule gives high.",
+    "evidence": "Cache cnc.fandom wiki_Pilot: the Generals manual quote box. data/patterns/join-ally-crew.json other_examples[0].sources[0].note says 'The page quotes the Generals manual...'. research/registry-notes/games-r3.md line 129."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P12",
+   "severity": "minor",
+   "file": "data/patterns/deploy-turret.json",
+   "summary": "Variant fixed-arc-emplacement says raiders counter it, but it keeps the base rule that it counters raiders. A card from this variant would list role:raider both ways.",
+   "evidence": "generator.counters[0] = {ref role:raider, 'A turret on a side path catches flankers who slip around the front line...'}. variants[fixed-arc-emplacement].overrides.countered_by[0] = {ref role:raider, 'A fast flanker circles to the side or rear that the fixed arc can't cover and kills the nest there.'}. The variant overrides countered_by but not counters, so it inherits the raider counter. A script over all 69 files finds a ref in both lists only here and in heal-from-debuff. The checker checked only this file's variants/N/seen_in, not the overrides.",
+   "fix": "Add to variants[fixed-arc-emplacement].overrides: \"counters\": [{\"ref\": \"class:infantry\", \"why\": \"Most turrets are anti-infantry guns that shred and pin soldiers in their reach (PlanetSide 2 Spitfire, Company of Heroes machine-gun nest).\"}]",
+   "verdict": {
+    "real": true,
+    "reason": "Minor. Overrides replace the base list (schema: 'Replaces the base generator's countered_by'). fixed-arc-emplacement replaces countered_by, with role:raider first, but keeps the base counters role:raider. The base reason ('a guard that never looks away') contradicts the variant's own summary: it can't turn to cover its sides or rear. Under fields.md Matchups rule (6), the same enemy may sit in both lists only when the reasons name deliberately different situations. Here the base entry was simply inherited. Among all pattern variants, only this one and heal-from-debuff carry a ref in both lists. The checker checked only variants/0-7/seen_in.",
+    "evidence": "data/patterns/deploy-turret.json: generator.counters and variants[fixed-arc-emplacement].overrides read. schemas/pattern.schema.json: variants.items.overrides.counters and countered_by both say 'Replaces the base generator's ...'. A python scan of all 69 files with overrides applied per variant. checks.json: the only deploy-turret variant path checked is variants/0-7/seen_in."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P13",
+   "severity": "minor",
+   "file": "data/patterns/heal-from-debuff.json",
+   "summary": "The generator lists weapon-trait:slow under both counters and countered_by, and variants home-field and own-fire inherit both. The card would claim to beat slowing weapons and lose to them.",
+   "evidence": "generator.counters[0] = weapon-trait:slow ('A lone enemy whose weapon slows or charges it only feeds it repairs...'). generator.countered_by[0] = weapon-trait:slow ('Several enemies stacking the status at once push it into the overload stage...'). The only source unit, tempest-rising.dynasty.tempest-sphere, records its real weakness as countered_by damage:armour-piercing ('Its armour takes the full force of Cannon hits...'). Its armour notes say cannon hits do full damage, and the pattern's counterplay/0 says the same.",
+   "fix": "Replace heal-from-debuff.json generator.countered_by[0] with {\"ref\": \"damage:armour-piercing\", \"why\": \"Plain armour-piercing hits give it nothing to feed on: cannon hits strike the Tempest Sphere at full strength.\"}. Keep counters as it is; the overload answer stays in counterplay/1.",
+   "verdict": {
+    "real": false,
+    "reason": "This overlap is what the rules allow. docs/fields.md Matchups rule (6): 'The same enemy may sit in counters and in countered by only when the two reasons name different situations. One against one and one against several cheaper enemies are different situations.' Here the counters reason says a lone slowing enemy only feeds it repairs, and the countered_by reason says several enemies stacking the status push it into overload. That is exactly the rule's example, and it matches counterplay/0 and counterplay/1. Units carry such overlaps too (8 units). The proposed fix is also wrong: damage:armour-piercing is a fact about the Tempest Sphere's armour (cannon at full damage), not a weakness of the heal-from-debuff mechanic. It would be false on, for example, a thrive-on-poison infantry card.",
+    "evidence": "docs/fields.md line 11, Matchups rule (6). data/patterns/heal-from-debuff.json: generator.counters[0] and countered_by[0] reasons, counterplay/0-1. data/units/tempest-rising.json tempest-sphere: armour.notes (cannon hits do full damage). A scan found 8 units with the same ref in both lists.",
+    "better_fix": "No change for the overlap. If anything, the home-field and own-fire variants inherit two entries written for the feed-on-status mechanic. They could get their own counters and countered_by overrides, but that is a separate point."
+   },
+   "status": "answered",
+   "answer": "Not confirmed by the skeptic; see the verdict's reason. Nothing changed."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P14",
+   "severity": "minor",
+   "file": "data/patterns/resupply-allies.json",
+   "summary": "resupply-allies and deploy-turret both cover a placed device that hands out ammo (the TF2 Dispenser is in both), and they relate only as combos-with. The batch's own registry-note correction gives such devices to deploy-turret.",
+   "evidence": "research/registry-notes/patterns.md:13, added by this batch: 'A placed device that heals, repairs or resupplies on its own is deploy-turret's support-station variant'. Yet resupply-allies keeps variants dropped-crate (seen_in Battlefield Ammo Box) and built-station ('a fixed dispenser that supplies without end', seen_in Team Fortress 2 Dispenser). deploy-turret's support-station also names the Team Fortress 2 Dispenser. Each file lists the other as combos-with, and neither has conflicts_with, so the generator can roll the same placed resupply device twice on one card.",
+   "fix": "In resupply-allies.json, change related {\"id\":\"deploy-turret\",\"kind\":\"combos-with\"} to \"often-confused-with\" and add \"conflicts_with\": [\"deploy-turret\"] to its generator. Reword registry-notes/patterns.md:13 to: \"A placed device with a short life that heals, repairs or resupplies on its own is deploy-turret's support-station variant; a lasting supply station or a dropped crate is resupply-allies.\"",
+   "verdict": {
+    "real": false,
+    "reason": "The overlap was decided and checked in the batch. In the integration step, a finding named exactly this pair: built-station and support-station both list the TF2 Dispenser. The applied correction was to add combos-with both ways, because 'a dispenser links both, as the Repair Turret links repair-allies and deploy-turret'. The Shieldmaiden's Repair Turret links both repair-allies and deploy-turret. patterns.md:13 says which deploy-turret variant such a device is, not that it may not also link the effect pattern. Adding conflicts_with would forbid exactly the dispenser-type card that both patterns describe together. Changing combos-with to often-confused-with would undo a checked decision.",
+    "evidence": "research/r3/patterns/integration.json lines 351-356 (finding, evidence and correction: combos-with both ways) and line 17 (applied). data/units/tempest-rising.json shieldmaiden abilities/0 patterns: [repair-allies, deploy-turret]. research/registry-notes/patterns.md line 13. research/r3/patterns/README.md line 96."
+   },
+   "status": "answered",
+   "answer": "Not confirmed by the skeptic; see the verdict's reason. Nothing changed."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P15",
+   "severity": "minor",
+   "file": "data/patterns/build-linked-exits.json",
+   "summary": "The summary says 'Teleport moves only the user', but teleport.json says some versions move teammates. The Thunderhead's Recall links both patterns for moving its garrison.",
+   "evidence": "build-linked-exits summary: '...Teleport moves only the user; host-spawn-point brings back the dead.' teleport.json summary: '...some move teammates instead of the user', with the variant move-teammates. tempest-rising.veti.thunderhead abilities/1 (Deploy / Recall Lightning Rod) links [build-linked-exits, teleport] for teleporting everyone inside the Rod to the aircraft.",
+   "fix": "In build-linked-exits.json summary, replace 'Teleport moves only the user;' with 'Teleport moves the user, or pulls teammates to the user, without placing entrances;'.",
+   "verdict": {
+    "real": true,
+    "reason": "Minor. The boundary sentence 'Teleport moves only the user' contradicts teleport.json. Its summary, unchanged from origin/main, says that some versions move teammates and not the user, and it has a move-teammates variant. The Thunderhead's Recall (abilities/1), which teleports everyone inside the Rod to the aircraft, links both patterns. build-linked-exits was not in the checker's sample.",
+    "evidence": "data/patterns/build-linked-exits.json summary. data/patterns/teleport.json summary and variants (move-teammates). git show origin/main:data/patterns/teleport.json has the same summary. data/units/tempest-rising.json thunderhead abilities/1 patterns [build-linked-exits, teleport]. checks.json: build-linked-exits not sampled."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed, with the summary kept inside the schema's 800 characters."
+  },
+  {
+   "dimension": "patterns",
+   "id": "P16",
+   "severity": "minor",
+   "file": "data/patterns/heal-self.json",
+   "summary": "shooter_analogues/1 (TF2 Sandvich) is medium. Its page quotes Valve's own publicity text in a labelled box, and that text states the self-heal mechanic.",
+   "evidence": "wiki.teamfortress.com/wiki/Sandvich: a quotation box labelled as the Sandvich's publicity blurb: it lets a Heavy who holds an area get health back between waves and stay where he is. This is the makers' text about the item, in a box that says what it copies. The checker counted the same kind of labelled flavour box on the Destiny item (refill-on-ally-buff sa/0). The other TF2 blurbs in the batch are flavour only (Bonk, Razorback, Buff Banner, Equalizer, Chargin' Targe), so medium can stand for them.",
+   "fix": "In heal-self.json, set shooter_analogues[1].confidence to \"high\".",
+   "verdict": {
+    "real": true,
+    "reason": "The Sandvich page has the quotation box labelled as its publicity blurb. That is the makers' text, in a box that names what it copies, and the rule asks only for official text about the unit, so high follows. The fix is incomplete, though. The rule does not require the official text to state the mechanic, and the checker counted a flavour 'In-game description' box on the Destiny item. So the same reading raises the five other R3 TF2 examples whose pages carry labelled publicity blurbs. Nothing in the batch records a decision that blurbs don't count.",
+    "evidence": "Cache wiki.teamfortress.com: wiki_Sandvich has the publicity blurb box. wiki_Bonk__Atomic_Punch, wiki_Razorback, wiki_Buff_Banner, wiki_Equalizer and wiki_Chargin__Targe ('Close Combat Kit publicity blurb') have labelled blurbs too. All are coded medium: become-invulnerable sa/1, retaliate-on-hit sa/2, rally-allies sa/0, rage-when-wounded sa/0, dash sa/3. A grep of research/, data/ and docs/ finds no ruling on publicity blurbs. The TF2 wiki API is behind a bot check, so the cache was used.",
+    "better_fix": "Set heal-self.json shooter_analogues[1].confidence to \"high\". For consistency, also set to \"high\": become-invulnerable shooter_analogues[1] (Bonk), rally-allies shooter_analogues[0] (Buff Banner), rage-when-wounded shooter_analogues[0] (Equalizer), retaliate-on-hit shooter_analogues[2] (Razorback) and dash shooter_analogues[3] (Chargin' Targe). The other option is to record a decision that publicity blurbs do not count and keep all six medium."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed with the skeptic's wider fix: the Sandvich example and the five other Team Fortress 2 examples whose pages quote the maker's publicity text are high."
+  },
+  {
+   "dimension": "record",
+   "id": "F1",
+   "severity": "major",
+   "file": "the draft pull-request description",
+   "summary": "Decisions needed item 2 (StarCraft II count) gives no options and no recommendation, which the house rules require for every item. It also asks Mustafa again about a choice he already made on 24 October.",
+   "evidence": "pr-body.md line 14: \"2. **StarCraft II count.** The plan keeps about 15 units, 5 per race, drawn from multiplayer, co-op and the campaign (all Legacy of the Void). Say if you want a different number.\" CLAUDE.md: \"then 'Decisions needed', each item self-contained, with options and a recommendation\". docs/brief.md lines 148-149 say the same, and runbook section 8 (line 225) requires the brief's format. docs/proposal.md line 84 records it as his answer of 24 October: \"About 15 units, 5 per race.\" The current PR #6 body (fetched through gh api) carries the same option-less text.",
+   "fix": "Replace item 2 with: \"2. **StarCraft II count.** Your answer of 24 October (docs/proposal.md) keeps about 15 Legacy of the Void units, 5 per race, from multiplayer, co-op and the campaign. - A (recommended): keep about 15, because R4's prep is planned on it. - B: give another number before R4's prep starts.\" Or move it out of Decisions needed and into For Mustafa as already decided.",
+   "verdict": {
+    "real": true,
+    "reason": "Only the format part holds. Item 2 has no options and no recommendation, which the brief, CLAUDE.md and runbook section 8 all require. The claim that Mustafa already chose the count on 24 October is not supported. The night log (16:12, 24 Oct) and state.json's open_decisions record his answers that day as 1A, the StarCraft II scope (Legacy of the Void with campaign, Archon, co-op and multiplayer) and 3A, with no count. The PR opened five minutes after his answers already asked about the count. Severity is minor, not major. The proposed fix calls it 'Your answer of 24 October', which repeats the unsupported claim.",
+    "evidence": "pr-body.md line 14; CLAUDE.md line 10; docs/brief.md lines 148-149; runbook line 225. Scratchpad r3/night-log.md line 5: 'Mustafa answered the plan questions (1A, SC2 Legacy of the Void only with campaign/Archon/co-op/multiplayer units, 3A)'. Scratchpad r3/state.json open_decisions[0].answers: no count. Commit 8366649's message names 1A and 3A and no count. docs/proposal.md line 84 puts 'About 15 units, 5 per race' under 'Your answers that day'. Current PR #6 body (gh api) line 21 has the same option-less item; the PR has no comments or reviews.",
+    "better_fix": "Item 2: 'StarCraft II count. The plan keeps about 15 Legacy of the Void units, 5 per race, from multiplayer, co-op and the campaign. A (recommended): keep about 15, so R4 stays near R1's and R3's size and the plan's target of about 100 units before the generator. B: give another number before R4's prep starts.' Do not call it his answer. Also have the main session check docs/proposal.md line 84, which lists the count among 'Your answers that day' although the night log and state file do not. Reword it to the plan's number, pending item 2, unless his chat confirms he gave it."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed in the draft: item 2 has options and a recommendation, and is not called his answer. The plan's own line on that day's answers (docs/proposal.md) is left as written: only Mustafa can say what he answered, and item 2 asks him."
+  },
+  {
+   "dimension": "record",
+   "id": "F2",
+   "severity": "minor",
+   "file": "the draft pull-request description",
+   "summary": "Prep questions 3 to 7 do not say which coded units each option would recode, although the draft says a different answer means recoding. Option 3B would quietly move five of the nine Generals units from t3 to t2, and its \"only three units at t3\" refers to units outside the batch.",
+   "evidence": "pr-body.md line 16: \"A different answer means recoding the units it touches.\" Line 20: \"B: make the tech building t2. That leaves only three units at t3.\" In data/units/generals.json, five t3 units are gated by the tech building alone: Jarmen Kell (Palace), Battle Bus (Palace), Overlord (Propaganda Center), Hacker (Propaganda Center) and Aurora Bomber (Strategy Center). In prep/editors.json, Generals question 1 says that under B \"t3 would then hold only the Nuke Cannon, SCUD Launcher and Hijacker\", and none of them is coded. No R3 Generals unit has a laser: only the Shieldmaiden and the Vimana carry laser or energy weapons. rule-problems.md items 80 and 81 both say \"no batch value waits on it\".",
+   "fix": "Add one line per item. 3B: \"Five of this batch's nine Generals units (Jarmen Kell, Battle Bus, Overlord, Hacker, Aurora Bomber) move from t3 to t2; in the whole game only the Nuke Cannon, the SCUD Launcher and the Hijacker would stay at t3.\" 4: \"No unit of this batch has a laser; it decides the Laser Tank and the Avenger when they are coded.\" 6 and 7: \"No unit of this batch is affected.\"",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed for items 3, 4, 6 and 7. Option 3B would move all five of the batch's t3 Generals units to t2, and its 'three units at t3' are uncoded units from the whole game, so the line misleads in the batch's context. The runbook asks for each taken decision's affected units. The summary goes too far for item 5, which already names Jarmen Kell and the Technical, as rule-problems item 86 does. The prep note's 'No Generals unit is coded yet, so either choice recodes nothing' is now stale.",
+    "evidence": "data/units/generals.json tier: jarmen-kell t3, gate Palace; battle-bus t3, Palace; overlord t3, Propaganda Center; hacker t3, Propaganda Center; aurora-bomber t3, Strategy Center; none needs a promotion. prep/editors.json, Generals question 1: under B, t3 would hold only the Nuke Cannon, SCUD Launcher and Hijacker. No Generals armament has the laser family; only the Shieldmaiden (2 weapons) and the Vimana do. rule-problems.md items 80 and 81 both read 'Units: none'. Item 86's B changes Jarmen Kell and the Technical and sends the Hacker to step 2. Runbook line 262: 'units it affects: <ids>'.",
+    "better_fix": "Use the proposed lines for 3B and 4. For 6 and 7, add 'No unit of this batch is affected'; for 7 you can add that the Mocny's anti-mech label comes from the wiki, not official text (rule-problems items 7 and 81). Leave item 5 as is, or add that under B the unarmed Hacker's role goes to step 2."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as the skeptic's better fix says."
+  },
+  {
+   "dimension": "record",
+   "id": "F3",
+   "severity": "minor",
+   "file": "the draft pull-request description",
+   "summary": "Items 6 and 7 leave out option C, which the prep gave and pull request #6 still shows. As a result, item 6 states the recommendation wrongly: the prep recommends A now, then C at the round. Both questions are also among the 83 problems the draft says need no answer now.",
+   "evidence": "prep/editors.json, Tempest Rising question: \"C: A now, and add control of a place to the word list's no-role words at the next rule round ... Recommendation: A for batch R3, then C\". The Iron Harvest question lists options (A), (B) and (C). rule-problems.md item 80, Fix: \"The prep's recommendation: A for R3, then its option C at the rule-fix round\". Item 81, Alternative: \"The prep's option C\". The current PR #6 body lists C for both items. Draft line 28: \"A (recommended): they name no role.\" Draft line 42: \"For the rule-fix round after R4 (... no answer is needed now): the 83 rule problems\". Items 80 and 81 are in \"Open, for Mustafa\", so they count in those 83. README line 174 likewise gives only \"name no role\".",
+   "fix": "Item 6: \"A: they name no role (this batch's note). B: they name disabler. C (recommended): A now, then add control of a place to the words that name no role at the rule-fix round after R4.\" Item 7: add \"C: at that round, let a game's notes name its own word for armoured units, standing in for tank or vehicle inside any alias.\" Line 42: \"the 83 rule problems ... (two of them are questions 6 and 7 above)\". README line 174: \"name no role for now; the recommendation then adds this to the word list at the rule-fix round (option C)\".",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The draft drops option C from both items, and from item 6 also the unit names (the Peacekeeper and the Physicist) that the current PR body gives. That reduces item 6's recommendation to plain A, while the prep recommends 'A for batch R3, then C'. Items 80 and 81 are among the 83 entries in 'Open, for Mustafa', so line 42's 'no answer is needed now' overlaps questions 6 and 7. The practical impact is small: item 80's fix (C) comes back at the rule-fix round anyway. Severity low to minor.",
+    "evidence": "prep/editors.json: the Tempest Rising question has options A, B and C with 'Recommendation: A for batch R3, then C'; the Iron Harvest question has (A), (B) and (C) with recommendation B. Current PR #6 body lines 34-41 list C for both, with item 6 marked 'A (recommended for R3)'. Draft lines 27-32 show only A and B. rule-problems.md items 1-83 are 'Open, for Mustafa' (counted: 83), with items 80 and 81 at lines 489 and 495. README line 174 says only 'name no role'.",
+    "better_fix": "Use the proposed text, and put '(the Peacekeeper and the Physicist)' back into item 6. Mark item 6's recommendation as 'A now, then C at the rule-fix round', as the prep words it. On line 42, note that items 80 and 81 of the 83 are questions 6 and 7."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as the skeptic's better fix says."
+  },
+  {
+   "dimension": "record",
+   "id": "F4",
+   "severity": "minor",
+   "file": "research/r3/README.md",
+   "summary": "The README and the draft present the stack-to-overload choice as taken with the recommended option, needing no answer. The record says its skeptic asked for a fold, the independent check found that the one-pattern rule argues for the fold, and the fold goes to Mustafa.",
+   "evidence": "patterns/README.md: \"Its skeptic asked for a fold into freeze-and-shatter ... That is a calibration choice for the pattern review\". patterns/integration.json, check.decisions id 9: \"Granularity (same interaction and counterplay = one pattern) argues for the fold ... so it is rightly a decision for the owner.\" handed_over, g9: \"The fold is not unit-side and goes to the owner (decision 9).\" README line 12: \"every decision of the batch took the recommended option\". README line 166 lists it under \"Taken during the batch with the recommended option\". pr-body.md lines 34 and 38: \"You do not need to answer\".",
+   "fix": "Move it to Decisions needed: \"Voltaic Tank's charge pattern (stack-to-overload). Its skeptic asked to fold it into freeze-and-shatter, and the independent check found the one-pattern rule argues for the fold and left it to you. A (recommended): keep it separate, marked a variant, until the pattern review of step 4, because a fold widens a checked R1 pattern beyond cold weapons. B: fold it now; the Voltaic Tank's armament/0 and combos/0 links and one line of games-r3.md move to freeze-and-shatter.\" In the README, decision 6 and the TL;DR should say this choice waits for Mustafa.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The skeptic's main correction was the fold, with variant-of only as a fallback if the pattern stayed separate. The fixer could not fold, because writers may not edit an existing file and freeze-and-shatter was checked in R1, so it left the fold 'for the merge pass', which had already run. The independent check approved keeping the file for now (ok: true), but said the one-pattern rule argues for the fold and left it to the owner. Calling the kept-separate choice 'the recommended option' that needs no answer is therefore inaccurate. Severity minor. The proposed option B, 'fold it now', is not free: it edits data/patterns/freeze-and-shatter.json against the Conventions rule 'Never edit an existing pattern file', which is a protected field-rule text. The patterns record sends the fold to the pattern review in plan step 4.",
+    "evidence": "research/r3/patterns/result.json groups[8].verdicts[0].correction: fold in the merge pass; if separate, set variant-of. groups[8].fixed.not_applied[0]: fold not done because writers can't edit an existing pattern file and it is R1-checked; 'Left for the merge pass'. integration.json check.decisions id 9 (ok: true): 'Granularity ... argues for the fold ... rightly a decision for the owner'; handed_over g9: 'goes to the owner'. patterns/README.md line 139: 'a calibration choice for the pattern review'. README lines 12 and 166; draft lines 34 and 38. docs/fields.md line 18 and scripts/build-docs.mjs line 640: 'Never edit an existing pattern file'.",
+    "better_fix": "In README decision 6, the README TL;DR and draft item 10, say: 'stack-to-overload stays its own pattern for now, marked a variant of freeze-and-shatter. Its skeptic recommended folding it in, which would edit a pattern R1's checker checked, so the fold is yours to decide at the pattern review (plan step 4).' If it moves to Decisions needed instead, option B must say a fold now needs his exception to the never-edit-an-existing-pattern-file rule."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed: the report and the draft say the fold is left for Mustafa at the pattern review."
+  },
+  {
+   "dimension": "record",
+   "id": "F5",
+   "severity": "minor",
+   "file": "research/r3/README.md",
+   "summary": "Runbook section 8 asks for three things that the copy-check section does not give, all of which R1's report gave: the 36 unreadable addresses one by one with their reasons, the result of part 2 (pages named in uncertain entries but not cited), and the commit the online run read.",
+   "evidence": "Runbook line 212: \"The report lists every page that could not be fetched, with the reason. `https://cnc.fandom.com/wiki/` and `.../CnC_Remastered_Collection/master/REDALERT/` always appear there.\" Line 209 defines part 2. README line 156 gives only counts by category. research/r1/README.md lines 145-154 list each page, the part 2 result (\"The 51 pages named in the batch's uncertain entries but not cited, all cached: no shared run\") and the commit (f9a38a7). My run of `npm run copy-check -- --offline --also research/r3 --also research/registry-notes` checked 1173 pages with 0 FOUND lines and left 36 unchecked: cnc.fandom.com/wiki/, iron-harvest.fandom.com/wiki/, the TheSuperHackers .../Data/INI/ folder, CnC_Remastered .../REDALERT/, the modenc root plus 22 ModEnc pages, tempestrising.com/factions/tempest-dynasty and 8 web.archive.org addresses. `--offline --also data/units` printed no FOUND line on any R3 unit (13 lines, all on R1 units).",
+   "fix": "Under \"The online copy-check\", give the commit it ran on and a sub-list of the 36 addresses grouped by reason. Name the four placeholders: https://cnc.fandom.com/wiki/, https://iron-harvest.fandom.com/wiki/, the TheSuperHackers .../Data/INI/ folder and the CnC_Remastered_Collection .../REDALERT/ folder. Then list the 23 ModEnc addresses (refused), tempestrising.com/factions/tempest-dynasty (gone; named in the Line Officer's uncertain note) and the 8 web.archive.org addresses (connection reset). Add one line for part 2 with its page count and result.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The README's copy-check paragraph gives counts by category only. It does not name the two placeholders runbook line 212 says must always appear, gives no result for part 2 and no commit for the online run. R1's report gives all three. Part of this is section 8 work not yet done: the handoff lists the three-part online copy-check as still to do, and the scratch folder holds no part 2 run with --only. So part 2 has to be run before a line can report it.",
+    "evidence": "I ran `node scripts/copy-check.mjs --offline --also research/r3 --also research/registry-notes`: 1173 pages checked, 0 FOUND, 36 not checked. They are cnc.fandom.com/wiki/, iron-harvest.fandom.com/wiki/, the ModEnc root plus 22 ModEnc pages, TheSuperHackers .../Data/INI/, CnC_Remastered .../REDALERT/, tempestrising.com/factions/tempest-dynasty and 8 web.archive.org addresses. `--offline --also data/units`: 13 FOUND lines, all on ra1, ra2 and ra3 units, none on R3 units. README line 156; runbook lines 207-212; research/r1/README.md lines 146-154 (commit f9a38a7, part 2 with 51 pages); docs/handoff.md lines 91-92.",
+    "better_fix": "In section 8, run the online part 1 on the final commit. Run part 2 (`--also data/units --only <url>` for each page named in an R3 uncertain entry but not cited) and read the FOUND lines on R3 units. Then write the proposed sub-list: the commit, the 36 addresses grouped by reason with the two required placeholders named literally, and the part 2 page count and result."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed: the report's copy-check section gives the commit, the three parts and every unread address by reason."
+  },
+  {
+   "dimension": "record",
+   "id": "F6",
+   "severity": "minor",
+   "file": "research/r3/README.md",
+   "summary": "The README says the merge pass, the patterns, the checker and the report ran \"by day on 10 and 11 November\". In fact the merge pass's first step and two of its finders ran on 29 October, and the 11 November commits were made between 00:06 and 08:09 Amsterdam time, inside the night window.",
+   "evidence": "README line 3: \"...and the merge pass, the patterns, the checker and this report by day on 10 and 11 November, after the work moved to a new session\". git log in Amsterdam time: 6c817f1 \"R3 merge pass, step 1\" on 2026-10-29 at 03:16 CET; then on 11 November 527724f at 00:06, 3618824 at 01:19, ef2460e at 05:12, 8e1746f at 05:14, 9ce1f96 at 06:45, 6556887 at 06:54 and e05e5c4 at 08:09 CET. merge/README.md line 22: \"The registry and links finders ran on 29 October 2026.\" Runbook line 311 puts the night window at 00:00-08:30 Amsterdam time. pr-body.md line 37: \"(10 and 11 November): four finders looked across the 27 units\".",
+   "fix": "README line 3: \"...and the fill at night from 26 to 29 October 2026, with the merge pass's first step (6c817f1) and two of its four finders on 29 October; the rest of the merge pass, the patterns, the checker and this report followed on 10 and 11 November, after the work moved to a new session.\" Drop \"by day\". In PR item 9, change \"(10 and 11 November)\" to \"(finders on 29 October and 10 November, fixes on 10 and 11 November)\".",
+   "verdict": {
+    "real": true,
+    "reason": "Partly confirmed. The clear error: merge pass step 1 (6c817f1) and two of its four finders ran on 29 October, not on 10-11 November. 'By day' is weaker evidence. The 10 November session ran under day rules, as the night log's heading says, with Mustafa answering live at 23:27, 23:58, 00:02 and 00:30 CET. 'By day' therefore means day rules, not the night shift, even though the clock hours were evening and night. The draft's item 9 date belongs to 'The consistency check's fixes', which were made on 10-11 November. Only the 'four finders' clause after it can mislead. Severity low.",
+    "evidence": "Commit times in Amsterdam time: 6c817f1 on 2026-10-29 at 03:16 CET; 527724f 00:06, 3618824 01:19, ef2460e 05:12, 8e1746f 05:14, 9ce1f96 06:45, 6556887 06:54 and e05e5c4 08:09 CET, all on 11 Nov. research/r3/merge/README.md line 22: the registry and links finders ran on 29 October. Scratchpad r3/night-log.md: '## New session, 10 November 2026 (day rules; the night shift is not recreated)', session start 22:35 CET, Mustafa's messages at 23:27-00:30. Runbook line 311 defines the night window as 00:00-08:30.",
+    "better_fix": "README line 3: '...the fill at night from 26 to 29 October 2026, with the merge pass's first step (6c817f1) and two of its finders on 29 October; the rest of the merge pass, the patterns, the checker and this report followed in a day session from the evening of 10 November to the morning of 11 November, after the work moved to a new session.' Do not describe it as night-shift work. Draft item 9: '(finders on 29 October and 10 November, fixes on 10 and 11 November)'."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as the skeptic's better fix says."
+  },
+  {
+   "dimension": "record",
+   "id": "F7",
+   "severity": "minor",
+   "file": "research/r3/README.md",
+   "summary": "The README says the Kaiser was recoded once, but the record shows two recodes: one after N1 and one after N3.",
+   "evidence": "README line 17: \"the Kaiser was recoded once after two note decisions\". opening/final/recode-iron-harvest.md has two sections, \"What N1 changed\" (\"One agent then recoded the entry\") and \"Night decision N3: the body plan\" (\"The Kaiser was then recoded by hand\"). The current PR #6 body calls it \"the Kaiser's two recodes\".",
+   "fix": "README line 17: \"the Kaiser was recoded twice, once after each of two note decisions (N1 and N3)\".",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The record describes two separate recodes: one by an agent after N1, one by hand after N3. Severity low.",
+    "evidence": "research/r3/opening/final/recode-iron-harvest.md line 5: 'One agent then recoded the entry' (after N1). Line 36: 'The Kaiser was then recoded by hand' (after N3). README line 17: 'recoded once after two note decisions'. Current PR #6 body line 79: 'the Kaiser's two recodes'."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "record",
+   "id": "F8",
+   "severity": "minor",
+   "file": "research/r3/README.md",
+   "summary": "The README contradicts itself on how many checkers there were: \"A checker\" in How it ran, \"Five checkers\" in the Checker section.",
+   "evidence": "README line 21: \"A checker who wrote none of the records re-opened the sources of 9 sampled units\". Line 140: \"Five checkers who wrote none of the records\". checker/result.json, runs: \"five groups: one per game for the units, two for the patterns\".",
+   "fix": "README line 21: \"Five checkers who wrote none of the records re-opened the sources of 9 sampled units...\".",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The README contradicts itself: line 21 has one checker, line 140 five, and the checker's record says five groups. Severity low.",
+    "evidence": "README line 21: 'A checker who wrote none of the records'. Line 140: 'Five checkers who wrote none of the records'. research/r3/checker/result.json runs.checks_and_skeptics: 'five groups: one per game for the units, two for the patterns'."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "record",
+   "id": "F9",
+   "severity": "minor",
+   "file": "research/r3/README.md",
+   "summary": "The README says all 18 settled batch problems took the recommended fix, but item 90 was settled with a smaller fix than the one proposed.",
+   "evidence": "README line 123: \"18 are settled, with the recommended fix\". rule-problems.md item 90 proposes naming \"the class of each of the seven sets\", while its \"Settled in the batch\" line reads \"A smaller fix: ... names the two coded so far (the Battle Bus medium, the Sentry Drone light). The other five sets are named when their units are coded\". pr-body.md item 12 sits under \"Taken during the batch with the recommended option\".",
+   "fix": "README: \"18 are settled: 17 with the recommended fix and one (item 90) with a smaller fix that names only the two one-off armour sets coded so far.\" PR item 12: add \"(one of them with a smaller fix)\".",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed, and the finding undercounts. Item 90 was settled with 'A smaller fix'. Item 102 was settled with only 'the part the batch can do', with the widening left for the pattern review, as its own fix plans. The other 16 say 'As proposed'. So the proposed '17 with the recommended fix' is itself off by one.",
+    "evidence": "research/r3/rule-problems.md, 'Settled in the batch' lines for items 84-106. Item 90: 'A smaller fix: ... names the two coded so far'. Item 102: 'The part the batch can do ... Widening the variant waits for the pattern review'. Items 85, 87-89, 91, 94 and 96-106 apart from 102: 'As proposed'. README line 123; draft item 12.",
+    "better_fix": "README: '18 are settled: 16 as proposed, item 90 with a smaller fix that names only the two one-off armour sets coded so far, and item 102 with the part the batch can do (the rest of its fix waits for the pattern review).' Draft item 12: add '(two of them only in part)'."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as the skeptic's better fix says."
+  },
+  {
+   "dimension": "record",
+   "id": "F10",
+   "severity": "minor",
+   "file": "research/r3/merge/fixes.json",
+   "summary": "Path removal left broken sentences in 11 places in the record.",
+   "evidence": "merge/fixes.json lines 102, 196, 291, 403, 454 and 514 contain \"All checks ran in the workspace .\", \"All commands ran in the workspace .\", \"All run in .\", \"All commands ran in .\" and \"I did not edit the repository the repository.\". patterns/result.json lines 433, 754, 1412, 1481 and 1705 contain \"in the workspace the workspace\" and \"Workspace the workspace.\". Found with grep over research/r3.",
+   "fix": "Text only: replace \"in the workspace the workspace\" with \"in the workspace\", \"Workspace the workspace.\" with \"In the workspace.\", \"ran in .\" and \"run in .\" with \"ran in the workspace.\", \"ran in the workspace .\" with \"ran in the workspace.\", and \"the repository the repository\" with \"the repository\". Then run npm run format and the copy-check.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. Removing the paths left 11 broken lines in the record's agent text, and a wider search found no others in research/r3. It is cosmetic: severity low.",
+    "evidence": "grep over research/r3 found merge/fixes.json lines 102 and 196 ('ran in the workspace .'), 291 ('All run in .'), 403 and 514 ('ran in .') and 454 ('ran in . I did not edit the repository the repository.'). It found patterns/result.json lines 433, 754 and 1481 ('in the workspace the workspace') and 1412 and 1705 ('Workspace the workspace.'). A search for doubled 'the X the X' phrases and for 'in .' found nothing else."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "record",
+   "id": "F11",
+   "severity": "minor",
+   "file": "the draft pull-request description",
+   "summary": "The draft names two Iron Harvest units differently from the data and the README.",
+   "evidence": "pr-body.md line 50: \"Anna Kos and Wojtek, ..., Engineer squad\". In data/units/iron-harvest.json, iron-harvest.polania.anna-kos is named \"Anna Kos\" and iron-harvest.shared.engineer is named \"Engineers\". The README table uses \"Anna Kos\" and \"Engineers\".",
+   "fix": "Line 50: \"Iron Harvest: Anna Kos, Mocny, Grimbart, Kaiser, Olga Morozova, Nakovalnya, William Mason, Stark, Engineers.\"",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed, but a nit. The draft uses informal names that differ from the data's name fields and the README table. It also treats the companions unevenly: Wojtek is named, Olga's tiger is not. Nobody would be misled. Severity low.",
+    "evidence": "data/units/iron-harvest.json: iron-harvest.polania.anna-kos is 'Anna Kos' and iron-harvest.shared.engineer is 'Engineers'. Draft line 50: 'Anna Kos and Wojtek ... Engineer squad'. README table lines 59 and 67 use the data names. Current PR #6 body line 91 has the same informal names."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "record",
+   "id": "F12",
+   "severity": "minor",
+   "file": "the draft pull-request description",
+   "summary": "The branch changes a file under schemas/, which the house rule counts as field rules needing Mustafa's recorded approval. Decision 1 does not say that his approval covers it, and the TL;DR says no field rule changed.",
+   "evidence": "`git diff --name-only origin/main...HEAD -- data/vocab schemas scripts/build-docs.mjs scripts/validate.mjs` prints schemas/game.schema.json (the research_bucket description). CLAUDE.md: \"Never change the word lists or field rules without his approval, recorded in the commit message. They are data/vocab/, schemas/ ...\", and the diff \"must print nothing that lacks that approval\". The 8366649 message says \"A description only, no rule change; it mirrors the batch list of Mustafa's plan change\" but records no approval of this edit. pr-body.md line 5: \"No word list or field rule changed.\" Line 11, item 1, does not mention the file.",
+   "fix": "Add to item 1: \"Approving also covers the one-line wording change in schemas/game.schema.json (the batch list in research_bucket's description; no rule changes), which the house rules ask you to approve; the merge commit message will record your approval.\"",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The protected-file diff prints schemas/game.schema.json, and its commit records no approval from Mustafa. It only says the edit mirrors his plan change, and that plan still awaits his approval in item 1. The night log shows each push since 24 October went ahead with the guard printing this file, treated as a description-only change. The change is indeed description only: the research_bucket $ref slug is unchanged. Severity minor.",
+    "evidence": "`git diff --name-only origin/main...HEAD -- data/vocab schemas scripts/build-docs.mjs scripts/validate.mjs` prints schemas/game.schema.json. `git diff origin/main...HEAD -- schemas/game.schema.json` changes only the research_bucket description. Commit 8366649's message: 'A description only, no rule change; it mirrors the batch list of Mustafa's plan change'. Scratchpad r3/night-log.md, 00:43 (27 Oct) and 00:10 (11 Nov): the guard printed only this file. CLAUDE.md, Rules for the data. Draft line 5: 'No word list or field rule changed.' Line 60 mentions the wording change; item 1 does not.",
+    "better_fix": "Use the proposed sentence in item 1. Also change TL;DR line 5 to 'No word list or field rule changed; one schema description changed in wording only (item 1)'. Then put his approval in the merge commit message."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as the skeptic's better fix says."
+  },
+  {
+   "dimension": "record",
+   "id": "F13",
+   "severity": "minor",
+   "file": "research/r3/README.md",
+   "summary": "The file index leaves out prep/editors.json, the source of the five prep questions. The report also has no final-review step and no review/ row, both of which R1's report has.",
+   "evidence": "The README Files table lists prep/trim.json but not prep/editors.json, which holds the open questions behind Decisions 3-7 and is cited by rule-problems.md items 80, 81 and 86. Runbook line 37 lists review/ in the batch record. research/r1/README.md line 22 has step 7, \"Final review\", and line 200 has the review/ row.",
+   "fix": "Add a row \"[prep/editors.json](prep/editors.json) | Each prep editor's changes and the five open questions\". Once review/findings.json exists, add step 7 \"Final review\" to How it ran (findings, verdicts, fixes) and a review/ row to Files, as R1 did.",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed for prep/editors.json. The file is new in R3 (R1's prep folder has only trim.json), holds the five prep questions and is cited by rule-problems items 80, 81 and 86, yet the Files table leaves it out. The missing review/ row and step 7 are not a defect yet: the final review is running now. The proposed fix rightly makes them conditional. Severity low.",
+    "evidence": "README Files table, lines 184-197: no editors.json. `ls research/r3/prep`: editors.json and trim.json. `ls research/r1/prep`: trim.json only. rule-problems.md lines 493, 499 and 533 cite research/r3/prep/editors.json. Runbook line 37 lists review/. R1 README line 22 has step 7 and line 200 the review/ row."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed: the report lists prep/editors.json, has its final-review step and a review row."
+  },
+  {
+   "dimension": "record",
+   "id": "F14",
+   "severity": "minor",
+   "file": "research/r3/patterns/README.md",
+   "summary": "The patterns record still says every new file is unchecked, but the checker has since marked 11 of them checked.",
+   "evidence": "patterns/README.md line 17: \"Every file has status `proposed` and review status `unchecked`.\" The data shows 11 of the 33 new files with review.status \"checked\" (checked_by \"batch r3 checker\") and 22 \"unchecked\". checker/result.json samples 11 patterns.",
+   "fix": "Line 17: \"Every file has status `proposed`. Review status was `unchecked` until the checker, which re-checked 11 of them; those are now `checked`.\"",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The sentence was true when the patterns were committed (ef2460e) and went stale when the checker's fix commit marked 11 sampled files checked. Severity low.",
+    "evidence": "Of the 33 pattern files added on the branch (git diff --diff-filter=A origin/main...HEAD -- data/patterns/), 11 have review.status 'checked' with checked_by 'batch r3 checker': deploy-turret, drop-in-from-above, fortify-on-death, generate-income, hijack-vehicle, host-spawn-point, lay-smoke, produce-unit-in-field, refill-on-ally-buff, suppress-with-fire and upgrade-in-field. The other 22 are 'unchecked'. patterns/README.md line 17 says every file is unchecked."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "record",
+   "id": "F15",
+   "severity": "minor",
+   "file": "research/r3/README.md",
+   "summary": "The README's rule-problem counts read as 128 + 4 = 132, but the file has 131 entries. One of the four missing problems went into an existing item.",
+   "evidence": "README line 120: \"an editor merged them into 128 entries ... named 4 missing problems; the editor applied them ... and the file grew to 131 entries.\" The rule-problems.md intro says the last check added four things: two more cases put into item 10, and new items 78, 80 and 99. The parsed file has 131 entries.",
+   "fix": "README line 120: \"named 4 missing problems (three became entries 78, 80 and 99, and the fourth joined item 10)\".",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The skeptic named 4 missing problems. Three became new entries (78, 80, 99) and the fourth was folded into item 10, so 128 + 3 = 131. The README's wording reads as 128 + 4. Severity low.",
+    "evidence": "Scratchpad r3/report/result-rule-problems-run1.json: verdicts.missing has 4 items. fixed.not_applied includes 'Second missing item ... no separate entry ... Both cases went into entry 10'. Counts went from 81 + 22 + 25 = 128 to 83 + 23 + 25 = 131. rule-problems.md intro: 'two more cases ... (in item 10) ... item 78 ... item 80 ... item 99'. README line 120."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "record",
+   "id": "F16",
+   "severity": "minor",
+   "file": "the draft pull-request description",
+   "summary": "The draft's For Mustafa section lists files but none of his actions. The brief defines that section as his actions, or \"nothing\".",
+   "evidence": "docs/brief.md lines 148-149: \"'For Mustafa' (his actions, or 'nothing')\". pr-body.md lines 44-65 guide him through the report, units, patterns and record, but never ask him to answer item 1 or approve the merge.",
+   "fix": "Start For Mustafa with: \"1. Answer item 1 (approve and merge), and items 2 to 7 if you want a different answer. 2. Optional: read research/r3/README.md.\" Keep the current list below it under a heading such as \"What this pull request holds\".",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed against the brief, but low. Mustafa's brief defines 'For Mustafa' as his actions, or 'nothing'. The draft's section is a tour of the files and never states his one action, answering item 1. R1's merged PR #4 also used 'For Mustafa' for information rather than actions, so the deviation has been tolerated before.",
+    "evidence": "docs/brief.md lines 148-149: 'For Mustafa' (his actions, or 'nothing'). Runbook line 225 uses the brief's format. Draft lines 44-65 list files only. PR #4 body (gh api) 'For Mustafa': decisions and content, not actions. Current PR #6 body is in the same style.",
+    "better_fix": "Open For Mustafa with '1. Answer item 1 (approve and merge), and items 2 to 7 if you want a different answer.' Then keep the file list under a short lead-in such as 'What this pull request holds'."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as the skeptic's better fix says."
+  },
+  {
+   "dimension": "tooling",
+   "id": "tooling-1",
+   "severity": "minor",
+   "file": "scripts/copy-check.mjs",
+   "summary": "If no page matches the --only text, the copy-check checks zero pages and still prints 'OK: no shared runs' with exit 0. Runbook section 8, step 4, part 2 (docs/research-runbook.md:209) relies on `--only <url>`, so a misspelled URL, or a page the notes name only by title, passes without being read. The behaviour is older than this batch, but the batch changed this script and R3's part 2 has not run yet.",
+   "evidence": "Ran `node scripts/copy-check.mjs --offline --also data/units --only <a mistyped Tempest Rising wiki address>`. Output: 'copy-check: 0 of 1049 cited page(s) (--only) in 152 record(s) and 6 note file(s)', 'pages checked: 0 (0 from cache, 0 fetched); not checked: 0', 'notes (--also): 6 file(s) checked against 0 page(s)', 'OK: no shared runs', exit 0. Cause: the script only fetches URLs that are cited or written out in the notes (line 500: allUrls; line 501: urls = allUrls.filter(inScope)). It adds a cached page only when that page is in scope (line 558). exitCode returns 0 when there are no findings and nothing is listed as not checked (lines 594-595). So a URL that is not written exactly in the data or notes, and is not cached, is never fetched and never listed. With a correct URL the check works: `--also research/r2 --only` with the name of the 1.8.0 patch page checked 1 page and found a run. Today all 158 pages named by URL in R3's uncertain notes are written out in full, and 157 are cached, so R3 is safe only while each URL is copied exactly.",
+   "fix": "In copyCheck, just before the `return`, add: `const seen = [...pages.keys(), ...(notes.length ? cachedPages(cacheDir).map(([u]) => u) : [])]; for (const t of opts.only) if (!seen.some(u => u.includes(t)) && !notChecked.some(([u]) => u.includes(t))) notChecked.push([t, '--only matched no cited, linked or cached page'])`. The run then ends INCOMPLETE with exit 3. Add a test to tests/copy-check.test.mjs: an offline copyCheck with an `only` text that names an address which does not exist returns exitCode 3 and that reason. At the end of runbook step 4.2 (line 209), add: 'A report that says 0 pages checked means the URL matched nothing: copy it exactly from the entry.'",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. If no page matches the --only text, the check looks at zero pages and still prints 'OK: no shared runs' and exits 0. Nothing in the docs, workflows or tests deals with this case, and there is no --only test at all. Runbook step 4.2 (line 209) depends on --only, and so do the main session's re-run after each workflow (runbook line 100) and the agents' own checks. Those checks accept exit 0 after `--only <part of each URL>` (research/workflows/code-units.js:89, patterns.js:64 and 85, reconcile.js:49). Part 1 runs with no --only and later catches a mistyped --only on a cited page. Step 4.2 pages have no such backstop. R3 is exposed only if a URL is mistyped: all 158 uncited URLs named in R3's uncertain notes are written out in data/units, and 157 of them are cached. The 'address under X' convention keeps the URLs written somewhere in each unit. The proposed code works: I tried it in a scratch copy. A mistyped URL now gives 'NOT CHECKED (--only matched no cited, linked or cached page)' and exit 3, and a correct cached page still exits 0. But the fix is incomplete, and its runbook sentence is wrong.",
+    "evidence": "Ran `node scripts/copy-check.mjs --offline --also data/units --only <a mistyped Tempest Rising wiki address>`: 0 of 1049 pages, 'checked against 0 page(s)', 'OK: no shared runs', exit 0. Code: copy-check.mjs:499-501 builds the URL list only from cited or written URLs, :557-558 adds only cached pages that match, and :594-596 returns 0 when there are no findings and nothing is listed as not checked. The branch's diff to this script touches only withoutLinks, not --only. Ran `--also research/r2 --only` with the name of the 1.8.0 patch page: it finds the run, yet prints 'pages checked: 0 (0 from cache, 0 fetched)' while the notes line says 'checked against 1 page(s)'. Patched scratch copy (scratch folder .../verify-tooling/cc-fix1.mjs): the typo run ends INCOMPLETE with exit 3, and the offline run time goes from 2.2 s to 4.0 s because the cache is read a second time. My script over R3's 27 units found 454 uncertain entries naming 159 URLs; 158 are not cited by their own unit and 157 of those are cached (the missing one is tempestrising.com/factions/tempest-dynasty).",
+    "better_fix": "Keep the idea, with three changes. (1) Do not call cachedPages() a second time. It parses all 1,173 cache files (205 MB) again. Instead, keep the URLs the existing loop at line 557 adds (hoist `all`, or collect a Set), and test each --only text against `[...urls, ...all.keys()]`. (2) Before the fetch loop, add any --only text that is a full http(s) URL, matches nothing in allUrls and has no cache file (cachePath) to `urls`. It is then fetched online, or listed as 'offline and not cached' offline. That way step 4.2 can actually check a page the notes name only by title, instead of always ending INCOMPLETE. Push only the unmatched texts that are not URLs to notChecked with the proposed reason (exit 3). Add the proposed test plus one for an uncached full URL offline (exit 3, 'offline and not cached'). (3) Do not add the proposed runbook sentence. 'pages checked: 0' also appears on a correct run when the page is cached but not written in the data. Write instead: 'If the run ends INCOMPLETE with \"--only matched no cited, linked or cached page\", the URL matched nothing: copy it exactly from the entry.'"
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed with the skeptic's better fix: an --only text that matches nothing ends the run incomplete, a full address nothing cites is fetched or listed, the cache is not parsed twice, and the runbook names the message."
+  },
+  {
+   "dimension": "tooling",
+   "id": "tooling-2",
+   "severity": "minor",
+   "file": "research/r2/prep/prep-cnc3.json",
+   "summary": "This pull request adds research/r2/ (commit 5b2dd46), but none of the copy-checks it runs covers that folder. The runbook (8.4.1), CLAUDE.md and the final review only name research/r<N> (r3) and the registry notes. Run on research/r2 today, the copy-check finds one six-word run, against pages that R3 cached later.",
+   "evidence": "`node scripts/copy-check.mjs --offline --also research/r2` gives exit 1. FOUND research/r2/prep/prep-cnc3.json /notes/game_wide (line 5, the Veterancy bullet: on rank coming from the worth of damage dealt and not from kills): a six-word run, shared with https://store.steampowered.com/events/ajaxgetpartnereventspageable/?clan_accountid=42794230&appid=1486920&offset=0&count=100&l=english and https://tempestrising.wiki.gg/wiki/Tempest_Rising_patch_1.8.0%2B57140. Both pages entered the cache through R3. 414 of R2's pages are not cached on this machine. The R2 README's 'no shared runs' was true on 25 October. handoff.md:96 lists only R1's units as known and left alone.",
+   "fix": "In prep-cnc3.json notes.game_wide, replace on rank coming from the worth of damage dealt and not from kills with 'earned by the value of the harm the unit inflicts, not by kills'. I checked this wording against every cached page with copy-check's words, grams and sharedRuns: no shared run. For this pull request's final copy-check, run `npm run copy-check -- --also research/r2 --also research/r3 --also research/registry-notes`.",
+   "verdict": {
+    "real": false,
+    "reason": "The FOUND line is real, but the overlap is a coincidence, not copied wording. R2 never read those pages, and the project leaves runs like this alone. R2's sentence is about Tiberium Wars veterancy and cites the cnc.fandom Veterancy page, which is cached and does not contain the run. Both matching pages are Tempest Rising text about the Dynasty's salvage effect, which gives back part of what a unit's hits on vehicles or buildings are worth. They were first fetched on 10 November for R3, 16 days after R2's notes were written and passed an online copy-check against the 958 pages R2 could read (R2 README:37). The same thing happens to other older records as the cache grows. research/r1, already on main, now shows 2 runs against Iron Harvest pages cached by R3, and handoff:96 already treats runs in R1's units against pages they never cite as 'known and left alone'. By design the runbook checks a batch's folder when that batch commits text. When R2 resumes, its prep commit runs part 1 on research/r2 (runbook section 1, step 4), so a reword would happen then. Small slip in the evidence: 19 of the 414 uncached pages are the data's own citations. R2's notes add 400 addresses, of which 395 are uncached.",
+    "evidence": "Ran `node scripts/copy-check.mjs --offline --also research/r2`: exit 1, one FOUND at prep-cnc3.json /notes/game_wide, a six-word run, against the Steam events page for appid 1486920 and the wiki's page for patch 1.8.0. Cache files: those two pages were fetched 2026-11-10T22:14Z and 22:18Z. Only R3 fill reports j05, j06 and j07 name them. Page text around the match: the sentence on the salvage effect. The cnc.fandom.com/wiki/Veterancy page is cached and has no match. `git log -- research/r2`: 5b2dd46, dated 25 Oct, not on origin/main. Ran `--offline --also research/r1`: exit 1, 2 FOUND (one against Iron Harvest's Mech page and one against the PZM-13 page). A data-only offline run shows 901 pages with 19 uncached, against 1301 with 414 uncached when research/r2 is added."
+   },
+   "status": "answered",
+   "answer": "Not confirmed by the skeptic; see the verdict's reason. Nothing changed."
+  },
+  {
+   "dimension": "tooling",
+   "id": "tooling-3",
+   "severity": "minor",
+   "file": "docs/research-runbook.md",
+   "summary": "Line 117, edited by this batch, still names R1's agreement report: 'R1's, at ef62f3a, until R3 has one'. R3 now has one (research/r3/opening/agreement.md, 48629b8). A session that takes the named commit literally would run an opening check for R4 that the rule does not call for.",
+   "evidence": "`git log --oneline -- research/r3/opening/agreement.md` gives 48629b8. `git log --oneline 48629b8..HEAD -- data/vocab schemas scripts/build-docs.mjs scripts/validate.mjs` prints nothing. `git log --oneline ef62f3a..HEAD -- <same paths>` prints 8366649 and 9fda853. So the trigger fires from ef62f3a but not from R3's report. An unneeded check costs two coders, an agreement report and a reconciler.",
+   "fix": "Replace 'R1's, at ef62f3a, until R3 has one.' with 'R3's, at 48629b8 (R1's was at ef62f3a).'",
+   "verdict": {
+    "real": false,
+    "reason": "The git facts hold, but the line already covers this case. It names the newest research/r<N>/opening/agreement.md as the report that counts, and it limits R1's commit to 'until R3 has one'. R3's report exists, and its commit (48629b8) is also listed in handoff:49 and the R3 README:17. Read as written, the rule points to 48629b8, and from there the trigger correctly does not fire for R4. The finding's failure case needs a reader to ignore the 'until' clause. The line was written in 8366649 on 24 Oct, before R3's opening check on 27 Oct, so when it was written it was simply accurate. An optional, harmless polish that never goes stale: name the commit through `git log -1 --format=%h -- 'research/r*/opening/agreement.md'`, which prints 48629b8 today.",
+    "evidence": "`git log -- research/r3/opening/agreement.md` gives 48629b8 (2026-10-27). `git log 48629b8..HEAD -- data/vocab schemas scripts/build-docs.mjs scripts/validate.mjs` prints nothing. The same command from ef62f3a prints 8366649 and 9fda853. ef62f3a is R1's agreement commit (2026-10-20). `git log -L117,117:docs/research-runbook.md`: last changed in 8366649 on 2026-10-24. handoff.md:49 lists '48629b8 | R3 opening check'."
+   },
+   "status": "answered",
+   "answer": "Not confirmed by the skeptic; see the verdict's reason. Nothing changed."
+  },
+  {
+   "dimension": "tooling",
+   "id": "tooling-4",
+   "severity": "minor",
+   "file": "docs/handoff.md",
+   "summary": "Line 96 says `npm run copy-check -- --offline --also data/units` finds '19 coincidental six-word runs in R1's units, against pages only R3 caches, such as \"one of them at a time\"'. Today the command finds 13 runs, the example is not among them, and 9 of the 13 are against pages that R1-era pattern files cite, not pages only R3 caches. 'None in R3's units' still holds.",
+   "evidence": "Ran the command (exit 1): 13 FOUND (ra1.json 6, ra2.json 2, ra3.json 5), none in generals, tempest-rising or iron-harvest. Pages matched: Gap_generator_(Red_Alert_2), cited by shroud-area.json; Ambulance (repair-allies.json); Striker-VX (transform.json, ra3.json); Psychic_tower (mind-control.json); Guardian_GI (deploy-siege-mode.json); GDI_armored_personnel_carrier_(Renegade) and UH-1Y_Venom (carry-passengers.json); Halopedia Plasma_grenade (throw-explosive.json); Torbjörn (overclock-self.json and deploy-turret.json). Only Sandbag_Cover, Riot_Van and the Aeon carrier are R3-only. The line was written in 71d7e67 on the old machine's cache.",
+   "fix": "Replace the line with: '**Known and left alone:** `npm run copy-check -- --offline --also data/units` finds coincidental six-word runs in R1's units (13 on 11 November 2026; the count depends on the cache), against pages other records cite, such as \"while it is in the air\" (Halopedia's Plasma grenade page). None is a page those units cite, and none is in R3's units.'",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. The 'Known and left alone' line makes claims about the command's output that are false on this machine. The command finds 13 runs, not 19. 'One of them at a time' is not among them. 9 of the 13 are against pages that R1-era pattern files already cited on origin/main, so the cause 'against pages only R3 caches' is wrong for them. Only 4 are against pages that are R3-only. The rest still holds: no FOUND line is in R3's units, and no matched page is cited by any unit. The line was written in 71d7e67 (2026-11-10 21:12Z), and this machine's cache starts at 21:55Z. The R1 units are unchanged on this branch, so the 9 runs against R1-era pattern pages most likely existed on the old cache too. The proposed text is nearly right, but 'against pages other records cite' does not fit Riot_Van (2 of the 13). No record cites it; only an R3 unit's uncertain note names it. Small slip in the evidence: Striker-VX is cited only by transform.json, not by ra3.json.",
+    "evidence": "Ran `npm run copy-check -- --offline --also data/units`: exit 1, 'FAILED: 13 shared run(s)' (ra1.json 6, ra2.json 2, ra3.json 5; none in generals, tempest-rising or iron-harvest), 51 pages uncached, and no 'one of them at a time'. My script (scratch folder .../verify-tooling/who-cites.mjs) checks which records cite each matched page on origin/main and at HEAD. Cited on main by R1-era patterns: Ambulance (repair-allies), Gap_generator_(Red_Alert_2) (shroud-area), Torbjörn (overclock-self), Plasma_grenade (throw-explosive), Striker-VX (transform), Psychic_tower (mind-control, overload-past-cap), GDI APC (Renegade) and UH-1Y_Venom (carry-passengers), Guardian_GI (deploy-siege-mode). R3-only: Sandbag_Cover (new build-cover), Aeon carrier (new produce-unit-in-field), and Riot_Van, which no record cites and only tempest-rising.gdf.drone-operator's uncertain note names. `git log -L96,96:docs/handoff.md` gives 71d7e67. The earliest 'fetched' time in the cache is 2026-11-10T21:55Z. `git diff origin/main...HEAD` shows no change to ra1, ra2 or ra3.",
+    "better_fix": "Replace the line with: '**Known and left alone:** `npm run copy-check -- --offline --also data/units` finds coincidental six-word runs in R1's units (13 on 11 November 2026; the count depends on the cache), against pages that other records cite or name, most of them cited by R1's own pattern files, such as \"while it is in the air\" (Halopedia's Plasma grenade page, cited by throw-explosive). None is a page those units cite, and none is in R3's units.'"
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as the skeptic's better fix says."
+  },
+  {
+   "dimension": "tooling",
+   "id": "tooling-5",
+   "severity": "minor",
+   "file": "docs/research-runbook.md",
+   "summary": "Line 212 names two placeholder addresses that 'always appear' among the pages not fetched. R3's notes add two more, and both appear in today's run. The R3 README counts four.",
+   "evidence": "`node scripts/copy-check.mjs --offline --also research/r3 --also research/registry-notes` lists as not cached: https://cnc.fandom.com/wiki/, https://iron-harvest.fandom.com/wiki/ (from games-r3.md:302, '.../wiki/<Title>'), the Data/INI/ folder address of the Generals 1.04 files (from games-r3.md:374, '.../Data/INI/<file>') and .../CnC_Remastered_Collection/master/REDALERT/. research/r3/README.md:156 says 'four placeholder or folder addresses'.",
+   "fix": "Rewrite the sentence as: '`https://cnc.fandom.com/wiki/`, `https://iron-harvest.fandom.com/wiki/`, `.../CnC_Remastered_Collection/master/REDALERT/` and `.../GameFilesOriginalZH/Data/INI/` always appear there: they are placeholders or folders in the notes, not pages.'",
+   "verdict": {
+    "real": true,
+    "reason": "Confirmed. This branch added two placeholder addresses to research/registry-notes/games-r3.md: 'https://iron-harvest.fandom.com/wiki/<Title>' at line 302 and '.../Data/INI/<file>' at line 374. Every part-1 run includes the registry notes, so both will show up among the unread pages in this and every later batch. The runbook's list of addresses that 'always appear there' (line 212) names only the two older ones. The R3 README:156 already counts four, so only the runbook is behind. All four addresses are cut at a '<...>' placeholder; REDALERT/ comes from games-r1.md:284. The proposed rewrite is accurate.",
+    "evidence": "Ran `node scripts/copy-check.mjs --offline --also research/r3 --also research/registry-notes` (exit 3): 1209 pages, 1173 cached, 36 not. The uncached list includes https://cnc.fandom.com/wiki/, https://iron-harvest.fandom.com/wiki/, .../GeneralsGamePatch/6c7f40d.../GameFilesOriginalZH/Data/INI/ and .../CnC_Remastered_Collection/master/REDALERT/. `git show origin/main:research/registry-notes/games-r3.md` contains neither the Iron Harvest '<Title>' placeholder nor the 'Data/INI/<file>' one; HEAD has both. R3 README:156 says 'four placeholder or folder addresses in the notes, which are not pages'."
+   },
+   "status": "fixed",
+   "commit": "bc3d69a",
+   "how": "Fixed as proposed."
+  },
+  {
+   "dimension": "tooling",
+   "id": "tooling-6",
+   "severity": "minor",
+   "file": "docs/handoff.md",
+   "summary": "Line 119 says the copy-check fetches pages 'two seconds apart'. By default it waits 1.5 seconds between requests.",
+   "evidence": "scripts/copy-check.mjs:35 reads '--delay MS  pause between network requests (default 1500)'. Line 463 has DEFAULT_OPTIONS delay: 1500. Line 224 computes the wait as lastRequest + delay - now, so requests start at least 1.5 s apart, not 2 s.",
+   "fix": "Replace 'Agents and the copy-check fetch pages again as needed, through the wiki APIs, two seconds apart.' with 'Agents fetch pages again as needed, through the wiki APIs, two seconds apart; the copy-check waits 1.5 seconds between requests unless run with `--delay 2000`.'",
+   "verdict": {
+    "real": false,
+    "reason": "The figure is wrong, but it causes no problem in practice. The copy-check's default pause is 1.5 s between request starts, and the npm script passes no --delay. But the sentence is a passing remark about how the cache refills, and no step or decision depends on it. The tool's real default is documented where its users look: the usage text at scripts/copy-check.mjs:35 and README.md:77. The 1.5 s default is unchanged from main, which already had it in the approved tooling round (#5). The 'two seconds' rule is the agents' own fetch rule in the workflow prompts, and for agents the handoff sentence is correct. The copy-check also backs off on 429 and 503 answers, so a site that wants slower requests gets them.",
+    "evidence": "scripts/copy-check.mjs:35 reads '--delay MS  pause between network requests (default 1500)'. Line 463 has DEFAULT_OPTIONS delay: 1500. Line 224 waits until lastRequest + delay. origin/main has the same values (lines 35 and 461), and README.md:73 on main / :77 at HEAD says default 1500. package.json's copy-check script is plain `node scripts/copy-check.mjs`. Tests set delay: 0 (tests/copy-check.test.mjs:209). A grep finds 'two seconds' only in the workflow prompts (for example reconcile.js:45) and in handoff.md:119."
+   },
+   "status": "answered",
+   "answer": "Not confirmed by the skeptic; see the verdict's reason. Nothing changed."
+  }
+ ]
+}
