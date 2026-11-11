@@ -162,6 +162,38 @@ export function htmlToText(h) {
   return decodeEntities(h)
 }
 
+// A Steam news post (store.steampowered.com/news/app/<id>/view/<post>) is drawn by a script: the page's markup holds
+// only the store's frame, and the post itself sits as JSON in one attribute. Read as plain HTML, every such page
+// gives the same frame and none of the post.
+const STEAM_NEWS = /^https?:\/\/store\.steampowered\.com\/news\/app\//
+
+/** The text of a Steam news post page (its title, body and description), or null when the page holds no post. */
+export function steamNewsText(h) {
+  const m = h.match(/data-partnereventstore="([^"]*)"/)
+  if (!m) return null
+  let events
+  try { events = JSON.parse(decodeEntities(m[1])) } catch { return null }
+  if (!Array.isArray(events)) return null
+  const parts = []
+  for (const e of events) {
+    const body = e?.announcement_body || {}
+    for (const t of [e?.event_name, body.headline, body.body]) if (typeof t === 'string' && t.trim()) parts.push(t)
+  }
+  if (!parts.length) return null
+  const og = h.match(/<meta property="og:description" content="([^"]*)"/)
+  if (og) parts.push(decodeEntities(og[1]))
+  return parts.join('\n').replace(/\[\/?[a-z0-9*]+(?:=[^\]]*)?\]/gi, ' ') // [h3], [/url], [url=...], [*]
+}
+
+/** The plain text of a cached page, or null when it has none to compare (a Steam news page without its post). */
+export function pageText(page) {
+  if (page.format === 'wikitext') return wikitextToText(page.raw)
+  if (STEAM_NEWS.test(page.url || '')) return steamNewsText(page.raw)
+  return htmlToText(page.raw)
+}
+export const NO_POST_TEXT = 'a Steam news page that holds no post text'
+export const ONLY_MATCHED_NOTHING = '--only matched no cited, linked or cached page'
+
 // ---------------------------------------------------------------- fetching
 
 // MediaWiki sites whose page URLs have no /wiki/ prefix (https://www.halopedia.org/Page_title).
@@ -499,26 +531,31 @@ export async function copyCheck(options = {}) {
   const inScope = u => !opts.only.length || opts.only.some(t => u.includes(t))
   const allUrls = [...new Set([...records.flatMap(r => citedUrls(r.value)), ...notes.flatMap(x => x.urls)])].sort()
   const urls = allUrls.filter(inScope)
+  // An --only text that is a full web address which nothing cites and the cache lacks (a page the notes name only by
+  // title): fetch it, or list it as not checked, so that the run cannot pass without having read it.
+  for (const t of opts.only) {
+    if (/^https?:\/\//.test(t) && !allUrls.some(u => u.includes(t)) && !fs.existsSync(cachePath(cacheDir, t)) && !urls.includes(t)) urls.push(t)
+  }
   const state = { delay: opts.delay, retryWait: opts.retryWait, log: opts.log, lastRequest: 0, requests: 0 }
   const pages = new Map() // url -> gram set
   const notChecked = [] // [url, reason]
-  let fromCache = 0, fetched = 0, failuresInARow = 0
+  let fromCache = 0, fetched = 0, requested = 0, failuresInARow = 0
   for (const url of urls) {
     const file = cachePath(cacheDir, url)
-    let page = null
+    let page = null, cached = false
     if (fs.existsSync(file) && !opts.refresh) {
-      try { page = JSON.parse(fs.readFileSync(file, 'utf8')); fromCache++ } catch { page = null }
+      try { page = JSON.parse(fs.readFileSync(file, 'utf8')); cached = true } catch { page = null }
     }
     if (!page) {
       if (opts.offline) { notChecked.push([url, 'offline and not cached']); continue }
       if (failuresInARow >= MAX_NETWORK_FAILURES) { notChecked.push([url, NETWORK_UNAVAILABLE]); continue }
-      if (fetched >= opts.maxFetch) { notChecked.push([url, `over --max-fetch ${opts.maxFetch}`]); continue }
+      if (requested >= opts.maxFetch) { notChecked.push([url, `over --max-fetch ${opts.maxFetch}`]); continue }
       try {
         opts.log(`fetching ${url}`)
         page = { url, fetched: new Date().toISOString(), ...(await fetchPage(url, state)) }
         fs.mkdirSync(path.dirname(file), { recursive: true })
         fs.writeFileSync(file, JSON.stringify(page, null, 1) + '\n')
-        fetched++
+        requested++ // pages fetched from the network, for --max-fetch
         failuresInARow = 0
       } catch (e) {
         // Only a failure to reach a site at all counts towards the network being down; an HTTP or wiki
@@ -529,7 +566,9 @@ export async function copyCheck(options = {}) {
         continue
       }
     }
-    const text = page.format === 'wikitext' ? wikitextToText(page.raw) : htmlToText(page.raw)
+    const text = pageText({ url, ...page })
+    if (text === null) { notChecked.push([url, NO_POST_TEXT]); continue }
+    if (cached) fromCache++; else fetched++
     pages.set(url, grams(words(text), n))
   }
 
@@ -538,7 +577,7 @@ export async function copyCheck(options = {}) {
     const cited = citedUrls(r.value).filter(u => pages.has(u))
     if (!cited.length) continue
     for (const [p, s] of proseStrings(r.value)) {
-      const ws = words(s)
+      const ws = words(withoutLinks(s)) // a web address named in a note is no wording, as in the --also notes
       if (ws.length < n) continue
       const byRun = new Map()
       for (const u of cited) for (const run of sharedRuns(ws, pages.get(u), n, ignore)) {
@@ -552,11 +591,15 @@ export async function copyCheck(options = {}) {
   // Notes cite no page of their own, so each of their texts is checked against every page: the cache and
   // every page fetched above. Runs in our own wording (or names in the data or the notes) never count.
   let notePages = 0
+  const seen = new Set(urls) // every address the run looked at or listed, for the --only check below
   if (notes.length) {
     const all = new Map(pages)
     for (const [url, page] of cachedPages(cacheDir)) {
-      if (all.has(url) || !inScope(url)) continue
-      all.set(url, grams(words(page.format === 'wikitext' ? wikitextToText(page.raw) : htmlToText(page.raw)), n))
+      if (!inScope(url)) continue
+      seen.add(url)
+      if (all.has(url)) continue
+      const text = pageText({ url, ...page })
+      if (text !== null) all.set(url, grams(words(text), n))
     }
     notePages = all.size
     const own = ownWordingGrams(opts.root, n, opts.also)
@@ -578,6 +621,12 @@ export async function copyCheck(options = {}) {
         for (const [run, { at, urls: us }] of byRun) findings.push({ file, id: null, path: at, run, urls: us })
       }
     }
+  }
+  // An --only text that matched nothing means nothing was read for it: a mistyped address must not pass as checked.
+  // Without --also the cache is not read, so a full address that is cached but cited nowhere counts as matched.
+  for (const t of opts.only) {
+    const matched = [...seen].some(u => u.includes(t)) || (/^https?:\/\//.test(t) && fs.existsSync(cachePath(cacheDir, t)))
+    if (!matched) notChecked.push([t, ONLY_MATCHED_NOTHING])
   }
   return {
     urls, allUrls, pagesChecked: pages.size, fromCache, fetched, requests: state.requests, notChecked, findings,

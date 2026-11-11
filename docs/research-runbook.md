@@ -160,6 +160,7 @@ Keep both codings, the agreement report and the hesitations in `research/r<N>/op
 - Each one gets a registry entry and a proposed pattern file (`data/patterns/<id>.json`, per `schemas/pattern.schema.json`). Do the same for registered ids that the batch's units link and that have no file yet.
 - Use `patterns.js`: a writer, then a skeptic, then the writer applies the confirmed corrections.
 - Link the units to the new ids, replacing the fit notes that asked for them. Run `npm run sync-patterns`, then `npm run docs`.
+- When `sync-patterns` changes the `source_units` of a pattern file whose review status is `checked` (here or in the merge pass), take `source_units` and every `source_units/N` out of its `review.checked_paths`, and say in `review.notes` which units the checker saw and which ones the batch added.
 
 ### 6. Checker
 
@@ -206,10 +207,10 @@ The pilot used this shape (research/pilot/README.md, Final review).
 3. `npm run check:merge`.
 4. The online copy-check, in three parts, each with zero FOUND lines:
    1. `npm run copy-check -- --also research/r<N> --also research/registry-notes`. Every record file lists the URLs of the pages its agent read, so the check fetches them.
-   2. For each page named in the batch's uncertain entries but not cited, run `npm run copy-check -- --also data/units --only <url>` and read the FOUND lines on the batch's units.
+   2. For each page named in the batch's uncertain entries but not cited, run `npm run copy-check -- --also data/units --only <url>` and read the FOUND lines on the batch's units. If the run ends INCOMPLETE with "--only matched no cited, linked or cached page", the URL matched nothing: copy it exactly from the entry.
    3. For every cited PDF or wiki `File:` page (the cache holds only the page's licence text; list them with `grep -rhoE '"url": "[^"]*(\.pdf|/wiki/File:)[^"]*"' data/units data/patterns research/r<N> | sort -u`), extract the text with `pdftotext`. Compare it with the prose that cites it using a six-word check (copy-check's `words`, `grams` and `sharedRuns`). List each one in the report as checked by hand.
 
-   The report lists every page that could not be fetched, with the reason. `https://cnc.fandom.com/wiki/` and `.../CnC_Remastered_Collection/master/REDALERT/` always appear there: they are placeholders in the notes, not pages.
+   The report lists every page that could not be fetched, with the reason. `https://cnc.fandom.com/wiki/`, `https://iron-harvest.fandom.com/wiki/`, `.../CnC_Remastered_Collection/master/REDALERT/` and `.../GameFilesOriginalZH/Data/INI/` always appear there: they are placeholders or folders in the notes, not pages.
 5. A search of the record for local paths: `grep -rnE "file://|/home/user|/tmp/|scratchpad" research/r<N>`.
 
 **`research/r<N>/README.md` contains:**

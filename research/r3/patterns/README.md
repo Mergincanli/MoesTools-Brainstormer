@@ -14,7 +14,7 @@ This is the record of the pattern phase for batch R3 (runbook, section 5): a pro
 
 ## The patterns
 
-"Planned" means the registry had the id and no file. "New" means the id was added now. Every file has status `proposed` and review status `unchecked`.
+"Planned" means the registry had the id and no file. "New" means the id was added now. Every file has status `proposed`. At the end of the pattern phase (ef2460e) every review status was `unchecked`; the checker has since re-checked 11 of the files, which are now `checked`.
 
 | Pattern | New or planned | Category | Source units | Variants | Examples (RTS + shooter) | Confidence |
 |---|---|---|---|---|---|---|
@@ -34,9 +34,9 @@ This is the record of the pattern phase for batch R3 (runbook, section 5): a pro
 | `resupply-allies` | planned | support | enlightened, vimana | 7 | 2 + 5 | high |
 | `sacrifice-for-allies` | new | support | enlightened | 8 | 5 + 1 | high |
 | `refill-on-ally-buff` | new | support | vimana | 6 | 2 + 2 | high |
-| `suppress-with-fire` | planned | control | grimbart | 6 | 4 + 0 | high |
-| `lay-smoke` | planned | stealth-deception | mocny | 6 | 4 + 3 | high |
-| `fire-power-shot` | planned | weapon-behaviour | anna-kos | 8 | 4 + 2 | high |
+| `suppress-with-fire` | planned | control | grimbart | 6 | 4 + 0 | high (medium since the checker) |
+| `lay-smoke` | planned | stealth-deception | mocny | 6 | 4 + 3 | high (medium since the checker) |
+| `fire-power-shot` | planned | weapon-behaviour | anna-kos | 8 | 4 + 2 | high (medium since the final review) |
 | `dampen-missile-fire` | new | control | shieldmaiden | 5 | 3 + 1 | high |
 | `deploy-turret` | planned | summon | engineer, william-mason, shieldmaiden | 8 | 6 + 8 | medium |
 | `build-cover` | planned | area | engineer | 7 | 5 + 5 | medium |
@@ -51,6 +51,8 @@ This is the record of the pattern phase for batch R3 (runbook, section 5): a pro
 | `stack-to-overload` | new | control | voltaic-tank | 10 | 3 + 4 | medium |
 | `band-together` | new | support | red-guard | 5 | 3 + 1 | high |
 | `generate-income` | new | support | hacker | 6 | 3 + 1 | high |
+
+The table shows the files as the pattern phase left them. The checker (9ce1f96) and the final review later lowered three pattern confidences, changed the confidence of single examples and fixed a few notes; [../checker/](../checker/) and [../review/](../review/) record those changes.
 
 **Asked for and not written:**
 

@@ -93,7 +93,7 @@ CI runs four check jobs on every push; it was green on each head it has finished
 3. **Merge** (section 9): only when every gate passes, and only with Mustafa's approval of pull request #6, which also holds the plan change.
 4. **Then R4** (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech), from its prep.
 
-**Known and left alone:** `npm run copy-check -- --offline --also data/units` finds 19 coincidental six-word runs in R1's units, against pages only R3 caches, such as "one of them at a time". None is a page those units cite, and none is in R3's units.
+**Known and left alone:** `npm run copy-check -- --offline --also data/units` finds coincidental six-word runs in R1's units (13 on 11 November 2026; the count depends on the cache), against pages that other records cite or name, most of them cited by R1's own pattern files, such as "while it is in the air" (Halopedia's Plasma grenade page, cited by throw-explosive). None is a page those units cite, and none is in R3's units.
 
 ## 4. What waits for Mustafa (pull request #6, "Decisions needed")
 
