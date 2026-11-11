@@ -315,9 +315,13 @@ export const RESTRICTED_SITES = Object.freeze(new Set(['liquipedia.net']))
 export const RESTRICTED = 'not fetched: this site\'s terms restrict automated reading, and Mustafa decides how it is read; ' +
   'once he has, set UNIT_FORGE_ALLOW_HOSTS to the site and COPY_CHECK_CONTACT to a contact'
 
+/** A host name as sites are compared: lower case, without the dot a name may end with (liquipedia.net. is the same site). */
+export const plainHost = host => String(host).toLowerCase().replace(/\.+$/, '')
+
 /** True when the set holds the host or a domain the host is under (www.liquipedia.net is under liquipedia.net). */
 export function covers(set, host) {
-  for (const d of set) if (host === d || host.endsWith(`.${d}`)) return true
+  const h = plainHost(host)
+  for (const d of set) if (h === d || h.endsWith(`.${d}`)) return true
   return false
 }
 
@@ -330,13 +334,24 @@ export function refusal(host) {
 
 /** The shortest pause before the next request to a host: the site's own minimum, or the override a test passes. */
 export function hostPause(host, state = {}) {
-  for (const [d, ms] of Object.entries(state.hostDelay || HOST_MIN_DELAY)) if (host === d || host.endsWith(`.${d}`)) return ms
+  const h = plainHost(host)
+  for (const [d, ms] of Object.entries(state.hostDelay || HOST_MIN_DELAY)) if (h === d || h.endsWith(`.${d}`)) return ms
   return 0
+}
+
+// The name a site is paced under: the domain whose pause covers the host, so that a site and its subdomains share
+// one clock; otherwise the host itself, with its port.
+function paceKey(u, state) {
+  const h = plainHost(u.hostname)
+  for (const d of Object.keys(state.hostDelay || HOST_MIN_DELAY)) if (h === d || h.endsWith(`.${d}`)) return d
+  return u.port ? `${h}:${u.port}` : h
 }
 
 // Between processes: one small file per site says when the site was last answered and whether a request is on its
 // way. A process claims the site under a lock, so two that wake together cannot both go.
-export const STAMP_DIR = path.join(os.tmpdir(), 'unit-forge-pace')
+// The folder is the user's own, so that another user of the machine cannot put something else in its place.
+const userName = () => { try { return os.userInfo().username.replace(/[^A-Za-z0-9._-]+/g, '_') } catch { return 'user' } }
+export const STAMP_DIR = path.join(os.tmpdir(), `unit-forge-pace-${userName()}`)
 const BUSY_MS = 35000 // a request in flight holds the site this long at most (the request's own limit is 30 s)
 
 function writeStamp(file, value) {
@@ -350,18 +365,43 @@ function writeStamp(file, value) {
 /** The file that paces requests to a site (host name and port) between processes. */
 export const stampFile = (site, dir = STAMP_DIR) => path.join(dir, site.replace(/[^A-Za-z0-9.-]+/g, '_'))
 
+// Takes the lock beside a stamp file: the open file, or null when no lock can be made in this folder.
+async function lockStamp(lock, tries = Infinity) {
+  for (let i = 0; i < tries; i++) {
+    try { return fs.openSync(lock, 'wx') } catch (e) {
+      if (e.code !== 'EEXIST') return null
+      try { if (Date.now() - fs.statSync(lock).mtimeMs > 120000) fs.unlinkSync(lock) } catch { /* another process removed it */ }
+      await sleep(50)
+    }
+  }
+  return null
+}
+function unlockStamp(fd, lock) {
+  try { fs.closeSync(fd) } catch { /* already closed */ }
+  try { fs.unlinkSync(lock) } catch { /* already gone */ }
+}
+
+// Stamp files of sites nobody has asked for a day are removed, once per process.
+let swept = false
+function sweepStamps(dir) {
+  if (swept) return
+  swept = true
+  try {
+    for (const f of fs.readdirSync(dir)) {
+      const file = path.join(dir, f)
+      if (Date.now() - fs.statSync(file).mtimeMs > 24 * 3600 * 1000) fs.unlinkSync(file)
+    }
+  } catch { /* best effort */ }
+}
+
 // Waits until the site is free and its last answer is at least `gap` ms old, then marks a request as on its way.
 async function claimSite(dir, site, gap) {
   const file = stampFile(site, dir), lock = `${file}.lock`
   try { fs.mkdirSync(dir, { recursive: true }) } catch { return null }
+  sweepStamps(dir)
   for (;;) {
-    let fd
-    try { fd = fs.openSync(lock, 'wx') } catch (e) {
-      if (e.code !== 'EEXIST') return null // no lock can be made here: go on without pacing between processes
-      try { if (Date.now() - fs.statSync(lock).mtimeMs > 120000) fs.unlinkSync(lock) } catch { /* another process removed it */ }
-      await sleep(50)
-      continue
-    }
+    const fd = await lockStamp(lock)
+    if (fd === null) return null // no lock can be made here: go on without pacing between processes
     let wait, inFlight
     try {
       let last = 0, busy = 0
@@ -370,12 +410,19 @@ async function claimSite(dir, site, gap) {
       inFlight = busy > last + gap // another process's request is on its way: its answer may come any moment
       if (wait <= 0) writeStamp(file, { last, busy: Date.now() + BUSY_MS })
     } finally {
-      fs.closeSync(fd)
-      try { fs.unlinkSync(lock) } catch { /* already gone */ }
+      unlockStamp(fd, lock)
     }
     if (wait <= 0) return file
     await sleep(Math.min(wait, inFlight ? 100 : 5000))
   }
+}
+
+// Writes the time of the site's answer, under the lock when it can be had within a second.
+async function answered(file) {
+  const lock = `${file}.lock`
+  const fd = await lockStamp(lock, 20)
+  writeStamp(file, { last: Date.now(), busy: 0 })
+  if (fd !== null) unlockStamp(fd, lock)
 }
 
 // The clock that paces requests is shared by every run in one process (the plant test runs the copy-check once per
@@ -404,27 +451,27 @@ function networkCode(e) {
 const MAX_REDIRECTS = 5
 async function politeGet(url, state) {
   for (let busy = 1, net = 0, hops = 0; ;) {
-    const u = new URL(url), host = u.hostname
+    const u = new URL(url), host = plainHost(u.hostname)
     const why = refusal(host)
     if (why) throw new Error(why)
     const pace = state.pace || PACE
     const wait = Math.max(pace.lastRequest + state.delay, (pace.lastByHost[host] || 0) + hostPause(host, state)) - Date.now()
     if (wait > 0) await sleep(wait)
     // Between processes too (stampDir null switches that off).
-    const slot = state.stampDir === null ? null : await claimSite(state.stampDir || STAMP_DIR, u.host, Math.max(state.delay, hostPause(host, state)))
+    const slot = state.stampDir === null ? null : await claimSite(state.stampDir || STAMP_DIR, paceKey(u, state), Math.max(state.delay, hostPause(host, state)))
     state.requests++
     let res
     // The pause counts from the moment the site answered (or the request failed), so that the site never sees two
     // requests closer together than the pause, however long a connection takes to open.
-    const stamp = () => {
+    const stamp = async () => {
       pace.lastRequest = pace.lastByHost[host] = Date.now()
-      if (slot) writeStamp(slot, { last: Date.now(), busy: 0 })
+      if (slot) await answered(slot)
     }
     try {
       res = await fetch(url, { headers: { 'User-Agent': userAgent() }, redirect: 'manual', signal: AbortSignal.timeout(30000) })
-      stamp()
+      await stamp()
     } catch (e) {
-      stamp()
+      await stamp()
       const code = networkCode(e)
       if (!TRANSIENT.has(code) || net >= NETWORK_RETRIES) throw new NetworkError(`network error: ${code}`)
       net++
@@ -455,6 +502,19 @@ async function politeGet(url, state) {
     }
     return res
   }
+}
+
+/**
+ * Where a page's own address leads: followed hop by hop under the rules above (paced, and refused where a hop
+ * leads to a restricted site). The plant test asks this before a browser opens a wiki page, because the
+ * copy-check reads such a page through the wiki's API and nobody has followed the page's own address yet.
+ */
+export async function followAddress(url, options = {}) {
+  const opts = { ...DEFAULT_OPTIONS, ...options }
+  const state = { delay: opts.delay, retryWait: opts.retryWait, log: opts.log, pace: opts.pace, hostDelay: opts.hostDelay, stampDir: opts.stampDir, requests: 0 }
+  const res = await politeGet(url, state)
+  await res.body?.cancel()
+  return { url: res.url || url, status: res.status }
 }
 
 // The body of an answer; a connection lost while reading it is a network failure too.

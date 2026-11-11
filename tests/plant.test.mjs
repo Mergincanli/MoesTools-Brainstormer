@@ -9,7 +9,7 @@ import path from 'node:path'
 import { describe, it, after } from 'node:test'
 import { REPO_ROOT, cachePath } from '../scripts/copy-check.mjs'
 import {
-  MIN_LINE_WORDS, NO_BROWSER, PASSAGES, PASSAGE_WORDS, VIEW_BROWSER, VIEW_WIKI, exitCode, formatPlantReport, pickPassages, plantTest, visibleLines,
+  MIN_LINE_WORDS, NO_BROWSER, PASSAGES, PASSAGE_WORDS, VIEW_BROWSER, VIEW_WIKI, browserArgs, exitCode, formatPlantReport, pickPassages, plantTest, visibleLines,
 } from '../scripts/plant.mjs'
 
 const tmpDirs = []
@@ -201,6 +201,39 @@ describe('plant test: the reader\'s view', () => {
     assert.deepEqual(fb.calls, [], 'the browser was asked for a page')
     assert.equal(r.view, VIEW_WIKI)
     assert.equal(r.flagged.length, 5)
+  })
+
+  it('does not open the browser when a wiki page\'s own address redirects to a restricted site', async () => {
+    const srv = http.createServer((req, res) => {
+      const u = new URL(req.url, 'http://x')
+      if (u.pathname === '/api.php') {
+        res.writeHead(200, { 'content-type': 'application/json' })
+        res.end(JSON.stringify({ parse: { title: 'X', wikitext: { '*': SOURCE }, text: { '*': RENDERED } } }))
+      } else if (u.pathname.startsWith('/wiki/')) { res.writeHead(302, { location: 'https://liquipedia.net/starcraft2/Marine' }); res.end() }
+      else { res.writeHead(404); res.end('no') }
+    })
+    await new Promise(resolve => srv.listen(0, '127.0.0.1', resolve))
+    after(() => { srv.closeAllConnections(); srv.close() })
+    const fb = fakeBrowser({ status: 200, wiki: true, lines: LONG, hops: ['127.0.0.1', 'liquipedia.net'] })
+    const r = await plantTest(`http://127.0.0.1:${srv.address().port}/wiki/Test_Drone`, { root: tempRoot(), delay: 0, retryWait: 1, browser: fb.browser, browserLines: fb.browserLines })
+    assert.deepEqual(fb.calls, [], 'the browser was asked to open the page')
+    assert.equal(r.view, VIEW_WIKI)
+    assert.match(String(r.browser_status), /redirected to liquipedia\.net, whose pages are not fetched as HTML/)
+    assert.equal(r.flagged.length, 5)
+  })
+
+  it('drops a browser view whose hops touched a restricted site', async () => {
+    const root = tempRoot()
+    seed(root, WIKI, { format: 'wikitext', raw: SOURCE, rendered: RENDERED })
+    const fb = fakeBrowser({ status: 200, wiki: true, lines: LONG, hops: ['w.example', 'www.liquipedia.net'] })
+    const r = await plantTest(WIKI, { root, offline: true, browser: fb.browser, browserLines: fb.browserLines })
+    assert.equal(r.view, VIEW_WIKI)
+    assert.equal(r.flagged.length, 5)
+  })
+
+  it('starts the browser so that it cannot resolve a restricted site or its subdomains', () => {
+    assert.deepEqual(browserArgs(), ['--host-resolver-rules=MAP liquipedia.net ~NOTFOUND, MAP *.liquipedia.net ~NOTFOUND'])
+    assert.deepEqual(browserArgs(new Set()), [])
   })
 
   it('says what happened when there is no reader\'s view', async () => {

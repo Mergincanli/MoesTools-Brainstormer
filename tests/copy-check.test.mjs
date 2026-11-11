@@ -563,6 +563,9 @@ describe('copy-check: pauses, contacts and cache-only pages', () => {
     assert.ok(RESTRICTED_SITES.has('liquipedia.net'))
     assert.ok(covers(RESTRICTED_SITES, 'api.liquipedia.net'))
     assert.ok(!covers(RESTRICTED_SITES, 'notliquipedia.net'))
+    assert.ok(covers(RESTRICTED_SITES, 'liquipedia.net.'), 'a host name may end with a dot')
+    assert.ok(covers(RESTRICTED_SITES, 'WWW.Liquipedia.NET'))
+    assert.equal(hostPause('liquipedia.net.'), 30000)
     const saved = { a: process.env.UNIT_FORGE_ALLOW_HOSTS, c: process.env.COPY_CHECK_CONTACT }
     const set = (a, c) => { for (const [k, v] of [['UNIT_FORGE_ALLOW_HOSTS', a], ['COPY_CHECK_CONTACT', c]]) { if (v === undefined) delete process.env[k]; else process.env[k] = v } }
     try {
@@ -578,7 +581,7 @@ describe('copy-check: pauses, contacts and cache-only pages', () => {
       assert.equal(refusal('liquipedia.net'), null)
       assert.equal(refusal('www.liquipedia.net'), null)
       set(undefined, undefined)
-      for (const url of ['https://liquipedia.net/starcraft2/No_Such_Test_Page', 'https://www.liquipedia.net/starcraft2/No_Such_Test_Page']) {
+      for (const url of ['https://liquipedia.net/starcraft2/No_Such_Test_Page', 'https://www.liquipedia.net/starcraft2/No_Such_Test_Page', 'https://liquipedia.net./starcraft2/No_Such_Test_Page']) {
         const res = await copyCheck(quick(tempRepo([url])))
         assert.equal(res.requests, 0, 'a request was started')
         assert.deepEqual(res.notChecked, [[url, RESTRICTED]])
@@ -586,6 +589,24 @@ describe('copy-check: pauses, contacts and cache-only pages', () => {
       }
     } finally {
       set(saved.a, saved.c)
+    }
+  })
+
+  it('never fetches a restricted site\'s page as HTML, even when both switches are set and its API gives no page', async () => {
+    const saved = { a: process.env.UNIT_FORGE_ALLOW_HOSTS, c: process.env.COPY_CHECK_CONTACT, f: globalThis.fetch }
+    const asked = []
+    process.env.UNIT_FORGE_ALLOW_HOSTS = 'liquipedia.net'
+    process.env.COPY_CHECK_CONTACT = 'https://example.org/contact'
+    globalThis.fetch = async input => { asked.push(String(input)); return new Response('<html>not an API answer</html>', { status: 200 }) } // nothing leaves
+    try {
+      const url = 'https://liquipedia.net/starcraft2/No_Such_Test_Page'
+      const res = await copyCheck({ ...quick(tempRepo([url])), hostDelay: {}, stampDir: null })
+      assert.equal(asked.length, 1)
+      assert.match(asked[0], /^https:\/\/liquipedia\.net\/starcraft2\/api\.php\?action=parse/)
+      assert.match(res.notChecked[0][1], /this site's pages are not fetched as HTML/)
+    } finally {
+      globalThis.fetch = saved.f
+      for (const [k, v] of [['UNIT_FORGE_ALLOW_HOSTS', saved.a], ['COPY_CHECK_CONTACT', saved.c]]) { if (v === undefined) delete process.env[k]; else process.env[k] = v }
     }
   })
 

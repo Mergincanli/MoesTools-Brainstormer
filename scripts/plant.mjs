@@ -33,7 +33,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
-import { RESTRICTED_SITES, cachePath, copyCheck, covers, rerunWithProxy, visibleLines, words } from './copy-check.mjs'
+import { RESTRICTED_SITES, cachePath, copyCheck, covers, followAddress, rerunWithProxy, visibleLines, words } from './copy-check.mjs'
 
 export { visibleLines } // the reader's lines of a rendered page
 
@@ -72,6 +72,17 @@ function writeRecord(root, url, passages) {
   fs.writeFileSync(path.join(root, 'data/units/plant.json'), JSON.stringify({ units: [unit] }))
 }
 
+/**
+ * Arguments that keep the browser from resolving a restricted site or one of its subdomains. A request rule
+ * (page.route) does not see the hops of a server redirect. Behind a proxy the browser resolves no names itself, so
+ * this is only one of three guards: plantTest also follows a wiki page's own address under the copy-check's rules
+ * before the browser opens it, and drops a view whose hops touched a restricted site.
+ */
+export function browserArgs(sites = NO_BROWSER) {
+  const rules = [...sites].flatMap(d => [`MAP ${d} ~NOTFOUND`, `MAP *.${d} ~NOTFOUND`])
+  return rules.length ? [`--host-resolver-rules=${rules.join(', ')}`] : []
+}
+
 /** Playwright's chromium, or null when Playwright is not installed. */
 export function findBrowser() {
   try { return createRequire(import.meta.url)('playwright').chromium } catch { return null }
@@ -95,7 +106,9 @@ async function browserLines(browser, url) {
       const el = wiki || document.querySelector('article') || document.querySelector('main') || document.body
       return { wiki: !!wiki, lines: el.innerText.split('\n').map(s => s.trim()).filter(Boolean) }
     })
-    return { status: res ? res.status() : null, lines: seen.lines, wiki: seen.wiki }
+    const hops = [] // the hosts the navigation went through, first to last
+    for (let q = res && res.request(); q; q = q.redirectedFrom()) { try { hops.unshift(new URL(q.url()).hostname) } catch { /* not a web address */ } }
+    return { status: res ? res.status() : null, lines: seen.lines, wiki: seen.wiki, hops }
   } finally {
     await page.close()
   }
@@ -133,9 +146,13 @@ export async function plantTest(url, options = {}) {
     if (!lines && covers(NO_BROWSER, new URL(url).hostname)) browserSaw = 'the site\'s terms do not allow a browser'
     else if (!lines && options.browser) {
       try {
-        const seen = await (options.browserLines || browserLines)(options.browser, url)
+        // The copy-check read a wiki page through the wiki's API, so the page's own address has not been followed
+        // yet: follow it under the copy-check's rules first, and give the browser the address it ends at.
+        const address = isWiki && !options.offline ? (await followAddress(url, quiet)).url : url
+        const seen = await (options.browserLines || browserLines)(options.browser, address)
         out.browser_status = seen.status
-        if (seen.status === null || seen.status >= 400) browserSaw = `the browser got HTTP ${seen.status}`
+        if ((seen.hops || []).some(h => covers(NO_BROWSER, h))) browserSaw = 'the browser was led to a site that it may not open'
+        else if (seen.status === null || seen.status >= 400) browserSaw = `the browser got HTTP ${seen.status}`
         else if (count(seen.lines) < MIN_VIEW_WORDS) browserSaw = `the browser got a page of under ${MIN_VIEW_WORDS} words`
         // A wiki answers a headless browser with a bot or consent page now and then, with status 200: only a page
         // that holds the wiki's own content block is the reader's view.
@@ -143,7 +160,7 @@ export async function plantTest(url, options = {}) {
         else { lines = seen.lines; out.view = VIEW_BROWSER }
       } catch (e) {
         out.browser_status = `error: ${String(e.message || e).split('\n')[0]}`
-        browserSaw = 'the browser failed to open the page'
+        browserSaw = 'the page could not be opened in the browser'
       }
     }
     if (!lines && isWiki && typeof cached.rendered === 'string') { lines = visibleLines(cached.rendered); out.view = VIEW_WIKI }
@@ -213,7 +230,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   if (useBrowser && !chromium) console.error('no browser (Playwright is not installed): only wiki pages can be tested, from the wiki\'s rendered page')
   let browser = null
   if (chromium) {
-    try { browser = await chromium.launch() } catch (e) {
+    try { browser = await chromium.launch({ args: browserArgs() }) } catch (e) {
       console.error(`the browser did not start (${String(e.message || e).split('\n')[0]}): only wiki pages can be tested, from the wiki's rendered page`)
     }
   }
