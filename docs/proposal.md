@@ -57,13 +57,14 @@ The three reference pages (`samples.md`, `vocabularies.md` and `fields.md`) were
 | Now | **This proposal.** | Plan, fields, word lists, 3 units, 3 patterns, example card. | This one |
 | 1 | **Foundations.** Turn the temporary checks used for this draft into real scripts: the validator, the docs builder and a copy-check. Set up CI (automatic checks that run on every change). Fill the games registry for the whole starting scope, and grow the pattern registry to about 50 pattern names so every research agent uses the same ones. | Repo tooling and CI; `data/games.json` complete. | 1 |
 | 2 | **Calibration pilot.** Three agents fill in the same three RA3 units without seeing each other's work, plus three units from games whose tiers and prices work differently from RA3: StarCraft II (two resources), Company of Heroes (three resources and tier buildings) and Battlefield (no prices or tiers). Any field they agree on less than about 80% of the time gets a sharper rule or a merged term, plus tie-break rules (rules that settle which of two similar terms to use). Then the word lists are frozen as version 1.0. You see the changes from 0.3 to 1.0, and batch R1 starts only after you OK them. | Word lists 1.0, tie-break rules. | Part of step 1 |
-| 3 | **Research run.** Batches R1, R3 and R4 (below), each in its own pull request. Per batch: research agents, then a separate checker, then the validator. Since the plan change of 24 October 2026 (section 2.2), R2 is paused and the other games are shelved until after step 6. | Units and proposed patterns, with a short report per batch. | 3, plus R2's paused record |
-| 4 | **Pattern consolidation.** Merge duplicate patterns, set the generator rules, write the coverage report and the top-30 list. | `docs/research/coverage.md`, `docs/research/top-30-patterns.md`. | 1 |
-| 5 | **Generator.** A pure TypeScript module: seeded rolls (each roll has a seed, a short code that rebuilds it exactly), lock and reroll, spice, rules, balance hints, text templates and original names, with full tests. | `src/core/`. | 2-3 |
+| 3 | **Research run.** Batches R1, R3 and R4 (below), each in its own pull request. Per batch: research agents, then a separate checker, then the validator. Since the plan change of 24 October 2026 (section 2.2), R2 is paused and the other games are shelved until after step 6. Since the plan change of 12 November 2026 (section 2.2), a first generator (step 3b) is built after R3 and before R4. | Units and proposed patterns, with a short report per batch. | 3, plus R2's paused record |
+| 3b | **First generator.** Built on the 55 units and 69 proposed patterns of R1 and R3, before R4. First the part of step 4 that it needs: the generator rules, as a rule sheet you approve and then as data, and a check for patterns that are one mechanic under two names. Then the core of step 5: seeded rolls, lock and reroll, spice, the rules, first balance hints, text templates and original names, with full tests. You get a command that rolls cards and a page of sample cards to read. No app and no remix yet, and the weights and cost points are starting values. | `data/generator/`, `src/core/`, `docs/cards.md`. | 2 |
+| 4 | **Pattern consolidation**, after R4 and the rule-fix round. Merge duplicate patterns, bring the generator rules of step 3b up to date with R4's patterns and the changed rules, write the coverage report and the top-30 list. | `docs/research/coverage.md`, `docs/research/top-30-patterns.md`. | 1 |
+| 5 | **Generator, completed.** The first generator of step 3b is a pure TypeScript module: seeded rolls (each roll has a seed, a short code that rebuilds it exactly), lock and reroll, spice, rules, text templates and original names, with full tests. Here it is brought to the full data: its tests run on about 140 units, the rarity weights and cost points are tuned, and remix and the full balance hints are added. | `src/core/`. | 1-2 |
 | 6 | **App.** Generator view, library, board, compare, duplicate and edit, remix, export and import, then polish (light and dark mode, keyboard) and deployment to GitHub Pages. | `src/app/`, a public link. | 4-6 |
 | Later | **The shelved games.** After the app, the shelved games come back in new batches, starting with R2 from its paused prep, building on what the generator and the app show. | More units and patterns. | One per batch |
 
-How the steps map to the brief: this proposal is its first step (section 7); steps 1-4 are Phase 1, the research; step 5 is Phase 2, the generator; and step 6 is Phase 3, the app.
+How the steps map to the brief: this proposal is its first step (section 7); steps 1-4 are Phase 1, the research; steps 3b and 5 are Phase 2, the generator; and step 6 is Phase 3, the app.
 
 Every pull request stays small, runs the schema checks and tests in CI, and ends with a report in the brief's format: TL;DR first, "Decisions needed" and "For Mustafa" last.
 
@@ -76,7 +77,7 @@ Every pull request stays small, runs the schema checks and tests in CI, and ends
 | R1 | Red Alert 1, 2 (with Yuri's Revenge) and 3 (with Uprising) | Merged on 23 October 2026 |
 | R2 | C&C Tiberian Dawn, Tiberian Sun, Tiberium Wars (with Kane's Wrath), Renegade | Paused during its prep, with the prep of three games kept in `research/r2/` |
 | R3 | C&C Generals (with Zero Hour), Tempest Rising, Iron Harvest | Merged on 11 November 2026 |
-| R4 | StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech | After R3 |
+| R4 | StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech | After the first generator (step 3b). Its prep was done on 11 November 2026 and is kept in `research/r4/prep/` |
 | Shelved | Company of Heroes 1-3, World in Conflict, Wargame, Broken Arrow, Supreme Commander, Dawn of War 1-2, Battlefield (vehicle archetypes), PlanetSide 2, Foxhole, WARDOGS, Arc Raiders | After step 6 |
 
 **Plan change of 24 October 2026.** The research run was taking too long before anything could be seen, so you narrowed it: finish R3, run one new batch R4, then go on to steps 4 to 6, and bring the shelved games back afterwards, building on what the app shows. This replaces the six batches planned before (R4 was Company of Heroes 1-3, World in Conflict, Wargame and Broken Arrow; R5 Supreme Commander, Planetary Annihilation, StarCraft II, Halo Wars 2 and Dawn of War 1-2; R6 the shooters and MechWarrior/BattleTech). Your answers that day:
@@ -84,6 +85,11 @@ Every pull request stays small, runs the schema checks and tests in CI, and ends
 - **StarCraft II:** only Legacy of the Void, as one game, and only its multiplayer (the base game, Archon mode included, with no custom or modded content). No unit that only the campaign or the co-op missions (Allied Commanders) have. Every multiplayer unit of the three races is coded, except the three workers (SCV, Drone, Probe): about 50 units, with no trim. This is an exception to decision 8B's size of about 9 units per game. Not coded as units of their own, as a closed list: the Larva and the Cocoon (a player does not control them); the MULE (it counts with the workers); and the Changeling, the Locust, the Broodling and the Interceptor, which are coded with the unit that spawns them. A unit that morphs or merges from another unit is a unit of its own (the Baneling, the Ravager, the Lurker, the Overseer, the Brood Lord, the Archon). R4's prep decides by the field rules as written whether the Hellion and the Hellbat are one unit or two. *(Your answer of 11 November 2026. On 24 October the scope also took units that only the campaign or the co-op missions have, and the count was about 15 units, 5 per race.)*
 - **Halo Wars** (2009) is new to the research: R4's prep adds its registry entry first.
 - **Rule fixes:** the rule problems of R3 and R4 go to one rule-fix round after R4, before step 4, unless one of them blocks R4. With no rule change between R3 and R4, R4 needs no opening check.
+
+**Plan change of 12 November 2026.** You wanted to see generated cards before more research is done. So a first generator (step 3b in section 2.1) is built now, on the 55 units and 69 proposed patterns of R1 and R3. R4 follows it, from its prep of 11 November 2026, when you say so. The rest of the order stays: the rule-fix round after R4, then steps 4 to 6.
+- **What it takes from step 4:** the generator rules, and a check for patterns that are one mechanic under two names. Such a pair is marked so that no card gets both; no pattern is merged or renamed before step 4. The patterns stay "proposed": your review of them, the merging, the coverage report and the top-30 list stay in step 4.
+- **What it leaves out:** the app (step 6), remix, and tuning. Its rarity weights and cost points are starting values until R4's units are in.
+- **What is brought up to date after R4 and the rule-fix round,** in steps 4 and 5: the rules and points for R4's patterns and for word-list terms that changed, the tuning, and the sample cards. The generator reads its rules from the data, so its code and tests stay. A card rolled before a data change is not rebuilt by its seed afterwards; each card records the data version it was rolled on.
 
 **How a batch runs:**
 
@@ -95,7 +101,7 @@ Every pull request stays small, runs the schema checks and tests in CI, and ends
 
 **Games added beyond the starting scope** need a reason: the new mechanic they teach and the patterns that justify them. They are listed in the registry and in the final report. This draft already cites three such games (Titanfall, Halo and Mega Man), only as shooter examples in the patterns and as 'seen in' examples in a few word lists, with no researched units.
 
-**Size target:** about 140 units before the generator, with the patterns they link: 28 from R1, 27 from R3 and about 86 from R4 (about 50 for StarCraft II and about 9 for each of its other four games). Decision 8's target, about 250 units and 80-100 patterns after merging, applies once the shelved games are back. *(Changed on 11 November 2026 with the StarCraft II count; it was about 100 units.)*
+**Size target:** about 140 units before step 4 and the completed generator (step 5), with the patterns they link: 28 from R1, 27 from R3 and about 86 from R4 (about 50 for StarCraft II and about 9 for each of its other four games). The first generator (step 3b) is built on the 55 units of R1 and R3. Decision 8's target, about 250 units and 80-100 patterns after merging, applies once the shelved games are back. *(Changed on 11 November 2026 with the StarCraft II count; it was about 100 units. Changed on 12 November 2026: the first generator comes before R4.)*
 
 **Coverage report:** games × classes, units per franchise, patterns per category, patterns by how many franchises use them, units without tiers or prices, rule breaks, and vocabulary gaps.
 
@@ -104,6 +110,8 @@ Every pull request stays small, runs the schema checks and tests in CI, and ends
 **Source access.** The Command & Conquer wiki blocks automatic page downloads but offers an official API (a data access point for programs), which this step's research used. It slows down heavy use, so the run spaces out its requests and keeps local copies of the pages it has read; those copies stay off GitHub. Other sources: StrategyWiki, CNCNZ, official pages and patch notes, and the established wiki for each series. Recent games with thin wikis (WARDOGS, Arc Raiders, Broken Arrow) may cite gameplay video at lower confidence.
 
 ### 2.3 The generator (Phase 2) at a glance
+
+Step 3b builds what this section describes, without remix and with starting values for the balance hints; step 5 completes it.
 
 - **Inputs:** class, tier, faction flavour, optional role, spice (1 grounded to 5 wild), a seed, and any locked parts.
 - **Roll order:** class, then the signature pattern (which sets parts it needs, such as passenger seats), then mobility, body, size, speed, armour, crew, weapons, extra abilities, matchups and text. Every step only offers terms that fit everything already chosen, so nonsense such as tracks on an aircraft can't be rolled.
@@ -150,6 +158,8 @@ scripts/                       validate, build-docs, coverage, sample-for-check,
 research/<batch>/              agent notes, notes on poor fits, checker logs (page cache is git-ignored);
                                new patterns go straight to data/patterns/ with status "proposed"
 data/manifest.json             content hash of the data, stored on every card
+data/generator/                the generator's rules that no word list or pattern holds: points, the pairing and counter rules, text templates and name words
+docs/cards.md                  a page of sample cards (generated)
 src/core/                      the generator: pure TypeScript, no browser code
 src/app/                       the web app
 tests/
@@ -280,7 +290,7 @@ No variant of the infest or leech pattern lets you steal a whole vehicle; that i
 - **The word lists are big** (37 lists, 299 terms). Only the ten core lists need your eyes; the supporting lists are mostly scales and plumbing.
 - **Sources can be thin or slow.** The C&C wiki slows down heavy use, and some recent games have little written about them. Mitigations: local copies of pages, spaced-out requests, video at low confidence, and recording "no tier or price" rather than inventing one.
 - **Live games change.** Each game records the version or date researched.
-- **Generator tuning** (rarity weights now, cost points with the generator) can only be judged once there are about 100 units; the weights in the draft are starting points.
+- **Generator tuning** (rarity weights now, cost points with the generator) can only be judged once there are about 100 units; the weights in the draft are starting points. The first generator (step 3b) runs on 55 units, so its cards show what the data can do, not a tuned balance; tuning comes in step 5.
 - **Copyright.** From step 1, a copy-check flags any run of six or more words shared with a cited page. Real names never reach generated cards, and no images are used.
 
 ## Decisions needed

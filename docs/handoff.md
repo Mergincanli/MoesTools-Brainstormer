@@ -1,11 +1,12 @@
 # Handoff: continuing Unit Forge in a new session
 
-Written on 10 November 2026, when the project moved from the session that ran it from 17 October to a new account. Read this first, then [CLAUDE.md](../CLAUDE.md) and the [research runbook](research-runbook.md). Updated on 11 November 2026: the phases that were open then are done, the saved work in progress (`research/handoff/`) has been used and deleted, and Mustafa approved pull request #6 (section 4).
+Written on 10 November 2026, when the project moved from the session that ran it from 17 October to a new account. Read this first, then [CLAUDE.md](../CLAUDE.md) and the [research runbook](research-runbook.md). Updated on 11 November 2026: the phases that were open then are done, the saved work in progress (`research/handoff/`) has been used and deleted, and Mustafa approved pull request #6 (section 4). Updated on 12 November 2026: pull requests #7 and #8 are merged, batch R4 is parked after its prep, and the next work is a first generator, the plan's step 3b (section 3, "What is left", and section 4).
 
 ## TL;DR
 
 - **The project:** Unit Forge, a tool for Mustafa that turns a researched database of real RTS and shooter units into original unit concepts for his game, Shamble Frontlines. The brief is [docs/brief.md](brief.md) and the plan is [docs/proposal.md](proposal.md).
-- **Where it stands:** plan step 3, the research run, batch R3 (Command & Conquer: Generals with Zero Hour, Tempest Rising, Iron Harvest).
+- **Where it stands (12 November 2026):** the next work is the first generator, the plan's step 3b, which Mustafa moved ahead of batch R4 that day (section 3, "What is left"). Its first step is a rule sheet that he approves before any code is written. Batch R4 is parked after its prep: the record is in [research/r4/prep/](../research/r4/prep/README.md), and R4 starts only when he says so.
+- **Batch R3** (Command & Conquer: Generals with Zero Hour, Tempest Rising, Iron Harvest), in plan step 3, the research run, is done.
   - All 27 R3 units are coded, checked and in `data/units/` (commit 6c817f1).
   - The merge pass, the patterns, the checker, the rule problems, the report, the final review and the claims check followed on 10 and 11 November (section 3). The report is [research/r3/README.md](../research/r3/README.md).
   - R3 is finished. Mustafa approved its pull request on 11 November 2026. R4 waits for his word: do not start it before he says so.
@@ -102,17 +103,18 @@ CI runs four check jobs on every push; it was green on each head it has finished
 **What is left:**
 
 1. **Nothing for R3.** Pull request #6 is approved and merged (runbook section 9).
-2. **R4** (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech), from its prep, and **only when Mustafa says so**. His decisions of 11 November 2026 set the order of the prep:
-   1. **First, the copy-check learns to read the rendered wiki page as well as the page's source, with tests.** Today it reads only the source (wikitext), so it misses text that a template kept on another page draws in, such as an ability box. Mustafa's conditions: the change passes only when the StarCraft wiki plant test flags 5 of 5, and the plant test goes into the repository as a script that can be run again.
-      - The plant test: open a page in a browser, take passages of ten words in a row from what a reader sees, plant them in a throwaway record that cites the page, run the copy-check on that record, and count the passages it flags. For a wiki that shows a headless browser a bot page (Fandom, Liquipedia), take the wiki's own rendered page from its API as the reader's view (`api.php`, `action=parse`, `prop=text`).
-      - The test page of 11 November was `https://starcraft.fandom.com/wiki/Marine_(StarCraft_II)`: 2 of 5 flagged. The three missed passages come from ability and upgrade templates kept on other pages.
-      - The scripts of 11 November were in the session's scratch folder and did not move. Write the repository's script new.
-      - Until the tool can read rendered pages, a batch is not clean without the one-off comparison: save each wiki page's rendered version as an html page in a throwaway root's cache, copy `data/`, `schemas/` and the batch's `research/` folders beside it, and run the copy-check there with `--offline`.
-   2. **Then the site test:** run the plant test on one page from each site R4 will cite, and show that the copy-check reads the page's real text. Results of 11 November, run ahead as a tool check: all planted passages flagged on www.halopedia.org, halo.fandom.com, www.sarna.net, mwo.fandom.com, planetaryannihilation.fandom.com, palobby.com, news.blizzard.com and www.halowaypoint.com (its news index; test a Halo Wars 2 page too). liquipedia.net: 4 of 5 on a saved page; the site limits automated reading, so read its API terms before citing it at volume. mwomercs.com: 4 of 5 (the miss is a cookie notice). planetaryannihilation.com refuses the request (HTTP 403): check by hand if it is cited. A Steam news index page holds no post; single posts are read. Repeat the test for every site the prep adds.
-   3. **The line for the agent briefs,** approved by Mustafa on 11 November 2026 with this wording. Add it to the runbook and to the agent briefs in `research/workflows/` at R4's prep: "Evidence: give the page's address and where on the page it is (the section or box), and say in your own words what it shows. Never copy six or more words in a row from a page, in any field of your answer, your notes or a file, the evidence included; give a figure or a name as it is, and paraphrase everything else."
-   4. **StarCraft II** (Mustafa, 11 November 2026; the plan's section 2.2 has the full text): every Legacy of the Void multiplayer unit except the three workers, about 50, with no trim. Multiplayer only: no co-op-only or campaign-only units. The plan lists what is not a unit of its own (the Larva, the Cocoon, the MULE, the Changeling, the Locust, the Broodling, the Interceptor) and says that a unit that morphs or merges from another is one. The prep decides by the field rules as written whether the Hellion and the Hellbat are one unit or two.
-   5. **Liquipedia, before any fill:** report to Mustafa how Liquipedia will be read within its terms of use, now that about 50 units cite it. On 11 November the site answered a headless browser with a rate-limit notice, and its API refused a request without compression and later rate-limited the session. Read its API terms first.
-   6. **The fill rule for StarCraft II** (Mustafa, 11 November 2026): code StarCraft II one race at a time. After the first race, report to him the tokens used per unit against the estimate. The estimate is 0.44 million tokens per unit for the fill, from R3's fill (about 11 million for 25 units). Measure it as the fill workflows' own token totals for that race, divided by its units. Above one and a half times the estimate, 0.66 million per unit, stop and ask him. Otherwise go on. For a first race of 16 units that is about 7 million expected, and a stop above about 10.6 million.
+2. **The first generator, the plan's step 3b** (Mustafa's plan change of 12 November 2026; the plan's sections 2.1 and 2.2 have the text). It is built on the 55 units and 69 proposed patterns of R1 and R3, before R4. The order of the work: the rule sheet; a check for patterns that are one mechanic under two names (such a pair is marked so that no card gets both; nothing is merged or renamed); the rules as data under `data/generator/`; the module in `src/core/` with its tests; a command that rolls cards, and a page of sample cards (`docs/cards.md`). His conditions of 12 November 2026:
+   1. **The rule sheet comes before any code.** It states every rule the generator applies and every number it uses, for his approval.
+   2. **A new schema file or a word-list change:** show him the wording too, and wait for his approval.
+   3. **A first page of sample cards** as soon as the module rolls valid cards, before the review passes.
+   4. **The stop rule:** report the tokens after the rule sheet and after the first build job, and stop to ask him above one and a half times the estimate. The estimate given to him on 11 November 2026, in million tokens: the rule sheet with the points 1.5 to 2.5; the check for double patterns 1.5 to 2.5; the module 5.5 to 8, in four build jobs; a separate card checker and the big roll tests 1.5 to 2.5; text templates and name words 1 to 1.5; review in two passes and fixes 2 to 3; the roll command and the sample page 0.3 to 0.5; the session's own work 3 to 5; about 16 to 25 in all. About 4 to 7 of that comes back after R4 and the rule-fix round (rules and points for the new patterns, tests on the bigger data, tuning, a re-check of R4's prep).
+3. **R4** (StarCraft II: Legacy of the Void, Halo Wars, Halo Wars 2, Planetary Annihilation: TITANS, MechWarrior/BattleTech), parked after its prep, and **only when Mustafa says so**. The prep ran on 11 November 2026. Its record is in [research/r4/prep/](../research/r4/prep/README.md), which also says how to go on. In short:
+   - **The tool work of the prep is merged** (pull request #8): the copy-check reads rendered wiki pages (plant test on the StarCraft Wiki: 5 of 5, as he required), the plant test and a page reader are scripts in the repository, and every agent brief carries his line on evidence and asks for tool problems apart from the hesitations.
+   - **The unit list is ready:** 85 units. StarCraft II 49, with the Hellion and the Hellbat as one unit by the modes rule, and 9 each for the other four games.
+   - **Not put in:** the editors' notes and their 30 registry edits are saved in the record. `research/registry-notes/games-r4.md` and `data/games.json` stay untouched until R4 resumes (his word of 12 November 2026).
+   - **Waiting for him:** eight questions from the prep, and how Liquipedia is read. Its terms do not allow automated reading of its pages, and the game's own unit descriptions can be read only there. The tools ask it for nothing until he has decided.
+   - **The site test** passed on every site the batch would cite; the record has the results. Run it again when R4 goes on, and check the games' versions again.
+   - **The fill rule for StarCraft II** (Mustafa, 11 November 2026): code StarCraft II one race at a time. After the first race, report to him the tokens used per unit against the estimate. The estimate is 0.44 million tokens per unit for the fill, from R3's fill (about 11 million for 25 units). Measure it as the fill workflows' own token totals for that race, divided by its units. Above one and a half times the estimate, 0.66 million per unit, stop and ask him. Otherwise go on. For a first race of 16 units that is about 7 million expected, and a stop above about 10.6 million.
 
 **Known and left alone:** `npm run copy-check -- --offline --also data/units` finds coincidental six-word runs in R1's units (13 on 11 November 2026; the count depends on the cache), against pages that other records cite or name, most of them cited by R1's own pattern files, such as "while it is in the air" (Halopedia's Plasma grenade page, cited by throw-explosive). None is a page those units cite, and none is in R3's units.
 
@@ -130,6 +132,14 @@ CI runs four check jobs on every push; it was green on each head it has finished
 8. **Liquipedia:** before any fill, a report on how it will be read within its terms (section 3, "What is left").
 9. **Models for the agents:** the session itself may run on the most capable model. Every work agent runs on the family below it, at the highest effort. Set the model on every agent call, so that no agent takes the session's model. Model names are not written in files: if in doubt, ask him.
 
+**Decided late on 11 November and on 12 November 2026:**
+
+1. **Pull request #7** (two status lines, the games registry's `status`, the StarCraft II plan lines): merged late on 11 November, on his answer "Merge #7, then push".
+2. **R4 stopped after its prep** ("Do not start R4", 11 November). He asked for a plan change to be proposed: a first generator before R4.
+3. **Pull request #8** (the tool work of R4's prep): merged on 12 November, on his word.
+4. **The first generator, the plan's step 3b:** approved on 12 November with the plan lines as shown to him, and with four conditions (section 3, "What is left", item 2).
+5. **R4's prep record** is kept under `research/r4/prep/`. The games registry and the notes file stay untouched until R4 resumes.
+
 **Still open:**
 
 1. The five questions from R3's prep (pull request #6, items 3 to 7). He gave no other answer, so the units stay coded by the recommended answers:
@@ -141,6 +151,8 @@ CI runs four check jobs on every push; it was green on each head it has finished
 2. Taken during the batch, each reversible if he asks: night decisions N1 to N4 (above), the consistency check's fixes, three choices about the new patterns, the Vimana's second roles and 18 settled rule problems. The report's "Decisions" lists them.
 3. Left for him at the pattern review (plan step 4): whether to fold `stack-to-overload` into `freeze-and-shatter`.
 4. For the rule-fix round after R4: the 83 rule problems in `research/r3/rule-problems.md`, among them the walker body-plan tie-break and the confidence rule (`research/r3/opening/splits.json`).
+5. For R4, when it goes on: the eight questions of its prep and the Liquipedia decision (`research/r4/prep/README.md`, sections 3 and 6).
+6. For the first generator: his approval of the rule sheet, before any code is written.
 
 ## 5. How the work is done
 
@@ -166,7 +178,7 @@ The procedure is [docs/research-runbook.md](research-runbook.md): its sections 1
 ## 7. First steps in the new session
 
 1. Make sure the Claude GitHub app can reach `Mergincanli/MoesTools-Brainstormer`, with push access.
-2. Run `npm install` (Node.js 22 or newer), then `npm run check:merge`. It should pass 305 of 305 tests.
+2. Run `npm install` (Node.js 22 or newer), then `npm run check:merge`. It should pass every test (386 on 12 November 2026).
 3. Check out `claude/quirky-cray-tih1w4` at this handoff commit or later.
 4. Read this file, CLAUDE.md and the runbook.
 5. Go on with section 3, "What is left".
