@@ -15,6 +15,19 @@ export const meta = {
 // }
 const REPO = '/home/user/MoesTools-Brainstormer'
 const B = args.batch
+
+// Rules every agent gets with its brief, word for word (docs/research-runbook.md, "The quality bar"): the rule on
+// evidence that Mustafa approved on 11 November 2026, tool problems reported apart from the hesitations, and how to
+// read a page (scripts/page-text.mjs). args.batch.rules (args.round.rules in a rule-fix round) adds a batch's own rules, such as a
+// site that must not be fetched.
+const EVIDENCE_RULE = 'Evidence: give the page\'s address and where on the page it is (the section or box), and say in your own words what it shows. Never copy six or more words in a row from a page, in any field of your answer, your notes or a file, the evidence included; give a figure or a name as it is, and paraphrase everything else.'
+const TOOL_RULE = 'Tool problems: when a tool fails you or cannot do its job (a script that crashes, a check that cannot read a page, a site that refuses you), list it in tool_problems, apart from your hesitations: the tool, what you asked of it and what happened. Leave the list empty when there were none.'
+const WIKI_RULE = 'Reading pages: read a page with `node scripts/page-text.mjs <page address>`, run from the root of the repository or of your workspace. It prints the page as plain text: for a wiki page its source and then the rendered page, which also holds what templates kept on other pages draw in, such as an ability box. It reads the page cache first and keeps what it fetches there. Do not fetch a rendered wiki page as HTML yourself: it is ten to twenty times the size.'
+const BATCH_RULES = (args.batch && args.batch.rules) || (args.round && args.round.rules) || ''
+const RULES = `## Rules for every answer\n- ${EVIDENCE_RULE}\n- ${TOOL_RULE}\n- ${WIKI_RULE}${BATCH_RULES ? `\n- For this batch: ${BATCH_RULES}` : ''}`
+const TOOL_PROBLEMS = { type: 'array', items: { type: 'string' }, description: 'tool problems, one line each: the tool, what you asked of it and what happened; empty when there were none' }
+// ask() is agent() with the rules at the end of the brief and a tool_problems list in the answer.
+const ask = (prompt, opts = {}) => agent(`${prompt}\n\n${RULES}`, opts.schema ? { ...opts, schema: { ...opts.schema, properties: { ...opts.schema.properties, tool_problems: TOOL_PROBLEMS } } } : opts)
 const DIR = args.dir
 if (!args.progress) throw new Error('args.progress is required: a folder outside the repository for the agents\' notes (runbook, "Progress notes")')
 const NOTES_FILE = `research/registry-notes/games-${B.id}.md`
@@ -26,7 +39,7 @@ A usage limit can cut you off part way, and you would then be started again with
 - Look there first. If the notes are for another task (their first line names the task), move them into ${dir}/old/ and start fresh. If they end with DONE, write your answer from them without redoing the work. Otherwise go on from where they stop, without redoing the steps they mark done.
 - A new notes file starts with one line naming your task. After each step you finish (a unit or record done, a page read, a check run), add a line or two: what is done, what you found and where (page URL or file), what comes next. Keep them short: just enough to write your answer without opening the pages again.
 - When the work is done, add a last line DONE, then give your answer.
-Pages fetched before are cached in ${root}/.cache/sources/<site>/ (one JSON file per page, named after its path; the raw field holds the page text): look there before fetching a page. Read long files and pages in parts, by searching for the section you need.`
+Pages fetched before are cached in ${root}/.cache/sources/<site>/ (one JSON file per page, named after its path; the raw field holds the page text or, for a wiki page, its source, and the rendered field holds the rendered wiki page): look there before fetching a page. Read long files and pages in parts, by searching for the section you need.`
 
 const COMMON = `Unit Forge (repository ${REPO}; read only for you, never edit a file there) is a research database of real RTS and shooter units, coded with fixed word lists (data/vocab/, docs/vocabularies.md, version 1.1.0, approved) and field rules (docs/fields.md, Conventions first), that feeds a generator of original unit concepts for Shamble Frontlines, a top-down team shooter where each player buys and becomes one unit. Step 3 is the research run; batch ${B.id.toUpperCase()} covers ${B.scope}, about 9 units per game (decision 8B). docs/research-runbook.md is the procedure. House rules: plain words and short sentences, paraphrase only (never six or more words copied from a page), no images, mechanics over numbers, cite pages by URL. Read wikis through their API, about two seconds between requests, retry after a 429.`
 
@@ -91,7 +104,7 @@ Each kept unit gets a one-line brief for its researcher. Give a reason for every
 
 const out = {}
 await parallel([
-  ...args.games.map(g => () => agent(editPrompt(g), { label: `edit:${g.id}`, phase: 'Edit notes', schema: EDIT }).then(r => { out[g.id] = r })),
-  ...(args.trim ? [() => agent(trimPrompt(), { label: 'trim', phase: 'Trim', schema: TRIM }).then(r => { out.trim = r })] : []),
+  ...args.games.map(g => () => ask(editPrompt(g), { label: `edit:${g.id}`, phase: 'Edit notes', schema: EDIT }).then(r => { out[g.id] = r })),
+  ...(args.trim ? [() => ask(trimPrompt(), { label: 'trim', phase: 'Trim', schema: TRIM }).then(r => { out.trim = r })] : []),
 ])
 return out

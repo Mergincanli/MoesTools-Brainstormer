@@ -4,6 +4,8 @@
 
 Entries written to `games_r5.json`: `supcom` (Supreme Commander with Forged Alliance), `pa` (Planetary Annihilation with TITANS), `sc2` (StarCraft II: Wings of Liberty with Heart of the Swarm and Legacy of the Void), `hw2` (Halo Wars 2 with Awakening the Nightmare), `dow1` (Dawn of War with Winter Assault, Dark Crusade and Soulstorm) and `dow2` (Dawn of War II with Chaos Rising and Retribution). `check_games.py` prints OK. A six-word copy-check of every string against all the pages I downloaded finds only page and game titles.
 
+**Moved on 11 November 2026.** The notes on `pa`, `sc2` and `hw2` are now in [games-r4.md](games-r4.md), the notes of the new batch R4 (plan change of 24 October 2026). This file keeps Supreme Commander and both Dawn of War games.
+
 Every cited page was checked:
 - Fandom wikis (Supreme Commander, StarCraft and Dawn of War): through the MediaWiki API. Each page exists under exactly the cited title, with no redirect. Plain downloads return 403, as expected.
 - Halopedia and PA Lobby pages: they return 200 directly.
@@ -11,13 +13,8 @@ Every cited page was checked:
 
 ## For the orchestrator (affects other batches)
 
-- **Liquipedia blocked this session.** After two parse calls spaced 31 seconds apart, a few quick search calls triggered a temporary IP block. The block page has a CAPTCHA; I did not try to get around it. Its API terms allow at most one parse request every 30 seconds and need gzip and a named user agent. SC2 agents should follow those terms or use the other sources listed below. The block may still be active from this machine.
 - **Faction tags on tier gates.**
-  - The `sc2` gates carry the race (terran, zerg, protoss). StarCraft II has no subfactions and every building name belongs to one race.
-  - All other entries leave gates untagged. Their gates are either shared by every faction (SupCom factories, PA, the HW2 tech levels) or generic levels (`Tier 1` to `Tier 3` in both Dawn of War games). This follows the r2 and r3 finding that a tagged gate rejects subfaction and `shared` units.
-- **No leader subfactions for HW2.** The game has 16 multiplayer leaders, and most swap one or two units (Forge's Grizzly replaces the Scorpion, Johnson's Mantis replaces the Warthog). I kept two factions. Record a leader's units under `unsc` or `banished` and name the leader in the notes and availability.
-  - If you prefer the Generals style instead, add subfactions with `parent`.
-  - In that case Pavium and Voridus get `introduced_in: hw2-awakening-the-nightmare`; the Halopedia page for the expansion says it added them.
+  - The entries here leave gates untagged. Their gates are either shared by every faction (SupCom factories) or generic levels (`Tier 1` to `Tier 3` in both Dawn of War games). This follows the r2 and r3 finding that a tagged gate rejects subfaction and `shared` units.
 - **Franchise names.**
   - Both Dawn of War games use "Warhammer 40,000", the umbrella brand, in the same way that "Command & Conquer" covers Red Alert.
   - Supreme Commander and Planetary Annihilation are separate franchises, although both descend from Total Annihilation. If design lineage should count, note that they are related.
@@ -28,27 +25,6 @@ Every cited page was checked:
   - The game has four levels: tech 1 to 3 factory upgrades, plus experimentals, which the wiki calls an unofficial tech 4.
   - Experimentals are built by tech 3 engineers, support commanders or an upgraded commander. They map to t3 under the gate `Experimental`, and support commanders map to t3 under `Quantum Gateway`.
   - The commander (ACU) is not bought. Its gate is `Start of the match` (t1), with no cost band.
-- **Planetary Annihilation.**
-  - The PA Lobby database itself labels basic factories T1, advanced factories T2 and Titans T3, so the map follows it.
-  - Titans use the gate `Titan (built by an advanced fabricator)`.
-  - Oddly, the database lists the T1 orbital fabrication bot among the Atlas's builders. Treat Titans as t3 anyway.
-  - Units launched from the T2 Unit Cannon keep their own factory gate.
-  - The commander uses `Start of the match`.
-- **StarCraft II.** (Corrected after the fact-check to match data/games.json.) There is no in-game tier label, so I matched the Zerg Hatchery, Lair and Hive levels:
-  - **t1:** the first production building, plus the tech building its line units need. Terran: Command Center, Barracks. Zerg: Hatchery, Spawning Pool, Roach Warren, Baneling Nest. Protoss: Nexus, Gateway, Cybernetics Core.
-  - **t2:** the second step. Terran: Factory, Starport, Armory, Ghost Academy. Zerg: Lair-tech buildings (Lair, Hydralisk Den, Lurker Den, Infestation Pit, Spire, Nydus Network). Protoss: Robotics Facility, Stargate.
-  - **t3:** the third step. Terran: Fusion Core, and the Thor, whose own gate is "Factory with tech lab and Armory (Thor)". Zerg: Hive-tech buildings (Hive, Ultralisk Cavern, Greater Spire). Protoss: Fleet Beacon, Robotics Bay, Dark Shrine, Templar Archives.
-  - Tech Lab and Reactor add-ons are not a tier step. So the Marauder is t1 and the Siege Tank t2; the Banshee and Raven are t2.
-  - Judgement calls: the Hellbat is t2: it is the Hellion's second mode, and the Armory is t2 in the registry. The Starport is t2 although it needs the Factory. The Ghost is t2. The Twilight Council unlocks no unit, so it is left out.
-  - Campaign-only units (for example the WoL Firebat, Goliath, Diamondback and Wraith, or the LotV Reaver): use the multiplayer gate of the building that makes them. Mission unlocks are not tech gates.
-  - Co-op Missions values appear in the same wiki infoboxes; ignore them.
-- **Halo Wars 2.**
-  - Halopedia's unit tables give each unit a "Tech" value from 0 to 3. The HQ upgrades unlock tech 1 to 3: Combat Station, Command Center and Headquarters (UNSC); Stronghold, Citadel and Fortress (Banished).
-  - The Banished outpost page says a match starts with a Stronghold, so tech 1 is available from the start. Tech 0 and tech 1 are therefore both t1, tech 2 is t2 and tech 3 is t3.
-  - **Check:** the UNSC Firebase page does not say outright that the UNSC main base also starts at tech 1. I assumed the two sides match.
-  - Consequence: the Garage, Airpad and Foundry need tech 2, so Warthogs, Hornets, Wolverines and Marauders are t2, and the Scorpion, Wraith and Vulture are t3. Heroes such as Atriox's Chosen are listed at tech 1, so they are t1.
-  - Unit upgrades (Gauss Warthog, Canister Shell) are upgrades, not tiers.
-  - The Flood appear only as enemies (Awakening the Nightmare campaign, Terminus Firefight). They are not a playable side; skip them or mark them atypical.
 - **Dawn of War.** Nine races step up in different ways, so the gates are generic: `Tier 1`, `Tier 2` and `Tier 3`.
   - Relic units (Land Raider, Baneblade, Avatar, Squiggoth and so on) count as Tier 3.
   - Newer wiki unit pages (the Dow1UnitData template) give the tier as a number, for example Tau Devilfish 2, Hammerhead 3, Sisters Immolator 2, Exorcist 3 and Living Saint 3. Older pages (DoWUnitData) give requirements instead. Translate them with this table:
@@ -81,32 +57,6 @@ Method for all six: price as stated in each basis, anchor on the main battle tan
   - Very high: Titan 516, the Wasp air-superiority fighter 533, Percival 1,373, Monkeylord about 20,700, Fatboy about 26,650.
   - **Hard to map.** Prices span three orders of magnitude, so tech level decides the band: all T1 is very low and all T3 is very high. Anchoring on the T1 tank (56) would push everything from T2 up into very high, which is worse.
   - Air units pay mostly in energy (the interceptor 2,250 energy for 50 mass), so the formula makes them look cheap. Mention energy-heavy units in their notes.
-- **Planetary Annihilation: metal, anchor 800 (Leveler); thresholds 400, 720, 1,120 and 1,600.**
-  - Very low: Dox 45, Ant 150, Inferno 225.
-  - Low: Slammer and Locusts 500, Bluehawk 700.
-  - Medium: Storm 750, Leveler and Gil-E 800.
-  - High: Sheller 1,200, Vanguard 1,500.
-  - Very high: Manhattan 8,000, Titans 30,000.
-  - Same compression as SupCom. The Leveler (the database calls it an assault tank) was chosen over the Vanguard heavy tank because it is the standard T2 line tank, and to match the SupCom anchor.
-- **StarCraft II: minerals + 3 × gas, anchor 525 (Siege Tank 150 minerals and 125 gas); thresholds 260, 470, 740 and 1,050.**
-  - The weight 3 comes from the Liquipedia mining rates (about 925 minerals and 325 gas per saturated base per minute, 2.85 to 1).
-  - The unit prices below are from memory, apart from the Siege Tank and Marine, and the 5.0.15 Viking price cut shows they move. Check each one against the current patch.
-  - Very low: Marine 50, Zealot 100, Roach 150, Marauder 175, Hydralisk 250.
-  - Low: Stalker 275, Mutalisk and Medivac 400.
-  - Medium: Siege Tank and Ghost 525, Immortal 575, Void Ray 700.
-  - High: Ultralisk, Thor and Colossus about 875 to 900.
-  - Very high: Brood Lord 1,050 (including its Corruptor), Carrier 1,100, Battlecruiser 1,300, Mothership 1,600.
-  - With a weight of 2, the boundaries move a little, but the order and most bands stay the same. The calibration pilot (plan step 2) uses SC2 to test the two-resource rule, so this is the place to revisit the weight.
-- **Halo Wars 2: supplies + power at par, anchor about 630 (Scorpion 550 + 90, Wraith 550 + 75); thresholds 320, 570, 890 and 1,270.**
-  - Very low: Marines 150, Jackrabbit 235, Warthog 250, Hornet 300.
-  - Low: Wolverine 330, Nightingale 400, Kodiak 525.
-  - Medium: heroes about 575, Scorpion 640, Vulture 850, Colossus 870.
-  - High: Grizzly 990.
-  - Very high: Scarab 4,000.
-  - **Uncertain.**
-    - No source gives income rates, so power is not weighted.
-    - The Halopedia tables are not tied to a patch. A search snippet of the Prima eGuide (the official guide, behind Cloudflare, so I could not open it) suggested a launch Scorpion price of about 650 resources.
-    - Leader-power drops and Blitz card costs are not unit prices.
 - **Dawn of War: requisition + power at par, anchor about 460 (Predator 465; Chaos Predator, Leman Russ, Looted Tank and Ravager 450; Hammerhead 480); thresholds 230, 410, 640 and 920.**
   - Very low: Scouts 100, Rhino 145, Guardsmen 160, Space Marine Squad 200, Land Speeder 215.
   - Low: Falcon 300, Necron Heavy Destroyer 300, Terminators 340.
@@ -129,19 +79,6 @@ Method for all six: price as stated in each basis, anchor on the main battle tan
   - Slow: Striker and Pillar 3.3 (0.83).
   - Medium: Titan 4 (1.0).
   - Very fast: interceptors 15 (3.75).
-- **PA:** ratio = speed / 20.
-  - Every tank (speed 10) and most bots (12 to 14) are very slow or slow.
-  - Medium: Skitter 25 (1.25).
-  - Medium, at the boundary: Zeus 30 (1.5).
-  - The Dox is unusually fast; this is a property of PA, and the band only reflects it.
-- **SC2:** ratio = speed / 3.15.
-  - Siege Tank 1.0 (medium).
-  - Use base speed: no creep, Stimpack or speed upgrades. Record those as abilities or upgrades.
-  - Keep one game speed throughout; the wikis use Faster.
-- **HW2:** no numeric speeds. Use the unit descriptions, at low confidence:
-  - "very fast moving" means fast or very fast;
-  - "slow moving" means slow.
-  - Some patch notes give speeds (the Season 14 notes on Halopedia raise the Vulture from 9 to 11), but there is no Marine figure to divide by.
 - **DoW1:** ratio = speed / 16.
   - Very slow: Necron Warriors 10 (0.63).
   - Slow: Terminators 12 (0.75).
@@ -180,13 +117,11 @@ Method for all six: price as stated in each basis, anchor on the main battle tan
   - Vehicle High (Land Raider, Killa Kan, Baneblade, Restored Monolith) maps to heavy. Lift the Baneblade and Restored Monolith to super-heavy by size.
   - Left out, to be set per unit: Vehicle Medium (from the Rhino to the Predator), Commander, Daemon Medium and High, and buildings.
   - DoW1 has no named damage types: each weapon lists damage per armour type, so there is no damage_map.
-- **No maps for SupCom, PA, SC2 or HW2.** SC2's attributes (Light, Armored, Biological, Mechanical, Massive, Psionic) cut across our classes. For sc2 they are step 2 of the armour-class order. The Siege Tank, the cost anchor, is heavy. Other Massive units are heavy; only check A makes one super-heavy. Other Armored units are medium, or light when they are infantry-sized (body size small, such as the Marauder). Light units are unarmoured when Biological and not Mechanical, otherwise light. A unit that is neither Light nor Armored goes on to step 4.
+- **No map for SupCom.**
 
 ## Flavour affinity (a proposal, not a sourced fact)
 
 - **Given:**
-  - SC2 protoss: allied (shields, warp and blink, stasis and time tricks, cloaking, carriers and air power). They also have psionics, which is Empire, so this is a judgement call.
-  - HW2 banished: soviet (brute force, scavenged machines, ramming Choppers, the Scarab walker). Also a judgement call.
   - DoW1 and DoW2 orks: soviet (salvage and looted tanks, cheap numbers, crude walkers).
   - DoW1 and DoW2 imperial-guard: soviet (masses of infantry, heavy tanks, artillery, super-heavy Baneblade).
   - DoW1 tau: allied (markerlight lock-on, stealth suits, drones and shields, hover tanks, battlesuits).
@@ -194,24 +129,11 @@ Method for all six: price as stated in each basis, anchor on the main battle tan
   - SupCom: UEF leans soviet (durable, slow, artillery), Aeon allied (hover, shields, long range) and Cybran empire (agile, stealth, a transforming destroyer, self-repair). None is clear.
   - Eldar: Empire's blades, psionics and discipline, but also Allied prism weapons, hover tanks and teleporting.
   - Dark Eldar: Empire's speed and blades, but also soul-draining.
-  - Space Marines, Chaos, Necrons, Sisters of Battle, Tyranids, Terran, Zerg and UNSC.
-  - PA has no factions.
+  - Space Marines, Chaos, Necrons, Sisters of Battle and Tyranids.
 
 ## Game-wide mechanics
 
 Mechanics that belong to the game, not the unit (see Shared mechanics and universal keys in the Conventions). Leave them off every unit's weapons and abilities. A unit that does one of them better or worse than the rest says so in its strengths or weaknesses.
-
-### StarCraft II (`sc2`)
-
-Written for pilot round 1, from the StarCraft Wiki's Burrow page and this note's speed rules. The health regeneration and plasma shield bullets were added after pilot round 2; check both against Liquipedia before the SC2 research run.
-
-- **Basic orders** (move, attack, stop, hold position, patrol): every unit. No pattern.
-- **Burrow** (burrow): most Zerg ground units can burrow once the Burrow research is done. Leave it off them; the wiki names the broodling as one that never can. A unit that does more with it records that on the unit: roaches and infestors keep moving when burrowed, and the lurker attacks only while burrowed.
-- **Creep**: Zerg ground units move faster on creep. Speeds are taken off creep (see Speed above), and creep is not recorded on units.
-- **Entering and leaving a transport or a bunker**: universal keys. The carrier (Medivac, Warp Prism, an Overlord with its transport upgrade) keeps one passive for its passenger seats (see Paired entries).
-- **Weapon and armour upgrades** bought at a research building for a whole class of units (Engineering Bay, Armory, Evolution Chamber, Forge and the like): side-wide upgrades, left off. Bands use the stock unit.
-- **Health regeneration** (armour model self-repair): every Zerg unit slowly regains health on its own. Code self-repair on each Zerg unit and say in armour.notes that it is slow and shared by the race. Terran and Protoss units have none.
-- **Plasma shields** (armour model regen-shield): every Protoss unit has a shield over its health that recharges after a short time out of combat. Code regen-shield on each Protoss unit, as the term's examples say.
 
 ### Dawn of War II (`dow2`)
 
@@ -236,7 +158,7 @@ Written before any dow2 unit is coded, from the Dawn of War Wiki's Dawn of War I
 - **Repair** (repair-allies): not game-wide. The wiki gives the Repair ability to various builder squads and heroes; record it on each unit that has it. Every HQ's healing aura is a base feature: leave it off.
 - **Weapon pickups**: the pages I read describe none in multiplayer. Wargear that enemies drop for the player to pick up is a campaign feature (the manual), so nothing is recorded.
 
-Supreme Commander, Planetary Annihilation, Halo Wars 2 and Dawn of War have no list yet. Write one before any of their units is coded.
+Supreme Commander and Dawn of War have no list yet. Write one before any of their units is coded.
 
 ## Notes for the r5 research agents
 
@@ -246,22 +168,6 @@ Supreme Commander, Planetary Annihilation, Halo Wars 2 and Dawn of War have no l
   - Rendered stat boxes show energy first, then mass, then build time. Do not swap them.
   - The FAF unit database describes Forged Alliance Forever balance, which differs. Do not mix the two.
   - Interesting mechanics to look for: commander (ACU) enhancements, shields, transports that can fire (ghetto gunship), the Fatboy mobile factory, and the Cybran Salem destroyer, which walks onto land.
-- **Planetary Annihilation.**
-  - Use palobby.com/units (plain HTML, data-mined from the game files, cited as kind "database").
-  - Always add `?version=titans`. The default pages have the Legion Expansion mod switched on and mix in its units (Purger, Peacekeeper and others).
-  - Unit pages: /units/unit/<id>?version=titans, for example assault_bot = Dox, tank_light_laser = Ant, tank_laser_adv = Leveler, titan_bot = Atlas.
-  - The Planetary Annihilation Fandom wiki is an old, thin stub (its unit list is from build 71937). Do not use it for numbers.
-- **StarCraft II.**
-  - Liquipedia is the best source. Respect its API terms: one parse request every 30 seconds, gzip and a named user agent. This session was blocked for going faster.
-  - The StarCraft Wiki (starcraft.fandom.com) infoboxes have costmin, costgas, supply, produced, req and speed. They also list Co-op values on the same lines; ignore those.
-  - Official role lines: the in-game unit description in the Liquipedia and StarCraft Wiki infoboxes is official text.
-  - Blizzard's patch notes are official: 5.0.15 (30 September 2025), 5.0.16 and its hotfix, and 5.0.17 (7 October 2026). 5.0.17 rolled most 5.0.16 changes back to 5.0.15. Wiki values may lag, so check each unit against these three patches.
-- **Halo Wars 2.**
-  - Halopedia allows API access and plain page loads.
-  - The cost tables are on the building pages (UNSC Barracks, Garage and Airpad; Banished Hall, Foundry and Summit; Firebase, Banished outpost, War Council and Armory). Columns: Population, Tech, Supplies, Power.
-  - Some rows have wrong type labels: the Scorpion is labelled "Core Aircraft".
-  - Patch notes are on the Season pages (Season 0 to 15). Season 15 (August 2020) is the last.
-  - The Prima eGuide (official) is behind Cloudflare.
 - **Dawn of War.**
   - Use the Dawn of War Wiki (dow.fandom.com) through its API. Page names are prefixed `Soulstorm/`, with some older ones under `Dark Crusade/`, `Dawn of War/` or no prefix.
   - Older boxes (DoWUnitData): Requires, Building, Cost (requisition, power, squad or vehicle cap), Speed, Armour.
@@ -276,16 +182,13 @@ Supreme Commander, Planetary Annihilation, Halo Wars 2 and Dawn of War have no l
     - Decorators, the icons over each squad, hint at its job (melee or ranged; against infantry, vehicles or everything). They are pictures, not words: their names are internal file names, and the meanings on the wiki's Decorators page are the wiki's words. They name no role.
     - Designation: the only type line the sources show on the tooltip is the armour type (see DoW2 armour). It names an armour, not a role, so roles step 1 reads the description as the unit's official one-line description. Skip its sentences about upgrades ("can be upgraded with", "upgrades grant"): upgrades never count for roles.
     - Strong-against and weak-against: no separate lines. The description says it inside its sentences, calling a unit effective, good or very damaging against a kind of target, or weak in melee, fragile or vulnerable to small arms. Read those phrases as the official strong-against text for roles step 4, and the weak ones for dropping secondary roles, when they name a kind of target (infantry, vehicles); a phrase about all targets names none. No unit in the wiki's Retribution lists flies (Valkyries appear only in globals), so no line names anti-air.
-- **Squads (decision 7B).** Halo Wars 2 and the first two Dawn of War games sell squads. Record squad size in the notes; a squad source maps to the rare squad crew model.
+- **Squads (decision 7B).** The first two Dawn of War games sell squads. Record squad size in the notes; a squad source maps to the rare squad crew model.
 
 ## Uncertainties to check
 
-1. The HW2 tier map assumes both sides start at tech level 1 (stated only for the Banished).
-2. The HW2 prices are Halopedia values that are not tied to a patch.
-3. The SupCom version: 1.5.3599 is what the wiki's data records. I did not confirm that it is the last official patch.
-4. The DoW1 tier steps for Imperial Guard, Tau, Dark Eldar and Sisters of Battle are not checked by name.
-5. The two-resource weights are judgement calls:
-   - SC2 gas counts 3 times;
-   - HW2, DoW1 and DoW2 count both resources at par;
+1. The SupCom version: 1.5.3599 is what the wiki's data records. I did not confirm that it is the last official patch.
+2. The DoW1 tier steps for Imperial Guard, Tau, Dark Eldar and Sisters of Battle are not checked by name.
+3. The two-resource weights are judgement calls:
+   - DoW1 and DoW2 count both resources at par;
    - SupCom counts energy at the mass-fabricator rate.
-6. SupCom and PA cost bands follow tech level almost one to one.
+4. SupCom cost bands follow tech level almost one to one.

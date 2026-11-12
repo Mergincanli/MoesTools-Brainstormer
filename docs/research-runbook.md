@@ -25,6 +25,8 @@ The night shift's work must be as good as the work done with Mustafa awake. Each
   - The copy-check (section 8, step 4) finds no shared run.
   - The record has no local paths.
 - **Paraphrase only.** Never copy six or more words from a page, use no images, and prefer mechanics over numbers. Real unit names are for reference only.
+- **Agents read pages with `node scripts/page-text.mjs <page address>`.** It prints a page as plain text, the way the copy-check reads it: for a wiki page, the source and the rendered page; for a game's patch notes on Steam, the news feed (`https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=<id>&count=40&maxlength=0&format=json`), which it prints post by post. Steam's own pages of a post often hold no post text; cite the feed's address and name the post's title and date. It uses the page cache first, spaces out requests to one site (also between agents working at once), and fetches nothing from a site whose terms restrict reading until Mustafa has decided how it is read. A rendered wiki page fetched as HTML is ten to twenty times the size, so agents do not fetch it by hand.
+- **Evidence.** Every agent's brief carries this line, word for word (Mustafa, 11 November 2026; `research/workflows/*.js`, `EVIDENCE_RULE`): "Evidence: give the page's address and where on the page it is (the section or box), and say in your own words what it shows. Never copy six or more words in a row from a page, in any field of your answer, your notes or a file, the evidence included; give a figure or a name as it is, and paraphrase everything else."
 
 ## Where things are
 
@@ -50,6 +52,7 @@ Commands, all run from the repository root:
 **Keep the count of agents to what the phase needs.**
 - At most 10 agents per workflow (CPU limits allow 2 at a time in each).
 - At most two workflows at once. While the usage limit sets the pace, more agents at once do not finish the batch sooner: they only cut off more agents part way when the limit hits.
+- Do not change the model or the effort in the middle of a run (Mustafa, 11 November 2026). Set both before the launch, and let a running workflow finish.
 - Each workflow's agents own only their files: their own workspace, or the files the prompt names.
 
 ## The state file and the night log
@@ -89,6 +92,8 @@ Each phase ends with a commit and a push of its record.
 
 **Never `git add -A` or `git add .`.** Add the files by name.
 
+**Tool problems** (Mustafa, 11 November 2026). Every agent lists the tool problems it met in `tool_problems`, apart from its hesitations: a script that crashes, a check that cannot read a page, a site that refuses it. After every workflow, copy them into `research/r<N>/tool-problems.md` with the phase and the agent. Read that list before the merge pass, and write beside each entry what was done about it.
+
 After every workflow, before you use any result:
 1. `git -C /home/user/MoesTools-Brainstormer status --porcelain` shows only your own changes. If anything else changed, save it as a patch in the scratchpad, restore the file with `git checkout -- <file>`, and note it in the night log. Prep, notes, checker and review agents read the repository itself and must change nothing in it.
 2. Check each workspace `$WS` the workflow used against the commit it was made from (`<start>`, in the state file). Run from the repository:
@@ -110,7 +115,8 @@ After every workflow, before you use any result:
    A skeptic checks every claim against the pages. An editor applies the confirmed corrections, re-fetches any point the two disagree on, and turns registry findings into exact JSON-pointer edits. Scripts: `prep.js`, then `notes-and-trim.js`.
 2. **Candidates, per game:** about half again as many as the batch keeps. Each says what it teaches the generator, the pattern ids it links, any mechanic no id covers, its pages, and whether it is buildable in skirmish.
 3. **Trim, one judge for the whole batch.** Keep about 9 per game, counting units already researched. Remove repeats within the batch and against units already in the data. Cover the classes, factions, roles, tiers and the registry patterns whose examples are in this batch. Give a reason for every cut. Record it in `research/r<N>/prep/trim.json`.
-4. **Commit the prep:** the notes, the registry edits and the trim, after the checks and the copy-check (section 8, step 4, part 1). Then open the batch's pull request from that commit, ready for review, with a short progress description, and subscribe to it.
+4. **The site test, before any fill.** Run `npm run plant-test -- <address>` on one page of every site the batch will cite. It opens the page as a reader sees it, plants passages of that text in a throwaway record that cites the page, and runs the copy-check on it. A site passes when every planted passage is flagged. Read the missed passages: a notice that a script draws is no loss, but page text is, and then the copy-check must learn to read that site before the batch cites it. Keep the output in `research/r<N>/prep/`. Liquipedia's terms do not allow automated reading of its pages, and its API is meant for editors (its API terms, read on 11 November 2026): agents fetch nothing from liquipedia.net unless the batch's rules say how, and Mustafa decides that.
+5. **Commit the prep:** the notes, the registry edits and the trim, after the checks and the copy-check (section 8, step 4, part 1). Then open the batch's pull request from that commit, ready for review, with a short progress description, and subscribe to it.
 
 ### 2. Opening check (only when the rules changed)
 
@@ -205,7 +211,7 @@ The pilot used this shape (research/pilot/README.md, Final review).
 1. `npm run format`.
 2. `npm run docs`.
 3. `npm run check:merge`.
-4. The online copy-check, in three parts, each with zero FOUND lines:
+4. The online copy-check, in three parts, each with zero FOUND lines. It compares a wiki page twice over: its source and its rendered page, which holds what templates kept on other pages draw in. A run that prints a SOURCE ONLY line read some wiki page's source only and is incomplete: run it online once, so that the rendered pages are fetched.
    1. `npm run copy-check -- --also research/r<N> --also research/registry-notes`. Every record file lists the URLs of the pages its agent read, so the check fetches them.
    2. For each page named in the batch's uncertain entries but not cited, run `npm run copy-check -- --also data/units --only <url>` and read the FOUND lines on the batch's units. A page named only by title counts too: give its full address. If the run ends INCOMPLETE, read its NOT CHECKED line. For a full address it gives the fetch error (or "offline and not cached"); for a part of an address it gives "--only matched no cited, linked or cached page". Either way, compare the URL with the entry, copy it exactly, and run again.
    3. For every cited PDF or wiki `File:` page (the cache holds only the page's licence text; list them with `grep -rhoE '"url": "[^"]*(\.pdf|/wiki/File:)[^"]*"' data/units data/patterns research/r<N> | sort -u`), extract the text with `pdftotext`. Compare it with the prose that cites it using a six-word check (copy-check's `words`, `grams` and `sharedRuns`). List each one in the report as checked by hand.

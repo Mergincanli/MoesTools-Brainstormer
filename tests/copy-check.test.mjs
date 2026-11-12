@@ -10,8 +10,10 @@ import path from 'node:path'
 import { describe, it, after } from 'node:test'
 import {
   REPO_ROOT, MAX_NETWORK_FAILURES, NO_POST_TEXT, ONLY_MATCHED_NOTHING, cachePath, copyCheck, exitCode, formatCopyReport, markdownBlocks, noteFiles,
-  noteTexts, pageText, steamNewsText, urlsIn,
+  noteTexts, pageGrams, pageText, pageTexts, sourceOnly, steamFeedLines, steamNewsText, urlsIn, covers, hostPause, refusal, HOST_MIN_DELAY, RESTRICTED, RESTRICTED_SITES,
+  SOURCE_ONLY_CACHE, SOURCE_ONLY_OFFLINE, USER_AGENT, stampFile, stampFolder,
 } from '../scripts/copy-check.mjs'
+import { plantTest } from '../scripts/plant.mjs'
 
 const COPY_CHECK = path.join(REPO_ROOT, 'scripts/copy-check.mjs')
 const PAGE = 'https://a.example/p'
@@ -19,6 +21,16 @@ const SUMMARY = 'Our drone leaps inside an enemy vehicle and eats it from within
 
 const tmpDirs = []
 after(() => { for (const d of tmpDirs) fs.rmSync(d, { recursive: true, force: true }) })
+
+// No test may reach a real site: any request that is not to this machine fails here, before it leaves. (A guard in
+// the code under test must not be the only thing between a test and a site whose terms forbid automated reading.)
+const realFetch = globalThis.fetch
+globalThis.fetch = (input, ...rest) => {
+  const host = new URL(typeof input === 'string' ? input : input.url).hostname
+  if (host !== '127.0.0.1') throw new Error(`a test tried to reach ${host}`)
+  return realFetch(input, ...rest)
+}
+after(() => { globalThis.fetch = realFetch })
 
 // A throwaway repo with one unit that cites the given URLs; `pages` maps a URL to the HTML to cache for it.
 function tempRepo(urls, pages = {}) {
@@ -309,6 +321,46 @@ describe('copy-check on Steam news posts', () => {
   })
 })
 
+// The Steam news feed as the API serves it: JSON with every post's title and body, the body in the store's own
+// markup or, for a post from another site, in HTML.
+const FEED = 'https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=1&count=40&maxlength=0&format=json'
+const feed = items => JSON.stringify({ appnews: { appid: 1, newsitems: items } })
+const FEED_POSTS = [
+  { gid: '77', title: 'Balance notes', date: 1785024000, feedlabel: 'Community Announcements',
+    contents: '[h2]Drones[/h2][p]Our drone leaps inside an [b]enemy vehicle[/b] and eats it\nfrom within, then leaves.[/p][list][*][p]\\[NEW] Range < 40 for now <spoilers>.[/p][/*][/list][img]https://cdn.example/a/long/picture/address/of/six/words.png[/img]' },
+  { gid: '78', title: 'A site writes', date: 1785110400, feedlabel: 'Some Site',
+    contents: '<p>The walker <strong>crushes</strong> light tanks &amp; infantry.</p><p>It is slow.</p>' },
+]
+
+describe('copy-check on the Steam news feed', () => {
+  it('reads the feed as its posts: titles, a date line and the body as lines of plain text', () => {
+    assert.deepEqual(steamFeedLines(feed(FEED_POSTS)), [
+      'Balance notes', '(post 77, 2026-07-26, Community Announcements)', 'Drones',
+      'Our drone leaps inside an enemy vehicle and eats it', 'from within, then leaves.', '\\[NEW] Range < 40 for now <spoilers>.',
+      'A site writes', '(post 78, 2026-07-27, Some Site)', 'The walker crushes light tanks & infantry.', 'It is slow.',
+    ])
+    assert.equal(pageText({ url: FEED, format: 'html', raw: feed(FEED_POSTS) }), steamFeedLines(feed(FEED_POSTS)).join('\n'))
+  })
+
+  it('gives null for what is not a feed, and such a page is then read as it is', () => {
+    assert.equal(steamFeedLines('<p>Service unavailable for now.</p>'), null)
+    assert.equal(steamFeedLines('{"appnews":{}}'), null)
+    assert.equal(pageText({ url: FEED, format: 'html', raw: '<p>Service unavailable for now.</p>' }), ' Service unavailable for now. ')
+    // the same JSON under another address is not taken for a feed
+    assert.match(pageText({ url: PAGE, format: 'html', raw: feed(FEED_POSTS) }), /newsitems/)
+  })
+
+  it('finds a run that crosses a bold tag and a line break of a post, which the JSON as it is would hide', () => {
+    const root = tempRepo([FEED], { [FEED]: feed(FEED_POSTS) })
+    const r = cli(root, '--offline')
+    assert.equal(r.status, 1, r.stdout + r.stderr)
+    assert.match(r.stdout, /"our drone leaps inside an enemy vehicle and eats it from within then leaves" \(14 words\)/)
+    // the proof that the raw JSON hides it: the same text under an address that is not a feed shares no run at all
+    const plain = cli(tempRepo([PAGE], { [PAGE]: feed(FEED_POSTS) }), '--offline')
+    assert.equal(plain.status, 0, plain.stdout + plain.stderr)
+  })
+})
+
 describe('copy-check --only', () => {
   it('checks only the pages whose address holds the text', async () => {
     const root = tempRepo([PAGE, OTHER], { [PAGE]: '<p>The drone leaps inside an enemy vehicle and eats it.</p>', [OTHER]: GUIDE })
@@ -342,3 +394,369 @@ describe('copy-check --only', () => {
   })
 })
 
+
+// A wiki page as a reader sees it holds text that its source only names: a template kept on another page draws
+// the ability box in. The check reads both the source and the rendered page.
+const WIKI = 'https://w.example/wiki/Test_Drone'
+const WIKI_SOURCE = "'''Test Drone''' is a small scout.\n{{DroneLeapAbility}}\n[[Category:Drones]]"
+const WIKI_RENDERED = '<div class="mw-parser-output"><p><b>Test Drone</b> is a small scout.</p>' +
+  '<table><tr><th>Leap</th></tr><tr><td>The drone leaps inside an enemy vehicle and eats it from within.</td></tr></table></div>'
+
+// Seeds a wiki page in a throwaway repo's cache: with its rendered page, or (an older cache) with the source only.
+function seedWiki(root, url, { rendered } = {}) {
+  const file = cachePath(path.join(root, '.cache', 'sources'), url)
+  fs.mkdirSync(path.dirname(file), { recursive: true })
+  fs.writeFileSync(file, JSON.stringify({ url, format: 'wikitext', raw: WIKI_SOURCE, ...(rendered ? { rendered } : {}) }))
+}
+
+describe('copy-check on rendered wiki pages', () => {
+  it('reads a wiki page as its source and as the rendered page, and never joins the two into one run', () => {
+    const page = { url: WIKI, format: 'wikitext', raw: 'one two three four five', rendered: '<p>six seven eight nine ten</p>' }
+    assert.deepEqual(pageTexts(page).map(t => t.trim()), ['one two three four five', 'six seven eight nine ten'])
+    assert.equal(pageGrams(page, 5).size, 2)
+    assert.equal(pageGrams(page, 6).size, 0, 'no six-word run spans the source and the rendered page')
+    assert.equal(sourceOnly(page), false)
+    assert.equal(sourceOnly({ format: 'wikitext', raw: 'x' }), true)
+    assert.equal(sourceOnly({ format: 'html', raw: 'x' }), false)
+    assert.deepEqual(pageTexts({ format: 'wikitext', raw: 'one two' }), ['one two'])
+    assert.match(pageText(page), /five\n\s*six/)
+  })
+
+  it('finds a run that only the rendered page holds: text a template on another page draws in', () => {
+    const root = tempRepo([WIKI])
+    seedWiki(root, WIKI, { rendered: WIKI_RENDERED })
+    const r = cli(root, '--offline')
+    assert.equal(r.status, 1, r.stdout)
+    assert.match(r.stdout, /FOUND {4}data\/units\/g\.json g\.f\.test-drone \/summary/)
+    assert.match(r.stdout, /"drone leaps inside an enemy vehicle and eats it from within"/)
+  })
+
+  it('offline, compares a page cached with its source only, lists it as SOURCE ONLY and ends incomplete', () => {
+    const root = tempRepo([WIKI])
+    seedWiki(root, WIKI)
+    const r = cli(root, '--offline')
+    assert.equal(r.status, 3, r.stdout)
+    assert.doesNotMatch(r.stdout, /FOUND/)
+    assert.match(r.stdout, /^pages checked: 1 \(1 from cache, 0 fetched\); not checked: 0; source only: 1$/m)
+    assert.match(r.stdout, new RegExp(`^SOURCE ONLY \\(${SOURCE_ONLY_OFFLINE}\\): 1 wiki page\\(s\\) compared with the page source, not with the rendered page$`, 'm'))
+    assert.match(r.stdout, /^INCOMPLETE: 1 wiki page\(s\) compared with the page source only \(listed above\); no shared runs in the 1 page\(s\) checked$/m)
+  })
+
+  it('still reports a run in the source of a page cached with its source only', async () => {
+    const root = tempRepo([WIKI])
+    const file = cachePath(path.join(root, '.cache', 'sources'), WIKI)
+    fs.mkdirSync(path.dirname(file), { recursive: true })
+    fs.writeFileSync(file, JSON.stringify({ url: WIKI, format: 'wikitext', raw: 'The [[drone]] leaps inside an enemy vehicle and eats it.' }))
+    const res = await copyCheck({ ...quick(root), offline: true })
+    assert.equal(res.findings.length, 1)
+    assert.equal(res.partly.length, 1)
+    assert.equal(exitCode(res), 1)
+    assert.match(formatCopyReport(res), /^INCOMPLETE: 1 wiki page\(s\) compared with the page source only \(listed above\)$/m)
+  })
+
+  it('exitCode() is 3 when a page was compared with its source only', () => {
+    assert.equal(exitCode({ findings: [], notChecked: [], partly: [['u', 'why']] }), 3)
+    assert.equal(exitCode({ findings: [], notChecked: [], partly: [] }), 0)
+    assert.equal(exitCode({ findings: [], notChecked: [] }), 0)
+  })
+
+  // A local wiki: /api.php answers action=parse with the props asked for.
+  async function wikiServer({ withText = true } = {}) {
+    const asked = []
+    const s = await server((req, res) => {
+      const u = new URL(req.url, 'http://x')
+      if (u.pathname !== '/api.php') { res.writeHead(404); res.end('no'); return }
+      asked.push({ prop: u.searchParams.get('prop'), page: u.searchParams.get('page'), agent: req.headers['user-agent'] })
+      const parse = { title: u.searchParams.get('page'), wikitext: { '*': WIKI_SOURCE }, ...(withText ? { text: { '*': WIKI_RENDERED } } : {}) }
+      res.writeHead(200, { 'content-type': 'application/json' })
+      res.end(JSON.stringify({ parse }))
+    })
+    return { ...s, asked }
+  }
+
+  it('asks the wiki for the source and the rendered page in one request, caches both and finds the run', async () => {
+    const { base, hits, asked } = await wikiServer()
+    const url = `${base}/wiki/Test_Drone`
+    const root = tempRepo([url])
+    const res = await copyCheck(quick(root))
+    assert.equal(asked.filter(a => a.page === 'Test Drone').length, 1, 'one request for the page')
+    assert.equal(asked.find(a => a.page === 'Test Drone').prop, 'wikitext|text')
+    assert.equal(asked[0].agent, USER_AGENT)
+    assert.equal(res.fetched, 1)
+    assert.equal(res.partly.length, 0)
+    assert.equal(res.findings.length, 1)
+    const cached = JSON.parse(fs.readFileSync(cachePath(path.join(root, '.cache', 'sources'), url), 'utf8'))
+    assert.equal(cached.format, 'wikitext')
+    assert.equal(cached.raw, WIKI_SOURCE)
+    assert.equal(cached.rendered, WIKI_RENDERED)
+    const before = hits.n
+    const again = await copyCheck(quick(root))
+    assert.equal(hits.n, before, 'a page cached with both is not fetched again')
+    assert.equal(again.fromCache, 1)
+  })
+
+  it('fetches a page again when the cache holds its source only, and then finds the run', async () => {
+    const { base, asked } = await wikiServer()
+    const url = `${base}/wiki/Test_Drone`
+    const root = tempRepo([url])
+    seedWiki(root, url)
+    const res = await copyCheck(quick(root))
+    assert.equal(asked.length >= 1, true)
+    assert.equal(res.fetched, 1)
+    assert.equal(res.fromCache, 0)
+    assert.equal(res.partly.length, 0)
+    assert.equal(res.findings.length, 1)
+    assert.equal(exitCode(res), 1)
+  })
+
+  it('keeps the cached source and lists the page as source only when the page cannot be fetched again', async () => {
+    const { base } = await server((req, res) => { res.writeHead(500); res.end('down') })
+    const url = `${base}/wiki/Test_Drone`
+    const root = tempRepo([url])
+    seedWiki(root, url)
+    const res = await copyCheck(quick(root))
+    assert.equal(res.notChecked.length, 0)
+    assert.equal(res.pagesChecked, 1)
+    assert.equal(res.fromCache, 1)
+    assert.deepEqual(res.partly.map(([u]) => u), [url])
+    assert.match(res.partly[0][1], /^HTTP 500/)
+    assert.equal(exitCode(res), 3)
+  })
+
+  it('lists a page as source only when the wiki gives no rendered page', async () => {
+    const { base } = await wikiServer({ withText: false })
+    const url = `${base}/wiki/Test_Drone`
+    const res = await copyCheck(quick(tempRepo([url])))
+    assert.equal(res.fetched, 1)
+    assert.deepEqual(res.partly, [[url, 'the wiki gave the page source but no rendered page']])
+    assert.equal(exitCode(res), 3)
+  })
+
+  it('checks notes against the rendered page of a cached wiki page too', () => {
+    const root = tempRepo([])
+    seedWiki(root, WIKI, { rendered: WIKI_RENDERED })
+    fs.mkdirSync(path.join(root, 'notes'))
+    fs.writeFileSync(path.join(root, 'notes/n.md'), 'A report says the drone leaps inside an enemy vehicle and eats it from within.\n')
+    const r = cli(root, '--offline', '--also', path.join(root, 'notes'))
+    assert.equal(r.status, 1, r.stdout)
+    assert.match(r.stdout, /FOUND {4}notes\/n\.md line 1/)
+  })
+
+  it('waits longer between two requests to a site whose terms ask for it', async () => {
+    const { base } = await wikiServer()
+    assert.equal(HOST_MIN_DELAY['liquipedia.net'], 30000)
+    const urls = [`${base}/wiki/A`, `${base}/wiki/B`]
+    const t0 = Date.now()
+    await copyCheck({ ...quick(tempRepo(urls)), hostDelay: { '127.0.0.1': 400 } })
+    const slow = Date.now() - t0
+    assert.ok(slow >= 400, `two requests to one site took ${slow} ms, the second should wait 400 ms`)
+  })
+})
+
+// Found by the review of the change that made the copy-check read rendered pages (11 November 2026).
+describe('copy-check: pauses, contacts and cache-only pages', () => {
+  // A local site that notes when every request arrives and when its answer goes out. It answers after `think` ms.
+  async function slowSite(think = 0) {
+    const log = [] // { path, at, answered }
+    const s = await server((req, res) => {
+      const u = new URL(req.url, 'http://x'), entry = { path: u.pathname + u.search, at: Date.now(), answered: 0 }
+      log.push(entry)
+      setTimeout(() => {
+        entry.answered = Date.now()
+        if (u.pathname !== '/api.php') { res.writeHead(404); res.end('no'); return }
+        res.writeHead(200, { 'content-type': 'application/json' })
+        res.end(JSON.stringify({ parse: { title: u.searchParams.get('page'), wikitext: { '*': WIKI_SOURCE }, text: { '*': WIKI_RENDERED } } }))
+      }, think)
+    })
+    return { ...s, log }
+  }
+
+  it('keeps a site\'s pause between two runs in one process, as the plant test makes them', async () => {
+    const { base, log } = await slowSite()
+    const opts = { delay: 0, retryWait: 1, hostDelay: { '127.0.0.1': 400 } }
+    await plantTest(`${base}/wiki/A`, opts)
+    const lastOfA = log[log.length - 1]
+    await plantTest(`${base}/wiki/B`, opts)
+    const firstOfB = log[log.indexOf(lastOfA) + 1]
+    assert.ok(firstOfB, 'the second run asked for nothing')
+    assert.ok(firstOfB.at - lastOfA.answered >= 395, `the second run's first request came ${firstOfB.at - lastOfA.answered} ms after the first run's last answer`)
+  })
+
+  it('counts the pause from the answer, so the site never sees two requests closer than the pause', async () => {
+    const { base, log } = await slowSite(250)
+    await copyCheck({ ...quick(tempRepo([`${base}/wiki/A`, `${base}/wiki/B`])), hostDelay: { '127.0.0.1': 300 } })
+    assert.ok(log.length >= 4, `requests seen: ${log.length}`)
+    const gaps = log.slice(1).map((e, i) => e.at - log[i].answered)
+    assert.ok(gaps.every(g => g >= 295), `ms between an answer and the next request: ${gaps.join(', ')}`)
+  })
+
+  it('takes a site\'s pause from its terms, for its subdomains too, unless a test overrides it', () => {
+    assert.equal(hostPause('liquipedia.net'), 30000)
+    assert.equal(hostPause('www.liquipedia.net'), 30000)
+    assert.equal(hostPause('notliquipedia.net'), 0)
+    assert.equal(hostPause('liquipedia.net', { hostDelay: {} }), 0)
+    assert.equal(hostPause('cnc.fandom.com'), 0)
+    assert.equal(hostPause('a.example', { hostDelay: { 'a.example': 7 } }), 7)
+  })
+
+  it('asks nothing of a site whose terms restrict reading, nor of its subdomains, until both switches are set', async () => {
+    assert.ok(RESTRICTED_SITES.has('liquipedia.net'))
+    assert.ok(covers(RESTRICTED_SITES, 'api.liquipedia.net'))
+    assert.ok(!covers(RESTRICTED_SITES, 'notliquipedia.net'))
+    assert.ok(covers(RESTRICTED_SITES, 'liquipedia.net.'), 'a host name may end with a dot')
+    assert.ok(covers(RESTRICTED_SITES, 'WWW.Liquipedia.NET'))
+    assert.equal(hostPause('liquipedia.net.'), 30000)
+    const saved = { a: process.env.UNIT_FORGE_ALLOW_HOSTS, c: process.env.COPY_CHECK_CONTACT }
+    const set = (a, c) => { for (const [k, v] of [['UNIT_FORGE_ALLOW_HOSTS', a], ['COPY_CHECK_CONTACT', c]]) { if (v === undefined) delete process.env[k]; else process.env[k] = v } }
+    try {
+      set(undefined, undefined)
+      assert.equal(refusal('liquipedia.net'), RESTRICTED)
+      assert.equal(refusal('www.liquipedia.net'), RESTRICTED)
+      assert.equal(refusal('cnc.fandom.com'), null)
+      set('liquipedia.net', undefined)
+      assert.equal(refusal('liquipedia.net'), RESTRICTED, 'allowed, but no contact')
+      set(undefined, 'https://example.org/contact')
+      assert.equal(refusal('liquipedia.net'), RESTRICTED, 'a contact, but not allowed')
+      set('liquipedia.net', 'https://example.org/contact')
+      assert.equal(refusal('liquipedia.net'), null)
+      assert.equal(refusal('www.liquipedia.net'), null)
+      set(undefined, undefined)
+      for (const url of ['https://liquipedia.net/starcraft2/No_Such_Test_Page', 'https://www.liquipedia.net/starcraft2/No_Such_Test_Page', 'https://liquipedia.net./starcraft2/No_Such_Test_Page']) {
+        const res = await copyCheck(quick(tempRepo([url])))
+        assert.equal(res.requests, 0, 'a request was started')
+        assert.deepEqual(res.notChecked, [[url, RESTRICTED]])
+        assert.equal(exitCode(res), 3)
+      }
+    } finally {
+      set(saved.a, saved.c)
+    }
+  })
+
+  it('never fetches a restricted site\'s page as HTML, even when both switches are set and its API gives no page', async () => {
+    const saved = { a: process.env.UNIT_FORGE_ALLOW_HOSTS, c: process.env.COPY_CHECK_CONTACT, f: globalThis.fetch }
+    const asked = []
+    process.env.UNIT_FORGE_ALLOW_HOSTS = 'liquipedia.net'
+    process.env.COPY_CHECK_CONTACT = 'https://example.org/contact'
+    globalThis.fetch = async input => { asked.push(String(input)); return new Response('<html>not an API answer</html>', { status: 200 }) } // nothing leaves
+    try {
+      const url = 'https://liquipedia.net/starcraft2/No_Such_Test_Page'
+      const res = await copyCheck({ ...quick(tempRepo([url])), hostDelay: {}, stampDir: null })
+      assert.equal(asked.length, 1)
+      assert.match(asked[0], /^https:\/\/liquipedia\.net\/starcraft2\/api\.php\?action=parse/)
+      assert.match(res.notChecked[0][1], /this site's pages are not fetched as HTML/)
+    } finally {
+      globalThis.fetch = saved.f
+      for (const [k, v] of [['UNIT_FORGE_ALLOW_HOSTS', saved.a], ['COPY_CHECK_CONTACT', saved.c]]) { if (v === undefined) delete process.env[k]; else process.env[k] = v }
+    }
+  })
+
+  it('follows a redirect itself, and refuses one that leads to a page of a restricted site', async () => {
+    const seen = []
+    const { base } = await server((req, res) => {
+      seen.push(req.url)
+      if (req.url === '/moved') { res.writeHead(302, { location: '/final' }); res.end(); return }
+      if (req.url === '/away') { res.writeHead(301, { location: 'https://liquipedia.net/starcraft2/Marine' }); res.end(); return }
+      if (req.url === '/loop') { res.writeHead(302, { location: '/loop' }); res.end(); return }
+      res.writeHead(200, { 'content-type': 'text/html' })
+      res.end('<p>The drone leaps inside an enemy vehicle and eats it.</p>')
+    })
+    const res = await copyCheck(quick(tempRepo([`${base}/moved`, `${base}/away`, `${base}/loop`])))
+    assert.deepEqual(seen.filter(u => u === '/final').length, 1, 'the redirect was not followed')
+    assert.equal(res.findings.length, 1)
+    const why = Object.fromEntries(res.notChecked)
+    assert.match(why[`${base}/away`], /^redirected to liquipedia\.net, whose pages are not fetched as HTML/)
+    assert.match(why[`${base}/loop`], /^more than 5 redirects/)
+  })
+
+  it('compares a sentence copied across a footnote mark', () => {
+    const page = { url: WIKI, format: 'wikitext', raw: 'x', rendered: '<p>The drone leaps inside an enemy<sup id="c1" class="reference"><a href="#n1">[1]</a></sup> vehicle and eats it from within.</p>' }
+    const texts = pageTexts(page)
+    assert.equal(texts.length, 3, 'the source, the rendered page, and the rendered page without footnote marks')
+    assert.ok(pageGrams(page, 6).has('leaps inside an enemy vehicle and'))
+    assert.ok(pageGrams(page, 6).has('inside an enemy 1 vehicle and'), 'the page as it is stays compared too')
+    assert.equal(pageTexts({ url: WIKI, format: 'wikitext', raw: 'x', rendered: '<p>No marks here.</p>' }).length, 2)
+    const root = tempRepo([WIKI])
+    seedWiki(root, WIKI, { rendered: page.rendered })
+    const r = cli(root, '--offline')
+    assert.equal(r.status, 1, r.stdout)
+    assert.match(r.stdout, /"drone leaps inside an enemy vehicle and eats it from within"/)
+  })
+
+  it('lists a page that only the cache holds, with its source only, when notes are checked against it', () => {
+    const root = tempRepo([])
+    seedWiki(root, WIKI)
+    fs.mkdirSync(path.join(root, 'notes'))
+    fs.writeFileSync(path.join(root, 'notes/n.md'), 'A note that cites nothing and copies nothing from any page at all.\n')
+    const r = cli(root, '--offline', '--also', path.join(root, 'notes'))
+    assert.equal(r.status, 3, r.stdout)
+    assert.ok(r.stdout.includes(`SOURCE ONLY (${SOURCE_ONLY_CACHE}): 1 wiki page(s)`), r.stdout)
+    assert.doesNotMatch(r.stdout, /^OK/m)
+  })
+
+  it('lists a cited page once when --refresh cannot fetch it and the cache holds its source only', async () => {
+    const { base } = await server((req, res) => { res.writeHead(500); res.end('down') })
+    const url = `${base}/wiki/Test_Drone`
+    const root = tempRepo([url])
+    seedWiki(root, url)
+    fs.mkdirSync(path.join(root, 'notes'))
+    fs.writeFileSync(path.join(root, 'notes/n.md'), 'A note that copies nothing from any page at all, as far as anyone can tell.\n')
+    const res = await copyCheck({ ...quick(root), refresh: true, also: [path.join(root, 'notes')] })
+    assert.deepEqual(res.notChecked.map(([u]) => u), [url])
+    assert.deepEqual(res.partly, [], 'the page is listed a second time as source only')
+  })
+
+  it('reads such a page again when its full address is given with --only', async () => {
+    const { base, log } = await slowSite()
+    const url = `${base}/wiki/Test_Drone`
+    const root = tempRepo([])
+    seedWiki(root, url)
+    fs.mkdirSync(path.join(root, 'notes'))
+    fs.writeFileSync(path.join(root, 'notes/n.md'), 'A report says the drone leaps inside an enemy vehicle and eats it from within.\n')
+    const res = await copyCheck({ ...quick(root), also: [path.join(root, 'notes')], only: [url] })
+    assert.equal(log.filter(e => e.path.startsWith('/api.php')).length, 1, 'the page was not fetched again')
+    assert.equal(res.partly.length, 0)
+    assert.equal(res.findings.length, 1)
+  })
+})
+
+// The pacing files sit in the system's temporary folder, which other users of a machine can write to: the folder
+// must be this user's own, and nothing may be written through a link that someone put there.
+describe('copy-check: the folder of the pacing files', () => {
+  const posix = typeof process.getuid === 'function'
+  const scratch = () => { const d = fs.mkdtempSync(path.join(os.tmpdir(), 'unit-forge-stamp-')); tmpDirs.push(d); return d }
+  const page = (req, res) => res.end('<p>A page with a few plain words on it.</p>')
+
+  it('makes the folder for this user alone, and closes one of the user\'s own that others could write to', { skip: !posix }, () => {
+    const dir = path.join(scratch(), 'pace')
+    assert.equal(stampFolder(dir), dir)
+    assert.equal(fs.statSync(dir).mode & 0o777, 0o700)
+    fs.chmodSync(dir, 0o777)
+    assert.equal(stampFolder(dir), dir)
+    assert.equal(fs.statSync(dir).mode & 0o777, 0o700)
+  })
+
+  it('refuses a link put where the folder should be, and still reads the page, with no pacing file', { skip: !posix }, async () => {
+    const base = scratch(), elsewhere = path.join(base, 'elsewhere'), dir = path.join(base, 'pace')
+    fs.mkdirSync(elsewhere)
+    fs.symlinkSync(elsewhere, dir)
+    assert.equal(stampFolder(dir), null)
+    const site = await server(page)
+    const res = await copyCheck({ ...quick(tempRepo([`${site.base}/p`])), hostDelay: {}, stampDir: dir })
+    assert.equal(res.pagesChecked, 1)
+    assert.deepEqual(fs.readdirSync(elsewhere), [], 'a pacing file was written through the link')
+  })
+
+  it('never writes a pacing file through a link that sits at its temporary name', { skip: !posix }, async () => {
+    const base = scratch(), dir = path.join(base, 'pace'), other = path.join(base, 'someone-elses-file.txt')
+    fs.writeFileSync(other, 'keep me')
+    fs.mkdirSync(dir, { mode: 0o700 })
+    const site = await server(page)
+    const stamp = stampFile(new URL(site.base).host, dir)
+    fs.symlinkSync(other, `${stamp}.${process.pid}`) // where this process writes before it moves the file in place
+    const res = await copyCheck({ ...quick(tempRepo([`${site.base}/p`])), hostDelay: {}, stampDir: dir })
+    assert.equal(res.pagesChecked, 1)
+    assert.equal(fs.readFileSync(other, 'utf8'), 'keep me')
+    assert.equal(fs.lstatSync(stamp).isFile(), true, 'the pacing file is a plain file of its own')
+    assert.ok(JSON.parse(fs.readFileSync(stamp, 'utf8')).last > 0)
+  })
+})

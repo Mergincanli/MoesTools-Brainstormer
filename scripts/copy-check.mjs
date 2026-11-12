@@ -14,15 +14,28 @@
 // appears in our own wording (any string in data/ or schemas/, or any text in research/registry-notes/,
 // leaving out files under an --also folder) is ignored: that is our own text quoted back, not a copy.
 //
-// Pages come from MediaWiki sites (Fandom, wiki.gg, StrategyWiki, Halopedia, Wikipedia and others) as
-// wikitext through the site's api.php (action=parse), and from other sites as HTML turned into text.
+// Pages come from MediaWiki sites (Fandom, wiki.gg, StrategyWiki, Halopedia, Wikipedia and others) through
+// the site's api.php (action=parse), and from other sites as HTML turned into text. A wiki page is read twice
+// over in one request: its source (wikitext) and its rendered page, the text a reader sees. The source alone
+// misses what a template kept on another page draws in, such as an ability box. A wiki page whose rendered
+// version is not in the cache is fetched again; offline it is compared with its source only and listed as
+// SOURCE ONLY, and the run then ends incomplete.
 // Every page is cached under .cache/sources/ (git-ignored), so later runs work offline. Requests go one
 // at a time with a pause between them, and a 429 or 503 answer is retried with a growing wait (Retry-After
 // when the site gives one). A dropped connection, a timeout or a temporary DNS failure is tried again at
 // most twice; other network errors are not retried. After three network failures in a row the network
 // counts as unavailable: nothing more is fetched and the remaining uncached pages are listed as not checked.
-// A Steam news post is read from the page's data attribute (its markup holds only the store's frame), and web
-// addresses in a record's prose are not wording.
+// A Steam news post is read from the page's data attribute (its markup holds only the store's frame), the Steam
+// news feed (api.steampowered.com) is read as its posts, not as the JSON that carries them, and web
+// addresses in a record's prose are not wording. A site can ask for a longer pause (HOST_MIN_DELAY), which also
+// holds between two runs in one process. Set COPY_CHECK_CONTACT to add a contact to the User-Agent header: a site
+// whose terms restrict automated reading (RESTRICTED_SITES: Liquipedia) is asked for nothing until Mustafa has
+// decided how it is read: then UNIT_FORGE_ALLOW_HOSTS names the site and COPY_CHECK_CONTACT gives the contact. Its
+// pages are never fetched as HTML, and a redirect is followed only where the same rules allow it. The pause for a
+// site also holds between several processes at once (research agents reading pages): a small file per site in
+// the system's temporary folder says when the site may next be asked.
+// scripts/plant.mjs tests whether the check reads what a reader of a page sees: run it on one page of
+// every new site before a batch cites it.
 //
 // This needs the network, so CI does not run it: research agents and checkers run it by hand. Behind a
 // proxy it needs Node.js 22.21 or newer (see rerunWithProxy below).
@@ -44,15 +57,21 @@
 //   2  bad arguments, an --also folder that does not exist, or a file under it that is not valid JSON
 //   3  no shared runs were found, but some pages were not checked (offline and not cached, over
 //      --max-fetch, an HTTP or network error, the network unavailable, a Steam news page that holds no post,
-//      or an --only TEXT that matched nothing), so the check is incomplete
+//      or an --only TEXT that matched nothing) or a wiki page was compared with its source only, so the
+//      check is incomplete
 import crypto from 'node:crypto'
 import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const USER_AGENT = 'UnitForgeCopyCheck/1.0 (checks research notes for copied wording; one request at a time)'
+// Some sites' terms ask for a contact in the User-Agent (Liquipedia's API terms do). It is not kept in the
+// repository: set COPY_CHECK_CONTACT (a web address or an email address) to add one.
+const contact = () => (process.env.COPY_CHECK_CONTACT || '').trim()
+const userAgent = () => `UnitForgeCopyCheck/1.1 (checks research notes for copied wording; one request at a time${contact() ? `; ${contact()}` : ''})`
+export const USER_AGENT = userAgent() // as it was when the script started
 
 // Keys whose values are names, titles, ids or citations rather than our own prose.
 const NOT_PROSE = new Set([
@@ -166,6 +185,22 @@ export function htmlToText(h) {
   return decodeEntities(h)
 }
 
+const FOOTNOTE_MARK = /<sup\b[^>]*\bclass="[^"]*\breference\b[^"]*"[\s\S]*?<\/sup\s*>/gi
+const BLOCK_TAGS = 'p|div|li|ul|ol|dl|dt|dd|tr|td|th|table|thead|tbody|h[1-6]|br|hr|section|article|blockquote|pre|figure|figcaption|caption|nav|header|footer|aside'
+
+/** The visible lines of an HTML page or fragment: one per block of text (paragraph, list item, table cell, heading). */
+export function visibleLines(html) {
+  let h = html.replace(/<!--[\s\S]*?-->/g, ' ')
+  h = h.replace(/<(script|style|noscript|svg|template|head)\b[\s\S]*?<\/\1\s*>/gi, ' ')
+  h = h.replace(FOOTNOTE_MARK, ' ')
+  h = h.replace(new RegExp(`</?(?:${BLOCK_TAGS})\\b[^>]*>`, 'gi'), '\u0001')
+  // Every other tag goes before the text is cut into lines: a tag may run over several lines of the page's source
+  // (a long list of attributes), and cut first it would leave its pieces among the lines. A tag starts with a
+  // letter, "/" or "!" and never crosses a block's end, so a "<" of the text takes at most the rest of its block.
+  h = h.replace(/<[a-zA-Z\/!][^>\u0001]*>/g, ' ')
+  return h.split(/[\u0001\n]/).map(line => decodeEntities(line).replace(/\s+/g, ' ').trim()).filter(Boolean)
+}
+
 // A Steam news post (store.steampowered.com/news/app/<id>/view/<post>) is drawn by a script: the page's markup holds
 // only the store's frame, and the post itself sits as JSON in one attribute. Read as plain HTML, every such page
 // gives the same frame and none of the post.
@@ -189,11 +224,83 @@ export function steamNewsText(h) {
   return parts.join('\n').replace(/\[\/?[a-z0-9*]+(?:=[^\]]*)?\]/gi, ' ') // [h3], [/url], [url=...], [*]
 }
 
-/** The plain text of a cached page, or null when it has none to compare (a Steam news page without its post). */
+// The Steam news feed (api.steampowered.com/ISteamNews/GetNewsForApp/...) answers with JSON: every post of a game
+// with its title and its body, the body in the store's own markup ([h2], [p], [*]) or, for a post from another
+// site, in HTML. Read as it is, a line break is the two characters \n and a [b] sits inside a sentence, so a
+// copied run that crosses either would go unseen.
+const STEAM_FEED = /^https?:\/\/api\.steampowered\.com\/ISteamNews\/GetNewsForApp\//
+const STORE_BLOCK = /\[\/?(?:p|h[1-6]|list|olist|\*|table|tr|td|th|quote|code|hr|br)(?:=[^\]]*)?\]/gi
+const STORE_INLINE = /\[\/?(?:b|i|u|s|strike|spoiler|url|c|noparse|color|size|dynamiclink)(?:=[^\]]*)?\]/gi // any other [word] is the post's own text
+const HTML_POST = /<\/?(?:p|br|div|a|img|strong|em|b|i|u|ul|ol|li|h[1-6]|span|table|tr|td|th|blockquote|iframe)\b[^>]*>/i
+
+/**
+ * The posts of a Steam news feed as lines of plain text: for each post its title, a line with its date, feed and
+ * number, then its body, one line per block. Null when the text is not a feed.
+ */
+export function steamFeedLines(raw) {
+  let items
+  try { items = JSON.parse(raw)?.appnews?.newsitems } catch { return null }
+  if (!Array.isArray(items)) return null
+  const lines = []
+  for (const item of items) {
+    if (typeof item?.title === 'string' && item.title.trim()) lines.push(item.title.trim())
+    const day = Number.isFinite(item?.date) ? new Date(item.date * 1000).toISOString().slice(0, 10) : null
+    lines.push(`(post ${item?.gid ?? '?'}${day ? `, ${day}` : ''}${item?.feedlabel ? `, ${item.feedlabel}` : ''})`)
+    if (typeof item?.contents !== 'string') continue
+    // A post from another site is HTML. The store's own markup is text: a "<" in it is the post's own.
+    if (HTML_POST.test(item.contents)) { lines.push(...visibleLines(item.contents)); continue }
+    const body = item.contents
+      .replace(/\[img\b[^\]]*\][\s\S]*?\[\/img\]/gi, ' ') // a picture's address is not wording
+      .replace(/\[previewyoutube\b[^\]]*\][\s\S]*?\[\/previewyoutube\]/gi, ' ')
+      .replace(STORE_BLOCK, '\n')
+      .replace(STORE_INLINE, ' ')
+    for (const part of body.split('\n')) { const line = part.replace(/\s+/g, ' ').trim(); if (line) lines.push(line) }
+  }
+  return lines
+}
+
+/**
+ * The plain texts of a cached page, or null when it has none to compare (a Steam news page without its post).
+ * A wiki page gives two: its source, and its rendered page when the cache holds it (what a reader sees,
+ * with the text that templates kept on other pages draw in).
+ */
+export function pageTexts(page) {
+  if (page.format === 'wikitext') {
+    if (typeof page.rendered !== 'string') return [wikitextToText(page.raw)]
+    // The rendered page twice: as it is, and without its footnote marks, since a reader who copies a sentence leaves
+    // out the "[1]" in the middle of it.
+    const noMarks = page.rendered.replace(FOOTNOTE_MARK, ' ')
+    return [wikitextToText(page.raw), htmlToText(page.rendered), ...(noMarks === page.rendered ? [] : [htmlToText(noMarks)])]
+  }
+  if (STEAM_NEWS.test(page.url || '')) { const t = steamNewsText(page.raw); return t === null ? null : [t] }
+  if (STEAM_FEED.test(page.url || '')) { const lines = steamFeedLines(page.raw); if (lines !== null) return [lines.join('\n')] }
+  return [htmlToText(page.raw)]
+}
+
+/** The texts of pageTexts() as one text, or null. For comparing, use pageGrams(): a run never spans two texts. */
 export function pageText(page) {
-  if (page.format === 'wikitext') return wikitextToText(page.raw)
-  if (STEAM_NEWS.test(page.url || '')) return steamNewsText(page.raw)
-  return htmlToText(page.raw)
+  const texts = pageTexts(page)
+  return texts === null ? null : texts.join('\n')
+}
+
+/** Every n-word run in a cached page's texts, or null when the page has no text to compare. */
+export function pageGrams(page, n) {
+  const texts = pageTexts(page)
+  if (texts === null) return null
+  const out = new Set()
+  for (const t of texts) for (const g of grams(words(t), n)) out.add(g)
+  return out
+}
+
+/** A wiki page cached with its source only: what a reader sees was not read. */
+export const sourceOnly = page => page.format === 'wikitext' && typeof page.rendered !== 'string'
+export const SOURCE_ONLY_OFFLINE = 'offline, and the cache holds the page source but not the rendered page'
+export const SOURCE_ONLY_CACHE = 'only the cache names this page, and it holds the page source but not the rendered page; give its address with --only to read it again'
+
+// True when the cache holds the page and, for a wiki page, its rendered version too.
+function cachedInFull(file) {
+  if (!fs.existsSync(file)) return false
+  try { return !sourceOnly(JSON.parse(fs.readFileSync(file, 'utf8'))) } catch { return false }
 }
 export const NO_POST_TEXT = 'a Steam news page that holds no post text'
 export const ONLY_MATCHED_NOTHING = '--only matched no cited, linked or cached page'
@@ -237,6 +344,160 @@ function safeDecode(s) {
 
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 
+// The shortest pause between two requests to one site, where the site's terms ask for more than --delay.
+// Liquipedia's API terms (liquipedia.net/api-terms-of-use, read on 11 November 2026) allow one action=parse
+// request per 30 seconds.
+export const HOST_MIN_DELAY = Object.freeze({ 'liquipedia.net': 30000 })
+// Sites whose terms restrict automated reading. Liquipedia's (the same terms): no automated reading of its pages,
+// an API meant for editors, and a contact in the User-Agent. Nothing is asked of such a site until Mustafa has
+// decided how it is read; UNIT_FORGE_ALLOW_HOSTS (host names, separated by commas) then names it, and
+// COPY_CHECK_CONTACT gives the contact. Its pages are never fetched as HTML and never opened in a browser.
+export const RESTRICTED_SITES = Object.freeze(new Set(['liquipedia.net']))
+export const RESTRICTED = 'not fetched: this site\'s terms restrict automated reading, and Mustafa decides how it is read; ' +
+  'once he has, set UNIT_FORGE_ALLOW_HOSTS to the site and COPY_CHECK_CONTACT to a contact'
+
+/** A host name as sites are compared: lower case, without the dot a name may end with (liquipedia.net. is the same site). */
+export const plainHost = host => String(host).toLowerCase().replace(/\.+$/, '')
+
+/** True when the set holds the host or a domain the host is under (www.liquipedia.net is under liquipedia.net). */
+export function covers(set, host) {
+  const h = plainHost(host)
+  for (const d of set) if (h === d || h.endsWith(`.${d}`)) return true
+  return false
+}
+
+/** Why a host may not be asked for anything now, or null when it may. */
+export function refusal(host) {
+  if (!covers(RESTRICTED_SITES, host)) return null
+  const allowed = new Set((process.env.UNIT_FORGE_ALLOW_HOSTS || '').split(',').map(h => h.trim()).filter(Boolean))
+  return covers(allowed, host) && contact() ? null : RESTRICTED
+}
+
+/** The shortest pause before the next request to a host: the site's own minimum, or the override a test passes. */
+export function hostPause(host, state = {}) {
+  const h = plainHost(host)
+  for (const [d, ms] of Object.entries(state.hostDelay || HOST_MIN_DELAY)) if (h === d || h.endsWith(`.${d}`)) return ms
+  return 0
+}
+
+// The name a site is paced under: the domain whose pause covers the host, so that a site and its subdomains share
+// one clock; otherwise the host itself, with its port.
+function paceKey(u, state) {
+  const h = plainHost(u.hostname)
+  for (const d of Object.keys(state.hostDelay || HOST_MIN_DELAY)) if (h === d || h.endsWith(`.${d}`)) return d
+  return u.port ? `${h}:${u.port}` : h
+}
+
+// Between processes: one small file per site says when the site was last answered and whether a request is on its
+// way. A process claims the site under a lock, so two that wake together cannot both go.
+// The folder sits in the system's temporary folder, which other users of the machine can write to. So it is named
+// after the user, made for this user alone, and used only when it is a real folder (not a link) that belongs to
+// this user; and no pacing file is ever written through a link (stampFolder, writeStamp).
+const userName = () => { try { return os.userInfo().username.replace(/[^A-Za-z0-9._-]+/g, '_') } catch { return 'user' } }
+export const STAMP_DIR = path.join(os.tmpdir(), `unit-forge-pace-${userName()}`)
+const BUSY_MS = 35000 // a request in flight holds the site this long at most (the request's own limit is 30 s)
+
+/**
+ * The folder for the pacing files when it is safe to use, or null: then requests are not paced between processes.
+ * It is made for this user alone when it is missing. A link put in its place, or a folder that belongs to another
+ * user, is refused; a folder of this user that others can write to is closed to them.
+ */
+export function stampFolder(dir = STAMP_DIR) {
+  try {
+    fs.mkdirSync(dir, { recursive: true, mode: 0o700 })
+    const st = fs.lstatSync(dir)
+    if (!st.isDirectory()) return null
+    if (typeof process.getuid === 'function') { // not on Windows, where the temporary folder is the user's own
+      if (st.uid !== process.getuid()) return null
+      if (st.mode & 0o022) fs.chmodSync(dir, 0o700)
+    }
+    return dir
+  } catch { return null }
+}
+
+// Writes a pacing file: a new file of this process's own (never one that is already there, so never through a
+// link), then moved over the old one. Pacing is best effort: when that fails twice, the file stays as it was.
+function writeStamp(file, value) {
+  const tmp = `${file}.${process.pid}`
+  for (let i = 0; i < 2; i++) {
+    try {
+      const fd = fs.openSync(tmp, 'wx', 0o600)
+      try { fs.writeSync(fd, JSON.stringify(value)) } finally { fs.closeSync(fd) }
+      fs.renameSync(tmp, file)
+      return
+    } catch {
+      try { fs.unlinkSync(tmp) } catch { /* nothing to clean */ }
+    }
+  }
+}
+
+/** The file that paces requests to a site (host name and port) between processes. */
+export const stampFile = (site, dir = STAMP_DIR) => path.join(dir, site.replace(/[^A-Za-z0-9.-]+/g, '_'))
+
+// Takes the lock beside a stamp file: the open file, or null when no lock can be made in this folder.
+async function lockStamp(lock, tries = Infinity) {
+  for (let i = 0; i < tries; i++) {
+    try { return fs.openSync(lock, 'wx', 0o600) } catch (e) {
+      if (e.code !== 'EEXIST') return null
+      try { if (Date.now() - fs.lstatSync(lock).mtimeMs > 120000) fs.unlinkSync(lock) } catch { /* another process removed it */ }
+      await sleep(50)
+    }
+  }
+  return null
+}
+function unlockStamp(fd, lock) {
+  try { fs.closeSync(fd) } catch { /* already closed */ }
+  try { fs.unlinkSync(lock) } catch { /* already gone */ }
+}
+
+// Stamp files of sites nobody has asked for a day are removed, once per process.
+let swept = false
+function sweepStamps(dir) {
+  if (swept) return
+  swept = true
+  try {
+    for (const f of fs.readdirSync(dir)) {
+      const file = path.join(dir, f)
+      if (Date.now() - fs.lstatSync(file).mtimeMs > 24 * 3600 * 1000) fs.unlinkSync(file)
+    }
+  } catch { /* best effort */ }
+}
+
+// Waits until the site is free and its last answer is at least `gap` ms old, then marks a request as on its way.
+async function claimSite(dir, site, gap) {
+  const file = stampFile(site, dir), lock = `${file}.lock`
+  if (stampFolder(dir) === null) return null // not a folder of this user's own: go on without pacing between processes
+  sweepStamps(dir)
+  for (;;) {
+    const fd = await lockStamp(lock)
+    if (fd === null) return null // no lock can be made here: go on without pacing between processes
+    let wait, inFlight
+    try {
+      let last = 0, busy = 0
+      try { ({ last = 0, busy = 0 } = JSON.parse(fs.readFileSync(file, 'utf8'))) } catch { /* no stamp yet */ }
+      wait = Math.max(busy, last + gap) - Date.now()
+      inFlight = busy > last + gap // another process's request is on its way: its answer may come any moment
+      if (wait <= 0) writeStamp(file, { last, busy: Date.now() + BUSY_MS })
+    } finally {
+      unlockStamp(fd, lock)
+    }
+    if (wait <= 0) return file
+    await sleep(Math.min(wait, inFlight ? 100 : 5000))
+  }
+}
+
+// Writes the time of the site's answer, under the lock when it can be had within a second.
+async function answered(file) {
+  const lock = `${file}.lock`
+  const fd = await lockStamp(lock, 20)
+  writeStamp(file, { last: Date.now(), busy: 0 })
+  if (fd !== null) unlockStamp(fd, lock)
+}
+
+// The clock that paces requests is shared by every run in one process (the plant test runs the copy-check once per
+// page), so a site's pause also holds between two runs. A test that needs a clock of its own passes `pace`.
+const PACE = { lastRequest: 0, lastByHost: {} }
+
 // Network errors worth one more try: a dropped connection, a timeout or a temporary DNS failure. Anything
 // else (connection refused, host not found, a bad certificate) fails the same way the next time.
 const TRANSIENT = new Set(['ECONNRESET', 'ETIMEDOUT', 'EAI_AGAIN', 'UND_ERR_SOCKET', 'UND_ERR_CONNECT_TIMEOUT'])
@@ -255,16 +516,31 @@ function networkCode(e) {
 
 // One request at a time. A 429 or 503 is retried with a growing wait (Retry-After if given); a transient
 // network error is retried at most NETWORK_RETRIES times; any other network error throws a NetworkError.
+// Redirects are followed here, one hop at a time, so that every hop is paced and checked like a first request.
+const MAX_REDIRECTS = 5
 async function politeGet(url, state) {
-  for (let busy = 1, net = 0; ;) {
-    const wait = state.lastRequest + state.delay - Date.now()
+  for (let busy = 1, net = 0, hops = 0; ;) {
+    const u = new URL(url), host = plainHost(u.hostname)
+    const why = refusal(host)
+    if (why) throw new Error(why)
+    const pace = state.pace || PACE
+    const wait = Math.max(pace.lastRequest + state.delay, (pace.lastByHost[host] || 0) + hostPause(host, state)) - Date.now()
     if (wait > 0) await sleep(wait)
-    state.lastRequest = Date.now()
+    // Between processes too (stampDir null switches that off).
+    const slot = state.stampDir === null ? null : await claimSite(state.stampDir || STAMP_DIR, paceKey(u, state), Math.max(state.delay, hostPause(host, state)))
     state.requests++
     let res
+    // The pause counts from the moment the site answered (or the request failed), so that the site never sees two
+    // requests closer together than the pause, however long a connection takes to open.
+    const stamp = async () => {
+      pace.lastRequest = pace.lastByHost[host] = Date.now()
+      if (slot) await answered(slot)
+    }
     try {
-      res = await fetch(url, { headers: { 'User-Agent': USER_AGENT }, redirect: 'follow', signal: AbortSignal.timeout(30000) })
+      res = await fetch(url, { headers: { 'User-Agent': userAgent() }, redirect: 'manual', signal: AbortSignal.timeout(30000) })
+      await stamp()
     } catch (e) {
+      await stamp()
       const code = networkCode(e)
       if (!TRANSIENT.has(code) || net >= NETWORK_RETRIES) throw new NetworkError(`network error: ${code}`)
       net++
@@ -282,8 +558,32 @@ async function politeGet(url, state) {
       busy++
       continue
     }
+    const to = res.status >= 300 && res.status < 400 && res.headers.get('location')
+    if (to) {
+      await res.body?.cancel()
+      if (++hops > MAX_REDIRECTS) throw new Error(`more than ${MAX_REDIRECTS} redirects`)
+      const next = new URL(to, url)
+      if (covers(RESTRICTED_SITES, next.hostname) && !/\/api\.php$/.test(next.pathname)) {
+        throw new Error(`redirected to ${next.hostname}, whose pages are not fetched as HTML (its terms)`)
+      }
+      url = next.href
+      continue
+    }
     return res
   }
+}
+
+/**
+ * Where a page's own address leads: followed hop by hop under the rules above (paced, and refused where a hop
+ * leads to a restricted site). The plant test asks this before a browser opens a wiki page, because the
+ * copy-check reads such a page through the wiki's API and nobody has followed the page's own address yet.
+ */
+export async function followAddress(url, options = {}) {
+  const opts = { ...DEFAULT_OPTIONS, ...options }
+  const state = { delay: opts.delay, retryWait: opts.retryWait, log: opts.log, pace: opts.pace, hostDelay: opts.hostDelay, stampDir: opts.stampDir, requests: 0 }
+  const res = await politeGet(url, state)
+  await res.body?.cancel()
+  return { url: res.url || url, status: res.status }
 }
 
 // The body of an answer; a connection lost while reading it is a network failure too.
@@ -295,11 +595,15 @@ async function bodyText(res) {
   }
 }
 
-async function fetchPage(url, state) {
+export async function fetchPage(url, state) {
+  const host = new URL(url).hostname
+  const why = refusal(host)
+  if (why) throw new Error(why)
   const wiki = mediaWikiTarget(url)
   if (wiki) {
     for (const api of wiki.apis) {
-      const q = `${api}?action=parse&page=${encodeURIComponent(wiki.title)}&prop=wikitext&redirects=1&format=json`
+      // One request for both the page source and the rendered page (prop=wikitext|text).
+      const q = `${api}?action=parse&page=${encodeURIComponent(wiki.title)}&prop=wikitext%7Ctext&redirects=1&format=json`
       const res = await politeGet(q, state)
       if (res.status === 404) { await res.body?.cancel(); continue } // no API at this path
       if (!res.ok) throw new Error(`HTTP ${res.status} from ${api}`)
@@ -307,11 +611,12 @@ async function fetchPage(url, state) {
       let data
       try { data = JSON.parse(body) } catch { continue } // not an API here; try the next one
       if (data.error) throw new Error(`wiki API: ${data.error.code}${data.error.info ? ` (${data.error.info})` : ''}`)
-      const wt = data.parse?.wikitext
-      const raw = typeof wt === 'string' ? wt : wt?.['*']
-      if (typeof raw === 'string') return { format: 'wikitext', via: q, raw }
+      const part = v => typeof v === 'string' ? v : v?.['*']
+      const raw = part(data.parse?.wikitext), rendered = part(data.parse?.text)
+      if (typeof raw === 'string') return { format: 'wikitext', via: q, raw, ...(typeof rendered === 'string' ? { rendered } : {}) }
     }
   }
+  if (covers(RESTRICTED_SITES, host)) throw new Error('the wiki API gave no page, and this site\'s pages are not fetched as HTML (its terms)')
   const res = await politeGet(url, state)
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   return { format: 'html', via: url, raw: await bodyText(res) }
@@ -538,11 +843,12 @@ export async function copyCheck(options = {}) {
   // An --only text that is a full web address which nothing cites and the cache lacks (a page the notes name only by
   // title): fetch it, or list it as not checked, so that the run cannot pass without having read it.
   for (const t of opts.only) {
-    if (/^https?:\/\//.test(t) && !allUrls.some(u => u.includes(t)) && !fs.existsSync(cachePath(cacheDir, t)) && !urls.includes(t)) urls.push(t)
+    if (/^https?:\/\//.test(t) && !allUrls.some(u => u.includes(t)) && !cachedInFull(cachePath(cacheDir, t)) && !urls.includes(t)) urls.push(t)
   }
-  const state = { delay: opts.delay, retryWait: opts.retryWait, log: opts.log, lastRequest: 0, requests: 0 }
+  const state = { delay: opts.delay, retryWait: opts.retryWait, log: opts.log, pace: opts.pace, hostDelay: opts.hostDelay, stampDir: opts.stampDir, requests: 0 }
   const pages = new Map() // url -> gram set
   const notChecked = [] // [url, reason]
+  const partly = [] // [url, reason]: wiki pages compared with their source only, not with the rendered page
   let fromCache = 0, fetched = 0, requested = 0, failuresInARow = 0
   for (const url of urls) {
     const file = cachePath(cacheDir, url)
@@ -550,30 +856,39 @@ export async function copyCheck(options = {}) {
     if (fs.existsSync(file) && !opts.refresh) {
       try { page = JSON.parse(fs.readFileSync(file, 'utf8')); cached = true } catch { page = null }
     }
-    if (!page) {
-      if (opts.offline) { notChecked.push([url, 'offline and not cached']); continue }
-      if (failuresInARow >= MAX_NETWORK_FAILURES) { notChecked.push([url, NETWORK_UNAVAILABLE]); continue }
-      if (requested >= opts.maxFetch) { notChecked.push([url, `over --max-fetch ${opts.maxFetch}`]); continue }
-      try {
-        opts.log(`fetching ${url}`)
-        page = { url, fetched: new Date().toISOString(), ...(await fetchPage(url, state)) }
-        fs.mkdirSync(path.dirname(file), { recursive: true })
-        fs.writeFileSync(file, JSON.stringify(page, null, 1) + '\n')
-        requested++ // pages fetched from the network, for --max-fetch
-        failuresInARow = 0
-      } catch (e) {
-        // Only a failure to reach a site at all counts towards the network being down; an HTTP or wiki
-        // API error shows the network works.
-        failuresInARow = e instanceof NetworkError ? failuresInARow + 1 : 0
-        if (failuresInARow === MAX_NETWORK_FAILURES) opts.log(`${MAX_NETWORK_FAILURES} network failures in a row; fetching nothing more`)
-        notChecked.push([url, e.message])
-        continue
+    // A wiki page cached by an older run holds the page source only: read it again for the rendered page. When
+    // that cannot be done, the page is still compared with its source, and listed as source only.
+    const old = page && sourceOnly(page) ? page : null
+    let why = null // why a page that needs fetching was not fetched
+    if (!page || old) {
+      if (opts.offline) why = old ? SOURCE_ONLY_OFFLINE : 'offline and not cached'
+      else if (failuresInARow >= MAX_NETWORK_FAILURES) why = NETWORK_UNAVAILABLE
+      else if (requested >= opts.maxFetch) why = `over --max-fetch ${opts.maxFetch}`
+      else {
+        try {
+          opts.log(`fetching ${url}`)
+          page = { url, fetched: new Date().toISOString(), ...(await fetchPage(url, state)) }
+          cached = false
+          fs.mkdirSync(path.dirname(file), { recursive: true })
+          fs.writeFileSync(file, JSON.stringify(page, null, 1) + '\n')
+          requested++ // pages fetched from the network, for --max-fetch
+          failuresInARow = 0
+        } catch (e) {
+          // Only a failure to reach a site at all counts towards the network being down; an HTTP or wiki
+          // API error shows the network works.
+          failuresInARow = e instanceof NetworkError ? failuresInARow + 1 : 0
+          if (failuresInARow === MAX_NETWORK_FAILURES) opts.log(`${MAX_NETWORK_FAILURES} network failures in a row; fetching nothing more`)
+          why = e.message
+          page = old
+        }
       }
     }
-    const text = pageText({ url, ...page })
-    if (text === null) { notChecked.push([url, NO_POST_TEXT]); continue }
+    if (!page) { notChecked.push([url, why]); continue }
+    const pg = pageGrams({ url, ...page }, n)
+    if (pg === null) { notChecked.push([url, NO_POST_TEXT]); continue }
+    if (sourceOnly(page)) partly.push([url, why || 'the wiki gave the page source but no rendered page'])
     if (cached) fromCache++; else fetched++
-    pages.set(url, grams(words(text), n))
+    pages.set(url, pg)
   }
 
   const findings = [] // { file, id, path, run, urls }
@@ -598,12 +913,17 @@ export async function copyCheck(options = {}) {
   const seen = new Set(urls) // every address the run looked at or listed, for the --only check below
   if (notes.length) {
     const all = new Map(pages)
+    const listed = new Set(urls) // cited, linked or named with --only: the main loop has said what became of them
     for (const [url, page] of cachedPages(cacheDir)) {
       if (!inScope(url)) continue
       seen.add(url)
       if (all.has(url)) continue
-      const text = pageText({ url, ...page })
-      if (text !== null) all.set(url, grams(words(text), n))
+      const pg = pageGrams({ url, ...page }, n)
+      if (pg === null) continue
+      all.set(url, pg)
+      // A page that only the cache holds is not fetched here. Cached with its source only, it is listed, so that the
+      // run cannot pass as complete: give its address with --only to read its rendered page.
+      if (sourceOnly(page) && !listed.has(url)) partly.push([url, SOURCE_ONLY_CACHE])
     }
     notePages = all.size
     const own = ownWordingGrams(opts.root, n, opts.also)
@@ -633,7 +953,7 @@ export async function copyCheck(options = {}) {
     if (!matched) notChecked.push([t, ONLY_MATCHED_NOTHING])
   }
   return {
-    urls, allUrls, pagesChecked: pages.size, fromCache, fetched, requests: state.requests, notChecked, findings,
+    urls, allUrls, pagesChecked: pages.size, fromCache, fetched, requests: state.requests, notChecked, partly, findings,
     records: records.length, notes: notes.length, notePages,
   }
 }
@@ -643,9 +963,9 @@ function shownPath(root, file) {
   return (inside(file, root) ? path.relative(root, file) : file).split(path.sep).join('/')
 }
 
-/** 1 when shared runs were found, else 3 when some pages were not checked, else 0. */
+/** 1 when shared runs were found, else 3 when some pages were not checked or only partly, else 0. */
 export function exitCode(res) {
-  return res.findings.length ? 1 : res.notChecked.length ? 3 : 0
+  return res.findings.length ? 1 : res.notChecked.length || res.partly?.length ? 3 : 0
 }
 
 export function formatCopyReport(res, options = {}) {
@@ -653,7 +973,9 @@ export function formatCopyReport(res, options = {}) {
   const lines = []
   const scope = opts.only.length ? `${res.urls.length} of ${res.allUrls.length} cited page(s) (--only)` : `${res.urls.length} cited page(s)`
   lines.push(`copy-check: ${scope} in ${res.records} record(s)${res.notes ? ` and ${res.notes} note file(s)` : ''}; reporting shared runs of ${opts.minWords}+ words`)
-  lines.push(`pages checked: ${res.pagesChecked} (${res.fromCache} from cache, ${res.fetched} fetched); not checked: ${res.notChecked.length}`)
+  const partly = res.partly || []
+  lines.push(`pages checked: ${res.pagesChecked} (${res.fromCache} from cache, ${res.fetched} fetched); not checked: ${res.notChecked.length}` +
+    (partly.length ? `; source only: ${partly.length}` : ''))
   if (res.notes) lines.push(`notes (--also): ${res.notes} file(s) checked against ${res.notePages} page(s), the cache and every page fetched`)
   for (const f of res.findings) {
     lines.push('')
@@ -670,19 +992,32 @@ export function formatCopyReport(res, options = {}) {
     lines.push('', `NOT CHECKED (${why}): ${us.length} page(s)`)
     for (const u of us) lines.push(`  ${u}`)
   }
+  const partlyBy = new Map()
+  for (const [u, why] of partly) {
+    if (!partlyBy.has(why)) partlyBy.set(why, [])
+    partlyBy.get(why).push(u)
+  }
+  for (const [why, us] of partlyBy) {
+    lines.push('', `SOURCE ONLY (${why}): ${us.length} wiki page(s) compared with the page source, not with the rendered page`)
+    for (const u of us) lines.push(`  ${u}`)
+  }
   lines.push('')
   if (res.findings.length) lines.push(`FAILED: ${res.findings.length} shared run(s); rewrite them in your own words`)
-  if (res.notChecked.length) {
-    lines.push(`INCOMPLETE: ${res.notChecked.length} page(s) not checked (listed above)` +
+  if (res.notChecked.length || partly.length) {
+    const what = [
+      ...(res.notChecked.length ? [`${res.notChecked.length} page(s) not checked`] : []),
+      ...(partly.length ? [`${partly.length} wiki page(s) compared with the page source only`] : []),
+    ].join(' and ')
+    lines.push(`INCOMPLETE: ${what} (listed above)` +
       (res.findings.length ? '' : `; no shared runs in the ${res.pagesChecked} page(s) checked`))
   }
-  if (!res.findings.length && !res.notChecked.length) lines.push('OK: no shared runs')
+  if (!res.findings.length && !res.notChecked.length && !partly.length) lines.push('OK: no shared runs')
   return lines.join('\n')
 }
 
 // Node's fetch ignores HTTPS_PROXY unless NODE_USE_ENV_PROXY=1 (Node 22.21+ and 24.5+), so behind a proxy
 // the script runs itself again with that set.
-function rerunWithProxy() {
+export function rerunWithProxy() {
   const proxied = process.env.HTTPS_PROXY || process.env.https_proxy
   if (!proxied || process.env.NODE_USE_ENV_PROXY) return null
   const args = ['--disable-warning=UNDICI-EHPA', ...process.execArgv, ...process.argv.slice(1)] // quiet "experimental" notice

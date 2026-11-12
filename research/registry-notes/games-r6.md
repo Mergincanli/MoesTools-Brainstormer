@@ -4,6 +4,8 @@
 
 Entries in `games_r6.json`: `battlefield` (series), `ps2`, `foxhole`, `wardogs`, `arc-raiders` and `mechwarrior` (series). `check_games.py` prints OK.
 
+**Moved on 11 November 2026.** The notes on `mechwarrior` are now in [games-r4.md](games-r4.md), the notes of the new batch R4 (plan change of 24 October 2026).
+
 Checks run:
 - **URLs.** Every cited URL was checked. Wiki pages went through each site's MediaWiki API (Fandom, foxhole.wiki.gg, arcraiders.wiki, sarna.net): each page exists under exactly the cited title, with no redirect. The other pages (Steam News, Gfinity, WARDOGS Hub, MP1st) return 200, and their page titles match the cited titles.
 - **Copy-check.** A six-word copy-check of every text field against all the pages read (wiki text, the Steam patch notes, community pages) finds no shared runs.
@@ -128,39 +130,6 @@ Checks run:
   - Heavy is mapped to armour-piercing, Launcher to explosive and Energy Clip to energy.
   - ARC attacks (fire, shockwaves, mortars, lasers) have no ammo type: use step 5 under armament[].damage.
 
-### MechWarrior / BattleTech (`has_tiers` false, `has_costs` false, as the brief asks)
-- **Why no tiers or costs.** Tech eras (3025 Succession Wars, 3050 Clan Invasion, later) are times, not gates. C-bill prices and Battle Value exist, but the brief asks for weight classes.
-- **Weight class as a cost proxy, if a cost band is ever needed:** light → low, medium → medium, heavy → high, assault → very high. I did not put this in the entry.
-- **The `armour_map` is a weight-class proxy.**
-  - BattleTech has no named armour categories: armour is points per location.
-  - Mapping: light and medium 'Mechs → medium ("light walkers"), heavy and assault → heavy (the class text names assault mechs), superheavy → super-heavy.
-  - Drop the map if a proxy is not acceptable.
-- **MechWarrior armour: steps 1 to 3** (the armour-class order). Checked against the BattleTechWiki's BattleMech page and InfoBoxBattleMech template (October 2026).
-  - **Step 1 decides every 'Mech the map lists.** The key is the weight class, which the BattleTechWiki infobox fills in from the mass (Light, Medium, Heavy, Assault, Superheavy). This note names no step up or down: a thinly armoured heavy 'Mech is still heavy. Describe its armour in words in armour.notes.
-  - **Ultralight 'Mechs** (the infobox's class below 20 tons) are not in the map. Go on to step 4, where a walker bigger than a soldier is medium.
-  - **Step 2 never applies.** BattleTech has no light, medium or heavy armour word. Light, medium and heavy are weight classes, and the armour a design's page names (a brand, or a kind of plating such as ferro-fibrous) does not change the class. A plating with a special effect goes in armour.notes, or into an armour model where one fits.
-  - **Step 3 decides nothing.** The game has no costs, and the registry names no standard main battle tank.
-  - **Check A.** Superheavy 'Mechs are super-heavy through the map. The game has no tiers, so another unit of body size huge can be super-heavy too.
-  - **Other kinds of unit** (combat vehicles, aerospace fighters, battle armour), if any is coded, are not in the map either: go on to step 4.
-- **Damage map.** It covers the three weapon kinds (Energy, Ballistic, Missile). They are MechWarrior Online's hardpoint types, and the BattleTechWiki's BattleMech page sorts 'Mech weapons into the same three, with physical attacks besides.
-- **MechWarrior damage: which step decides** (armament[].damage). Checked against the BattleTechWiki's BattleMech page and about twenty weapon pages, and the MechWarrior Online Wiki's Weapons page (October 2026).
-  - **Step 4 binds.** A weapon's kind is the first word of the Type field in its BattleTechWiki infobox: Energy for lasers, PPCs, flamers and plasma weapons, Ballistic for autocannons, machine guns and Gauss rifles, Missile for LRMs and other launchers. In MechWarrior Online it is the hardpoint type the weapon needs. A 'Mech's own page lists its weapons without their kind, so step 4 needs the weapon's page, or the MechWarrior Online 'Mech page's hardpoint types, among the sources (cited, or named in an uncertain entry).
-  - **Kinds the map leaves out take step 5:** Artillery (the Long Tom, Thumper and Sniper pieces, and the Arrow IV, whose Type reads Artillery (Missile)), Equipment (the anti-missile system and TAG) and Utility (the Narc beacon). Melee weapons a design carries (a hatchet and the like) have no kind, and step 5 gives melee. Unarmed physical attacks stay off the unit (see Game-wide mechanics).
-  - **Steps 1 and 2 still come first.** TAG and the Narc beacon do no damage: they only mark a target for friendly guided fire, so they take step 2. The anti-missile system shoots down incoming missiles; where its sources show it firing on its own, it is the interceptor armour model rather than a weapon.
-  - **Step 3 exceptions** (record these kinds of weapon as the type named, whatever their kind): flamers (Energy) are fire; Gauss rifles of every size (Ballistic) are armour-piercing.
-  - **Not exceptions:** autocannons and machine guns (Ballistic) take kinetic from the map; plasma rifles and plasma cannons (Energy, marked heat-inducing in their Type) take energy; missiles take explosive, guided or not.
-  - **Words in brackets.** The Type field also tags some weapons in brackets (anti-infantry, heat-inducing, direct fire). These are the wiki's words, so they are not official text for roles, but the secondary-role rule counts a source that calls a weapon anti-infantry, and this tag is one.
-- **Which title decides** (Series games). This entry splits facts by kind, and the split comes before the newest-title rule. What a 'Mech carries and where comes from its tabletop design on the BattleTechWiki: its weapons and which way each faces, armour values, weight class, speed and the tabletop ranges the range_reference compares. How it plays comes from MechWarrior 5: Clans where its pages cover the 'Mech, otherwise from MechWarrior Online: whether a weapon locks on, fires one shell or a burst, or fires indirectly, and what happens when it dies. Kinds of target come from all counted titles together: the tabletop has infantry, VTOLs (low air) and naval vessels, so 'Mech weapons list them where their own rules allow. A lock-on weapon still lists only what the title that decides its play lets it lock onto (can_target step 2), plus naval by the naval rule; the tabletop's wider list adds nothing to it. So the Atlas's centre-torso lasers face backwards; an Inner Sphere autocannon that MechWarrior Online fires as one shell per shot is a cannon; LRMs lock on and also fire indirectly; SRMs that MechWarrior Online calls non-locking are rockets with no homing trait, and the tabletop's self-guided wording goes in notes. Pilots come back in the next drop or match, so on_death is respawn, basis in-game.
-- **Control.** Set to `both`: MechWarrior is piloted, the 2018 BattleTech game and the tabletop are commanded.
-- **Factions.**
-  - `inner-sphere` and `clan` are the main tech split.
-  - `shared` is for Star League designs fielded by both.
-  - The five Great Houses are subfactions of `inner-sphere`.
-  - Only House Kurita (Draconis Combine, a Japanese-styled feudal empire) gets a flavour: empire.
-  - Possible but weaker: Steiner → soviet (the Lyran taste for assault 'Mechs).
-  - The Clans are left out: an elite, honour-bound warrior caste with superior tech, between allied and empire.
-- **Speed.** The Centurion CN9-A (4/6 movement, 43.2/64.8 km/h) is the reference: the games have no playable infantry, and mediums are the workhorse class. An Atlas (32.4 km/h cruising, 54 km/h top) comes out slow and a Jenner (118.8 km/h) fast.
-
 ## Other uncertainties
 
 - **PlanetSide 2:**
@@ -168,11 +137,6 @@ Checks run:
   - The wiki's cost table may lag behind recent patches. Spot-check a unit's price against its own page or patch notes.
   - Two step 3 exceptions under PlanetSide 2 damage are choices made here, not game labels. Direct hit plus splash follows the direct-hit type, where the Generals note sends a weapon with two damage names to step 5. Laser or plasma gives Vanu beam and bolt weapons energy, where step 4 would give them armour-piercing with an atypical break. Decide whether to keep both.
   - The italic Class Overview paragraphs on class pages: if a source shows they are the game's own text, they become official class text.
-- **MechWarrior / BattleTech:**
-  - The MUL refused this session's requests (HTTP 403 at masterunitlist.battletech.com), so reading the unit role there (Official role lines) is untested. If coders cannot reach it either, roles step 1 never finds an official line for this game.
-  - Whether MechWarrior Online or MechWarrior 5: Clans shows a role or description line in the game was not checked.
-  - Physical attacks and battle armour riding come from the tabletop. The pages I read do not say whether the two piloted titles have them, so the Series games rule (the newest counted title decides) could not be applied; the note leaves both off the 'Mech either way.
-  - Riding battle armour gives the 'Mech no passenger seats. If OmniMech handholds should count as seats, the passenger passive of Paired entries would apply to most OmniMechs.
 - **Battlefield:** the side ids beyond `shared` are a guess at what the research will need. Agents should record mirrored vehicles once, under `shared`, naming each side's model in the notes.
 - **WARDOGS:**
   - Prices and unlock levels come from fan sites. Only the patch notes are official.
@@ -217,27 +181,6 @@ Written in the research run's batch preparation, before any ps2 unit is coded, f
 - **Collisions** (no pattern): moving vehicles hurt what they hit through the collision resist types. That is not a weapon. Code the crush trait only where its size rule allows and the unit's sources show it running soldiers down.
 - **Weapon pickups**: the pages I read describe none; soldiers change gear at equipment terminals.
 - **Reclaimed vehicles**: fixed-loadout copies of existing vehicles that a tool, now marked expired content, could bring back from wrecks on Esamir. They are not separate units: leave them out.
-
-### MechWarrior / BattleTech (`mechwarrior`)
-
-Written in the research run's batch preparation, before any mechwarrior unit is coded, from the BattleTechWiki's BattleMech, Physical Attacks, Jump Jet, Heat Sink, OmniMech, Mechanized Battle Armor, List of Design Quirks and MechWarrior 5: Clans pages, and the MechWarrior Online Wiki's Beginners Guide: Interface/Basics, Heat Sinks, Heat Scaling, Critical Hit, Armor, Module and Quirks pages. The MechWarrior Online Wiki pages are old (last edited between 2012 and 2021), so check MechWarrior Online facts against its patch notes. The counted titles are the tabletop designs, MechWarrior Online and MechWarrior 5: Clans (see Series games).
-
-- **Basic controls** (throttle, turning the legs, torso twist and centring the torso, full stop, powering down and up, targeting an enemy to see its weapons and damage and to lock guided missiles, weapon groups, chain fire and alpha strike, zoom, night and heat vision): every 'Mech. No pattern. Torso twist is how a biped 'Mech aims, not an ability; quads cannot twist without a design quirk. The mount proposal follows the aim-models tie-break, which counts a torso that twists only partway as limited arc.
-- **Orders to teammates** (no pattern): MechWarrior 5: Clans gives the player a Command Wheel and a Battle Grid to direct the rest of the star, and in MechWarrior Online one player per team can place battle-plan markers. These are basic orders: leave them off.
-- **Heat** (resource heat; no pattern): every 'Mech gains heat from firing, moving and jumping, and sheds it through heat sinks; past its limit it shuts down. In MechWarrior Online the pilot can override the shutdown for a few seconds, at the risk of internal damage and an ammunition explosion. Code heat as the resource on every 'Mech; shutdown and override belong to it and are not abilities. MechWarrior Online's heat scaling ("ghost heat") adds extra heat when too many of certain weapons fire at once: mention it in the summary of a weapon it affects. Equipment that dumps heat on a key (a coolant pod and the like) belongs to the design that carries it.
-- **Ammunition** (resource limited-ammo, where that field's rule fits): ballistic and missile weapons feed from ammunition carried in the 'Mech. The only refill during a fight in the pages I read is MechWarrior 5: Clans' ammo caches, tagged in scan mode.
-- **Locations and critical hits** (armour model zonal): every 'Mech's armour and structure are split by location (head, torso sections with front and rear armour, arms, legs). Once a location's armour is gone, hits can wreck the weapons and equipment inside it, ammunition included, before the location itself is destroyed. Code zonal on every 'Mech; it is built into the armour, and the model's examples name this game. Code directional as well: every torso section has front and rear armour, and standard designs put less on the rear. Leave it off only when a source shows the rear as thick as the front. Ammunition-protection equipment (CASE) belongs to the design: mention it in armour.notes.
-- **Physical attacks** (tabletop; no pattern): as its build allows, a 'Mech can punch with its arms, push, kick, charge, or swing something it has picked up, and one with jump jets can make a death-from-above attack. These come with being a 'Mech: leave them off weapons and abilities. A melee weapon the design carries (a hatchet and the like) is a weapon of our melee family.
-- **Jump jets** (mobility trait leap; pattern leap, planned): not game-wide. Only designs that mount them can jump; record them on those units.
-- **Speed and electronic equipment**: not game-wide. MASC, triple-strength myomer and superchargers, and electronics such as ECM, active probes, TAG and Narc, belong to the designs that carry them; record them on those units (patterns.md gives MASC as an overclock-self example, and an always-on ECM is the jammer trait). The standard sensors and the electronic-warfare features every 'Mech has, which make it harder to lock onto (the BattleMech page), give no sensor trait.
-- **Variants, OmniMech configurations and refits** (no pattern): a design's variants, an OmniMech's pod configurations and MechLab refits are chosen before a battle, never during one, so they are not abilities or modes. Code the model researched; other configurations follow the armament rules for loadout picks, or go in notes.
-- **Design quirks** (no pattern): the tabletop's optional quirks and MechWarrior Online's per-variant quirks mostly change numbers: put those in notes. Record a quirk as a passive only when it adds a mechanic. A quirk that changes rolls or numbers, for the 'Mech or for units near it (Command 'Mech, Distracting), is a number change: notes only.
-- **Progression** (no pattern): MechWarrior Online's skill tree and MechWarrior 5: Clans' 'Mech XP upgrades and pilot skills improve a 'Mech outside the fight. Bands use the stock 'Mech; notes can name them.
-- **Consumables and call-in strikes** (side-wide powers): in MechWarrior Online the player fits consumables (artillery and air strikes, Cool Shot coolant and others) into a 'Mech's consumable slots. They are the player's kit, not the design's: leave them off.
-- **Scan mode** (MechWarrior 5: Clans; no pattern): every pilot can switch to a mode, with weapons unable to fire, for hacking turret controls, disarming mines, opening locks and tagging salvage and ammo caches. Leave it off.
-- **Repair and salvage** (no pattern): technicians repair 'Mechs between missions in MechWarrior 5: Clans, and the pages describe no repair during a fight. Leave it off.
-- **Riding battle armour** (tabletop; carry-passengers would be the pattern): most OmniMechs have handholds that let friendly battle armour ride them into battle (six suits at most, twice that on superheavy 'Mechs), and other 'Mechs can carry riders only when the riders have magnetic clamps. The riders hang on outside rather than sit in seats, so give the 'Mech no passenger seats and leave the riding off it; say in crew.notes that an OmniMech can carry riders. If battle armour is coded, record riding on it as its own (see Other uncertainties).
-- **Capturing bases** (a game-mode rule, no pattern): the capture points of MechWarrior Online's Assault and Conquest modes.
 
 Foxhole, WARDOGS and ARC Raiders have no list yet. Write one before any of their units is coded.
 
@@ -301,24 +244,3 @@ Foxhole, WARDOGS and ARC Raiders have no list yet. Write one before any of their
     - strippable armour plates and weak points;
     - shield mitigation that works with any charge left;
     - Queen and Matriarch boss machines.
-- **MechWarrior / BattleTech.**
-  - Sarna (BattleTechWiki), API at `https://www.sarna.net/wiki/api.php`. Mech pages need the `(BattleMech)` suffix when the name is ambiguous ("Centurion" alone is a disambiguation).
-  - The MechWarrior Online Fandom wiki is mostly pre-launch and old: use it only for game-specific mechanics, such as hardpoints and ghost heat.
-  - **Official role lines.** Written before any mechwarrior unit is coded, from the BattleTechWiki's unit role pages (Scout, Sniper, Striker and Juggernaut, and the Unit Roles category), its Master Unit List, BattleMech and InfoBoxBattleMech pages and a sample of 'Mech pages, the MechWarrior Online Wiki's 'Mech pages, and the official MechWarrior Online and MechWarrior 5: Clans sites.
-    - **Designation: the unit role.** The rulebooks the role pages cite (the Introductory Rulebook of Classic BattleTech, the two Alpha Strike books and Campaign Operations) define a set of battlefield roles, and the Master Unit List (MUL), Catalyst Game Labs' official unit database, gives units their role (the role pages link MUL searches by role). Read the role of the MUL entry for the model researched as its designation for roles step 1, and cite the MUL as kind official.
-    - **Which roles name ours.** The Unit Roles category lists fourteen: Ambusher, Attack Fighter, Brawler, Dogfighter, Fast Dogfighter, Fire Support, Interceptor, Juggernaut, Missile Boat, Scout, Skirmisher, Sniper, Striker and Transport. Scout is our scout label, Sniper is an alias of marksman, and Transport is our transport label. Fire Support means firepower, so it names no role, and the other ten are none of our labels or aliases. Marksman still has its coding rule: a Sniper whose long-range guns are not in our sniper family fails it, and step 1 goes on.
-    - **Where to read it.** The BattleTechWiki's Master Unit List page says MUL 2.0 replaced the old site on 31 August 2026. The masterunitlist.info unit links on the wiki's pages now fail, and the new site (masterunitlist.battletech.com) refused this session's requests. The BattleTechWiki's 'Mech pages do not give the role: InfoBoxBattleMech has no role field (its seldom-used Use field is the wiki's words), and the role pages describe each role without listing units. When no coder can read the MUL, step 1 finds no official line: go on to step 2.
-    - **Technical Readouts.** A readout's own text on a design (its Capabilities section and the rest) is official, but the BattleTechWiki does not copy it: its Description and Weapons and Equipment sections retell it in the wiki's words, with page references, so they are not official text. The infobox's weight class (Ultralight, Light, Medium, Heavy, Assault, Superheavy) is filled in from the mass; it is the armour map's key, not a role.
-    - **The piloted games.** No official 'Mech role or description line was found for MechWarrior Online or MechWarrior 5: Clans. Neither official site (mwomercs.com, mw5clans.com) has 'Mech pages, the game-manual link of the MechWarrior Online site leads back to its overview page, and the 'Mech descriptions on the MechWarrior Online Wiki are its own words. Their patch notes are official text: mwomercs.com/game/patch-notes and the Steam news feed for app 342200, and the release notes in the news on mw5clans.com.
-    - **Strong-against and weak-against:** none of these sources has such lines.
-    - **Sides.** A design is one entry whichever side fields it, so the rule that official text must hold for every side's version only matters for an archetype recorded once for several designs.
-  - Good patterns:
-    - heat management and shutdown;
-    - jump jets;
-    - torso twist;
-    - OmniMech pods;
-    - zonal armour and losing arms or legs;
-    - MASC and triple-strength myomer sprint bursts;
-    - ECM;
-    - Elementals as power armour.
-  - Heat, torso twist, OmniMech pods and zonal armour are game-wide or word-list terms (see Game-wide mechanics), so they never become a unit's abilities.

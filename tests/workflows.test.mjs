@@ -39,7 +39,7 @@ async function run(file, args, { skip } = {}) {
   const hooks = {
     args,
     agent: async (prompt, opts = {}) => {
-      prompts.push({ label: opts.label, prompt })
+      prompts.push({ label: opts.label, prompt, schema: opts.schema })
       return opts.label === skip ? null : opts.schema ? fill(opts.schema) : 'x'
     },
     parallel: thunks => Promise.all(thunks.map(t => t().catch(e => { errors.push(e); return null }))),
@@ -125,6 +125,33 @@ describe('workflow scripts', () => {
         await assert.rejects(run(file, args), /args\.progress is required/)
       })
     }
+  }
+
+  // The rule on evidence, word for word as Mustafa approved it on 11 November 2026. Every agent of every script gets
+  // it, with the rule on tool problems and a tool_problems list in its answer, kept apart from the hesitations.
+  const EVIDENCE = 'Evidence: give the page\'s address and where on the page it is (the section or box), and say in your own words what it shows. ' +
+    'Never copy six or more words in a row from a page, in any field of your answer, your notes or a file, the evidence included; ' +
+    'give a figure or a name as it is, and paraphrase everything else.'
+  for (const [file, { readOnly, args }] of Object.entries(SCRIPTS)) {
+    const full = readOnly ? { ...args, progress: P } : args
+    it(`${file}: every agent gets the rule on evidence word for word, and reports tool problems in a list of their own`, async () => {
+      const { prompts } = await run(file, full)
+      for (const { label, prompt, schema } of prompts) {
+        assert.ok(prompt.includes(`- ${EVIDENCE}\n`), `${label}: the rule on evidence is missing or reworded`)
+        assert.match(prompt, /\n- Tool problems: when a tool fails you or cannot do its job/, label)
+        assert.match(prompt, /\n- Reading pages: read a page with `node scripts\/page-text\.mjs <page address>`/, label)
+        assert.ok(prompt.trimEnd().endsWith('it is ten to twenty times the size.'), `${label}: the rules are not the end of the brief`)
+        assert.equal(schema?.properties?.tool_problems?.type, 'array', `${label}: no tool_problems list in the answer`)
+        assert.ok(!(schema.required || []).includes('tool_problems'), `${label}: tool_problems must not be required`)
+      }
+    })
+
+    it(`${file}: a batch's own rules reach every agent`, async () => {
+      const rule = 'never fetch a page from site.example'
+      const withRule = args.round ? { ...full, round: { ...args.round, rules: rule } } : { ...full, batch: { ...args.batch, rules: rule } }
+      const { prompts } = await run(file, withRule)
+      for (const { label, prompt } of prompts) assert.ok(prompt.trimEnd().endsWith(`- For this batch: ${rule}`), label)
+    })
   }
 
   it('verify-fixes.js: the recheck angle refuses to run without the claims run it follows', async () => {
