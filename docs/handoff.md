@@ -1,11 +1,11 @@
 # Handoff: continuing Unit Forge in a new session
 
-Written on 10 November 2026, when the project moved from the session that ran it from 17 October to a new account. Read this first, then [CLAUDE.md](../CLAUDE.md) and the [research runbook](research-runbook.md). Updated on 11 November 2026: the phases that were open then are done, the saved work in progress (`research/handoff/`) has been used and deleted, and Mustafa approved pull request #6 (section 4). Updated on 12 November 2026: pull requests #7 and #8 are merged, batch R4 is parked after its prep, and the next work is a first generator, the plan's step 3b (section 3, "What is left", and section 4).
+Written on 10 November 2026, when the project moved from the session that ran it from 17 October to a new account. Read this first, then [CLAUDE.md](../CLAUDE.md) and the [research runbook](research-runbook.md). Updated on 11 November 2026: the phases that were open then are done, the saved work in progress (`research/handoff/`) has been used and deleted, and Mustafa approved pull request #6 (section 4). Updated on 12 November 2026: pull requests #7 and #8 are merged, batch R4 is parked after its prep, and the next work is a first generator, the plan's step 3b (section 3, "What is left", and section 4). Updated on 13 November 2026: pull request #9 is merged, and Mustafa approved the generator's rule sheet ([docs/generator-rules.md](generator-rules.md)), so the build has started.
 
 ## TL;DR
 
 - **The project:** Unit Forge, a tool for Mustafa that turns a researched database of real RTS and shooter units into original unit concepts for his game, Shamble Frontlines. The brief is [docs/brief.md](brief.md) and the plan is [docs/proposal.md](proposal.md).
-- **Where it stands (12 November 2026):** the next work is the first generator, the plan's step 3b, which Mustafa moved ahead of batch R4 that day (section 3, "What is left"). Its first step is a rule sheet that he approves before any code is written. Batch R4 is parked after its prep: the record is in [research/r4/prep/](../research/r4/prep/README.md), and R4 starts only when he says so.
+- **Where it stands (12 November 2026):** the next work is the first generator, the plan's step 3b, which Mustafa moved ahead of batch R4 that day (section 3, "What is left"). Its first step was a rule sheet, which he approved on 13 November 2026 ([docs/generator-rules.md](generator-rules.md)); the rules as data, the module and a first page of sample cards follow. Batch R4 is parked after its prep: the record is in [research/r4/prep/](../research/r4/prep/README.md), and R4 starts only when he says so.
 - **Batch R3** (Command & Conquer: Generals with Zero Hour, Tempest Rising, Iron Harvest), in plan step 3, the research run, is done.
   - All 27 R3 units are coded, checked and in `data/units/` (commit 6c817f1).
   - The merge pass, the patterns, the checker, the rule problems, the report, the final review and the claims check followed on 10 and 11 November (section 3). The report is [research/r3/README.md](../research/r3/README.md).
@@ -140,6 +140,18 @@ CI runs four check jobs on every push; it was green on each head it has finished
 4. **The first generator, the plan's step 3b:** approved on 12 November with the plan lines as shown to him, and with four conditions (section 3, "What is left", item 2).
 5. **R4's prep record** is kept under `research/r4/prep/`. The games registry and the notes file stay untouched until R4 resumes.
 
+**Decided on 13 November 2026:**
+
+1. **Pull request #9** (the plan lines for the first generator, and R4's parked prep record): merged on his word.
+2. **The rule sheet** ([docs/generator-rules.md](generator-rules.md)), which he saw after a second agent had checked it twice:
+   - P1, P3 and P4 approved "with the wording in section 13 of the rule sheet": a new schema with three data files under `data/generator/`; a new, separate checker for rolled cards; one line of wording in the card schema.
+   - P2 approved with its sentence: "A key-bound mobility trait and the ability that implies it are one button and count as one key."
+   - Each approval is recorded in its commit message, as he asked.
+   - All eleven questions answered A: K1, K2, HC, SP, FL, RF, MU, PT, AV, T3S, MD.
+3. **K2 A needs a fifth approval.** It adds a new property to the card schema (`primary_fire`) and changes the example card's key count. He sees its exact wording first; until he approves it, a signature fired with primary fire is counted as a key, as before.
+4. **HC A is an exception to his decision 5B,** and he asked for that to be said, with the date, where the rule is written. It is in the rule sheet's section 6 and in the hard-control part of `data/generator/rules.json`.
+5. **His reminder:** a first page of sample cards as soon as the module rolls valid cards, before the review passes.
+
 **Still open:**
 
 1. The five questions from R3's prep (pull request #6, items 3 to 7). He gave no other answer, so the units stay coded by the recommended answers:
@@ -152,7 +164,7 @@ CI runs four check jobs on every push; it was green on each head it has finished
 3. Left for him at the pattern review (plan step 4): whether to fold `stack-to-overload` into `freeze-and-shatter`.
 4. For the rule-fix round after R4: the 83 rule problems in `research/r3/rule-problems.md`, among them the walker body-plan tie-break and the confidence rule (`research/r3/opening/splits.json`).
 5. For R4, when it goes on: the eight questions of its prep and the Liquipedia decision (`research/r4/prep/README.md`, sections 3 and 6).
-6. For the first generator: his approval of the rule sheet, before any code is written.
+6. For the first generator: his word on the wording of the new card property that answer K2 A needs.
 
 ## 5. How the work is done
 
