@@ -209,7 +209,7 @@ The pilot used this shape (research/pilot/README.md, Final review).
 
 **The checks, in this order:**
 1. `npm run format`.
-2. `npm run docs`.
+2. `npm run docs`, then `npm run manifest` (the data version in `data/manifest.json`).
 3. `npm run check:merge`.
 4. The online copy-check, in three parts, each with zero FOUND lines. It compares a wiki page twice over: its source and its rendered page, which holds what templates kept on other pages draw in. A run that prints a SOURCE ONLY line read some wiki page's source only and is incomplete: run it online once, so that the rendered pages are fetched.
    1. `npm run copy-check -- --also research/r<N> --also research/registry-notes`. Every record file lists the URLs of the pages its agent read, so the check fetches them.

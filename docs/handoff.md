@@ -190,7 +190,7 @@ The procedure is [docs/research-runbook.md](research-runbook.md): its sections 1
 ## 7. First steps in the new session
 
 1. Make sure the Claude GitHub app can reach `Mergincanli/MoesTools-Brainstormer`, with push access.
-2. Run `npm install` (Node.js 22 or newer), then `npm run check:merge`. It should pass every test (386 on 12 November 2026).
+2. Run `npm install` (Node.js 22.18 or newer), then `npm run check:merge`. It should pass every test (510 on 13 November 2026).
 3. Check out `claude/quirky-cray-tih1w4` at this handoff commit or later.
 4. Read this file, CLAUDE.md and the runbook.
 5. Go on with section 3, "What is left".

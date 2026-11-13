@@ -40,7 +40,7 @@ Paraphrase only, cite every claim with a confidence level, no images. Real unit 
 
 ## Working on the data
 
-You need Node.js 22 or newer; `npm install` refuses older versions. Install once with `npm install`, then run `npm run check` before you push: it runs everything CI runs. The scripts live in `scripts/` and the tests in `tests/`.
+You need Node.js 22.18 or newer; `npm install` refuses older versions. Install once with `npm install`, then run `npm run check` before you push: it runs everything CI runs. The scripts live in `scripts/` and the tests in `tests/`.
 
 | Command | What it does |
 |---|---|
@@ -49,6 +49,9 @@ You need Node.js 22 or newer; `npm install` refuses older versions. Install once
 | `npm run format:check` | Lists JSON files that are not in the house style, without changing them. |
 | `npm run docs` | Rebuilds the generated pages in `docs/` (samples, vocabularies, fields) from the JSON. |
 | `npm run docs:check` | Fails if a generated page is out of date. |
+| `npm run manifest` | Rewrites `data/manifest.json`, the content hash of the word lists, the patterns and the generator's rules that every rolled card records. Run it after any change to those. `npm run manifest:check` fails when it is out of date. |
+| `npm run check:generator` | Checks the generator's data files (`data/generator/`) against their schema, the ids they name and the rule sheet's counts. |
+| `npm run typecheck` | Type-checks the generator module (`src/core/`). Node 22.18 or newer runs its TypeScript files directly; there is no build step. |
 | `npm test` | Runs the tests in `tests/`. |
 | `npm run copy-check` | Fetches every page the data cites and flags any run of six or more words that a record shares with a page it cites. Add `--also <folder>` to check notes too (see the options below). |
 | `npm run plant-test -- <page address> ...` | Tests whether the copy-check reads what a reader of a page sees: it takes the visible text of the page, plants up to five passages of it in a throwaway record that cites the page, and counts the passages the copy-check flags. Run it on one page of every new site before a research batch cites it. It uses a browser (Playwright with Chromium) when one is installed; without it, only wiki pages can be tested. Add `--json <file>` to save the results. |
@@ -58,7 +61,7 @@ You need Node.js 22 or newer; `npm install` refuses older versions. Install once
 | `npm run vocab-diff -- <old> [<new>]` | Lists what changed in the word lists between two versions: each version is a folder of word lists or a git commit (its `data/vocab/`); `<new>` defaults to `data/vocab`. |
 | `npm run sync-patterns` | Fills in each pattern file's `source_units` from the units that link it (through abilities, weapons and modes). Research agents never run it and never edit an existing pattern file: they run `npm run validate`, which warns while a list is out of date (a new pattern they write gets its first list by hand). The merge pass runs it once, then `npm run docs`, then `npm run check:merge`. |
 | `npm run sync-patterns:check` | Lists the pattern files whose `source_units` are out of date, without changing them, and fails if there is one. |
-| `npm run check` | Format check, validator, docs check and tests, in that order. This is what CI runs. |
+| `npm run check` | Format check, validator, the generator data check, the manifest check, docs check, type check and tests, in that order. This is what CI runs. |
 | `npm run check:merge` | The pattern sync check, then `npm run check`. For the merge pass: a research pull request may leave pattern lists out of date, so CI does not run it. |
 
 Edit the JSON directly; the word lists in `data/vocab/*.json` are the source of truth. After any JSON edit run `npm run format`; after any change under `data/`, `schemas/` or `docs/examples/` run `npm run docs`, and commit the rebuilt pages with it.
