@@ -33,12 +33,23 @@ export function firstSentence(s: string): string {
   return (m ? m[0] : s).trim()
 }
 
-/** Section 18: cut after the last whole word that fits in `max` characters, with no dots added. */
-export function cutAtWord(s: string, max: number): string {
+/** Section 18: a text longer than `max` is cut after the last whole word that fits, then back to the last comma,
+ *  semicolon, colon or bracket before the unfinished clause, that mark dropped; never on an opening bracket, and with
+ *  no dots added. A text that fits is untouched. */
+export function cutAtWord(s: string, max: number, opening = 0): string {
   if (s.length <= max) return s
   const room = s.slice(0, max + 1)
   const at = room.lastIndexOf(' ')
-  return (at > 0 ? room.slice(0, at) : s.slice(0, max)).replace(/[\s,;:]+$/u, '')
+  const words = (at > 0 ? room.slice(0, at) : s.slice(0, max)).replace(/[\s,;:([]+$/u, '')
+  // The cut-back never reaches into the opening words before the summary and keeps at least half the allowed length;
+  // otherwise the text ends after the last whole word that fits (section 18).
+  const floor = Math.max(opening, Math.ceil(max / 2))
+  const mark = Math.max(...[',', ';', ':', '(', ')', '[', ']'].map(m => words.lastIndexOf(m)))
+  let cut = mark >= floor ? words.slice(0, mark) : words
+  // A bracket the cut leaves open is an unfinished clause too, so the cut goes back to it (within the same limits).
+  const open = cut.lastIndexOf('(')
+  if (open > cut.lastIndexOf(')') && open >= floor) cut = cut.slice(0, open)
+  return cut.replace(/[\s,;:([]+$/u, '')
 }
 
 /** The card's text lines so far (a line is never shown twice) and the check (T-b). */
@@ -102,14 +113,18 @@ function workingName(ix: Index, d: Draft): { name: string; problem?: string } {
   return { name, problem: nameProblem(ix, name) }
 }
 
-/** The signature's name: a word of the flavour's signature_words lists, then a noun for the pattern's category. */
-function signatureName(ix: Index, d: Draft): { name: string; problem?: string } {
+/** The signature's name: a word of the flavour's signature_words lists, never a word of the card's working name
+ *  (drawn again on the same dice until it differs, section 18), then a noun for the pattern's category. */
+function signatureName(ix: Index, d: Draft, cardName: string): { name: string; problem?: string } {
   const style = styleOf(ix, d.parts.flavour)
   const cat = categoryOf(ix, d.parts.signature?.pattern ?? '') ?? ''
   const nouns = (ix.data.names as unknown as { signature_nouns?: Record<string, string[]> }).signature_nouns?.[cat] ?? []
   const words = (style?.signature_words ?? []).flatMap((list: string) => (style?.words[list] ?? []).map(String))
   const dice = diceFor(d.seed, 'text.signature.name', d.attempt)
-  const word = pick(dice, words)
+  const taken = new Set(cardName.split(/[^\p{L}\p{N}]+/u).filter(Boolean))
+  if (!words.some(w => !taken.has(w))) return { name: '', problem: `every signature word of ${d.parts.flavour} is a word of the name ${cardName}` }
+  let word = pick(dice, words)
+  while (word !== undefined && taken.has(word)) word = pick(dice, words)
   const noun = pick(dice, nouns)
   if (!word || !noun) return { name: '', problem: `names.json has no signature words for ${d.parts.flavour} or no nouns for category ${cat}` }
   const name = (templateOf(ix, 'signature_name').template ?? '').replace('{name_word}', word).replace('{category_noun}', noun)
@@ -130,7 +145,10 @@ function escapeLines(ix: Index, p: DraftParts): string[] | undefined {
     if (!line) return undefined
     out.push(line)
   }
-  const weapons = [p.armament.primary, p.armament.secondary, ...(p.armament.conditional ?? []).map(c => c.weapon)].filter((w): w is WeaponDraft => !!w)
+  // A latch delivery (HC4) and a weapon of the cryo, emp, psionic or magnetic family (HC7) owe their escape lines, a
+  // second form's weapon included (section 18).
+  const formWeapons = (p.modes ?? []).flatMap(m => m.armament ?? [])
+  const weapons = [p.armament.primary, p.armament.secondary, ...(p.armament.conditional ?? []).map(c => c.weapon), ...formWeapons].filter((w): w is WeaponDraft => !!w)
   for (const e of hc.entries) {
     if (!e.term || !e.escape_line) continue
     const [kind, id] = e.term.split(':')
@@ -176,9 +194,11 @@ export function controlsOf(ix: Index, p: DraftParts, sigName: string): CardText[
     const traits = impliedKeyTraits(ix, ab)
     const name = ix.patternById.get(ab.pattern ?? '')?.name ?? ab.pattern ?? ''
     if (traits.length && !movementUsed) {
+      // On the movement key, named as the ability is on any other key (section 18).
       movementUsed = true
       for (const t of traits) traitsWithAbility.add(t)
-      add(ab.seat ?? 'driver', 'key_bound_movement', { trait: label('mobility-traits', traits[0]) })
+      const input = L.key_bound_movement
+      if (input !== undefined) out.push({ seat: ab.seat ?? 'driver', input, action: i === 0 ? fill('signature', { signature_name: sigName }) : fill('next_ability', { ability: name }) })
       return
     }
     if (i === 0) add(ab.seat ?? 'driver', 'signature', { signature_name: sigName })
@@ -212,7 +232,7 @@ export function textOf(ix: Index, d: Draft, m: Matchups): { text: CardText; coun
   const name = workingName(ix, d)
   if (name.problem) return { flag: 'name-collision', problem: name.problem }
   trace.push({ field: 'text.name', value: name.name, how: d.name !== undefined ? 'locked' : 'rolled', rule: 'section 11 (name style), T-a', candidates: 0 })
-  const sn = signatureName(ix, d)
+  const sn = signatureName(ix, d, name.name)
   if (sn.problem) return { flag: 'name-collision', problem: sn.problem }
   trace.push({ field: 'text.signature.name', value: sn.name, how: 'rolled', rule: 'section 11 (signature name), T-a', candidates: 0 })
   // The pitch: the template, the summary's first sentence, cut at a word (section 18).
@@ -223,7 +243,9 @@ export function textOf(ix: Index, d: Draft, m: Matchups): { text: CardText; coun
   const lead = lines.one(firstSentence(summary), neutral.pitch ?? '')
   const pitchTemplate = templateOf(ix, 'pitch')
   const article = /^[aeiou]/i.test(size) ? 'An' : 'A'
-  const pitch = cutAtWord((pitchTemplate.template ?? '').replace('{A}', article).replace('{size}', size).replace('{flavour}', style?.flavour_word ?? '').replace('{class_noun}', style?.class_nouns[p.class ?? ''] ?? '').replace('{summary}', lead), pitchTemplate.max_length ?? 160)
+  const frame = (pitchTemplate.template ?? '').replace('{A}', article).replace('{size}', size).replace('{flavour}', style?.flavour_word ?? '').replace('{class_noun}', style?.class_nouns[p.class ?? ''] ?? '')
+  const opening = frame.indexOf('{summary}')
+  const pitch = cutAtWord(frame.replace('{summary}', lead), pitchTemplate.max_length ?? 160, opening < 0 ? 0 : opening)
   const effect = lines.one(summary, neutral.signature_effect ?? '')
   // The team-play hook: the first of the pattern's hooks the flavour favours, else its first; its line the first
   // teammates line.

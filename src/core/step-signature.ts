@@ -7,7 +7,7 @@
 // excludes and strength links become needs (G3, G4, A7, M2); a key-bound trait it implies is one of them (K-d: step 9
 // sets it, and only then).
 import { emptyParts, locksWaiting } from './draft.ts'
-import { drawAbility, kindsThatFit, neededItems, placeNeededExtras, placed, variantDraftProblem, type PatternChoice, type Reaches } from './abilities.ts'
+import { drawAbility, gateToolExtra, kindsThatFit, neededItems, placeNeededExtras, placed, roleChosen, variantDraftProblem, type PatternChoice, type Reaches } from './abilities.ts'
 import { blockOf, usablePattern, type Index } from './data.ts'
 import { budgetOf } from './keys.ts'
 import { lockProblem } from './locks.ts'
@@ -87,7 +87,16 @@ export function signatureChoices(ix: Index, d: Draft, rs: Reaches): { choices: P
   // The forced reach's choices, for a lock still waiting that no choice at the gate fits (G5, locks.ts).
   const more = (): PatternChoice[] => (rs.forced ? toolsFirst(choicesFrom(rs.forced, true)) : [])
   const gate = toolsFirst(choicesFrom(rs.gate, false))
-  if (gate.length || !rs.forced) return { choices: gate, forced: false, more }
+  // A chosen role's tool, read with G5 (section 18): a tool as the signature at the gate; else a tool as an extra at the
+  // gate; else, above the gate, a tool as the signature when one fits; else a tool as an extra above the gate.
+  const isTool = (c: PatternChoice): boolean => c.variants.some(v => servesRole(ix, role, blockFor(ix, c.pattern, v)))
+  if (roleChosen(d) && roleNeedsTool(ix, role) && rs.forced && !gate.some(isTool) && !gateToolExtra(ix, d, rs)) {
+    const above = toolsFirst(choicesFrom(rs.forced, true))
+    if (above.some(isTool)) return { choices: above, forced: true, more }
+  }
+  // Above the gate only for an input's or a lock's need (G5): never on the generator's own roll.
+  const mayForce = d.inputs.role !== null || d.locks.includes('roles') || d.locks.includes('signature') || d.locks.includes('abilities') || d.needs.some(n => n.forced)
+  if (gate.length || !rs.forced || !mayForce) return { choices: gate, forced: false, more }
   return { choices: toolsFirst(choicesFrom(rs.forced, true)), forced: true, more }
 }
 

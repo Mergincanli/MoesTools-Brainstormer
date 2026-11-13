@@ -32,7 +32,7 @@ function makeChecker(data) {
     const tierT = term('tiers', p.tier)
     const abil = [p.signature, ...(p.abilities || [])]
     if (p.pending) out.push('pending extras left on the draft')
-    if ((p.abilities || []).length > 3) out.push('more than 3 extras')
+    if (1 + (p.abilities || []).length > R.counts.abilities[p.tier].length - 1) out.push(`${1 + p.abilities.length} abilities on a ${p.tier} card (A6)`)
     const ids = abil.map(a => a.pattern)
     if (new Set(ids).size !== ids.length) out.push('a pattern twice (A6)')
     const blocks = abil.map(a => block(a.pattern, a.variant))
@@ -101,8 +101,8 @@ function makeChecker(data) {
     const nature = (() => {
       for (const e of R.defaults.nature) {
         const t = term('nature', e.nature)
+        // Section 18: the data's order decides; an entry is passed over only when the nature's word list leaves out the class.
         if (t.classes && !t.classes.includes(p.class)) continue
-        if ([...(p.armour.models || []).map(m => term('armour-models', m)), term('crew-models', p.crew.model)].some(x => (x.excluded?.nature || []).includes(e.nature))) continue
         if (!e.when) return e.nature
         const [k, v] = e.when.split(':')
         if ((k === 'class' && p.class === v) || (k === 'body' && p.body.plan === v) || (k === 'crew' && p.crew.model === v)) return e.nature

@@ -39,7 +39,7 @@ Walker / mech · T1 · Soviets · role: Anti-armour, Frontline assault (also) ·
 
 #### Abilities
 
-- **Hail Bind** (signature): Channel, Medium cooldown, key Q. Enemies you suppress are also marked for your whole team for as long as the suppression lasts.
+- **Walrus Lock** (signature): Channel, Medium cooldown, key Q. Enemies you suppress are also marked for your whole team for as long as the suppression lasts.
 
 #### Team play
 
@@ -51,7 +51,7 @@ Needs an escort: Setup and finisher: the gunner pins, teammates flank or throw e
 - Facing it: A loud stream of tracers and a growing pinned marker on your own character warn you before you are fully pinned.
 - For teammates: Escort: a rooted gunner needs someone watching its sides while it sweeps.
 - What others see: From above, the swept area shows as a fan or lane of dense tracers with a faint tint on the ground for as long as it lasts.
-- Controls: LMB Autocannon; LMB Cannon; Q Hail Bind
+- Controls: Driver / pilot: LMB Autocannon, Q Walrus Lock · Gunner: LMB Cannon
 
 #### Strong against
 
@@ -124,7 +124,7 @@ Counter-pick: Its team fights inside hazard zones or lays fields, letting it hol
 - Facing it: Your status weapon visibly heals it (green sparks instead of the usual effect, and a heal number), so you learn quickly to switch to plain damage.
 - For teammates: The enemy team needs a plan: send plain-damage units against it, or coordinate a burst of the status to overload it.
 - What others see: The status looks different on this unit (gold or green sparks instead of the usual effect), so enemies see that it is being eaten, not suffered.
-- Controls: LMB Machine gun; LMB Guided missiles
+- Controls: Driver / pilot: LMB Machine gun · Gunner: LMB Guided missiles
 
 #### Strong against
 
@@ -186,9 +186,9 @@ Aircraft · T3 · Soviets · role: Anti-infantry, Area denial (also) · spice 3 
 #### Abilities
 
 - **Rivet Wall** (signature): Active, Medium cooldown, key Q. Pick a spot at range; a storm hurts every unit inside it, ground and air, friend and foe (not buildings), for a few seconds. Storms on the same spot do not stack.
-- **Rage when wounded**: Passive.
-- **Become invulnerable**: Active, Medium cooldown, key R.
-- **Lay mines**: Active, Short cooldown, key Shift, Commander seat.
+- **Rage when wounded**: Passive. Missing health adds attack speed together with life steal or regeneration, so a low unit both hits faster and heals while it fights.
+- **Become invulnerable**: Active, Medium cooldown, key R. A power on a long recharge covers allied vehicles and buildings in a small area, which can't be hurt for a short time; soldiers caught in it die, or the user's base loses power for a while.
+- **Lay mines**: Active, Short cooldown, key Shift, Commander seat. A flier scatters a spread of hidden mines along its flight path or onto a marked spot, and is exposed to anti-air while it flies the run.
 
 #### Team play
 
@@ -200,7 +200,7 @@ Needs an escort: Allies keep enemies inside: a stun, a pull or suppression right
 - Facing it: A coloured ground patch with a sharp rim and a hiss or crackle shows the zone before it has hurt you much: step out, go round, or rush through if the prize is worth it. Get out of its fire and your machine comes back to life in a moment.
 - For teammates: Versions that hurt allies make the team plan around them: they must give way at the choke you flood, or the zone is tuned to spare friends.
 - What others see: A strongly coloured ground patch with a crisp rim, drawn under units but above terrain and readable from the top-down camera at any zoom; the colour tells what it does (green toxic, orange fire, blue slow).
-- Controls: LMB Tesla / electric; LMB EMP; Q Rivet Wall; R Become invulnerable; Shift Lay mines
+- Controls: Driver / pilot: LMB Tesla / electric, Q Rivet Wall, R Become invulnerable · Gunner: LMB EMP · Commander: Shift Lay mines
 
 #### Strong against
 
@@ -272,7 +272,7 @@ Infantry · T1 · Allies · role: Frontline assault · spice 2 · seed `allied-t
 #### Abilities
 
 - **Polar Relay** (signature): Active, Short cooldown, key Q. Its signature ability comes from the pattern listed under inspiration.
-- **Disguise**: Passive.
+- **Disguise**: Passive. Standing still turns you into a piece of scenery, a tree or a crate for instance; firing makes you flicker for a moment, and moving ends it.
 
 #### Team play
 
@@ -284,7 +284,7 @@ Protector: Drivers protect their mechanic and stay inside its range, and the mec
 - Facing it: Every repairer is a priority target: it is fragile, and its patient starts losing again once it falls.
 - For teammates: A natural protector pair: repairers make tanks last, and tanks shield repairers.
 - What others see: A team-coloured beam with sparks on vehicles or crosses on soldiers, and green numbers on the patient.
-- Controls: LMB Laser; RMB Repair tool; Q Polar Relay
+- Controls: LMB Laser, RMB Repair tool, Q Polar Relay
 
 #### Strong against
 
@@ -350,7 +350,7 @@ Drone / support · T2 · Allies · role: Support, Area denial (also) · spice 3 
 #### Abilities
 
 - **Glacier Breaker** (signature): Triggered. The carrier burrows or hides in cover and waits under the enemy's path, then goes off when they walk over it.
-- **Leave a hazard zone**: Deploy, Short cooldown, key R.
+- **Leave a hazard zone**: Deploy, Short cooldown, key R. The zone hurts no one but slows the movement and attacks of enemies inside, so the team can catch or out-shoot them.
 
 #### Team play
 
@@ -362,7 +362,7 @@ Setup and finisher: Setups keep enemies in the ring: stuns, slows, pulls and wal
 - Facing it: A siren and a ring on the ground show when and where it will go off: leave the ring, get behind cover, or kill the carrier first. Break the line of fire and the frost stops building.
 - For teammates: Defenders answer with barriers, invulnerability or a 'can't die' field timed to the blast, and healers stand ready for afterwards.
 - What others see: A ring on the ground showing the blast's reach, a countdown on the carrier and a rising alarm that everyone on screen hears; the ring is in team colour for allies and red for enemies.
-- Controls: LMB Cryo; RMB Repair tool; R Leave a hazard zone
+- Controls: LMB Cryo, RMB Repair tool, R Leave a hazard zone
 
 #### Strong against
 
@@ -426,9 +426,9 @@ Hovercraft · T3 · Allies · role: Marksman / overwatch, Logistics (also) · sp
 #### Abilities
 
 - **Floe Berth** (signature): Passive. Passengers shoot their own weapons out of ports, possibly with a bonus; the vehicle's output is the sum of who is aboard.
-- **Depend on a relay**: Active, Short cooldown, key R.
-- **Freeze and shatter**: Active, Medium cooldown, key Shift.
-- **Gather resources**: Channel, Medium cooldown, key Q.
+- **Depend on a relay**: Active, Short cooldown, key R. The unit plants its own relay beacon and works within its radius; to advance it must pick the beacon up and plant it again, and enemies who find the beacon can strand it.
+- **Freeze and shatter**: Active, Medium cooldown, key Shift. A separate finisher, such as a stomp, a slam or a dive, that does little to normal targets but shatters frozen ones for heavy damage. It can sit on the freezer's own card or on a teammate's.
+- **Gather resources**: Channel, Medium cooldown, key Q. The battlefield is the field: it breaks down wrecks, and rocks or trees where the map has them, into money, so every fight leaves salvage and players can deny it by destroying wrecks first. Unlike leech-weapon-on-kill, the pay is team money from any wreck, salvaged by holding the tool on it, not a claim on a kill the unit made.
 
 #### Team play
 
@@ -436,11 +436,11 @@ Seat synergy: A built-in two-player combo: 'need a ride' and 'need anti-tank' ca
 
 #### How it plays
 
-- As the player: As the driver you buy a cheap, fast chassis with a narrow but useful default weapon, so you aren't useless alone. You buy a unit that is better than its tier suggests, such as a cheap hover tank that can't be mind-controlled or a light tank carrying a heavy laser, because part of it lives in the relay. You buy a fragile, fast support, such as a helicopter in the Cryocopter's spirit or a cryo trooper. You buy a slow, tough hauler and spend the life on the economy: drive to a node, hold the mining tool on it to fill your hopper, then drive into a drop-off's ring to bank the load.
+- As the player: As the driver you buy a cheap, fast chassis with a narrow but useful default weapon, so you aren't useless alone. You buy a unit that is better than its tier suggests, such as a cheap hover tank that can't be mind-controlled or a light tank carrying a heavy laser, because part of it lives in the relay. Big targets fill slowly and soldiers quickly, so freezing a tank means holding the beam for a while in the open. You buy a slow, tough hauler and spend the life on the economy: drive to a node, hold the mining tool on it to fill your hopper, then drive into a drop-off's ring to bank the load.
 - Facing it: Check the roof weapon, the colour of its shots and the loadout icon before committing, then fight it with what it lacks. Break the line of fire and the frost stops building.
 - For teammates: An engineer passenger makes it a mobile repair station that also strips parasites off vehicles, a natural answer to infesters.
 - What others see: A distinct roof weapon model for each of 4-6 loadout groups (for example anti-armour, anti-infantry, anti-air and support tool), readable from above, plus colour-coded shots and a group icon on the nameplate.
-- Controls: LMB Cryo; LMB Prism; R Depend on a relay; Shift Freeze and shatter; Q Gather resources
+- Controls: Driver / pilot: LMB Cryo, R Depend on a relay, Shift Freeze and shatter, Q Gather resources · Gunner: LMB Prism
 
 #### Strong against
 
@@ -491,7 +491,7 @@ Cost Very high, power 10 of 10, complexity 10 of 10, 4 keys; warnings: Off-flavo
 
 ### Swallow Thaw
 
-*A medium Empire soldier: The drone mends armour or hulls, heals, turns bullets aside or helps build instead of fighting, and can be sent to a teammate; it can't*
+*A medium Empire soldier: The drone mends armour or hulls, heals, turns bullets aside or helps build instead of fighting, and can be sent to a teammate*
 
 Infantry · T1 · Empire · role: Disabler / control · spice 2 · seed `empire-t1-1`
 
@@ -521,9 +521,9 @@ Setup and finisher: The owner's team uses drones to scout and screen: they spot 
 
 - As the player: Press Q to release your drones: two to four small fliers (more at the top tier) that spread around you, stay inside a short leash, and attack whatever you hit last, or the nearest enemy in sight if you hit nothing.
 - Facing it: Right now you can shoot them (they have little health), throw splash into the bunch, use an EMP to drop them all, break line of sight, or run past their owner's leash so they turn back.
-- For teammates: Support builds send a drone to a teammate to repair, heal or turn bullets aside for them (The Division 2's Fixer and Defender), which makes the owner a protector.
+- For teammates: A piloting operator needs a bodyguard: a teammate guards the planted body while they fly.
 - What others see: Release: a hatch sound and the drones fanning out from the unit, each with a team-coloured light and a shadow on the ground so it reads over terrain from above.
-- Controls: LMB Sniper; RMB Flak; Q Bloom Kennel
+- Controls: LMB Sniper, RMB Flak, Q Bloom Kennel
 
 #### Strong against
 
@@ -563,7 +563,7 @@ Cost Medium, power 5 of 10, complexity 3 of 10, 2 keys.
 
 ### Pine Mist
 
-*A medium Empire soldier: Missiles and rockets inside the field veer off and miss instead of firing slower; the strays still explode where they land, and the*
+*A medium Empire soldier: Missiles and rockets inside the field veer off and miss instead of firing slower; the strays still explode where they land*
 
 Infantry · T2 · Empire · role: Area denial, Anti-armour (also) · spice 3 · seed `empire-t2-8`
 
@@ -594,7 +594,7 @@ Protector: Protector: allies holding ground inside the field take much less rock
 - Facing it: Your rocket or missile weapon's fire rate visibly drops and an interference icon shows on your HUD while you are inside the field.
 - For teammates: Escort dependency: the field unit stands still and is usually lightly armed, so it needs teammates to keep enemies off it.
 - What others see: From above, a faint shimmering ring at the field's edge, team-coloured for allies and red for enemies, visible only while it is up.
-- Controls: LMB Guided missiles; Q Thaw Bind
+- Controls: LMB Guided missiles, Q Thaw Bind
 
 #### Strong against
 
@@ -657,8 +657,8 @@ Tank / ground vehicle · T3 · Empire · role: Infiltrator / saboteur, Anti-armo
 #### Abilities
 
 - **Moth Shade** (signature): Passive. Always on: each enemy sees you as one of their own basic soldiers. After you attack or are hit, the disguise comes back by itself a few seconds later.
-- **Deploy a turret**: Active, Long cooldown, key R.
-- **Convert the fallen**: Active, Short cooldown, key Shift.
+- **Deploy a turret**: Active, Long cooldown, key R. A sturdy gun nest whose facing is set when it is placed: it hits hard inside a forward arc but can't turn to cover its sides or rear, and a teammate may climb in to guard them.
+- **Convert the fallen**: Active, Short cooldown, key Shift. A short curse on the enemy you hit, adding a little damage: if it dies before the curse ends, a minion rises, stronger as the curse is upgraded.
 
 #### Team play
 
@@ -670,7 +670,7 @@ Spotter: Pair the disguise with a strike: the disguised player walks in, opens w
 - Facing it: The impostor looks like a teammate or a prop. The tells are there on purpose: its name belongs to a teammate your minimap shows somewhere else, it moves at the wrong speed, or it never answers pings.
 - For teammates: A disguised transport carries a squad past the turrets and unloads deep in enemy lines; unloading ends the cover.
 - What others see: The disguised player sees their real unit with a mask outline and a banner naming the current disguise, so they always know what the enemy sees.
-- Controls: LMB Rockets; LMB Cannon; R Deploy a turret; Shift Convert the fallen
+- Controls: Driver / pilot: LMB Rockets, R Deploy a turret, Shift Convert the fallen · Gunner: LMB Cannon
 
 #### Strong against
 
@@ -720,84 +720,91 @@ Cost High, power 8 of 10, complexity 7 of 10, 3 keys.
 
 Spice 5. Only the flavour was chosen.
 
-### Rivet-40
+### Boar
 
-*A small Soviet soldier: No crate: the supplier's buff or support zone reloads whoever it lands on, or makes them reload and recharge faster while they stand in*
+*A medium Soviet hovercraft: When the shell finally falls it explodes, hurting whoever came close to finish it.*
 
-Infantry · T1 · Soviets · role: Raider / flanker, Support (also) · spice 5 · seed `soviet-wild-1`
+Hovercraft · T2 · Soviets · role: Transport, Logistics (also), Buffer / aura (also) · spice 5 · seed `soviet-wild-7`
 
 #### Body
 
-- Moves: On foot (Strafe), Fast speed
-- Body: Humanoid, Small, 3 bodies; Organic; Open
-- Armour: Light (Ablative plates)
+- Moves: Hover (Drift), Medium speed
+- Body: Open mount, Medium; Crewed machine; Open
+- Armour: Heavy (Crew casualties)
 - Sensors: Medium sight
-- Crew: Squad
-- On death: Respawn
+- Crew: Driver + gunner; alone: Seat swap; 2 passenger seats (Passenger (cargo))
+- On death: Bail out
 
 #### Weapons
 
-- Main: Melee weapon, Electric damage, Attach, Melee range, Free aim mount; hits Infantry, Ground vehicles, Structures; traits: Silence / disarm; fired from the Driver / pilot seat
+- Main: Explosives, Fire damage, Place, Short range, Limited arc mount; hits Infantry, Ground vehicles, Structures; fired from the Gunner seat
+- Second: EMP, EMP damage, Projectile, Medium range, Free aim mount; hits Infantry, Ground vehicles, Low air, Structures; traits: Homing; fired from the Gunner seat
 
 #### Abilities
 
-- **Boar Boon** (signature): Active, Short cooldown, key Q. No crate: the supplier's buff or support zone reloads whoever it lands on, or makes them reload and recharge faster while they stand in it.
-- **Switch weapon mode**: Toggle / mode switch, Spammable cooldown, key R.
+- **Elk Ward** (signature): Triggered. When the shell finally falls it explodes, hurting whoever came close to finish it.
+- **Generate income in place**: Channel, Medium cooldown, key R. Deploy anywhere and earn a payment every few seconds while set up, ranking up with the payments; pack up to move. The basic version.
+- **Rally allies**: Active, Medium cooldown, key Shift. The call starts small and grows with every hit the caller lands while it runs, so the buffer has to fight at the front to make it count.
 
 #### Team play
 
-Resupply: Players on finite ammo, such as rocket troops, artillery and gadget-heavy kits, stay near the supplier or call it over with a ping.
+Protector: Riders make the shell dangerous: its firepower is whoever stayed inside, so a full carrier leaves a strong bunker and an empty one leaves almost nothing.
 
 #### How it plays
 
-- As the player: You buy a support unit that carries supplies as well as a weapon: press Q to drop a crate, and teammates inside its small ring get ammo, grenades and ability charges back over a few seconds. You carry two answers but use one at a time; good players switch before the fight changes, not after.
-- Facing it: You see the crate and its ring; destroy it and the enemy's refills stop. Something is clinging to you: hold F to throw it off.
-- For teammates: The crate turns a piece of cover into a small forward base that the team holds.
-- What others see: The crate shows a team-coloured ring and a gauge of what it has left; teammates inside see their ammo counters tick up, with a soft sound.
-- Controls: LMB Melee weapon; Q Boar Boon; R Switch weapon mode
+- As the player: As the driver, where you die becomes a choice: when the hull is nearly gone you steer for the spot where a bunker helps most, such as the objective or a choke point. You buy a cheap card with no real weapon. You buy a unit with a modest weapon whose real value is the ring around it: teammates inside fire faster, move faster or take less damage.
+- Facing it: You see the hull flung up and slammed down, its outline change and a new bar with a bunker icon appear: the kill is not finished. Get out of its fire and your machine comes back to life in a moment.
+- For teammates: The team gets a forward strongpoint where the carrier died: medics treat the hurt riders, an engineer repairs the shell, and others fight around it.
+- What others see: The crash is loud and unlike a normal death: the hull is thrown up, lands on its belly and throws a ring of dust, and it looks like a bunker from above.
+- Controls: Gunner: LMB Explosives, RMB EMP · Driver / pilot: R Generate income in place, Shift Rally allies
 
 #### Strong against
 
+- Raider / flanker (role): Hit-and-run units can kill the hull, but lack the staying power or the heavy weapon to crack the shell that follows.
+- Organic (nature): Its weapons deal damage that works well on this kind of unit.
 - Uncrewed machine (nature): Its weapons deal damage that works well on this kind of unit.
-- Light (armour): Its weapons deal damage that is strong against this armour.
-- Medium (armour): Its weapons deal damage that is strong against this armour.
+- Crewed machine (nature): Its weapons deal damage that works well on this kind of unit.
+- Recharging shield (armour model): Its weapons deal damage that breaks through this kind of protection.
 
 #### Countered by
 
-- Raider / flanker (role): Fast flankers reach the supplier and its crate behind the line and cut the refills off.
-- Artillery / siege (role): Artillery shells a parked supplier or a crate from beyond the fight.
-- Splash (weapon trait): Teammates bunch up around the crate, and area damage hits them all.
-- Fast or more (speed): Fast units change the fight faster than it can swap, and slip out of slow lock-on modes.
-- Silence / disarm (weapon trait): Blocking its abilities strands it in whichever mode it was in.
+- Artillery / siege (role): The shell can't move, so artillery and fortification-breaking weapons level it from beyond its riders' reach.
+- Splash (weapon trait): Splash catches the hurt riders bunched together when the shell falls or when they climb out.
+- Tank / ground vehicle (class): This kind of unit has an answer to its abilities.
+- Aircraft (class): This kind of unit has an answer to its abilities.
+- Scout / recon (role): It hides by setting up where nobody looks, so scouts who find and mark it hand their team an easy kill.
 
 #### Strengths
 
-- Support (role): Keeps teammates' heavy weapons, grenades and gadgets topped up at the front, so they need not go back to base. Paid for by: Resupply allies (ability).
-- Switch weapon mode (ability): Carries two answers and picks the one the fight needs. Paid for by: Switch weapon mode (ability).
+- Fortify on death (ability): Has to be destroyed twice: the first kill only parks it as a bunker with fresh health that its riders keep fighting from. Paid for by: Fortify on death (ability).
+- Logistics (role): Earns money for the whole team wherever it sets up, with no field or route to defend, and earns more with every rank it gains. Paid for by: Generate income in place (ability).
+- Buffer / aura (role): Teammates near it fire faster, move faster or take less damage, so a group with it beats the same group without it. Paid for by: Rally allies (ability).
 
 #### Weaknesses
 
-- Resupply allies (ability): Its own stock or cooldown limits it, and it is soft and often standing still beside the crate or parked to hand out supplies.
-- Switch weapon mode (ability): Only one mode works at a time, and each swap leaves a short gap with neither ready.
+- Fortify on death (ability): Its second life can't move, so it stands wherever the hull happened to die, takes fortification-breaking weapons badly and holds hurt riders in one spot.
+- Generate income in place (ability): Unarmed and rooted while it earns, and slow to pack up, so anything that finds it can kill it and stop the income.
+- Rally allies (ability): Its worth lies in others: alone it is a modest fighter, and it has to stand close to the group it lifts, where splash and snipers find it.
 
 #### Balance hints
 
-Cost Low, power 3 of 10, complexity 4 of 10, 2 keys.
+Cost Medium, power 6 of 10, complexity 8 of 10, 3 keys.
 
 #### Counterplay
 
-- Kill the supplier: it is soft and often parked, and the heavy weapons in front of it run dry soon after.
-- Cut the route: a supplier with a limited stock has to go back to a base to restock, so raid the road or the base behind it.
-- Read the active mode from its model, shots or icon, and fight it with what that mode is weak against.
+- Plan for two kills: the fresh bar is the second half of the job, so keep shooting after the crash.
+- Change weapons: the shell is armoured like a fortification, so bring what breaks buildings, and since it can't move, shell it from beyond its riders' reach.
+- Strike early: a new earner brings in little and grows with every rank, so a kill before it ranks up costs the enemy the most future income.
+- Kill or drive off the buffer first: the boost ends with it, and many buffers (officers, casters, thralls) are fragile. Where the aura rides on a heavy unit, cut it off from the group it lifts or wait out its call.
 
 #### Inspiration
 
-- Patterns: `resupply-allies`, `switch-weapon-mode`
-- Source units: `tempest-rising.veti.enlightened`, `tempest-rising.veti.vimana`
+- Patterns: `fortify-on-death`, `generate-income`, `rally-allies`
+- Source units: `generals.gla.battle-bus`
 
 ### Stratus A6
 
-*A tiny Allied drone: Earners can work from inside a friendly shelter that holds several of them and pays a little faster; they are safe while it stands, so the*
+*A tiny Allied drone: Earners can work from inside a friendly shelter that holds several of them and pays a little faster; they are safe while it stands*
 
 Drone / support · T3 · Allies · role: Logistics · spice 5 · seed `allied-wild-2`
 
@@ -817,8 +824,8 @@ Drone / support · T3 · Allies · role: Logistics · spice 5 · seed `allied-wi
 #### Abilities
 
 - **Nimbus Boon** (signature): Deploy, Short cooldown, key Q. Earners can work from inside a friendly shelter that holds several of them and pays a little faster; they are safe while it stands, so the shelter becomes the enemy's target.
-- **Bombard an area**: Active, Short cooldown, key R.
-- **Pull a target**: Channel, Medium cooldown, key Shift.
+- **Bombard an area**: Active, Short cooldown, key R. Plant a beacon at the spot; after a long countdown a devastating strike lands unless an enemy reaches the beacon and disarms it, so your team must guard it.
+- **Pull a target**: Channel, Medium cooldown, key Shift. A thrown hook drags the first enemy it hits back to you, with light damage and a short moment of helplessness.
 
 #### Team play
 
@@ -830,7 +837,7 @@ Needs an escort: The earner's team: an escort or a friendly turret near its spot
 - Facing it: Somewhere on the map an enemy earner is feeding their team's money. A faint signal pulse every so often gives its rough direction, so hunting it is worth a detour. Once hooked you can't fire during the short pull. A lift lasts longer, so hold F to struggle free sooner and call for help.
 - For teammates: The enemy team: scouts and raiders hunt the earner, and a scout who spots it should ping it so a hunter can finish it.
 - What others see: A laptop or antenna unfolds over the model, and a soft coin tick plays with each payment; teammates see small money pop-ups.
-- Controls: Q Nimbus Boon; R Bombard an area; Shift Pull a target
+- Controls: Q Nimbus Boon, R Bombard an area, Shift Pull a target
 
 #### Strong against
 
@@ -876,81 +883,88 @@ Cost Medium, power 5 of 10, complexity 6 of 10, 3 keys.
 - Patterns: `generate-income`, `bombard-area`, `pull-target`
 - Source units: `generals.china.hacker`
 
-### Peony Grace
+### Maple Gale
 
-*A small Empire aircraft: An always-on ring around the unit gives a small boost to whoever stands in it, with no key to press.*
+*A medium Empire aircraft: The landing wrecks or kills whatever stands on the marker, so a well-aimed drop is also an attack; the marker shows first*
 
-Aircraft · T1 · Empire · role: Buffer / aura, Frontline assault (also), Scout / recon (also) · spice 5 · seed `empire-wild-4`
+Aircraft · T3 · Empire · role: Raider / flanker, Area denial (also) · spice 5 · seed `empire-wild-40`
 
 #### Body
 
-- Moves: Jet (Forward only), Fast speed
-- Body: Disc, Small; Crewed machine; Open
-- Armour: Medium (Self-repair)
+- Moves: Hovering flight (Strafe), Very fast speed
+- Body: Disc, Medium; Uncrewed machine; Limited
+- Armour: Light (Evasive)
 - Sensors: Medium sight
-- Crew: Solo
-- On death: Bail out
+- Crew: Remote operator
+- On death: Respawn
 
 #### Weapons
 
-- Main: Cannon, Explosive damage, Projectile, Medium range, Auto-target mount; hits Infantry, Ground vehicles, Low air, Structures; traits: Heals on hit; fired from the Driver / pilot seat
+- Main: Melee weapon, Melee damage, Attach, Melee range, Free aim mount; hits Infantry, Ground vehicles, Structures; traits: Spin-up; fired from the Driver / pilot seat
 
 #### Abilities
 
-- **Bamboo Boon** (signature): Passive. An always-on ring around the unit gives a small boost to whoever stands in it, with no key to press.
-- **Sacrifice for allies**: Active, Medium cooldown, key R.
-- **Launch drones**: Active, Medium cooldown, key Shift.
+- **Valour Rush** (signature): Active, Short cooldown, key Q. The landing wrecks or kills whatever stands on the marker, so a well-aimed drop is also an attack; the marker shows first, so only what can't or won't move is caught.
+- **Leave a hazard zone**: Active, Long cooldown, key R. Set down a few visible canisters ahead of time; each vents its gas when an enemy comes close or shoots it. Unlike a mine it is in plain sight and makes a zone, not a single blast.
+- **Execute one kind of target**: Active, Long cooldown, key Shift. The kill hatches a pair of short-lived minions from the body that fight for the attacker until they expire.
+- **Block abilities**: Passive. Your weapon's hits block the target's abilities for a moment.
 
 #### Team play
 
-Protector: Allies gather on the buffer before a push and ask for the boost with a ping; the buffer answers when the call is ready.
+Carry: Drops work best onto a spot a teammate already holds or is pushing, so the arrival joins a fight instead of starting one alone.
 
 #### How it plays
 
-- As the player: You buy a unit with a modest weapon whose real value is the ring around it: teammates inside fire faster, move faster or take less damage. You play a leader with a handful of cheap AI followers (thralls, drones, conscripts). Press Q to release your drones: two to four small fliers (more at the top tier) that spread around you, stay inside a short leash, and attack whatever you hit last, or the nearest enemy in sight if you hit nothing.
-- Facing it: You see the ring on the ground and a marker on every buffed enemy, so you know who is boosted and from where.
-- For teammates: Two buffers of different kinds, such as speed and armour, add up to a strong push; two of the same kind should not.
-- What others see: A team-coloured ring on the ground around the buffer, brighter while a call is active and visible to both teams.
-- Controls: LMB Cannon; R Sacrifice for allies; Shift Launch drones
+- As the player: You choose where you enter the fight: pick a spot your team can see and arrive there instead of walking from base, past the front and any defences on the way. Read where the enemy has to walk (a choke, a capture point, the lane behind a retreating tank) and cover it; the zone works while you shoot, reposition or hold. You pick prey, not fights: the strike only locks onto the kind you can kill (soldiers, for a dog-like hunter), and every other unit under the cursor shows a crossed-out icon, so you never waste it on a tank. Apply the block by the variant's means: a weapon hit, a thrown pulse, a short held link, an area, or, with the mark-linked variant, every enemy your team has marked.
+- Facing it: A team-coloured marker and a rising sound show the landing spot a few seconds ahead: aim at it, throw splash on it, or get off it. Something is clinging to you: hold F to throw it off.
+- For teammates: Spotters ping safe landing zones and warn when enemies camp a marker.
+- What others see: A beam or smoke column over the landing spot, readable from the top-down camera, with a shrinking ring that shows both the time left and the crush area.
+- Controls: LMB Melee weapon, Q Valour Rush, R Leave a hazard zone, Shift Execute one kind of target
 
 #### Strong against
 
-- Structures (target): Its abilities give it the edge over this kind of unit.
-- Deploy a turret (ability): Its abilities give it the edge over this kind of unit.
-- Unarmoured (armour): Its weapons deal damage that is strong against this armour.
-- Light (armour): Its weapons deal damage that is strong against this armour.
+- Deploy / anchor (movement trait): A planted unit can't step off the marker in time, so the landing hits it with nothing to dodge (reasoned from the crush on landing).
+- Artillery / siege (role): Lands behind the front on top of, or beside, long-range units that can't defend themselves up close.
+- Infantry (class): Soldiers cross a zone slowly and wear down fast inside it.
+- Slow or less (speed): Slow units cannot get out of a zone before it has done its work.
+- Mobility (ability type): Its abilities give it the edge over this kind of unit.
 
 #### Countered by
 
-- Marksman / overwatch (role): Snipers pick the buffer out of the group, and the boost ends with it.
-- Raider / flanker (role): Flankers get behind the front line to the buffer standing just inside it.
-- Splash (weapon trait): The ring pulls teammates into one clump that area damage hits all at once.
-- Anti-infantry (role): Anything built to clear light targets thins the followers and with them the buffs.
-- Anti-air (role): This kind of unit has an answer to its abilities.
+- Splash (weapon trait): Splash on the marked spot catches the arrival while it can't yet move or fire.
+- Anti-air (role): Anti-air shoots down falling pods, transport planes and hovering carriers before they unload.
+- Aircraft (class): Ground zones do not reach fliers, which can strike the caster from above.
+- Long or more (range): Long-range weapons hit the caster from well outside its zone.
+- Heavy or more (armour): Heavy armour shrugs off most zone damage long enough to cross it or to reach the caster.
 
 #### Strengths
 
-- Buffer / aura (role): Teammates near it fire faster, move faster or take less damage, so a group with it beats the same group without it. Paid for by: Rally allies (ability).
-- Buffer / aura (role): One spent life gives the whole group around it a strong boost at the moment it matters. Paid for by: Sacrifice for allies (ability).
-- Launch drones (ability): Its drones strike around corners and beyond its owner's own reach and soak a few shots, so one player pressures two places at once. Paid for by: Launch drones (ability).
+- Drop in from above (ability): Enters the fight at a spot of its choosing, far from base, skipping the walk and the front line in between. Paid for by: Drop in from above (ability).
+- Area denial (role): Denies ground: enemies must leave the zone, go round it or pay to cross. Paid for by: Leave a hazard zone (ability).
+- Infantry (can hit): Its strike kills a soldier outright, whatever his health or armour. Paid for by: Execute one kind of target (ability).
+- Execute one kind of target (ability): Each kill leaves short-lived minions that keep fighting for it. Paid for by: Execute one kind of target (ability).
+- Block abilities (ability): Shuts off enemy escapes, shields and heals for a few seconds so the team can finish the target. Paid for by: Block abilities (ability).
 
 #### Weaknesses
 
-- Rally allies (ability): Its worth lies in others: alone it is a modest fighter, and it has to stand close to the group it lifts, where splash and snipers find it.
-- Sacrifice for allies (ability): Every use costs a body: its followers are its ammunition, and with none left it has nothing to give.
-- Launch drones (ability): The drones are fragile and leashed, most fall when their owner dies, and once a wave is spent the owner waits out a long cooldown.
+- Drop in from above (ability): Its landing spot is marked for everyone before it arrives, and it lands alone and briefly helpless, so a waiting enemy can kill it on arrival.
+- Leave a hazard zone (ability): The zone is fixed to the ground and shows its edge, so alert enemies simply walk round it; its value depends on placement.
+- Execute one kind of target (ability): The strike works only on one kind of target and only up close; against anything else it is useless.
+- Block abilities (ability): Leaves enemy weapons alone, so a target with a strong gun still fights back, and units with few abilities lose little.
 
 #### Balance hints
 
-Cost Medium, power 6 of 10, complexity 5 of 10, 2 keys.
+Cost High, power 7 of 10, complexity 6 of 10, 3 keys.
 
 #### Counterplay
 
-- Kill or drive off the buffer first: the boost ends with it, and many buffers (officers, casters, thralls) are fragile. Where the aura rides on a heavy unit, cut it off from the group it lifts or wait out its call.
-- Wait out a timed call: back off for its few seconds and come back while it is on cooldown.
-- Kill the minions before they are spent: they are cheap and frail, and each one killed is a buff that never happens.
+- Watch for the tell: a carrier hovering overhead, smoke or a marked pad shows where the arrival will be, so pre-aim it, put splash on it or wait beside it.
+- Shoot the delivery first: a hovering carrier, a slow transport plane or a falling pod can be brought down before anyone gets out, and whoever is still aboard is lost.
+- Step out or go round: the zone is fixed to the ground and shows its edge, so leaving it ends the harm.
+- Shoot it down on the approach: the hunter is usually fragile and must close in, so fast-firing small arms in a group stop it short, and a group of riflemen standing still is the worst place to send dogs.
+- Keep fighting with your gun: weapons still work, so a unit that leans on its weapon loses little; save your abilities until the block fades.
 
 #### Inspiration
 
-- Patterns: `rally-allies`, `sacrifice-for-allies`, `launch-drones`
-- Source units: `generals.china.overlord`, `tempest-rising.dynasty.line-officer`, `tempest-rising.veti.vimana`
+- Patterns: `drop-in-from-above`, `leave-hazard-zone`, `execute-target`, `block-abilities`
+- Source units: `generals.usa-air-force.combat-chinook`, `iron-harvest.usonia.william-mason`

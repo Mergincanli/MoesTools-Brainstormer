@@ -52,13 +52,17 @@ function exampleNames(p: Pattern): string[] {
       for (const field of ['unit', 'game', 'franchise']) {
         const v = e[field]
         if (typeof v !== 'string') continue
+        // The part before a colon, each bracketed part, and each part between commas or semicolons inside brackets are
+        // names of their own (section 18), as is the whole name.
         const text = v.replace(/^extra:/, '')
-        const inner = [...text.matchAll(/\(([^)]*)\)/g)].map(m => m[1] ?? '')
-        const outer = text.replace(/\([^)]*\)/g, ' ').trim()
-        for (const name of [outer, ...inner]) {
+        const inner = [...text.matchAll(/\(([^)]*)\)/g)].flatMap(m => [m[1] ?? '', ...(m[1] ?? '').split(/[,;]/)])
+        const outer = text.replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim()
+        const beforeColon = outer.includes(':') ? [outer.slice(0, outer.indexOf(':'))] : []
+        for (const name of [outer, ...beforeColon, ...inner]) {
           if (!name.trim()) continue
-          if (field === 'unit') out.push(name.trim())
-          else out.push(...shortForms(name))
+          // A game an example comes from counts by its title and its short forms, as a researched game does.
+          if (field === 'unit' || field === 'franchise') out.push(name.trim())
+          else if (name === outer) out.push(...shortForms(outer))
         }
       }
     }
@@ -67,15 +71,17 @@ function exampleNames(p: Pattern): string[] {
 }
 
 /** Every text line of a pattern (the words it writes in lower case show that a word is plain English). */
+/** The fields of a pattern that are examples or sources, not its own text (section 18: "our own texts"). */
+const NOT_TEXT = new Set(['other_examples', 'shooter_analogues', 'source_units', 'source_terms', 'sources', 'seen_in', '$schema', 'id', 'related', 'review'])
+
 function patternLines(p: Pattern): string[] {
   const out: string[] = []
   const walk = (x: unknown): void => {
     if (typeof x === 'string') out.push(x)
     else if (Array.isArray(x)) x.forEach(walk)
-    else if (x && typeof x === 'object') for (const v of Object.values(x)) walk(v)
+    else if (x && typeof x === 'object') for (const [k, v] of Object.entries(x)) if (!NOT_TEXT.has(k)) walk(v)
   }
-  const rec = p as unknown as Record<string, unknown>
-  walk([rec.summary, rec.counterplay, rec.player_translation, rec.variants, p.generator])
+  walk(p)
   return out
 }
 
@@ -122,7 +128,17 @@ export function nameIndex(ix: Index): NameIndex {
   const nameWords = new Set([...forNames].flatMap(n => wordsOf(n).map(w => w.toLowerCase())))
   const lower = new Set<string>()
   const texts = ix.data.texts as unknown as Record<string, unknown>
-  const lines = [...ix.patterns.flatMap(patternLines), ...Object.values((texts.neutral as Record<string, string>) ?? {}), ...Object.values((texts.derived_reasons as Record<string, string>) ?? {})]
+  // Our own texts: the patterns' text lines (not their examples or sources), the word lists' labels and descriptions,
+  // and the generator's texts (section 18).
+  const generatorTexts: string[] = []
+  const walk = (x: unknown): void => {
+    if (typeof x === 'string') generatorTexts.push(x)
+    else if (Array.isArray(x)) x.forEach(walk)
+    else if (x && typeof x === 'object') Object.values(x).forEach(walk)
+  }
+  walk(texts)
+  const vocabTexts = Object.values(ix.data.vocab).flatMap(l => l.terms.flatMap(t => [t.label, (t as unknown as { description?: string }).description].filter((x): x is string => typeof x === 'string')))
+  const lines = [...ix.patterns.flatMap(patternLines), ...vocabTexts, ...generatorTexts]
   for (const line of lines) for (const w of wordsOf(line)) if (w === w.toLowerCase()) lower.add(w)
   const out: NameIndex = { phrases, words, whole, nameWords, lower }
   ix.derived.set('name-index', out)
@@ -146,12 +162,15 @@ export function realNameIn(ix: Index, text: string): string | undefined {
       at = text.indexOf(p, at + 1)
     }
   }
-  for (const m of text.matchAll(/[\p{L}\p{N}']+/gu)) {
-    const w = m[0]
+  for (const m of text.matchAll(/[\p{L}\p{N}'’]+/gu)) {
+    // A real name followed by a possessive ending ('s, or ' after an s) is still that name (section 18).
+    const w = m[0].replace(/['’]s$/u, '').replace(/(?<=s)['’]$/u, '').replace(/^['’]+|['’]+$/gu, '')
     if (w.toLowerCase() === WIKI) return w
     if (!N.words.has(w)) continue
-    const before = text.slice(0, m.index).replace(/[\s"'(“‘[]+$/u, '')
-    const start = before === '' || /[.!?:;]$/.test(before)
+    // Only a full stop, a question mark, an exclamation mark, a quotation mark or a line start begins a sentence; after
+    // a colon or a semicolon the sentence goes on (section 18).
+    const before = text.slice(0, m.index).replace(/[ \t]+$/u, '')
+    const start = before === '' || /[.!?"“”‘\n]$/.test(before)
     if (!start) return w
     if (!N.lower.has(w.toLowerCase()) || /\p{Lu}/u.test(w.slice(1))) return w
   }

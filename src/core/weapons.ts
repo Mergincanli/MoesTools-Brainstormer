@@ -45,19 +45,19 @@ interface Way {
 }
 
 /** The ways a weapon of this family can be on the draft (kept by what they depend on: reach.ts weaponContextOf). */
-function waysOf(ix: Index, d: Draft, parts: DraftParts, family: string, forced: boolean): Way[] {
-  const key = `ways|${family}|${weaponContextOf(ix, parts, d.spice, forced ? 'forced' : 'gate')}`
+function waysOf(ix: Index, d: Draft, parts: DraftParts, family: string, F: Forced): Way[] {
+  const key = `ways|${family}|${F.damage}${F.delivery}${F.mount}|${weaponContextOf(ix, parts, d.spice, 'gate')}`
   const known = ix.cache.get(key) as Way[] | undefined
   if (known) return known
   const out: Way[] = []
   const w0: WeaponDraft = { family }
   const fam = term(ix, 'weapon-families', family)
-  const dels = family === ADAPTIVE ? [null] : allowedFits(ix, parts, d.spice, 'weapon-delivery', w0, deliveriesThatFit(ix, parts, w0), forced).map(c => c.id)
-  const dmgs = family === ADAPTIVE ? [null] : allowedFits(ix, parts, d.spice, 'damage-types', w0, damagesOf(ix, family), forced).map(c => c.id)
+  const dels = family === ADAPTIVE ? [null] : allowedFits(ix, parts, d.spice, 'weapon-delivery', w0, deliveriesThatFit(ix, parts, w0), F.delivery).map(c => c.id)
+  const dmgs = family === ADAPTIVE ? [null] : allowedFits(ix, parts, d.spice, 'damage-types', w0, damagesOf(ix, family), F.damage).map(c => c.id)
   const allRanges = termsOf(ix, 'range-bands').filter(t => !t.source_only).map(t => t.id)
   for (const delivery of dels) {
     const w1: WeaponDraft = { ...w0, delivery }
-    const mounts = mountsThatFit(ix, parts, d.spice, w1).filter(c => forced || onOwnRolls(c)).map(c => c.id)
+    const mounts = mountsThatFit(ix, parts, d.spice, w1).filter(c => F.mount || onOwnRolls(c)).map(c => c.id)
     if (!mounts.length) continue
     const traits = termsOf(ix, 'weapon-traits').filter(t => !t.source_only && !neverOnCardWeapon(ix, `weapon-trait:${t.id}`) && termProblem(ix, parts, 'weapon-traits', t.id, w1) === undefined).map(t => t.id)
     const targets = targetsOf(ix, { ...w1, traits: traits.includes(ANTI_AIR) ? [ANTI_AIR] : [] })
@@ -73,21 +73,21 @@ function waysOf(ix: Index, d: Draft, parts: DraftParts, family: string, forced: 
  * range, targets and traits that fit the draft? The quick joint check that keeps two needs from being left to one
  * weapon that cannot meet both.
  */
-function familyCan(ix: Index, d: Draft, parts: DraftParts, family: string, needs: readonly Need[], forced: boolean): boolean {
+function familyCan(ix: Index, d: Draft, parts: DraftParts, family: string, needs: readonly Need[], F: Forced): boolean {
   if (!needs.length) return true
-  return waysOf(ix, d, parts, family, forced).some(way => needs.every(n => n.links.some(l => wayMeets(ix, way, family, n, l))))
+  return waysOf(ix, d, parts, family, F).some(way => needs.every(n => n.links.some(l => wayMeets(ix, way, family, n, l))))
 }
 
 /** Do the ways of this weapon (its family, with its delivery and damage where chosen) leave the needs within reach of
  *  it and of the weapons after it whose family is open (none: it meets them all; one: that one meets the rest)? */
 function jointOk(ix: Index, d: Draft, w: WeaponDraft, needs: readonly Need[], after: number): boolean {
   if (!needs.length || after > 1 || w.family === undefined) return true
-  const forced = mayForce(ix, d)
-  const ways = waysOf(ix, d, d.parts, w.family, forced).filter(x => (w.delivery === undefined || x.delivery === w.delivery) && (w.damage === undefined || x.damage === w.damage))
+  const F = forcedOf(ix, d)
+  const ways = waysOf(ix, d, d.parts, w.family, F).filter(x => (w.delivery === undefined || x.delivery === w.delivery) && (w.damage === undefined || x.damage === w.damage))
   const meets = (way: Way, n: Need): boolean => n.links.some(l => wayMeets(ix, way, w.family as string, n, l))
   if (after === 0) return ways.some(way => needs.every(n => meets(way, n)))
   const rest = needs.filter(n => !ways.some(way => meets(way, n)))
-  return !rest.length || offerTerms(ix, d.parts, d.spice, 'weapon-families', { weapon: {} }).candidates.some(c => c.id !== ADAPTIVE && (forced || onOwnRolls(c)) && familyCan(ix, d, d.parts, c.id, rest, forced))
+  return !rest.length || offerTerms(ix, d.parts, d.spice, 'weapon-families', { weapon: {} }).candidates.some(c => c.id !== ADAPTIVE && (F.family || onOwnRolls(c)) && familyCan(ix, d, d.parts, c.id, rest, F))
 }
 
 /** Does one way of a weapon of this family meet a link of a need? */
@@ -118,8 +118,8 @@ export function weaponsCanMeet(ix: Index, d: Draft, parts: DraftParts, weapons: 
   const needs = weaponOnlyNeeds(ix, d, parts)
   if (!needs.length || weapons > 1) return true
   if (weapons === 0) return false
-  const forced = mayForce(ix, d)
-  return offerTerms(ix, parts, d.spice, 'weapon-families', { weapon: {} }).candidates.some(c => c.id !== ADAPTIVE && (forced || onOwnRolls(c)) && familyCan(ix, d, parts, c.id, needs, forced))
+  const F = forcedOf(ix, d)
+  return offerTerms(ix, parts, d.spice, 'weapon-families', { weapon: {} }).candidates.some(c => c.id !== ADAPTIVE && (F.family || onOwnRolls(c)) && familyCan(ix, d, parts, c.id, needs, F))
 }
 
 /** Where a weapon is built: its dice path, how to read and place it on the draft, and its seat. */
@@ -193,11 +193,17 @@ function allowedFits(ix: Index, parts: DraftParts, spice: number, list: string, 
 
 /** Can a weapon of this family be completed on the draft: a damage, a delivery and a mount (at the gate, or above it
  *  when `forced`) that fit together? */
-function completable(ix: Index, parts: DraftParts, spice: number, family: string, forced: boolean, seat?: string): boolean {
+function completable(ix: Index, parts: DraftParts, spice: number, family: string, F: Forced, seat?: string): boolean {
   const w: WeaponDraft = seat !== undefined ? { family, seat } : { family }
-  if (family === ADAPTIVE) return hasMount(ix, parts, spice, w, forced)
-  if (!allowedFits(ix, parts, spice, 'damage-types', w, damagesOf(ix, family), forced).length) return false
-  return allowedFits(ix, parts, spice, 'weapon-delivery', w, deliveriesThatFit(ix, parts, w), forced).some(c => hasMount(ix, parts, spice, { ...w, delivery: c.id }, forced))
+  if (family === ADAPTIVE) return hasMount(ix, parts, spice, w, F.mount)
+  if (!allowedFits(ix, parts, spice, 'damage-types', w, damagesOf(ix, family), F.damage).length) return false
+  return allowedFits(ix, parts, spice, 'weapon-delivery', w, deliveriesThatFit(ix, parts, w), F.delivery).some(c => hasMount(ix, parts, spice, { ...w, delivery: c.id }, F.mount))
+}
+
+/** Can a weapon on this seat be made within the spice gate (a family with a damage, a delivery and a mount at the
+ *  gate)? A crew whose gunner could get none is not offered on the generator's own roll. */
+export function seatCanArm(ix: Index, parts: DraftParts, spice: number, seat: string): boolean {
+  return offerTerms(ix, parts, spice, 'weapon-families', { weapon: {} }).candidates.some(c => c.id !== ADAPTIVE && onOwnRolls(c) && completable(ix, parts, spice, c.id, NONE_FORCED, seat))
 }
 
 /** G11: the range of a weapon: the family's default, or the range nearest to it that meets an open need a pattern's
@@ -217,10 +223,28 @@ function rangeFor(ix: Index, d: Draft, s: WeaponSpec, w: WeaponDraft): string | 
   return meets[0] ?? own
 }
 
-/** G5: may this weapon go above the spice gate? Only for an input's or a lock's need on a weapon part still open. */
-function mayForce(ix: Index, d: Draft): boolean {
-  return ix.data.rules.defaults.spice_fallback === 'least-rare' && d.needs.some(n => n.forced && n.links.some(l => ownersOf(l).includes('weapons')) && needAnswer(ix, d.parts, n) !== 'yes')
+/** G5: may a weapon's part go above the spice gate? Only for an input's or a lock's need still open on a link of one
+ *  of these kinds; never on the generator's own roll (section 18: the least rare fallback is for what an input or a
+ *  lock needs). */
+function forcedFor(ix: Index, d: Draft, kinds: readonly string[]): boolean {
+  return ix.data.rules.defaults.spice_fallback === 'least-rare' && d.needs.some(n => n.forced && n.links.some(l => kinds.includes(parseLink(l).kind)) && needAnswer(ix, d.parts, n) !== 'yes')
 }
+
+/** The weapon link kinds (a need on any of them may take the family above the gate). */
+const WEAPON_LINKS = ['weapon', 'damage', 'delivery', 'range', 'mount', 'weapon-trait', 'hits']
+
+/** Which of a weapon's parts may go above the gate (an input's or a lock's need on that part). */
+interface Forced {
+  family: boolean
+  damage: boolean
+  delivery: boolean
+  mount: boolean
+}
+function forcedOf(ix: Index, d: Draft): Forced {
+  return { family: forcedFor(ix, d, WEAPON_LINKS), damage: forcedFor(ix, d, ['damage']), delivery: forcedFor(ix, d, ['delivery']), mount: forcedFor(ix, d, ['mount']) }
+}
+const NONE_FORCED: Forced = { family: false, damage: false, delivery: false, mount: false }
+const ALL_FORCED: Forced = { family: true, damage: true, delivery: true, mount: true }
 
 const times = (c: Candidate, f: number): Candidate => (f === 1 ? c : { id: c.id, odds: { ...c.odds, weight: c.odds.weight * f, fallbackWeight: c.odds.fallbackWeight * f } })
 
@@ -230,7 +254,7 @@ const times = (c: Candidate, f: number): Candidate => (f === 1 ? c : { id: c.id,
  * waiting lock rules out is drawn again.
  */
 function drawPart(
-  ix: Index, d: Draft, s: WeaponSpec, field: string, list: string, candidates: readonly Candidate[], toWeapon: (id: string) => WeaponDraft, factor: (id: string) => number,
+  ix: Index, d: Draft, s: WeaponSpec, field: string, list: string, candidates: readonly Candidate[], toWeapon: (id: string) => WeaponDraft, factor: (id: string) => number, forced: boolean,
 ): { got: Kept | undefined; fits: Candidate[] } {
   // The needs only weapons meet are judged together, by the ways this weapon and the ones after it can be (jointOk);
   // the others one by one, by the look-ahead of needs.ts.
@@ -241,7 +265,7 @@ function drawPart(
     .filter(c => jointOk(ix, d, toWeapon(c.id), joint, s.after ?? 99) && allNeedsProblem(ix, s.set(d.parts, toWeapon(c.id)), d.spice, recheck, memoAfter(ix, base, list)) === undefined)
     .map(c => times(c, factor(c.id)))
   let pool: Pool = poolOf(ix, fits, 'gate', d.spice)
-  if (!pool.items.length && mayForce(ix, d)) pool = poolOf(ix, fits, 'forced', d.spice)
+  if (!pool.items.length && forced) pool = poolOf(ix, fits, 'forced', d.spice)
   const accept = (id: string): string | undefined => lockProblem(ix, d, s.set(d.parts, toWeapon(id)))
   return { got: drawKeeping(ix, d, diceFor(d.seed, `${s.path}.${field}`, d.attempt), pool, accept, leastRareOf(ix, d, fits)), fits }
 }
@@ -253,25 +277,25 @@ function entry(s: WeaponSpec, field: string, value: unknown, got: Kept | undefin
 /** Builds one weapon on the draft; why it could not be built, or undefined. */
 export function rollWeapon(ix: Index, d: Draft, s: WeaponSpec): string | undefined {
   let w: WeaponDraft = { ...s.get(d.parts), seat: s.seat }
+  const F = forcedOf(ix, d)
   const place = (next: WeaponDraft): void => {
     w = next
     d.parts = s.set(d.parts, w)
   }
   // Family: set by a pattern (A10), else drawn; never adaptive on the card's own rolls (only a pattern brings one).
   if (s.family !== undefined) {
-    if (termProblem(ix, d.parts, 'weapon-families', s.family, {}) !== undefined || !completable(ix, d.parts, d.spice, s.family, true, s.seat)) return `${s.familyBy} needs a ${s.family} weapon, and it does not fit`
+    if (termProblem(ix, d.parts, 'weapon-families', s.family, {}) !== undefined || !completable(ix, d.parts, d.spice, s.family, ALL_FORCED, s.seat)) return `${s.familyBy} needs a ${s.family} weapon, and it does not fit`
     place({ ...w, family: s.family })
     d.trace.push({ field: `${s.path}.family`, value: s.family, how: 'implied', by: s.familyBy, rule: 'A10, G3', candidates: 0 })
   } else {
-    const forced = mayForce(ix, d)
-    const families = offerTerms(ix, d.parts, d.spice, 'weapon-families', { weapon: {} }).candidates.filter(c => c.id !== ADAPTIVE && completable(ix, d.parts, d.spice, c.id, forced, s.seat))
+    const families = offerTerms(ix, d.parts, d.spice, 'weapon-families', { weapon: {} }).candidates.filter(c => c.id !== ADAPTIVE && completable(ix, d.parts, d.spice, c.id, F, s.seat))
     // The needs only weapons meet stay within reach of this weapon and the one after it, together (drawPart, jointOk).
     const offer = families
     const toWeapon = (id: string): WeaponDraft => {
       const v = { ...w, family: id }
       return { ...v, range: rangeFor(ix, d, s, v) }
     }
-    const { got } = drawPart(ix, d, s, 'family', 'weapon-families', offer, toWeapon, () => 1)
+    const { got } = drawPart(ix, d, s, 'family', 'weapon-families', offer, toWeapon, () => 1, F.family)
     if (!got) return `no weapon family fits the card and its needs`
     place({ ...w, family: got.id })
     d.trace.push(entry(s, 'family', got.id, got, 'G1, S1, S3'))
@@ -284,13 +308,13 @@ export function rollWeapon(ix: Index, d: Draft, s: WeaponSpec): string | undefin
   } else {
     // Damage and delivery: the family's allowed values, the default three times as likely (G12).
     const dmg = offerTerms(ix, d.parts, d.spice, 'damage-types', { weapon: w, only: damagesOf(ix, family) }).candidates
-    const damage = drawPart(ix, d, s, 'damage', 'damage-types', dmg, id => ({ ...w, damage: id }), id => (id === fam?.default_damage ? weight : 1)).got
+    const damage = drawPart(ix, d, s, 'damage', 'damage-types', dmg, id => ({ ...w, damage: id }), id => (id === fam?.default_damage ? weight : 1), F.damage).got
     if (!damage) return `no damage type of ${family} fits`
     place({ ...w, damage: damage.id })
     d.trace.push(entry(s, 'damage', damage.id, damage, 'G12 (default x3)'))
     const dels = offerTerms(ix, d.parts, d.spice, 'weapon-delivery', { weapon: w, only: deliveriesThatFit(ix, d.parts, w) }).candidates
-      .filter(c => hasMount(ix, d.parts, d.spice, { ...w, delivery: c.id }, mayForce(ix, d)))
-    const delivery = drawPart(ix, d, s, 'delivery', 'weapon-delivery', dels, id => ({ ...w, delivery: id }), id => (id === fam?.default_delivery ? weight : 1)).got
+      .filter(c => hasMount(ix, d.parts, d.spice, { ...w, delivery: c.id }, F.mount))
+    const delivery = drawPart(ix, d, s, 'delivery', 'weapon-delivery', dels, id => ({ ...w, delivery: id }), id => (id === fam?.default_delivery ? weight : 1), F.delivery).got
     if (!delivery) return `no delivery of ${family} fits`
     place({ ...w, delivery: delivery.id })
     d.trace.push(entry(s, 'delivery', delivery.id, delivery, 'G12 (default x3)'))
@@ -300,7 +324,7 @@ export function rollWeapon(ix: Index, d: Draft, s: WeaponSpec): string | undefin
     d.trace.push({ field: `${s.path}.range`, value: range, how: range === own ? 'default' : 'implied', rule: 'G11', candidates: 0 })
   }
   // Mount: by the aim models' rarity, the default three times as likely, only those the body allows (G12, G1).
-  const mount = drawPart(ix, d, s, 'mount', 'aim-models', mountsThatFit(ix, d.parts, d.spice, w), id => ({ ...w, mount: id }), id => (id === fam?.default_aim ? weight : 1)).got
+  const mount = drawPart(ix, d, s, 'mount', 'aim-models', mountsThatFit(ix, d.parts, d.spice, w), id => ({ ...w, mount: id }), id => (id === fam?.default_aim ? weight : 1), F.mount).got
   if (!mount) return `no mount fits a ${family} on this body`
   place({ ...w, mount: mount.id })
   d.trace.push(entry(s, 'mount', mount.id, mount, 'G12 (default x3, aim rarity), G1'))

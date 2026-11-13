@@ -16,7 +16,8 @@ import { roll } from '../src/core/roll.ts'
 export const PAGE = 'docs/cards.md'
 
 /** The cards of the page: the three flavours at T1, T2 and T3 (class and role left to the dice), then one card per
- *  flavour at spice 5. The seeds were picked so that the nine show six classes and no name word twice. */
+ *  flavour at spice 5. The seeds were picked so that the nine show six classes, and the twelve no name word, role or
+ *  signature noun twice where the dice allowed it. */
 export const SAMPLES = [
   { seed: 'soviet-t1-1', spice: 2, inputs: { flavour: 'soviet', tier: 't1' } },
   { seed: 'soviet-t2-2', spice: 3, inputs: { flavour: 'soviet', tier: 't2' } },
@@ -27,9 +28,9 @@ export const SAMPLES = [
   { seed: 'empire-t1-1', spice: 2, inputs: { flavour: 'empire', tier: 't1' } },
   { seed: 'empire-t2-8', spice: 3, inputs: { flavour: 'empire', tier: 't2' } },
   { seed: 'empire-t3-3', spice: 3, inputs: { flavour: 'empire', tier: 't3' } },
-  { seed: 'soviet-wild-1', spice: 5, inputs: { flavour: 'soviet' } },
+  { seed: 'soviet-wild-7', spice: 5, inputs: { flavour: 'soviet' } },
   { seed: 'allied-wild-2', spice: 5, inputs: { flavour: 'allied' } },
-  { seed: 'empire-wild-4', spice: 5, inputs: { flavour: 'empire' } },
+  { seed: 'empire-wild-40', spice: 5, inputs: { flavour: 'empire' } },
 ]
 
 /** The page's text. */

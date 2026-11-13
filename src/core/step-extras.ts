@@ -4,7 +4,7 @@
 // seat budgets allow, never the same pattern twice and never a conflict (A6, A7, A11); a pattern an extra implies comes
 // with it (A8). Then the seats are given out (A5): a commander takes the last extra (or the signature), a gunner the
 // secondary weapon, the driver everything else. Last, a card with a transform pattern gets its second form (A9).
-import { drawAbility, itemForNeed, placeItem, placeNeededExtras, placed, variantDraftProblem, type PatternChoice } from './abilities.ts'
+import { abilityCap, drawAbility, itemForNeed, placeItem, placeNeededExtras, placed, variantDraftProblem, type PatternChoice } from './abilities.ts'
 import { blockOf, usablePattern, type Index } from './data.ts'
 import { diceFor } from './dice.ts'
 import { budgetOf, budgetProblem, seatPlan } from './keys.ts'
@@ -20,9 +20,9 @@ import { reachesFor } from './step-signature.ts'
 import type { StepResult } from './steps.ts'
 import type { AbilityDraft, Draft, DraftParts } from './types.ts'
 
-/** The most extras a card holds: the largest count of counts.abilities, less the signature (the card schema's three). */
-export function maxExtras(ix: Index): number {
-  return Math.max(...Object.values(ix.data.rules.counts.abilities).map(w => w.length - 1)) - 1
+/** The most extras a card of this tier holds: the tier's cap of abilities (A6) less the signature. */
+export function maxExtras(ix: Index, tier: string | undefined): number {
+  return abilityCap(ix, tier) - 1
 }
 
 /** Why locked extras do not fit (the hard rules apply: I1, G5). Each is checked on the reach of the card with the
@@ -31,7 +31,7 @@ function lockedExtrasProblem(ix: Index, d: Draft): string | undefined {
   const plain: DraftParts = { ...emptyParts(), class: d.parts.class, tier: d.parts.tier, flavour: d.parts.flavour, roles: { ...d.parts.roles } }
   const base = reachOf(ix, plain, d.spice, 'forced')
   const extras = d.parts.abilities ?? []
-  if (extras.length > maxExtras(ix)) return `${extras.length} extras; a card holds ${maxExtras(ix)}`
+  if (extras.length > maxExtras(ix, d.parts.tier)) return `${extras.length} extras; a ${d.parts.tier} card holds ${maxExtras(ix, d.parts.tier)} (A6)`
   const before: Array<{ pattern: string; variant: string | null | undefined }> = d.parts.signature?.pattern ? [{ pattern: d.parts.signature.pattern, variant: d.parts.signature.variant }] : []
   for (const x of extras) {
     const p = x.pattern !== undefined ? ix.patternById.get(x.pattern) : undefined
@@ -93,7 +93,7 @@ export function stepExtras(ix: Index, d: Draft): StepResult {
     const tier = d.parts.tier as string
     const weights = ix.data.rules.counts.abilities[tier] ?? [0, 1]
     const target = diceFor(d.seed, 'abilities', d.attempt).pick(weights).index
-    const room = Math.min(target, 1 + maxExtras(ix))
+    const room = Math.min(target, 1 + maxExtras(ix, tier))
     let stopped: string | undefined
     while (1 + (d.parts.pending ?? []).length < room) {
       rs = reachesFor(ix, d)

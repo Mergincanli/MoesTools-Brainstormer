@@ -78,21 +78,24 @@ export function stepSecondForm(ix: Index, d: Draft): StepResult {
     return ok
   }
   const by = `pattern:${via.pattern}`
+  // Above the gate only when a lock put the transform (or the form) on the card (G5); on the generator's own roll the
+  // form's parts stay within the gate.
+  const forced = d.locks.includes('signature') || d.locks.includes('abilities') || d.locks.includes('modes')
   const ctx = { class: d.parts.class, flavour: d.parts.flavour, spice: d.spice }
   const allowed = blockFor(ix, via.pattern, via.variant).classes
   const classes = termsOf(ix, 'classes').filter(t => !t.source_only && t.id !== d.parts.class && allowed.includes(t.id)).map(t => ({ id: t.id, odds: termOdds(ix, 'classes', t.id, ctx) }))
-  const cls = drawKeeping(ix, d, diceFor(d.seed, 'modes.0.class', d.attempt), pickPool(ix, d, classes, true), () => undefined)
+  const cls = drawKeeping(ix, d, diceFor(d.seed, 'modes.0.class', d.attempt), pickPool(ix, d, classes, forced), () => undefined)
   if (!cls) return fail(`${via.pattern} needs a second class, and none fits (A9)`)
   let m: ModeDraft = { via: via.pattern, class: cls.id, mobility: {} }
   d.trace.push({ field: 'modes.0.class', value: cls.id, how: 'needed', by, rule: 'A9, S1', ...keptTrace(cls) })
   const mob = offerTerms(ix, formParts(d.parts, m), d.spice, 'mobility').candidates
-  const base = drawKeeping(ix, d, diceFor(d.seed, 'modes.0.mobility.base', d.attempt), pickPool(ix, d, mob, true), () => undefined)
+  const base = drawKeeping(ix, d, diceFor(d.seed, 'modes.0.mobility.base', d.attempt), pickPool(ix, d, mob, forced), () => undefined)
   const handling = base ? term(ix, 'mobility', base.id)?.default_handling : undefined
   if (!base || !handling) return fail(`no mobility fits a second form of class ${cls.id} (A9)`)
   m = { ...m, mobility: { base: base.id, handling } }
   d.trace.push({ field: 'modes.0.mobility.base', value: base.id, how: 'needed', by, rule: 'A9, G1, S1', ...keptTrace(base) })
   const spd = offerTerms(ix, formParts(d.parts, m), d.spice, 'speed-bands').candidates
-  const speed = drawKeeping(ix, d, diceFor(d.seed, 'modes.0.mobility.speed', d.attempt), pickPool(ix, d, spd, true), () => undefined)
+  const speed = drawKeeping(ix, d, diceFor(d.seed, 'modes.0.mobility.speed', d.attempt), pickPool(ix, d, spd, forced), () => undefined)
   if (!speed) return fail(`no speed fits a second form on ${base.id} (A9)`)
   m = { ...m, mobility: { base: base.id, handling, speed: speed.id } }
   d.trace.push({ field: 'modes.0.mobility.speed', value: speed.id, how: 'needed', by, rule: 'A9, G1, S1', ...keptTrace(speed) })
@@ -149,7 +152,7 @@ export function stepOnDeath(ix: Index, d: Draft): StepResult {
     const firsts = offerTerms(ix, d.parts, d.spice, 'on-death', { only: rule.who_gets_out }).candidates
       .filter(c => fits(c.id, []))
       .map(c => (c.id === def ? { id: c.id, odds: { ...c.odds, weight: c.odds.weight * rule.default_weight, fallbackWeight: c.odds.fallbackWeight * rule.default_weight } } : c))
-    const first = drawKeeping(ix, d, dice, pickPool(ix, d, firsts, true), id => lockProblem(ix, d, { ...d.parts, on_death: [id] }), leastRareOf(ix, d, firsts))
+    const first = drawKeeping(ix, d, dice, pickPool(ix, d, firsts, false), id => lockProblem(ix, d, { ...d.parts, on_death: [id] }), leastRareOf(ix, d, firsts))
     if (!first) return fail('no on-death outcome fits the card (section 7)')
     const more = dice.pick(ix.data.rules.counts.on_death).index
     const list = [first.id]

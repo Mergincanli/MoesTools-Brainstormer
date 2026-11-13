@@ -154,18 +154,28 @@ export function needsAfter(ix: Index, needs: readonly Need[], list: string): Nee
   return needs.filter(n => n.links.some(l => linkLists(ix, l).some(x => affected.has(x))))
 }
 
-/** Section 7: the natures the draft can still have (the first entry whose when link it meets and whose nature the word
- *  lists allow; an entry whose link is still open may or may not be reached). */
-function naturesLeft(ix: Index, parts: DraftParts): string[] {
+/** Section 7 (as settled in section 18): the natures the draft can still have. The data's order decides: the first
+ *  entry whose when link holds; an entry is passed over only when the nature word list does not allow that nature for
+ *  the card's class. An entry whose link is still open may or may not be reached. No other part overrules it. */
+export function naturesLeft(ix: Index, parts: DraftParts): string[] {
   const out: string[] = []
   for (const e of ix.data.rules.defaults.nature) {
-    if (termProblem(ix, parts, 'nature', e.nature) !== undefined) continue
+    const classes = term(ix, 'nature', e.nature)?.classes
+    if (parts.class !== undefined && classes && !classes.includes(parts.class)) continue
     const a = e.when ? matchLink(ix, parts, e.when) : 'yes'
     if (a === 'no') continue
     if (!out.includes(e.nature)) out.push(e.nature)
     if (a === 'yes') break
   }
   return out
+}
+
+/** Why the parts leave no nature they can hold (a part that excludes the card's nature is not offered), or undefined. */
+export function natureProblem(ix: Index, parts: DraftParts): string | undefined {
+  if (parts.nature !== undefined) return undefined
+  const left = naturesLeft(ix, parts)
+  if (left.some(n => termProblem(ix, parts, 'nature', n) === undefined)) return undefined
+  return `the card's nature (${left.join(' or ')}) does not fit its parts (section 7)`
 }
 
 /** The values a single-valued part can still take on this draft (from the chosen parts alone). */

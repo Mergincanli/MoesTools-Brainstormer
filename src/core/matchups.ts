@@ -11,6 +11,7 @@ import { term, termsOf, usablePattern, type Index } from './data.ts'
 import { abilitiesOf } from './keys.ts'
 import { parseLink, targetOf } from './links.ts'
 import { neverOnCardWeapon } from './patterns.ts'
+import { ADAPTIVE } from './weapons.ts'
 import { maxSpice } from './odds.ts'
 import { canHoldRole, canMeet, reachOf, variantProblem } from './reach.ts'
 import type { DraftParts, Link, WeaponDraft } from './types.ts'
@@ -135,14 +136,23 @@ export function matchupsOf(ix: Index, p: DraftParts): Matchups | { flag?: string
   if (flier) cb.push({ ref: flier, why: reason.hits ?? '', list: 'countered_by' })
   const weapons = weaponsOn(p)
   if (!weapons.some(w => (w.can_target ?? []).some(t => Object.hasOwn(dl.flier_hits, t)))) cb.push({ ref: dl.no_air_weapon, why: reason.class ?? '', list: 'countered_by' })
+  // A damage link the card's nature is immune to is dropped wherever it comes from, an ability or a part (section 18).
+  const immune = (ref: string): boolean => {
+    const { kind, id } = parseLink(ref)
+    if (kind !== 'damage' || !dl.drop_immune) return false
+    return ((term(ix, 'damage-types', id) as unknown as { immune?: string[] } | undefined)?.immune ?? []).includes(`nature:${p.nature}`)
+  }
   // N2: links no card can satisfy are dropped; at least one must be left.
-  const countered = capped(cb.filter(l => satisfiable(ix, l.ref)), max)
+  const countered = capped(cb.filter(l => !immune(l.ref) && satisfiable(ix, l.ref)), max)
   if (!countered.length) return { flag: 'no-counter', problem: 'no countered-by link some card can satisfy (N2)' }
   // Counters: the abilities' links, then for the primary weapon and the secondary what its damage type is strong
   // against, in the word list's order.
   if (dl.counters_from_damage) {
-    for (const w of [p.armament.primary, p.armament.secondary]) {
-      const dt = typeof w?.damage === 'string' ? term(ix, 'damage-types', w.damage) : undefined
+    // The conditional weapons count at the place of the adaptive weapon they belong to, in their order (section 18).
+    const conditional = (p.armament.conditional ?? []).map(c => c.weapon)
+    const inTurn = [p.armament.primary, p.armament.secondary].flatMap(w => (w?.family === ADAPTIVE ? conditional : w ? [w] : []))
+    for (const w of inTurn) {
+      const dt = typeof w.damage === 'string' ? term(ix, 'damage-types', w.damage) : undefined
       for (const l of dt?.strong_vs ?? []) counters.push({ ref: l, why: (reason as Record<string, string>)[parseLink(l).kind] ?? '', list: 'counters' })
     }
   }

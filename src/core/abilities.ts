@@ -69,8 +69,15 @@ function budgetChoices(ix: Index, parts: DraftParts, item: Item): Option[] {
 }
 
 /** Section 5: can every item still be placed, each with one of its kinds, within the key, passive and seat budgets? */
+/** A6 (as settled in section 18): the most abilities a card of this tier holds, the signature included: the tier's
+ *  largest count in rules.json counts.abilities. A cap, also for the extras a role, a pattern or a lock needs. */
+export function abilityCap(ix: Index, tier: string | undefined): number {
+  return (ix.data.rules.counts.abilities[tier ?? ''] ?? [0, 1]).length - 1
+}
+
 export function fitAll(ix: Index, parts: DraftParts, items: readonly Item[], i = 0): boolean {
   if (budgetOf(ix, parts) !== undefined) return false
+  if (abilitiesOf(parts).length + (items.length - i) > abilityCap(ix, parts.tier)) return false
   const item = items[i]
   if (!item) return true
   for (const o of budgetChoices(ix, parts, item)) {
@@ -105,6 +112,16 @@ function extraOptions(ix: Index, rs: Reaches, forced: boolean, tier: string, pat
   }
   return out
 }
+
+/** G13 with G5: can some tool of the role come as an extra at the spice gate (a variant the gate reach offers as an
+ *  extra that serves the role)? */
+export function gateToolExtra(ix: Index, d: Draft, rs: Reaches): boolean {
+  const role = d.parts.roles.primary
+  return extraOptions(ix, rs, false, d.parts.tier ?? '', [...rs.gate.patterns.keys()]).some(o => servesRole(ix, role, o.block))
+}
+
+/** Is the card's role chosen (an input or a lock)? */
+export const roleChosen = (d: Draft): boolean => roleIsFixed(d)
 
 /** G13: the extras that serve the role (role_fit patterns, or a pattern that brings passenger seats). */
 function toolOptions(ix: Index, d: Draft, rs: Reaches): Option[] {
@@ -235,6 +252,7 @@ export function variantDraftProblem(ix: Index, d: Draft, parts: DraftParts, rs: 
   if (room) return room
   const { items, problem } = neededItems(ix, d, next, rs)
   if (problem) return problem
+  if (abilitiesOf(next).length + items.length > abilityCap(ix, parts.tier)) return `with the extras it needs the card would hold more than ${abilityCap(ix, parts.tier)} abilities (A6)`
   const kinds = kindsAtTier(ix, block, parts.tier ?? '', hardControlOf(ix, patternId, variantId))
   if (!kinds.some(kind => fitAll(ix, placed(parts, { pattern: patternId, variant: variantId, kind }, slot), items))) {
     return 'no kind fits the key, passive and seat budgets with the extras it needs (A3, section 5)'

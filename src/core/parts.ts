@@ -10,7 +10,7 @@ import { diceFor } from './dice.ts'
 import { withPendingLocks } from './draft.ts'
 import { parseLink } from './links.ts'
 import { drawKeeping, keptTrace, lockedTraitsWithoutAbility, lockProblem } from './locks.ts'
-import { affectedBy, allNeedsProblem, lastChance, memoAfter, needAnswer, needProblem, needsAfter, newMemo, ownersOf, valuesLeft, type Memo } from './needs.ts'
+import { affectedBy, allNeedsProblem, lastChance, memoAfter, natureProblem, needAnswer, needProblem, needsAfter, newMemo, ownersOf, valuesLeft, type Memo } from './needs.ts'
 import type { Odds } from './odds.ts'
 import { offerTerms, onOwnRolls, poolOf, termProblem, UNIT_PARTS, withPart, type Candidate, type Mode, type Pool } from './offer.ts'
 import type { StepResult } from './steps.ts'
@@ -130,6 +130,7 @@ export function rollSingle(ix: Index, d: Draft, spec: SingleSpec): StepResult {
       spec.extra?.(next, c.id) ??
       ownRequiresProblem(ix, d, next, spec.list, c.id, memo) ??
       allNeedsProblem(ix, next, d.spice, recheck, memo) ??
+      natureProblem(ix, next) ??
       (forLocks ? leavesOptions(ix, d, withPendingLocks(d, next) ?? next, spec.list, newMemo(), true) : leavesOptions(ix, d, next, spec.list, memo))
     )
   }
@@ -215,7 +216,7 @@ export function rollMulti(ix: Index, d: Draft, spec: MultiSpec): StepResult {
     return offer.candidates.filter(c => {
       const next = spec.set(d.parts, [...chosen, c.id])
       const memo = memoAfter(ix, base, spec.list)
-      return ownRequiresProblem(ix, d, next, spec.list, c.id, memo) === undefined && allNeedsProblem(ix, next, d.spice, recheck, memo) === undefined
+      return ownRequiresProblem(ix, d, next, spec.list, c.id, memo) === undefined && allNeedsProblem(ix, next, d.spice, recheck, memo) === undefined && natureProblem(ix, next) === undefined
     })
   }
   // Needs this step must meet, one part each (G3: implied parts are set; G5: from the gate, else the least rare).

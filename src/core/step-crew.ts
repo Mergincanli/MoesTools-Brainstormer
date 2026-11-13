@@ -8,10 +8,11 @@ import { withPendingLocks } from './draft.ts'
 import { abilitiesOf, budgetOf, budgetProblem, seatPlan } from './keys.ts'
 import { matchLink, parseLink } from './links.ts'
 import { drawKeeping, keptTrace, leastRareOf, lockProblem } from './locks.ts'
-import { allNeedsProblem, needAnswer } from './needs.ts'
+import { allNeedsProblem, naturesLeft, needAnswer } from './needs.ts'
 import { offerTerms, poolOf, termProblem } from './offer.ts'
 import { fail, fixedOdds, ok, rollSingle } from './parts.ts'
 import { passengerKind } from './patterns.ts'
+import { seatCanArm } from './weapons.ts'
 import type { StepResult } from './steps.ts'
 import type { Draft, DraftParts, Need } from './types.ts'
 
@@ -30,6 +31,14 @@ function crewProblem(ix: Index, parts: DraftParts, model: string): string | unde
     if (!plan.abilities.includes(seat) && plan.secondary !== seat) return `its ${seat} seat would own nothing (C4)`
   }
   return undefined
+}
+
+/** G5, G16: on the generator's own roll a crew whose gunner could get no weapon within the spice gate is not offered
+ *  (the least rare fallback is for a crew an input or a lock asks for). */
+function gunnerProblem(ix: Index, parts: DraftParts, model: string, spice: number): string | undefined {
+  const gunner = ix.data.rules.defaults.secondary_weapon.always_with
+  if (!(term(ix, 'crew-models', model)?.seats ?? []).includes(gunner)) return undefined
+  return seatCanArm(ix, parts, spice, gunner) ? undefined : `its ${gunner} could get no weapon within the spice gate`
 }
 
 /** The passengers: needs on the draft that one number of seats must meet. */
@@ -93,24 +102,27 @@ function stepPassengers(ix: Index, d: Draft): StepResult {
   return ok
 }
 
-/** Section 7: the nature, from the first entry whose when link the card meets and whose nature the word lists allow. */
+/** Section 7 (as settled in section 18): the nature, from the first entry of rules.json defaults.nature whose when
+ *  link holds; an entry is passed over only when the nature word list does not allow it for the card's class. No other
+ *  part overrules it: the steps before did not offer a part that excludes it (needs.ts natureProblem). */
 function stepNature(ix: Index, d: Draft): StepResult {
-  for (const e of ix.data.rules.defaults.nature) {
-    if (termProblem(ix, d.parts, 'nature', e.nature) !== undefined) continue
-    if (e.when && matchLink(ix, d.parts, e.when) !== 'yes') continue
-    d.parts = { ...d.parts, nature: e.nature }
-    d.trace.push({ field: 'nature', value: e.nature, how: 'default', by: e.when ?? 'the last entry', rule: 'section 7 (nature)', candidates: 0 })
-    const why = allNeedsProblem(ix, d.parts, d.spice, d.needs)
-    return why ? fail(why) : ok
-  }
-  return fail('no nature fits the card (rules.json defaults.nature)')
+  const nature = naturesLeft(ix, d.parts)
+  const chosen = nature.length === 1 ? nature[0] : undefined
+  if (chosen === undefined) return fail('no nature follows from the card (rules.json defaults.nature)')
+  const clash = termProblem(ix, d.parts, 'nature', chosen)
+  if (clash) return fail(`the card is ${chosen}, and ${clash}`)
+  const entry = ix.data.rules.defaults.nature.find(e => e.nature === chosen && (!e.when || matchLink(ix, d.parts, e.when) === 'yes'))
+  d.parts = { ...d.parts, nature: chosen }
+  d.trace.push({ field: 'nature', value: chosen, how: 'default', by: entry?.when ?? 'the last entry', rule: 'section 7 (nature)', candidates: 0 })
+  const why = allNeedsProblem(ix, d.parts, d.spice, d.needs)
+  return why ? fail(why) : ok
 }
 
 export function stepCrew(ix: Index, d: Draft): StepResult {
   const locked = d.locks.includes('crew')
   const model = rollSingle(ix, d, {
     step: 'crew', field: 'crew.model', list: 'crew-models', get: p => p.crew.model, locked, rule: 'G1, S1, S3',
-    extra: (parts, id) => crewProblem(ix, parts, id),
+    extra: (parts, id) => crewProblem(ix, parts, id) ?? (locked ? undefined : gunnerProblem(ix, parts, id, d.spice)),
   })
   if (!model.ok) return model
   const crew = term(ix, 'crew-models', d.parts.crew.model as string)

@@ -1,6 +1,9 @@
 // Renders a finished card (schemas/concept-card.schema.json) as plain text that reads as Markdown: the readable card
-// of `npm run roll` and the cards of docs/cards.md. It shows only what the card holds, with the word lists' labels
-// for its ids; no rule codes.
+// of `npm run roll` and the cards of docs/cards.md. It shows what the card holds, with the word lists' labels for its
+// ids, and for each extra ability what it does: its variant's summary from the patterns, when that summary passes the
+// text check (the card schema has an effect text for the signature only). No rule codes.
+import { indexOf } from '../../src/core/data.ts'
+import { realNameIn } from '../../src/core/names.ts'
 
 /** Plain words for the kinds of typed links. */
 const KIND_WORDS = {
@@ -73,13 +76,18 @@ export function renderCard(card, data, { level = 2 } = {}) {
   out.push('', `${h}# Abilities`, '')
   const keyOf = name => t.how_it_plays.controls.find(c => c.action === name)
   const abilities = [p.signature, ...p.abilities]
+  const ix = indexOf(data)
+  const names = abilities.map((a, i) => (i === 0 ? t.signature.name : L.pattern(a.pattern)))
   abilities.forEach((a, i) => {
-    const name = i === 0 ? t.signature.name : L.pattern(a.pattern)
+    const name = names[i]
     const key = keyOf(name)
     const how = [L.label('ability-kinds', a.kind), a.cooldown ? `${L.label('cooldown-bands', a.cooldown)} cooldown` : null, key ? `key ${key.input}` : null, a.seat !== 'driver' ? `${L.label('seat-roles', a.seat)} seat` : null].filter(Boolean).join(', ')
-    out.push(`- **${name}**${i === 0 ? ' (signature)' : ''}: ${how}.${i === 0 ? ` ${t.signature.effect}` : ''}`)
+    // An extra's effect: its variant's summary in the patterns, when it names no real thing.
+    const summary = i === 0 ? t.signature.effect : data.patterns.find(x => x.id === a.pattern)?.variants.find(v => v.id === a.variant)?.summary
+    const effect = i === 0 || (summary && realNameIn(ix, summary) === undefined) ? ` ${summary ?? ''}` : ''
+    out.push(`- **${name}**${i === 0 ? ' (signature)' : ''}: ${how}.${effect}`.trimEnd())
   })
-  const traitKeys = t.how_it_plays.controls.filter(c => c.input === data.rules.layout.key_bound_movement)
+  const traitKeys = t.how_it_plays.controls.filter(c => c.input === data.rules.layout.key_bound_movement && !names.includes(c.action))
   for (const c of traitKeys) out.push(`- Movement key ${c.input}: ${c.action}.`)
   out.push('', `${h}# Team play`, '', `${L.label('team-play-hooks', t.team_play_hook.hook)}: ${t.team_play_hook.text}`, '')
   out.push(`${h}# How it plays`, '')
@@ -87,7 +95,12 @@ export function renderCard(card, data, { level = 2 } = {}) {
   out.push(`- Facing it: ${t.how_it_plays.as_target}`)
   out.push(`- For teammates: ${t.how_it_plays.teammates}`)
   out.push(`- What others see: ${t.how_it_plays.tells}`)
-  out.push(`- Controls: ${t.how_it_plays.controls.map(c => `${c.input} ${c.action}`).join('; ')}`, '')
+  // Controls, grouped by seat when the card has more than one.
+  const seatsUsed = [...new Set(t.how_it_plays.controls.map(c => c.seat))]
+  const controls = seatsUsed.length > 1
+    ? seatsUsed.map(s => `${L.label('seat-roles', s)}: ${t.how_it_plays.controls.filter(c => c.seat === s).map(c => `${c.input} ${c.action}`).join(', ')}`).join(' · ')
+    : t.how_it_plays.controls.map(c => `${c.input} ${c.action}`).join(', ')
+  out.push(`- Controls: ${controls}`, '')
   const rel = r => `- ${L.link(r.ref)}: ${r.why}`
   out.push(`${h}# Strong against`, '', ...card.matchups.counters.map(rel), '')
   out.push(`${h}# Countered by`, '', ...card.matchups.countered_by.map(rel), '')
