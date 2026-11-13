@@ -1,0 +1,257 @@
+{
+  "id": "fixture-c-empire-t3-walker-transform",
+  "schema_version": "1.0.0",
+  "generator": {
+    "version": "hand-made fixture",
+    "data_version": "d3ec703f39df46e4868d2a0c451cefaf896db1ef64a33f7a546119fa15631dc9"
+  },
+  "seed": "fixture-c",
+  "spice": 4,
+  "inputs": {
+    "class": null,
+    "tier": null,
+    "flavour": "empire",
+    "role": null
+  },
+  "locks": [],
+  "parts": {
+    "class": "walker",
+    "tier": "t3",
+    "flavour": "empire",
+    "nature": "crewed-machine",
+    "availability": "unique",
+    "roles": {
+      "primary": "raider",
+      "secondary": ["disabler"]
+    },
+    "mobility": {
+      "base": "legs-biped",
+      "handling": "pivot",
+      "traits": ["transform", "boost"],
+      "speed": "fast"
+    },
+    "body": {
+      "plan": "humanoid-mech",
+      "size": "medium",
+      "count": 1
+    },
+    "armament": {
+      "primary": {
+        "family": "emp",
+        "damage": "emp",
+        "mount": "free-aim",
+        "delivery": "projectile",
+        "range": "medium",
+        "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+        "traits": ["chain"],
+        "seat": "driver"
+      },
+      "secondary": {
+        "family": "guided-missiles",
+        "damage": "armour-piercing",
+        "mount": "free-aim",
+        "delivery": "lock-on",
+        "range": "long",
+        "can_target": ["infantry", "ground-vehicle", "low-air", "high-air", "structure"],
+        "traits": [],
+        "seat": "driver"
+      },
+      "conditional": []
+    },
+    "armour": {
+      "class": "light",
+      "models": ["evasive", "self-repair"]
+    },
+    "sensors": {
+      "sight": "medium",
+      "traits": ["lingering-sight"]
+    },
+    "crew": {
+      "model": "solo",
+      "solo_fallback": null,
+      "passengers": null
+    },
+    "signature": {
+      "pattern": "transform",
+      "variant": "ground-and-air",
+      "kind": "toggle",
+      "seat": "driver",
+      "cooldown": "short"
+    },
+    "abilities": [
+      {
+        "pattern": "dash",
+        "variant": "quick-lunge",
+        "kind": "active",
+        "seat": "driver",
+        "cooldown": "short"
+      },
+      {
+        "pattern": "rage-when-wounded",
+        "variant": "smooth-ramp",
+        "kind": "passive",
+        "seat": "driver",
+        "cooldown": null
+      }
+    ],
+    "modes": [
+      {
+        "via": "transform",
+        "class": "aircraft",
+        "mobility": {
+          "base": "jet",
+          "handling": "forward-only",
+          "speed": "very-fast"
+        },
+        "armament": [
+          {
+            "family": "plasma",
+            "damage": "energy",
+            "mount": "free-aim",
+            "delivery": "projectile",
+            "range": "medium",
+            "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+            "traits": [],
+            "seat": "driver"
+          }
+        ]
+      }
+    ],
+    "resource": null,
+    "on_death": ["pilot-eject", "death-blast"]
+  },
+  "matchups": {
+    "strengths": [
+      {
+        "ref": "mobility-trait:transform",
+        "why": "Two forms for two fights: it can leave a losing fight by changing what it is.",
+        "paired_with": 0
+      },
+      {
+        "ref": "mobility-trait:boost",
+        "why": "A burst of speed on a key closes the last gap to a target, breaks away from a losing fight or crosses open ground faster than its normal pace allows.",
+        "paired_with": 1
+      },
+      {
+        "ref": "pattern:rage-when-wounded",
+        "why": "The more health it has lost, the harder it hits, so a wounded one can still turn a losing fight.",
+        "paired_with": 2
+      }
+    ],
+    "weaknesses": [
+      {
+        "ref": "mobility-trait:transform",
+        "why": "Each form can't fight what the other one is for, and after a change it is locked in its form for a while."
+      },
+      {
+        "ref": "mobility-trait:boost",
+        "why": "The burst runs in a line the enemy can read and block, and once spent it leaves the unit at its normal pace until the key recharges."
+      },
+      {
+        "ref": "pattern:rage-when-wounded",
+        "why": "At full health it gets no bonus, its peak comes when one more burst would kill it, and healing takes the bonus away."
+      }
+    ],
+    "countered_by": [
+      {
+        "ref": "role:anti-air",
+        "why": "Anti-air units that also hit the ground threaten both forms, so changing doesn't escape them."
+      },
+      {
+        "ref": "weapon-trait:root",
+        "why": "This kind of unit has an answer to its abilities."
+      },
+      {
+        "ref": "damage:emp",
+        "why": "EMP blocks the change and leaves it stuck in the form it was caught in."
+      },
+      {
+        "ref": "weapon-trait:slow",
+        "why": "This kind of unit has an answer to its abilities."
+      },
+      {
+        "ref": "range:>=long",
+        "why": "This kind of unit has an answer to its abilities."
+      }
+    ],
+    "counters": [
+      {
+        "ref": "delivery:lobbed",
+        "why": "Shells that take a while to land on a point miss a unit that bursts out of the impact area."
+      },
+      {
+        "ref": "nature:uncrewed-machine",
+        "why": "Its weapons deal damage that works well on this kind of unit."
+      },
+      {
+        "ref": "nature:crewed-machine",
+        "why": "Its weapons deal damage that works well on this kind of unit."
+      },
+      {
+        "ref": "armour-model:regen-shield",
+        "why": "Its weapons deal damage that breaks through this kind of protection."
+      },
+      {
+        "ref": "armour-model:charge-shield",
+        "why": "Its weapons deal damage that breaks through this kind of protection."
+      }
+    ],
+    "counterplay": [
+      "Use units that threaten both forms, such as rockets that hit ground and air, so switching doesn't get it out of trouble.",
+      "Strike right after a switch: during the lockout it can't change back, so hit it with what its current form can't fight.",
+      "Read the tell and step off the line: the burst runs straight, so sidestep it, or put a wall, a barrier or a heavy teammate in its path.",
+      "Finish it in one burst: take it from healthy to dead before it can trade blows at its peak, since a badly hurt one is the most dangerous."
+    ]
+  },
+  "text": {
+    "name": "Heron Vigil",
+    "pitch": "A medium Empire walker: A ground or hover form and a flying form, each able to hit only its own layer.",
+    "signature": {
+      "name": "Willow Fold",
+      "effect": "A ground or hover form and a flying form, each able to hit only its own layer."
+    },
+    "team_play_hook": {
+      "hook": "counter-pick",
+      "text": "A transformer covers two jobs for its team, so teammates guard the blind spot of whichever form it is in."
+    },
+    "how_it_plays": {
+      "as_user": "The lockout after a switch is the cost: change at the wrong moment and you are stuck in the wrong form. Press Space and you surge forward the way you are moving, or the way you face if you stand still: a lunge of a few body-lengths in a moment, or a few seconds of much higher speed in the sprint variant. You play close to the edge: a hurt brawler with this passive is worth more in the fight than a healthy one, so you stay in rather than retreating at half health.",
+      "as_target": "Read the form from the silhouette and the height cue (a high flier's shadow sits apart from its body), then attack with what that form can't hit. Get out of its fire and your machine comes back to life in a moment.",
+      "teammates": "Spotters who call out the coming threat (air or ground) help it pick the right form before the fight.",
+      "controls": [
+        {
+          "seat": "driver",
+          "input": "LMB",
+          "action": "EMP"
+        },
+        {
+          "seat": "driver",
+          "input": "RMB",
+          "action": "Guided missiles"
+        },
+        {
+          "seat": "driver",
+          "input": "Q",
+          "action": "Willow Fold"
+        },
+        {
+          "seat": "driver",
+          "input": "Space",
+          "action": "Dash"
+        }
+      ],
+      "tells": "Two clearly different silhouettes, plus a height cue (shadow offset, altitude ring) for a flying form."
+    }
+  },
+  "inspiration": {
+    "patterns": ["transform", "dash", "rage-when-wounded"],
+    "source_units": ["iron-harvest.rusviet.olga-morozova", "iron-harvest.usonia.william-mason", "ra3.empire.mecha-tengu"]
+  },
+  "balance": {
+    "cost_band": "high",
+    "power": 7,
+    "complexity": 6,
+    "keys": 3,
+    "flags": []
+  }
+}

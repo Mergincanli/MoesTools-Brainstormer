@@ -409,8 +409,22 @@ The rules went into `data/generator/` on 13 November 2026 (P1). Where the sheet 
 
 `npm run check:generator` (`scripts/check-generator-data.mjs`) checks the three files against their schema, every id they name, this sheet's counts, the card texts (no real name, no wording shared with the patterns) and that every rule code of sections 2 to 11 has its place in the data (`research/generator/data/coverage.json`).
 
+## 18. Points settled while the checker and the module were built
+
+The checker of P3 is written from this sheet alone, apart from the module. Writing it showed places where the sheet did not say enough. They are settled here, on 13 November 2026; none changes an answer of section 15.
+
+- **What "names a real thing" means (T-b).** A text names a real thing when it holds a whole real name: a name of T-a's list, a franchise, a short form of a game's title, or the word wiki. A name of several words counts when its words are capitalised as in the name. A name of one word counts when it is capitalised in the middle of a sentence; at the start of a sentence it counts only when our own texts never write the word in lower case, or when it has capitals inside it. A plain description of a side, such as "every side", is not a name. Read this way, 108 of the pattern lines that the templates can use fail, 2 more than the first count.
+- **The fallback of T-b.** A field with one value (a summary, a reason) takes its neutral sentence. A field with several lines takes the next line that passes and is not on the card yet, and the neutral sentence when there is none.
+- **An adaptive weapon** has no damage type, delivery or range of its own; its conditional weapons carry them.
+- **The pitch** is cut after the last whole word that fits in 160 characters, with no dots added.
+- **Controls.** The signature sits on Q, the first extra ability on R and the next on Shift. An ability that implies a key-bound movement trait sits on Space, as the movement key. A passive or triggered ability has no entry, and neither have conditional weapons or the weapon of a second form.
+- **The order of matchup links (N4).** First the links of the abilities, the signature's first. Then the links from parts. In "countered by": the damage types in the word list's order, then the link for fliers, then the aircraft link. In "counters": for the primary weapon and then the secondary, what its damage type is strong against, in the word list's order. A second form's weapon adds no link.
+- **On-death outcomes** follow rarity and spice like every rolled part.
+- **The name check (T-a)** also reads the weapon names of the researched units, and the titles of the games that the patterns' examples come from.
+- **Not on rolled cards today:** the range off-screen (no weapon family leads to it), so its points never apply.
+
 ## What comes next
 
 1. The rules as data (P1), the key count (P2) and the card schema line (P4).
-2. The module in `src/core/`, the separate checker for rolled cards (P3), a command that rolls cards and a first page of sample cards, which Mustafa sees as soon as the module rolls valid cards and before the review passes.
+2. The module in `src/core/` (job 1 of 4 is done), a command that rolls cards and a first page of sample cards, which Mustafa sees as soon as the module rolls valid cards and before the review passes.
 3. The wording of the card property for K2 A, for his approval.

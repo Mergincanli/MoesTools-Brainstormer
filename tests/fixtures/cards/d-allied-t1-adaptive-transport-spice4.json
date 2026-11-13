@@ -1,0 +1,242 @@
+{
+  "id": "fixture-d-allied-t1-adaptive-transport",
+  "schema_version": "1.0.0",
+  "generator": {
+    "version": "hand-made fixture",
+    "data_version": "d3ec703f39df46e4868d2a0c451cefaf896db1ef64a33f7a546119fa15631dc9"
+  },
+  "seed": "fixture-d",
+  "spice": 4,
+  "inputs": {
+    "class": null,
+    "tier": "t1",
+    "flavour": "allied",
+    "role": "transport"
+  },
+  "locks": [],
+  "parts": {
+    "class": "vehicle",
+    "tier": "t1",
+    "flavour": "allied",
+    "nature": "crewed-machine",
+    "availability": "open",
+    "roles": {
+      "primary": "transport",
+      "secondary": []
+    },
+    "mobility": {
+      "base": "wheels",
+      "handling": "steer",
+      "traits": [],
+      "speed": "medium"
+    },
+    "body": {
+      "plan": "box-carrier",
+      "size": "medium",
+      "count": 1
+    },
+    "armament": {
+      "primary": {
+        "family": "adaptive",
+        "damage": null,
+        "mount": "free-aim",
+        "delivery": null,
+        "range": null,
+        "can_target": ["infantry", "ground-vehicle", "low-air", "high-air", "structure"],
+        "traits": [],
+        "seat": "driver"
+      },
+      "secondary": null,
+      "conditional": [
+        {
+          "when": "role:anti-armour",
+          "weapon": {
+            "family": "rockets",
+            "damage": "explosive",
+            "mount": "free-aim",
+            "delivery": "projectile",
+            "range": "medium",
+            "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+            "traits": [],
+            "seat": "driver"
+          }
+        },
+        {
+          "when": "role:anti-air",
+          "weapon": {
+            "family": "flak",
+            "damage": "explosive",
+            "mount": "free-aim",
+            "delivery": "projectile",
+            "range": "medium",
+            "can_target": ["infantry", "low-air", "high-air"],
+            "traits": [],
+            "seat": "driver"
+          }
+        },
+        {
+          "when": "role:support",
+          "weapon": {
+            "family": "repair-tool",
+            "damage": "repair",
+            "mount": "free-aim",
+            "delivery": "beam",
+            "range": "short",
+            "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+            "traits": [],
+            "seat": "driver"
+          }
+        }
+      ]
+    },
+    "armour": {
+      "class": "light",
+      "models": ["charge-shield"]
+    },
+    "sensors": {
+      "sight": "medium",
+      "traits": []
+    },
+    "crew": {
+      "model": "solo",
+      "solo_fallback": null,
+      "passengers": {
+        "seats": 3,
+        "kind": "passenger-module"
+      }
+    },
+    "signature": {
+      "pattern": "passenger-sets-weapon",
+      "variant": "class-swap",
+      "kind": "passive",
+      "seat": "driver",
+      "cooldown": null
+    },
+    "abilities": [
+      {
+        "pattern": "lay-smoke",
+        "variant": "self-screen",
+        "kind": "active",
+        "seat": "driver",
+        "cooldown": "medium"
+      }
+    ],
+    "modes": [],
+    "resource": null,
+    "on_death": ["bail-out"]
+  },
+  "matchups": {
+    "strengths": [
+      {
+        "ref": "passengers:>=1",
+        "why": "Changes role mid-match depending on who climbs in.",
+        "paired_with": 0
+      },
+      {
+        "ref": "pattern:lay-smoke",
+        "why": "Blocks sight across an area for a short time, so teammates can cross, retreat or revive unseen, or an enemy gun line is blinded.",
+        "paired_with": 1
+      }
+    ],
+    "weaknesses": [
+      {
+        "ref": "passengers:>=1",
+        "why": "Alone it has at most a modest default weapon, and losing the vehicle leaves everyone inside hurt and on foot."
+      },
+      {
+        "ref": "pattern:lay-smoke",
+        "why": "The cloud hides enemies as well as friends and stops nothing that fires at the ground, so it is cover from sight, not from harm."
+      }
+    ],
+    "countered_by": [
+      {
+        "ref": "role:anti-armour",
+        "why": "Its light hull falls fast to anti-armour, throwing everyone inside out hurt."
+      },
+      {
+        "ref": "weapon-trait:splash",
+        "why": "Splash and burst damage kill the light hull and then catch the hurt players it throws out."
+      },
+      {
+        "ref": "weapon:flamethrower",
+        "why": "This kind of unit has an answer to its abilities."
+      },
+      {
+        "ref": "range:short",
+        "why": "This kind of unit has an answer to its abilities."
+      },
+      {
+        "ref": "damage:kinetic",
+        "why": "This kind of damage works well against this unit's armour, shields or body."
+      }
+    ],
+    "counters": [
+      {
+        "ref": "class:infantry",
+        "why": "Brings whatever weapons its riders carry, or vehicle-sized versions of them, to soldiers who can't outrun it."
+      },
+      {
+        "ref": "range:>=long",
+        "why": "Its abilities give it the edge over this kind of unit."
+      },
+      {
+        "ref": "role:marksman",
+        "why": "Reasoned: a marksman needs a clear line of sight to a target, which the cloud takes away."
+      },
+      {
+        "ref": "armour-class:unarmoured",
+        "why": "Its weapons deal damage that is strong against this armour."
+      },
+      {
+        "ref": "armour-class:light",
+        "why": "Its weapons deal damage that is strong against this armour."
+      }
+    ],
+    "counterplay": [
+      "Read the loadout from the roof weapon, then fight it with what that loadout lacks; a passenger without anti-air removes the vehicle's anti-air.",
+      "Burst the light chassis: it throws both players out hurt and on foot, so keep anti-infantry fire ready for the follow-up.",
+      "Fire blind into the cloud with grenades, mortars or other area weapons; they need no line of sight to hit what hides there."
+    ]
+  },
+  "text": {
+    "name": "Nimbus L7",
+    "pitch": "A medium Allied vehicle: One specialist seat: the passenger's class replaces the default weapon with a vehicle-sized version of its own; empty, the default",
+    "signature": {
+      "name": "Cirrus Berth",
+      "effect": "One specialist seat: the passenger's class replaces the default weapon with a vehicle-sized version of its own; empty, the default returns."
+    },
+    "team_play_hook": {
+      "hook": "seat-synergy",
+      "text": "A built-in two-player combo: 'need a ride' and 'need anti-tank' calls, and in-field counter-picking without re-buying."
+    },
+    "how_it_plays": {
+      "as_user": "As the driver you buy a cheap, fast chassis with a narrow but useful default weapon, so you aren't useless alone. Smoke the open ground before your team crosses it, or behind you when you need to break off a losing fight.",
+      "as_target": "Check the roof weapon, the colour of its shots and the loadout icon before committing, then fight it with what it lacks.",
+      "teammates": "An engineer passenger makes it a mobile repair station that also strips parasites off vehicles, a natural answer to infesters.",
+      "controls": [
+        {
+          "seat": "driver",
+          "input": "LMB",
+          "action": "Adaptive"
+        },
+        {
+          "seat": "driver",
+          "input": "R",
+          "action": "Lay smoke"
+        }
+      ],
+      "tells": "A distinct roof weapon model for each of 4-6 loadout groups (for example anti-armour, anti-infantry, anti-air and support tool), readable from above, plus colour-coded shots and a group icon on the nameplate."
+    }
+  },
+  "inspiration": {
+    "patterns": ["passenger-sets-weapon", "lay-smoke"],
+    "source_units": ["generals.gla.battle-bus", "ra3.allied.multigunner-ifv", "generals.china.overlord"]
+  },
+  "balance": {
+    "cost_band": "low",
+    "power": 1,
+    "complexity": 4,
+    "keys": 1,
+    "flags": []
+  }
+}

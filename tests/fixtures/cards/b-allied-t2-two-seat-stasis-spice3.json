@@ -1,0 +1,218 @@
+{
+  "id": "fixture-b-allied-t2-two-seat-stasis",
+  "schema_version": "1.0.0",
+  "generator": {
+    "version": "hand-made fixture",
+    "data_version": "d3ec703f39df46e4868d2a0c451cefaf896db1ef64a33f7a546119fa15631dc9"
+  },
+  "seed": "fixture-b",
+  "spice": 3,
+  "inputs": {
+    "class": "vehicle",
+    "tier": "t2",
+    "flavour": null,
+    "role": null
+  },
+  "locks": [],
+  "parts": {
+    "class": "vehicle",
+    "tier": "t2",
+    "flavour": "allied",
+    "nature": "crewed-machine",
+    "availability": "limited",
+    "roles": {
+      "primary": "disabler",
+      "secondary": ["scout"]
+    },
+    "mobility": {
+      "base": "wheels",
+      "handling": "steer",
+      "traits": ["amphibious"],
+      "speed": "fast"
+    },
+    "body": {
+      "plan": "hull-turret",
+      "size": "large",
+      "count": 1
+    },
+    "armament": {
+      "primary": {
+        "family": "laser",
+        "damage": "energy",
+        "mount": "free-aim",
+        "delivery": "beam",
+        "range": "medium",
+        "can_target": ["infantry", "ground-vehicle", "low-air", "structure"],
+        "traits": ["overheat"],
+        "seat": "driver"
+      },
+      "secondary": {
+        "family": "guided-missiles",
+        "damage": "armour-piercing",
+        "mount": "slow-turret",
+        "delivery": "lock-on",
+        "range": "long",
+        "can_target": ["infantry", "ground-vehicle", "low-air", "high-air", "structure"],
+        "traits": [],
+        "seat": "gunner"
+      },
+      "conditional": []
+    },
+    "armour": {
+      "class": "medium",
+      "models": ["regen-shield"]
+    },
+    "sensors": {
+      "sight": "long",
+      "traits": ["radar"]
+    },
+    "crew": {
+      "model": "driver-gunner",
+      "solo_fallback": "auto-gunner",
+      "passengers": null
+    },
+    "signature": {
+      "pattern": "lock-in-stasis",
+      "variant": "timed-prison",
+      "kind": "active",
+      "seat": "driver",
+      "cooldown": "long"
+    },
+    "abilities": [
+      {
+        "pattern": "reveal-area",
+        "variant": "pulse-scan",
+        "kind": "active",
+        "seat": "driver",
+        "cooldown": "medium"
+      }
+    ],
+    "modes": [],
+    "resource": null,
+    "on_death": ["bail-out", "wreck"]
+  },
+  "matchups": {
+    "strengths": [
+      {
+        "ref": "pattern:lock-in-stasis",
+        "why": "Takes any one enemy out of the fight while it holds, however big or well armoured, and can shelter a teammate the same way.",
+        "paired_with": 0
+      },
+      {
+        "ref": "role:scout",
+        "why": "Finds hidden enemies and targets for the team beyond its own sight.",
+        "paired_with": 1
+      }
+    ],
+    "weaknesses": [
+      {
+        "ref": "pattern:lock-in-stasis",
+        "why": "Holds one target for a short fixed time and does no damage while it lasts: nobody can hurt the held enemy either, and it comes back where it was when the time is up."
+      },
+      {
+        "ref": "pattern:reveal-area",
+        "why": "Information only: the scan deals no damage, and a wasted one leaves the team blind until the cooldown ends."
+      }
+    ],
+    "countered_by": [
+      {
+        "ref": "range:>=long",
+        "why": "Long-range fire hits the caster from beyond the reach of its prison shot, and only one target at a time is ever locked away."
+      },
+      {
+        "ref": "weapon-trait:silence",
+        "why": "Locked out of its abilities, it can't cast the prison at all."
+      },
+      {
+        "ref": "speed:>=fast",
+        "why": "Fast units are out of the scanned area before the team can act on what it showed."
+      },
+      {
+        "ref": "armour-class:>=heavy",
+        "why": "A head-on armoured push does not rely on hiding, so the scan has little to uncover."
+      },
+      {
+        "ref": "damage:armour-piercing",
+        "why": "This kind of damage works well against this unit's armour, shields or body."
+      }
+    ],
+    "counters": [
+      {
+        "ref": "armour-class:>=heavy",
+        "why": "Armour makes no difference: the heaviest tank is held out of the fight as surely as a soldier."
+      },
+      {
+        "ref": "sensor:stealth",
+        "why": "Stealthy units are shown to the whole team for as long as the reveal lasts."
+      },
+      {
+        "ref": "pattern:cloak",
+        "why": "Cloaked units inside the scan are uncovered for the team."
+      },
+      {
+        "ref": "pattern:burrow",
+        "why": "Burrowed or submerged units inside the scan are uncovered for the team."
+      },
+      {
+        "ref": "pattern:shroud-area",
+        "why": "A scan lights up what hides under a shroud field, at least for a moment."
+      }
+    ],
+    "counterplay": [
+      "Kill or interrupt the caster: a beam or channel ends the moment it does, and the target comes back unharmed.",
+      "Struggle out of a beam hold: the held player holds F to fill a break bar, and the beam snaps if the bar fills before the erase does.",
+      "Leave the scanned area before the team can act, or stand still against motion sensors, which miss enemies that are not moving."
+    ]
+  },
+  "text": {
+    "name": "Meridian R4",
+    "pitch": "A large Allied vehicle: A targeted shot locks one enemy or teammate away for a short fixed time; there is no erase, and the target returns where it was when the",
+    "signature": {
+      "name": "Glacier Hold",
+      "effect": "A targeted shot locks one enemy or teammate away for a short fixed time; there is no erase, and the target returns where it was when the time runs out."
+    },
+    "team_play_hook": {
+      "hook": "rescue",
+      "text": "Defenders get a clear rescue job: find and kill the caster, who is fragile and standing still."
+    },
+    "how_it_plays": {
+      "as_user": "You pick one target and take it out of the fight: the enemy tank that was winning is suddenly a statue nobody can touch, so your team fights the rest of theirs a player short. Scan where trouble is coming: a flank, a capture point, the gap a cloaked enemy has to cross, or the ground your artillery wants to hit.",
+      "as_target": "Your screen greys out and your unit is frozen in place inside a visible shell; you can still watch the fight and ping, but you can't move or fire. Against a beam you are not helpless: hold F, the universal shake-off, to struggle. A second bar fills while you struggle and the beam snaps when it is full, so an erase becomes a race between the two bars. Timed prisons and fields can't be shaken off, but they are short.",
+      "teammates": "Attackers use the hold to win a numbers fight: lock the enemy's biggest threat, then focus the rest.",
+      "controls": [
+        {
+          "seat": "driver",
+          "input": "LMB",
+          "action": "Laser"
+        },
+        {
+          "seat": "driver",
+          "input": "Q",
+          "action": "Glacier Hold"
+        },
+        {
+          "seat": "driver",
+          "input": "R",
+          "action": "Reveal an area"
+        },
+        {
+          "seat": "gunner",
+          "input": "LMB",
+          "action": "Guided missiles"
+        }
+      ],
+      "tells": "A distinct stasis look, such as a clock-like shell or a desaturated, translucent body, clearly different from ice (which means freeze and shatter: shoot it) so players know shots are wasted."
+    }
+  },
+  "inspiration": {
+    "patterns": ["lock-in-stasis", "reveal-area"],
+    "source_units": ["ra2.allied.chrono-legionnaire"]
+  },
+  "balance": {
+    "cost_band": "high",
+    "power": 6,
+    "complexity": 5,
+    "keys": 3,
+    "flags": []
+  }
+}

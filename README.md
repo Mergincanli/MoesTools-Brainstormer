@@ -51,6 +51,7 @@ You need Node.js 22.18 or newer; `npm install` refuses older versions. Install o
 | `npm run docs:check` | Fails if a generated page is out of date. |
 | `npm run manifest` | Rewrites `data/manifest.json`, the content hash of the word lists, the patterns and the generator's rules that every rolled card records. Run it after any change to those. `npm run manifest:check` fails when it is out of date. |
 | `npm run check:generator` | Checks the generator's data files (`data/generator/`) against their schema, the ids they name and the rule sheet's counts. |
+| `node scripts/check-cards.mjs <card.json>` | Checks rolled concept cards against the generator's rule sheet ([docs/generator-rules.md](docs/generator-rules.md)): a checker written apart from the generator, from the same rules. |
 | `npm run typecheck` | Type-checks the generator module (`src/core/`). Node 22.18 or newer runs its TypeScript files directly; there is no build step. |
 | `npm test` | Runs the tests in `tests/`. |
 | `npm run copy-check` | Fetches every page the data cites and flags any run of six or more words that a record shares with a page it cites. Add `--also <folder>` to check notes too (see the options below). |
