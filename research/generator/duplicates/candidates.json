@@ -1,0 +1,3296 @@
+[
+  {
+    "id": "L1-01",
+    "level": 1,
+    "a": {
+      "pattern": "stack-to-overload"
+    },
+    "b": {
+      "pattern": "freeze-and-shatter"
+    },
+    "player_a": "Weapons on several cards add charge pips to an enemy vehicle; full pips overload it (burning, crawling, no abilities) and a finisher weapon cashes it in.",
+    "player_b": "Hold a cold beam to fill a frost meter; the target freezes solid and the next heavy hit shatters it for bonus damage.",
+    "why_same": "Same loop for both players: build up a status, the victim is helpless for a window, a heavy hit cashes it in; the victim answers by breaking contact early and its team by hunting the builders. stack-to-overload's own summary calls itself a variant of freeze-and-shatter. Its own differences (the overloaded vehicle still crawls and fires, stacks ride on ordinary damaging weapons, only finisher weapons cash in, vehicles only) read like variant twists. Several variants also mirror each other: affinity-bonus ~ brittle-chill, ignite-burst ~ chain-shatter, outright-execution ~ shatter-threshold.",
+    "evidence": [
+      {
+        "file": "data/patterns/stack-to-overload.json",
+        "path": "summary",
+        "excerpt": "Several allied weapons feed one meter on an enemy vehicle: each hit adds a stack of charge, and every stack hampers it a little more (in Tempest Rising, slower movement a…"
+      },
+      {
+        "file": "data/patterns/stack-to-overload.json",
+        "path": "related[0]",
+        "excerpt": "{\"id\":\"freeze-and-shatter\",\"kind\":\"variant-of\"}"
+      },
+      {
+        "file": "data/patterns/stack-to-overload.json",
+        "path": "generator.conflicts_with",
+        "excerpt": "[\"freeze-and-shatter\"]"
+      },
+      {
+        "file": "data/patterns/freeze-and-shatter.json",
+        "path": "summary",
+        "excerpt": "A cold weapon or power does little or no damage by itself. Held on a target, it slows it more and more, and once enough cold has built up the target freezes solid: it can…"
+      },
+      {
+        "file": "data/patterns/stack-to-overload.json",
+        "path": "variants[1].summary",
+        "excerpt": "No overload at all: charged targets simply take extra damage from affinity weapons, so the pips are a soft mark rather than a lockout. The gentle version for low spice."
+      },
+      {
+        "file": "data/patterns/freeze-and-shatter.json",
+        "path": "variants[1].summary",
+        "excerpt": "The build-up only slows and never freezes; a heavy hit from you or a teammate detonates the chill for bonus damage. The gentle version for low spice."
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "stack-to-overload conflicts_with freeze-and-shatter; stack-to-overload related variant-of freeze-and-shatter",
+    "known": "Already known: stack-to-overload lists freeze-and-shatter as variant-of and in conflicts_with (one way only), so the generator never puts both on one card. What is left is a merge decision, not a duplicate-button risk."
+  },
+  {
+    "id": "L2-01",
+    "level": 2,
+    "a": {
+      "pattern": "deal-percent-damage",
+      "variant": "blast-spends-user",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "self-destruct",
+      "variant": "countdown-in-place",
+      "variant_index": 0
+    },
+    "player_a": "Lock the vehicle in place behind a long countdown, bail out on foot, and the blast takes a share of every machine's health in the ring and destroys your vehicle; once per life.",
+    "player_b": "Stop where you are, a loud countdown runs, you bail out as your infantry form, and the vehicle explodes and wrecks what is around it; one blast per life.",
+    "why_same": "Same action, same target and the same answer (kill the carrier before the countdown ends, or leave the ring). Both variants name the Red Alert M.A.D. Tank as their source, the wording is almost the same, and the M.A.D. Tank's one ability links both patterns. The only difference is how the blast counts damage (a share of health or a flat big blast), which is deal-percent-damage's own job. A card with both would show two keys that each blow the vehicle up after a countdown.",
+    "evidence": [
+      {
+        "file": "data/patterns/deal-percent-damage.json",
+        "path": "variants[4].summary",
+        "excerpt": "The blast also destroys the user: it locks in place behind a long countdown, the player bails out as their infantry form when the countdown starts, and it can be used onc…"
+      },
+      {
+        "file": "data/patterns/deal-percent-damage.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Red Alert M.A.D. Tank"
+      },
+      {
+        "file": "data/patterns/self-destruct.json",
+        "path": "variants[0].summary",
+        "excerpt": "You stop where you are and a loud countdown runs; only destroying you first stops the blast, and then nothing explodes."
+      },
+      {
+        "file": "data/patterns/self-destruct.json",
+        "path": "variants[0].seen_in",
+        "excerpt": "Red Alert M.A.D. Tank"
+      },
+      {
+        "file": "data/patterns/self-destruct.json",
+        "path": "player_translation.summary",
+        "excerpt": "A slow, lightly armed unit that is one big bomb. Get it into the enemy and press the key: it locks in place behind a loud countdown (or goes off on contact in the ram var…"
+      },
+      {
+        "file": "data/units/ra1.json",
+        "path": "units[id=ra1.soviet.mad-tank].abilities[0]",
+        "excerpt": "Harmonic shock wave (activate): patterns [\"self-destruct\",\"deal-percent-damage\"]"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "deal-percent-damage related combos-with self-destruct; self-destruct related combos-with deal-percent-damage"
+  },
+  {
+    "id": "L2-02",
+    "level": 2,
+    "a": {
+      "pattern": "passenger-sets-weapon",
+      "variant": "wreck-bunker",
+      "variant_index": 5
+    },
+    "b": {
+      "pattern": "fortify-on-death",
+      "variant": "cover-wreck",
+      "variant_index": 1
+    },
+    "player_a": "When the carrier dies, both players are thrown out hurt, but the wreck stays as hard cover they can fight from until it is destroyed.",
+    "player_b": "Everyone is thrown out hurt as on a normal death, but the dead hull stays as hard cover with its own health.",
+    "why_same": "Nearly the same sentence. fortify-on-death's cover-wreck says it was written from passenger-sets-weapon's wreck-bunker twist and has no source of its own, and its open question proposes retiring the twist. The twist's own source (the Zero Hour Battle Bus) is fortify-on-death's base wreck-fort source, so the twist also overlaps fortify-on-death's base mechanic.",
+    "evidence": [
+      {
+        "file": "data/patterns/passenger-sets-weapon.json",
+        "path": "variants[5].summary",
+        "excerpt": "When the vehicle dies, both players are thrown out hurt as usual, but the wreck stays behind as hard cover they can fight from until it is destroyed."
+      },
+      {
+        "file": "data/patterns/passenger-sets-weapon.json",
+        "path": "variants[5].seen_in",
+        "excerpt": "Zero Hour Battle Bus"
+      },
+      {
+        "file": "data/patterns/fortify-on-death.json",
+        "path": "variants[1].summary",
+        "excerpt": "Everyone is thrown out hurt as on a normal death, but the dead hull stays behind as a piece of hard cover with its own health that players can fight around."
+      },
+      {
+        "file": "data/patterns/fortify-on-death.json",
+        "path": "variants[1].seen_in",
+        "excerpt": "Our own reading for a player version, as written in passenger-sets-weapon's wreck-bunker twist; not in a source"
+      },
+      {
+        "file": "data/patterns/fortify-on-death.json",
+        "path": "variants[0].seen_in",
+        "excerpt": "Zero Hour Battle Bus"
+      },
+      {
+        "file": "data/patterns/fortify-on-death.json",
+        "path": "open_questions[5]",
+        "excerpt": "passenger-sets-weapon has a wreck-bunker twist that describes this mechanic as cover for players who were thrown out. Should that twist be retired and point here, with th…"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "fortify-on-death related combos-with passenger-sets-weapon"
+  },
+  {
+    "id": "L2-03",
+    "level": 2,
+    "a": {
+      "pattern": "mind-control",
+      "variant": "weapon-puppet",
+      "variant_index": 0
+    },
+    "b": {
+      "pattern": "infest-vehicle",
+      "variant": "latched-control",
+      "variant_index": 9
+    },
+    "player_a": "Hold a link on an enemy; after a short wind-up you aim and fire its weapon for a few seconds while it keeps moving; a shake-off or your death ends it.",
+    "player_b": "Latch onto an enemy vehicle and take over only its weapon for a few seconds; it keeps driving; a shake-off, a repair or your death ends it.",
+    "why_same": "Same effect on the same target with the same answers (shake it off, kill the controller). mind-control's weapon-puppet source note says infest-vehicle's latched-control does the same from on board. latched-control's source (StarCraft II neural parasite) is also the source of mind-control's leashed-parasite, and 'Neural Parasite' is in both files' source_terms. The difference is delivery (a latch versus a link), which the field rules say does not make a new pattern; a latch also needs a repair or shake-off to remove.",
+    "evidence": [
+      {
+        "file": "data/patterns/mind-control.json",
+        "path": "variants[0].summary",
+        "excerpt": "Takes only the victim's weapon for a few seconds; the victim keeps moving and can shake free. The default against players."
+      },
+      {
+        "file": "data/patterns/mind-control.json",
+        "path": "variants[0].seen_in",
+        "excerpt": "A player-safe cut of Red Alert 2 and StarCraft II control; infest-vehicle's latched-control variant does the same from on board"
+      },
+      {
+        "file": "data/patterns/mind-control.json",
+        "path": "variants[3].seen_in",
+        "excerpt": "StarCraft II neural parasite"
+      },
+      {
+        "file": "data/patterns/mind-control.json",
+        "path": "source_terms",
+        "excerpt": "[\"Mind control\",\"Neural Parasite\",\"Holy Persuasion\",\"Enthrall\",\"Pest\",\"Data Knife hack\",\"Conversion\"]"
+      },
+      {
+        "file": "data/patterns/infest-vehicle.json",
+        "path": "variants[9].summary",
+        "excerpt": "Latches on and takes over only the host's weapon, never its movement, for a few seconds at most; it ends at once if the infester is shaken off, repaired off or killed, an…"
+      },
+      {
+        "file": "data/patterns/infest-vehicle.json",
+        "path": "variants[9].seen_in",
+        "excerpt": "StarCraft II neural parasite"
+      },
+      {
+        "file": "data/patterns/infest-vehicle.json",
+        "path": "source_terms",
+        "excerpt": "[\"Dismantler Claws\",\"rodeo\",\"boarding\",\"Parasitic Bomb\",\"Neural Parasite\"]"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "not linked (no conflicts_with, no related entry)"
+  },
+  {
+    "id": "L2-04",
+    "level": 2,
+    "a": {
+      "pattern": "gather-resources",
+      "variant": "salvage-wrecks",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "leech-weapon-on-kill",
+      "variant": "loot-currency",
+      "variant_index": 4
+    },
+    "player_a": "Hold a tool on wrecks (and rocks or trees) to break them into team money; enemies deny it by destroying wrecks first.",
+    "player_b": "Wrecks pay out resources or crafting material instead of direct power.",
+    "why_same": "gather-resources' open question says this variant and leech-weapon-on-kill's loot-currency are the same interaction, counterplay (deny or destroy the wrecks) and source, and recommends folding both into salvage-wrecks. Both name Supreme Commander reclaim as their source.",
+    "evidence": [
+      {
+        "file": "data/patterns/gather-resources.json",
+        "path": "variants[4].summary",
+        "excerpt": "The battlefield is the field: it breaks down wrecks, and rocks or trees where the map has them, into money, so every fight leaves salvage and players can deny it by destr…"
+      },
+      {
+        "file": "data/patterns/gather-resources.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Supreme Commander reclaim; Battlezone scavengers collecting scrap from downed vehicles"
+      },
+      {
+        "file": "data/patterns/gather-resources.json",
+        "path": "open_questions[4]",
+        "excerpt": "For the merge pass: leech-weapon-on-kill's loot-currency variant (wrecks pay out resources or crafting material) and its Supreme Commander Reclaim example cover the same …"
+      },
+      {
+        "file": "data/patterns/leech-weapon-on-kill.json",
+        "path": "variants[4].summary",
+        "excerpt": "Wrecks pay out in resources or crafting material rather than direct power."
+      },
+      {
+        "file": "data/patterns/leech-weapon-on-kill.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Supreme Commander reclaim, ARC Raiders salvage"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "gather-resources related often-confused-with leech-weapon-on-kill"
+  },
+  {
+    "id": "L2-05",
+    "level": 2,
+    "a": {
+      "pattern": "deploy-turret",
+      "variant": "support-station",
+      "variant_index": 3
+    },
+    "b": {
+      "pattern": "resupply-allies",
+      "variant": "built-station",
+      "variant_index": 3
+    },
+    "player_a": "Place a device that does no fighting and, for its short life, heals, repairs or hands out ammo to allies in a radius.",
+    "player_b": "Build a fixed dispenser that supplies allies near it without end while it stands.",
+    "why_same": "Same action, same target (allies in a ring around a placed device) and the same answer (shoot the fragile device, splash the crowd around it). Both name Team Fortress 2's Dispenser as a source, and 'Dispenser' is in both files' source_terms. Differences are numbers (short life versus until destroyed). deploy-turret's open question already asks whether the station should be its own pattern. The station also overlaps repair-allies: the Shieldmaiden's Deploy Repair Turret links deploy-turret and repair-allies.",
+    "evidence": [
+      {
+        "file": "data/patterns/deploy-turret.json",
+        "path": "variants[3].summary",
+        "excerpt": "The device does no fighting: for its short life it heals soldiers, repairs vehicles or hands out ammo to allies in a radius, and it is fragile, so the enemy must shoot it…"
+      },
+      {
+        "file": "data/patterns/deploy-turret.json",
+        "path": "variants[3].seen_in",
+        "excerpt": "Tempest Rising Shieldmaiden Repair Turret and Riot Medic Healing Turret, Team Fortress 2 Dispenser, Overwatch Illari's Healing Pylon, Apex Legends D.O.C. Heal Drone"
+      },
+      {
+        "file": "data/patterns/deploy-turret.json",
+        "path": "open_questions[3]",
+        "excerpt": "Should the support station (the Shieldmaiden's repair turret) stay a variant here, or become its own pattern? This draft keeps it here, because placement, health, caps an…"
+      },
+      {
+        "file": "data/patterns/deploy-turret.json",
+        "path": "source_terms",
+        "excerpt": "[\"Deploy Exosuit\",\"Turret Relocate\",\"Anti-Air Turret\",\"MG Bunker\",\"Cannon Bunker\",\"Deploy Repair Turret\",\"Healing Turret\",\"Auto-Turret\",\"Tarantula Turret\",\"Machine Gun Em…"
+      },
+      {
+        "file": "data/patterns/resupply-allies.json",
+        "path": "variants[3].summary",
+        "excerpt": "Put up a fixed dispenser that supplies without end while it stands; it takes time to build, can't defend itself and gathers the team around one spot."
+      },
+      {
+        "file": "data/patterns/resupply-allies.json",
+        "path": "variants[3].seen_in",
+        "excerpt": "Team Fortress 2 Dispenser"
+      },
+      {
+        "file": "data/patterns/resupply-allies.json",
+        "path": "source_terms",
+        "excerpt": "[\"Sacrifice\",\"Sacrificial Benediction\",\"Consecrated Restocking\",\"Ammo Box\",\"Ammo Bag\",\"Ammunition Package\",\"Dispenser\",\"Supply Vehicle\",\"FOB\",\"air staging facility\",\"Alch…"
+      },
+      {
+        "file": "data/units/tempest-rising.json",
+        "path": "units[id=tempest-rising.gdf.shieldmaiden].abilities[0]",
+        "excerpt": "Deploy Repair Turret: patterns [\"repair-allies\",\"deploy-turret\"]"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "deploy-turret related combos-with resupply-allies; resupply-allies related combos-with deploy-turret"
+  },
+  {
+    "id": "L2-06",
+    "level": 2,
+    "a": {
+      "pattern": "lay-mines",
+      "variant": "snare-trap",
+      "variant_index": 2
+    },
+    "b": {
+      "pattern": "freeze-and-shatter",
+      "variant": "cold-trap",
+      "variant_index": 4
+    },
+    "player_a": "Plant one or two hidden traps; the first enemy to touch one is held (rooted, slowed, or frozen from T2 up) for a moment, and you get a ping.",
+    "player_b": "Plant a hidden mine or a breakable ice block that freezes whoever touches it, or stands near when it breaks.",
+    "why_same": "Same action, target and answer (detect it, avoid it, shoot an unsprung trap). Both name Halo Wars 2's Cryogenic Generator as a source, and snare-trap names a freezing payload itself. The only extra in cold-trap is that its freeze then sets up freeze-and-shatter's shatter bonus.",
+    "evidence": [
+      {
+        "file": "data/patterns/lay-mines.json",
+        "path": "variants[2].summary",
+        "excerpt": "Holds instead of blowing up: the first enemy to touch it is rooted (or slowed; a freezing payload only from T2 up) for a moment and takes light damage, and the owner gets…"
+      },
+      {
+        "file": "data/patterns/lay-mines.json",
+        "path": "variants[2].seen_in",
+        "excerpt": "Overwatch Junkrat's Steel Trap; Halo Wars 2 Cryogenic Generator (a freezing payload)"
+      },
+      {
+        "file": "data/patterns/freeze-and-shatter.json",
+        "path": "variants[4].summary",
+        "excerpt": "A hidden mine or a breakable block of ice that freezes whoever touches it, or whoever stands near when it breaks."
+      },
+      {
+        "file": "data/patterns/freeze-and-shatter.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Halo Wars 2 Cryogenic Generator and Ice Barrier, Destiny 2 Stasis crystals"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "freeze-and-shatter related combos-with lay-mines"
+  },
+  {
+    "id": "L2-07",
+    "level": 2,
+    "a": {
+      "pattern": "convert-on-kill",
+      "variant": "death-curse",
+      "variant_index": 2
+    },
+    "b": {
+      "pattern": "execute-target",
+      "variant": "spawn-from-victim",
+      "variant_index": 6
+    },
+    "player_a": "Curse or tag an enemy soldier; if it dies while marked, a weak minion rises from it and fights for you.",
+    "player_b": "Your execute strike kills its prey outright and hatches a pair of short-lived minions from the body that fight for you.",
+    "why_same": "Same result (the kill you set up becomes minions for you) and the same answers (kill or outrange the source, clear the minions with splash). convert-on-kill's open question says the two share their result and asks whether spawn-from-victim should move into convert-on-kill. Difference: convert-on-kill lets any kill of a tagged enemy count, spawn-from-victim needs the execute strike itself.",
+    "evidence": [
+      {
+        "file": "data/patterns/convert-on-kill.json",
+        "path": "summary",
+        "excerpt": "Your attacks or an aura tag enemy soldiers while they keep being hit or stay in range. A tagged soldier cannot receive buffs from its own side, and if it dies while tagge…"
+      },
+      {
+        "file": "data/patterns/convert-on-kill.json",
+        "path": "variants[2].summary",
+        "excerpt": "A short curse on the enemy you hit, adding a little damage: if it dies before the curse ends, a minion rises, stronger as the curse is upgraded."
+      },
+      {
+        "file": "data/patterns/convert-on-kill.json",
+        "path": "open_questions[5]",
+        "excerpt": "Should execute-target's spawn-from-victim variant, where the killing strike itself hatches minions for the attacker, move here as a variant or stay there? The two share t…"
+      },
+      {
+        "file": "data/patterns/execute-target.json",
+        "path": "variants[6].summary",
+        "excerpt": "The kill hatches a pair of short-lived minions from the body that fight for the attacker until they expire."
+      },
+      {
+        "file": "data/patterns/execute-target.json",
+        "path": "variants[6].seen_in",
+        "excerpt": "Brood War Spawn Broodling"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "convert-on-kill related often-confused-with execute-target"
+  },
+  {
+    "id": "L2-08",
+    "level": 2,
+    "a": {
+      "pattern": "carry-passengers",
+      "variant": "hot-drop",
+      "variant_index": 2
+    },
+    "b": {
+      "pattern": "drop-in-from-above",
+      "variant": "rope-drop",
+      "variant_index": 2
+    },
+    "player_a": "Fly a carrier over a spot and press Q: every rider is thrown out with a slowed, safe fall and lands spread out; the carrier never touches down.",
+    "player_b": "Fly a transport over a spot or a roof and lower your riders on ropes one after another without landing; you hover exposed until the last one is down.",
+    "why_same": "Same action for the pilot (unload riders from the air onto a chosen spot without landing), same targets, same answers (anti-air on the carrier, punish riders as they land). drop-in-from-above's summary tries to set hot-drop apart as 'a plain mid-air unload of riders', but its own rope-drop is also a mid-air unload of riders. Differences: all at once by parachute versus one by one on ropes while hovering, and rope-drop can occupy a roof.",
+    "evidence": [
+      {
+        "file": "data/patterns/carry-passengers.json",
+        "path": "variants[2].summary",
+        "excerpt": "On Q, every rider is thrown out over a spot with a slowed, safe fall, so they land spread out and briefly exposed while the carrier never has to touch down."
+      },
+      {
+        "file": "data/patterns/carry-passengers.json",
+        "path": "variants[2].seen_in",
+        "excerpt": "Red Alert 3 Century Bomber Paradrop, PlanetSide 2 Galaxy ejection system"
+      },
+      {
+        "file": "data/patterns/drop-in-from-above.json",
+        "path": "summary",
+        "excerpt": "The unit, the teammates it carries or a machine it calls for come down from above onto a spot the player picks: by pod, parachute, ropes from a hovering carrier or a cras…"
+      },
+      {
+        "file": "data/patterns/drop-in-from-above.json",
+        "path": "variants[2].summary",
+        "excerpt": "Fly a transport over a spot or a roof and lower your riders on ropes one after another without landing; an empty building is occupied at once. You hover in place, exposed…"
+      },
+      {
+        "file": "data/patterns/drop-in-from-above.json",
+        "path": "variants[2].seen_in",
+        "excerpt": "Generals Combat Chinook (Combat Drop)"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "carry-passengers related combos-with drop-in-from-above; drop-in-from-above related often-confused-with carry-passengers"
+  },
+  {
+    "id": "L2-09",
+    "level": 2,
+    "a": {
+      "pattern": "heal-from-debuff",
+      "variant": "borrowed-time",
+      "variant_index": 5
+    },
+    "b": {
+      "pattern": "become-invulnerable",
+      "variant": "cant-die",
+      "variant_index": 5
+    },
+    "player_a": "For a few seconds every hit heals you instead of hurting you; it starts on a key or by itself at low health, then waits out a long cooldown.",
+    "player_b": "For a few seconds health cannot drop below a floor, so you (or allies in a small field, or one chosen ally) cannot die.",
+    "why_same": "For the enemy it is the same: the unit cannot be killed for a few seconds, and the answer is to hold fire until it ends (or burst before it triggers). heal-from-debuff's own open question asks whether borrowed-time should move to become-invulnerable. Differences: borrowed-time heals as well and is self-only; cant-die can cover allies.",
+    "evidence": [
+      {
+        "file": "data/patterns/heal-from-debuff.json",
+        "path": "variants[5].summary",
+        "excerpt": "For a few seconds every hit heals it instead of hurting it; it starts on a key or by itself when health drops low, then waits out a long cooldown."
+      },
+      {
+        "file": "data/patterns/heal-from-debuff.json",
+        "path": "variants[5].seen_in",
+        "excerpt": "Dota 2 Abaddon (Borrowed Time)"
+      },
+      {
+        "file": "data/patterns/heal-from-debuff.json",
+        "path": "open_questions[3]",
+        "excerpt": "Should the borrowed-time variant, which turns all damage into healing, stay here or move to become-invulnerable?"
+      },
+      {
+        "file": "data/patterns/heal-from-debuff.json",
+        "path": "counterplay[3]",
+        "excerpt": "Wait out the window: against a version that turns all damage into healing for a few seconds (Abaddon's Borrowed Time), hold fire until it ends, or take it from healthy to…"
+      },
+      {
+        "file": "data/patterns/become-invulnerable.json",
+        "path": "variants[5].summary",
+        "excerpt": "Allies in a small field, or one chosen ally, can be hurt but can't die for a few seconds, because health stops at a floor; a thrown device makes the field and can be shot…"
+      },
+      {
+        "file": "data/patterns/become-invulnerable.json",
+        "path": "counterplay[0]",
+        "excerpt": "Stop wasting fire and wait it out: back off, reposition and save your burst for the moment it ends; many versions can't be ended early, so the timing is known."
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "heal-from-debuff related often-confused-with become-invulnerable"
+  },
+  {
+    "id": "L2-10",
+    "level": 2,
+    "a": {
+      "pattern": "dash",
+      "variant": "untouchable-dash",
+      "variant_index": 9
+    },
+    "b": {
+      "pattern": "rewind-self",
+      "variant": "rewind-dash",
+      "variant_index": 3
+    },
+    "player_a": "A short dash during which nothing can hurt you, so you slip through a volley; the recharge is long.",
+    "player_b": "A quick dash to a spot you choose, untouchable on the way, that also heals back the damage you took in the last moment.",
+    "why_same": "Both name Dota 2 Faceless Void's Time Walk as their source, and 'Time Walk' is in both files' source_terms. Same action (an untouchable dash to escape or engage) and the same answers (bait it out, punish the recharge). rewind-dash only adds the heal-back.",
+    "evidence": [
+      {
+        "file": "data/patterns/dash.json",
+        "path": "variants[9].summary",
+        "excerpt": "Nothing can hurt the unit during the dash, so it slips through a volley; the dash is short and its recharge long."
+      },
+      {
+        "file": "data/patterns/dash.json",
+        "path": "variants[9].seen_in",
+        "excerpt": "Dota 2 Faceless Void's Time Walk (invulnerable on the way)"
+      },
+      {
+        "file": "data/patterns/dash.json",
+        "path": "source_terms",
+        "excerpt": "[\"Tempest Engine\",\"Bull Rush\",\"Turbo-Charge\",\"Ignite Afterburners\",\"Oorah!\",\"Sprint\",\"Charge\",\"Boosters\",\"Tailwind\",\"Charging\",\"Bulldozer\",\"Charge of Darkness\",\"Time Walk…"
+      },
+      {
+        "file": "data/patterns/rewind-self.json",
+        "path": "variants[3].summary",
+        "excerpt": "Only the health rewinds: a quick dash to a spot you choose, untouchable on the way, heals back the damage taken in the last moment. The enemy can no longer camp the retur…"
+      },
+      {
+        "file": "data/patterns/rewind-self.json",
+        "path": "variants[3].seen_in",
+        "excerpt": "Dota 2 Faceless Void's Time Walk"
+      },
+      {
+        "file": "data/patterns/rewind-self.json",
+        "path": "source_terms",
+        "excerpt": "[\"Time Belt\",\"Recall\",\"Time Lapse\",\"Chronobreak\",\"Time Walk\"]"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "not linked (no conflicts_with, no related entry)"
+  },
+  {
+    "id": "L2-11",
+    "level": 2,
+    "a": {
+      "pattern": "dash",
+      "variant": "untouchable-dash",
+      "variant_index": 9
+    },
+    "b": {
+      "pattern": "become-invulnerable",
+      "variant": "phase-out",
+      "variant_index": 3
+    },
+    "player_a": "A short dash during which nothing can hurt you; long recharge.",
+    "player_b": "For a moment you move faster (or unseen) and cannot be hurt, slipping through enemy lines, but cannot fire, heal or touch objectives.",
+    "why_same": "Same action (an untouchable burst of movement to slip through enemies) and the same answer (wait it out; a silence before it starts stops it). Differences: the dash is a short straight burst, phase-out lasts a little longer with full steering and may also hide you.",
+    "evidence": [
+      {
+        "file": "data/patterns/dash.json",
+        "path": "variants[9].summary",
+        "excerpt": "Nothing can hurt the unit during the dash, so it slips through a volley; the dash is short and its recharge long."
+      },
+      {
+        "file": "data/patterns/become-invulnerable.json",
+        "path": "variants[3].summary",
+        "excerpt": "Slip out of reach for a moment: faster or unseen, untouchable and free to slip through enemy lines, but unable to fire, heal or touch objectives; a ghost image or a trail…"
+      },
+      {
+        "file": "data/patterns/become-invulnerable.json",
+        "path": "variants[3].seen_in",
+        "excerpt": "Titanfall 2 Phase Shift, Overwatch Reaper's Wraith Form, Apex Legends Wraith's Into the Void"
+      },
+      {
+        "file": "data/patterns/dash.json",
+        "path": "related[5]",
+        "excerpt": "{\"id\":\"become-invulnerable\",\"kind\":\"combos-with\"}"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "dash related combos-with become-invulnerable; become-invulnerable related combos-with dash"
+  },
+  {
+    "id": "L2-12",
+    "level": 2,
+    "a": {
+      "pattern": "teleport",
+      "variant": "home-jump",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "gather-resources",
+      "variant": "warp-home",
+      "variant_index": 1
+    },
+    "player_a": "Teleport back to a fixed friendly point (a spawn, a depot, a deployed beacon) to escape or to deliver cargo.",
+    "player_b": "A hauler that drives out but teleports straight back to its drop-off when full, or early on order to escape an attack.",
+    "why_same": "Both name the Red Alert 2 Chrono Miner as their source. Same action (jump home to bank a load or escape) and the same answer (catch it on the way out or at the field, never on the way home). warp-home is home-jump carrying a gatherer's load.",
+    "evidence": [
+      {
+        "file": "data/patterns/teleport.json",
+        "path": "variants[4].summary",
+        "excerpt": "Teleport back to a fixed friendly point, such as a spawn, a depot or a deployed beacon, to escape or to deliver cargo; elsewhere the unit has to travel normally."
+      },
+      {
+        "file": "data/patterns/teleport.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Red Alert 2 Chrono Miner"
+      },
+      {
+        "file": "data/patterns/gather-resources.json",
+        "path": "variants[1].summary",
+        "excerpt": "Drives out like any vehicle but teleports straight back to the drop-off once full, so it can be caught only on the way out or at the field, never on the trip home (and it…"
+      },
+      {
+        "file": "data/patterns/gather-resources.json",
+        "path": "variants[1].seen_in",
+        "excerpt": "Red Alert 2 Chrono Miner"
+      },
+      {
+        "file": "data/patterns/gather-resources.json",
+        "path": "other_examples[0].note",
+        "excerpt": "The two stock miners show the main twists. The Allied one drives out to the ore like any vehicle but teleports back to its refinery once full, so it spends little time on…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "not linked (no conflicts_with, no related entry)"
+  },
+  {
+    "id": "L2-13",
+    "level": 2,
+    "a": {
+      "pattern": "teleport",
+      "variant": "beacon-jump",
+      "variant_index": 3
+    },
+    "b": {
+      "pattern": "rewind-self",
+      "variant": "set-anchor",
+      "variant_index": 4
+    },
+    "player_a": "Throw or place a marker, then teleport to it while it lasts; enemies can see it, shoot it or wait beside it.",
+    "player_b": "Tap to mark your spot and health, tap again within a short time to return to them; the anchor is visible and can be camped.",
+    "why_same": "Same action (drop a marker, later snap back to it) and the same answers (camp or shoot the marker). set-anchor's source note cites Overwatch Sombra's Translocator, which is also beacon-jump's source. Difference: set-anchor also restores the health you had, and its marker is always where you stood.",
+    "evidence": [
+      {
+        "file": "data/patterns/teleport.json",
+        "path": "variants[3].summary",
+        "excerpt": "Throw or place a marker, then teleport to it while it lasts. Enemies can see it, shoot it or wait beside it, and a damaged marker kills whoever jumps to it."
+      },
+      {
+        "file": "data/patterns/teleport.json",
+        "path": "variants[3].seen_in",
+        "excerpt": "Unreal Tournament Translocator; Overwatch Sombra's Translocator"
+      },
+      {
+        "file": "data/patterns/rewind-self.json",
+        "path": "variants[4].summary",
+        "excerpt": "Tap once to mark your current spot and health, tap again within a short time to return to them; the anchor is visible to enemies and can be camped."
+      },
+      {
+        "file": "data/patterns/rewind-self.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "An original twist on the Time Belt, close to Dota 2 Faceless Void's upgraded Time Walk (which can send him back to where the dash started) and to the early, placed use of…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "teleport related often-confused-with rewind-self; rewind-self related often-confused-with teleport"
+  },
+  {
+    "id": "L2-14",
+    "level": 2,
+    "a": {
+      "pattern": "earn-veterancy",
+      "variant": "carried-rank",
+      "variant_index": 7
+    },
+    "b": {
+      "pattern": "join-ally-crew",
+      "variant": "rank-courier",
+      "variant_index": 3
+    },
+    "player_a": "When your vehicle is destroyed, your surviving pilot keeps its rank and brings it into the next vehicle you take.",
+    "player_b": "You bring the ranks of a vehicle lost earlier and hand them to the next hull for good, on top of its own; once.",
+    "why_same": "Both name the Generals USA Pilot as their source and describe the same thing: a rank survives the hull and is carried into the next one. In a game where the player who drove the vehicle is its pilot, both cards would do the same. Differences: which card holds it (the vehicle or the rider) and rank-courier's one-time limit.",
+    "evidence": [
+      {
+        "file": "data/patterns/earn-veterancy.json",
+        "path": "variants[7].summary",
+        "excerpt": "When the vehicle is destroyed, its surviving pilot keeps the rank and brings it to the next vehicle they take."
+      },
+      {
+        "file": "data/patterns/earn-veterancy.json",
+        "path": "variants[7].seen_in",
+        "excerpt": "Generals USA vehicle pilots"
+      },
+      {
+        "file": "data/patterns/join-ally-crew.json",
+        "path": "variants[3].summary",
+        "excerpt": "The rider brings the ranks of a vehicle lost earlier and hands them to the next hull for good, on top of the ranks it already has; the gift can be made once."
+      },
+      {
+        "file": "data/patterns/join-ally-crew.json",
+        "path": "variants[3].seen_in",
+        "excerpt": "Generals USA Pilot"
+      },
+      {
+        "file": "data/patterns/join-ally-crew.json",
+        "path": "other_examples[0].note",
+        "excerpt": "A one-way version. When a ranked American vehicle is destroyed, an unarmed pilot is left standing in the wreckage, or parachutes from an aircraft, carrying that vehicle's…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "join-ally-crew related combos-with earn-veterancy"
+  },
+  {
+    "id": "L2-15",
+    "level": 2,
+    "a": {
+      "pattern": "rally-allies",
+      "variant": "shadow-one",
+      "variant_index": 6
+    },
+    "b": {
+      "pattern": "join-ally-crew",
+      "variant": "squad-attach",
+      "variant_index": 1
+    },
+    "player_a": "Tie yourself to one teammate or squad and follow it, so that ally is always inside your bonus.",
+    "player_b": "Attach yourself to a teammate's infantry squad: walk with it, steady it and speed its healing while attached.",
+    "why_same": "Both name Dawn of War's Commissar attached to a squad as their source, and both files' examples describe that same commander. Same action and the same answers (kill or separate the buffer, splash the group).",
+    "evidence": [
+      {
+        "file": "data/patterns/rally-allies.json",
+        "path": "variants[6].summary",
+        "excerpt": "The buffer ties itself to one teammate or squad and follows it, so that ally is always inside the bonus; the rest of the team gets less."
+      },
+      {
+        "file": "data/patterns/rally-allies.json",
+        "path": "variants[6].seen_in",
+        "excerpt": "Company of Heroes Lieutenant (Maintain Command Range); Dawn of War Commissar attached to a squad"
+      },
+      {
+        "file": "data/patterns/rally-allies.json",
+        "path": "other_examples[3].note",
+        "excerpt": "The attached-leader form: an infantry commander who joins one Guardsmen squad and raises that squad's morale and health regeneration for as long as he stays with it."
+      },
+      {
+        "file": "data/patterns/join-ally-crew.json",
+        "path": "variants[1].summary",
+        "excerpt": "The host is a teammate's infantry squad instead of a vehicle: the leader walks with it, steadies it and speeds its healing while attached."
+      },
+      {
+        "file": "data/patterns/join-ally-crew.json",
+        "path": "variants[1].seen_in",
+        "excerpt": "Dawn of War Commissar"
+      },
+      {
+        "file": "data/patterns/join-ally-crew.json",
+        "path": "other_examples[2].note",
+        "excerpt": "The same idea with a squad as the host: a single commander figure is attached to an infantry squad, which then holds its morale better and recovers health faster for as l…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "join-ally-crew related often-confused-with rally-allies"
+  },
+  {
+    "id": "L2-16",
+    "level": 2,
+    "a": {
+      "pattern": "sacrifice-for-allies",
+      "variant": "spend-minion",
+      "variant_index": 0
+    },
+    "b": {
+      "pattern": "rally-allies",
+      "variant": "placed-blessing",
+      "variant_index": 4
+    },
+    "player_a": "Send a cheap minion to a chosen spot, where it gives itself up and buffs every ally in the area.",
+    "player_b": "Put a buff on a chosen area at range that covers whoever stands there; each use costs money or another price, such as the unit itself.",
+    "why_same": "Same action (pay, then a strong timed buff lands on an area) and the same answer (back off for its seconds). Both name Tempest Rising's Enlightened Sacrifice as a source, and that one ability links rally-allies, resupply-allies and sacrifice-for-allies. sacrifice-for-allies' build note says 'The buff itself is the rally-allies effect', and rally-allies' summary already lists a spent minion as a price. What sacrifice-for-allies adds is the price (a lost body, which gives the enemy minions to hunt) and its other variants.",
+    "evidence": [
+      {
+        "file": "data/patterns/sacrifice-for-allies.json",
+        "path": "variants[0].summary",
+        "excerpt": "Send a cheap minion to a chosen spot, where it gives itself up and buffs every ally in the area."
+      },
+      {
+        "file": "data/patterns/sacrifice-for-allies.json",
+        "path": "variants[0].seen_in",
+        "excerpt": "Tempest Rising Enlightened (Sacrifice)"
+      },
+      {
+        "file": "data/patterns/sacrifice-for-allies.json",
+        "path": "build_difficulty.notes[1]",
+        "excerpt": "The buff itself is the rally-allies effect; the bonus per receiver needs an event that each unit's own perk can listen to."
+      },
+      {
+        "file": "data/patterns/rally-allies.json",
+        "path": "summary",
+        "excerpt": "A unit makes the teammates around it fight better for a while: they fire faster, hit harder, move faster or take less damage. It comes as an always-on aura around the car…"
+      },
+      {
+        "file": "data/patterns/rally-allies.json",
+        "path": "variants[4].summary",
+        "excerpt": "The buff is put on a chosen area at range and covers whoever stands there, not the caster; each use costs team money or another price and has a long wait."
+      },
+      {
+        "file": "data/patterns/rally-allies.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Tempest Rising Vimana (Sacrificial Benediction, paid in credits) and Enlightened (Sacrifice, paid with the unit)"
+      },
+      {
+        "file": "data/units/tempest-rising.json",
+        "path": "units[id=tempest-rising.veti.enlightened].abilities[0]",
+        "excerpt": "Sacrifice: patterns [\"rally-allies\",\"resupply-allies\",\"sacrifice-for-allies\"]"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "sacrifice-for-allies related combos-with rally-allies; rally-allies related combos-with sacrifice-for-allies"
+  },
+  {
+    "id": "L2-17",
+    "level": 2,
+    "a": {
+      "pattern": "build-structure",
+      "variant": "builder-drone",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "launch-drones",
+      "variant": "support-drone",
+      "variant_index": 4
+    },
+    "player_a": "A small drone rides on you and helps you build, or flies off on command to build, repair or capture somewhere else while you fight.",
+    "player_b": "A drone that mends, heals, turns bullets aside or helps build instead of fighting, and can be sent to a teammate.",
+    "why_same": "Both name Supreme Commander's UEF Engineering Drone as a source. Same action (send a helper drone off to work) and the same answers (shoot the fragile drone, EMP it, kill the owner).",
+    "evidence": [
+      {
+        "file": "data/patterns/build-structure.json",
+        "path": "variants[4].summary",
+        "excerpt": "A small drone rides on the unit and helps it build, or flies off on command to build, repair or capture somewhere else, so the unit can fight while its drone works."
+      },
+      {
+        "file": "data/patterns/build-structure.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Supreme Commander UEF Engineering Drone"
+      },
+      {
+        "file": "data/patterns/launch-drones.json",
+        "path": "variants[4].summary",
+        "excerpt": "The drone mends armour or hulls, heals, turns bullets aside or helps build instead of fighting, and can be sent to a teammate; it can't defend itself."
+      },
+      {
+        "file": "data/patterns/launch-drones.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "The Division 2 Fixer and Defender Drones, Supreme Commander Engineering Drone, Generals Battle Drone (patches up its parent while it stands still), Deep Rock Galactic Bos…"
+      },
+      {
+        "file": "data/patterns/launch-drones.json",
+        "path": "other_examples[3].note",
+        "excerpt": "An upgrade on the back of the UEF commander (and of support commanders) adds a small drone that helps with whatever its owner is building, or can be sent off on its own t…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "not linked (no conflicts_with, no related entry)"
+  },
+  {
+    "id": "L2-18",
+    "level": 2,
+    "a": {
+      "pattern": "capture-structure",
+      "variant": "clamp-a-device",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "disable-machine",
+      "variant": "clamp-on-stunner",
+      "variant_index": 5
+    },
+    "player_a": "Tap to stick a device on an enemy structure: it stops working at once and loses health until the device is knocked off; you are free to move.",
+    "player_b": "Stick a device onto an enemy machine: it stops until a short timer ends or the device is knocked off, then the device must recharge.",
+    "why_same": "Both name Team Fortress 2's sapper as their source (the base game and its Mann vs. Machine mode). On a player-placed turret, which is both a structure and a machine, the two do the same thing, and the answer is the same (knock the device off with a repair tool, kill the sapper). Differences: structure plus damage over time, versus machine plus a short timer.",
+    "evidence": [
+      {
+        "file": "data/patterns/capture-structure.json",
+        "path": "variants[4].summary",
+        "excerpt": "Tap to stick a device on the structure: it stops working at once and loses health until the device is knocked off, and you are free to move."
+      },
+      {
+        "file": "data/patterns/capture-structure.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Team Fortress 2 sapper"
+      },
+      {
+        "file": "data/patterns/disable-machine.json",
+        "path": "variants[5].summary",
+        "excerpt": "A device stuck onto a machine stops it until a short timer ends or the device is knocked off, then must recharge."
+      },
+      {
+        "file": "data/patterns/disable-machine.json",
+        "path": "variants[5].seen_in",
+        "excerpt": "Team Fortress 2 Mann vs. Machine sapper"
+      },
+      {
+        "file": "data/patterns/disable-machine.json",
+        "path": "summary",
+        "excerpt": "An electric or electromagnetic effect stops a machine for a short time without destroying it. Versions differ in what they stop: a pin keeps a vehicle from moving, deploy…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "capture-structure related often-confused-with disable-machine; disable-machine related often-confused-with capture-structure"
+  },
+  {
+    "id": "L2-19",
+    "level": 2,
+    "a": {
+      "pattern": "passenger-sets-weapon",
+      "variant": "anchor-to-fire",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "fortify-on-death",
+      "variant": "anchor-by-choice",
+      "variant_index": 2
+    },
+    "player_a": "Your passengers can shoot only once the vehicle deploys into a static bunker, trading mobility for firepower.",
+    "player_b": "Enter the shell on a key before the hull dies, one way; anchored, it gains room and lets riders fire who could not fire while it drove.",
+    "why_same": "Both name the Kane's Wrath Reckoner as their source. Same action (deploy the carrier into a bunker so riders can fire) and the same answers (out-range it, flank it, catch it before it deploys). anchor-by-choice is one way, like the Reckoner; anchor-to-fire does not say whether it packs up again.",
+    "evidence": [
+      {
+        "file": "data/patterns/passenger-sets-weapon.json",
+        "path": "variants[4].summary",
+        "excerpt": "Passengers can only shoot once the vehicle deploys into a static bunker, trading mobility for firepower."
+      },
+      {
+        "file": "data/patterns/passenger-sets-weapon.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Kane's Wrath Reckoner"
+      },
+      {
+        "file": "data/patterns/fortify-on-death.json",
+        "path": "variants[2].summary",
+        "excerpt": "The shell can also be entered on a key before the hull dies, one way; anchored, it gains room and lets riders fire who could not fire while it drove."
+      },
+      {
+        "file": "data/patterns/fortify-on-death.json",
+        "path": "variants[2].seen_in",
+        "excerpt": "Kane's Wrath Reckoner"
+      },
+      {
+        "file": "data/patterns/fortify-on-death.json",
+        "path": "other_examples[0].note",
+        "excerpt": "An unarmed carrier for two infantry squads that turns into a fixed bunker either on the player's order or by itself the first time it would be destroyed, and can never pa…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "fortify-on-death related combos-with passenger-sets-weapon"
+  },
+  {
+    "id": "L2-20",
+    "level": 2,
+    "a": {
+      "pattern": "transform",
+      "variant": "shell-and-pilot",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "drop-in-from-above",
+      "variant": "call-down-machine",
+      "variant_index": 3
+    },
+    "player_a": "When your outer shell's health runs out you are thrown clear as a small, fragile pilot and must earn a new shell before you can change back.",
+    "player_b": "When your suit or vehicle is wrecked, you call a fresh one down onto a marker beside you after a long wait and climb in.",
+    "why_same": "Same loop (lose the machine, fight on as the pilot, get a machine back) and the same answers (kill the pilot before the machine returns, meet the arrival). drop-in-from-above's open question says the William Mason record names both and asks whether call-downs of your own machine belong to transform. shell-and-pilot's source (D.Va) gets her new mech by calling it down.",
+    "evidence": [
+      {
+        "file": "data/patterns/transform.json",
+        "path": "variants[4].summary",
+        "excerpt": "When the outer shell's health runs out, the pilot is thrown clear as a small, fragile form and must earn a new shell before changing back."
+      },
+      {
+        "file": "data/patterns/transform.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Overwatch D.Va"
+      },
+      {
+        "file": "data/patterns/transform.json",
+        "path": "shooter_analogues[1].note",
+        "excerpt": "A pilot inside a mech: when the mech's health runs out she is thrown clear, briefly invulnerable, into a small, fragile pilot form with a light pistol, and must charge he…"
+      },
+      {
+        "file": "data/patterns/drop-in-from-above.json",
+        "path": "variants[3].summary",
+        "excerpt": "When your suit or vehicle is wrecked, call a fresh one down onto a marker beside you after a long wait; it can crush what stands there, and you climb in with E."
+      },
+      {
+        "file": "data/patterns/drop-in-from-above.json",
+        "path": "variants[3].seen_in",
+        "excerpt": "Iron Harvest William Mason (Requisition); Titanfall's Titanfall; Battlefield 2042 call-ins"
+      },
+      {
+        "file": "data/patterns/drop-in-from-above.json",
+        "path": "open_questions[5]",
+        "excerpt": "William Mason's Requisition lands a new suit, not him, and the unit record also names transform's shell-and-pilot variant. Titanfall's Titan, earned through a meter and f…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "drop-in-from-above related combos-with transform"
+  },
+  {
+    "id": "L2-21",
+    "level": 2,
+    "a": {
+      "pattern": "burrow",
+      "variant": "tripwire-ambush",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "self-destruct",
+      "variant": "buried-trap",
+      "variant_index": 7
+    },
+    "player_a": "Wait buried on a spot; when an enemy comes close you surface by yourself, with the eruption if you have it, so you guard a route.",
+    "player_b": "Burrow or hide in cover under the enemy's path and go off when they walk over you.",
+    "why_same": "Both name StarCraft II banelings buried as mines as a source. Same action (lie buried on a route and fire automatically on the first enemy near) and the same answers (detectors, scans, avoid the obvious paths, spread out). Difference: buried-trap spends the unit, tripwire-ambush surfaces to keep fighting.",
+    "evidence": [
+      {
+        "file": "data/patterns/burrow.json",
+        "path": "variants[4].summary",
+        "excerpt": "You wait buried on a spot; when an enemy comes close you surface by yourself, with the eruption if you have it, so you can guard a route while watching the map."
+      },
+      {
+        "file": "data/patterns/burrow.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "StarCraft II automatic unburrow and banelings buried as mines"
+      },
+      {
+        "file": "data/patterns/self-destruct.json",
+        "path": "variants[7].summary",
+        "excerpt": "The carrier burrows or hides in cover and waits under the enemy's path, then goes off when they walk over it."
+      },
+      {
+        "file": "data/patterns/self-destruct.json",
+        "path": "variants[7].seen_in",
+        "excerpt": "StarCraft II Baneling (burrowed); Company of Heroes Goliath (camouflaged in cover)"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "self-destruct related combos-with burrow"
+  },
+  {
+    "id": "L2-22",
+    "level": 2,
+    "a": {
+      "pattern": "lay-mines",
+      "variant": "be-the-mine",
+      "variant_index": 7
+    },
+    "b": {
+      "pattern": "burrow",
+      "variant": "tripwire-ambush",
+      "variant_index": 4
+    },
+    "player_a": "Burrow to become a hidden mine yourself: fire one heavy blast at the next enemy in range, show yourself while you reload, unburrow to move.",
+    "player_b": "Wait buried on a spot; surface by yourself when an enemy comes close.",
+    "why_same": "Both are 'bury yourself on a route and strike the first enemy that comes near, automatically', with the same answers (a detector reveals it; shoot it while it shows itself). Sources differ (Widow Mine versus buried banelings). Difference: be-the-mine attacks from below and stays buried, tripwire-ambush surfaces. self-destruct's buried-trap is the third member of this cluster.",
+    "evidence": [
+      {
+        "file": "data/patterns/lay-mines.json",
+        "path": "variants[7].summary",
+        "excerpt": "The unit burrows or hunkers down to become a hidden mine itself: it fires one heavy blast at the next enemy that comes in range, shows itself while it reloads, and must u…"
+      },
+      {
+        "file": "data/patterns/lay-mines.json",
+        "path": "variants[7].seen_in",
+        "excerpt": "StarCraft II Widow Mine"
+      },
+      {
+        "file": "data/patterns/lay-mines.json",
+        "path": "other_examples[4].note",
+        "excerpt": "A small robot that is itself the mine: it walks into place and burrows, and only then can it attack, firing one missile with a wide splash at an enemy that comes near and…"
+      },
+      {
+        "file": "data/patterns/burrow.json",
+        "path": "variants[4].summary",
+        "excerpt": "You wait buried on a spot; when an enemy comes close you surface by yourself, with the eruption if you have it, so you can guard a route while watching the map."
+      },
+      {
+        "file": "data/patterns/burrow.json",
+        "path": "related[3]",
+        "excerpt": "{\"id\":\"lay-mines\",\"kind\":\"often-confused-with\"}"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "burrow related often-confused-with lay-mines"
+  },
+  {
+    "id": "L2-23",
+    "level": 2,
+    "a": {
+      "pattern": "infest-vehicle",
+      "variant": "mine-latch",
+      "variant_index": 7
+    },
+    "b": {
+      "pattern": "lay-mines",
+      "variant": "snare-trap",
+      "variant_index": 2
+    },
+    "player_a": "Plant up to two hidden latch-mines; the first enemy vehicle over one is tagged or slowed, and you get a ping.",
+    "player_b": "Plant one or two hidden traps; the first enemy to touch one is rooted or slowed for a moment, and you get a ping.",
+    "why_same": "Same action, same trigger, same answers (detect, sweep, take another route). Differences: the latch stays on the vehicle (a lasting slow or tracker until shaken or repaired off) and only vehicles set it off; the snare is a short hold on any enemy.",
+    "evidence": [
+      {
+        "file": "data/patterns/infest-vehicle.json",
+        "path": "variants[7].summary",
+        "excerpt": "You plant up to two hidden latch-mines; the first enemy vehicle to drive over one is tagged (tracker) or slowed (anchor), never gnawed, and you get a ping. You never wait…"
+      },
+      {
+        "file": "data/patterns/infest-vehicle.json",
+        "path": "variants[7].seen_in",
+        "excerpt": "Firestorm limpet drone"
+      },
+      {
+        "file": "data/patterns/lay-mines.json",
+        "path": "variants[2].summary",
+        "excerpt": "Holds instead of blowing up: the first enemy to touch it is rooted (or slowed; a freezing payload only from T2 up) for a moment and takes light damage, and the owner gets…"
+      },
+      {
+        "file": "data/patterns/lay-mines.json",
+        "path": "related[2]",
+        "excerpt": "{\"id\":\"infest-vehicle\",\"kind\":\"often-confused-with\"}"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "lay-mines related often-confused-with infest-vehicle"
+  },
+  {
+    "id": "L2-24",
+    "level": 2,
+    "a": {
+      "pattern": "execute-target",
+      "variant": "health-threshold",
+      "variant_index": 1
+    },
+    "b": {
+      "pattern": "freeze-and-shatter",
+      "variant": "shatter-threshold",
+      "variant_index": 6
+    },
+    "player_a": "A strike that kills any target outright once it is below a health threshold (above it, a heavy hit); a kill readies it again.",
+    "player_b": "Frostbitten targets cannot heal, and any whose health drops below a threshold shatters outright.",
+    "why_same": "Same effect (an instant kill under a threshold) and the same answer (stay above the line, which shows on the health bar). freeze-and-shatter's text itself calls it 'an execute rather than a hold'. Differences: shatter-threshold also blocks healing and lets any damage trigger the kill; different sources (Culling Blade, Ice Blast).",
+    "evidence": [
+      {
+        "file": "data/patterns/execute-target.json",
+        "path": "variants[1].summary",
+        "excerpt": "Works on any kind of target, but kills outright only once the target is below a threshold; above it the strike is an ordinary heavy hit. A kill readies the strike again a…"
+      },
+      {
+        "file": "data/patterns/execute-target.json",
+        "path": "variants[1].seen_in",
+        "excerpt": "Dota 2 Culling Blade"
+      },
+      {
+        "file": "data/patterns/freeze-and-shatter.json",
+        "path": "variants[6].summary",
+        "excerpt": "Frostbitten targets can't heal, and any whose health drops below a threshold shatters outright: an execute rather than a hold."
+      },
+      {
+        "file": "data/patterns/freeze-and-shatter.json",
+        "path": "variants[6].seen_in",
+        "excerpt": "Dota 2 Ancient Apparition's Ice Blast"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "not linked (no conflicts_with, no related entry)"
+  },
+  {
+    "id": "L2-25",
+    "level": 2,
+    "a": {
+      "pattern": "mind-control",
+      "variant": "hack-machine",
+      "variant_index": 2
+    },
+    "b": {
+      "pattern": "capture-structure",
+      "variant": "take-over",
+      "variant_index": 0
+    },
+    "player_a": "After a short, warned hack, take a crewless machine (a drone, a turret, a robot) to fight for you.",
+    "player_b": "Hold at touching distance to turn an enemy turret, device or building to your team; it works for you until retaken.",
+    "why_same": "On a player-placed turret both do the same thing, with the same answers (interrupt the hack, kill the hacker, retake it). mind-control's player version keeps a captured turret until the controller dies. Differences: take-over also takes buildings and lasts until retaken; hack-machine also takes mobile drones and robots.",
+    "evidence": [
+      {
+        "file": "data/patterns/mind-control.json",
+        "path": "variants[2].summary",
+        "excerpt": "A tech version that takes only crewless machines (drones, turrets, robots) after a short, warned hack; living units are immune. It turns the psychic immunity inside out."
+      },
+      {
+        "file": "data/patterns/mind-control.json",
+        "path": "player_translation.summary",
+        "excerpt": "A fragile controller that holds a link on one enemy. After a short, visible wind-up it takes the victim's weapon for a few seconds: you aim and fire their gun at their ow…"
+      },
+      {
+        "file": "data/patterns/capture-structure.json",
+        "path": "variants[0].summary",
+        "excerpt": "Hold in contact to turn an enemy turret, device or building to your team; it keeps its health and works for you until it is retaken."
+      },
+      {
+        "file": "data/patterns/capture-structure.json",
+        "path": "variants[0].seen_in",
+        "excerpt": "Red Alert 1 Engineer, Generals Black Lotus and Rangers, PlanetSide 2 hacking"
+      },
+      {
+        "file": "data/patterns/capture-structure.json",
+        "path": "shooter_analogues[0].note",
+        "excerpt": "The Infiltrator walks up to an enemy terminal or base turret and holds the use key while a progress ring fills; the equipment then belongs to their faction and can be use…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "not linked (no conflicts_with, no related entry)"
+  },
+  {
+    "id": "L2-26",
+    "level": 2,
+    "a": {
+      "pattern": "build-linked-exits",
+      "variant": "recall-to-carrier",
+      "variant_index": 2
+    },
+    "b": {
+      "pattern": "teleport",
+      "variant": "move-teammates",
+      "variant_index": 6
+    },
+    "player_a": "Set down a shelter that teammates garrison; on a key it dissolves and everyone inside reappears on the ground beneath you, wherever you are.",
+    "player_b": "Pull teammates to your position after a short countdown, or trade places with one ally.",
+    "why_same": "The key press is the same (teleport teammates to me), and the Thunderhead's one ability 'Deploy / Recall Lightning Rod' links both patterns. Difference: recall-to-carrier needs the shelter first, which the enemy can destroy with everyone inside.",
+    "evidence": [
+      {
+        "file": "data/patterns/build-linked-exits.json",
+        "path": "variants[2].summary",
+        "excerpt": "Set down one shelter that teammates garrison; on a key it dissolves and everyone inside reappears on the ground beneath you, wherever you are. If enemies destroy the shel…"
+      },
+      {
+        "file": "data/patterns/build-linked-exits.json",
+        "path": "variants[2].seen_in",
+        "excerpt": "Tempest Rising Thunderhead (Lightning Rod)"
+      },
+      {
+        "file": "data/patterns/teleport.json",
+        "path": "variants[6].summary",
+        "excerpt": "Pull nearby teammates to your position after a short countdown, or trade places with one ally; whoever is moved arrives briefly disabled."
+      },
+      {
+        "file": "data/patterns/teleport.json",
+        "path": "variants[6].seen_in",
+        "excerpt": "StarCraft Arbiter Recall; Red Alert 3 Chrono Swap"
+      },
+      {
+        "file": "data/units/tempest-rising.json",
+        "path": "units[id=tempest-rising.veti.thunderhead].abilities[1]",
+        "excerpt": "Deploy / Recall Lightning Rod: patterns [\"build-linked-exits\",\"teleport\"]"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "build-linked-exits related often-confused-with teleport; teleport related often-confused-with build-linked-exits"
+  },
+  {
+    "id": "L2-27",
+    "level": 2,
+    "a": {
+      "pattern": "launch-drones",
+      "variant": "scout-drone",
+      "variant_index": 2
+    },
+    "b": {
+      "pattern": "reveal-area"
+    },
+    "player_a": "A drone that does not fight: it widens your sight, reveals stealthed units near you, or climbs above a chosen spot and marks enemies there for the team.",
+    "player_b": "On a key, uncover an area for the whole team for a few seconds, hidden units included, or place a sensor that keeps pinging movers.",
+    "why_same": "Same effect (the team sees hidden enemies in an area) and the same answers (leave the area, shoot the drone or sensor). The field rules say delivery does not make a new pattern. scout-drone's Battlefield MAV pings moving enemies like reveal-area's T-UGS. Difference: the drone can move and be shot down.",
+    "evidence": [
+      {
+        "file": "data/patterns/launch-drones.json",
+        "path": "variants[2].summary",
+        "excerpt": "The drone does not fight: it widens its owner's sight, reveals stealthed units near him, or climbs above a chosen spot and marks enemies there for the team."
+      },
+      {
+        "file": "data/patterns/launch-drones.json",
+        "path": "variants[2].seen_in",
+        "excerpt": "Generals Scout Drone, The Division 2 Tactician Drone, Battlefield MAV, Apex Legends Crypto's drone"
+      },
+      {
+        "file": "data/patterns/launch-drones.json",
+        "path": "shooter_analogues[4].note",
+        "excerpt": "Two gadgets the soldier steers by remote. The Recon's MAV is an unarmed flying camera: it spots enemies, its motion sensor pings moving enemies on the team's minimap, and…"
+      },
+      {
+        "file": "data/patterns/reveal-area.json",
+        "path": "summary",
+        "excerpt": "On a key, the unit uncovers an area for its whole team for a short time: it scans a spot, often far away, fires or places a sensor that pulses, or deploys into a sensor p…"
+      },
+      {
+        "file": "data/patterns/reveal-area.json",
+        "path": "variants[2].seen_in",
+        "excerpt": "Battlefield T-UGS; Valorant Sova's Recon Bolt (pulses for a few seconds)"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "launch-drones related often-confused-with reveal-area"
+  },
+  {
+    "id": "L2-28",
+    "level": 2,
+    "a": {
+      "pattern": "shroud-area",
+      "variant": "thrown-blackout",
+      "variant_index": 2
+    },
+    "b": {
+      "pattern": "lay-smoke",
+      "variant": "lobbed-smoke",
+      "variant_index": 1
+    },
+    "player_a": "Throw a device that keeps an area dark for the enemy for several seconds, hiding allies who stand in it.",
+    "player_b": "Throw or fire a canister to a spot; a smoke cloud forms that nobody can see through.",
+    "why_same": "Same action (throw an area-hiding effect on a key) and mostly the same answers (walk in, fire area weapons blind, wait it out). shroud-area's escort-field and lay-smoke's trailing-screen overlap the same way. The difference each file names: smoke blinds both sides (allies inside see little and enemies can hide in it too), the blackout blinds only the enemy.",
+    "evidence": [
+      {
+        "file": "data/patterns/shroud-area.json",
+        "path": "variants[2].summary",
+        "excerpt": "On a key, throw a device that keeps an area dark for the enemy for several seconds, hiding allies who stand in it."
+      },
+      {
+        "file": "data/patterns/shroud-area.json",
+        "path": "summary",
+        "excerpt": "An always-on field around the unit keeps the nearby ground dark for the enemy team: nothing inside shows on their screens or minimap, so the unit and the teammates beside…"
+      },
+      {
+        "file": "data/patterns/lay-smoke.json",
+        "path": "variants[1].summary",
+        "excerpt": "Fire or throw a canister to a chosen spot within reach, where the cloud forms."
+      },
+      {
+        "file": "data/patterns/lay-smoke.json",
+        "path": "summary",
+        "excerpt": "On a key, the unit fills an area with a cloud of smoke for a short time: around itself, where a thrown or fired canister lands, or as a screen across the line of fire. No…"
+      },
+      {
+        "file": "data/patterns/shroud-area.json",
+        "path": "variants[0].summary",
+        "excerpt": "The base form: an always-on field around the carrier that hides it and nearby allies and moves with it."
+      },
+      {
+        "file": "data/patterns/lay-smoke.json",
+        "path": "variants[3].summary",
+        "excerpt": "The smoke follows you as you move for its duration, a moving cover for you and those beside you."
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "shroud-area related often-confused-with lay-smoke; lay-smoke related often-confused-with shroud-area"
+  },
+  {
+    "id": "L2-29",
+    "level": 2,
+    "a": {
+      "pattern": "gather-resources",
+      "variant": "worker-crew",
+      "variant_index": 3
+    },
+    "b": {
+      "pattern": "reinforce-squad",
+      "variant": "respawning-followers",
+      "variant_index": 4
+    },
+    "player_a": "Field a few AI workers that dig and carry for you; lost ones come back.",
+    "player_b": "Separate AI followers tied to you, a work crew or an escort, come back one by one after a delay, free, up to a cap.",
+    "why_same": "Both name the Yuri's Revenge Slave Miner's slaves as a source, and worker-crew's own text points to respawning-followers for how lost workers return. respawning-followers drops reinforce-squad's squad requirement, so it can roll next to gather-resources and repeat the same followers. Same answers (kill the master, strike in the gap).",
+    "evidence": [
+      {
+        "file": "data/patterns/gather-resources.json",
+        "path": "variants[3].summary",
+        "excerpt": "Fields a few AI workers that dig and carry for it instead of mining itself. The workers are soft, so the enemy can kill them to cut the income; lost ones come back as in …"
+      },
+      {
+        "file": "data/patterns/gather-resources.json",
+        "path": "variants[3].seen_in",
+        "excerpt": "Red Alert 2: Yuri's Revenge Slave Miner (free slaves); Generals GLA Workers (bought one by one)"
+      },
+      {
+        "file": "data/patterns/reinforce-squad.json",
+        "path": "variants[4].summary",
+        "excerpt": "The bodies are separate AI followers tied to the unit, a work crew or an escort, rather than its own members: each one lost comes back at the unit by itself after a delay…"
+      },
+      {
+        "file": "data/patterns/reinforce-squad.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Red Alert 2: Yuri's Revenge Slave Miner (worker slaves); Diablo III Command Skeletons; Risk of Rain 2 Empathy Cores"
+      },
+      {
+        "file": "data/patterns/reinforce-squad.json",
+        "path": "variants[4].overrides.requires",
+        "excerpt": "[]"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "gather-resources related combos-with reinforce-squad; reinforce-squad related combos-with gather-resources"
+  },
+  {
+    "id": "L2-30",
+    "level": 2,
+    "a": {
+      "pattern": "self-destruct",
+      "variant": "disguised-bomb",
+      "variant_index": 5
+    },
+    "b": {
+      "pattern": "disguise",
+      "variant": "copy-target",
+      "variant_index": 0
+    },
+    "player_a": "A bomb carrier that looks like an ordinary vehicle until it strikes.",
+    "player_b": "Pick a unit in view and take its look after a short change-over (and wolf-in-the-column: a disguised vehicle that drives into the enemy and blows up).",
+    "why_same": "The Generals Bomb Truck is the source of self-destruct's disguised-bomb and of disguise's copy-target and wolf-in-the-column. disguised-bomb carries a whole disguise inside a self-destruct variant, so a card with disguise and self-destruct (disguised-bomb) shows the disguise twice. wolf-in-the-column requires self-destruct, so that pairing is intended; the duplicate risk is disguised-bomb. Same answers (detectors, watch how it moves).",
+    "evidence": [
+      {
+        "file": "data/patterns/self-destruct.json",
+        "path": "variants[5].summary",
+        "excerpt": "The carrier looks like an ordinary vehicle until it strikes; detection or a sharp eye on how it moves gives it away."
+      },
+      {
+        "file": "data/patterns/self-destruct.json",
+        "path": "variants[5].seen_in",
+        "excerpt": "Generals Bomb Truck"
+      },
+      {
+        "file": "data/patterns/disguise.json",
+        "path": "variants[0].seen_in",
+        "excerpt": "Red Alert 2 and 3 spies, Red Alert 3 Sudden Transport, Generals bomb truck, Team Fortress 2 Spy"
+      },
+      {
+        "file": "data/patterns/disguise.json",
+        "path": "variants[5].summary",
+        "excerpt": "A disguised vehicle that drives into the enemy group and then blows itself up."
+      },
+      {
+        "file": "data/patterns/disguise.json",
+        "path": "variants[5].overrides.requires",
+        "excerpt": "[[\"pattern:self-destruct\"]]"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "self-destruct related combos-with disguise; disguise related combos-with self-destruct"
+  },
+  {
+    "id": "L2-31",
+    "level": 2,
+    "a": {
+      "pattern": "leave-hazard-zone",
+      "variant": "slow-field",
+      "variant_index": 2
+    },
+    "b": {
+      "pattern": "dampen-missile-fire",
+      "variant": "slow-all-attacks",
+      "variant_index": 4
+    },
+    "player_a": "A zone that hurts no one but slows the movement and attacks of enemies inside (it can form around you, at a thrown canister or at range).",
+    "player_b": "A field around your standing unit slows the attack rate of every enemy inside it.",
+    "why_same": "dampen-missile-fire sets itself apart from leave-hazard-zone by two things: nothing is laid on the ground, and only one weapon kind is hit. slow-all-attacks drops the second, and leave-hazard-zone lets a zone form around the unit itself. Same answers (leave the field, force or kill its source). Remaining differences: a carried field versus a laid zone, and slow-field also slows movement.",
+    "evidence": [
+      {
+        "file": "data/patterns/leave-hazard-zone.json",
+        "path": "summary",
+        "excerpt": "On a key, the unit covers a patch of ground with something that harms (fire, gas, radiation, an energy storm) or hampers (a field that slows movement and attacks). The zo…"
+      },
+      {
+        "file": "data/patterns/leave-hazard-zone.json",
+        "path": "variants[2].summary",
+        "excerpt": "The zone hurts no one but slows the movement and attacks of enemies inside, so the team can catch or out-shoot them."
+      },
+      {
+        "file": "data/patterns/dampen-missile-fire.json",
+        "path": "summary",
+        "excerpt": "While the unit stands still, a wide, always-on field around it hampers every enemy rocket and missile weapon inside it: those launchers, on units and defences alike, fire…"
+      },
+      {
+        "file": "data/patterns/dampen-missile-fire.json",
+        "path": "variants[4].summary",
+        "excerpt": "The field slows the attack rate of every enemy inside it, not only rocket and missile weapons, but it is smaller and does not stack."
+      },
+      {
+        "file": "data/patterns/dampen-missile-fire.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Dota 2 Shiva's Guard Freezing Aura"
+      }
+    ],
+    "confidence": "low",
+    "already_linked": "dampen-missile-fire related often-confused-with leave-hazard-zone"
+  },
+  {
+    "id": "L2-32",
+    "level": 2,
+    "a": {
+      "pattern": "throw-explosive",
+      "variant": "remote-charge",
+      "variant_index": 3
+    },
+    "b": {
+      "pattern": "lay-mines",
+      "variant": "command-trigger",
+      "variant_index": 3
+    },
+    "player_a": "Place or throw a few charges and set them all off with a second press, for traps and ambushes.",
+    "player_b": "Each mine can be set to go off by itself or only on your order, so it waits for the best target.",
+    "why_same": "Same action (lay explosives on a route and blow them by hand when the right target comes). throw-explosive's own summary says a charge left to wait for whoever passes is a mine. Differences that matter a little: charges are visible and can be shot or defused, mines stay hidden until revealed.",
+    "evidence": [
+      {
+        "file": "data/patterns/throw-explosive.json",
+        "path": "summary",
+        "excerpt": "A burst of explosive damage the unit delivers by hand, apart from its normal weapon: it lobs a grenade at a spot, throws a charge that sticks to what it hits, or runs up …"
+      },
+      {
+        "file": "data/patterns/throw-explosive.json",
+        "path": "variants[3].summary",
+        "excerpt": "Place or throw a few charges and set them all off with a second press, for traps and ambushes; they vanish if you die."
+      },
+      {
+        "file": "data/patterns/throw-explosive.json",
+        "path": "player_translation.as_user[3]",
+        "excerpt": "With the remote variant the charge waits for your second press, which makes traps on a route or on a vehicle you expect to come back."
+      },
+      {
+        "file": "data/patterns/lay-mines.json",
+        "path": "variants[3].summary",
+        "excerpt": "Each mine can be set to go off by itself or only on your order, so it can wait for the best target (the tank, not the scout in front of it). Enemies who reveal it can def…"
+      },
+      {
+        "file": "data/patterns/lay-mines.json",
+        "path": "variants[3].seen_in",
+        "excerpt": "Generals Demo Trap (proximity fuse or manual control); the StarCraft: Ghost demo's spider mines"
+      }
+    ],
+    "confidence": "low",
+    "already_linked": "throw-explosive related often-confused-with lay-mines; lay-mines related often-confused-with throw-explosive"
+  },
+  {
+    "id": "L2-33",
+    "level": 2,
+    "a": {
+      "pattern": "bombard-area",
+      "variant": "planted-beacon",
+      "variant_index": 5
+    },
+    "b": {
+      "pattern": "throw-explosive",
+      "variant": "demolition-charge",
+      "variant_index": 4
+    },
+    "player_a": "Plant a beacon; after a long countdown a devastating strike lands there unless an enemy reaches the beacon and disarms it, so your team guards it.",
+    "player_b": "Set a slow charge with a long fuse that can bring down a structure; the enemy can see it and defuse it in time.",
+    "why_same": "Same play for both sides: plant, guard a long countdown, the enemy races to defuse it. Both come from Renegade's planted kit (the ion cannon beacon in bombard-area's source_terms, timed C4 in demolition-charge's sources). Difference: the beacon hits an area, the charge one structure.",
+    "evidence": [
+      {
+        "file": "data/patterns/bombard-area.json",
+        "path": "variants[5].summary",
+        "excerpt": "Plant a beacon at the spot; after a long countdown a devastating strike lands unless an enemy reaches the beacon and disarms it, so your team must guard it."
+      },
+      {
+        "file": "data/patterns/bombard-area.json",
+        "path": "source_terms",
+        "excerpt": "[\"Parabombs\",\"MiG airstrike\",\"Corrosive Bile\",\"Tactical Nuke\",\"Mortar Barrage\",\"Rolling Thunder\",\"Orbital Strike\",\"ion cannon beacon\"]"
+      },
+      {
+        "file": "data/patterns/throw-explosive.json",
+        "path": "variants[4].summary",
+        "excerpt": "Slow to set and on a long fuse, but enough to bring down a structure; the enemy can see it and defuse it in time."
+      },
+      {
+        "file": "data/patterns/throw-explosive.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Generals Colonel Burton timed charge, Renegade timed C4"
+      }
+    ],
+    "confidence": "low",
+    "already_linked": "bombard-area related often-confused-with throw-explosive"
+  },
+  {
+    "id": "L2-34",
+    "level": 2,
+    "a": {
+      "pattern": "build-structure",
+      "variant": "deploy-into-structure",
+      "variant_index": 3
+    },
+    "b": {
+      "pattern": "deploy-siege-mode",
+      "variant": "become-structure",
+      "variant_index": 7
+    },
+    "player_a": "Drive to a spot and unpack yourself into a team building; once deployed you cannot move again.",
+    "player_b": "Unfold into a small building that does a job for the team (a refinery, say), giving up your weapons until you pack up.",
+    "why_same": "Same action (drive, unpack into a building that serves the team) and the same answers (catch it on the way, then hit the building). Difference: one way versus packing up again. The field rules send every second form through its mode pattern, so a deploy-into-structure card may already carry deploy-siege-mode's key.",
+    "evidence": [
+      {
+        "file": "data/patterns/build-structure.json",
+        "path": "variants[3].summary",
+        "excerpt": "The unit itself unpacks into the building at a spot it drives to; it is slow and fragile on the way, and once deployed it can't move again, so choosing the spot is the wh…"
+      },
+      {
+        "file": "data/patterns/build-structure.json",
+        "path": "variants[3].overrides.kinds",
+        "excerpt": "[\"deploy\"]"
+      },
+      {
+        "file": "data/patterns/deploy-siege-mode.json",
+        "path": "variants[7].summary",
+        "excerpt": "It unfolds into a small building that does a job for the team, such as a refinery, and gives up its weapons until it packs up."
+      },
+      {
+        "file": "data/patterns/deploy-siege-mode.json",
+        "path": "summary",
+        "excerpt": "The unit stops and plants itself: stabilisers or legs dig in, a soldier builds a small nest, a hovering flier sets down or locks onto one spot. While planted it cannot mo…"
+      }
+    ],
+    "confidence": "low",
+    "already_linked": "not linked (no conflicts_with, no related entry)"
+  },
+  {
+    "id": "L2-35",
+    "level": 2,
+    "a": {
+      "pattern": "upgrade-in-field",
+      "variant": "exclusive-bay",
+      "variant_index": 0
+    },
+    "b": {
+      "pattern": "passenger-sets-weapon",
+      "variant": "modular-bay",
+      "variant_index": 3
+    },
+    "player_a": "Your unit has one mounting point and a short list of parts (a gun, an aura mast, a passenger bunker); the first one bought rules out the rest.",
+    "player_b": "A one-time purchase fits the bay as a passenger bunker whose riders fire out, instead of a fixed weapon or aura; the options exclude each other.",
+    "why_same": "Both name the Generals Overlord add-ons as their source; modular-bay restates the exclusive-bay purchase with the bunker picked. On the Overlord the field rules link both patterns to the one Battle Bunker ability on purpose, but on a generated card both variants would describe the same bay twice.",
+    "evidence": [
+      {
+        "file": "data/patterns/upgrade-in-field.json",
+        "path": "variants[0].summary",
+        "excerpt": "The unit has one mounting point and a short list of parts for it, such as a gun, an aura mast or a passenger bunker; the first one bought rules out the others for the res…"
+      },
+      {
+        "file": "data/patterns/upgrade-in-field.json",
+        "path": "variants[0].seen_in",
+        "excerpt": "Generals Overlord add-ons"
+      },
+      {
+        "file": "data/patterns/passenger-sets-weapon.json",
+        "path": "variants[3].summary",
+        "excerpt": "A one-time purchase fits the bay as a passenger bunker whose riders fire their own weapons out of it, instead of a fixed weapon or aura; the options exclude each other."
+      },
+      {
+        "file": "data/patterns/passenger-sets-weapon.json",
+        "path": "variants[3].seen_in",
+        "excerpt": "Overlord and Helix add-ons"
+      },
+      {
+        "file": "data/units/generals.json",
+        "path": "units[id=generals.china.overlord].abilities[0]",
+        "excerpt": "Battle Bunker: patterns [\"passenger-sets-weapon\",\"upgrade-in-field\"]"
+      }
+    ],
+    "confidence": "low",
+    "already_linked": "upgrade-in-field related combos-with passenger-sets-weapon"
+  },
+  {
+    "id": "L2-36",
+    "level": 2,
+    "a": {
+      "pattern": "repair-allies",
+      "variant": "revive",
+      "variant_index": 7
+    },
+    "b": {
+      "pattern": "host-spawn-point",
+      "variant": "call-in-the-fallen",
+      "variant_index": 5
+    },
+    "player_a": "Bring a fallen teammate back on the spot after a short channel, instead of sending them to the buy screen.",
+    "player_b": "Call dead teammates back down beside you, spending one use from a pool the whole team shares; enemy jammers block it.",
+    "why_same": "Same result for the team (a dead teammate is back next to you without the respawn trip) and a similar answer (kill the one who brings them back, meet the arrival). Differences: revive needs the body and a channel; call-in drops them from above from a shared pool.",
+    "evidence": [
+      {
+        "file": "data/patterns/repair-allies.json",
+        "path": "variants[7].summary",
+        "excerpt": "Fallen teammates can be brought back on the spot after a short channel, instead of going back to the buy screen."
+      },
+      {
+        "file": "data/patterns/repair-allies.json",
+        "path": "variants[7].seen_in",
+        "excerpt": "PlanetSide 2 Medical Applicator; Overwatch Mercy"
+      },
+      {
+        "file": "data/patterns/host-spawn-point.json",
+        "path": "variants[5].summary",
+        "excerpt": "No standing spawn: on a key you call dead teammates back down beside you, spending one use from a pool the whole team shares; enemy jammers block the call."
+      },
+      {
+        "file": "data/patterns/host-spawn-point.json",
+        "path": "variants[5].seen_in",
+        "excerpt": "Helldivers 2 Reinforce"
+      }
+    ],
+    "confidence": "low",
+    "already_linked": "not linked (no conflicts_with, no related entry)"
+  },
+  {
+    "id": "L2-37",
+    "level": 2,
+    "a": {
+      "pattern": "deploy-turret",
+      "variant": "leave-machine-as-turret",
+      "variant_index": 7
+    },
+    "b": {
+      "pattern": "drop-in-from-above",
+      "variant": "earned-war-machine",
+      "variant_index": 4
+    },
+    "player_a": "Climb out of your suit or vehicle; the empty machine stays put and keeps shooting by itself until you climb back in.",
+    "player_b": "Fill a meter, call your heavy machine down beside you and climb in; whenever you are out of it, it fights by itself.",
+    "why_same": "Both cite Titanfall's Auto-Titan for the part where the machine fights alone while its pilot is out; that part would appear twice on a card with both. Difference: earned-war-machine's core is the call-down; leave-machine-as-turret is a toggle on a machine you already have.",
+    "evidence": [
+      {
+        "file": "data/patterns/deploy-turret.json",
+        "path": "variants[7].summary",
+        "excerpt": "The unit's own suit or vehicle is the turret: the pilot climbs out and the empty machine stays put and keeps shooting on its own, worse than when crewed, while the pilot …"
+      },
+      {
+        "file": "data/patterns/deploy-turret.json",
+        "path": "variants[7].seen_in",
+        "excerpt": "Iron Harvest William Mason's Deploy Exosuit, Titanfall's Auto-Titan"
+      },
+      {
+        "file": "data/patterns/drop-in-from-above.json",
+        "path": "variants[4].summary",
+        "excerpt": "Fill a meter through play, then call your own heavy machine down onto a marker beside you and climb in; whenever you are out of it, it fights by itself, following you or …"
+      },
+      {
+        "file": "data/patterns/drop-in-from-above.json",
+        "path": "variants[4].seen_in",
+        "excerpt": "Titanfall (Titan meter and Titanfall; Auto-Titan follow and guard modes)"
+      }
+    ],
+    "confidence": "low",
+    "already_linked": "deploy-turret related combos-with drop-in-from-above; drop-in-from-above related combos-with deploy-turret"
+  },
+  {
+    "id": "L2-38",
+    "level": 2,
+    "a": {
+      "pattern": "cloak",
+      "variant": "cloak-field",
+      "variant_index": 5
+    },
+    "b": {
+      "pattern": "shroud-area",
+      "variant": "escort-field",
+      "variant_index": 0
+    },
+    "player_a": "A deployed device or anchored mode cloaks every ally in a radius; the carrier cannot move while it runs.",
+    "player_b": "An always-on field around the carrier hides it and nearby allies from enemies outside, and moves with it.",
+    "why_same": "Both hide allies in a radius around one carrier, and both files cite Brawl Stars area stealth (Leon's Lollipop Drop in cloak-field; Sandy's Sandstorm in shroud-area's thrown-blackout). Remaining difference: detectors undo the cloak but not the shroud.",
+    "evidence": [
+      {
+        "file": "data/patterns/cloak.json",
+        "path": "variants[5].summary",
+        "excerpt": "A deployed device or an anchored mode cloaks every ally in a radius; the carrier cannot move while it runs and the field flickers when hit, so two carriers leapfrog a for…"
+      },
+      {
+        "file": "data/patterns/cloak.json",
+        "path": "variants[5].seen_in",
+        "excerpt": "Tiberian Sun Firestorm Mobile Stealth Generator, Halo Wars 2 Shroud and cloaking generator, Brawl Stars Leon's Lollipop Drop"
+      },
+      {
+        "file": "data/patterns/shroud-area.json",
+        "path": "variants[0].summary",
+        "excerpt": "The base form: an always-on field around the carrier that hides it and nearby allies and moves with it."
+      },
+      {
+        "file": "data/patterns/shroud-area.json",
+        "path": "variants[2].seen_in",
+        "excerpt": "Brawl Stars Sandy's Sandstorm; the wiki guesses that a cut Radar Jammer ability of the Generals Radar Van would have obscured an area"
+      },
+      {
+        "file": "data/patterns/shroud-area.json",
+        "path": "summary",
+        "excerpt": "An always-on field around the unit keeps the nearby ground dark for the enemy team: nothing inside shows on their screens or minimap, so the unit and the teammates beside…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "cloak conflicts_with shroud-area; shroud-area conflicts_with cloak; cloak related often-confused-with shroud-area; shroud-area related often-confused-with cloak",
+    "known": "Already known: cloak and shroud-area list each other in conflicts_with, so they never share a card."
+  },
+  {
+    "id": "L2-39",
+    "level": 2,
+    "a": {
+      "pattern": "command-companion",
+      "variant": "helper-drone",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "launch-drones",
+      "variant": "bought-add-on",
+      "variant_index": 1
+    },
+    "player_a": "A small helper machine instead of an animal partner: it does chores and little damage and picks its owner up once.",
+    "player_b": "Buy one drone of a type that follows you for good until it is shot down, then buy it again.",
+    "why_same": "Both are one lasting AI helper at your side; command-companion's scout-pack overlaps launch-drones' scout-drone the same way, and reinforce-squad's respawning-followers covers the companion's return after a wait (command-companion's own open question).",
+    "evidence": [
+      {
+        "file": "data/patterns/command-companion.json",
+        "path": "variants[4].summary",
+        "excerpt": "A small machine in place of an animal: it does chores and little damage, enemies don't target it, and it picks its owner up once when they go down."
+      },
+      {
+        "file": "data/patterns/launch-drones.json",
+        "path": "variants[1].summary",
+        "excerpt": "No key: the unit buys one drone of a type (a gun drone, a scout drone, a repair drone) that follows it for good until shot down and is bought again; it falls when its own…"
+      },
+      {
+        "file": "data/patterns/command-companion.json",
+        "path": "open_questions[6]",
+        "excerpt": "The fill agents noted that reinforce-squad's respawning-followers twist matches only the companion's return after a wait. Should a unit with a companion link both pattern…"
+      },
+      {
+        "file": "data/patterns/command-companion.json",
+        "path": "generator.conflicts_with",
+        "excerpt": "[\"launch-drones\",\"reinforce-squad\"]"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "command-companion conflicts_with launch-drones; command-companion related often-confused-with launch-drones",
+    "known": "Already known: command-companion lists launch-drones and reinforce-squad in conflicts_with (one way only)."
+  },
+  {
+    "id": "L3-01",
+    "level": 3,
+    "a": {
+      "pattern": "band-together"
+    },
+    "b": {
+      "pattern": "rally-allies"
+    },
+    "player_a": "Stay packed with teammates on cards of your group; each member fires faster while enough of them are close. Nobody gives the bonus.",
+    "player_b": "One buffer lifts the teammates around it (aura, timed call or placed buff).",
+    "how_they_differ": "Different answer: against band-together you thin or split the crowd (no giver to kill); against rally-allies you kill the buffer. band-together's close-ranks (Darktide coherency) is still a crowd rule, not one unit's aura.",
+    "evidence": [
+      {
+        "file": "data/patterns/band-together.json",
+        "path": "summary",
+        "excerpt": "Members of a set group (one unit type, or a few types that count one another) get better at their job while enough of them stand close together: in Command & Conquer: Gen…"
+      },
+      {
+        "file": "data/patterns/band-together.json",
+        "path": "related[0]",
+        "excerpt": "{\"id\":\"rally-allies\",\"kind\":\"often-confused-with\"}"
+      },
+      {
+        "file": "data/patterns/band-together.json",
+        "path": "variants[1].seen_in",
+        "excerpt": "Warhammer 40,000: Darktide coherency"
+      },
+      {
+        "file": "data/patterns/rally-allies.json",
+        "path": "counterplay[0]",
+        "excerpt": "Kill or drive off the buffer first: the boost ends with it, and many buffers (officers, casters, thralls) are fragile. Where the aura rides on a heavy unit, cut it off fr…"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "band-together related often-confused-with rally-allies"
+  },
+  {
+    "id": "L3-02",
+    "level": 3,
+    "a": {
+      "pattern": "rally-allies"
+    },
+    "b": {
+      "pattern": "resupply-allies"
+    },
+    "player_a": "Make nearby teammates fire faster, move faster or take less damage for a while.",
+    "player_b": "Give teammates back used-up ammo, fuel or ability charges.",
+    "how_they_differ": "What is given differs (stats versus a refill that only matters where ammo is scarce). The duplicates script flagged them because the Veti Sacrifice ability links both; it judged them distinct, and so do I.",
+    "evidence": [
+      {
+        "file": "data/patterns/rally-allies.json",
+        "path": "summary",
+        "excerpt": "A unit makes the teammates around it fight better for a while: they fire faster, hit harder, move faster or take less damage. It comes as an always-on aura around the car…"
+      },
+      {
+        "file": "data/patterns/resupply-allies.json",
+        "path": "summary",
+        "excerpt": "A unit gives teammates back what they have used up: ammunition, fuel, energy or ability charges. It drops a crate or pack that refills everyone standing near it, parks a …"
+      },
+      {
+        "file": "data/units/tempest-rising.json",
+        "path": "units[id=tempest-rising.veti.enlightened].abilities[0]",
+        "excerpt": "Sacrifice: patterns [\"rally-allies\",\"resupply-allies\",\"sacrifice-for-allies\"]"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "rally-allies related combos-with resupply-allies; resupply-allies related combos-with rally-allies"
+  },
+  {
+    "id": "L3-03",
+    "level": 3,
+    "a": {
+      "pattern": "resupply-allies",
+      "variant": "buff-borne-refill",
+      "variant_index": 5
+    },
+    "b": {
+      "pattern": "refill-on-ally-buff"
+    },
+    "player_a": "Your buff or support zone reloads whoever it lands on.",
+    "player_b": "A receiver perk: when a teammate's buff lands on you, your stock refills at once and faster while it lasts.",
+    "how_they_differ": "Two sides of one exchange, held by different players (the giver and the receiver); both cite the Veti Consecrated Restocking. Not one button twice, but a card should not get both halves alone and call it a combo.",
+    "evidence": [
+      {
+        "file": "data/patterns/resupply-allies.json",
+        "path": "variants[5].summary",
+        "excerpt": "No crate: the supplier's buff or support zone reloads whoever it lands on, or makes them reload and recharge faster while they stand in it."
+      },
+      {
+        "file": "data/patterns/refill-on-ally-buff.json",
+        "path": "summary",
+        "excerpt": "The unit fights on a small stock of shots that comes back slowly by itself. When a teammate's buff lands on it, the whole stock returns at once, and for as long as the bu…"
+      },
+      {
+        "file": "data/patterns/refill-on-ally-buff.json",
+        "path": "source_terms",
+        "excerpt": "[\"Consecrated Restocking\",\"Auto Restock\",\"Consecration\",\"Gravitationally Enhanced\"]"
+      },
+      {
+        "file": "data/patterns/resupply-allies.json",
+        "path": "source_terms",
+        "excerpt": "[\"Sacrifice\",\"Sacrificial Benediction\",\"Consecrated Restocking\",\"Ammo Box\",\"Ammo Bag\",\"Ammunition Package\",\"Dispenser\",\"Supply Vehicle\",\"FOB\",\"air staging facility\",\"Alch…"
+      },
+      {
+        "file": "data/patterns/refill-on-ally-buff.json",
+        "path": "related[0]",
+        "excerpt": "{\"id\":\"resupply-allies\",\"kind\":\"often-confused-with\"}"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "resupply-allies related often-confused-with refill-on-ally-buff; refill-on-ally-buff related often-confused-with resupply-allies"
+  },
+  {
+    "id": "L3-04",
+    "level": 3,
+    "a": {
+      "pattern": "block-abilities"
+    },
+    "b": {
+      "pattern": "disable-machine",
+      "variant": "weapons-lock",
+      "variant_index": 1
+    },
+    "player_a": "Lock any enemy's abilities for a few seconds; its guns still work.",
+    "player_b": "Stop one machine from firing and using abilities for a few seconds; it can still drive.",
+    "how_they_differ": "block-abilities leaves weapons working and hits any target; weapons-lock also stops firing and hits machines only. block-abilities' summary draws this line itself.",
+    "evidence": [
+      {
+        "file": "data/patterns/block-abilities.json",
+        "path": "summary",
+        "excerpt": "A hit, a mark, a pulse or an aura stops enemies from using their abilities for a few seconds: their keys lock, channels they run are cut off, toggles are switched off or …"
+      },
+      {
+        "file": "data/patterns/disable-machine.json",
+        "path": "variants[1].summary",
+        "excerpt": "A missile or hack stops one machine from firing and using abilities for a few seconds; it can still drive away."
+      },
+      {
+        "file": "data/patterns/block-abilities.json",
+        "path": "related[0]",
+        "excerpt": "{\"id\":\"disable-machine\",\"kind\":\"often-confused-with\"}"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "block-abilities related often-confused-with disable-machine"
+  },
+  {
+    "id": "L3-05",
+    "level": 3,
+    "a": {
+      "pattern": "cloak",
+      "variant": "hide-when-still",
+      "variant_index": 1
+    },
+    "b": {
+      "pattern": "disguise",
+      "variant": "prop-when-still",
+      "variant_index": 2
+    },
+    "player_a": "Passive: invisible while you neither move nor attack.",
+    "player_b": "Passive: while still you look like a tree or crate, can keep firing with a flicker, and moving ends it.",
+    "how_they_differ": "A prop can be targeted and shot on suspicion (a hit breaks it) and keeps firing; a cloaked unit cannot be targeted but breaks cover when it fires. Both are passive, and two files say a card has one passive slot, so the two cannot meet on one card anyway.",
+    "evidence": [
+      {
+        "file": "data/patterns/cloak.json",
+        "path": "variants[1].summary",
+        "excerpt": "Passive: hidden whenever you neither move nor attack; moving or firing shows you, and you vanish again a moment after you stop."
+      },
+      {
+        "file": "data/patterns/disguise.json",
+        "path": "variants[2].summary",
+        "excerpt": "Standing still turns you into a piece of scenery, a tree or a crate for instance; firing makes you flicker for a moment, and moving ends it."
+      },
+      {
+        "file": "data/patterns/disguise.json",
+        "path": "summary",
+        "excerpt": "The unit stays in plain view but is drawn as something harmless: one of the viewer's own soldiers or vehicles, a unit it chose to copy, or scenery such as a tree. Turrets…"
+      },
+      {
+        "file": "data/patterns/cloak.json",
+        "path": "summary",
+        "excerpt": "The unit turns invisible to the enemy: it cannot be seen or picked as a target, yet it stays solid and in most games area damage still lands on it (Iron Harvest removed g…"
+      },
+      {
+        "file": "data/patterns/overload-past-cap.json",
+        "path": "variants[3].summary",
+        "excerpt": "The pure original: no spend key, and relief comes only from captives dying or being disposed of, so the controller must lead its captives into the fight. Being passive, i…"
+      },
+      {
+        "file": "data/patterns/stack-to-overload.json",
+        "path": "player_translation.controls[0]",
+        "excerpt": "Builders: no extra key. Charging is a passive on the main weapon (left mouse) and uses the card's one passive slot; variants put a charging grenade or a charge pulse on Q…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "cloak related often-confused-with disguise; disguise related often-confused-with cloak"
+  },
+  {
+    "id": "L3-06",
+    "level": 3,
+    "a": {
+      "pattern": "leap",
+      "variant": "landing-strike",
+      "variant_index": 1
+    },
+    "b": {
+      "pattern": "become-invulnerable",
+      "variant": "untouchable-flurry",
+      "variant_index": 8
+    },
+    "player_a": "Jump to a spot; the landing hurts and knocks back enemies in a small circle.",
+    "player_b": "Leap to an enemy and strike it and those around it, untouchable until the flurry ends; a leap out of the fight that slams a chosen circle works the same way.",
+    "how_they_differ": "The flurry's second form (a Meteor Strike-style slam) looks like a landing strike, but leap deliberately keeps jumpers hittable in the air ('a gamble rather than a dodge'), while the flurry cannot be shot. Different answer.",
+    "evidence": [
+      {
+        "file": "data/patterns/leap.json",
+        "path": "variants[1].summary",
+        "excerpt": "The landing hurts enemies in a small circle and knocks them back, more the closer they stand to the centre, after the landing ring has warned them."
+      },
+      {
+        "file": "data/patterns/leap.json",
+        "path": "player_translation.changes_from_rts[3]",
+        "excerpt": "Some RTS jumpers are nearly immune in the air (Dawn of War II's squads take little ranged damage airborne); here a jumper stays hittable as a low flier, so a jump is a ga…"
+      },
+      {
+        "file": "data/patterns/become-invulnerable.json",
+        "path": "variants[8].summary",
+        "excerpt": "Leap to an enemy and strike it and those around it in quick succession, untouchable until the flurry ends; it stops early when no visible enemy is in reach, and one versi…"
+      },
+      {
+        "file": "data/patterns/become-invulnerable.json",
+        "path": "shooter_analogues[6].note",
+        "excerpt": "An ultimate that turns the untouchable window into an attack: he leaps high out of the fight, where neither team can see or target him and he can't contest objectives, he…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "not linked (no conflicts_with, no related entry)"
+  },
+  {
+    "id": "L3-07",
+    "level": 3,
+    "a": {
+      "pattern": "dash",
+      "variant": "sprint",
+      "variant_index": 1
+    },
+    "b": {
+      "pattern": "overclock-self",
+      "variant": "slump-after",
+      "variant_index": 4
+    },
+    "player_a": "A few seconds of much higher speed; nothing changes afterwards.",
+    "player_b": "A free burst of speed whose overuse locks you up: slower than normal, then briefly stuck.",
+    "how_they_differ": "The field rules split them on purpose: a boost that adds only speed and costs nothing is dash, anything with a cost is overclock-self. The slump is the cost the enemy punishes.",
+    "evidence": [
+      {
+        "file": "data/patterns/dash.json",
+        "path": "summary",
+        "excerpt": "On a key, the unit bursts forward much faster than its normal pace: a quick lunge of a few body-lengths, or a sprint lasting a few seconds, along the way it faces or move…"
+      },
+      {
+        "file": "data/patterns/dash.json",
+        "path": "variants[1].summary",
+        "excerpt": "A few seconds of much higher speed with full steering; nothing changes afterwards, and the key then waits out a medium recharge."
+      },
+      {
+        "file": "data/patterns/overclock-self.json",
+        "path": "summary",
+        "excerpt": "On a key the unit enters a short boosted state: it moves, fires or reloads faster, hits harder or gains bonus health, for a few seconds or for as long as it keeps the boo…"
+      },
+      {
+        "file": "data/patterns/overclock-self.json",
+        "path": "variants[4].summary",
+        "excerpt": "A free burst of speed whose overuse locks the unit up: first slower than normal, then briefly stuck."
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "dash related often-confused-with overclock-self; overclock-self related often-confused-with dash"
+  },
+  {
+    "id": "L3-08",
+    "level": 3,
+    "a": {
+      "pattern": "dash"
+    },
+    "b": {
+      "pattern": "teleport"
+    },
+    "player_a": "A fast burst along a readable line that slows and stuns cut short.",
+    "player_b": "Vanish and reappear elsewhere through walls; the destination or arrival is the tell. (leap: an arc over walls with a landing ring.)",
+    "how_they_differ": "Each file names the others and the answers differ (step off the line, watch the arrival point, read the landing ring).",
+    "evidence": [
+      {
+        "file": "data/patterns/dash.json",
+        "path": "summary",
+        "excerpt": "On a key, the unit bursts forward much faster than its normal pace: a quick lunge of a few body-lengths, or a sprint lasting a few seconds, along the way it faces or move…"
+      },
+      {
+        "file": "data/patterns/teleport.json",
+        "path": "summary",
+        "excerpt": "The unit vanishes from one spot and appears at another without crossing the ground between: walls, cliffs, water and enemy lines don't matter. Short versions are an insta…"
+      },
+      {
+        "file": "data/patterns/leap.json",
+        "path": "summary",
+        "excerpt": "On a key, the unit jumps along an arc to a chosen spot within reach, clearing walls, gaps, ledges and other units, and lands a moment later; then the key needs time to re…"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "dash related often-confused-with teleport; teleport related often-confused-with dash"
+  },
+  {
+    "id": "L3-09",
+    "level": 3,
+    "a": {
+      "pattern": "reinforce-squad",
+      "variant": "field-reinforce",
+      "variant_index": 1
+    },
+    "b": {
+      "pattern": "host-spawn-point",
+      "variant": "call-in-the-fallen",
+      "variant_index": 5
+    },
+    "player_a": "Replace lost AI squad members anywhere, slower or dearer, arriving from above or the map edge.",
+    "player_b": "Call dead teammates (players) back down beside you from a shared pool.",
+    "how_they_differ": "reinforce-squad itself lists Helldivers' Reinforce 'for contrast (closer to host-spawn-point and drop-in-from-above)'; it refills AI members of your own squad, not players.",
+    "evidence": [
+      {
+        "file": "data/patterns/reinforce-squad.json",
+        "path": "variants[1].summary",
+        "excerpt": "Members can be replaced anywhere, but each one takes longer or costs more and arrives from above or from the map edge."
+      },
+      {
+        "file": "data/patterns/reinforce-squad.json",
+        "path": "shooter_analogues[3].note",
+        "excerpt": "For contrast (closer to host-spawn-point and drop-in-from-above): a living player calls a dead teammate back down in a drop pod, from a limited pool of uses that grows wi…"
+      },
+      {
+        "file": "data/patterns/host-spawn-point.json",
+        "path": "variants[5].seen_in",
+        "excerpt": "Helldivers 2 Reinforce"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "reinforce-squad related often-confused-with host-spawn-point; host-spawn-point related often-confused-with reinforce-squad"
+  },
+  {
+    "id": "L3-10",
+    "level": 3,
+    "a": {
+      "pattern": "host-spawn-point",
+      "variant": "placed-beacon",
+      "variant_index": 2
+    },
+    "b": {
+      "pattern": "build-structure",
+      "variant": "forward-base",
+      "variant_index": 2
+    },
+    "player_a": "Plant a small, fragile beacon your squad or team can spawn at.",
+    "player_b": "Build a team base near the front from the team's purse; it extends the build zone and gives a place to respawn, buy or refit. (reinforce-squad's forward-post is a post where AI squads top up.)",
+    "how_they_differ": "Scale and cost differ: a cheap personal beacon versus a paid team building with more jobs; build-structure lists host-spawn-point as a combo.",
+    "evidence": [
+      {
+        "file": "data/patterns/host-spawn-point.json",
+        "path": "variants[2].summary",
+        "excerpt": "Plant a small beacon, one at a time with a long wait to replace it, that your squad or team can spawn at; it gives itself away with a beam or beeping and breaks under any…"
+      },
+      {
+        "file": "data/patterns/build-structure.json",
+        "path": "variants[2].summary",
+        "excerpt": "A small base near the front that extends the team's build zone and gives teammates a place to respawn, buy or refit; it grows more useful the more teammates use it, and t…"
+      },
+      {
+        "file": "data/patterns/build-structure.json",
+        "path": "related[2]",
+        "excerpt": "{\"id\":\"host-spawn-point\",\"kind\":\"combos-with\"}"
+      },
+      {
+        "file": "data/patterns/reinforce-squad.json",
+        "path": "variants[3].summary",
+        "excerpt": "On a key, set up a forward post (by claiming a building, or by giving up the unit itself) where squads, teammates' included, can top up their losses until the enemy destr…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "build-structure related combos-with host-spawn-point"
+  },
+  {
+    "id": "L3-11",
+    "level": 3,
+    "a": {
+      "pattern": "lock-in-stasis",
+      "variant": "stasis-trap",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "lay-mines",
+      "variant": "snare-trap",
+      "variant_index": 2
+    },
+    "player_a": "Place a hidden ward that holds the first enemies in it for a long time; nobody can hurt them while held.",
+    "player_b": "A hidden trap holds the first enemy for a moment so your team can shoot it.",
+    "how_they_differ": "Opposite purpose: stasis isolates a target (it is untouchable), the snare sets it up for damage.",
+    "evidence": [
+      {
+        "file": "data/patterns/lock-in-stasis.json",
+        "path": "variants[4].summary",
+        "excerpt": "Place a hidden ward that holds the first enemies to walk into it for a long time; nobody can hurt them while they are held, so the team uses the time to reposition or tak…"
+      },
+      {
+        "file": "data/patterns/lay-mines.json",
+        "path": "variants[2].summary",
+        "excerpt": "Holds instead of blowing up: the first enemy to touch it is rooted (or slowed; a freezing payload only from T2 up) for a moment and takes light damage, and the owner gets…"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "not linked (no conflicts_with, no related entry)"
+  },
+  {
+    "id": "L3-12",
+    "level": 3,
+    "a": {
+      "pattern": "leave-hazard-zone",
+      "variant": "trap-canisters",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "lay-mines"
+    },
+    "player_a": "Set down visible canisters that vent a damaging zone when an enemy comes close or shoots them.",
+    "player_b": "Plant hidden mines that blow up on contact.",
+    "how_they_differ": "Visible and making a zone versus hidden and a single blast; trap-canisters says so itself. Detection matters only for mines.",
+    "evidence": [
+      {
+        "file": "data/patterns/leave-hazard-zone.json",
+        "path": "variants[4].summary",
+        "excerpt": "Set down a few visible canisters ahead of time; each vents its gas when an enemy comes close or shoots it. Unlike a mine it is in plain sight and makes a zone, not a sing…"
+      },
+      {
+        "file": "data/patterns/lay-mines.json",
+        "path": "summary",
+        "excerpt": "A unit plants mines that the enemy can't easily see or target and that wait for contact. The first enemy to drive or walk over one, or to come very close, sets it off: an…"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "leave-hazard-zone related often-confused-with lay-mines"
+  },
+  {
+    "id": "L3-13",
+    "level": 3,
+    "a": {
+      "pattern": "throw-explosive",
+      "variant": "sticky-charge",
+      "variant_index": 1
+    },
+    "b": {
+      "pattern": "infest-vehicle",
+      "variant": "ticking-charge",
+      "variant_index": 4
+    },
+    "player_a": "Throw a charge that clings to a vehicle and blows after a short fuse.",
+    "player_b": "Latch onto a vehicle, arm a charge and leap off; it blows after a short fuse.",
+    "how_they_differ": "The field rules: a thrown sticky bomb is throw-explosive, not infest-vehicle, because nobody latches on. The infester's latch and approach are the play.",
+    "evidence": [
+      {
+        "file": "data/patterns/throw-explosive.json",
+        "path": "variants[1].summary",
+        "excerpt": "Clings to the first vehicle or surface it hits and blows after a short fuse, hard enough to cripple a vehicle's movement."
+      },
+      {
+        "file": "data/patterns/infest-vehicle.json",
+        "path": "variants[4].summary",
+        "excerpt": "Latches, then arms a charge as it leaps off; the charge detonates after a short fuse, hurting the host and nearby vehicles, and the victim gets a window to shake it off o…"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "throw-explosive related often-confused-with infest-vehicle"
+  },
+  {
+    "id": "L3-14",
+    "level": 3,
+    "a": {
+      "pattern": "hijack-vehicle",
+      "variant": "crew-snipe",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "execute-target"
+    },
+    "player_a": "One special shot kills a crewed vehicle's driver whatever its armour; the hull turns neutral for whoever climbs in first.",
+    "player_b": "A strike kills one kind of target outright.",
+    "how_they_differ": "The result is a hull to race for, not a kill; crewless machines are immune. Already related (often-confused-with).",
+    "evidence": [
+      {
+        "file": "data/patterns/hijack-vehicle.json",
+        "path": "variants[4].summary",
+        "excerpt": "One special shot from range kills a crewed vehicle's driver whatever its armour; the hull stops, turns neutral and goes to whoever climbs in first, of either side, and ri…"
+      },
+      {
+        "file": "data/patterns/execute-target.json",
+        "path": "summary",
+        "excerpt": "A strike, usually at close range, that kills its target outright instead of dealing damage, so the target's health, armour and upgrades don't matter. It works only on one…"
+      },
+      {
+        "file": "data/patterns/execute-target.json",
+        "path": "related[0]",
+        "excerpt": "{\"id\":\"hijack-vehicle\",\"kind\":\"often-confused-with\"}"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "hijack-vehicle related often-confused-with execute-target; execute-target related often-confused-with hijack-vehicle"
+  },
+  {
+    "id": "L3-15",
+    "level": 3,
+    "a": {
+      "pattern": "confuse-enemies"
+    },
+    "b": {
+      "pattern": "mind-control"
+    },
+    "player_a": "Enemies in an area lose track of friend and foe and attack whoever is near.",
+    "player_b": "You take over one enemy (in the player version, its weapon) and aim it yourself.",
+    "how_they_differ": "Nobody commands the confused enemies; each file names the other.",
+    "evidence": [
+      {
+        "file": "data/patterns/confuse-enemies.json",
+        "path": "summary",
+        "excerpt": "A gas, grenade, pulse or curse makes enemies in an area lose track of friend and foe for a few seconds. Their commander loses control of them and they attack whatever is …"
+      },
+      {
+        "file": "data/patterns/mind-control.json",
+        "path": "summary",
+        "excerpt": "A unit takes over an enemy so that it fights for the other side. The takeover comes from a psychic shot, a held link, a planted parasite or a hack, and hands over the who…"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "confuse-enemies related often-confused-with mind-control; mind-control related often-confused-with confuse-enemies"
+  },
+  {
+    "id": "L3-16",
+    "level": 3,
+    "a": {
+      "pattern": "leech-weapon-on-kill",
+      "variant": "upgrade-ladder",
+      "variant_index": 1
+    },
+    "b": {
+      "pattern": "earn-veterancy",
+      "variant": "stat-ladder",
+      "variant_index": 0
+    },
+    "player_a": "Every claim (in the source, touching a salvage crate) moves the unit one step up a fixed ladder.",
+    "player_b": "Kills and assists fill a rank bar; two or three small ranks, lost on death.",
+    "how_they_differ": "Close in feel, but leech needs a claim the enemy can deny (grab or destroy the crate, break the tether); veterancy comes from kill credit. Already related (often-confused-with).",
+    "evidence": [
+      {
+        "file": "data/patterns/leech-weapon-on-kill.json",
+        "path": "variants[1].summary",
+        "excerpt": "Every claim moves the unit one step up a fixed ladder, whatever the donor was; extra claims become cash or experience. Easier to read and balance."
+      },
+      {
+        "file": "data/patterns/leech-weapon-on-kill.json",
+        "path": "variants[1].seen_in",
+        "excerpt": "Generals salvage crates"
+      },
+      {
+        "file": "data/patterns/earn-veterancy.json",
+        "path": "variants[0].summary",
+        "excerpt": "Two or three ranks from kills and assists, each a small fixed lift to health, damage or fire rate, all lost on death."
+      },
+      {
+        "file": "data/patterns/earn-veterancy.json",
+        "path": "related[0]",
+        "excerpt": "{\"id\":\"leech-weapon-on-kill\",\"kind\":\"often-confused-with\"}"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "earn-veterancy related often-confused-with leech-weapon-on-kill"
+  },
+  {
+    "id": "L3-17",
+    "level": 3,
+    "a": {
+      "pattern": "fire-power-shot"
+    },
+    "b": {
+      "pattern": "throw-explosive"
+    },
+    "player_a": "One heavy special shot on its own key, often after a visible wind-up.",
+    "player_b": "A grenade or charge on its own key with a fuse warning. (Also near execute-target and switch-weapon-mode, which fire-power-shot names.)",
+    "how_they_differ": "Different answers: dodge the line or hit the shooter during its wind-up, versus leave the blast circle or deal with the charge before it goes off.",
+    "evidence": [
+      {
+        "file": "data/patterns/fire-power-shot.json",
+        "path": "summary",
+        "excerpt": "On its own key, the unit fires one heavy special shot that hits far harder than its ordinary weapon, then waits out a cooldown. Most versions show a wind-up first, a mome…"
+      },
+      {
+        "file": "data/patterns/fire-power-shot.json",
+        "path": "related[1]",
+        "excerpt": "{\"id\":\"throw-explosive\",\"kind\":\"often-confused-with\"}"
+      },
+      {
+        "file": "data/patterns/throw-explosive.json",
+        "path": "summary",
+        "excerpt": "A burst of explosive damage the unit delivers by hand, apart from its normal weapon: it lobs a grenade at a spot, throws a charge that sticks to what it hits, or runs up …"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "fire-power-shot related often-confused-with throw-explosive"
+  },
+  {
+    "id": "L3-18",
+    "level": 3,
+    "a": {
+      "pattern": "deploy-turret",
+      "variant": "support-station",
+      "variant_index": 3
+    },
+    "b": {
+      "pattern": "repair-allies",
+      "variant": "heal-aura",
+      "variant_index": 2
+    },
+    "player_a": "Place a fragile device that heals or repairs allies in a radius for its short life.",
+    "player_b": "You heal every friendly unit near you, slowly and by yourself.",
+    "how_they_differ": "Placed versus carried: the station holds a spot and is shot, the aura moves with its carrier, who is the target. The Shieldmaiden's one ability links both patterns.",
+    "evidence": [
+      {
+        "file": "data/patterns/deploy-turret.json",
+        "path": "variants[3].summary",
+        "excerpt": "The device does no fighting: for its short life it heals soldiers, repairs vehicles or hands out ammo to allies in a radius, and it is fragile, so the enemy must shoot it…"
+      },
+      {
+        "file": "data/patterns/repair-allies.json",
+        "path": "variants[2].summary",
+        "excerpt": "Heals every friendly unit nearby, slowly and by itself; riders carried inside heal faster."
+      },
+      {
+        "file": "data/units/tempest-rising.json",
+        "path": "units[id=tempest-rising.gdf.shieldmaiden].abilities[0]",
+        "excerpt": "Deploy Repair Turret: patterns [\"repair-allies\",\"deploy-turret\"]"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "deploy-turret related combos-with repair-allies"
+  },
+  {
+    "id": "L3-19",
+    "level": 3,
+    "a": {
+      "pattern": "drop-in-from-above",
+      "variant": "drop-on-respawn",
+      "variant_index": 5
+    },
+    "b": {
+      "pattern": "host-spawn-point",
+      "variant": "spawn-by-pod",
+      "variant_index": 3
+    },
+    "player_a": "Each time you respawn you may drop onto any spot your team can see, for a longer wait.",
+    "player_b": "Teammates who spawn on you or your beacon come down by pod or parachute.",
+    "how_they_differ": "Different card holders and targets: your own entry anywhere versus teammates arriving at your host.",
+    "evidence": [
+      {
+        "file": "data/patterns/drop-in-from-above.json",
+        "path": "variants[5].summary",
+        "excerpt": "No key in play: each time you respawn you may pick a drop onto any spot your team can see, instead of the base, in exchange for a longer respawn wait."
+      },
+      {
+        "file": "data/patterns/host-spawn-point.json",
+        "path": "variants[3].summary",
+        "excerpt": "Teammates who spawn on you or your beacon come down from high above by pod or parachute, steering a little toward it; they can be shot on the way down, and the spot needs…"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "drop-in-from-above related combos-with host-spawn-point; host-spawn-point related combos-with drop-in-from-above"
+  },
+  {
+    "id": "L3-20",
+    "level": 3,
+    "a": {
+      "pattern": "produce-unit-in-field",
+      "variant": "unfold-into-factory",
+      "variant_index": 1
+    },
+    "b": {
+      "pattern": "deploy-siege-mode",
+      "variant": "become-structure",
+      "variant_index": 7
+    },
+    "player_a": "Unfold into a field factory; only while unfolded can you build units.",
+    "player_b": "Unfold into a small building that does a job for the team.",
+    "how_they_differ": "By the field rules every second form links its mode pattern (the Slave Miner's deployed mode is via deploy-siege-mode and its ability links both), so the deploy and the job are meant to pair. gather-resources' deploy-processor (implies the deploy-anchor trait) is the same case.",
+    "evidence": [
+      {
+        "file": "data/patterns/produce-unit-in-field.json",
+        "path": "variants[1].summary",
+        "excerpt": "Stop and unfold into a field factory; only while unfolded can you build, and you are then a stationary, unarmed building that an enemy engineer may even capture."
+      },
+      {
+        "file": "data/patterns/deploy-siege-mode.json",
+        "path": "variants[7].seen_in",
+        "excerpt": "Yuri's Revenge Slave Miner (refinery)"
+      },
+      {
+        "file": "data/patterns/gather-resources.json",
+        "path": "variants[2].overrides.implies",
+        "excerpt": "[\"role:logistics\",\"mobility-trait:deploy-anchor\"]"
+      },
+      {
+        "file": "data/patterns/deploy-siege-mode.json",
+        "path": "open_questions[0]",
+        "excerpt": "On a card the deploy-anchor mobility trait already uses a key and stands for this pattern. Should the pattern also be listed as an ability (which counts the key twice), o…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "produce-unit-in-field related combos-with deploy-siege-mode"
+  },
+  {
+    "id": "L3-21",
+    "level": 3,
+    "a": {
+      "pattern": "transform",
+      "variant": "hidden-and-exposed",
+      "variant_index": 3
+    },
+    "b": {
+      "pattern": "burrow"
+    },
+    "player_a": "A hidden form (under water or ground) that fights one kind of target, flipping into an exposed attack form for the other.",
+    "player_b": "Go under the ground to hide; usually you cannot attack from below.",
+    "how_they_differ": "The hidden form keeps fighting, which burrow mostly forbids; already combos-with.",
+    "evidence": [
+      {
+        "file": "data/patterns/transform.json",
+        "path": "variants[3].summary",
+        "excerpt": "A hidden form (under water or under ground) that fights only one kind of target, flipping into an exposed attack form for the other."
+      },
+      {
+        "file": "data/patterns/burrow.json",
+        "path": "summary",
+        "excerpt": "The unit leaves the level the fight happens on, going under the ground or under water, and comes back up to act. While below it is hidden from everyone without a detector…"
+      },
+      {
+        "file": "data/patterns/transform.json",
+        "path": "related[2]",
+        "excerpt": "{\"id\":\"burrow\",\"kind\":\"combos-with\"}"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "transform related combos-with burrow"
+  },
+  {
+    "id": "L3-22",
+    "level": 3,
+    "a": {
+      "pattern": "self-destruct",
+      "variant": "remote-bomb",
+      "variant_index": 6
+    },
+    "b": {
+      "pattern": "launch-drones",
+      "variant": "piloted-drone",
+      "variant_index": 3
+    },
+    "player_a": "Steer a small expendable bomb from a safe spot and set it off by hand.",
+    "player_b": "Plant yourself and steer one drone by hand to scout, mark or strike, then take back control of your body.",
+    "how_they_differ": "Same control scheme, but the bomb is spent in one blast while the drone scouts and returns.",
+    "evidence": [
+      {
+        "file": "data/patterns/self-destruct.json",
+        "path": "variants[6].summary",
+        "excerpt": "The player steers a small expendable bomb from a safe spot and detonates it by hand, then returns to their own body."
+      },
+      {
+        "file": "data/patterns/launch-drones.json",
+        "path": "variants[3].summary",
+        "excerpt": "The owner plants himself and steers one drone by hand inside a leash, to scout over cliffs and walls, mark targets or strike from beyond the enemy's reach; his body stand…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "not linked (no conflicts_with, no related entry)"
+  },
+  {
+    "id": "L3-23",
+    "level": 3,
+    "a": {
+      "pattern": "bombard-area"
+    },
+    "b": {
+      "pattern": "leave-hazard-zone",
+      "variant": "ranged-storm",
+      "variant_index": 3
+    },
+    "player_a": "Mark a spot; after a warning, one heavy strike lands.",
+    "player_b": "Pick a spot at range; a storm hurts everyone inside for a few seconds.",
+    "how_they_differ": "A one-off strike to dodge versus a lingering zone to leave; already combos-with.",
+    "evidence": [
+      {
+        "file": "data/patterns/bombard-area.json",
+        "path": "summary",
+        "excerpt": "The unit picks a spot, often far beyond its own gun's reach, and after a delay something heavy lands there: shells, a missile, a glob of acid, bombs from called-in jets o…"
+      },
+      {
+        "file": "data/patterns/leave-hazard-zone.json",
+        "path": "variants[3].summary",
+        "excerpt": "Pick a spot at range; a storm hurts every unit inside it, ground and air, friend and foe (not buildings), for a few seconds. Storms on the same spot do not stack."
+      },
+      {
+        "file": "data/patterns/bombard-area.json",
+        "path": "related[3]",
+        "excerpt": "{\"id\":\"leave-hazard-zone\",\"kind\":\"combos-with\"}"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "bombard-area related combos-with leave-hazard-zone"
+  },
+  {
+    "id": "L3-24",
+    "level": 3,
+    "a": {
+      "pattern": "disable-machine",
+      "variant": "forced-landing",
+      "variant_index": 6
+    },
+    "b": {
+      "pattern": "freeze-and-shatter",
+      "variant": "grounded-flier",
+      "variant_index": 8
+    },
+    "player_a": "A hit flier loses lift and settles to the ground for a few seconds, where ground weapons reach it.",
+    "player_b": "A frozen flier drops out of the sky and takes heavy damage when it lands.",
+    "how_they_differ": "Both bring fliers down, but one is a soft grounding, the other a frozen crash that is part of the freeze combo.",
+    "evidence": [
+      {
+        "file": "data/patterns/disable-machine.json",
+        "path": "variants[6].summary",
+        "excerpt": "A low flier that is hit loses lift and settles to the ground for a few seconds, where ground weapons can reach it, instead of crashing."
+      },
+      {
+        "file": "data/patterns/freeze-and-shatter.json",
+        "path": "variants[8].summary",
+        "excerpt": "The cold reaches aircraft too, and a frozen flier drops out of the sky and takes heavy damage when it lands."
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "disable-machine related often-confused-with freeze-and-shatter; freeze-and-shatter related often-confused-with disable-machine"
+  },
+  {
+    "id": "L3-25",
+    "level": 3,
+    "a": {
+      "pattern": "heal-self",
+      "variant": "share-the-kit",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "repair-allies"
+    },
+    "player_a": "Your self-heal kit can be thrown down or handed to a teammate instead.",
+    "player_b": "Hold a beam or tool on a teammate to mend it.",
+    "how_they_differ": "A self-heal with a sharing twist versus a support beam; repair-allies says healing yourself is a different pattern.",
+    "evidence": [
+      {
+        "file": "data/patterns/heal-self.json",
+        "path": "variants[4].summary",
+        "excerpt": "The same heal can be thrown down as a pickup for a teammate, or given to one directly, instead of being used on yourself; enemies may grab a dropped one."
+      },
+      {
+        "file": "data/patterns/repair-allies.json",
+        "path": "player_translation.controls[3]",
+        "excerpt": "The tool never works on yourself; healing yourself is a different pattern."
+      },
+      {
+        "file": "data/patterns/heal-self.json",
+        "path": "related[0]",
+        "excerpt": "{\"id\":\"repair-allies\",\"kind\":\"often-confused-with\"}"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "heal-self related often-confused-with repair-allies; repair-allies related often-confused-with heal-self"
+  },
+  {
+    "id": "L3-26",
+    "level": 3,
+    "a": {
+      "pattern": "dampen-missile-fire"
+    },
+    "b": {
+      "pattern": "rally-allies",
+      "variant": "ward-aura",
+      "variant_index": 2
+    },
+    "player_a": "A field around you makes enemy rocket and missile launchers inside fire much slower.",
+    "player_b": "Allies near you take less damage.",
+    "how_they_differ": "One hampers one enemy weapon kind (answer: bring guns), the other cuts damage on allies (answer: heavy single hits); dampen-missile-fire lists rally-allies as often-confused-with.",
+    "evidence": [
+      {
+        "file": "data/patterns/dampen-missile-fire.json",
+        "path": "summary",
+        "excerpt": "While the unit stands still, a wide, always-on field around it hampers every enemy rocket and missile weapon inside it: those launchers, on units and defences alike, fire…"
+      },
+      {
+        "file": "data/patterns/rally-allies.json",
+        "path": "variants[2].summary",
+        "excerpt": "The boost is protection: allies inside take less damage, either a share off everything or a fixed cut to each ranged hit that blunts small arms more than heavy guns."
+      },
+      {
+        "file": "data/patterns/dampen-missile-fire.json",
+        "path": "related[3]",
+        "excerpt": "{\"id\":\"rally-allies\",\"kind\":\"often-confused-with\"}"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "dampen-missile-fire related often-confused-with rally-allies"
+  },
+  {
+    "id": "L3-27",
+    "level": 3,
+    "a": {
+      "pattern": "join-ally-crew"
+    },
+    "b": {
+      "pattern": "passenger-sets-weapon"
+    },
+    "player_a": "Board a teammate's vehicle as extra crew to lift its rank (on the rider's card).",
+    "player_b": "The vehicle's weapon comes from whoever rides in it (on the vehicle's card).",
+    "how_they_differ": "join-ally-crew's own open question explains the split: different card, and it changes strength, not the weapon.",
+    "evidence": [
+      {
+        "file": "data/patterns/join-ally-crew.json",
+        "path": "open_questions[5]",
+        "excerpt": "Why this is not a twist of passenger-sets-weapon: that pattern sits on the vehicle's card and changes its weapon or job, while this one sits on the rider's card, works on…"
+      },
+      {
+        "file": "data/patterns/passenger-sets-weapon.json",
+        "path": "summary",
+        "excerpt": "A vehicle whose weapon, or whole job, comes from whoever is inside. Empty, it has a modest default weapon or none at all. When someone boards, either the vehicle swaps it…"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "join-ally-crew related often-confused-with passenger-sets-weapon"
+  },
+  {
+    "id": "L3-28",
+    "level": 3,
+    "a": {
+      "pattern": "infest-vehicle",
+      "variant": "anchor",
+      "variant_index": 1
+    },
+    "b": {
+      "pattern": "disable-machine",
+      "variant": "pinning-beam",
+      "variant_index": 0
+    },
+    "player_a": "Latched on, slow the host, block its deploying or transforming, or jam its gun.",
+    "player_b": "Hold a beam that keeps one ground machine from moving, deploying or transforming.",
+    "how_they_differ": "Same pin, but the infester is attached and protected (shake off or repair it away) while a beam breaks on line of sight; already combos-with.",
+    "evidence": [
+      {
+        "file": "data/patterns/infest-vehicle.json",
+        "path": "variants[1].summary",
+        "excerpt": "Little or no damage; it slows the host, blocks its deploying or transforming, or jams its gun (on a multi-seat host, where it lands picks which), so teammates can catch o…"
+      },
+      {
+        "file": "data/patterns/disable-machine.json",
+        "path": "variants[0].summary",
+        "excerpt": "A held beam keeps one ground machine from moving, deploying or transforming while its guns still work; it ends when the beam breaks or the victim shakes it off."
+      },
+      {
+        "file": "data/patterns/disable-machine.json",
+        "path": "related[0]",
+        "excerpt": "{\"id\":\"infest-vehicle\",\"kind\":\"combos-with\"}"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "infest-vehicle related combos-with disable-machine; disable-machine related combos-with infest-vehicle"
+  },
+  {
+    "id": "L3-29",
+    "level": 3,
+    "a": {
+      "pattern": "suppress-with-fire"
+    },
+    "b": {
+      "pattern": "leave-hazard-zone",
+      "variant": "slow-field",
+      "variant_index": 2
+    },
+    "player_a": "Pour heavy fire over an area so soldiers caught in it slow down and lose their aim.",
+    "player_b": "A zone that slows the movement and attacks of every enemy inside.",
+    "how_they_differ": "Suppression is a timed stream of real fire that vehicles ignore; the field hits everyone. Already often-confused-with.",
+    "evidence": [
+      {
+        "file": "data/patterns/suppress-with-fire.json",
+        "path": "summary",
+        "excerpt": "On a key, the unit pours out a long stream of heavy fire over an area or at one target. Enemy soldiers caught in it are suppressed: they move slowly, aim badly and, if th…"
+      },
+      {
+        "file": "data/patterns/leave-hazard-zone.json",
+        "path": "variants[2].summary",
+        "excerpt": "The zone hurts no one but slows the movement and attacks of enemies inside, so the team can catch or out-shoot them."
+      },
+      {
+        "file": "data/patterns/suppress-with-fire.json",
+        "path": "related[1]",
+        "excerpt": "{\"id\":\"leave-hazard-zone\",\"kind\":\"often-confused-with\"}"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "suppress-with-fire related often-confused-with leave-hazard-zone"
+  },
+  {
+    "id": "L3-30",
+    "level": 3,
+    "a": {
+      "pattern": "hijack-vehicle",
+      "variant": "ace-driver",
+      "variant_index": 3
+    },
+    "b": {
+      "pattern": "join-ally-crew",
+      "variant": "rank-rider",
+      "variant_index": 0
+    },
+    "player_a": "A vehicle you drive (a stolen one) gets better stats and keeps or gains veterancy; you step out unharmed when it dies.",
+    "player_b": "Ride in a teammate's vehicle to lift it to top rank; you are thrown clear alive when it dies.",
+    "how_they_differ": "Driving a stolen hull versus riding along in a teammate's; different card and target.",
+    "evidence": [
+      {
+        "file": "data/patterns/hijack-vehicle.json",
+        "path": "variants[3].summary",
+        "excerpt": "A vehicle you drive gets better stats and keeps or gains veterancy, and you step out unharmed when it is destroyed."
+      },
+      {
+        "file": "data/patterns/join-ally-crew.json",
+        "path": "variants[0].summary",
+        "excerpt": "The rider boards a teammate's vehicle and lifts it to the top rank while aboard; one rider per vehicle, and the rider is thrown clear alive if it dies."
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "join-ally-crew related often-confused-with hijack-vehicle"
+  },
+  {
+    "id": "L3-31",
+    "level": 3,
+    "a": {
+      "pattern": "build-linked-exits",
+      "variant": "burst-out-exit",
+      "variant_index": 4
+    },
+    "b": {
+      "pattern": "drop-in-from-above",
+      "variant": "strike-from-reserve",
+      "variant_index": 8
+    },
+    "player_a": "Open a new network exit at a distant spot your team can see; after a loud warning the teammates inside pour out.",
+    "player_b": "Wait out of play, safe, then come out at any spot your team can see after a short delay.",
+    "how_they_differ": "One moves teammates through your network, the other is your own entry; close in feel, different holder.",
+    "evidence": [
+      {
+        "file": "data/patterns/build-linked-exits.json",
+        "path": "variants[4].summary",
+        "excerpt": "Open a new exit at a distant spot your team can see: it breaks out of the ground after a warning every enemy hears, then the teammates waiting inside pour out."
+      },
+      {
+        "file": "data/patterns/drop-in-from-above.json",
+        "path": "variants[8].summary",
+        "excerpt": "Wait out of play inside a carrier or off the map, safe, then come out at any spot your team can see after a short delay; you can go back into reserve and strike again aft…"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "not linked (no conflicts_with, no related entry)"
+  },
+  {
+    "id": "L3-32",
+    "level": 3,
+    "a": {
+      "pattern": "deal-percent-damage",
+      "variant": "share-zone",
+      "variant_index": 6
+    },
+    "b": {
+      "pattern": "leave-hazard-zone"
+    },
+    "player_a": "A field that every second takes a small share of current health from each enemy inside.",
+    "player_b": "A zone that hurts or slows whoever stays inside.",
+    "how_they_differ": "Same shape, but the share rule makes big targets bleed fastest, which is deal-percent-damage's own point; already often-confused-with.",
+    "evidence": [
+      {
+        "file": "data/patterns/deal-percent-damage.json",
+        "path": "variants[6].summary",
+        "excerpt": "A field that, every second, takes a small share of the current health of each enemy inside, so big targets bleed fastest and leaving quickly is the answer."
+      },
+      {
+        "file": "data/patterns/leave-hazard-zone.json",
+        "path": "summary",
+        "excerpt": "On a key, the unit covers a patch of ground with something that harms (fire, gas, radiation, an energy storm) or hampers (a field that slows movement and attacks). The zo…"
+      },
+      {
+        "file": "data/patterns/deal-percent-damage.json",
+        "path": "related[2]",
+        "excerpt": "{\"id\":\"leave-hazard-zone\",\"kind\":\"often-confused-with\"}"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "deal-percent-damage related often-confused-with leave-hazard-zone"
+  },
+  {
+    "id": "L3-33",
+    "level": 3,
+    "a": {
+      "pattern": "teleport",
+      "variant": "short-blink",
+      "variant_index": 0
+    },
+    "b": {
+      "pattern": "dash",
+      "variant": "quick-lunge",
+      "variant_index": 0
+    },
+    "player_a": "An instant short hop through walls and gaps.",
+    "player_b": "A burst of a few body-lengths along the ground almost at once.",
+    "how_they_differ": "The blink ignores walls and cannot be cut short; the lunge runs a readable line that slows and stuns stop.",
+    "evidence": [
+      {
+        "file": "data/patterns/teleport.json",
+        "path": "variants[0].summary",
+        "excerpt": "An instant short hop toward where the unit is moving or aiming, from a few charges that refill over a few seconds or on a short cooldown; it needs a clear landing spot."
+      },
+      {
+        "file": "data/patterns/dash.json",
+        "path": "variants[0].summary",
+        "excerpt": "A burst of a few body-lengths that takes a fraction of a second, the way you move or face; it does nothing to what it passes and recharges quickly."
+      },
+      {
+        "file": "data/patterns/dash.json",
+        "path": "counterplay[1]",
+        "excerpt": "Slow, root or stun it: a slow shortens the burst, and a root or stun stops a charge where it stands."
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "teleport related often-confused-with dash; dash related often-confused-with teleport"
+  },
+  {
+    "id": "L3-34",
+    "level": 3,
+    "a": {
+      "pattern": "command-companion",
+      "variant": "healing-partner",
+      "variant_index": 1
+    },
+    "b": {
+      "pattern": "repair-allies",
+      "variant": "heal-aura",
+      "variant_index": 2
+    },
+    "player_a": "Your AI partner slowly heals friendly soldiers near it, so where you leave it matters.",
+    "player_b": "You heal every friendly unit near you.",
+    "how_they_differ": "The heal rides on a partner you place and that can be killed separately; repair-allies is on yourself.",
+    "evidence": [
+      {
+        "file": "data/patterns/command-companion.json",
+        "path": "variants[1].summary",
+        "excerpt": "The companion also slowly heals friendly soldiers near it and walks over to wounded ones, so where the master leaves it matters to the team."
+      },
+      {
+        "file": "data/patterns/repair-allies.json",
+        "path": "variants[2].summary",
+        "excerpt": "Heals every friendly unit nearby, slowly and by itself; riders carried inside heal faster."
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "command-companion related combos-with repair-allies"
+  },
+  {
+    "id": "L3-35",
+    "level": 3,
+    "a": {
+      "pattern": "sacrifice-for-allies",
+      "variant": "spend-self",
+      "variant_index": 2
+    },
+    "b": {
+      "pattern": "self-destruct"
+    },
+    "player_a": "Use up your very cheap unit to give the team a bigger buff.",
+    "player_b": "Blow your unit up to damage everything around it.",
+    "how_they_differ": "Both spend the unit, but one buffs allies and the other hurts enemies; already often-confused-with.",
+    "evidence": [
+      {
+        "file": "data/patterns/sacrifice-for-allies.json",
+        "path": "variants[2].summary",
+        "excerpt": "The unit itself is used up: the player goes back to the buy screen and the team gets a bigger buff. Only for a very cheap unit."
+      },
+      {
+        "file": "data/patterns/self-destruct.json",
+        "path": "summary",
+        "excerpt": "The unit turns itself into the weapon: on a key, or by driving into a target, it blows up, damaging everything around it, and is spent. Because the price is the unit itse…"
+      },
+      {
+        "file": "data/patterns/sacrifice-for-allies.json",
+        "path": "related[5]",
+        "excerpt": "{\"id\":\"self-destruct\",\"kind\":\"often-confused-with\"}"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "sacrifice-for-allies related often-confused-with self-destruct"
+  },
+  {
+    "id": "L3-36",
+    "level": 3,
+    "a": {
+      "pattern": "earn-veterancy",
+      "variant": "officer-aura",
+      "variant_index": 6
+    },
+    "b": {
+      "pattern": "rally-allies",
+      "variant": "standing-aura",
+      "variant_index": 1
+    },
+    "player_a": "You rank up from the experience of troops near you and turn your rank into an aura for them.",
+    "player_b": "An always-on ring gives a small boost to whoever stands in it.",
+    "how_they_differ": "officer-aura is veterancy feeding a rally aura (a combination); a card with both would carry two auras. Already combos-with.",
+    "evidence": [
+      {
+        "file": "data/patterns/earn-veterancy.json",
+        "path": "variants[6].summary",
+        "excerpt": "The unit ranks up from the experience of the troops near it and turns its rank into an aura that makes them stronger."
+      },
+      {
+        "file": "data/patterns/rally-allies.json",
+        "path": "variants[1].summary",
+        "excerpt": "An always-on ring around the unit gives a small boost to whoever stands in it, with no key to press."
+      },
+      {
+        "file": "data/patterns/earn-veterancy.json",
+        "path": "related[2]",
+        "excerpt": "{\"id\":\"rally-allies\",\"kind\":\"combos-with\"}"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "earn-veterancy related combos-with rally-allies"
+  },
+  {
+    "id": "L3-37",
+    "level": 3,
+    "a": {
+      "pattern": "gather-resources",
+      "variant": "summoned-worker",
+      "variant_index": 5
+    },
+    "b": {
+      "pattern": "generate-income",
+      "variant": "placed-collector",
+      "variant_index": 4
+    },
+    "player_a": "Drop a temporary worker robot at a node; it mines fast for a while, then shuts down.",
+    "player_b": "Place a collector that pumps out money for a limited lifetime.",
+    "how_they_differ": "Node versus anywhere. Already known: generate-income lists gather-resources in conflicts_with (one way only).",
+    "evidence": [
+      {
+        "file": "data/patterns/gather-resources.json",
+        "path": "variants[5].summary",
+        "excerpt": "On a key, drop a temporary worker robot at a node you can see; it mines faster than a player for a short time, then shuts down, and enemies can shoot it."
+      },
+      {
+        "file": "data/patterns/generate-income.json",
+        "path": "variants[4].summary",
+        "excerpt": "Instead of sitting down, place a collector that pumps out money for a limited lifetime and pays a little more when destroyed; it costs a lot up front, and the enemy can s…"
+      },
+      {
+        "file": "data/patterns/generate-income.json",
+        "path": "generator.conflicts_with",
+        "excerpt": "[\"gather-resources\"]"
+      }
+    ],
+    "confidence": "medium",
+    "already_linked": "generate-income conflicts_with gather-resources; generate-income related often-confused-with gather-resources",
+    "known": "Already known: generate-income conflicts_with gather-resources."
+  },
+  {
+    "id": "L3-38",
+    "level": 3,
+    "a": {
+      "pattern": "cloak"
+    },
+    "b": {
+      "pattern": "burrow"
+    },
+    "player_a": "Turn invisible and attack straight from hiding.",
+    "player_b": "Go below the ground and surface before acting.",
+    "how_they_differ": "burrow's summary draws the line (a burrower must come up first). Already known: they list each other in conflicts_with.",
+    "evidence": [
+      {
+        "file": "data/patterns/burrow.json",
+        "path": "summary",
+        "excerpt": "The unit leaves the level the fight happens on, going under the ground or under water, and comes back up to act. While below it is hidden from everyone without a detector…"
+      },
+      {
+        "file": "data/patterns/burrow.json",
+        "path": "generator.conflicts_with",
+        "excerpt": "[\"cloak\"]"
+      },
+      {
+        "file": "data/patterns/cloak.json",
+        "path": "generator.conflicts_with",
+        "excerpt": "[\"burrow\",\"shroud-area\",\"draw-fire\"]"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "cloak conflicts_with burrow; burrow conflicts_with cloak; cloak related often-confused-with burrow; burrow related often-confused-with cloak",
+    "known": "Already known: mutual conflicts_with."
+  },
+  {
+    "id": "L3-39",
+    "level": 3,
+    "a": {
+      "pattern": "carry-passengers"
+    },
+    "b": {
+      "pattern": "passenger-sets-weapon"
+    },
+    "player_a": "A carrier whose riders cannot fight while inside.",
+    "player_b": "A vehicle whose weapon comes from its riders.",
+    "how_they_differ": "Already known: carry-passengers lists passenger-sets-weapon in conflicts_with (one way only); the field rules link one or the other, never both.",
+    "evidence": [
+      {
+        "file": "data/patterns/carry-passengers.json",
+        "path": "summary",
+        "excerpt": "A vehicle or building with seats that teammates enter to travel or shelter protected, and leave where they choose. In a vehicle the riders can't fight while inside, and t…"
+      },
+      {
+        "file": "data/patterns/carry-passengers.json",
+        "path": "generator.conflicts_with",
+        "excerpt": "[\"passenger-sets-weapon\"]"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "carry-passengers conflicts_with passenger-sets-weapon; carry-passengers related often-confused-with passenger-sets-weapon",
+    "known": "Already known: carry-passengers conflicts_with passenger-sets-weapon."
+  },
+  {
+    "id": "L3-40",
+    "level": 3,
+    "a": {
+      "pattern": "deploy-siege-mode"
+    },
+    "b": {
+      "pattern": "transform"
+    },
+    "player_a": "Plant yourself into a stronger stationary mode.",
+    "player_b": "Swap into a second form that can also move.",
+    "how_they_differ": "A second form that cannot move is deploy-siege-mode; already known: mutual conflicts_with.",
+    "evidence": [
+      {
+        "file": "data/patterns/transform.json",
+        "path": "summary",
+        "excerpt": "One key turns the unit into a second form with its own movement, weapons and often its own armour and target layer: a hover gunboat becomes a jet fighter, a buggy stands …"
+      },
+      {
+        "file": "data/patterns/transform.json",
+        "path": "generator.conflicts_with",
+        "excerpt": "[\"deploy-siege-mode\"]"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "deploy-siege-mode conflicts_with transform; transform conflicts_with deploy-siege-mode; deploy-siege-mode related often-confused-with transform; transform related often-confused-with deploy-siege-mode",
+    "known": "Already known: mutual conflicts_with."
+  },
+  {
+    "id": "L3-41",
+    "level": 3,
+    "a": {
+      "pattern": "freeze-and-shatter"
+    },
+    "b": {
+      "pattern": "lock-in-stasis"
+    },
+    "player_a": "Freeze a target as a setup for bonus damage.",
+    "player_b": "Take a target out of the fight; nothing can hurt or help it.",
+    "how_they_differ": "A freeze sets up damage, stasis shields its target. Already known: mutual conflicts_with.",
+    "evidence": [
+      {
+        "file": "data/patterns/lock-in-stasis.json",
+        "path": "summary",
+        "excerpt": "Takes a target out of the fight altogether for a while: it can't move, fire or use abilities, and nothing can hurt or help it until the effect ends. Unlike a freeze, it s…"
+      },
+      {
+        "file": "data/patterns/lock-in-stasis.json",
+        "path": "generator.conflicts_with",
+        "excerpt": "[\"freeze-and-shatter\"]"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "freeze-and-shatter conflicts_with lock-in-stasis; lock-in-stasis conflicts_with freeze-and-shatter; freeze-and-shatter related often-confused-with lock-in-stasis; lock-in-stasis related often-confused-with freeze-and-shatter",
+    "known": "Already known: mutual conflicts_with."
+  },
+  {
+    "id": "L3-42",
+    "level": 3,
+    "a": {
+      "pattern": "become-invulnerable"
+    },
+    "b": {
+      "pattern": "rewind-self"
+    },
+    "player_a": "Become untouchable for a moment, paid for before or after.",
+    "player_b": "Snap back to where you stood a few seconds ago, at the health you had.",
+    "how_they_differ": "rewind-self undoes damage and moves you (its clean-rewind is untouchable only for an instant). Already known: become-invulnerable lists rewind-self in conflicts_with (one way only).",
+    "evidence": [
+      {
+        "file": "data/patterns/rewind-self.json",
+        "path": "summary",
+        "excerpt": "On a key, the unit snaps back to where it stood, at the health it had, a few seconds earlier, undoing the damage it took and the ground it covered since; then it waits ou…"
+      },
+      {
+        "file": "data/patterns/rewind-self.json",
+        "path": "variants[1].summary",
+        "excerpt": "The rewind also reloads the weapon and clears most debuffs, and the unit is untouchable for the instant of the rewind."
+      },
+      {
+        "file": "data/patterns/become-invulnerable.json",
+        "path": "generator.conflicts_with",
+        "excerpt": "[\"rewind-self\"]"
+      }
+    ],
+    "confidence": "high",
+    "already_linked": "become-invulnerable conflicts_with rewind-self; become-invulnerable related often-confused-with rewind-self; rewind-self related often-confused-with become-invulnerable",
+    "known": "Already known: become-invulnerable conflicts_with rewind-self."
+  }
+]
