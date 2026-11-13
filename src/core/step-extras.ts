@@ -1,78 +1,24 @@
-// Step 13 (only whether the card has a secondary weapon, so far) and step 14 (the extra abilities), then the seats.
-//
-// The secondary weapon takes its key before the extras (A6). Step 13 comes before step 14 in the roll order, so the
-// choice is made at step 13's place: always with a gunner seat, and when a pattern needs its adaptive weapon as the
-// secondary one (A10); otherwise 1 in one_in, if the budgets have a key left (section 7, K-a, K-c). The weapon itself
-// is rolled with the rest of step 13 later; this step marks only that it exists ({} on the draft).
+// Step 14: the extra abilities, then the seats and the second form.
 //
 // Step 14 aims for a total number of abilities by tier (counts.abilities), and adds extras while the key, passive and
 // seat budgets allow, never the same pattern twice and never a conflict (A6, A7, A11); a pattern an extra implies comes
 // with it (A8). Then the seats are given out (A5): a commander takes the last extra (or the signature), a gunner the
-// secondary weapon, the driver everything else.
+// secondary weapon, the driver everything else. Last, a card with a transform pattern gets its second form (A9).
 import { drawAbility, itemForNeed, placeItem, placeNeededExtras, placed, variantDraftProblem, type PatternChoice } from './abilities.ts'
 import { blockOf, usablePattern, type Index } from './data.ts'
 import { diceFor } from './dice.ts'
-import { abilitiesOf, budgetOf, budgetProblem, crewSeats, seatPlan } from './keys.ts'
-import { parseLink } from './links.ts'
-import { lockProblem, pendingNotLocked } from './locks.ts'
-import { needsOfBlock, newMemo } from './needs.ts'
-import { dueNeeds, fail, ok } from './parts.ts'
+import { budgetOf, budgetProblem, seatPlan } from './keys.ts'
+import { matchLink, parseLink } from './links.ts'
+import { lockedRoleNeeds, pendingNotLocked } from './locks.ts'
+import { needAnswer, needsOfBlock, newMemo } from './needs.ts'
+import { dueNeeds, fail } from './parts.ts'
 import { blockFor, cooldownWeights, hardControlOf, kindsAtTier, mayJoin } from './patterns.ts'
 import { reachOf, reachWithAbilities, variantProblem } from './reach.ts'
 import { emptyParts } from './draft.ts'
+import { stepSecondForm } from './step-late.ts'
 import { reachesFor } from './step-signature.ts'
 import type { StepResult } from './steps.ts'
 import type { AbilityDraft, Draft, DraftParts } from './types.ts'
-
-/** The adaptive weapon family (weapon-families word list), which A10 places by the pattern that implies it. */
-const ADAPTIVE = 'adaptive'
-
-/** A10: a pattern on the card implies an adaptive weapon and requires another family for the card, so the adaptive
- *  weapon is the secondary one (rules.json defaults.adaptive.slot_when_family_required). */
-function adaptiveAsSecondary(ix: Index, d: Draft): string | undefined {
-  if (ix.data.rules.defaults.adaptive.slot_when_family_required !== 'secondary') return undefined
-  for (const a of abilitiesOf(d.parts)) {
-    if (a.pattern === undefined) continue
-    const b = blockFor(ix, a.pattern, a.variant ?? null)
-    const adaptive = b.implies.some(l => l === `weapon:${ADAPTIVE}`)
-    const family = b.requires.some(g => g.some(l => parseLink(l).kind === 'weapon' && parseLink(l).id !== ADAPTIVE))
-    if (adaptive && family) return `pattern:${a.pattern}`
-  }
-  return undefined
-}
-
-/** Step 13, its first part: does the card have a secondary weapon? */
-export function stepSecondaryWeapon(ix: Index, d: Draft): StepResult {
-  const a = d.parts.armament
-  if (a.secondary !== undefined) {
-    const why = budgetOf(ix, d.parts)
-    if (why) return fail(`the locked secondary weapon does not fit: ${why}`)
-    d.trace.push({ field: 'armament.secondary', value: a.secondary === null ? 'none' : 'yes', how: 'locked', rule: 'I1', candidates: 0 })
-    return ok
-  }
-  const rule = ix.data.rules.defaults.secondary_weapon
-  const roll = diceFor(d.seed, 'armament.secondary', d.attempt).below(rule.one_in) // drawn every time, whatever decides
-  const withIt = { ...d.parts, armament: { ...a, secondary: {} } }
-  const room = budgetOf(ix, withIt) === undefined
-  const gunner = crewSeats(ix, d.parts).includes(rule.always_with)
-  const forcedBy = gunner ? `crew:${d.parts.crew.model}` : adaptiveAsSecondary(ix, d)
-  // A secondary weapon the waiting locks leave no key for is drawn again: there is none (locks.ts).
-  const clash = forcedBy === undefined && room && roll === 0 ? lockProblem(ix, d, withIt) : undefined
-  const has = forcedBy !== undefined || (room && roll === 0 && !clash)
-  if (has && !room) return fail(`the secondary weapon ${forcedBy} needs takes a key the budgets do not have (K-a, K-c)`)
-  d.parts = has ? withIt : { ...d.parts, armament: { ...a, secondary: null } }
-  d.trace.push({
-    field: 'armament.secondary',
-    value: has ? 'yes' : 'none',
-    how: forcedBy ? 'needed' : 'rolled',
-    ...(forcedBy ? { by: forcedBy } : {}),
-    rule: forcedBy ? (gunner ? 'section 7 (always with a gunner seat)' : 'A10') : `section 7 (1 in ${rule.one_in} if a key is left), A6`,
-    candidates: rule.one_in,
-    draw: roll,
-    ...(!room && !forcedBy ? { note: 'no key left for it' } : clash ? { note: `the locks rule it out: ${clash}` } : {}),
-  })
-  return ok
-}
 
 /** The most extras a card holds: the largest count of counts.abilities, less the signature (the card schema's three). */
 export function maxExtras(ix: Index): number {
@@ -169,11 +115,19 @@ export function stepExtras(ix: Index, d: Draft): StepResult {
       const why = placeNeededExtras(ix, d, reachesFor(ix, d)) // A8: a pattern the extra implies comes with it
       if (why) return fail(why)
     }
+    // G5: a tool a locked secondary role still lacks (a pattern or category its fit or requires names) comes last.
+    for (const n of lockedRoleNeeds(ix, d)) {
+      if (n.avoid || needAnswer(ix, d.parts, n) === 'yes' || !n.links.some(l => ['pattern', 'category'].includes(parseLink(l).kind))) continue
+      if (n.links.some(l => !['pattern', 'category'].includes(parseLink(l).kind) && matchLink(ix, d.parts, l) !== 'no')) continue
+      const item = itemForNeed(ix, d, reachesFor(ix, d), n)
+      const why = typeof item === 'string' ? item : placeItem(ix, d, reachesFor(ix, d), item) ?? placeNeededExtras(ix, d, reachesFor(ix, d))
+      if (why) return fail(`the locked secondary role: ${why}`)
+    }
     d.trace.push({ field: 'abilities', value: target, how: 'rolled', rule: 'A6', candidates: weights.filter(w => w > 0).length, note: `${(d.parts.pending ?? []).length} extras${stopped ? `; stopped: ${stopped}` : ''}` })
     const { pending, ...rest } = d.parts
     d.parts = { ...rest, abilities: [...(pending ?? [])] }
   }
   giveSeats(ix, d)
   const why = budgetProblem(ix, d.parts)
-  return why ? fail(why) : ok
+  return why ? fail(why) : stepSecondForm(ix, d)
 }

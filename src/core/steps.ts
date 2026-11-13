@@ -231,8 +231,9 @@ export function stepPrimaryRole(ix: Index, d: Draft): StepResult {
       candidates: 0,
       ...(atGate ? { aboveGate: `at spice ${d.spice} ${atGate}; the role is chosen, so a later step sets its tool above the gate if it must (G5, G13)` } : {}),
     })
-    // The locked secondary roles are set at their own step; what they need is passed on now, like the primary's.
-    for (const role of rolesToHold(d)) d.needs.push(...roleNeeds(ix, d, role, true))
+    // The input or locked primary role passes its needs on. The locked secondary roles are set at their own step (16):
+    // the steps before keep their needs possible by drawing again (locks.ts), and step 14 adds a tool they still lack.
+    for (const role of [...new Set([...inputRoles(d), fixed])]) d.needs.push(...roleNeeds(ix, d, role, true))
     return ok
   }
   const dropped: Array<{ id: string; why: string }> = []

@@ -237,24 +237,44 @@ function targets(ix: Index, D: Map<string, Set<string>>): Set<string> {
 /** The anti-air trait that lifts a weapon to high air (validate.mjs exempt; weapon-traits word list). */
 const ANTI_AIR = 'anti-air'
 
-function weaponReach(ix: Index, parts: DraftParts, spice: number, mode: Mode, D: Map<string, Set<string>>, tgts: Set<string>): WeaponReach {
-  const out: WeaponReach = {
-    families: new Set(),
-    damages: new Set(),
-    deliveries: new Set(),
-    ranges: new Set(),
-    settableRanges: new Set(),
-    traits: new Set(),
-    hits: new Set(),
-    mounts: new Set(),
+const emptyWeaponReach = (): WeaponReach => ({
+  families: new Set(), damages: new Set(), deliveries: new Set(), ranges: new Set(), settableRanges: new Set(), traits: new Set(), hits: new Set(), mounts: new Set(),
+})
+
+/**
+ * What the card's weapons can still be: the union of what each weapon can be. A weapon whose family is chosen counts
+ * for itself; a weapon still to come (or one with no family yet) counts as any family the card can hold. Each weapon's
+ * share depends only on itself and on the unit's parts, so it is kept by those (`context`): while one weapon's parts
+ * are drawn, the others' shares are worked out once.
+ */
+function weaponReach(ix: Index, parts: DraftParts, spice: number, mode: Mode, D: Map<string, Set<string>>, tgts: Set<string>, context: string): WeaponReach {
+  const out = emptyWeaponReach()
+  const add = (r: WeaponReach): void => {
+    for (const k of Object.keys(out) as Array<keyof WeaponReach>) for (const x of r[k]) out[k].add(x)
+  }
+  const share = (w: WeaponDraft): WeaponReach => {
+    const { seat: _seat, affects: _affects, ...own } = w
+    const key = `weapon-share|${context}|${JSON.stringify(own)}`
+    const known = ix.cache.get(key) as WeaponReach | undefined
+    if (known) return known
+    const r = weaponShare(ix, parts, spice, mode, D, tgts, own)
+    ix.cache.set(key, r)
+    return r
   }
   const { weapons, complete } = weaponsOf(parts)
+  for (const w of weapons) if (w.family !== undefined) add(share(w))
+  if (!complete || weapons.some(w => w.family === undefined)) add(share({}))
+  return out
+}
+
+/** What one weapon can be (weaponReach): its own parts where chosen, else what its family (or any family) allows. */
+function weaponShare(ix: Index, parts: DraftParts, spice: number, mode: Mode, D: Map<string, Set<string>>, tgts: Set<string>, one: WeaponDraft): WeaponReach {
+  const out = emptyWeaponReach()
   const slots: Array<{ fam: Term; w: WeaponDraft }> = []
-  for (const w of weapons) {
-    const fam = w.family !== undefined ? term(ix, 'weapon-families', w.family) : undefined
-    if (fam) slots.push({ fam, w })
-  }
-  if (!complete || weapons.some(w => w.family === undefined)) {
+  if (one.family !== undefined) {
+    const fam = term(ix, 'weapon-families', one.family)
+    if (fam) slots.push({ fam, w: one })
+  } else {
     for (const c of offerTerms(ix, parts, spice, 'weapon-families', { weapon: {} }).candidates) {
       const fam = term(ix, 'weapon-families', c.id)
       if (fam && (mode === 'forced' || onOwnRolls(c))) slots.push({ fam, w: {} })
@@ -349,11 +369,20 @@ function weaponLinkedLists(ix: Index): string[] {
   return list
 }
 
+/** What a weapon's share of the reach depends on besides the weapon itself: the class, tier, flavour, spice and mode,
+ *  the possible bodies (mounts) and targets (a dropped weapon needs a flier), and the unit-wide parts that a map links
+ *  with weapon parts. */
+function weaponContext(ix: Index, parts: DraftParts, spice: number, mode: Mode, bodies: ReadonlySet<string>, tgts: ReadonlySet<string>): string {
+  const unitMaps = weaponLinkedLists(ix).map(l => `${l}=${(UNIT_PARTS[l]?.(parts) ?? []).join('+')}`)
+  return `${mode}|${spice}|${parts.class}|${parts.tier}|${parts.flavour}|${[...bodies].join('+')}|${[...tgts].join('+')}|${unitMaps.join('|')}`
+}
+
 /**
  * The weapons a draft can still get, worked out from its chosen parts alone (the other parts are not narrowed against
  * each other): the quick check of a need on a weapon part between the steps (needs.ts).
  */
-export function weaponOptions(ix: Index, parts: DraftParts, spice: number, mode: Mode): WeaponReach {
+/** The bodies and targets a draft can still have (each chosen part as it is, the open ones by their offer). */
+function bodiesAndTargets(ix: Index, parts: DraftParts, spice: number, mode: Mode): { bodies: Set<string>; tgts: Set<string> } {
   const pool = (list: string): Set<string> => {
     const v = singleValue(parts, list)
     if (v !== undefined) return new Set([v])
@@ -367,14 +396,23 @@ export function weaponOptions(ix: Index, parts: DraftParts, spice: number, mode:
       if (t) tgts.add(t)
     }
   }
-  const bodies = pool('bodies')
-  // The weapons depend on the class, tier, flavour, spice and mode, the possible bodies (mounts) and targets (a dropped
-  // weapon needs a flier), the chosen weapons, and the unit-wide parts that a map links with weapon parts: kept by those.
-  const unitMaps = weaponLinkedLists(ix).map(l => `${l}=${(UNIT_PARTS[l]?.(parts) ?? []).join('+')}`)
-  const key = `weapons|${mode}|${spice}|${parts.class}|${parts.tier}|${parts.flavour}|${[...bodies].join('+')}|${[...tgts].join('+')}|${JSON.stringify(parts.armament)}|${unitMaps.join('|')}`
+  return { bodies: pool('bodies'), tgts }
+}
+
+/** The key of what a weapon's parts depend on, besides the weapon itself (weaponContext), for a draft. */
+export function weaponContextOf(ix: Index, parts: DraftParts, spice: number, mode: Mode): string {
+  const { bodies, tgts } = bodiesAndTargets(ix, parts, spice, mode)
+  return weaponContext(ix, parts, spice, mode, bodies, tgts)
+}
+
+export function weaponOptions(ix: Index, parts: DraftParts, spice: number, mode: Mode): WeaponReach {
+  const { bodies, tgts } = bodiesAndTargets(ix, parts, spice, mode)
+  // The weapons depend on the chosen weapons and on weaponContext: kept by those.
+  const context = weaponContext(ix, parts, spice, mode, bodies, tgts)
+  const key = `weapons|${context}|${JSON.stringify(parts.armament)}`
   const known = ix.cache.get(key) as WeaponReach | undefined
   if (known) return known
-  const out = weaponReach(ix, parts, spice, mode, new Map([['bodies', bodies]]), tgts)
+  const out = weaponReach(ix, parts, spice, mode, new Map([['bodies', bodies]]), tgts, context)
   ix.cache.set(key, out)
   if (ix.cache.size > KEEP) {
     const oldest = ix.cache.keys().next().value
@@ -406,7 +444,7 @@ function build(ix: Index, parts: DraftParts, spice: number, mode: Mode): Reach {
     single: D,
     multi: M,
     targets: tgts,
-    weapon: weaponReach(ix, parts, spice, mode, D, tgts),
+    weapon: weaponReach(ix, parts, spice, mode, D, tgts, weaponContext(ix, parts, spice, mode, D.get('bodies') ?? new Set(), tgts)),
     maxSeats,
     patterns: new Map(),
     fixedPatterns,

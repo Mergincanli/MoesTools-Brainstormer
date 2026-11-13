@@ -14,6 +14,7 @@ const data = loadGeneratorData()
 function makeChecker(data) {
   const T = new Map(Object.values(data.vocab).map(l => [l.id, new Map(l.terms.map(t => [t.id, t]))]))
   const term = (list, id) => T.get(list)?.get(id)
+  const termsOfList = list => [...(T.get(list)?.values() ?? [])]
   const rank = (list, id) => term(list, id)?.rank ?? 0
   const pat = new Map(data.patterns.map(p => [p.id, p]))
   const R = data.rules
@@ -113,7 +114,95 @@ function makeChecker(data) {
     if (p.roles.primary === 'transport' && !need) out.push('transport with no pattern that brings seats (G13)')
     if (p.mobility.handling !== term('mobility', p.mobility.base).default_handling) out.push('handling is not the mobility default (G10)')
     if (traits.length > 2 || (p.armour.models || []).length < 1 || (p.armour.models || []).length > 2 || (p.sensors.traits || []).length > 2) out.push('a list over its size (C1)')
-    const unit = { classes: [p.class], tiers: [p.tier], mobility: [p.mobility.base], bodies: [p.body.plan], sizes: [p.body.size], 'speed-bands': [p.mobility.speed], 'armour-classes': [p.armour.class], 'armour-models': p.armour.models, 'sensor-traits': p.sensors.traits, 'sight-bands': [p.sensors.sight], 'crew-models': [p.crew.model], nature: [p.nature], availability: [p.availability], 'mobility-traits': traits, roles: [p.roles.primary] }
+    const unit = { classes: [p.class], tiers: [p.tier], mobility: [p.mobility.base], bodies: [p.body.plan], sizes: [p.body.size], 'speed-bands': [p.mobility.speed], 'armour-classes': [p.armour.class], 'armour-models': p.armour.models, 'sensor-traits': p.sensors.traits, 'sight-bands': [p.sensors.sight], 'crew-models': [p.crew.model], nature: [p.nature], availability: [p.availability], 'mobility-traits': traits, roles: [p.roles.primary, ...(p.roles.secondary || [])], 'on-death': p.on_death || [] }
+    // Step 13: the weapons (section 7, A5, A10, G11, G12, C1, HC1; section 18: an adaptive weapon has no damage,
+    // delivery or range of its own).
+    const all = term => termsOfList(term)
+    const targetsAll = all('target-types').filter(t => !t.source_only).map(t => t.id)
+    const body = term('bodies', p.body.plan)
+    const flier = ['low-air', 'high-air'].includes(term('mobility', p.mobility.base).target_type)
+    const weaponRules = (w, where, cls, withBody) => {
+      const fam = term('weapon-families', w.family)
+      if (!fam || fam.source_only) return out.push(`${where}: family ${w.family}`)
+      if (fam.classes && !fam.classes.includes(cls)) out.push(`${where}: ${w.family} not for ${cls} (G1)`)
+      if (w.family === 'adaptive') {
+        if (w.damage !== null || w.delivery !== null || w.range !== null) out.push(`${where}: an adaptive weapon with a damage, delivery or range (section 18)`)
+      } else {
+        if (!(fam.allowed?.['damage-types'] ?? [fam.default_damage]).includes(w.damage)) out.push(`${where}: damage ${w.damage} not allowed (G12)`)
+        if (!(fam.allowed?.['weapon-delivery'] ?? [fam.default_delivery]).includes(w.delivery)) out.push(`${where}: delivery ${w.delivery} not allowed (G12)`)
+        const allowedRanges = term('weapon-delivery', w.delivery).allowed?.['range-bands']
+        if (w.range !== fam.default_range && !(allowedRanges ?? all('range-bands').map(t => t.id)).includes(w.range)) out.push(`${where}: range ${w.range} (G11)`)
+        if (w.delivery === 'drop' && !flier) out.push(`${where}: a dropped weapon on a unit that does not fly`)
+      }
+      const famT = fam.allowed?.['target-types'] ?? targetsAll
+      const delT = (w.delivery && term('weapon-delivery', w.delivery).allowed?.['target-types']) || targetsAll
+      const lift = (w.traits || []).includes('anti-air') && famT.includes('low-air') && delT.includes('high-air')
+      const want = targetsAll.filter(x => (famT.includes(x) && delT.includes(x)) || (x === 'high-air' && lift))
+      if (JSON.stringify(w.can_target) !== JSON.stringify(want)) out.push(`${where}: targets ${w.can_target}, the rules give ${want} (G12)`)
+      if (['lobbed', 'drop', 'place'].includes(w.delivery) && w.can_target.some(x => x.endsWith('-air'))) out.push(`${where}: a ${w.delivery} weapon hits fliers (G12)`)
+      if ((w.traits || []).length > 3) out.push(`${where}: more than 3 traits (C1)`)
+      if ((w.traits || []).includes('stun')) out.push(`${where}: the stun trait (HC1)`)
+      for (const t of w.traits || []) {
+        const tt = term('weapon-traits', t)
+        if ((tt.excluded?.['weapon-delivery'] || []).includes(w.delivery) || (w.delivery && (term('weapon-delivery', w.delivery).excluded?.['weapon-traits'] || []).includes(t))) out.push(`${where}: trait ${t} with ${w.delivery} (G1)`)
+        for (const x of tt.excluded?.['weapon-traits'] || []) if ((w.traits || []).includes(x)) out.push(`${where}: traits ${t} and ${x} (G1)`)
+      }
+      if (withBody && body.allowed?.['aim-models'] && !body.allowed['aim-models'].includes(w.mount)) out.push(`${where}: mount ${w.mount} on ${p.body.plan} (G12)`)
+      if (w.delivery && (term('weapon-delivery', w.delivery).excluded?.['aim-models'] || []).includes(w.mount)) out.push(`${where}: mount ${w.mount} with ${w.delivery} (G1)`)
+    }
+    const a13 = p.armament
+    const fallbackSeat = R.defaults.primary_weapon_seat[p.crew.solo_fallback]
+    const pSeat = fallbackSeat && cseats.includes(fallbackSeat) ? fallbackSeat : 'driver'
+    if (a13.primary === null) {
+      const cat = data.patterns.find(x => x.id === p.signature.pattern).category
+      if (!R.defaults.unarmed.primary_roles.includes(p.roles.primary) || !R.defaults.unarmed.signature_categories.includes(cat)) out.push('unarmed outside the unarmed rule (section 7)')
+    } else {
+      weaponRules(a13.primary, 'primary', p.class, true)
+      if (a13.primary.seat !== pSeat) out.push(`primary weapon on seat ${a13.primary.seat}, not ${pSeat} (A5)`)
+    }
+    if (a13.secondary) {
+      weaponRules(a13.secondary, 'secondary', p.class, true)
+      if (a13.secondary.seat !== (cseats.includes('gunner') ? 'gunner' : 'driver')) out.push('the secondary weapon is not on the gunner seat (A5)')
+    }
+    const adaptive = [a13.primary, a13.secondary].find(w => w && w.family === 'adaptive')
+    if (adaptive && (a13.conditional.length < 2 || a13.conditional.length > 4)) out.push(`${a13.conditional.length} conditional weapons (A10)`)
+    if (!adaptive && a13.conditional.length) out.push('conditional weapons without an adaptive weapon (A10)')
+    a13.conditional.forEach((c, i) => {
+      weaponRules(c.weapon, `conditional ${i}`, p.class, true)
+      if (!/^(role|weapon):/.test(c.when)) out.push(`conditional ${i}: when ${c.when} (A10)`)
+      if (c.when.startsWith('weapon:') && c.weapon.family !== c.when.slice(7)) out.push(`conditional ${i}: a leeched weapon of another family`)
+    })
+    // Step 15: on death (section 7, C3) and the resource.
+    const od = R.defaults.on_death
+    const who = (p.on_death || []).filter(x => od.who_gets_out.includes(x))
+    const left = (p.on_death || []).filter(x => od.what_is_left.includes(x))
+    if (who.length !== 1 || left.length > 1 || p.on_death[0] !== who[0]) out.push(`on death ${p.on_death} (C3)`)
+    if (p.on_death.includes('wreck') && p.on_death.includes('respawn')) out.push('a wreck with respawn (C3)')
+    for (const x of p.on_death) {
+      if (od.crewed_machine_only.includes(x) && p.nature !== 'crewed-machine') out.push(`${x} on a ${p.nature} unit (section 7)`)
+      const t = term('on-death', x)
+      if (t.classes && !t.classes.includes(p.class)) out.push(`${x} not for ${p.class} (G1)`)
+      if ((t.excluded?.classes || []).includes(p.class) || (t.excluded?.nature || []).includes(p.nature)) out.push(`${x} excluded here (G1)`)
+      if ((crew.excluded?.['on-death'] || []).includes(x)) out.push(`${x} with crew ${p.crew.model} (G1)`)
+    }
+    const named = new Set(blocks.flatMap(b => [...b.implies, ...b.requires.flat()]).filter(l => l.startsWith('resource:')).map(l => l.slice(9)))
+    if (p.resource !== null && !named.has(p.resource) && !d.locks.includes('resource')) out.push(`resource ${p.resource} that no pattern names (section 7)`)
+    if (p.resource === null && blocks.some(b => b.implies.some(l => l.startsWith('resource:')))) out.push('a pattern implies a resource the card lacks (G3)')
+    // Step 16: the secondary roles (G14).
+    const sec = p.roles.secondary
+    if (!Array.isArray(sec) || sec.length > 2 || new Set([p.roles.primary, ...sec]).size !== sec.length + 1) out.push(`secondary roles ${sec} (G14)`)
+    // The second form (A9).
+    const transform = abil.find(a => R.defaults.second_form.via.includes(a.pattern))
+    if (transform ? (p.modes || []).length !== 1 : (p.modes || []).length) out.push('a second form without transform, or none with it (A9)')
+    for (const m of p.modes || []) {
+      if (m.class === p.class || !block(transform.pattern, transform.variant).classes.includes(m.class)) out.push(`second form class ${m.class} (A9)`)
+      const mt = term('mobility', m.mobility.base)
+      if (mt.classes && !mt.classes.includes(m.class)) out.push(`second form mobility ${m.mobility.base} not for ${m.class} (A9)`)
+      if (m.mobility.handling !== mt.default_handling) out.push('second form handling (G10)')
+      if (!m.mobility.speed) out.push('second form without a speed')
+      if ((m.armament || []).length > 1) out.push('more than one second-form weapon (A9)')
+      for (const w of m.armament || []) weaponRules(w, 'second form weapon', m.class, false)
+    }
     for (const [list, vals] of Object.entries(unit)) {
       for (const id of vals) {
         const t = term(list, id)
@@ -129,15 +218,17 @@ function makeChecker(data) {
   }
 }
 
-describe('two thousand rolls of steps 1 to 14', () => {
+const classes = [null, 'infantry', 'vehicle', 'walker', 'hover', 'aircraft', 'drone']
+const ROLES = [null, null, null, ...data.vocab.roles.terms.map(t => t.id)]
+const results = []
+for (let i = 0; i < 2000; i++) {
+  const inputs = i % 3 === 0 ? { class: classes[i % 7], role: ROLES[i % ROLES.length], tier: i % 2 ? 't1' : null } : {}
+  results.push({ i, inputs, spice: 1 + (i % 5), r: roll(data, { seed: `sweep-${i}`, spice: 1 + (i % 5), inputs }) })
+}
+const cards = results.filter(x => x.r.ok).map(x => x.r.draft.parts)
+
+describe('two thousand rolls of steps 1 to 16', () => {
   const check = makeChecker(data)
-  const classes = [null, 'infantry', 'vehicle', 'walker', 'hover', 'aircraft', 'drone']
-  const roles = [null, null, null, ...data.vocab.roles.terms.map(t => t.id)]
-  const results = []
-  for (let i = 0; i < 2000; i++) {
-    const inputs = i % 3 === 0 ? { class: classes[i % 7], role: roles[i % roles.length], tier: i % 2 ? 't1' : null } : {}
-    results.push({ i, inputs, spice: 1 + (i % 5), r: roll(data, { seed: `sweep-${i}`, spice: 1 + (i % 5), inputs }) })
-  }
 
   it('every draft passes the checker', () => {
     const problems = []
@@ -204,20 +295,18 @@ describe('two thousand rolls of steps 1 to 14', () => {
 describe('locks: each set at its own step, the steps before it keep to it (I1, G5, G7, T2)', () => {
   const check = makeChecker(data)
   const lockOf = (p, name) => ({
-    class: p.class, tier: p.tier, flavour: p.flavour, roles: { primary: p.roles.primary, secondary: [] },
+    class: p.class, tier: p.tier, flavour: p.flavour, roles: p.roles,
     mobility: { base: p.mobility.base, handling: p.mobility.handling, traits: p.mobility.traits }, speed: p.mobility.speed,
     body: { plan: p.body.plan }, size: p.body.size, armour: p.armour, sensors: p.sensors, crew: { ...p.crew, count: p.body.count },
-    signature: p.signature, abilities: p.abilities,
+    signature: p.signature, abilities: p.abilities, primary: p.armament.primary, secondary: p.armament.secondary,
+    conditional: p.armament.conditional, modes: p.modes, resource: p.resource, on_death: p.on_death,
   })[name]
-  const NAMES = ['class', 'tier', 'flavour', 'roles', 'mobility', 'speed', 'body', 'size', 'armour', 'sensors', 'crew', 'signature', 'abilities']
-  const canon = x => (Array.isArray(x) ? x.map(canon) : x && typeof x === 'object' ? Object.fromEntries(Object.keys(x).sort().filter(k => x[k] !== undefined).map(k => [k, canon(x[k])])) : x)
-  const card = p => JSON.stringify(canon(p))
-  // A card of these steps has no secondary roles yet; a roles lock says it has none, which an ability that names
-  // another role rules out (G14, M2). Those cards are left out of the own-value test.
-  const pat = new Map(data.patterns.map(p => [p.id, p]))
-  const namesRole = a => { const p = pat.get(a.pattern); return JSON.stringify([p.generator, p.variants.find(v => v.id === a.variant)?.overrides ?? {}]).includes('"role:') }
+  const NAMES = ['class', 'tier', 'flavour', 'roles', 'mobility', 'speed', 'body', 'size', 'armour', 'sensors', 'crew', 'signature', 'abilities', 'primary', 'secondary', 'conditional', 'modes', 'resource', 'on_death']
+  // Seats follow the crew (A5), so a part locked onto another card is compared without them.
+  const canon = (x, seats = true) => (Array.isArray(x) ? x.map(y => canon(y, seats)) : x && typeof x === 'object' ? Object.fromEntries(Object.keys(x).sort().filter(k => x[k] !== undefined && (seats || k !== 'seat')).map(k => [k, canon(x[k], seats)])) : x)
+  const card = (p, seats = true) => JSON.stringify(canon(p, seats))
   const bases = []
-  for (let i = 0; i < 130; i++) {
+  for (let i = 0; i < 190; i++) {
     const r = roll(data, { seed: `lock-${i}`, spice: 1 + (i % 5) })
     if (r.ok) bases.push({ i, r, name: NAMES[i % NAMES.length] })
   }
@@ -227,14 +316,13 @@ describe('locks: each set at its own step, the steps before it keep to it (I1, G
     for (const { i, r, name } of bases) {
       if (r.attempts !== 1) continue // a later attempt's card: an earlier attempt may pass with the lock (G7)
       const p = r.draft.parts
-      if (name === 'roles' && [p.signature, ...p.abilities].some(namesRole)) continue
       const again = roll(data, { seed: `lock-${i}`, spice: r.draft.spice, locks: { [name]: lockOf(p, name) } })
       assert.ok(again.ok, `lock-${i} ${name}: ${again.reason}`)
       if (again.attempts !== 1) continue
       compared++
       assert.equal(card(again.draft.parts), card(p), `lock-${i} ${name}`)
     }
-    assert.ok(compared >= 100, `only ${compared} compared`)
+    assert.ok(compared >= 150, `only ${compared} compared`)
   })
 
   it('T2: a part locked on a new seed keeps its value, and the card passes the checker', () => {
@@ -243,7 +331,7 @@ describe('locks: each set at its own step, the steps before it keep to it (I1, G
       const lock = lockOf(r.draft.parts, name)
       const other = roll(data, { seed: `lock-other-${i}`, spice: r.draft.spice, locks: { [name]: lock } })
       assert.ok(other.ok, `lock-other-${i} ${name}: ${other.reason}`)
-      const kept = name === 'signature' ? canon(other.draft.parts.signature).pattern === lock.pattern : name === 'abilities' ? other.draft.parts.abilities.map(a => a.pattern).join() === lock.map(a => a.pattern).join() : card(lockOf(other.draft.parts, name)) === card(lock)
+      const kept = card(lockOf(other.draft.parts, name), false) === card(lock, false)
       if (!kept) problems.push(`lock-other-${i}: ${name} not kept`)
       for (const pr of check(other.draft)) problems.push(`lock-other-${i} ${name}: ${pr}`)
     }
@@ -286,5 +374,241 @@ describe('locks: each set at its own step, the steps before it keep to it (I1, G
       }
     }
     assert.ok(redrawn > 5, `${redrawn} redrawn`)
+  })
+})
+
+describe('steps 13 to 16 and the second form', () => {
+  const check = makeChecker(data)
+  const fams = data.vocab['weapon-families'].terms.filter(t => !t.source_only)
+  const fam = id => fams.find(f => f.id === id)
+  const weaponsOf = p => [p.armament.primary, p.armament.secondary, ...p.armament.conditional.map(c => c.weapon)].filter(Boolean)
+  const pat = id => data.patterns.find(x => x.id === id)
+  const usesKey = kind => data.vocab['ability-kinds'].terms.find(t => t.id === kind)?.uses_key === true
+  const firstBand = kind => { const t = data.rules.cooldowns[kind] ?? {}; return Object.keys(t).find(k => typeof t[k] === 'number' && t[k] > 0) ?? null }
+  const lockSig = (id, variant, k = 0) => {
+    const v = variant ?? pat(id).variants[0].id
+    const kinds = pat(id).variants.find(x => x.id === v)?.overrides?.kinds ?? pat(id).generator.kinds
+    const kind = kinds[k % kinds.length]
+    return { pattern: id, variant: v, kind, cooldown: usesKey(kind) ? firstBand(kind) : null }
+  }
+  const RANK = list => new Map(data.vocab[list].terms.map(t => [t.id, t.rank ?? 0]))
+
+  it('G1: every weapon family the word lists allow for a class is rolled for it, and none they leave out; adaptive only through its patterns (A10)', () => {
+    const classes = data.vocab.classes.terms.filter(t => !t.source_only).map(t => t.id)
+    for (const cls of classes) {
+      const seen = new Set()
+      for (let i = 0; i < 150; i++) {
+        // Bombs drop (a flier only): half the infantry rolls fly on a jetpack.
+        const locks = cls === 'infantry' && i % 2 ? { mobility: { base: 'jetpack', handling: 'strafe', traits: [] } } : {}
+        const r = roll(data, { seed: `fam-${cls}-${i}`, spice: locks.mobility ? 5 : 3 + (i % 3), inputs: { class: cls }, locks })
+        assert.ok(r.ok, r.reason)
+        for (const w of weaponsOf(r.draft.parts)) seen.add(w.family)
+      }
+      const allowed = fams.filter(f => !f.classes || f.classes.includes(cls)).map(f => f.id)
+      const adaptiveHere = data.patterns.some(p => p.generator?.classes.includes(cls) && JSON.stringify([p.generator.implies, p.variants.map(v => v.overrides?.implies)]).includes('weapon:adaptive'))
+      assert.deepEqual(allowed.filter(f => !seen.has(f) && (f !== 'adaptive' || adaptiveHere)), [], `${cls}: allowed but never rolled`)
+      assert.deepEqual([...seen].filter(f => !allowed.includes(f)), [], `${cls}: rolled but not allowed`)
+    }
+  })
+
+  it('G12: the default damage and delivery are three times as likely as another allowed value', () => {
+    const share = list => {
+      let hit = 0, all = 0
+      for (const p of cards) for (const w of weaponsOf(p)) {
+        const f = fam(w.family)
+        if (w.family === 'adaptive') continue
+        const field = list === 'damage-types' ? 'damage' : 'delivery'
+        const ids = f.allowed?.[list] ?? [f[`default_${field}`]]
+        if (ids.length !== 2) continue
+        all++
+        if (w[field] === f[`default_${field}`]) hit++
+      }
+      return { share: hit / all, all }
+    }
+    for (const list of ['damage-types', 'weapon-delivery']) {
+      const { share: s, all } = share(list)
+      assert.ok(all > 300, `${all} weapons`)
+      assert.ok(Math.abs(s - 0.75) < 0.06, `${list}: the default is ${s.toFixed(3)} of ${all}; 3:1 gives 0.75`)
+    }
+  })
+
+  it('G12, HC1: targets follow the family and delivery; lobbed, dropped and placed shots never hit fliers; high air by family or anti-air; never a stun trait', () => {
+    let lifted = 0, ground = 0
+    for (const p of cards) for (const w of weaponsOf(p)) {
+      assert.ok(!(w.traits ?? []).includes('stun'), 'HC1')
+      if (['lobbed', 'drop', 'place'].includes(w.delivery)) {
+        ground++
+        assert.ok(!w.can_target.some(t => t.endsWith('-air')), `${w.family} ${w.delivery} hits fliers`)
+      }
+      const famHigh = (fam(w.family).allowed?.['target-types'] ?? []).includes('high-air')
+      if (w.can_target.includes('high-air') && !famHigh) {
+        lifted++
+        assert.ok(w.traits.includes('anti-air'), `${w.family} reaches high air without anti-air`)
+      }
+    }
+    assert.ok(lifted > 0 && ground > 0, `${lifted} lifted by anti-air, ${ground} ground-only deliveries`)
+  })
+
+  it('A5: a gunner seat owns the secondary weapon; the primary weapon sits where the solo fallback puts it', () => {
+    let gunners = 0
+    for (const p of cards) {
+      const seats = data.vocab['crew-models'].terms.find(t => t.id === p.crew.model).seats ?? ['driver']
+      if (!seats.includes('gunner')) continue
+      gunners++
+      assert.equal(p.armament.secondary?.seat, 'gunner')
+      if (p.armament.primary) assert.equal(p.armament.primary.seat, data.rules.defaults.primary_weapon_seat[p.crew.solo_fallback] === 'gunner' ? 'gunner' : 'driver')
+    }
+    assert.ok(gunners > 20, `${gunners} cards with a gunner seat`)
+  })
+
+  it('section 7: unarmed only for the roles and signature categories the data names, about 1 in 3 of those', () => {
+    const rule = data.rules.defaults.unarmed
+    let eligible = 0, unarmed = 0
+    for (let i = 0; i < 240; i++) {
+      const r = roll(data, { seed: `unarmed-${i}`, spice: 1 + (i % 5), inputs: { role: rule.primary_roles[i % rule.primary_roles.length] } })
+      if (!r.ok) continue
+      const p = r.draft.parts
+      const cat = pat(p.signature.pattern).category
+      if (rule.signature_categories.includes(cat)) eligible++
+      if (p.armament.primary === null) {
+        unarmed++
+        assert.ok(rule.signature_categories.includes(cat) && rule.primary_roles.includes(p.roles.primary))
+      }
+    }
+    for (const p of cards) if (p.armament.primary === null) assert.ok(rule.primary_roles.includes(p.roles.primary))
+    assert.ok(unarmed > 0 && unarmed < eligible * 0.5, `${unarmed} unarmed of ${eligible} that may be`)
+  })
+
+  it('A10: an adaptive weapon has 2 to 4 conditional weapons with when links, and no damage, delivery or range of its own (section 18)', () => {
+    for (let i = 0; i < 6; i++) {
+      const a = roll(data, { seed: `adaptive-${i}`, spice: 5, inputs: { class: 'vehicle' }, locks: { signature: lockSig('passenger-sets-weapon') } })
+      assert.ok(a.ok, a.reason)
+      const p = a.draft.parts.armament
+      assert.equal(p.primary.family, 'adaptive')
+      assert.deepEqual([p.primary.damage, p.primary.delivery, p.primary.range], [null, null, null])
+      assert.ok(p.conditional.length >= 2 && p.conditional.length <= 4)
+      assert.ok(p.conditional.every(c => c.when.startsWith('role:')) && new Set(p.conditional.map(c => c.when)).size === p.conditional.length)
+      const b = roll(data, { seed: `leech-${i}`, spice: 5, inputs: { class: 'walker' }, locks: { signature: lockSig('leech-weapon-on-kill') } })
+      assert.ok(b.ok, b.reason)
+      const q = b.draft.parts.armament
+      assert.equal(q.secondary.family, 'adaptive', 'leech-weapon-on-kill requires another family: the adaptive weapon is the secondary one')
+      assert.notEqual(q.primary.family, 'adaptive')
+      assert.ok(q.conditional.every(c => c.when === `weapon:${c.weapon.family}`), 'a leeched weapon is the victim family')
+      assert.deepEqual([...check(a.draft), ...check(b.draft)], [])
+    }
+  })
+
+  it('G3, G4: the weapon parts the patterns and roles ask for are on the card', () => {
+    const asks = data.patterns.filter(p => p.generator?.slot !== 'extra' && (p.generator?.implies ?? []).some(l => /^(weapon|delivery|weapon-trait):/.test(l) && l !== 'weapon:adaptive'))
+    assert.ok(asks.length > 0)
+    for (const p of asks.slice(0, 8)) {
+      const cls = p.generator.classes.find(c => c !== 'naval')
+      const r = roll(data, { seed: `asks-${p.id}`, spice: 5, inputs: { class: cls }, locks: { signature: lockSig(p.id, p.variants.find(v => !v.overrides?.implies)?.id) } })
+      if (!r.ok) continue
+      const ws = weaponsOf(r.draft.parts)
+      for (const l of p.generator.implies.filter(x => /^(weapon|delivery|weapon-trait):/.test(x))) {
+        const [kind, id] = l.split(':')
+        const has = ws.some(w => (kind === 'weapon' ? w.family === id : kind === 'delivery' ? w.delivery === id : w.traits.includes(id)))
+        assert.ok(has, `${p.id} implies ${l}`)
+      }
+    }
+    for (const r of results.filter(x => x.r.ok && x.inputs.role === 'anti-infantry')) {
+      const ws = weaponsOf(r.r.draft.parts)
+      assert.ok(ws.some(w => ['small-arms', 'machine-gun', 'shotgun'].includes(w.family) || w.traits.includes('splash')), 'G13 anti-infantry')
+    }
+  })
+
+  it('section 7, C3: on death: one who-gets-out outcome, drones, beasts and remote crews never bail out, no wreck with respawn, nothing above the gate', () => {
+    for (const p of cards) {
+      const od = p.on_death
+      if (p.nature !== 'crewed-machine') assert.ok(!od.includes('bail-out') && !od.includes('pilot-eject'), `${p.nature} ${od}`)
+      assert.ok(!(od.includes('wreck') && od.includes('respawn')))
+    }
+    const atOne = results.filter(x => x.r.ok && x.spice === 1 && !Object.keys(x.inputs).length).flatMap(x => x.r.draft.parts.on_death)
+    assert.ok(atOne.every(x => data.vocab['on-death'].terms.find(t => t.id === x).rarity === 'common'), 'section 18: rarity and spice apply')
+    const crewed = cards.filter(p => p.nature === 'crewed-machine')
+    const bail = crewed.filter(p => p.on_death[0] === 'bail-out').length / crewed.length
+    assert.ok(bail > 0.55, `bail-out is the crewed machine's default (x3): ${bail.toFixed(2)}`)
+  })
+
+  it('section 7: no resource unless a pattern names one; then one it names', () => {
+    let named = 0
+    for (const p of cards) {
+      const links = [p.signature, ...p.abilities].flatMap(a => {
+        const q = pat(a.pattern), o = q.variants.find(v => v.id === a.variant)?.overrides ?? {}
+        return [...(o.implies ?? q.generator.implies ?? []), ...(o.requires ?? q.generator.requires ?? []).flat()]
+      }).filter(l => l.startsWith('resource:'))
+      if (links.length) named++
+      if (p.resource !== null) assert.ok(links.includes(`resource:${p.resource}`), p.resource)
+    }
+    const kill = data.patterns.find(q => (q.generator?.implies ?? []).some(l => l.startsWith('resource:')) && q.generator.slot !== 'extra')
+    if (kill) {
+      const r = roll(data, { seed: 'resource', spice: 5, inputs: { class: kill.generator.classes[0] }, locks: { signature: lockSig(kill.id, kill.variants.find(v => !v.overrides?.implies)?.id) } })
+      if (r.ok) assert.ok(kill.generator.implies.includes(`resource:${r.draft.parts.resource}`))
+    }
+    assert.ok(named >= 0)
+  })
+
+  it('G14: secondary roles: 0 to 2, the roles the patterns name first, each one the finished card holds', () => {
+    const rank = { speed: RANK('speed-bands'), armour: RANK('armour-classes'), range: RANK('range-bands'), sight: RANK('sight-bands') }
+    const cmp = (r, a, op, b) => (op === '>=' ? r.get(a) >= r.get(b) : op === '<=' ? r.get(a) <= r.get(b) : a === b)
+    const yes = (p, l, primaryOnly = false) => {
+      const m = /^([a-z-]+):(>=|<=)?(.+)$/.exec(l)
+      const [, kind, op, id] = m
+      const ws = primaryOnly ? [p.armament.primary].filter(Boolean) : weaponsOf(p)
+      const abil = [p.signature, ...p.abilities]
+      switch (kind) {
+        case 'damage': return ws.some(w => w.damage === id)
+        case 'hits': return ws.some(w => w.can_target.includes(id))
+        case 'delivery': return ws.some(w => w.delivery === id)
+        case 'weapon': return ws.some(w => w.family === id)
+        case 'weapon-trait': return ws.some(w => w.traits.includes(id))
+        case 'range': return ws.some(w => w.range && cmp(rank.range, w.range, op, id))
+        case 'speed': return cmp(rank.speed, p.mobility.speed, op, id)
+        case 'armour-class': return cmp(rank.armour, p.armour.class, op, id)
+        case 'sight': return cmp(rank.sight, p.sensors.sight, op, id)
+        case 'sensor': return p.sensors.traits.includes(id)
+        case 'pattern': return abil.some(a => a.pattern === id)
+        case 'category': return abil.some(a => pat(a.pattern).category === id)
+        case 'passengers': return (p.crew.passengers?.seats ?? 0) >= Number(id)
+        default: return false
+      }
+    }
+    const counts = [0, 0, 0]
+    for (const p of cards) {
+      const sec = p.roles.secondary
+      counts[sec.length]++
+      for (const role of [p.roles.primary, ...sec]) {
+        for (const g of data.vocab.roles.terms.find(t => t.id === role).requires ?? []) assert.ok(g.some(l => yes(p, l)), `${role} requires ${g}`)
+        const fit = data.rules.role_fit[role]
+        if (fit?.patterns) assert.ok(fit.patterns.some(x => yes(p, `pattern:${x}`)), `${role}: its tool`)
+        if (fit?.any) assert.ok(fit.any.some(l => yes(p, l)), `${role}: ${fit.any}`)
+        for (const l of fit?.all ?? []) assert.ok(yes(p, l, l.startsWith('range:')), `${role}: ${l}`)
+      }
+      const named = [p.signature, ...p.abilities].flatMap(a => {
+        const q = pat(a.pattern), o = q.variants.find(v => v.id === a.variant)?.overrides ?? {}
+        return [...(o.implies ?? q.generator.implies ?? []), ...(o.adds_strengths ?? q.generator.adds_strengths ?? []).map(x => x.ref)]
+      }).filter(l => l.startsWith('role:')).map(l => l.slice(5))
+      for (const r of named) assert.ok([p.roles.primary, ...sec].includes(r), `a pattern names role ${r}`)
+    }
+    assert.ok(counts.every(c => c > 50), `secondary role counts ${counts}`)
+  })
+
+  it('A9: transform gives one second form: another class it allows, a mobility for that class, 0 or 1 weapon', () => {
+    const weapons = new Set()
+    for (let i = 0; i < 8; i++) {
+      const variant = pat('transform').variants[i % pat('transform').variants.length].id
+      // The kinds a variant may take depend on the budgets; the first kind that fits is used.
+      const r = [0, 1, 2].map(k => roll(data, { seed: `form-${i}`, spice: 3 + (i % 3), inputs: { tier: 't3' }, locks: { signature: lockSig('transform', variant, k) } })).find(x => x.ok)
+      assert.ok(r, `transform ${variant}: no kind fits`)
+      const [m] = r.draft.parts.modes
+      assert.equal(r.draft.parts.modes.length, 1)
+      assert.equal(m.via, 'transform')
+      assert.notEqual(m.class, r.draft.parts.class)
+      weapons.add((m.armament ?? []).length)
+      assert.deepEqual(check(r.draft), [])
+    }
+    assert.deepEqual([...weapons].sort(), [0, 1])
+    assert.ok(cards.filter(p => !p.signature.pattern.includes('transform') && !p.abilities.some(a => a.pattern === 'transform')).every(p => p.modes.length === 0))
   })
 })

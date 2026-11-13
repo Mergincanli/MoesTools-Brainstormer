@@ -284,7 +284,10 @@ export function needProblem(ix: Index, parts: DraftParts, spice: number, need: N
   if (a === 'no') return what
   const mode = needMode(ix, need)
   const setByPattern = need.rule === 'G3' || need.rule === 'G4' || need.rule === 'M2'
-  const open = need.links.filter(l => answer(ix, parts, l, need.onPrimary === true) === 'open')
+  // The quick links first: a later ability or role can still bring a pattern, a category or a role; the weapons' own
+  // look-ahead (weaponOptions) is the slowest, so it comes last.
+  const cost = (l: Link): number => (['pattern', 'category', 'role', 'cost', 'resource'].includes(parseLink(l).kind) ? 0 : WEAPON_KINDS.has(parseLink(l).kind) ? 2 : 1)
+  const open = need.links.filter(l => answer(ix, parts, l, need.onPrimary === true) === 'open').sort((a, b) => cost(a) - cost(b))
   const ok = need.avoid
     ? open.every(l => stillAvoidable(ix, parts, spice, l, mode, memo))
     : open.some(l => stillPossible(ix, parts, spice, l, mode, setByPattern, memo))

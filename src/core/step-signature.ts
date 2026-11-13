@@ -13,7 +13,7 @@ import { budgetOf } from './keys.ts'
 import { lockProblem } from './locks.ts'
 import { needsOfBlock, newMemo } from './needs.ts'
 import { fail, ok } from './parts.ts'
-import { cooldownWeights, hardControlOf } from './patterns.ts'
+import { blockFor, cooldownWeights, hardControlOf, roleNeedsTool, servesRole } from './patterns.ts'
 import { reachOf, reachWithAbilities, variantProblem, type Reach } from './reach.ts'
 import type { StepResult } from './steps.ts'
 import type { AbilityDraft, Draft, DraftParts } from './types.ts'
@@ -61,8 +61,8 @@ function lockedProblem(ix: Index, d: Draft, rs: Reaches, sig: AbilityDraft): str
 
 /**
  * The signature candidates of a draft at step 4: each pattern the reach offers as a signature, with the variants that
- * pass the draft's checks. From the gate first; from the least rare when nothing at the gate fits and an input or a
- * lock may need it (G5).
+ * pass the draft's checks; only the tools of the role when the role needs one and one fits (G13). From the gate first;
+ * from the least rare when nothing at the gate fits and an input or a lock may need it (G5).
  */
 export function signatureChoices(ix: Index, d: Draft, rs: Reaches): { choices: PatternChoice[]; forced: boolean; more: () => PatternChoice[] } {
   const memo = newMemo()
@@ -74,11 +74,21 @@ export function signatureChoices(ix: Index, d: Draft, rs: Reaches): { choices: P
     }
     return out
   }
+  // G13 as the sheet writes it: when the role needs a tool, the signature is a tool whenever one fits ("the signature
+  // when one fits, otherwise an extra ability"); only when none can be the signature does the tool come as an extra.
+  const role = d.parts.roles.primary
+  const toolsFirst = (choices: PatternChoice[]): PatternChoice[] => {
+    if (!roleNeedsTool(ix, role)) return choices
+    const tools = choices
+      .map(c => ({ pattern: c.pattern, variants: c.variants.filter(v => servesRole(ix, role, blockFor(ix, c.pattern, v))) }))
+      .filter(c => c.variants.length > 0)
+    return tools.length ? tools : choices
+  }
   // The forced reach's choices, for a lock still waiting that no choice at the gate fits (G5, locks.ts).
-  const more = (): PatternChoice[] => (rs.forced ? choicesFrom(rs.forced, true) : [])
-  const gate = choicesFrom(rs.gate, false)
+  const more = (): PatternChoice[] => (rs.forced ? toolsFirst(choicesFrom(rs.forced, true)) : [])
+  const gate = toolsFirst(choicesFrom(rs.gate, false))
   if (gate.length || !rs.forced) return { choices: gate, forced: false, more }
-  return { choices: choicesFrom(rs.forced, true), forced: true, more }
+  return { choices: toolsFirst(choicesFrom(rs.forced, true)), forced: true, more }
 }
 
 export function stepSignature(ix: Index, d: Draft): StepResult {

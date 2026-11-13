@@ -30,8 +30,9 @@ interface LockPiece {
  * see them as they would on a card rolled without the lock; the mobility lock keeps base and handling (step 5) and the
  * traits (step 9; speed has its own lock); the body lock keeps the body plan only, since the body count follows the
  * crew (rolled with it at step 12), and a crew lock may carry the count; the extra abilities' lock is set at step 14,
- * and the extras step 4 places for the card's needs must be among them. The name lock is set at once (nothing rolls
- * it yet); the weapons, modes, resource and on-death locks wait for their steps.
+ * and the extras step 4 places for the card's needs must be among them. The weapons are rolled in turn within step 13,
+ * so the secondary and the conditional weapons' locks are set when their turn comes (weapons.secondary,
+ * weapons.conditional). The name lock is set at once (nothing rolls it yet).
  */
 function lockPieces(L: Partial<LockValues>): LockPiece[] {
   const out: LockPiece[] = []
@@ -61,8 +62,8 @@ function lockPieces(L: Partial<LockValues>): LockPiece[] {
     }))
   }
   if (L.primary !== undefined) add('weapons', p => ({ ...p, armament: { ...p.armament, primary: L.primary } }))
-  if (L.secondary !== undefined) add('weapons', p => ({ ...p, armament: { ...p.armament, secondary: L.secondary } }))
-  if (L.conditional !== undefined) add('weapons', p => ({ ...p, armament: { ...p.armament, conditional: L.conditional } }))
+  if (L.secondary !== undefined) add('weapons.secondary', p => ({ ...p, armament: { ...p.armament, secondary: L.secondary } }))
+  if (L.conditional !== undefined) add('weapons.conditional', p => ({ ...p, armament: { ...p.armament, conditional: L.conditional } }))
   if (L.abilities !== undefined) add('extra-abilities', p => ({ ...p, abilities: L.abilities }))
   if (L.modes !== undefined) add('extra-abilities', p => ({ ...p, modes: L.modes }))
   if (L.resource !== undefined) add('on-death', p => ({ ...p, resource: L.resource }))

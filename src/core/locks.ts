@@ -5,12 +5,18 @@
 // This keeps the odds exact (rejection: each value that fits keeps its share), and it keeps T2: a card whose locked
 // values break no rule is rolled again into the same card, since every draw that fits the locks is the draw it was.
 // When nothing in the offer fits the locks, the least rare value that fits is used (G5: a part a lock needs is set).
+//
+// One gap is left as it is (reported): the needs of an input or a lock are forced (G5), and a forced need lets the
+// look-ahead of a later step count parts above the spice gate as possible, so that step's own offer can be wider than
+// on the card rolled without the lock; a lock on a card's own value can then, rarely, change another part. The lock
+// sweeps have not met it.
 import { term, type Index } from './data.ts'
 import type { Dice } from './dice.ts'
 import { lockWaits, locksWaiting, withPendingLocks } from './draft.ts'
 import { abilitiesOf, budgetOf, impliedKeyTraits } from './keys.ts'
 import { allNeedsProblem, needsOfBlock } from './needs.ts'
 import { drawOne, poolOf, termProblem, UNIT_PARTS, type Candidate, type Pool } from './offer.ts'
+import { roleNeeds } from './steps.ts'
 import { blockFor, mayJoin, type Placed } from './patterns.ts'
 import type { AbilityDraft, Draft, DraftParts, Need, TraceEntry } from './types.ts'
 
@@ -47,7 +53,16 @@ function lockNeeds(ix: Index, d: Draft): Need[] {
   }
   if (lockWaits(d, 'signature', 'signature')) add(d.locked.signature)
   if (lockWaits(d, 'abilities', 'extra-abilities')) for (const a of d.locked.abilities ?? []) add(a)
+  // The locked secondary roles: their requires and fit (G2, G13), until step 16 sets them.
+  if (lockWaits(d, 'roles', 'secondary-roles')) for (const role of d.locked.roles?.secondary ?? []) out.push(...roleNeeds(ix, d, role, true))
   return out
+}
+
+/** The needs of the locked secondary roles that an extra ability must still meet (a pattern or category no part
+ *  meets yet): step 14 adds those after its free extras (G5: a part a lock needs is set). */
+export function lockedRoleNeeds(ix: Index, d: Draft): Need[] {
+  if (!lockWaits(d, 'roles', 'secondary-roles')) return []
+  return (d.locked.roles?.secondary ?? []).flatMap(role => roleNeeds(ix, d, role, true))
 }
 
 /** K-d: the locked key-bound mobility traits that no ability on the card implies (they need one that does). */
@@ -78,9 +93,9 @@ function traitsExtrasImply(ix: Index): Set<string> {
  * locks on top, every part must fit the others (G1, both ways), the abilities must go together (A6, A7, A11) and fit
  * the budgets (K-a, K-c), the extras placed so far must be among the locked extras, a locked key-bound trait must come
  * with an ability once the signature step has placed the needed extras (K-d), and, from step 5 on, every need must
- * stay possible, the locked abilities' needs included.
+ * stay possible, the locked abilities' and secondary roles' needs included.
  */
-export function lockProblem(ix: Index, d: Draft, next: DraftParts): string | undefined {
+export function lockProblem(ix: Index, d: Draft, next: DraftParts, listOpen = false): string | undefined {
   const waiting = withPendingLocks(d, next)
   if (!waiting) return undefined
   let all = waiting
@@ -113,7 +128,9 @@ export function lockProblem(ix: Index, d: Draft, next: DraftParts): string | und
   }
   // The needs are checked from step 5 on: before step 3 the card has no role, and during step 4 the extras the card
   // needs come after the signature (a need they meet looks impossible until they are placed; the step checks its own).
-  if (!d.done.includes('signature')) return undefined
+  // While a list is still being filled (`listOpen`: more parts of it may follow), a need it may still meet is left to
+  // the parts still to come; it is judged on the finished list.
+  if (!d.done.includes('signature') || listOpen) return undefined
   const why = allNeedsProblem(ix, all, d.spice, [...d.needs, ...lockNeeds(ix, d)])
   return why ? `with the locked parts: ${why}` : undefined
 }

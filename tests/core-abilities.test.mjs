@@ -63,13 +63,25 @@ describe('A1 and A6: which patterns and variants can be offered', () => {
     assert.deepEqual(left.sort(), ['confuse-enemies/curse-one-ally', 'dash/pin-charge', 'mind-control/auto-capture-field', 'passenger-sets-weapon/tool-seat'])
   })
 
-  it('the signature is drawn from its pool, its weight the pattern odds times role_weight for a tool (S1, S5, A1, G13)', () => {
+  it('G13: when the role needs a tool and one fits, the signature is drawn among the tools only; its weight is the pattern odds (S1, S5, A1)', () => {
+    let toolsOnly = 0
+    let asExtra = 0
     for (let i = 0; i < 60; i++) {
       const r = roll(data, { seed: `pool-${i}`, spice: 1 + (i % 5), inputs: { role: i % 2 ? 'engineer' : null } })
       const e = entry(r, 'signature.pattern')
       assert.ok(e.options.some(o => o.id === e.value), 'the drawn pattern was offered')
       const p = r.draft.parts
       const fit = data.rules.role_fit[p.roles.primary]?.patterns ?? []
+      if (fit.length) {
+        // "The signature when one fits, otherwise an extra ability": the pool is all tools, or holds none.
+        const tools = e.options.filter(o => fit.includes(o.id)).length
+        assert.ok(tools === 0 || tools === e.options.length, `${p.roles.primary}: ${tools} tools among ${e.options.length}`)
+        if (tools) toolsOnly++
+        else {
+          assert.ok(p.abilities.some(a => fit.includes(a.pattern)), 'no tool as the signature: one comes as an extra')
+          asExtra++
+        }
+      }
       for (const o of e.options) {
         if (entry(r, 'signature.pattern').aboveGate) break
         const best = Math.max(...ix.patternById.get(o.id).variants.map(v => patternOdds(ix, blockOf(ix.patternById.get(o.id), v.id), { class: p.class, flavour: p.flavour, spice: r.draft.spice }).weight))
@@ -80,6 +92,7 @@ describe('A1 and A6: which patterns and variants can be offered', () => {
       assert.ok(v.options.some(o => o.id === p.signature.variant) && v.options.every(o => o.weight === 1), 'S6: equal odds')
       for (const o of v.options) assert.ok(ix.patternById.get(p.signature.pattern).variants.find(x => x.id === o.id).min_spice <= r.draft.spice || v.aboveGate)
     }
+    assert.ok(toolsOnly >= 10, `${toolsOnly} cards drew the signature among tools only (${asExtra} took the tool as an extra)`)
   })
 })
 

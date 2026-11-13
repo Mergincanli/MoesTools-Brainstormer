@@ -206,8 +206,9 @@ export function rollMulti(ix: Index, d: Draft, spec: MultiSpec): StepResult {
   // A candidate for the list as it stands: fits the hard rules with the parts chosen so far, keeps every need possible
   // (only the needs a part of this list can change are checked again).
   const recheck = needsAfter(ix, d.needs, spec.list)
-  // A part a waiting lock rules out is drawn again (locks.ts).
-  const accept = (id: string): string | undefined => lockProblem(ix, d, spec.set(d.parts, [...chosen, id]))
+  // A part a waiting lock rules out is drawn again (locks.ts); the needs on the list are judged once it is full.
+  let last = false
+  const accept = (id: string): string | undefined => lockProblem(ix, d, spec.set(d.parts, [...chosen, id]), !last)
   const candidates = (exclude: readonly string[], only?: readonly string[]): Candidate[] => {
     const offer = offerTerms(ix, spec.set(d.parts, chosen), d.spice, spec.list, { except: [...chosen, ...exclude], ...(only ? { only } : {}) })
     const base = newMemo()
@@ -235,6 +236,7 @@ export function rollMulti(ix: Index, d: Draft, spec: MultiSpec): StepResult {
   const free = Math.max(0, Math.min(want - counted, max - chosen.length))
   let offered = 0
   for (let i = 0; i < free; i++) {
+    last = i === free - 1
     const c = candidates([]).filter(x => !keyBound(x.id) && onOwnRolls(x))
     offered = Math.max(offered, c.length)
     const got = drawKeeping(ix, d, dice, poolOf(ix, c, 'gate', d.spice), accept)
@@ -242,6 +244,8 @@ export function rollMulti(ix: Index, d: Draft, spec: MultiSpec): StepResult {
     chosen.push(got.id)
   }
   parts = spec.set(d.parts, chosen)
+  const clash = lockProblem(ix, d, parts)
+  if (clash) return fail(`${spec.field}: ${clash}`)
   d.parts = parts
   const entry: TraceEntry = { field: spec.field, value: chosen, how: notes.length ? 'needed' : 'rolled', rule: spec.rule, candidates: offered, note: `count ${want}${notes.length ? `; ${notes.join('; ')}` : ''}` }
   d.trace.push(entry)

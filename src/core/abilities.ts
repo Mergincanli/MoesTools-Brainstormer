@@ -8,9 +8,9 @@
 //
 // Extras a card needs are chosen right after the signature, so that the parts they imply are set before the rest is
 // rolled (G3): a pattern an ability implies (A8), a requires group only a pattern can meet (G4), the role's tool when
-// the signature does not serve the role (G13: "the signature when one fits, otherwise an extra ability"), and a role's
-// requires group only a pattern can meet (G2). Reading of G13 (reported): the signature is rolled among all candidates,
-// tools role_weight times as likely (A1); when it is not a tool, a tool comes as an extra.
+// the signature does not serve the role (G13: "the signature when one fits, otherwise an extra ability": the signature
+// is drawn among the tools whenever one fits, step-signature.ts, so a tool comes as an extra only when none can be the
+// signature), and a role's requires group only a pattern can meet (G2).
 import { blockOf, categoryOf, type Block, type Index } from './data.ts'
 import { diceFor } from './dice.ts'
 import { lockWaits, withPendingLocks } from './draft.ts'
