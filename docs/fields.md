@@ -306,7 +306,7 @@ One generated unit concept (Phase 2). Example: [docs/examples/concept-card.examp
 | `schema_version` | text | yes |  |  |
 | `generator` | group | yes |  |  |
 | `generator.version` | text | yes |  | Generator code version. |
-| `generator.data_version` | text | yes |  | Content hash of the vocabularies and patterns used (data/manifest.json). |
+| `generator.data_version` | text | yes |  | Content hash of the vocabularies, patterns and generator rules used (data/manifest.json). |
 | `seed` | text | yes |  | Shareable seed string. |
 | `spice` | integer (1-5) | yes |  | 1 = grounded (common parts, on-flavour) ... 5 = wild (rare cross-overs). |
 | `inputs` | group | yes |  | What the user picked before rolling. Null = let the generator choose. |
