@@ -423,6 +423,22 @@ The checker of P3 is written from this sheet alone, apart from the module. Writi
 - **The name check (T-a)** also reads the weapon names of the researched units, and the titles of the games that the patterns' examples come from.
 - **Not on rolled cards today:** the range off-screen (no weapon family leads to it), so its points never apply.
 
+**Settled by the first cross-check** (13 November 2026). The module's cards were run through the separate checker. Where the two read this sheet differently, the reading below now holds, and the side that read it otherwise was changed.
+
+- **Implied patterns (A8).** The implied pattern is on the card, as the signature or as an extra.
+- **The number of abilities (A6).** The tier's largest count is a cap, the signature included, also when a role, an implied or required pattern or a lock needs an extra. What does not fit is not offered.
+- **A chosen role's tool (G13 with G5).** In this order: a tool as the signature at the spice gate; a tool as an extra at the gate; above the gate, a tool as the signature when one fits by the hard rules; a tool as an extra above the gate.
+- **Passenger seats and the spice gate (G5, S6).** Seats have no rarity of their own, but only a pattern brings them (section 7). So the pattern that brings them is the part judged against the gate, and a variant above the card's spice is allowed when the card needs seats and no variant within the spice brings them.
+- **Nature (section 7).** The data's order decides: the first entry whose condition holds. An entry is passed over only when the nature word list does not allow that nature for the card's class, so a drone with a creature body stays an uncrewed machine. No other part overrules it: a part that excludes the card's nature is not offered.
+- **Counter links from weapons (N4).** Conditional weapons count: what each one's damage type is strong against, in their order, at the place of the adaptive weapon they belong to.
+- **Escape lines (HC7).** A second form's weapon of the cryo, emp, psionic or magnetic family owes its escape line too.
+- **Controls.** An ability on the movement key has one entry on Space, named as the ability is on any other key. A key-bound trait with no key ability behind it keeps an entry of its own, named by the trait. When the signature is passive, a third ability on a key takes Q.
+- **The text check (T-b), in detail.** A real name followed by a possessive ending is still that name. In an example's name, the part before a colon, each bracketed part, and each part between commas or semicolons inside brackets are names of their own, also when they are one word. Our own words are not real names in a text: the labels of the word lists, the patterns' names, and the flavour words and class nouns that the pitch writes (EMP is such a label). The weapon names of the researched units are read by the name check only: many are plain words. Read this way, 206 of the 2,713 distinct pattern lines that a card can show fail the check.
+- **The pitch.** When the cut leaves a clause unfinished, the pitch is cut back to the last comma, semicolon, colon or bracket before it, and that mark is dropped.
+- **Names.** The word in the signature's name is never a word of the card's working name.
+- **Body-aim weapons** sit on the driver's seat only. The validator asks for this; the aim-models word list says it only in prose (a data problem for step 4).
+- **Not on a card today:** what an extra ability does. The card schema has an effect text for the signature only. The sample page reads each extra's summary from the patterns instead.
+
 ## What comes next
 
 1. The rules as data (P1), the key count (P2) and the card schema line (P4).

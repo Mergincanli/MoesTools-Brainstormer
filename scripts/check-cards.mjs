@@ -39,7 +39,7 @@
 //   A6    no pattern twice; the number of abilities is within the tier's counts (counts.abilities); partial: a card
 //         below its tier's smallest count is not reported, since G16 lets a card take only what fits
 //   A7    conflicts_with, either side; A11 rules.same_mechanic pairs (pattern ids, or {pattern, variants} sides)
-//   A8    an implied pattern: link is one of the card's extra abilities
+//   A8    an implied pattern: link is one of the card's abilities (the signature or an extra)
 //   A9    a second form only from transform (rules.defaults.second_form), one entry, another class the transform
 //         pattern allows, a mobility of that class with its default handling and an allowed speed, 0 or 1 weapon
 //         (counts.second_form_weapons) of a family that class can use
@@ -76,7 +76,8 @@
 //   C3    exactly one 'who gets out' outcome, at most one 'what is left' outcome, no pair from never_together
 //   S7    bail-out or pilot-eject only for a crewed machine; solo fallback only on a multi-seat crew; body count (squad 2
 //         to 5, else 1, counts.body_count); passengers only when an ability implies or requires them, seats within the
-//         size's cap, the kind by defaults.passengers.kinds; nature by defaults.nature; availability gates
+//         size's cap, the kind by defaults.passengers.kinds; nature by defaults.nature (an entry whose nature the word
+//         list does not allow for the card's class is passed over); availability gates
 //         (counts.availability: min_spice, min_tier); unarmed only for the listed primary roles and signature
 //         categories; a secondary weapon always with a gunner seat; a resource only when an ability implies or requires it
 //   G5/T6 every part with a rarity is at the spice gate (effective rarity: class_rarity replaces, else a favoured part or
@@ -103,7 +104,9 @@
 //         source term; neither name equals a real name or a source term
 //   T-b   no text field names a real game, franchise, faction or unit, a short form of a game title, or the word wiki
 //         (reading in buildTextCheck: whole names, a name of several words when written as a name, a single plain
-//         word only in mid-sentence; on the patterns' template lines it flags 108 of 1,726, the sheet counted 106)
+//         word only in mid-sentence, a bracketed part of an example's name as a name of its own, our own words (the
+//         word lists' labels, pattern names, flavour words, class nouns) never; on the 2,713 distinct pattern lines a
+//         card can show it flags 206)
 //   S11   each text field is what the templates of texts.json build from the card and the data: name, pitch,
 //         signature name and effect, team-play hook and its text, as_user, as_target, teammates, tells, matchup reasons,
 //         counterplay, inspiration; where a pattern line fails T-b, its fallback (the next passing line of the same
@@ -418,12 +421,12 @@ function collectStrings(x, out, skip) {
 }
 function buildTextCheck(data) {
   const names = []
-  // A name in brackets ('Air Force General (Malcolm Granger)', 'Mobile EMP (GDI, Firestorm)') counts when it has two
-  // words or more: a single bracketed word is as often a gloss ('(EMP)') as a name.
+  // A name in brackets ('Air Force General (Malcolm Granger)', 'Mobile EMP (GDI, Firestorm)') counts as a name of its
+  // own, also when it is one word ('(Marines)'); a gloss in lower case ('(morph)') is dropped by the rules for one word.
   const addName = s => {
     if (typeof s !== 'string') return
     names.push(s.replace(/\([^)]*\)/g, ' ').replace(/["“”]/g, ' ').trim())
-    for (const m of s.matchAll(/\(([^)]*)\)/g)) for (const part of m[1].split(/[,;]/)) if (nameTokens(part).length > 1) names.push(part.trim())
+    for (const m of s.matchAll(/\(([^)]*)\)/g)) for (const part of m[1].split(/[,;]/)) if (nameTokens(part).length) names.push(part.trim())
   }
   for (const u of data.units) addName(u.name)
   for (const g of data.games) {
@@ -445,9 +448,20 @@ function buildTextCheck(data) {
   collectStrings(data.texts, corpus, new Set())
   const lower = new Set(corpus.flatMap(s => nameTokens(s)).filter(w => w === w.toLowerCase()))
 
+  // Our own words are not real names in a text (sheet section 18): the labels of the word lists, the patterns' names,
+  // and the flavour words and class nouns that the pitch writes. 'EMP' is a label of ours as well as a bracketed gloss.
+  const own = new Set()
+  for (const tm of Object.values(data.terms)) for (const t of Object.values(tm)) if (typeof t.label === 'string') own.add(t.label)
+  for (const p of Object.values(data.patterns)) if (typeof p.name === 'string') own.add(p.name)
+  for (const style of Object.values(data.names || {})) {
+    if (!style || typeof style !== 'object') continue
+    if (typeof style.flavour_word === 'string') own.add(style.flavour_word)
+    for (const noun of Object.values(style.class_nouns || {})) if (typeof noun === 'string') own.add(noun)
+  }
   const byFirst = new Map()
   const seen = new Set()
   for (const n of names) {
+    if (own.has(n)) continue
     const toks = nameTokens(n)
     if (!toks.length || !toks.some(w => /[A-Za-z]/.test(w))) continue
     const key = toks.join(' ')
@@ -712,7 +726,7 @@ function checkAbilities({ data, p, abil, tier }, add) {
     for (const r of x.block?.implies || []) {
       if (!r.startsWith('pattern:')) continue
       const id = r.slice('pattern:'.length)
-      if (!abil.slice(1).some(y => y.a.pattern === id)) add('A8', x.at, `'${x.a.pattern}' implies pattern '${id}', which is not one of the card's extra abilities`)
+      if (!abil.some(y => y.a.pattern === id)) add('A8', x.at, `'${x.a.pattern}' implies pattern '${id}', which is not one of the card's abilities`)
     }
   }
 }
@@ -966,8 +980,10 @@ function checkCrew({ data, card, p, abil, P }, add) {
     const kind = (D.passengers?.kinds || []).find(k => !k.pattern || abil.some(x => x.a.pattern === k.pattern && (!k.variants || k.variants.includes(x.a.variant))))?.kind
     if (kind && pass.kind !== kind) add('S7', '/parts/crew/passengers/kind', `the passengers' kind is '${kind}', not '${pass.kind}'`)
   }
-  // Nature: the first rule of defaults.nature that holds.
-  const rule = (D.nature || []).find(n => !n.when || matches(data, n.when, P))
+  // Nature: the first rule of defaults.nature that holds; a rule whose nature the word list does not allow for the
+  // card's class is passed over (a drone with a creature body stays an uncrewed machine).
+  const natureForClass = id => { const c = data.terms.nature?.[id]?.classes; return !c || c.includes(p.class) }
+  const rule = (D.nature || []).find(n => natureForClass(n.nature) && (!n.when || matches(data, n.when, P)))
   if (rule && p.nature !== rule.nature) add('S7', '/parts/nature', `nature is '${rule.nature}'${rule.when ? ` (${rule.when})` : ''}, not '${p.nature}'`)
   // Availability gates.
   const av = C.availability?.[p.availability]
@@ -1153,7 +1169,8 @@ function rarityParts(ctx) {
   })
   for (const x of abil) {
     if (!x.block) continue
-    const meets = l => { const r = parseRef(l); return (r.kind === 'pattern' && r.id === x.a.pattern) || (r.kind === 'category' && r.id === x.pattern.category) }
+    const brings = [...(x.block.implies || []), ...(x.block.requires || []).flat()].some(l => parseRef(l).kind === 'passengers')
+    const meets = l => { const r = parseRef(l); return (r.kind === 'pattern' && r.id === x.a.pattern) || (r.kind === 'category' && r.id === x.pattern.category) || (r.kind === 'passengers' && brings) }
     out.push({ at: x.at, vid: 'patterns', id: x.a.pattern, lock: x.i === 0 ? 'signature' : 'abilities', rarity: patternRarity(data, card, x.block), meets, ability: x })
   }
   return out
@@ -1168,11 +1185,35 @@ function checkSpice(ctx, add) {
   // requires of every pattern that is locked or serves a needed role, and the roles those patterns imply.
   const groups = []
   const neededPatterns = new Set(abil.filter(x => locks.has(x.i === 0 ? 'signature' : 'abilities')).map(x => x.a.pattern))
+  const bringsSeats = b => [...(b?.implies || []), ...(b?.requires || []).flat()].some(l => parseRef(l).kind === 'passengers')
+  const linkAtGate = l => {
+    const r = parseRef(l)
+    const vid = data.refKinds[r.kind]?.vocab
+    return r.cmp || !vid || !data.terms[vid]?.[r.id] || gate(effectiveRarity(data, card, vid, r.id, p.class))
+  }
+  let seatsKnown
+  const seatsAtGate = () => (seatsKnown ??= Object.values(data.patterns).some(pt => !abil.some(x => x.a.pattern === pt.id) && (pt.variants || []).some(y => {
+    if ((y.min_spice ?? 1) > card.spice) return false
+    const b = blockOf(data, pt.id, y.id)
+    return b && (b.classes || []).includes(p.class) && tierRank(data, b.min_tier) <= ctx.tier && bringsSeats(b) && gate(patternRarity(data, card, b)) &&
+      !(b.excludes || []).some(l => matches(data, l, P)) && (b.implies || []).every(linkAtGate)
+  })))
   const roles = new Set(card.inputs.role ? [card.inputs.role] : [])
   for (let changed = true, guard = 0; changed && guard < 20; guard++) {
     changed = false
     for (const r of roles) {
-      for (const g of data.terms.roles[r]?.requires || []) groups.push(g)
+      for (const g of data.terms.roles[r]?.requires || []) {
+        groups.push(g)
+        // A role that needs passenger seats needs a pattern that brings them (section 7). The card's own seat-bringer
+        // counts as needed, with what it implies, unless another pattern would bring the seats from within the spice
+        // gate (G5: above the gate only when nothing at the gate fits). Partial: that other pattern is judged by its
+        // class, tier, rarity, variant spice, excludes and implied parts only.
+        if (g.some(l => parseRef(l).kind === 'passengers') && !seatsAtGate()) {
+          for (const x of abil) {
+            if (bringsSeats(x.block) && !neededPatterns.has(x.a.pattern)) { neededPatterns.add(x.a.pattern); changed = true }
+          }
+        }
+      }
       const f = data.rules.role_fit?.[r]
       if (f?.patterns) {
         groups.push(f.patterns.map(id => `pattern:${id}`))
@@ -1198,7 +1239,9 @@ function checkSpice(ctx, add) {
   // A need is met at the gate when a part within the spice (or a part with no rarity) meets one of its links; a part
   // above the gate is justified only by a need it meets that nothing within the spice on the card meets.
   const above = x => !gate(x.rarity)
-  const meetsAtGate = g => g.some(l => (RARITY_KINDS.has(parseRef(l).kind) ? parts.some(x => !above(x) && x.meets(l)) : matches(data, l, P)))
+  // Passenger seats have no rarity of their own, but only a pattern brings them (section 7): the pattern is the part.
+  const viaPart = l => { const k = parseRef(l).kind; return RARITY_KINDS.has(k) || k === 'passengers' }
+  const meetsAtGate = g => g.some(l => (viaPart(l) ? parts.some(x => !above(x) && x.meets(l)) : matches(data, l, P)))
   const justified = x => groups.some(g => g.some(l => x.meets(l)) && !meetsAtGate(g))
   for (const x of parts) {
     if (!above(x) || exempt(x)) continue
@@ -1231,8 +1274,20 @@ function checkSpice(ctx, add) {
       const keyOnly = e && data.rules.hard_control?.classes?.[e.class]?.key_kinds_only
       return (b.classes || []).includes(p.class) && tierRank(data, b.min_tier) <= ctx.tier && !(e && e.escape === null) && !(keyOnly && !b.kinds.some(k => isKeyKind(data, k)))
     })
-    const lowest = Math.min(...fitting.map(y => y.min_spice))
-    const ok = neededPatterns.has(x.a.pattern) && !fitting.some(y => y.min_spice <= card.spice) && v.min_spice === lowest
+    // The needs this ability is on the card for: a variant counts when its own block meets one of them (a pattern or
+    // category link holds for every variant; passenger seats only for a variant that brings them).
+    const part = parts.find(q => q.ability === x)
+    const why = part ? groups.filter(g => g.some(l => part.meets(l)) && !meetsAtGate(g)) : []
+    const variantMeets = (y, g) => g.some(l => {
+      const r = parseRef(l)
+      if (r.kind === 'pattern') return r.id === x.a.pattern
+      if (r.kind === 'category') return r.id === x.pattern.category
+      const b = blockOf(data, x.a.pattern, y.id)
+      return r.kind === 'passengers' && [...(b.implies || []), ...(b.requires || []).flat()].some(k => parseRef(k).kind === 'passengers')
+    })
+    const serving = why.length ? fitting.filter(y => why.some(g => variantMeets(y, g))) : fitting
+    const lowest = Math.min(...serving.map(y => y.min_spice))
+    const ok = (neededPatterns.has(x.a.pattern) || why.length > 0) && !serving.some(y => y.min_spice <= card.spice) && v.min_spice === lowest
     if (!ok) add('S6', `${x.at}/variant`, `variant '${v.id}' starts at spice ${v.min_spice}, above the card's ${card.spice}`)
   }
 }

@@ -171,8 +171,11 @@ describe('patterns on a card (section 4)', () => {
     only(card('c'), 'A11', withData({ sameMechanic: sameMechanicPairs({ same_mechanic: [[{ pattern: 'dash', variants: ['quick-lunge'] }, { pattern: 'transform' }]] }) }))
     assert.deepEqual(codes(card('c'), withData({ sameMechanic: sameMechanicPairs({ same_mechanic: [[{ pattern: 'dash', variants: ['sprint'] }, 'transform']] }) })), [])
   })
-  test('A8: an implied pattern must be one of the extra abilities', () => {
+  test('A8: an implied pattern must be on the card, as the signature or as an extra', () => {
     only(card('c'), 'A8', withPattern('dash', { implies: ['mobility-trait:boost', 'pattern:lay-smoke'] }))
+    // the signature of fixture c is transform: implied by an extra, it is on the card already
+    const d = withPattern('dash', { implies: ['mobility-trait:boost', 'pattern:transform'] })
+    assert.deepEqual(checkCard(card('c'), d), [], fmt(checkCard(card('c'), d)))
   })
   test('A9: a second form only from transform, of another class it allows', () => {
     const c = card('c')
@@ -380,6 +383,11 @@ describe('crew, death, availability and the other rows of section 7', () => {
     b.parts.nature = 'uncrewed-machine'
     has(b, 'S7')
   })
+  test("S7: a default whose nature the word list does not allow for the card's class is passed over", () => {
+    // organic is for infantry, walkers and aircraft only: put first for vehicles, it does not apply to fixture a
+    const d = withRules({ defaults: { ...data.rules.defaults, nature: [{ when: 'class:vehicle', nature: 'organic' }, ...data.rules.defaults.nature] } })
+    assert.deepEqual(checkCard(card('a'), d), [], fmt(checkCard(card('a'), d)))
+  })
   test('S7: availability gates', () => {
     const a = card('a')
     a.parts.availability = 'limited' // only from spice 2
@@ -425,6 +433,19 @@ describe('spice and flavour (section 3, G5, T6)', () => {
     const a = card('a')
     a.inputs.role = 'assault'
     assert.deepEqual(checkCard(a, d), [], fmt(checkCard(a, d)))
+  })
+  test('G5: an input role that needs seats justifies its seat pattern above the gate only when no other pattern brings seats at the gate', () => {
+    // fixture d at spice 2: input role transport, seats from passenger-sets-weapon, whose adaptive weapon is rare.
+    // carry-passengers would bring the seats from within the gate, so the rare weapon is not justified ...
+    const c = card('d')
+    c.spice = 2
+    only(c, 'G5')
+    // ... and it is once no other pattern brings seats at all
+    const seats = b => [...(b?.implies || []), ...(b?.requires || []).flat()].some(l => l.startsWith('passengers:'))
+    const others = Object.values(data.patterns).filter(pt => pt.id !== 'passenger-sets-weapon' && (seats(pt.generator) || pt.variants.some(v => seats(v.overrides))))
+    assert.ok(others.some(pt => pt.id === 'carry-passengers'))
+    const d = withData({ patterns: Object.fromEntries(Object.entries(data.patterns).filter(([id]) => !others.some(pt => pt.id === id))) })
+    assert.deepEqual(checkCard(c, d), [], fmt(checkCard(c, d)))
   })
   test('G5: the class is rolled at the gate when nothing is locked', () => {
     const a = card('a')
@@ -518,6 +539,13 @@ describe('names and text (section 11, T-a, T-b)', () => {
     assert.ok(leaks('a fast flank (Generals dozers need escorts)').includes('Generals'))
     assert.deepEqual(leaks('a spy can hide among engineers on every side'), [])
     assert.deepEqual(leaks('Engineers repair it.'), [])
+  })
+  test("T-b: possessive forms, bracketed parts of an example's name, and our own words", () => {
+    const leaks = s => data.textCheck.leaks(s)
+    assert.ok(leaks("splash there catches several at once, as at Generals' crowded tunnel mouths").includes('Generals'))
+    assert.ok(leaks("a helicopter in the Cryocopter's spirit").includes('Cryocopter'))
+    assert.ok(leaks('as Medivacs do for stimmed Marines.').includes('Marines'), 'a single word in brackets after an example is a name')
+    assert.deepEqual(leaks('throw splash into the bunch, or use an EMP to drop them all'), [], 'EMP is a label of our own word lists')
   })
   test('T-b: no card text names a real game', () => {
     const a = card('a')
