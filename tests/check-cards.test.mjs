@@ -546,6 +546,20 @@ describe('names and text (section 11, T-a, T-b)', () => {
     assert.ok(leaks("a helicopter in the Cryocopter's spirit").includes('Cryocopter'))
     assert.ok(leaks('as Medivacs do for stimmed Marines.').includes('Marines'), 'a single word in brackets after an example is a name')
     assert.deepEqual(leaks('throw splash into the bunch, or use an EMP to drop them all'), [], 'EMP is a label of our own word lists')
+    assert.ok(leaks("Follow up after an emergency fix: Battlefield's extinguisher leaves it on low health").includes('Battlefield'), 'a sentence goes on after a colon')
+  })
+  test('S11 controls: a key ability may sit on Q when the signature is passive, and only then', () => {
+    const d = card('d') // a passive signature and one key extra, on R
+    const smoke = d.text.how_it_plays.controls.find(c => c.input === data.rules.layout.next_ability)
+    assert.ok(smoke, 'fixture d binds its extra to the next-ability key')
+    smoke.input = data.rules.layout.signature
+    assert.deepEqual(checkCard(d, data), [], fmt(checkCard(d, data)))
+    const b = card('b') // a key signature on Q and a key extra
+    const extra = b.text.how_it_plays.controls.find(c => c.input === data.rules.layout.next_ability)
+    assert.ok(extra, 'fixture b binds its extra to the next-ability key')
+    b.text.how_it_plays.controls.find(c => c.input === data.rules.layout.signature).input = data.rules.layout.fourth_key
+    extra.input = data.rules.layout.signature
+    has(b, 'S11')
   })
   test('T-b: no card text names a real game', () => {
     const a = card('a')

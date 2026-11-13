@@ -405,11 +405,11 @@ function textTokens(s) {
   const re = /[A-Za-z0-9]+/g
   let m
   while ((m = re.exec(t))) {
-    // A word starts a sentence after a full stop, '!', '?', ':', a quote mark or a line break; after a letter, a
-    // number, a comma, a semicolon, a bracket or a dash it does not.
+    // A word starts a sentence after a full stop, '!', '?', a quote mark or a line break; after a letter, a number, a
+    // comma, a colon, a semicolon, a bracket or a dash it does not (our texts go on in lower case after a colon).
     let j = m.index - 1
     while (j >= 0 && /[ \t]/.test(t[j])) j--
-    out.push({ w: m[0], start: j < 0 || /[.!?:"'“”‘’\n\r]/.test(t[j]) })
+    out.push({ w: m[0], start: j < 0 || /[.!?"'“”‘’\n\r]/.test(t[j]) })
   }
   return out
 }
@@ -1489,7 +1489,8 @@ function checkControls({ data, card, p, abil }, add) {
     traits.forEach(t => merged.add(t))
     const space = traits.length ? [L.key_bound_movement] : []
     if (x.i === 0) want.push({ seat: x.a.seat, inputs: [L.signature, ...space], action: fill(X.signature, { signature_name: card.text.signature.name }) })
-    else want.push({ seat: x.a.seat, inputs: [L.next_ability, L.fourth_key, L.key_bound_movement], action: fill(X.next_ability, { ability: x.pattern?.name ?? x.a.pattern }) })
+    // an extra sits on R, then Shift; on Space when it is the movement ability; on Q when the signature is passive
+    else want.push({ seat: x.a.seat, inputs: [L.next_ability, L.fourth_key, L.key_bound_movement, ...(isKeyKind(data, abil[0].a.kind) ? [] : [L.signature])], action: fill(X.next_ability, { ability: x.pattern?.name ?? x.a.pattern }) })
   })
   for (const t of p.mobility.traits) {
     if (!data.terms['mobility-traits'][t]?.uses_key) continue
