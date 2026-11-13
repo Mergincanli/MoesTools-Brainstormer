@@ -826,6 +826,53 @@ describe('validator', () => {
   })
 })
 
+// ---------------------------------------------------------------- the key count on a card
+
+// A card's keys: abilities on a key, key-bound mobility traits and the secondary weapon. A key-bound trait and the
+// ability that implies it are one button (Mustafa, 13 November 2026). The cases change the example card, which has
+// a signature on a key and a secondary weapon; they look only at the count, whatever else the changed card breaks.
+describe('validator: the key count on a card', () => {
+  const countLine = errors => errors.filter(e => /balance\.keys says|keys exceeds/.test(e))
+  const withLeap = (dir, { ability, kind = 'active', keys }) => edit(dir, CARD, c => {
+    c.parts.tier = 't3'
+    c.parts.mobility.traits = ['leap']
+    if (ability) c.parts.abilities = [{ pattern: 'leap', variant: 'vault', kind, seat: 'driver', cooldown: kind === 'active' ? 'short' : null }]
+    c.balance.keys = keys
+  })
+
+  it('counts a key-bound trait and the ability that implies it as one key', () => {
+    const dir = freshCopy()
+    withLeap(dir, { ability: true, keys: 3 }) // the signature, the leap (ability and trait together), the secondary weapon
+    assert.deepEqual(countLine(validate(dir).errors), [])
+  })
+
+  it('still counts a key-bound trait that no ability implies', () => {
+    const dir = freshCopy()
+    withLeap(dir, { ability: false, keys: 2 })
+    assert.equal(countLine(validate(dir).errors).length, 1)
+    assert.match(countLine(validate(dir).errors)[0], /balance\.keys says 2, counted 3/)
+  })
+
+  it('keeps the trait\'s key when the ability that implies it is not on a key itself', () => {
+    const dir = freshCopy()
+    edit(dir, PATTERN('leap'), p => { p.generator.kinds = ['active', 'passive'] })
+    withLeap(dir, { ability: true, kind: 'passive', keys: 3 }) // the signature, the trait, the secondary weapon
+    assert.deepEqual(countLine(validate(dir).errors), [])
+  })
+
+  it('reads the implied trait from the variant when the variant sets its own', () => {
+    const dir = freshCopy()
+    // The variant 'ledge-hop' implies nothing, so a leap trait beside it is a key of its own.
+    edit(dir, CARD, c => {
+      c.parts.tier = 't3'
+      c.parts.mobility.traits = ['leap']
+      c.parts.abilities = [{ pattern: 'leap', variant: 'ledge-hop', kind: 'active', seat: 'driver', cooldown: 'short' }]
+      c.balance.keys = 4
+    })
+    assert.deepEqual(countLine(validate(dir).errors), [])
+  })
+})
+
 // ---------------------------------------------------------------- research checker tools
 
 describe('sample-for-check', () => {

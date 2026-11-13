@@ -33,6 +33,8 @@
 //    generator, and the card must meet its rules (or its variant's): kinds, slot, min_tier, classes, requires,
 //    excludes, implies, conflicts_with; strength/weakness pairing, matchups that describe the card's own parts, no
 //    real unit names or unit links on a card, and body-aim only on the driver's weapons.
+//    Keys: an ability whose kind uses a key, a key-bound mobility trait, and the secondary weapon. A key-bound
+//    mobility trait and the ability that implies it are one button and count as one key.
 // 5) Field rules on researched units (the coding rules in the field descriptions):
 //    - seats: 'driver' is never written (a weapon or ability with no seat is the driver's), and any other seat must
 //      be one the unit has: its crew model's seats, crew.seats or crew.passengers.kind;
@@ -761,8 +763,15 @@ export function validate(root = REPO_ROOT) {
     }
     const tier = terms.tiers?.[c.parts.tier] || {}
     const abil = [c.parts.signature, ...c.parts.abilities]
+    // A key-bound mobility trait and the ability that implies it are one button and count as one key. Only an
+    // ability that is itself on a key takes the trait's key with it: under a passive one the trait keeps its own.
+    const sameButton = new Set(abil.filter(a => isKey(a.kind)).flatMap(a => {
+      const pat = patternById[a.pattern]
+      const v = a.variant ? pat?.variants?.find(x => x.id === a.variant) : undefined
+      return v?.overrides?.implies || pat?.generator?.implies || []
+    }).filter(r => r.startsWith('mobility-trait:')).map(r => r.slice('mobility-trait:'.length)))
     const keys = abil.filter(a => isKey(a.kind)).length
-      + c.parts.mobility.traits.filter(t => terms['mobility-traits']?.[t]?.uses_key).length
+      + c.parts.mobility.traits.filter(t => terms['mobility-traits']?.[t]?.uses_key && !sameButton.has(t)).length
       + (c.parts.armament.secondary ? 1 : 0)
     const passives = abil.filter(a => !isKey(a.kind)).length
     if (keys > tier.max_keys) err(`${f}: ${keys} keys exceeds ${c.parts.tier} budget ${tier.max_keys}`)
