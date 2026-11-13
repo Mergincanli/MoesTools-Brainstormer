@@ -1,0 +1,156 @@
+{
+  "$schema": "../../schemas/generator.schema.json",
+  "schema_version": "1.0.0",
+  "kind": "texts",
+  "version": "0.1.0",
+  "status": "draft",
+  "templates": {
+    "name": {
+      "fields": ["text/name"],
+      "template": "{name}",
+      "fills": {
+        "name": "a name built from names.json for the card's flavour: one of its templates, each placeholder filled with a word from the list of the same name"
+      }
+    },
+    "pitch": {
+      "fields": ["text/pitch"],
+      "template": "{A} {size} {flavour} {class_noun}: {summary}",
+      "max_length": 160,
+      "cut": "word",
+      "fills": {
+        "A": "A or An, whichever fits the next word",
+        "size": "the label of the card's size, in lower case",
+        "flavour": "flavour_word of the card's flavour in names.json",
+        "class_noun": "class_nouns of the card's flavour in names.json, for the card's class",
+        "summary": "the first sentence of the signature variant's summary"
+      },
+      "note": "Not in the sheet: the size label is written in lower case, and {A} is A or An to fit the next word."
+    },
+    "signature_name": {
+      "fields": ["text/signature/name"],
+      "template": "{name_word} {category_noun}",
+      "fills": {
+        "name_word": "a word from the lists that signature_words names for the card's flavour in names.json",
+        "category_noun": "a word of signature_nouns in names.json for the signature pattern's category"
+      }
+    },
+    "signature_effect": {
+      "fields": ["text/signature/effect"],
+      "template": "{summary}",
+      "fills": {
+        "summary": "the signature variant's summary"
+      }
+    },
+    "team_play_hook": {
+      "fields": ["text/team_play_hook/hook", "text/team_play_hook/text"],
+      "hook": "the first of the signature pattern's team_play.hooks that the card's flavour favours, else its first",
+      "template": "{line}",
+      "fills": {
+        "line": "player_translation.teammates[0] of the signature pattern"
+      }
+    },
+    "as_user": {
+      "fields": ["text/how_it_plays/as_user"],
+      "template": "{signature_line} {extra_lines}",
+      "fills": {
+        "signature_line": "player_translation.as_user[0] of the signature pattern",
+        "extra_lines": "the first sentence of player_translation.as_user[0] of each extra ability's pattern, in order"
+      }
+    },
+    "as_target": {
+      "fields": ["text/how_it_plays/as_target"],
+      "template": "{signature_line} {escape_lines}",
+      "fills": {
+        "signature_line": "player_translation.as_target[0] of the signature pattern",
+        "escape_lines": "the escape of every hard-control part on the card (rules.json hard_control): the pattern's own player_translation.as_target line at its escape index, or the line in escapes for a latch delivery or for a weapon of an HC7 family"
+      },
+      "note": "Not in the sheet: a line that is already in the text is not repeated (hijack-vehicle's escape is its as_target[0])."
+    },
+    "teammates": {
+      "fields": ["text/how_it_plays/teammates"],
+      "template": "{line}",
+      "fills": {
+        "line": "player_translation.teammates[1] of the signature pattern, or teammates[0] when it has only one line"
+      },
+      "note": "Not in the sheet's first form: the team-play hook takes the first teammates line, so this field takes the second, and the card does not show one line twice."
+    },
+    "tells": {
+      "fields": ["text/how_it_plays/tells"],
+      "template": "{line}",
+      "fills": {
+        "line": "player_translation.feedback[0] of the signature pattern"
+      }
+    },
+    "controls": {
+      "fields": ["text/how_it_plays/controls"],
+      "each": "one entry per bound input, in the order of rules.json layout: seat is the seat that owns the part, input is the layout's input for the part's slot, action is the template in actions for that slot",
+      "actions": {
+        "primary_weapon": "{weapon}",
+        "secondary_weapon": "{weapon}",
+        "gunner_weapon": "{weapon}",
+        "signature": "{signature_name}",
+        "next_ability": "{ability}",
+        "fourth_key": "{ability}",
+        "key_bound_movement": "{trait}"
+      },
+      "fills": {
+        "weapon": "the label of the weapon's family",
+        "signature_name": "the card's signature name (text/signature/name)",
+        "ability": "the name of the ability's pattern",
+        "trait": "the label of the key-bound mobility trait"
+      },
+      "note": "Not in the sheet: section 11 says one entry per bound input, by the layout, but gives no wording for the action, so the action is the plain name of the part."
+    },
+    "matchup_reasons": {
+      "fields": [
+        "matchups/strengths/why",
+        "matchups/weaknesses/why",
+        "matchups/counters/why",
+        "matchups/countered_by/why"
+      ],
+      "template": "{why}",
+      "fills": {
+        "why": "the why of the pattern's link (a variant's overrides replace the base block's list); a link derived from the card's parts (N4) takes the sentence in derived_reasons for its link kind"
+      }
+    },
+    "counterplay": {
+      "fields": ["matchups/counterplay"],
+      "each": "one entry per line: counterplay[0] and counterplay[1] of the signature pattern, then counterplay[0] of each extra ability's pattern"
+    },
+    "inspiration": {
+      "fields": ["inspiration/patterns", "inspiration/source_units"],
+      "each": "patterns: every pattern on the card; source_units: up to max of the signature pattern's source_units, picked by the seed",
+      "max": 3
+    }
+  },
+  "derived_reasons": {
+    "damage": "This kind of damage works well against this unit's armour, shields or body.",
+    "hits": "It flies, so weapons that can reach its height can bring it down.",
+    "class": "It has no weapon that hits fliers, so aircraft can attack it freely.",
+    "armour-class": "Its weapons deal damage that is strong against this armour.",
+    "armour-model": "Its weapons deal damage that breaks through this kind of protection.",
+    "nature": "Its weapons deal damage that works well on this kind of unit.",
+    "target": "Its weapons deal damage that is strong against this kind of target."
+  },
+  "escapes": {
+    "latch": "Something is clinging to you: hold F to throw it off.",
+    "cryo": "Break the line of fire and the frost stops building.",
+    "emp": "Get out of its fire and your machine comes back to life in a moment.",
+    "psionic": "Break its line of sight and its grip on your mind fades.",
+    "magnetic": "Get out of its beam and you drop free."
+  },
+  "neutral": {
+    "pitch": "Built around one signature ability.",
+    "signature_effect": "Its signature ability comes from the pattern listed under inspiration.",
+    "team_play_hook": "It works best when a teammate follows up on what it starts.",
+    "as_user": "Your signature ability shapes how you fight, and the rest of your kit backs it up.",
+    "as_target": "Learn what its signature ability does and fight it where that ability cannot help it.",
+    "teammates": "Teammates who stay near it can make the most of what it does.",
+    "tells": "Its signature ability has a look and a sound that both teams can read from above.",
+    "counterplay": "Fight it where its signature ability is of no use.",
+    "strengths": "This is what its abilities let it do well.",
+    "weaknesses": "This is the price it pays for what its abilities do.",
+    "counters": "Its abilities give it the edge over this kind of unit.",
+    "countered_by": "This kind of unit has an answer to its abilities."
+  }
+}

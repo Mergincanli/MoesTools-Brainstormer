@@ -1,0 +1,562 @@
+{
+  "$schema": "../../schemas/generator.schema.json",
+  "schema_version": "1.0.0",
+  "kind": "rules",
+  "version": "0.1.0",
+  "status": "draft",
+  "defaults": {
+    "spice": 2,
+    "input_odds": {
+      "tier": {
+        "t1": 1,
+        "t2": 1,
+        "t3": 1
+      },
+      "flavour": {
+        "soviet": 1,
+        "allied": 1,
+        "empire": 1
+      }
+    },
+    "fill_pattern_requires": true,
+    "spice_fallback": "least-rare",
+    "avoided_blocks_implied": true,
+    "default_rarity": "common",
+    "handling": "default_handling",
+    "weapon_default_weight": 3,
+    "mount_uses_aim_rarity": true,
+    "role_weight": 3,
+    "pattern_roles_first": true,
+    "take_what_fits": true,
+    "favoured_step": 1,
+    "flavour_lean": "favoured",
+    "variant_odds": "equal",
+    "always_variant": true,
+    "kind_odds": "equal",
+    "seats": {
+      "operating": ["gunner", "commander"],
+      "gunner": ["secondary-weapon"],
+      "commander": ["last-extra", "signature"]
+    },
+    "implied_pattern_as_extra": true,
+    "second_form": {
+      "via": ["transform"],
+      "uses_body_rule": false
+    },
+    "adaptive": {
+      "slot": "primary",
+      "slot_when_family_required": "secondary",
+      "when_links": {
+        "passenger-sets-weapon": "role",
+        "leech-weapon-on-kill": "weapon"
+      }
+    },
+    "same_mechanic_check": {
+      "related": ["variant-of", "generalises"],
+      "likeness": 0.5,
+      "likeness_of": ["categories", "kinds", "classes", "implies", "requires", "countered_by", "counters", "hooks"],
+      "shared_unit_entries": 2
+    },
+    "key_traits_only_when_implied": true,
+    "primary_weapon_seat": {
+      "full-control": "driver",
+      "auto-gunner": "driver",
+      "seat-swap": "gunner",
+      "needs-crew": "gunner",
+      "note": "Reading: section 7 says that with full control or an auto-gunner the buyer drives and fires the primary weapon, that with seat-swap the lone player switches between driving and shooting, and that with needs-crew the main gun needs a second player. The last two are read as the gunner seat firing the primary weapon, as the solo-fallback word list describes them."
+    },
+    "passengers": {
+      "only_from_patterns": true,
+      "caps": {
+        "tiny": 0,
+        "small": 1,
+        "medium": 4,
+        "large": 6,
+        "huge": 8
+      },
+      "seat_odds": "equal",
+      "kinds": [
+        {
+          "pattern": "passenger-sets-weapon",
+          "variants": ["fire-ports"],
+          "kind": "passenger-firing"
+        },
+        {
+          "pattern": "passenger-sets-weapon",
+          "kind": "passenger-module"
+        },
+        {
+          "kind": "passenger-cargo"
+        }
+      ],
+      "note": "Not in the sheet: seat_odds. Section 7 gives the range (from the needed minimum to the cap for the size) but no odds within it, so each number of seats in the range is equally likely."
+    },
+    "nature": [
+      {
+        "when": "body:beast",
+        "nature": "organic"
+      },
+      {
+        "when": "crew:remote",
+        "nature": "uncrewed-machine"
+      },
+      {
+        "when": "class:infantry",
+        "nature": "organic"
+      },
+      {
+        "when": "class:drone",
+        "nature": "uncrewed-machine"
+      },
+      {
+        "nature": "crewed-machine"
+      }
+    ],
+    "on_death": {
+      "who_gets_out": ["respawn", "bail-out", "pilot-eject"],
+      "what_is_left": ["wreck", "death-blast"],
+      "default": {
+        "crewed-machine": "bail-out",
+        "organic": "respawn",
+        "uncrewed-machine": "respawn"
+      },
+      "default_weight": 3,
+      "crewed_machine_only": ["bail-out", "pilot-eject"],
+      "never_together": [["wreck", "respawn"]]
+    },
+    "unarmed": {
+      "primary_roles": ["support", "transport", "infiltrator", "engineer", "logistics"],
+      "signature_categories": ["support", "transport-garrison", "infiltration", "summon", "control"],
+      "one_in": 3,
+      "note": "Reading: the sheet says 'the role'; it is read as the primary role, the only role known when the weapons are rolled (step 13; secondary roles come at step 16)."
+    },
+    "secondary_weapon": {
+      "always_with": "gunner",
+      "one_in": 2
+    },
+    "resource": null,
+    "set_unguaranteed_links": true,
+    "pair_within_ability": true,
+    "matchup_lists": {
+      "lists": ["strengths", "weaknesses", "counters", "countered_by"],
+      "max": 5,
+      "signature_first": true,
+      "note": "Reading: M4 sits under strengths and weaknesses, but it cites the field rules' Matchups rule 7, which covers counters and countered by as well, so all four lists are capped."
+    },
+    "counter_check": {
+      "list": "countered_by",
+      "drop_unsatisfiable": true
+    },
+    "derived_links": {
+      "damage_vs": ["armour-class", "nature", "armour-model"],
+      "flier_hits": {
+        "low-air": "hits:low-air",
+        "high-air": "hits:high-air"
+      },
+      "no_air_weapon": "class:aircraft",
+      "drop_immune": true,
+      "counters_from_damage": true
+    }
+  },
+  "roll_order": [
+    "class",
+    "tier-and-flavour",
+    "primary-role",
+    "signature",
+    "mobility",
+    "body",
+    "size",
+    "speed",
+    "mobility-traits",
+    "armour",
+    "sensors",
+    "crew",
+    "weapons",
+    "extra-abilities",
+    "on-death",
+    "secondary-roles",
+    "matchups-balance-text"
+  ],
+  "counts": {
+    "mobility_traits": [6, 3, 1],
+    "armour_models": [0, 3, 1],
+    "sight": {
+      "short": 1,
+      "medium": 4,
+      "long": 1
+    },
+    "sight_boost": {
+      "band": "long",
+      "times": 3,
+      "roles": ["scout", "marksman"]
+    },
+    "sensor_traits": [6, 3, 1],
+    "body_count": {
+      "squad": [0, 0, 1, 1, 1, 1],
+      "other": [0, 1]
+    },
+    "availability": {
+      "open": {
+        "weight": 10
+      },
+      "limited": {
+        "weight": 2,
+        "min_spice": 2
+      },
+      "unique": {
+        "weight": 1,
+        "min_spice": 4,
+        "min_tier": "t2"
+      }
+    },
+    "weapon_traits": [4, 4, 2, 1],
+    "conditional_weapons": [0, 0, 1, 1, 1],
+    "abilities": {
+      "t1": [0, 2, 1],
+      "t2": [0, 1, 2, 1],
+      "t3": [0, 0, 1, 2, 1]
+    },
+    "second_form_weapons": [1, 1],
+    "on_death": [4, 1],
+    "secondary_roles": [2, 2, 1],
+    "note": "Not in the sheet: the weights of conditional_weapons (A10 says 2 to 4 conditional weapons) and second_form_weapons (A9 says 0 or 1 weapon); each count is equally likely. Reading: sight_boost reads the primary role, the only role known when the sensors are rolled (step 11)."
+  },
+  "cooldowns": {
+    "active": {
+      "short": 1,
+      "medium": 2,
+      "long": 1
+    },
+    "toggle": {
+      "spam": 2,
+      "short": 1
+    },
+    "deploy": {
+      "spam": 1,
+      "short": 2
+    },
+    "channel": {
+      "short": 1,
+      "medium": 2
+    },
+    "ultimate": {
+      "long": 2,
+      "per-life": 1
+    },
+    "hard_control": {
+      "medium": 1,
+      "long": 1
+    },
+    "hard_control_ultimate": {
+      "per-life": 1
+    },
+    "note": "Not in the sheet: the hard_control weights. A4 says a hard-control ability takes medium or long whatever its kind, without odds, so the two are equally likely. Reading: A4 speaks of every hard-control ability, HC3 of the stun class only; both are followed, so the cooldown override covers both classes and the rule that only key kinds are allowed covers the stun class (hard_control/classes)."
+  },
+  "role_fit": {
+    "engineer": {
+      "patterns": ["capture-structure", "build-structure", "host-spawn-point", "build-linked-exits"]
+    },
+    "logistics": {
+      "patterns": ["gather-resources", "generate-income"]
+    },
+    "buffer": {
+      "patterns": ["rally-allies", "sacrifice-for-allies"]
+    },
+    "infiltrator": {
+      "patterns": ["capture-structure", "hijack-vehicle", "infest-vehicle", "cloak", "disguise"]
+    },
+    "anti-infantry": {
+      "any": ["weapon-trait:splash", "weapon:small-arms", "weapon:machine-gun", "weapon:shotgun"]
+    },
+    "assault": {
+      "all": ["armour-class:>=medium", "range:<=medium"],
+      "note": "Reading: G13 asks for a main weapon of medium range or less, so range:<=medium is read on the primary weapon only, although a typed link on its own matches any weapon (N1)."
+    },
+    "raider": {
+      "all": ["speed:>=fast", "armour-class:<=light"]
+    },
+    "transport": {
+      "all": ["passengers:>=2"]
+    }
+  },
+  "hard_control": {
+    "classes": {
+      "stun": {
+        "min_tier": "t2",
+        "key_kinds_only": true
+      },
+      "latch": {
+        "min_tier": "t1",
+        "key_kinds_only": false
+      }
+    },
+    "entries": [
+      {
+        "term": "weapon-trait:stun",
+        "class": "stun",
+        "never_on_card_weapon": true
+      },
+      {
+        "term": "delivery:attach",
+        "class": "latch",
+        "escape_line": "latch"
+      },
+      {
+        "pattern": "freeze-and-shatter",
+        "class": "stun",
+        "variants": "all",
+        "except": ["brittle-chill", "shatter-strike", "shatter-threshold"],
+        "escape": 1
+      },
+      {
+        "pattern": "lock-in-stasis",
+        "class": "stun",
+        "variants": "all",
+        "except": ["shelter-ally", "other-plane"],
+        "escape": 2
+      },
+      {
+        "pattern": "pull-target",
+        "class": "stun",
+        "variants": "all",
+        "escape": 1
+      },
+      {
+        "pattern": "mind-control",
+        "class": "stun",
+        "variants": "all",
+        "escape": 2
+      },
+      {
+        "pattern": "hijack-vehicle",
+        "class": "stun",
+        "variants": "all",
+        "escape": 0
+      },
+      {
+        "pattern": "disable-machine",
+        "class": "stun",
+        "variants": ["shutdown-pulse", "charged-burst", "clamp-on-stunner"],
+        "escape": 1
+      },
+      {
+        "pattern": "stack-to-overload",
+        "class": "stun",
+        "variants": ["stagger-window"],
+        "escape": 3
+      },
+      {
+        "pattern": "confuse-enemies",
+        "class": "stun",
+        "variants": ["curse-one-ally"],
+        "escape": null
+      },
+      {
+        "pattern": "burrow",
+        "class": "stun",
+        "variants": ["erupt"],
+        "escape": 3,
+        "escape_avoids": true,
+        "min_tier": "t2"
+      },
+      {
+        "pattern": "lay-mines",
+        "class": "stun",
+        "variants": ["snare-trap"],
+        "escape": 2,
+        "escape_avoids": true,
+        "min_tier": "t2"
+      },
+      {
+        "pattern": "passenger-sets-weapon",
+        "class": "stun",
+        "variants": ["tool-seat"],
+        "escape": null,
+        "min_tier": "t2"
+      },
+      {
+        "pattern": "suppress-with-fire",
+        "class": "stun",
+        "variants": ["knockdown-barrage"],
+        "escape": 1,
+        "escape_avoids": true,
+        "borderline": true
+      },
+      {
+        "pattern": "dash",
+        "class": "stun",
+        "variants": ["pin-charge"],
+        "escape": null,
+        "borderline": true
+      },
+      {
+        "pattern": "launch-drones",
+        "class": "stun",
+        "variants": ["summoned-brute"],
+        "escape": 1,
+        "escape_avoids": true,
+        "borderline": true
+      },
+      {
+        "pattern": "execute-target",
+        "class": "stun",
+        "variants": ["committed-takedown"],
+        "escape": 1,
+        "escape_avoids": true,
+        "borderline": true
+      },
+      {
+        "pattern": "become-invulnerable",
+        "class": "stun",
+        "variants": ["lock-and-pulse"],
+        "escape": 1,
+        "escape_avoids": true
+      },
+      {
+        "pattern": "retaliate-on-hit",
+        "class": "stun",
+        "variants": ["reflect-window"],
+        "escape": 1,
+        "escape_avoids": true
+      },
+      {
+        "pattern": "infest-vehicle",
+        "class": "latch",
+        "variants": "all",
+        "escape": 1
+      },
+      {
+        "pattern": "throw-explosive",
+        "class": "latch",
+        "variants": ["sticky-charge"],
+        "escape": 1
+      }
+    ],
+    "weapon_families": {
+      "families": ["cryo", "emp", "psionic", "magnetic"],
+      "note": "Exception to decision 5B (Mustafa, 13 November 2026; question HC, answer A). Decision 5B allows stuns only from T2, kept short and on a medium or longer cooldown. Weapons of the cryo, emp, psionic and magnetic families may freeze or stop a target at any tier and without a cooldown, because a weapon has no cooldown. Of 5B, only the rule that the card states the victim's escape applies to them (HC7)."
+    }
+  },
+  "same_mechanic": [],
+  "points": {
+    "pattern": {
+      "power": "risks.balance.level",
+      "complexity": "risks.readability.level",
+      "scale": {
+        "low": 1,
+        "medium": 2,
+        "high": 3
+      },
+      "cost_divisor": 2,
+      "cost_rounding": "up",
+      "stored_wins": true,
+      "ultimate_bonus": 1,
+      "max": 3
+    },
+    "parts": {
+      "armour_class": {
+        "power": {
+          "heavy": 1,
+          "super-heavy": 2
+        },
+        "cost": {
+          "heavy": 1,
+          "super-heavy": 2
+        }
+      },
+      "speed": {
+        "power": {
+          "fast": 1,
+          "very-fast": 2
+        },
+        "cost": {
+          "fast": 1,
+          "very-fast": 2
+        }
+      },
+      "best_weapon_range": {
+        "power": {
+          "long": 1,
+          "off-screen": 2
+        },
+        "cost": {
+          "long": 1,
+          "off-screen": 2
+        }
+      },
+      "size": {
+        "cost": {
+          "large": 1,
+          "huge": 2
+        }
+      },
+      "secondary_weapon": {
+        "power": 1,
+        "cost": 1
+      },
+      "availability": {
+        "power": {
+          "unique": 1
+        },
+        "cost": {
+          "limited": 1,
+          "unique": 2
+        }
+      },
+      "passenger_seats": {
+        "cost": 1,
+        "complexity": 1
+      }
+    },
+    "power": {
+      "ability_minus": 1,
+      "min": 1,
+      "max": 10
+    },
+    "complexity": {
+      "ability_minus": 1,
+      "per_key": 1,
+      "per_operating_seat": 1,
+      "squad": 1,
+      "second_form": 1,
+      "min": 1,
+      "max": 10
+    },
+    "cost_bands": {
+      "very-low": {
+        "min": 0,
+        "max": 2
+      },
+      "low": {
+        "min": 3,
+        "max": 4
+      },
+      "medium": {
+        "min": 5,
+        "max": 7
+      },
+      "high": {
+        "min": 8,
+        "max": 10
+      },
+      "very-high": {
+        "min": 11
+      }
+    },
+    "tier_bands": {
+      "t1": ["very-low", "low", "medium"],
+      "t2": ["low", "medium", "high"],
+      "t3": ["medium", "high", "very-high"]
+    }
+  },
+  "layout": {
+    "primary_weapon": "LMB",
+    "secondary_weapon": "RMB",
+    "signature": "Q",
+    "next_ability": "R",
+    "key_bound_movement": "Space",
+    "fourth_key": "Shift",
+    "gunner_weapon": "LMB"
+  },
+  "attempts": 200
+}

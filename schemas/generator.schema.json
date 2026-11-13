@@ -1,0 +1,1908 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "generator.schema.json",
+  "title": "Generator rules, names and texts",
+  "description": "data/generator/rules.json, names.json and texts.json: the first generator's own rules, numbers, name words and text templates, as the rule sheet docs/generator-rules.md states them (approved by Mustafa on 13 November 2026, item P1). Each file says which it is in kind, and each kind allows only its own properties. The data holds the values; each property's description here gives the rule that reads it, with the sheet's rule code. Everything else the generator uses stays where it is: the word lists (data/vocab) and the patterns' generator blocks. A note on an entry marks a value the sheet does not give, or a reading of the sheet; the sheet wins over a note. Fields marked x-vocab must hold a term id from that word list; pattern and variant ids are checked against data/patterns by the generator files' check.",
+  "type": "object",
+  "required": ["kind", "version", "status"],
+  "properties": {
+    "kind": {
+      "description": "Which of the three files this is: rules (rules.json), names (names.json) or texts (texts.json).",
+      "enum": ["rules", "names", "texts"]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["kind"],
+        "properties": {
+          "kind": {
+            "const": "rules"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/rules"
+      }
+    },
+    {
+      "if": {
+        "required": ["kind"],
+        "properties": {
+          "kind": {
+            "const": "names"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/names"
+      }
+    },
+    {
+      "if": {
+        "required": ["kind"],
+        "properties": {
+          "kind": {
+            "const": "texts"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/texts"
+      }
+    }
+  ],
+  "$defs": {
+    "version": {
+      "description": "Version of this file. It goes into the data version that every card records (G8), together with the word lists and the patterns.",
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "status": {
+      "description": "draft until Mustafa approves this file; approved after.",
+      "enum": ["draft", "approved"]
+    },
+    "note": {
+      "description": "A value the sheet does not give (the text says 'Not in the sheet') or a reading of the sheet where it is unclear or two of its rules differ (the text says 'Reading'): what was chosen and why.",
+      "type": "string",
+      "minLength": 10
+    },
+    "patternId": {
+      "description": "A pattern id: the name of a file in data/patterns.",
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "weights": {
+      "description": "Weights by count: the first number is the weight of none, the second of one, and so on. A count is rolled with these relative weights; a weight of 0 means never.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "number",
+        "minimum": 0
+      }
+    },
+    "bandWeights": {
+      "description": "Cooldown band (cooldown-bands) to relative weight.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "x-vocab": "cooldown-bands"
+      },
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      }
+    },
+    "sentence": {
+      "description": "A fixed sentence in plain words. It names no real game, unit, faction or brand, copies no pattern text and makes sense on any card.",
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 300
+    },
+    "rules": {
+      "description": "data/generator/rules.json: the rules and numbers the sheet places in R.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "kind",
+        "version",
+        "status",
+        "defaults",
+        "roll_order",
+        "counts",
+        "cooldowns",
+        "role_fit",
+        "hard_control",
+        "same_mechanic",
+        "points",
+        "layout",
+        "attempts"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "schema_version": {
+          "type": "string"
+        },
+        "kind": {
+          "const": "rules"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "defaults": {
+          "$ref": "#/$defs/defaults"
+        },
+        "roll_order": {
+          "description": "The order of the roll (section 2), one step id per step. Each step offers only terms that fit everything chosen before it. The steps fill: class; tier and flavour; the primary role; the signature (pattern, variant, kind, cooldown); mobility base and handling; body plan; size; speed; mobility traits; armour class and models; sensors (sight, traits); crew, solo fallback, the seat of each weapon and ability, passengers, body count, nature and availability; weapons (primary, secondary, conditional); extra abilities and a second form; on death and resource; secondary roles; then matchups, balance, text and inspiration. Each card field draws from its own dice stream, made from the seed and the field's name, so locking or rerolling one part never moves the dice of another.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/slug"
+          }
+        },
+        "counts": {
+          "$ref": "#/$defs/counts"
+        },
+        "cooldowns": {
+          "$ref": "#/$defs/cooldowns"
+        },
+        "role_fit": {
+          "description": "Role fit (G13, question RF answer A): a role is held only if its word-list requires are met and its entry here holds: patterns = the card holds at least one of these patterns; any = at least one of these links holds; all = every link holds (links are matched as the validator matches them, N1). A role with patterns also needs the card to hold a pattern that serves it: the signature when one fits, otherwise an extra ability inside the budgets; while that role is fixed, the patterns that serve it are role_weight times as likely (defaults). Transport's passenger seats come only from a pattern or variant that implies or requires them (defaults.passengers), so those patterns serve transport. A role without an entry needs only its word-list requires.",
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "x-vocab": "roles"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 1,
+            "properties": {
+              "patterns": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "#/$defs/patternId"
+                }
+              },
+              "any": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                }
+              },
+              "all": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "common.schema.json#/$defs/ref"
+                }
+              },
+              "note": {
+                "$ref": "#/$defs/note"
+              }
+            }
+          }
+        },
+        "hard_control": {
+          "$ref": "#/$defs/hardControl"
+        },
+        "same_mechanic": {
+          "description": "One mechanic under two names (A11): pairs of patterns that Mustafa confirmed as the same mechanic. A listed pair is treated like conflicts_with: no card holds both. No pattern is merged or renamed. Empty today: the first check found two candidates and listed neither.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "$ref": "#/$defs/patternId"
+            }
+          }
+        },
+        "points": {
+          "$ref": "#/$defs/points"
+        },
+        "layout": {
+          "description": "The input of each slot (K-f, decision 1B). The secondary weapon is a key even when a gunner fires it; a gunner uses its own left mouse button for its gun. The keys of an ability go Q (signature), R (the next ability), then Shift (a fourth key); Space is for a key-bound mobility trait. Inputs that are never keys (E interact, hold F shake off, hold X bail out, 1 to 3 switch seat, middle mouse ping, G evict passengers) are in the tiers word list, not here.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "primary_weapon",
+            "secondary_weapon",
+            "signature",
+            "next_ability",
+            "key_bound_movement",
+            "fourth_key",
+            "gunner_weapon"
+          ],
+          "properties": {
+            "primary_weapon": {
+              "type": "string",
+              "minLength": 1
+            },
+            "secondary_weapon": {
+              "type": "string",
+              "minLength": 1
+            },
+            "signature": {
+              "type": "string",
+              "minLength": 1
+            },
+            "next_ability": {
+              "type": "string",
+              "minLength": 1
+            },
+            "key_bound_movement": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fourth_key": {
+              "type": "string",
+              "minLength": 1
+            },
+            "gunner_weapon": {
+              "description": "The input a gunner seat fires its own weapon with.",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "attempts": {
+          "description": "G7: a rolled card that breaks any rule of the sheet is rolled again, on the next attempt's dice; locked parts never change. After this many attempts the generator reports the inputs as unavailable for that seed.",
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "defaults": {
+      "description": "Defaults, odds and switches for rules that have no list of their own, in the order of the sheet's sections. A switch that is true turns on the rule its description gives.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "spice",
+        "input_odds",
+        "fill_pattern_requires",
+        "spice_fallback",
+        "avoided_blocks_implied",
+        "default_rarity",
+        "handling",
+        "weapon_default_weight",
+        "mount_uses_aim_rarity",
+        "role_weight",
+        "pattern_roles_first",
+        "take_what_fits",
+        "favoured_step",
+        "flavour_lean",
+        "variant_odds",
+        "always_variant",
+        "kind_odds",
+        "seats",
+        "implied_pattern_as_extra",
+        "second_form",
+        "adaptive",
+        "same_mechanic_check",
+        "key_traits_only_when_implied",
+        "primary_weapon_seat",
+        "passengers",
+        "nature",
+        "on_death",
+        "unarmed",
+        "secondary_weapon",
+        "resource",
+        "set_unguaranteed_links",
+        "pair_within_ability",
+        "matchup_lists",
+        "counter_check",
+        "derived_links"
+      ],
+      "properties": {
+        "spice": {
+          "description": "The spice the command uses when none is given (section 1; the command only).",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "input_odds": {
+          "description": "Odds of the open inputs (section 1): an open tier or flavour is rolled with these relative weights. An open class is rolled by the classes list's rarity, and an open role at step 3 (G14).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tier", "flavour"],
+          "properties": {
+            "tier": {
+              "type": "object",
+              "minProperties": 1,
+              "propertyNames": {
+                "type": "string",
+                "x-vocab": "tiers"
+              },
+              "additionalProperties": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "flavour": {
+              "type": "object",
+              "minProperties": 1,
+              "propertyNames": {
+                "type": "string",
+                "x-vocab": "faction-flavours"
+              },
+              "additionalProperties": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "fill_pattern_requires": {
+          "description": "G4: a pattern's requires group that the card does not meet yet is met by setting one of its links, picked like any part, at the step that owns it.",
+          "type": "boolean"
+        },
+        "spice_fallback": {
+          "description": "G5 (question SP answer A): a part that the inputs or locks need is set, not rolled: hard rules apply, rarity does not. That covers a part chosen as an input, a part that a chosen pattern implies or requires, and the tool that a chosen role needs (G13). When several parts would meet the need, the generator picks among them by the spice odds and uses a part above the spice gate only when nothing at the gate fits (least-rare). What the generator rolls on its own never goes above the gate: a pattern whose implied or required parts are above it is not offered, and a role is rolled only if the card can hold it at its spice (G14). grey-out (answer B, not chosen) would grey such inputs out instead.",
+          "enum": ["least-rare", "grey-out"]
+        },
+        "avoided_blocks_implied": {
+          "description": "G6: a flavour's avoided parts stay out below its avoided_until_spice (3) even when a pattern implies them; such a pattern is then not offered.",
+          "type": "boolean"
+        },
+        "default_rarity": {
+          "description": "G9: the rarity of a term that has none: roles, sizes, speeds, armour classes, damage types, deliveries, ranges, targets, weapon traits, sight, nature, availability (except its own odds in counts), resources, cooldowns, hooks.",
+          "type": "string",
+          "x-vocab": "rarity"
+        },
+        "handling": {
+          "description": "G10: handling is always the mobility term's default_handling; the handling list's rarities are not used in step 3b.",
+          "enum": ["default_handling"]
+        },
+        "weapon_default_weight": {
+          "description": "G12: damage, delivery and mount start from the family's default_damage, default_delivery and default_aim; another allowed value can be rolled, with the default this many times as likely.",
+          "type": "number",
+          "minimum": 1
+        },
+        "mount_uses_aim_rarity": {
+          "description": "G12: for mounts the aim models' own rarity applies as well as weapon_default_weight. Mounts must also be in the body's allowed aim models (word lists).",
+          "type": "boolean"
+        },
+        "role_weight": {
+          "description": "G13 and A1: while a role is fixed, patterns that serve it (role_fit) are this many times as likely; a signature candidate that serves the primary role gets this factor on top of its spice and flavour weight.",
+          "type": "number",
+          "minimum": 1
+        },
+        "pattern_roles_first": {
+          "description": "G14: the secondary roles come from roles the finished card holds; a role that a pattern on the card implies or names in a strength is added first, and a pattern whose role finds no room is not offered. The primary role is rolled among the roles a card of its class and tier can hold at its spice, at the default rarity's weight, times the flavour's favoured_weight when the flavour favours it.",
+          "type": "boolean"
+        },
+        "take_what_fits": {
+          "description": "G16: when a count asks for more parts than the rules allow at the card's spice, the card takes as many as fit and no more.",
+          "type": "boolean"
+        },
+        "favoured_step": {
+          "description": "S2: a part the flavour favours counts this many steps more common (rare as uncommon, uncommon as common), but never where a class_rarity applies (S3).",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "flavour_lean": {
+          "description": "S5 (question FL): how a pattern's flavour_lean counts. favoured (answer A, chosen): like a favoured word-list part, the flavour's favoured_weight times as likely and favoured_step more common, but not for its class_rarity. weight-only (B) and step-only (C) were not chosen.",
+          "enum": ["favoured", "weight-only", "step-only"]
+        },
+        "variant_odds": {
+          "description": "S6: variants are rolled with equal odds among those whose min_spice is at most the card's spice.",
+          "enum": ["equal"]
+        },
+        "always_variant": {
+          "description": "A2: a rolled card always has a variant for each ability (null only on hand-made cards); its overrides replace the base fields they name, exactly as the validator reads them.",
+          "type": "boolean"
+        },
+        "kind_odds": {
+          "description": "A3: the kind is rolled with equal odds among the variant's (or base) kinds allowed at the tier (ultimate only at T3) and fitting the key and passive budgets; a stun-class ability takes only kinds that use a key (hard_control).",
+          "enum": ["equal"]
+        },
+        "seats": {
+          "description": "A5 and C4: seats are given out at step 12, once the crew is known. The driver owns every weapon and ability that no other seat owns. operating: the operating seats beyond the driver; each one the card has owns at least one weapon or ability (C4, the idle-seat flag), and each counts toward complexity (points). gunner and commander: what such a seat owns, in order of choice: the secondary weapon (secondary-weapon); one ability: the last extra ability (last-extra), or the signature when there is no extra (signature).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["operating", "gunner", "commander"],
+          "properties": {
+            "operating": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "x-vocab": "seat-roles"
+              }
+            },
+            "gunner": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "enum": ["secondary-weapon", "last-extra", "signature"]
+              }
+            },
+            "commander": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "enum": ["secondary-weapon", "last-extra", "signature"]
+              }
+            }
+          }
+        },
+        "implied_pattern_as_extra": {
+          "description": "A8: an implied pattern: link (tunnel-carrier implies burrow, own-fire implies leave-hazard-zone) adds that pattern as an extra ability, inside the budgets, or the variant is not offered.",
+          "type": "boolean"
+        },
+        "second_form": {
+          "description": "A9 (question MD answer A): only the patterns in via give a second form (parts.modes, one entry): a class the pattern allows other than the card's own, a mobility rolled for that class by the rules of step 5 but without the body rule (uses_body_rule false: cards record no second body), and a number of weapons rolled by step 13 (counts.second_form_weapons). Deploy-siege-mode adds no second form in step 3b: a card's mode needs a mobility, and a deployed unit cannot move; its own text describes the deployed state.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["via", "uses_body_rule"],
+          "properties": {
+            "via": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/patternId"
+              }
+            },
+            "uses_body_rule": {
+              "type": "boolean"
+            }
+          }
+        },
+        "adaptive": {
+          "description": "A10: an implied weapon:adaptive is the slot weapon (primary), unless the pattern's requires names another weapon family for the card (leech-weapon-on-kill), then it is the slot_when_family_required weapon (secondary). It gets conditional weapons rolled by step 13 (counts.conditional_weapons), each with a when link of the kind when_links gives for its pattern: a passenger role (role:) for passenger-sets-weapon, a victim family (weapon:) for leech-weapon-on-kill.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["slot", "slot_when_family_required", "when_links"],
+          "properties": {
+            "slot": {
+              "enum": ["primary", "secondary"]
+            },
+            "slot_when_family_required": {
+              "enum": ["primary", "secondary"]
+            },
+            "when_links": {
+              "description": "Pattern id to the link kind of each conditional weapon's when.",
+              "type": "object",
+              "minProperties": 1,
+              "propertyNames": {
+                "$ref": "#/$defs/patternId"
+              },
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[a-z]+(-[a-z]+)*$"
+              }
+            }
+          }
+        },
+        "same_mechanic_check": {
+          "description": "A11, the check that proposes pairs for same_mechanic (research/generator/rule-sheet/scripts/duplicates.mjs): a pair of patterns is a candidate when they are linked by one of the related kinds, or when their generator blocks score likeness or more (the mean overlap of the fields in likeness_of) and shared_unit_entries or more unit entries link both. Mustafa confirms a candidate before it is listed.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["related", "likeness", "likeness_of", "shared_unit_entries"],
+          "properties": {
+            "related": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": ["variant-of", "generalises", "often-confused-with", "counters", "combos-with"]
+              }
+            },
+            "likeness": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "likeness_of": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": ["categories", "kinds", "classes", "implies", "requires", "countered_by", "counters", "hooks"]
+              }
+            },
+            "shared_unit_entries": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "key_traits_only_when_implied": {
+          "description": "K-d: key-bound mobility traits (uses_key true) are never rolled on their own. A card has one only when an ability on it implies the trait: its own pattern (leap, dash, burrow, teleport, transform, deploy-siege-mode) or a variant of another pattern that implies it. Such a variant does not add a second ability.",
+          "type": "boolean"
+        },
+        "primary_weapon_seat": {
+          "description": "Who does what (section 7): the seat that fires the primary weapon on a multi-seat card, by its solo fallback. With full control or an auto-gunner the buyer drives and fires the primary weapon; with seat-swap the lone player switches between driving and shooting; with needs-crew the main gun needs a second player. A card with one seat fires everything from the driver seat. A gunner seat also owns the secondary weapon and a commander seat one ability (seats).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["full-control", "auto-gunner", "seat-swap", "needs-crew"],
+          "properties": {
+            "full-control": {
+              "type": "string",
+              "x-vocab": "seat-roles"
+            },
+            "auto-gunner": {
+              "type": "string",
+              "x-vocab": "seat-roles"
+            },
+            "seat-swap": {
+              "type": "string",
+              "x-vocab": "seat-roles"
+            },
+            "needs-crew": {
+              "type": "string",
+              "x-vocab": "seat-roles"
+            },
+            "note": {
+              "$ref": "#/$defs/note"
+            }
+          }
+        },
+        "passengers": {
+          "description": "Passengers (section 7). only_from_patterns: a card has passenger seats only when a chosen pattern or variant implies or requires them (carry-passengers, passenger-sets-weapon, and variants such as disguised-carrier, rope-drop, storm-a-garrison or wreck-fort). Seats run from the needed minimum to the cap for the card's size (caps); a variant that needs more than the cap is not offered. kinds: the seat kind, from the first entry that matches a pattern (and variant) on the card; an entry with no pattern matches every card.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["only_from_patterns", "caps", "seat_odds", "kinds"],
+          "properties": {
+            "only_from_patterns": {
+              "type": "boolean"
+            },
+            "caps": {
+              "type": "object",
+              "minProperties": 1,
+              "propertyNames": {
+                "type": "string",
+                "x-vocab": "sizes"
+              },
+              "additionalProperties": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 8
+              }
+            },
+            "seat_odds": {
+              "description": "How the number of seats is picked between the needed minimum and the cap.",
+              "enum": ["equal"]
+            },
+            "kinds": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["kind"],
+                "properties": {
+                  "pattern": {
+                    "$ref": "#/$defs/patternId"
+                  },
+                  "variants": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "$ref": "common.schema.json#/$defs/slug"
+                    }
+                  },
+                  "kind": {
+                    "type": "string",
+                    "x-vocab": "seat-roles"
+                  }
+                }
+              }
+            },
+            "note": {
+              "$ref": "#/$defs/note"
+            }
+          }
+        },
+        "nature": {
+          "description": "Nature (section 7): the first entry whose when link the card meets, and whose nature the word lists allow for the card, gives its nature; an entry with no when matches every card. Infantry is organic, a drone an uncrewed machine and other classes crewed machines; a remote crew makes an uncrewed machine and a beast body an organic one (rare on a walker or an aircraft, as the beast body is rare).",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["nature"],
+            "properties": {
+              "when": {
+                "$ref": "common.schema.json#/$defs/ref"
+              },
+              "nature": {
+                "type": "string",
+                "x-vocab": "nature"
+              }
+            }
+          }
+        },
+        "on_death": {
+          "description": "On death (section 7, C3, decision 3C). Outcome 1 is one of who_gets_out; the 3C default for the card's nature (default) is default_weight times as likely. Outcomes in crewed_machine_only need the card's nature to be crewed-machine (never a drone, a beast or a remote crew). An optional outcome 2 comes from what_is_left, as many as counts.on_death rolls. Two outcomes never contradict: one who-gets-out outcome, at most one what-is-left outcome, and no pair in never_together (respawn's word-list text says nothing is left). The word lists' term rules apply as well (infantry: no bail-out or wreck).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "who_gets_out",
+            "what_is_left",
+            "default",
+            "default_weight",
+            "crewed_machine_only",
+            "never_together"
+          ],
+          "properties": {
+            "who_gets_out": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "x-vocab": "on-death"
+              }
+            },
+            "what_is_left": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "x-vocab": "on-death"
+              }
+            },
+            "default": {
+              "type": "object",
+              "minProperties": 1,
+              "propertyNames": {
+                "type": "string",
+                "x-vocab": "nature"
+              },
+              "additionalProperties": {
+                "type": "string",
+                "x-vocab": "on-death"
+              }
+            },
+            "default_weight": {
+              "type": "number",
+              "minimum": 1
+            },
+            "crewed_machine_only": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "x-vocab": "on-death"
+              }
+            },
+            "never_together": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "string",
+                  "x-vocab": "on-death"
+                }
+              }
+            }
+          }
+        },
+        "unarmed": {
+          "description": "Unarmed (section 7): the primary weapon is null only when the card's primary role is one of primary_roles and its signature pattern's category is one of signature_categories; then the chance is 1 in one_in.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["primary_roles", "signature_categories", "one_in"],
+          "properties": {
+            "primary_roles": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "x-vocab": "roles"
+              }
+            },
+            "signature_categories": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "x-vocab": "pattern-categories"
+              }
+            },
+            "one_in": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "note": {
+              "$ref": "#/$defs/note"
+            }
+          }
+        },
+        "secondary_weapon": {
+          "description": "Secondary weapon (section 7, decision 2A): always rolled when the card has the always_with seat; otherwise with a chance of 1 in one_in, if the key budget allows (a secondary weapon is a key, K-a).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["always_with", "one_in"],
+          "properties": {
+            "always_with": {
+              "type": "string",
+              "x-vocab": "seat-roles"
+            },
+            "one_in": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "resource": {
+          "description": "Resource (section 7): the card's resource unless a pattern implies or requires one; null = none. The resources list allows at most one.",
+          "type": ["string", "null"],
+          "x-vocab": "resources"
+        },
+        "set_unguaranteed_links": {
+          "description": "M2: each strength and weakness link must match the card's own parts. A link that a block does not guarantee (not the pattern itself, not implied, not required) is set like an implied part, or the variant is not offered.",
+          "type": "boolean"
+        },
+        "pair_within_ability": {
+          "description": "M3: on a rolled card each strength pairs (paired_with) with a weakness from the same ability: within one ability the strengths pair with its weaknesses in order, and a second strength pairs with the last weakness. An unpaired weakness is allowed. The rolled-card checker checks this, not the validator, so hand-made cards stay valid.",
+          "type": "boolean"
+        },
+        "matchup_lists": {
+          "description": "M4: each of these lists keeps at most max entries; with signature_first, the signature's entries come first.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["lists", "max", "signature_first"],
+          "properties": {
+            "lists": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": ["strengths", "weaknesses", "counters", "countered_by"]
+              }
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "signature_first": {
+              "type": "boolean"
+            },
+            "note": {
+              "$ref": "#/$defs/note"
+            }
+          }
+        },
+        "counter_check": {
+          "description": "N2, the brief's 'at least one counter': at least one link of the card's list (countered_by) can be satisfied by some card the generator can roll, at any class, tier, flavour and spice; otherwise the card gets no-counter and is rolled again. With drop_unsatisfiable, links no card can satisfy are dropped from the card.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["list", "drop_unsatisfiable"],
+          "properties": {
+            "list": {
+              "enum": ["countered_by"]
+            },
+            "drop_unsatisfiable": {
+              "type": "boolean"
+            }
+          }
+        },
+        "derived_links": {
+          "description": "N4, matchup links that come from parts (their reasons are the sentences in texts.json derived_reasons). countered_by gets: damage:<type> for each damage type whose strong_vs names the card's part of a kind in damage_vs (armour class, nature or armour model); for a flier, the link flier_hits gives for its target type; the no_air_weapon link when no weapon on the card hits air. With drop_immune, a damage: link whose immune list names the card's nature is dropped. With counters_from_damage, counters gets the strong_vs links of each weapon's damage type. Both lists also get their abilities' links and must end with at least one entry (card schema).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["damage_vs", "flier_hits", "no_air_weapon", "drop_immune", "counters_from_damage"],
+          "properties": {
+            "damage_vs": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": ["armour-class", "nature", "armour-model"]
+              }
+            },
+            "flier_hits": {
+              "type": "object",
+              "minProperties": 1,
+              "propertyNames": {
+                "type": "string",
+                "x-vocab": "target-types"
+              },
+              "additionalProperties": {
+                "$ref": "common.schema.json#/$defs/ref"
+              }
+            },
+            "no_air_weapon": {
+              "$ref": "common.schema.json#/$defs/ref"
+            },
+            "drop_immune": {
+              "type": "boolean"
+            },
+            "counters_from_damage": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "counts": {
+      "description": "How many parts of a kind a card gets (step id, from roll_order, in brackets), and the odds of a few terms that the sheet keeps in R. A list of weights reads by count: the first number is the weight of none, the second of one, and so on. A count never goes beyond what the rules allow at the card's spice (G16).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mobility_traits",
+        "armour_models",
+        "sight",
+        "sight_boost",
+        "sensor_traits",
+        "body_count",
+        "availability",
+        "weapon_traits",
+        "conditional_weapons",
+        "abilities",
+        "second_form_weapons",
+        "on_death",
+        "secondary_roles"
+      ],
+      "properties": {
+        "mobility_traits": {
+          "description": "C1 (mobility-traits): mobility traits without a key, 0, 1 or 2. Key-bound traits come only from abilities (K-d) and count toward the card's two traits.",
+          "type": "array",
+          "$ref": "#/$defs/weights",
+          "maxItems": 3
+        },
+        "armour_models": {
+          "description": "C1 (armour): armour models, 1 or 2.",
+          "type": "array",
+          "$ref": "#/$defs/weights",
+          "maxItems": 3
+        },
+        "sight": {
+          "description": "Sight (sensors, section 7, decision 6C): relative weight of each sight band.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "x-vocab": "sight-bands"
+          },
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "sight_boost": {
+          "description": "Sight (sensors, section 7): the band's weight is times as high when the card's primary role (the only role known at this step) is one of roles.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["band", "times", "roles"],
+          "properties": {
+            "band": {
+              "type": "string",
+              "x-vocab": "sight-bands"
+            },
+            "times": {
+              "type": "number",
+              "minimum": 1
+            },
+            "roles": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "x-vocab": "roles"
+              }
+            }
+          }
+        },
+        "sensor_traits": {
+          "description": "Sensor traits (sensors, section 7): 0, 1 or 2; the term rules apply.",
+          "type": "array",
+          "$ref": "#/$defs/weights",
+          "maxItems": 3
+        },
+        "body_count": {
+          "description": "Body count (crew, section 7): squad for a squad crew, other for every other crew.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["squad", "other"],
+          "properties": {
+            "squad": {
+              "type": "array",
+              "$ref": "#/$defs/weights",
+              "maxItems": 6
+            },
+            "other": {
+              "type": "array",
+              "$ref": "#/$defs/weights",
+              "maxItems": 6
+            }
+          }
+        },
+        "availability": {
+          "description": "Availability (crew, section 7, decision 7B, question AV answer A): fixed weights instead of the rarity odds. A term is offered only from its min_spice and from its min_tier (unique's min_tier is also the word list's).",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "x-vocab": "availability"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["weight"],
+            "properties": {
+              "weight": {
+                "type": "number",
+                "minimum": 0
+              },
+              "min_spice": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              "min_tier": {
+                "type": "string",
+                "x-vocab": "tiers"
+              }
+            }
+          }
+        },
+        "weapon_traits": {
+          "description": "C1 (weapons): weapon traits per weapon, 0 to 3, implied ones included.",
+          "type": "array",
+          "$ref": "#/$defs/weights",
+          "maxItems": 4
+        },
+        "conditional_weapons": {
+          "description": "A10 (weapons): conditional weapons of an adaptive weapon, 2 to 4.",
+          "type": "array",
+          "$ref": "#/$defs/weights",
+          "maxItems": 5
+        },
+        "abilities": {
+          "description": "A6 (extra-abilities): the total number of abilities the card aims for, signature included, by tier. Extras are then added while the key and passive budgets allow (a secondary weapon takes its key first); never the same pattern twice, at most 3 extras (card schema).",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "x-vocab": "tiers"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "$ref": "#/$defs/weights",
+            "maxItems": 5
+          }
+        },
+        "second_form_weapons": {
+          "description": "A9 (extra-abilities): weapons of a second form, 0 or 1.",
+          "type": "array",
+          "$ref": "#/$defs/weights",
+          "maxItems": 2
+        },
+        "on_death": {
+          "description": "On death (on-death, section 7): outcomes from defaults.on_death.what_is_left on top of the one who-gets-out outcome, 0 or 1.",
+          "type": "array",
+          "$ref": "#/$defs/weights",
+          "maxItems": 2
+        },
+        "secondary_roles": {
+          "description": "G14 (secondary-roles): secondary roles, 0, 1 or 2 (card schema maximum 2).",
+          "type": "array",
+          "$ref": "#/$defs/weights",
+          "maxItems": 3
+        },
+        "note": {
+          "$ref": "#/$defs/note"
+        }
+      }
+    },
+    "cooldowns": {
+      "description": "A4: a key kind (uses_key true) needs a cooldown band, rolled with its kind's weights here; passive and triggered abilities get none. A hard-control ability (hard_control) takes the hard_control weights whatever its kind, or hard_control_ultimate for an ultimate; the weights of its kind do not apply (A4, HC3, decision 5B).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["active", "toggle", "deploy", "channel", "ultimate", "hard_control", "hard_control_ultimate"],
+      "properties": {
+        "active": {
+          "$ref": "#/$defs/bandWeights"
+        },
+        "toggle": {
+          "$ref": "#/$defs/bandWeights"
+        },
+        "deploy": {
+          "$ref": "#/$defs/bandWeights"
+        },
+        "channel": {
+          "$ref": "#/$defs/bandWeights"
+        },
+        "ultimate": {
+          "$ref": "#/$defs/bandWeights"
+        },
+        "hard_control": {
+          "$ref": "#/$defs/bandWeights"
+        },
+        "hard_control_ultimate": {
+          "$ref": "#/$defs/bandWeights"
+        },
+        "note": {
+          "$ref": "#/$defs/note"
+        }
+      }
+    },
+    "hardControl": {
+      "description": "Hard control (section 6, decision 5B, question HC answer A). The data has no hard-control field: a part is hard control when an entry here names it. Roots, silences, slows, knockback and suppression are not hard control.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classes", "entries", "weapon_families"],
+      "properties": {
+        "classes": {
+          "description": "stun: the victim can neither move nor act (stun, freeze, stasis, hold, full shutdown, full takeover); latch: an enemy or a device rides on or in the victim. min_tier: the lowest tier for an ability of the class (HC2: stuns from T2; HC6: latches may appear at T1). key_kinds_only: the ability takes only a kind that uses a key (HC3, A3). Every hard-control ability with a key kind takes the hard_control cooldowns (cooldowns, A4).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stun", "latch"],
+          "properties": {
+            "stun": {
+              "$ref": "#/$defs/hardControlClass"
+            },
+            "latch": {
+              "$ref": "#/$defs/hardControlClass"
+            }
+          }
+        },
+        "entries": {
+          "description": "The hard-control list. A pattern entry covers the variants it lists, or all its variants but those in except. escape: the index of the pattern's player_translation.as_target line that states the victim's escape; it goes into the card's text/how_it_plays/as_target (HC4). null: the pattern states no escape, so the variant is not offered (HC4). escape_avoids: that line says how to avoid the effect, not how to end it; it counts as the escape (question HC). min_tier: the variant's own text gives the effect only from this tier, so it is offered only from there (HC2). borderline: marked borderline in the sheet's table; it counts as hard control all the same (question HC answer A). A term entry names a part by a typed link: never_on_card_weapon, the part is never rolled on a card weapon (HC1: a weapon has no cooldown, so stuns come only from abilities); escape_line, the key of its fixed escape line in texts.json escapes (HC4: a latch delivery's line is the universal shake-off, hold F).",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/hardControlEntry"
+          }
+        },
+        "weapon_families": {
+          "description": "HC7: a card weapon of one of these families adds the fixed escape line for its family (texts.json escapes) to text/how_it_plays/as_target. These families are not held to T2 or to a cooldown.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["families", "note"],
+          "properties": {
+            "families": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "x-vocab": "weapon-families"
+              }
+            },
+            "note": {
+              "description": "The sheet's own words on the exception to decision 5B that Mustafa approved.",
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        }
+      }
+    },
+    "hardControlClass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["min_tier", "key_kinds_only"],
+      "properties": {
+        "min_tier": {
+          "type": "string",
+          "x-vocab": "tiers"
+        },
+        "key_kinds_only": {
+          "type": "boolean"
+        }
+      }
+    },
+    "hardControlEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class"],
+      "oneOf": [
+        {
+          "required": ["pattern", "variants", "escape"]
+        },
+        {
+          "required": ["term"]
+        }
+      ],
+      "properties": {
+        "pattern": {
+          "$ref": "#/$defs/patternId"
+        },
+        "term": {
+          "$ref": "common.schema.json#/$defs/ref"
+        },
+        "class": {
+          "enum": ["stun", "latch"]
+        },
+        "variants": {
+          "description": "all, or the listed variant ids of the pattern.",
+          "anyOf": [
+            {
+              "const": "all"
+            },
+            {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "common.schema.json#/$defs/slug"
+              }
+            }
+          ]
+        },
+        "except": {
+          "description": "With variants all: the variants that are not hard control.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/slug"
+          }
+        },
+        "escape": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        },
+        "escape_avoids": {
+          "type": "boolean"
+        },
+        "min_tier": {
+          "type": "string",
+          "x-vocab": "tiers"
+        },
+        "borderline": {
+          "type": "boolean"
+        },
+        "never_on_card_weapon": {
+          "type": "boolean"
+        },
+        "escape_line": {
+          "$ref": "common.schema.json#/$defs/slug"
+        }
+      }
+    },
+    "points": {
+      "description": "Balance hints (section 10, question PT answer A): every number is a starting value, tuned in step 5.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pattern", "parts", "power", "complexity", "cost_bands", "tier_bands"],
+      "properties": {
+        "pattern": {
+          "description": "Pattern points, 0 to 3 each: power = the scale value of the pattern's risks.balance.level, complexity = the scale value of its risks.readability.level, cost = power divided by cost_divisor, rounded as cost_rounding says. With stored_wins, a pattern's own generator.points win. An ability of the ultimate kind adds ultimate_bonus to its pattern's power, up to max.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "power",
+            "complexity",
+            "scale",
+            "cost_divisor",
+            "cost_rounding",
+            "stored_wins",
+            "ultimate_bonus",
+            "max"
+          ],
+          "properties": {
+            "power": {
+              "description": "The pattern field power comes from.",
+              "enum": ["risks.balance.level"]
+            },
+            "complexity": {
+              "description": "The pattern field complexity comes from.",
+              "enum": ["risks.readability.level"]
+            },
+            "scale": {
+              "type": "object",
+              "minProperties": 1,
+              "propertyNames": {
+                "type": "string",
+                "x-vocab": "ratings"
+              },
+              "additionalProperties": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              }
+            },
+            "cost_divisor": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "cost_rounding": {
+              "enum": ["up", "down"]
+            },
+            "stored_wins": {
+              "type": "boolean"
+            },
+            "ultimate_bonus": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3
+            }
+          }
+        },
+        "parts": {
+          "description": "Part points: steps above the middle (standard) term of each ranked word list, by the score they count toward. A number is the points for having the part (a secondary weapon, passenger seats); a map gives points per term. best_weapon_range is the longest range among the card's weapons.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "armour_class",
+            "speed",
+            "best_weapon_range",
+            "size",
+            "secondary_weapon",
+            "availability",
+            "passenger_seats"
+          ],
+          "properties": {
+            "armour_class": {
+              "$ref": "#/$defs/partPointsArmourClass"
+            },
+            "speed": {
+              "$ref": "#/$defs/partPointsSpeed"
+            },
+            "best_weapon_range": {
+              "$ref": "#/$defs/partPointsRange"
+            },
+            "size": {
+              "$ref": "#/$defs/partPointsSize"
+            },
+            "secondary_weapon": {
+              "$ref": "#/$defs/partPointsFlat"
+            },
+            "availability": {
+              "$ref": "#/$defs/partPointsAvailability"
+            },
+            "passenger_seats": {
+              "$ref": "#/$defs/partPointsFlat"
+            }
+          }
+        },
+        "power": {
+          "description": "B1, power (1 to 10): the sum over abilities of (pattern power minus ability_minus), plus the parts' power points, kept between min and max.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ability_minus", "min", "max"],
+          "properties": {
+            "ability_minus": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10
+            }
+          }
+        },
+        "complexity": {
+          "description": "B2, complexity (1 to 10): the sum over abilities of (pattern complexity minus ability_minus), plus per_key for each key (K-a), per_operating_seat for each operating seat beyond the driver (defaults.seats), squad for a squad crew, second_form for a second form, and the parts' complexity points (1 for passenger seats), kept between min and max.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ability_minus", "per_key", "per_operating_seat", "squad", "second_form", "min", "max"],
+          "properties": {
+            "ability_minus": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "per_key": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "per_operating_seat": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "squad": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "second_form": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10
+            }
+          }
+        },
+        "cost_bands": {
+          "description": "B3, the cost band: from the sum of the patterns' cost plus the parts' cost points, the band whose min and max hold it (no max: and more).",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "x-vocab": "cost-bands"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["min"],
+            "properties": {
+              "min": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "max": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "tier_bands": {
+          "description": "B3, the cost bands expected for each tier; a card outside them gets the cost-outside-tier warning.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "x-vocab": "tiers"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "x-vocab": "cost-bands"
+            }
+          }
+        }
+      }
+    },
+    "partPointsFlat": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "power": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cost": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "complexity": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "partPointsArmourClass": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "power": {
+          "$ref": "#/$defs/pointsByArmourClass"
+        },
+        "cost": {
+          "$ref": "#/$defs/pointsByArmourClass"
+        },
+        "complexity": {
+          "$ref": "#/$defs/pointsByArmourClass"
+        }
+      }
+    },
+    "partPointsSpeed": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "power": {
+          "$ref": "#/$defs/pointsBySpeed"
+        },
+        "cost": {
+          "$ref": "#/$defs/pointsBySpeed"
+        },
+        "complexity": {
+          "$ref": "#/$defs/pointsBySpeed"
+        }
+      }
+    },
+    "partPointsRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "power": {
+          "$ref": "#/$defs/pointsByRange"
+        },
+        "cost": {
+          "$ref": "#/$defs/pointsByRange"
+        },
+        "complexity": {
+          "$ref": "#/$defs/pointsByRange"
+        }
+      }
+    },
+    "partPointsSize": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "power": {
+          "$ref": "#/$defs/pointsBySize"
+        },
+        "cost": {
+          "$ref": "#/$defs/pointsBySize"
+        },
+        "complexity": {
+          "$ref": "#/$defs/pointsBySize"
+        }
+      }
+    },
+    "partPointsAvailability": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "power": {
+          "$ref": "#/$defs/pointsByAvailability"
+        },
+        "cost": {
+          "$ref": "#/$defs/pointsByAvailability"
+        },
+        "complexity": {
+          "$ref": "#/$defs/pointsByAvailability"
+        }
+      }
+    },
+    "pointsByArmourClass": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "x-vocab": "armour-classes"
+      },
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "pointsBySpeed": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "x-vocab": "speed-bands"
+      },
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "pointsByRange": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "x-vocab": "range-bands"
+      },
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "pointsBySize": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "x-vocab": "sizes"
+      },
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "pointsByAvailability": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "x-vocab": "availability"
+      },
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "names": {
+      "description": "data/generator/names.json: the name word banks and the words the text templates use (section 11), one entry per flavour, plus the signature nouns. Every word was checked against the real names in the data (T-a, names.mjs).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "kind", "version", "status", "soviet", "allied", "empire", "signature_nouns"],
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "schema_version": {
+          "type": "string"
+        },
+        "kind": {
+          "const": "names"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "soviet": {
+          "$ref": "#/$defs/flavourNames"
+        },
+        "allied": {
+          "$ref": "#/$defs/flavourNames"
+        },
+        "empire": {
+          "$ref": "#/$defs/flavourNames"
+        },
+        "signature_nouns": {
+          "description": "Words for the signature name, by the signature pattern's category: plain English action words, which may occur inside a real name (T-a).",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "x-vocab": "pattern-categories"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "flavourNames": {
+      "description": "One flavour's words. The working name (text/name) follows one of templates, each {placeholder} filled with a word from the list of the same name in words; picks are made with the card's name dice.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["flavour_word", "class_nouns", "templates", "words", "signature_words"],
+      "properties": {
+        "flavour_word": {
+          "description": "The flavour's word in the pitch (texts.json templates.pitch).",
+          "type": "string",
+          "minLength": 1
+        },
+        "class_nouns": {
+          "description": "The class noun in the pitch, by class.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "x-vocab": "classes"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "templates": {
+          "description": "Working-name templates; one is picked, each equally likely.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "\\{[a-z_]+\\}"
+          }
+        },
+        "words": {
+          "description": "Placeholder name to its words (or numbers).",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[a-z_]+$"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          }
+        },
+        "signature_words": {
+          "description": "The lists in words that give the first word of the signature name (texts.json templates.signature_name).",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z_]+$"
+          }
+        },
+        "note": {
+          "$ref": "#/$defs/note"
+        }
+      }
+    },
+    "texts": {
+      "description": "data/generator/texts.json: the card text templates and the fixed sentences (section 11, HC4, HC7, N4, T-b). Every line taken from a pattern is our own paraphrased text. A line that names a real game, franchise, faction, unit or wiki never goes onto a card (T-b): the generator takes the next line of the same field that passes the check, or else the field's sentence in neutral.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "kind", "version", "status", "templates", "derived_reasons", "escapes", "neutral"],
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "schema_version": {
+          "type": "string"
+        },
+        "kind": {
+          "const": "texts"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "templates": {
+          "description": "One entry per card text field of section 11's table.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "pitch",
+            "signature_name",
+            "signature_effect",
+            "team_play_hook",
+            "as_user",
+            "as_target",
+            "teammates",
+            "tells",
+            "controls",
+            "matchup_reasons",
+            "counterplay",
+            "inspiration"
+          ],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/template"
+            },
+            "pitch": {
+              "$ref": "#/$defs/template"
+            },
+            "signature_name": {
+              "$ref": "#/$defs/template"
+            },
+            "signature_effect": {
+              "$ref": "#/$defs/template"
+            },
+            "team_play_hook": {
+              "$ref": "#/$defs/template"
+            },
+            "as_user": {
+              "$ref": "#/$defs/template"
+            },
+            "as_target": {
+              "$ref": "#/$defs/template"
+            },
+            "teammates": {
+              "$ref": "#/$defs/template"
+            },
+            "tells": {
+              "$ref": "#/$defs/template"
+            },
+            "controls": {
+              "$ref": "#/$defs/template"
+            },
+            "matchup_reasons": {
+              "$ref": "#/$defs/template"
+            },
+            "counterplay": {
+              "$ref": "#/$defs/template"
+            },
+            "inspiration": {
+              "$ref": "#/$defs/template"
+            }
+          }
+        },
+        "derived_reasons": {
+          "description": "N4: the reason (why) for a matchup link that comes from the card's parts, by link kind (rules.json defaults.derived_links).",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "$ref": "common.schema.json#/$defs/slug"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/sentence"
+          }
+        },
+        "escapes": {
+          "description": "Fixed escape lines for text/how_it_plays/as_target: latch for a weapon with the attach delivery (HC4: the universal shake-off, hold F), and one per weapon family of HC7 (rules.json hard_control.weapon_families). Written to the player on the receiving end.",
+          "type": "object",
+          "required": ["latch"],
+          "propertyNames": {
+            "anyOf": [
+              {
+                "const": "latch"
+              },
+              {
+                "type": "string",
+                "x-vocab": "weapon-families"
+              }
+            ]
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/sentence"
+          }
+        },
+        "neutral": {
+          "description": "T-b: the fixed sentence for each text field whose pattern lines can all fail the real-name check. strengths, weaknesses, counters and countered_by stand for the why of an entry in that matchup list.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "pitch",
+            "signature_effect",
+            "team_play_hook",
+            "as_user",
+            "as_target",
+            "teammates",
+            "tells",
+            "counterplay",
+            "strengths",
+            "weaknesses",
+            "counters",
+            "countered_by"
+          ],
+          "properties": {
+            "pitch": {
+              "$ref": "#/$defs/sentence"
+            },
+            "signature_effect": {
+              "$ref": "#/$defs/sentence"
+            },
+            "team_play_hook": {
+              "$ref": "#/$defs/sentence"
+            },
+            "as_user": {
+              "$ref": "#/$defs/sentence"
+            },
+            "as_target": {
+              "$ref": "#/$defs/sentence"
+            },
+            "teammates": {
+              "$ref": "#/$defs/sentence"
+            },
+            "tells": {
+              "$ref": "#/$defs/sentence"
+            },
+            "counterplay": {
+              "$ref": "#/$defs/sentence"
+            },
+            "strengths": {
+              "$ref": "#/$defs/sentence"
+            },
+            "weaknesses": {
+              "$ref": "#/$defs/sentence"
+            },
+            "counters": {
+              "$ref": "#/$defs/sentence"
+            },
+            "countered_by": {
+              "$ref": "#/$defs/sentence"
+            }
+          }
+        }
+      }
+    },
+    "template": {
+      "description": "How one card text field is built. fields: the card fields it fills, as paths with / (a list's items are passed through). template: the text, with {placeholders}; fills: where each placeholder's text comes from. each: what the items of a list field are. hook: how the team-play hook term is picked. actions: the action text of a controls entry, by layout slot (rules.json layout). max_length and cut: the text is cut at a word to this many characters. max: the most items taken.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fields"],
+      "properties": {
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z_]+(/[a-z_]+)*$"
+          }
+        },
+        "template": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fills": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[A-Za-z_]+$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 3
+          }
+        },
+        "each": {
+          "type": "string",
+          "minLength": 3
+        },
+        "hook": {
+          "type": "string",
+          "minLength": 3
+        },
+        "actions": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[a-z_]+$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "max_length": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "cut": {
+          "enum": ["word"]
+        },
+        "max": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "note": {
+          "$ref": "#/$defs/note"
+        }
+      }
+    }
+  }
+}

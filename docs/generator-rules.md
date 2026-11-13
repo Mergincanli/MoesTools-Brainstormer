@@ -262,7 +262,7 @@ Templates are NEW and live in X; word banks in N. Every line taken from a patter
 | team-play hook | hook: the first of the pattern's `team_play.hooks` that the flavour favours, else its first; text: `player_translation.teammates[0]` | PG fields, WL faction-flavours.favoured.team-play-hooks |
 | as user | `as_user[0]` of the signature, then the first sentence of each extra's | `player_translation` |
 | as target | `as_target[0]`, then every hard-control escape line (HC4) | `player_translation` |
-| teammates, tells | `teammates[0]`; `feedback[0]` of the signature | `player_translation` |
+| teammates, tells | the pattern's second `teammates` line (the first when it has only one), so that the hook's line is not shown twice; `feedback[0]` of the signature | `player_translation` |
 | controls | one entry per bound input, by the layout (K-f) | the card's parts |
 | matchup reasons | the pattern's `why`; derived links (N4) use fixed sentences in X | PG, X |
 | counterplay | the signature's `counterplay[0]` and `[1]`, each extra's `[0]` | PG counterplay |
@@ -391,6 +391,23 @@ A second agent checked the first draft against the data, the plan and the valida
 The same agent then checked this revision: 23 of its 26 findings were resolved and 3 in part, and it found 12 new slips in the revised text (3 medium, 9 low). Those 15 points are worked in as well; that last pass was not checked again.
 
 Not redone: the counts of rules and of new numbers in the TL;DR are approximate after this revision. No generator exists yet, so every frequency in this sheet comes from the stated weights, not from rolled cards.
+
+## 17. Values added when the rules were written as data
+
+The rules went into `data/generator/` on 13 November 2026 (P1). Where the sheet gave a range or a rule without odds, the data takes the plainest value, and each such entry carries a `note` in its file. They are starting values like the rest:
+
+- **Equal odds** where the sheet gives none: a hard-control ability's cooldown (medium or long); the number of conditional weapons (2 to 4) and of second-form weapons (0 or 1); the number of passenger seats between the needed minimum and the size's cap; the Soviet flavour's two name templates.
+- **Text details:** a control's action text is the part's plain name; the as-target text never repeats a line; the pitch writes the size in lower case and uses "A" or "An" as fits.
+- **Readings of this sheet:**
+  - the word before the signature noun is a word from the flavour's own name words;
+  - the unarmed rule and the sight boost read the primary role;
+  - with seat-swap or needs-crew the gunner seat fires the primary weapon;
+  - assault's range condition is read on the main weapon only;
+  - the cap of five applies to all four matchup lists;
+  - the cooldown rule for hard control covers latches as well as stuns, and only stuns are limited to kinds that use a key.
+- **Housekeeping:** each file starts with `$schema` and `schema_version`, as the other data files do, and has version 0.1.0 and status draft.
+
+`npm run check:generator` (`scripts/check-generator-data.mjs`) checks the three files against their schema, every id they name, this sheet's counts, the card texts (no real name, no wording shared with the patterns) and that every rule code of sections 2 to 11 has its place in the data (`research/generator/data/coverage.json`).
 
 ## What comes next
 
