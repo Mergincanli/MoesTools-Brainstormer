@@ -1,0 +1,860 @@
+{
+ "game": "pa",
+ "notes": {
+  "role_line": "### Planetary Annihilation: TITANS (`pa`)\n\nWritten in the batch R4 preparation, before any `pa` unit is coded. Sources: PA Lobby's TITANS pages for every buildable mobile unit (the unit pages and their blueprint views at `/units/json/<id>?version=titans`), the developers' patch notes from April 2022 to October 2026 (read through the Steam news API for app 386070), the Steam store page and the Planetary Annihilation Wiki on Fandom.\n\n- **The official text is the in-game unit description.** Every unit blueprint has a `description` string, marked for translation with `!LOC:`. The game shows it in the build bar's preview: the hotfix of 21 August 2026 stopped descriptions in that preview from overlapping the icons. The Icarus (July 2026), the Barnacle and Vanguard (April 2024) and the Horsefly (June 2025) each had their description rewritten along with their rework.\n  - PA Lobby prints the string in italics under the unit's name. Its blueprint view shows the same string inside the game file; for the Dox that is the file assault_bot.json in the game's folder of land units, at https://palobby.com/units/json/assault_bot?version=titans.\n  - Cite the PA Lobby unit page as kind database. Its note says that the line under the name copies the game's own description. That makes the line a faithful copy of in-game text for the confidence word list.\n- **How the line is built.** A type label comes first, then a dash, then a few short sentences. Those sentences often end with a line saying which targets the unit attacks.\n  - The label before the dash is the designation for roles step 1.\n  - The sentences after the dash are the official description. They count for roles.secondary step 1, for strong and weak wording, and as a target line.\n  - Every commander's line is only its own name (Imperial Able Commander, for example). So the commander has no designation, and its line names no role.\n- **Designations that name a role.** This means a label or alias of the roles word list, in any word form:\n  - **anti-air:** Mobile Anti-Air (Spinner) and Anti-Air Bot (Stinger).\n  - **scout:** Scout (Firefly, Skitter).\n  - **siege, through the alias bomber:** Carpet Bomber (Bumblebee), Tactical Bomber (Hornet) and Siege Bomber (Wyrm, which also names siege itself). Siege's coding rule still binds. Dropped bombs pass it. The Hornet's tactical missiles pass only if a source says they are built mainly to destroy structures.\n  - **marksman, through the alias sniper:** Sniper (Gil-E). Marksman's rule still holds: the weapon must be of the sniper family and reach long.\n  - **support:** Support Barge (Barnacle) and Support Platform (Angel). Both repair other units.\n  - **transport:** Air Transport (Pelican) names transport, but the Pelican's blueprint gives it room for one land unit. Transport's rule says a carrier with one seat is never a transport, so step 1 skips the role. The Astraeus (Orbital Lander) also carries one unit, and its label names no role.\n  - The Jig's Gas Mining contains miner, a logistics alias, in another word form. The Jig is an orbital structure.\n- **Designations that name no role**, so step 1 goes on to the next step:\n  - **Land:** Basic Infantry (Dox), Assault Bot, Assault Tank, Light Tank, Heavy Tank, Flame Tank, Hover Tank, Attack Vehicle, Mortar tank, Flak Tank, Tesla Bot, Nanobot Swarm, Bomb bot, Mobile Tactical Missile, Proxy Commander, Jamming Vehicle, Mobile Anti-Nuke and Mobile Nuke.\n  - **Air:** Fighter, Advanced Interplanetary Fighter, Gunship, Strafer Aircraft and Solar Drone.\n  - **Naval:** Gunboat, Frigate, Submarine, Advanced Submarine, Deep Water Destroyer, Hover Destroyer, Missile Ship, Battleship and Drone Carrier.\n  - **Builders:** Basic, Advanced, Combat, Advanced Combat and Orbital Fabricator. Fabricator is not an engineer alias, so builders reach engineer at step 2.\n  - **Orbital:** Orbital Fighter, Space Probe, Basic Radar, Advanced Radar, Orbital Laser Platform, Railgun Platform and Orbital Battleship.\n  - **Titans:** Seismic Titan, Rolling Fortress, Lightning Titan, Invasion Titan and Doomsday Titan.\n  - **Fire Support (Grenadier)** contains the word support but names no role. Support's requires fail for an armed unit with no repair tool, so step 1 skips support, as for RA3's support lines.\n- **There are no strong-against or weak-against lines.** No description says a unit is good or poor against a kind of target. The descriptions give three other things:\n  - **Target lines**, for example land and sea, only air, everything but orbital, or nothing at all.\n    - For a unit with one weapon, the line belongs to that weapon.\n    - PA Lobby lists each weapon's target layers (Targets), taken from the game data. These decide can_target (see Game-wide mechanics).\n    - A main weapon that can hit only air units is anti-air at roles step 4, because it can hit nothing else. This covers the Spinner, Stinger, Storm, Hummingbird, Phoenix and Icarus.\n  - **Labels on weapons.** The Leviathan's guns are called anti-ship and anti-land. The Stinger's missiles and some of the Stingray's are called anti-air. These count for can_target step 3 and for roles.secondary, never for step 1.\n  - **Traits that name no kind of target:**\n    - devastating damage (Locusts, Leveler, Atlas, Wyrm);\n    - open to flanking (Leveler);\n    - fragile and slow (Bumblebee);\n    - cannons cannot target it (Barracuda);\n    - near invincible (Ares);\n    - shoots down missiles (Gil-E, Angel);\n    - hidden from radar (Kraken).\n\n    Use these for strengths and weaknesses. Never use them for step 4 or for the rule that drops a role.\n- **The game data gives no step 4 bonus.** PA's ammo blueprints have an armour damage map, a multiplier for each armour type. In the TITANS build every value read is 0, 0.33 or 1, so no weapon ever does more than full damage to any type. Step 4 therefore rests on two things only: a main weapon that can hit nothing else, or strong-against wording in the patch notes.\n- **The patch notes are official text too.** They are the posts on the game's official Steam news feed; since 2024 the developer's community teams have written them. Some name a unit's job or its counters:\n  - The balance update of 11 April 2022 calls the Dox the game's main raiding unit. That is the raider label, used at roles.secondary step 1.\n  - The update of 26 July 2026 moves the Boom back to an anti-vehicle job. Anti-vehicle is an anti-armour alias.\n  - The notes of April 2024 call the Bumblebee the intended counter to basic bots.\n  - The notes of April 2024 and June 2025 name the Gil-E, the Hummingbird and the Stryker among the Hornet's counters.\n\n  How to read them:\n  - A role label or alias counts at roles.secondary step 1.\n  - Strong-against wording counts at step 4 only when it names a kind of target: air or aircraft means air; tanks, vehicles or anti-vehicle mean armour; infantry means infantry. The word bots on its own names no kind, because PA's bots range from the Dox to the Atlas.\n  - A matchup that a patch note names is a sourced matchup.\n  - Check every note against the version researched, because later patches change units.\n- **Not official:**\n  - the Planetary Annihilation Wiki on Fandom: its own words, unit numbers from build 71937, and design proposals from 2012;\n  - PA Lobby's T1, T2 and T3 labels: they match the game's own unit types Basic, Advanced and Titan, but they are the site's labels, not text from the game;\n  - the user tags on the Steam store page (Robots, Mechs).\n- **The official site was not read.** planetaryannihilation.com refused this session (HTTP 403), and its Wayback Machine copies would not load. Whether the site has unit profiles is unchecked.",
+  "game_wide": "### Planetary Annihilation: TITANS (`pa`)\n\nWritten in the batch R4 preparation, before any `pa` unit is coded. Sources:\n\n- PA Lobby's TITANS pages: every buildable mobile unit, every factory, the titans and the commanders table.\n- PA Lobby's blueprint views of the base specs (base_bot, base_vehicle, base_flyer, base_ship, base_orbital, base_structure and base_commander), of sample units and of every weapon's ammo.\n- The developers' patch notes from April 2022 to October 2026, read through the Steam news API for app 386070.\n- The Steam store page.\n- The Planetary Annihilation Wiki's game pages, which copy the official feature lists.\n\nThe game has one shared roster: every player fields the same units.\n\n- **Basic orders** (no pattern). Leave all of these off.\n  - The base specs' command lists give every mobile unit move, patrol and assist. Armed units also have attack: the April 2024 notes gave the Skitter an attack order so that it can attack-move. Land units also have a use order for teleporters, but the Atlas and the Ares do not.\n  - Fire stances exist: the April 2024 notes mention a hold-fire stance.\n  - Area orders exist for building and for loading transports (April 2023 notes).\n  - The Wiki's Area Commands, Order queueing and Retreat Zones pages are design proposals from 2012, not the game as shipped. Do not cite them as evidence.\n- **Builders and their menus** (not game-wide: record them on each builder).\n  - Fabricators and the commander build, repair, reclaim and assist (base_commander's command list and each builder's Builds box).\n  - Code the build menu by the abilities rule:\n    - build-structure for factories, economy buildings and sensor buildings;\n    - deploy-turret for defence towers;\n    - lay-mines for mines;\n    - build-linked-exits for teleporters;\n    - build-cover for walls.\n  - Repair is repair-allies.\n  - Reclaim turns wrecks and terrain into metal or energy for the side (the official feature list, copied on the Wiki's Planetary Annihilation page). The nearest pattern is gather-resources, but nothing is carried back to base. Link gather-resources with a fit_note, or leave the patterns empty with a fit_note.\n  - Exceptions, from their descriptions:\n    - The Stitch cannot assist other construction, and it builds only mines and teleporters.\n    - The Barnacle cannot assist unit production.\n    - The Barnacle, Stitch, Mend and Angel repair nearby units on their own (Auto Repair).\n    - The Barnacle, Mend and Angel also reclaim wrecks on their own.\n- **Streaming economy and assisting** (no pattern; leave off).\n  - Metal and energy flow in as income. A builder pays both per second, at its build rate, while it builds. A unit's price is therefore its metal cost alone (see the registry basis).\n  - When income falls short, all building slows. The patch notes call this stalling.\n  - Any builder can assist a construction or a factory and adds its build rate to it. Sources: the official feature list (it calls this sending many builders to one job in real time) and the assist order in the base specs.\n  - A unit that builds faster or slower than others says so in its strengths or weaknesses.\n  - Units that make metal or energy on their own (the commander, the Icarus) say so in their notes. If a coder records the Icarus's energy as a passive, it links no pattern, because generate-income needs a stop and ranks; add a fit_note.\n- **The commander** (one entry covers every skin).\n  - Every player starts with one commander (gate Start of the match).\n  - PA Lobby's commanders table lists 76 commanders with one shared set of stats. They come in four body classes: Imperial, Quadruped, Raptor and Tank. The table also lists a tutorial commander, which is not researched.\n  - It builds basic structures, produces metal and energy, and has storage.\n  - A gun, an anti-air missile and a torpedo launcher fire on the attack order.\n  - Its Uber Cannon fires only on its own order: the uber_cannon blueprint sets manual fire and no auto-attack. Each shot takes 10,000 energy from the side's pool. By Weapons vs abilities this makes it an ability, not a weapon; link fire-power-shot.\n  - In the default mode, a player who loses every commander loses the match. The Eradication mode (June 2025) keeps the war going until the fabricators, factories or support commanders picked in the lobby are destroyed. Game modes stay off the units.\n  - The Colonel (designation Proxy Commander) is an ordinary T2 unit, not a commander.\n- **No veterancy** (no earn-veterancy). No PA Lobby page, blueprint or patch note read mentions ranks or experience. No ability has source veterancy.\n- **No capture, garrisons or crates.** No command list read has a capture order. Nothing read describes a garrison or a pickup.\n- **Wrecks** (on_death wreck).\n  - Since the June 2025 update, every unit leaves a wreck holding half its metal cost. Fabricators of any side can reclaim it.\n  - Aircraft wrecks fall to the ground, and naval and hover wrecks sink to the sea floor (April 2023 notes).\n  - Since July 2026, a wreck stays visible in the fog once someone has seen it.\n  - Code wreck, basis in-game, on every unit. Cite the June 2025 notes, or name them in an uncertain entry.\n  - Exceptions: units whose blueprint sets the wreck's health fraction to 0. That is every orbital unit, through base_orbital, and the Locusts. The Helios is not an exception: since July 2026 it crashes and leaves a wreck. For the exceptions, code what their own pages show, or else the decision-3C default. Add an uncertain entry, because no page says outright that a fraction of 0 means no wreck.\n- **Death blasts** (on_death death-blast).\n  - Only units whose PA Lobby page has a Death Explosion section with damage: every commander, the Ares, Atlas and Zeus, the Helios (its crash, since July 2026), the Manhattan (a nuke on death) and the Jig.\n  - Since the June 2025 update, the commander's and the titans' blasts no longer hurt allies. The Helios crash added in July 2026 does not hurt them either.\n  - Their ammo armour maps show that they do nothing to orbital units. The titans' blasts do nothing to aircraft either.\n  - Self-destruct attacks (Boom, Kessler, Manhattan, Ragnarok) are weapons or abilities, not on_death outcomes.\n- **Armour types** (no armour map, no armour model).\n  - Each blueprint gives the unit one of eight armour types, by kind of unit: AT_Bot, AT_Vehicle, AT_Hover (on the Drifter and the Ares among the pages read), AT_Air, AT_Naval, AT_Orbital, AT_Structure and AT_Commander.\n  - Some ammo scales its damage by armour type, and in this build only by 0, a third or 1:\n    - flak and air-defence ammo do nothing to land units, ships or structures;\n    - nukes do a third of their damage to commanders and orbital units;\n    - titan death blasts do nothing to aircraft or orbital units.\n  - What follows for the field rules:\n    - No damage bonus exists for roles step 4.\n    - Damage step 4 never applies: PA has no damage categories, and every hit lands on HitPoints.\n    - Armour-class step 2 never applies: there is no light, medium or heavy armour category. Description words such as heavy armored (Inferno) or heavily armored (Vanguard) belong to the job line, as the RA1 manual's armour grades did.\n  - Armour class therefore comes from three steps:\n    - step 3: the Leveler, the cost anchor, is heavy;\n    - step 4: the kind of unit named in the class descriptions;\n    - step 5: the unit's HP on PA Lobby against the Leveler and the Dox. The Dox is a machine, so check B makes it light.\n  - No PA Lobby page gives facing values. The Leveler's description says it is open to flanking, and its page shows a slow-turning turret: record that in its weaknesses and never code directional.\n- **Friendly fire.**\n  - PA Lobby flags the few ammo whose splash hurts allies (Splash damages allies). Among the pages read, these are the Manhattan's nuke, the Jig's death nuke and the Unit Cannon's pods.\n  - Give friendly-fire only to those weapons. Most ammo checks hits against enemies only.\n- **Burn damage.** Almost every ammo on PA Lobby lists a burn damage and radius, even the Dox's bullets and the death blasts. No page read says it harms units over time; the patch notes tie area weapons to trees. Never code fire, damage-over-time or zone from it.\n- **Target layers** (can_target). PA Lobby gives each weapon's Targets layers from the game data. Read them as follows:\n  - LandHorizontal is the land layer: list infantry, ground vehicles and structures wherever the family allows them.\n  - WaterSurface, Seafloor and Underwater mean naval. Underwater holds submarines; Seafloor holds amphibious units walking under water.\n  - Air means low air and high air. PA has one air layer, and in a commanded game a weapon that attacks air lists both.\n  - Orbital matches none of our target kinds. Say it in the summary and add a fit_note wanting an orbital target.\n  - Leave out any kind that the weapon's armour map sets to 0.\n- **Orbital layer and planets** (no pattern; fit_notes).\n  - Orbital units fly above a planet. Only weapons that target the orbital layer can hit them.\n  - Most orbital units are always visible to every player (the Visibility box on their pages). The Astraeus, Hermes and ARKYD are not.\n  - Units of the Interplanetary type travel between planets on their own, at speeds kept apart from their move speed: the Phoenix, Astraeus, Avenger, Omega, Hermes, ARKYD, Advanced Radar Satellite, SXX-1304, Artemis, Solar Array, Orbital Fabrication Bot and Helios.\n  - The word lists have no orbital mobility, class or target kind. Take the closest terms and add fit_notes that name the gap.\n  - Planet-smashing structures and nukes are side-wide superweapons: leave them off. The planet-smashers are the Halley and the Catalyst in the advanced builders' menus, and the Ragnarok; the store page names lasers, asteroid impacts and the Ragnarok.\n- **Transports** (one passenger passive on the carrier).\n  - The Pelican carries one land unit, but never the commander. Since July 2026, a basic amphibious bot riding in it (the Dox) can fire from it (blueprint transporter block; July 2026 notes).\n  - The Astraeus carries one land unit, or an air or naval fabricator, to another planet. It can carry the commander.\n  - Both have one seat, so code crew.passengers with 1 seat; they never get the transport role.\n  - Loading and unloading are universal keys.\n  - The Pelican's dummy targeting weapon does no damage. It only slows the Pelican near enemy land units. Give it no weapon entry; put the slowdown in mobility.notes.\n- **Teleporters** (build-linked-exits on the builders; nothing on the units that use them).\n  - Teleporters are structures. Commanders, fabricators, the Stitch and Mend and the orbital fabrication bot build them.\n  - Land units cross between linked teleporters with the use order, on one planet or between planets. That counts as the universal enter key.\n  - A unit that cannot use teleporters says so: the titans have no use order; the orbital fabrication bot lost it in April 2024; the Kaiju gained it then.\n  - The Helios's link with a teleporter is the Helios's own ability.\n- **Unit Cannon** (a T2 structure; leave it off).\n  - It builds land units and fires up to 16 at once to any point in the system.\n  - Its Builds box lists 17 unit types. Being launchable is no ability of those units, but it may go in their notes.\n  - Units it launches keep their own factory gate.\n- **Factories** (leave off).\n  - An advanced factory also builds every basic unit of its kind.\n  - Factories have a cooldown and a roll-off time.\n  - A basic fabricator builds the advanced factory of its own kind.\n- **Sight, radar, sonar and jamming** (sensor traits, per unit).\n  - Every unit has a surface-and-air sight radius and a separate underwater radius. Some also see the orbital layer, detect mines, or carry radar or sonar (the Recon box, and the radar and recon tables).\n  - Mobile radar draws energy and needs the side's energy to keep up (April 2024 notes).\n  - Jammers keep allies near them off enemy radar: code the jammer trait. They are the Nyx and the Radar Jamming Station, a structure.\n  - The Kraken is the only unit hidden from radar (the Stealth box on its page). Our stealth trait also hides a unit from sight, so give the Kraken no trait and add a fit_note, as for RA2's NightHawk.\n  - No unit cloaks, burrows or disguises itself.\n  - The Skitter, Stitch and Barnacle find mines. Detector is the nearest trait: code it with a fit_note saying the unit finds only mines.\n- **Weapons that draw energy** (resource energy).\n  - A weapon whose PA Lobby entry gives an energy cost per shot refills from the side's energy pool: the Spark, Bumblebee, Wyrm, Icarus, Zeus, SXX-1304 and Artemis, and the commander's Uber Cannon.\n  - Code energy as the resource on those units, and say in notes that the pool is the side's economy.\n- **Slowing while firing** (no pattern). The Stinger slows down while it fires, and the Pelican near enemy land units (July 2026 notes). Speed bands use the listed move speed; put the slowdown in mobility.notes.\n- **Shields** (none).\n  - A shield system was added for testing in March 2026 and shown as a prototype in May 2026. No unit in the TITANS data read carries one.\n  - The ignore-shields flag on some ammo belongs to that system. Code no shield model.\n- **Shooting down missiles and pods** (per unit, not game-wide).\n  - Some units shoot down missiles or Unit Cannon pods by themselves (Anti Entity Targets on PA Lobby): the Gil-E, Bluehawk, Stingray, Angel and Ward.\n  - Code each one by rule 8 of Weapon entries and the interceptor model's coding rule.\n- **Mobility** (per unit; the Physics box on PA Lobby).\n  - Amphibious units walk on the sea floor: the Dox, Slammer, commander, Atlas, Colonel and Manhattan.\n  - Hover units cross land, water and lava: the Drifter, Locusts, Kaiju, Ward and Ares.\n  - Water-hover units cross water and shallows: the Piranha, Fabrication Ship and Barnacle.\n- **Game modes** (leave off): Eradication, Bounty Mode, Dynamic Alliances and alliance victory, and the ranked 1v1 ladder. Galactic War's tech cards, sub-commanders and AI factions are not researched.\n- **Expansion** (introduced_in).\n  - TITANS includes the original game.\n  - Units missing from PA Lobby's Classic version get introduced_in `pa-titans`: the Stryker, Spark, Stinger, Locusts, Drifter, Storm, Manhattan, Nyx, Ward, Icarus, Horsefly, Wyrm, Angel, Typhoon, Kaiju, Omega, Hermes, Artemis, Kessler, Colonel and Barnacle, and the four mobile titans.\n  - The Nyx, Ward and Kessler arrived with the June 2025 update. Say so in their notes.",
+  "registry_findings": [
+   {
+    "path": "tier_map/11/gate",
+    "current": "Titan (built by an advanced fabricator)",
+    "proposed": "\"Titan (built by an advanced fabricator or the orbital fabrication bot)\". The band stays t3. Units' tier.basis and source notes should say that the orbital route needs only the T1 Orbital Launcher, which t3's source rule allows when it is said.",
+    "evidence": "https://palobby.com/units/unit/titan_orbital?version=titans, Built By box: the T1 orbital fabrication bot is the only builder listed. https://palobby.com/units/unit/titan_bot?version=titans, https://palobby.com/units/unit/titan_vehicle?version=titans and https://palobby.com/units/unit/titan_air?version=titans, Built By boxes: each lists the advanced fabricator of its own kind (for the Atlas also the Colonel) together with the T1 orbital fabrication bot. https://palobby.com/units/unit/orbital_fabrication_bot?version=titans: the header line says it makes satellites, spaceships and titans. Its Builds box holds the Ares, Atlas, Helios and Zeus, and its Built By box names the Orbital Launcher (T1) and the Orbital Factory. https://palobby.com/units/unit/orbital_launcher?version=titans, Built By box: T1 fabricators and the four commander classes. The titans' Unit Types box shows the game's Titan type, which PA Lobby labels T3, so t3 can stay.",
+    "severity": "wrong"
+   },
+   {
+    "path": "sources/1/note",
+    "current": "Lists the Ares, Atlas, Helios and Zeus (30,000 metal each) and the Ragnarok structure (60,000) as T3. The Atlas unit page names the advanced fabrication bot among its builders (and, oddly, the orbital fabrication bot).",
+    "proposed": "\"Lists the Ares, Atlas, Helios and Zeus (30,000 metal each) and the Ragnarok structure (60,000) as T3. The T1 orbital fabrication bot builds the Ares, Atlas, Zeus and Helios and is the Helios's only builder; the Ares, Atlas and Zeus are also built by the advanced fabricator of their kind (the Atlas also by the Colonel), and the Ragnarok by the advanced fabricators and the Colonel.\" Set accessed to the date of the re-read.",
+    "evidence": "The same Built By boxes as for tier_map/11/gate. https://palobby.com/units/unit/titan_structure?version=titans, Built By box: the four advanced fabricators and the Colonel. The orbital fabrication bot's own description says it makes titans, so its presence in the list is not an oddity of the database.",
+    "severity": "unclear"
+   },
+   {
+    "path": "cost_thresholds/basis",
+    "current": "Units cost metal only (energy is spent while building, not as a price). Anchor: the Leveler, the advanced vehicle factory's assault tank, 800 metal, chosen to match the T2 heavy tank anchor used for Supreme Commander; thresholds at 0.5, 0.9, 1.4 and 2 times the anchor. Every T1 land, air and orbital unit falls in very low (the Ant light tank is 150); the T1 naval Narwhal (450), Barracuda (500) and Orca (600) fall in low, and the Titans (30,000) in very high.",
+    "proposed": "\"Units cost metal only (energy is spent while building, not as a price). Anchor: the Leveler, the advanced vehicle factory's assault tank, 800 metal, chosen to match the T2 heavy tank anchor used for Supreme Commander; thresholds at 0.5, 0.9, 1.4 and 2 times the anchor. Every T1 land and air unit falls in very low (the Ant light tank is 150); the T1 Narwhal (450), Barracuda (500), Barnacle (550) and Orca (600) fall in low, the T1 ARKYD radar satellite (800) in medium and the T1 orbital fabrication bot (1,300) in high; T2 units run from low (the Locusts, Slammer and Nyx at 500) to very high, and the Titans (30,000) are very high.\"",
+    "evidence": "https://palobby.com/units/table/recon?version=titans and https://palobby.com/units/table/radar?version=titans: the ARKYD is T1 at 800 metal, and https://palobby.com/units/unit/orbital_launcher?version=titans lists it in its Builds box. https://palobby.com/units/table/builders?version=titans: the Orbital Fabrication Bot is T1 at 1,300 and the Barnacle T1 at 550. https://palobby.com/units/table/naval?version=titans: Narwhal 450, Barracuda 500 and Orca 600 (T1). https://palobby.com/units/table/bots?version=titans: Locusts and Slammer at 500 (T2); the radar table gives the Nyx at 500 (T2). With thresholds of 400, 720, 1,120 and 1,600, a price of 800 is medium and 1,300 is high, so 'every T1 orbital unit falls in very low' is false. The arithmetic of the thresholds and the anchor price (vehicles table: Leveler 800) are right.",
+    "severity": "wrong"
+   },
+   {
+    "path": "version_researched",
+    "current": "The live TITANS build as listed by the PA Lobby units database (version 'TITANS') in October 2026; the last numbered build archived there is 124632. Base-game units only: the Legion Expansion community mod is not used.",
+    "proposed": "\"The live TITANS build as the PA Lobby units database lists it under version 'TITANS' (read 11 November 2026): after the balance update of 26 July 2026 that opened ranked season 16 (builds 124666 and 124667), the fourth hotfix for co-op Galactic War (21 August 2026) and the bug-fix patches of 3 and 8 October 2026. PA Lobby's numbered builds stop at 124632, which predates the July 2026 rebalance, so they are not used. Base-game units only: the Legion Expansion community mod is not used.\"",
+    "evidence": "Steam news API for app 386070 (https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=386070&count=40&maxlength=0&format=json):\n- The post of 26 July 2026 names updates 124666 and 124667. It cuts the Leveler's health from 1,500 to 1,300 and its shots from 300 to 250, the Nyx from 700 to 500 metal and the ARKYD's health from 1,000 to 600, raises the Orbital Launcher from 600 to 900 metal, and triples the Ragnarok's charge.\n- Hotfix 4 of 21 August 2026 cuts the Helios crash splash from 5,000 to 500 and the Pelican's health from 125 to 120.\n- The posts of 3 and 8 October 2026 list only bug fixes.\nPA Lobby's live pages show the new values: Leveler 1,300 HP and 2x250 (vehicles table, unit page), Nyx 500 (radar table), Orbital Launcher 900 (factories table), ARKYD 600 HP (radar table), Helios death blast splash 500 (unit page), Pelican 120 HP (air table). https://palobby.com/units/unit/tank_laser_adv?version=titans-124632 still shows the Leveler at 1,500 HP with 2x300 and splash, the values of March 2026. The current text is true, but it names no patch and points readers to a build older than the data.",
+    "severity": "unclear"
+   },
+   {
+    "path": "sight_reference",
+    "current": "Dox: vision radius 105 in the PA Lobby database. Radar is a sensor, not sight",
+    "proposed": "\"Dox: vision radius 105 in the PA Lobby database (its surface-and-air sight; its underwater sight is also 105). Use each unit's Vision radius, the surface-and-air figure; underwater, orbital and mine vision, radar and sonar are separate layers for sensors.notes and sensor traits.\"",
+    "evidence": "https://palobby.com/units/unit/assault_bot?version=titans, Recon box: vision radius 105 and underwater vision radius 105. https://palobby.com/units/json/assault_bot?version=titans, recon block: one sight entry for the surface-and-air layer and one for the underwater layer, both 105. Other units list layers that differ, so the field must say which figure to use. The Leveler shows no underwater vision; the Astraeus shows an orbital vision radius, the Stitch a mine vision radius, and the Stingray radar and sonar radii (their Recon boxes).",
+    "severity": "unclear"
+   }
+  ],
+  "other_notes": "- **Step-1 statements in games-r4.md that no longer hold** (checked against the live data on 11 November 2026):\n  - **Tiers: the Titan gate.** \"Titans use the gate Titan (built by an advanced fabricator)\" is wrong. Calling the orbital fabrication bot's place among the Atlas's builders \"odd\" is also misleading. The T1 orbital fabrication bot builds the Ares, Atlas, Zeus and Helios, and it is the Helios's only builder. Its own description says it makes titans (see the registry findings). Keeping titans at t3 is still right.\n  - **Speed.**\n    - \"Every tank (speed 10)\" is wrong for the Drifter (hover tank) and the Stryker (attack vehicle). Both move at 14, which is slow (0.7).\n    - The Locusts were cut to 30 in March 2026, so they now sit at 1.5 (medium) beside the Zeus.\n    - The Boom moves at 40 (2.0, fast).\n    - The Boom, the Skitter and the Locusts are all faster on land than the Dox.\n  - **Damage and armour maps.** \"No maps for PA\" still holds, but the note gives no reason, and PA does have armour types. Its blueprints give eight types, one per kind of unit, and its ammo scales damage only by 0, a third or full. So no map fits and no bonus exists (see Game-wide mechanics).\n  - **Uncertain 4.** \"PA cost bands follow tech level almost one to one\" no longer holds:\n    - T1 spans very low to high: T1 ships are low, the ARKYD is medium and the orbital fabrication bot is high.\n    - T2 spans low to very high. The Locusts, Slammer and Nyx cost 500, while the Horsefly, Kraken, Hornet, Stingray, Wyrm, Angel, Leviathan, Typhoon, Manhattan, Ward, Omega, the T2 fabricators and the Colonel all cost 1,600 or more.\n  - **These statements still hold:** every price in the Prices list, the anchor and thresholds, and the gates Start of the match and Unit Cannon. PA Lobby's T1, T2 and T3 labels match the game's own Basic, Advanced and Titan unit types; note that the titans carry Advanced as well. The PA Lobby URL pattern and the Fandom stub's build 71937 also hold. The claim that PA Lobby's default pages mix in Legion Expansion units was not re-checked: this session only read ?version=titans pages and three Classic tables.\n- **The speed reference passes the engine check.** The Dox's blueprint sets its move speed to 20; the 11 April 2022 balance update raised it from 19 and cut its acceleration so it reaches full speed almost at once. Nothing read slows it while it fires. Only the Stinger and the Pelican have firing slowdowns (July 2026). So 20 is the speed it really moves at. Interplanetary travel uses separate multipliers on orbital units, the Phoenix and the Unit Cannon's pods (September 2022 notes). Put that in notes; it never sets a band.\n- **Sites to cite**, one address each for the plant test:\n  - **palobby.com unit page:** https://palobby.com/units/unit/assault_bot?version=titans. The site passed on 11 November.\n  - **palobby.com blueprint view:** https://palobby.com/units/json/assault_bot?version=titans. This is a code-like page of the same site; test it as well, because coders will cite it for blueprint fields (wreck fraction, transporter, manual fire).\n  - **planetaryannihilation.fandom.com:** https://planetaryannihilation.fandom.com/wiki/Planetary_Annihilation. This page copies the official feature list. The site passed on 11 November.\n  - **store.steampowered.com app page:** https://store.steampowered.com/app/386070/Planetary_Annihilation_TITANS/. This page type is new and needs a test.\n  - **api.steampowered.com (patch notes):** https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=386070&count=40&maxlength=0&format=json. It is cached and holds every post from August 2021 to 8 October 2026. The Steam store's news post pages and the Steam Community announcement pages for this game gave no post text through the page reader, so cite the API address and name the post's title and date in the note.\n  - **planetaryannihilation.com** refuses requests, and its Wayback copies would not load. Do not cite it.\n  - Liquipedia is not used for this game.\n- **The version to research.** Use PA Lobby's live ?version=titans pages only. The numbered builds (titans-124632 and older) predate the July 2026 rebalance and show outdated values. The Leveler at 124632, for example, still has 1,500 HP and splash.\n- **How to read PA Lobby.**\n  - **Unit pages.** The header line is the official description. The boxes are Overview, Physics (speed, and amphibious or hover), Recon (sight, underwater, orbital and mine vision, radar, sonar, jamming), Economy, Unit Types, Built By, Builds, and each Weapon with its Targets layers and Ammo. Some pages add Anti Entity Targets, Death Explosion, Self Destruct, Visibility (Always visible), Stealth, and Auto Repair or Auto Reclaim.\n  - **Blueprints.** The unit's own file is at /units/json/<id>?version=titans. Its weapon and ammo are at /units/json/<id>_tool_weapon?version=titans and /units/json/<id>_ammo?version=titans; the exact names are linked from the unit page. The base specs are at /units/json/base_bot (also base_vehicle, base_flyer, base_ship, base_orbital, base_structure and base_commander), each ?version=titans. A unit inherits fields it does not set, such as its armour type, command list and wreck fraction. /units/json/base_unit is not served.\n  - **Already cached for coders.** Every buildable mobile unit's PA Lobby page, every ammo blueprint and the patch notes are in the page cache. Per-unit fetching should cost little; this may lower the R4 token estimate for PA.\n- **Traps.**\n  - **Dummy weapons.** The Skitter has none: the April 2024 notes say it has no real weapon, only a dummy tool. The Pelican's weapon only aims, and its sole effect is a slowdown near enemy land units. The Typhoon's 0-damage weapon launches Squall drones; those drones are not buildable units.\n  - **Interceptors.** The Angel's beam and the Gil-E's second beam shoot down missiles. The Ward's 0.01-damage missile is an anti-nuke interceptor.\n  - **The commander** is one archetype for 76 skins. Its Uber Cannon is an ability (see Game-wide mechanics).\n  - **The Fandom Commander page is out of date.** It mixes Legion structures into the commander's build list and keeps the old death-blast numbers. It also says the blast hurts allies, which stopped in June 2025.\n  - **Mixed wording.** The Barracuda's description says cannons cannot target it: this means it is under water. Its radar stealth was removed in April 2022.\n  - **Range against the Dox's gun.** Measured against the Dox's gun (75), the Leveler's reach (120) is long and passes its own sight (100), so its gun bands off-screen by the range rule. Keep the coded value and add an uncertain entry. Check each unit's weapon reach against its own sight in the same way.\n- **The armour-class reading is a judgement for the skeptic to confirm.** These notes skip armour-class step 2 for description words such as heavy armored. Read literally, step 2 would make the T1 Inferno (225 metal) heavy.",
+  "pages_read": [
+   "https://palobby.com/units/about?version=titans",
+   "https://palobby.com/units/unit/assault_bot?version=titans",
+   "https://palobby.com/units/json/assault_bot?version=titans",
+   "https://palobby.com/units/table/commanders?version=titans",
+   "https://palobby.com/units/table/builders?version=titans",
+   "https://palobby.com/units/table/vehicles?version=titans",
+   "https://palobby.com/units/table/bots?version=titans",
+   "https://palobby.com/units/table/air?version=titans",
+   "https://palobby.com/units/table/naval?version=titans",
+   "https://palobby.com/units/table/orbital?version=titans",
+   "https://palobby.com/units/table/repair?version=titans",
+   "https://palobby.com/units/table/transports?version=titans",
+   "https://palobby.com/units/table/teleporters?version=titans",
+   "https://palobby.com/units/table/unit-cannons?version=titans",
+   "https://palobby.com/units/table/radar?version=titans",
+   "https://palobby.com/units/table/recon?version=titans",
+   "https://palobby.com/units/table/hover?version=titans",
+   "https://palobby.com/units/table/waterhover?version=titans",
+   "https://palobby.com/units/table/land?version=titans",
+   "https://palobby.com/units/table/mobile?version=titans",
+   "https://palobby.com/units/table/factories?version=titans",
+   "https://palobby.com/units/table/titans?version=titans",
+   "https://palobby.com/units/table/mobile?version=classic",
+   "https://palobby.com/units/table/orbital?version=classic",
+   "https://palobby.com/units/table/builders?version=classic",
+   "https://palobby.com/units/unit/<id>?version=titans for the factories: bot_factory, vehicle_factory, air_factory, naval_factory, orbital_launcher, bot_factory_adv, vehicle_factory_adv, air_factory_adv, naval_factory_adv, orbital_factory, unit_cannon",
+   "https://palobby.com/units/unit/<id>?version=titans for the titans and commander: titan_bot, titan_vehicle, titan_air, titan_orbital, titan_structure, imperial_able",
+   "https://palobby.com/units/unit/<id>?version=titans for the mobile units: bot_bomb, attack_vehicle, land_scout, air_scout, bot_grenadier, bot_tesla, bot_aa, transport, tank_light_laser, solar_drone, sea_scout, aa_missile_vehicle, tank_hover, fighter, tank_armor, bomber, frigate, attack_sub, bot_nanoswarm, tank_jammer, assault_bot_adv, destroyer, bot_tactical_missile, tank_flak, bot_sniper, gunship, tank_laser_adv, fighter_adv, tank_heavy_mortar, hover_ship, tank_heavy_armor, strafer, nuclear_sub, bomber_adv, missile_ship, bomber_heavy, support_platform, battleship, carrier, tank_nuke, tank_anti_nuke",
+   "https://palobby.com/units/unit/<id>?version=titans for the builders, orbital units and teleporter: fabrication_bot, fabrication_ship, fabrication_vehicle, fabrication_aircraft, fabrication_bot_combat, fabrication_barge, fabrication_bot_combat_adv, orbital_fabrication_bot, fabrication_bot_adv, fabrication_vehicle_adv, fabrication_aircraft_adv, fabrication_ship_adv, bot_support_commander, orbital_lander, orbital_probe, orbital_fighter, orbital_mine, defense_satellite, solar_array, orbital_railgun, mining_platform, orbital_laser, orbital_battleship, radar_satellite, radar_satellite_adv, teleporter",
+   "https://palobby.com/units/unit/tank_laser_adv?version=titans-124632",
+   "https://palobby.com/units/json/<id>?version=titans for blueprints: imperial_able, base_commander, uber_cannon, base_bot, base_vehicle, base_flyer, base_ship, base_orbital, base_structure, tank_light_laser, fighter, frigate, orbital_fighter, tank_hover, titan_bot, titan_air, titan_vehicle, titan_orbital, bot_nanoswarm, attack_sub, transport, orbital_lander",
+   "https://palobby.com/units/json/<ammo id>?version=titans for all 79 ammo blueprints linked from the unit pages (for example assault_bot_ammo, tank_flak_ammo, nuke_pbaoe, nuke_launcher_ammo, tank_nuke_pbaoe, titan_orbital_ammo_death, carrier_ammo, cannon_uber)",
+   "https://planetaryannihilation.fandom.com/wiki/Commander",
+   "https://planetaryannihilation.fandom.com/wiki/Area_Commands",
+   "https://planetaryannihilation.fandom.com/wiki/Planetary_Annihilation:_TITANS",
+   "https://planetaryannihilation.fandom.com/wiki/Planetary_Annihilation",
+   "https://planetaryannihilation.fandom.com/wiki/Units",
+   "https://planetaryannihilation.fandom.com/api.php (action=query: search and allpages)",
+   "https://store.steampowered.com/app/386070/Planetary_Annihilation_TITANS/",
+   "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=386070&count=40&maxlength=0&format=json (posts read in full: 1846018067928927, 1845383656389093, 1841579228669720 in part, 1839041357034121, 1838407329256527 in part, 1826992588601152, 1803527891512092, 5762993398273328359, 5133583099796884697 in part, 4353300134240266373 in part)"
+  ],
+  "tool_problems": [
+   "planetaryannihilation.com (curl, homepage and /guides/): HTTP 403 both times, so the official site could not be read.",
+   "web.archive.org: asked the page reader (scripts/page-text.mjs) for https://web.archive.org/web/20250213231751/https://planetaryannihilation.com/guides/; it failed with a network error (UND_ERR_CONNECT_TIMEOUT). The raw id_ form of the same snapshot, fetched by curl, ended in a connection reset (curl exit 35). The archive.org availability API answered HTTP 429 the first time and worked when retried.",
+   "store.steampowered.com news posts: asked the page reader for /news/app/386070/view/<gid> for five PA posts (1839041357034121, 1845383656389093, 1846018067928927, 1803527891512092, 5762993398273328359); each exited 3 with 'no text to print'. The Steam news API address worked instead.",
+   "steamcommunity.com: asked the page reader for https://steamcommunity.com/games/386070/announcements/detail/1839041357034121; it printed only the site's menus and footer, with no post text.",
+   "palobby.com: asked the page reader for https://palobby.com/units/json/base_unit?version=titans; it exited 3 (the page is not served). The other base specs worked.",
+   "Page reader on the Steam news API URL: the printed output is the raw JSON with control characters, which a JSON parser rejects. I read the cached file's raw field instead. The page itself was fetched and cached correctly."
+  ]
+ },
+ "verdicts": {
+  "verdicts": [
+   {
+    "claim": "Role line: every unit blueprint has a description string marked for translation with !LOC:",
+    "real": false,
+    "reason": "Holds for the fourteen non-commander unit blueprints read, but the commander's blueprint has a description with no translation marker, so 'every' is too strong.",
+    "evidence": "https://palobby.com/units/json/assault_bot?version=titans and the cached blueprints of attack_sub, bot_nanoswarm, fighter, frigate, orbital_fighter, orbital_lander, tank_hover, tank_light_laser, the four titans and transport: the description field opens with the !LOC: marker. https://palobby.com/units/json/imperial_able?version=titans: the description field is the commander's name alone, with no marker.",
+    "correction": "Every unit blueprint read has a description string. The non-commander ones mark it for translation with !LOC:; the Able Commander's does not."
+   },
+   {
+    "claim": "Role line: the game shows the description in the build bar preview, and the hotfix of 21 August 2026 stopped it overlapping the icons",
+    "real": true,
+    "reason": "The hotfix's bug-fix list says this.",
+    "evidence": "Steam news API for app 386070 (https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=386070&count=40&maxlength=0&format=json), item 1841579228669720 of 21 August 2026, bug fixes: unit descriptions in the open build bar preview no longer spill over the icons."
+   },
+   {
+    "claim": "Role line: the Icarus (July 2026), Barnacle and Vanguard (April 2024) and Horsefly (June 2025) had their descriptions rewritten",
+    "real": true,
+    "reason": "Each rework entry names a description change.",
+    "evidence": "Same API: item 1839041357034121 (26 July 2026), Icarus entry lists an updated description; item 5762993398273328359 (11 April 2024), Barnacle entry (description now mentions auto reclaim) and Vanguard entry (description changed for the removed jamming); item 1803527891512092 (26 June 2025), Horsefly entry (updated description)."
+   },
+   {
+    "claim": "Role line: PA Lobby prints the string in italics under the name; the blueprint view shows the same string in the game file (the Dox's path)",
+    "real": true,
+    "reason": "Confirmed on both pages.",
+    "evidence": "https://palobby.com/units/unit/assault_bot?version=titans, page header: the line sits in an italic (em) element under the name. https://palobby.com/units/json/assault_bot?version=titans: the header names the Dox's game file and its description field holds the same line."
+   },
+   {
+    "claim": "Role line: PA Lobby's note says that the line under the name copies the game's own description",
+    "real": false,
+    "reason": "PA Lobby says nothing about where the italic line comes from. The faithful-copy status rests on this registry note naming the line as a copy of in-game text (the second route of the confidence list's high) and on the blueprint view showing the same string.",
+    "evidence": "https://palobby.com/units/about?version=titans: only credits (derived from PADB, modified by palobby) and the version lists. https://palobby.com/units/unit/assault_bot?version=titans: no note next to the line. data/vocab/confidence.json, term high: a field counts when the game's registry note names it as a copy of in-game text.",
+    "correction": "PA Lobby does not say what it copies. This note names the italic line under a unit's name as a copy of the in-game description (the blueprint view shows the same !LOC string), which is what the confidence list needs; coders say so in the source note, in their own words."
+   },
+   {
+    "claim": "Role line: every commander's line is only its own name; game-wide: the commanders table lists 76 commanders with shared stats in four body classes, plus a tutorial commander",
+    "real": false,
+    "reason": "Counts, classes and shared stats are right, and the skins carry only their name. But four of the 76 rows are the class base entries (Imperial, Quadruped, Raptor and Tank Class Commander), whose line is a placeholder warning that the commander is broken, not a name.",
+    "evidence": "https://palobby.com/units/table/commanders?version=titans: 77 rows, 76 with one identical stat row plus a Tutorial Commander with other figures; ids split into imperial 29, quad 22, raptor 20, tank 5. https://palobby.com/units/unit/tank_base?version=titans and https://palobby.com/units/unit/raptor_base?version=titans (fetched 11 November): header line is the class name plus a placeholder warning. https://palobby.com/units/unit/quad_osiris?version=titans: name only.",
+    "correction": "A playable commander's line is only its name, so it has no designation. The table's 76 rows include the four class base entries, whose line is a placeholder; one entry covers all of them."
+   },
+   {
+    "claim": "Role line: designations that name a role (Spinner and Stinger anti-air; Firefly and Skitter scout; Bumblebee, Hornet and Wyrm bomber; Gil-E sniper; Barnacle and Angel support; Pelican transport with one seat; Astraeus no role; the Jig's Gas Mining)",
+    "real": true,
+    "reason": "Every label matches its unit page; both carriers have one seat; the Jig is an orbital structure. The Barnacle's line limits its repairs to ships.",
+    "evidence": "Header lines on palobby.com unit pages (?version=titans): aa_missile_vehicle, bot_aa, air_scout, land_scout, bomber, bomber_adv, bomber_heavy, bot_sniper, fabrication_barge, support_platform, transport, orbital_lander, mining_platform (Unit Types: Orbital, Structure). Blueprints transport and orbital_lander: transporter capacity 1."
+   },
+   {
+    "claim": "Role line: designations that name no role (land, air, naval, builder, orbital and titan lists); builders reach engineer at step 2",
+    "real": true,
+    "reason": "Every listed label matches its page, and treating the Assault labels as naming no role follows the Generals precedent. Two gaps: the orbital list leaves out the Solar Array, a buildable mobile T2 orbital unit labelled Economy; and the Stitch's and Mend's lines lead with repairing, so step 2's main-action test may give them support rather than engineer.",
+    "evidence": "Header lines on all cached TITANS unit pages at palobby.com; https://palobby.com/units/unit/solar_array?version=titans (label Economy; Unit Types Mobile, Orbital, Advanced; built by the Orbital Factory); fabrication_bot_combat and fabrication_bot_combat_adv header lines; research/registry-notes/games-r3.md, Generals designation bullet (Assault entries name no role).",
+    "correction": "Add Economy (Solar Array) to the orbital list. For the Stitch and Mend, step 2 chooses between engineer and support by their main action."
+   },
+   {
+    "claim": "Role line: Fire Support (Grenadier) names no role because support's requires fail",
+    "real": true,
+    "reason": "The Grenadier is armed and has no repair tool. The April 2022 notes also call Grenadiers long-range support units, official text with the support label, which drops for the same reason.",
+    "evidence": "https://palobby.com/units/unit/bot_grenadier?version=titans, header line; API item 4353300134240266373 (11 April 2022), Grenadier entry."
+   },
+   {
+    "claim": "Role line: no description says a unit is good or poor against a kind of target; target lines, weapon labels (Leviathan, Stinger, Stingray) and the trait list as given",
+    "real": true,
+    "reason": "Checked against the header line of every cached unit page; the traits (devastating damage, flanking, fragile and slow, safe from cannons, near invincible, intercepts missiles, radar stealth) and weapon labels all appear as described.",
+    "evidence": "Header lines of the cached palobby.com pages battleship, bot_aa, missile_ship, bot_nanoswarm, tank_laser_adv, titan_bot, bomber_heavy, bomber, attack_sub, titan_vehicle, bot_sniper, support_platform and nuclear_sub, and of the other mobile units."
+   },
+   {
+    "claim": "Role line: a main weapon that hits only air (Spinner, Stinger, Storm, Hummingbird, Phoenix, Icarus) gives anti-air at step 4",
+    "real": true,
+    "reason": "Each one's only weapon targets the air layer alone (the Spinner and Stinger already get anti-air at step 1).",
+    "evidence": "Weapon boxes, Targets line, on palobby.com pages aa_missile_vehicle, bot_aa, tank_flak, fighter, fighter_adv and solar_drone (?version=titans): Air only."
+   },
+   {
+    "claim": "Role line: ammo armour damage maps hold only 0, 0.33 or 1, so the game data gives no step 4 bonus",
+    "real": true,
+    "reason": "No multiplier above 1 exists in any cached ammo blueprint.",
+    "evidence": "All cached ammo blueprints at palobby.com/units/json/<ammo>?version=titans: maps appear on air_defense_ammo, base_commander_aa_ammo, bot_support_commander_ammo, carrier_ammo, mining_platform_nuke, nuke_launcher_ammo, nuke_pbaoe, tank_flak_ammo, tank_nuke_pbaoe and the titan death and stomp ammo; every value is 0, 0.33 or 1."
+   },
+   {
+    "claim": "Role line: the patch notes are official, posted on the official Steam news feed, written by the developer's community teams since 2024",
+    "real": true,
+    "reason": "The 2024 post credits the PA Consultants team, the 2025 one the Community Consultants and the 2026 ones the Community Commanders. But the API feed the notes say to cite also carries press articles.",
+    "evidence": "API items 5762993398273328359, 1803527891512092 and 1839041357034121 (sign-offs and credits); among the 40 items, four have the feed label GamingOnLinux and one PCGamesN.",
+    "correction": "Cite only items labelled Community Announcements; the GamingOnLinux and PCGamesN items in the same feed are press articles, not official text."
+   },
+   {
+    "claim": "Role line: patch-note jobs and counters (Dox main raider, April 2022; Boom back to anti-vehicle, July 2026; Bumblebee the answer to basic bots, April 2024; Gil-E and Hummingbird, April 2024, and Stryker, June 2025, among the Hornet's counters)",
+    "real": true,
+    "reason": "All four are in the posts, but the list misses many role labels and weak points (see missing).",
+    "evidence": "API items 4353300134240266373 (Dox entry), 1839041357034121 (Boom entry), 5762993398273328359 (Stinger entry says Bumblebees are meant to beat basic bots; Hornet entry names Gil-Es and Hummingbirds), 1803527891512092 (Hornet entry names Stryker AA and Gil-Es as two main counters)."
+   },
+   {
+    "claim": "Role line: not official: the Fandom wiki (build 71937, 2012 proposals), PA Lobby's T1 to T3 labels, the store's user tags",
+    "real": true,
+    "reason": "Confirmed. PA Lobby also shows T0 for commanders and the Kessler, so its labels are not a strict copy of Basic, Advanced and Titan.",
+    "evidence": "https://planetaryannihilation.fandom.com/wiki/Units, opening line (build 71937); Fandom api.php revision queries (Order queueing first edited 2 September 2012, Retreat Zones 3 September 2012); Area Commands images uploaded 1 September 2012; store page Tags box (Robots, Mechs); orbital table (Kessler T0)."
+   },
+   {
+    "claim": "Role line: planetaryannihilation.com refused the session (HTTP 403) and its Wayback copies would not load",
+    "real": true,
+    "reason": "Reproduced.",
+    "evidence": "My requests on 11 November 2026: the homepage answered HTTP 403; a Wayback snapshot request ended in a connection reset. docs/handoff.md, section 3, also records the 403."
+   },
+   {
+    "claim": "Game-wide: the base specs give every mobile unit move, patrol and assist; armed units also attack; land units use teleporters, except the Atlas and Ares",
+    "real": false,
+    "reason": "The base specs do, but the Helios replaces its list with move, patrol and attack, so it has no assist order. The rest holds; air and naval base specs have no use order at all.",
+    "evidence": "Blueprints at palobby.com/units/json/<id>?version=titans: base_bot and base_vehicle (move, patrol, attack, assist, use), base_flyer and base_ship (no use), base_orbital (move, patrol, assist), titan_bot and titan_vehicle (no use), titan_orbital (move, patrol, attack).",
+    "correction": "Every mobile unit has move and patrol, and every one but the Helios has assist. Armed units have attack; land units have use, except the Atlas and Ares."
+   },
+   {
+    "claim": "Game-wide: a hold-fire stance (April 2024 notes); area orders for building and loading transports (April 2023 notes)",
+    "real": true,
+    "reason": "Both are in the posts; the area loading line sits under modding and concerns transports with more than one seat, which the base game lacks.",
+    "evidence": "API items 5762993398273328359 (Boombot entry mentions the hold-fire stance) and 5133583099796884697 (area build spacing under improvements; area loading for multi-seat transports under modding)."
+   },
+   {
+    "claim": "Game-wide: the Wiki's Area Commands, Order queueing and Retreat Zones pages are 2012 design proposals",
+    "real": true,
+    "reason": "All three date from September 2012 and describe hoped-for or borrowed features.",
+    "evidence": "https://planetaryannihilation.fandom.com/wiki/Area_Commands (cache): conditional wording with Zero-K examples, images uploaded September 2012. planetaryannihilation.fandom.com/api.php revisions: Order queueing first edited 2 September 2012, speculative; Retreat Zones first edited 3 September 2012, a Zero-K idea."
+   },
+   {
+    "claim": "Game-wide: builder exceptions (Stitch builds only mines and teleporters and cannot assist; Barnacle cannot help build units; auto repair on Barnacle, Stitch, Mend and Angel; auto reclaim on Barnacle, Mend and Angel)",
+    "real": true,
+    "reason": "Matches; the Barnacle's Builds box also holds only mines and teleporters.",
+    "evidence": "palobby.com pages fabrication_bot_combat, fabrication_barge, fabrication_bot_combat_adv and support_platform: header lines, Builds boxes, Auto Repair and Auto Reclaim boxes."
+   },
+   {
+    "claim": "Game-wide: reclaim turns wrecks and terrain into metal or energy, and the feature list calls assisting sending many builders to one job in real time",
+    "real": false,
+    "reason": "The copied feature list only says that wreckage and terrain can be reclaimed to recover after a battle, and that swarms of construction units are assigned in real time to run the economy. It names neither metal nor energy, nor one job, nor build rates adding up.",
+    "evidence": "https://planetaryannihilation.fandom.com/wiki/Planetary_Annihilation, Features, the streaming economy entry.",
+    "correction": "Reclaim recovers resources from wrecks and terrain (feature list); since June 2025 a wreck holds half the unit's metal cost. Assisting rests on the assist order in the base specs; the feature list only speaks of assigning many builders in real time."
+   },
+   {
+    "claim": "Game-wide: the patch notes call a shortfall of income stalling",
+    "real": true,
+    "reason": "The March 2026 notes speak of stalling on energy.",
+    "evidence": "API item 1826992588601152 (16 March 2026), Advanced Energy Plant entry."
+   },
+   {
+    "claim": "Game-wide: units that make metal or energy on their own are the commander and the Icarus; generate-income needs a stop and ranks",
+    "real": false,
+    "reason": "Incomplete: the Solar Array, a buildable mobile T2 orbital unit, also makes energy. And generate-income's summary rests on stopping to earn; ranks appear only in its Generals example.",
+    "evidence": "https://palobby.com/units/unit/solar_array?version=titans, Economy box (energy production) and Unit Types (Mobile); imperial_able and solar_drone Economy boxes; data/patterns/generate-income.json, summary.",
+    "correction": "The commander, the Icarus and the Solar Array make resources on their own. A passive for them links no pattern, because generate-income needs the unit to stop and set up; add a fit_note."
+   },
+   {
+    "claim": "Game-wide: the commander builds basic structures, makes metal and energy, has storage; a gun, anti-air missile and torpedo fire on the attack order; the Uber Cannon fires only on its own order and costs 10,000 energy a shot",
+    "real": true,
+    "reason": "Confirmed; the Uber Cannon can also hit air.",
+    "evidence": "https://palobby.com/units/unit/imperial_able?version=titans (Builds, Economy, Weapons 1 to 4); https://palobby.com/units/json/uber_cannon?version=titans (manual fire on, auto attack off, energy as ammo source, 10000 per shot, target layers land, water surface and air)."
+   },
+   {
+    "claim": "Game-wide: Eradication (June 2025); the Colonel is an ordinary T2 unit, not a commander",
+    "real": true,
+    "reason": "Matches. Note that the Colonel's unit type is SupportCommander, the kind of unit Eradication can make players destroy.",
+    "evidence": "API item 1803527891512092, Eradication section; https://palobby.com/units/unit/bot_support_commander?version=titans, Unit Types (Advanced, Fabber, SupportCommander; no Commander)."
+   },
+   {
+    "claim": "Game-wide: no veterancy, capture, garrisons or crates",
+    "real": true,
+    "reason": "Nothing read has them.",
+    "evidence": "Command lists of the base spec blueprints (no capture order); a search of all 40 API items finds no unit ranks or experience (only the ranked ladder)."
+   },
+   {
+    "claim": "Game-wide: since June 2025 every unit leaves a wreck holding half its metal cost, and fabricators of any side can reclaim it",
+    "real": false,
+    "reason": "The half-cost rule is in the June 2025 notes, but no page read says which side may reclaim a wreck.",
+    "evidence": "API item 1803527891512092, general balance line on wreckage. Searches of the 40 API items, the cached Fandom pages and the PA Lobby pages for reclaim find nothing about sides.",
+    "correction": "Drop 'of any side', or keep it as an uncertain entry."
+   },
+   {
+    "claim": "Game-wide: aircraft wrecks fall to the ground and naval and hover wrecks sink (April 2023 notes)",
+    "real": false,
+    "reason": "The April 2023 notes say naval and hover wrecks sink and that air units now leave wrecks; falling to the ground comes from the July 2026 modding line on flyer death weapons.",
+    "evidence": "API items 5133583099796884697 (improvements) and 1839041357034121 (mod support section).",
+    "correction": "Naval and hover wrecks sink (April 2023); air units leave wrecks (April 2023) that hit the ground (July 2026 notes)."
+   },
+   {
+    "claim": "Game-wide: since July 2026 a wreck stays visible in the fog once seen",
+    "real": true,
+    "reason": "In the hotfix of 7 July 2026, a post the researcher's list does not name.",
+    "evidence": "API item 1836506165578468 (7 July 2026), quality of life section."
+   },
+   {
+    "claim": "Game-wide: a wreck health fraction of 0 on base_orbital and the Locusts; the Helios set to 1 in July 2026",
+    "real": true,
+    "reason": "Confirmed in the blueprints and the July post.",
+    "evidence": "Blueprints base_orbital and bot_nanoswarm (0), titan_orbital (1); API item 1839041357034121, Helios entry."
+   },
+   {
+    "claim": "Game-wide: death blasts on every commander, the Ares, Atlas, Zeus, Helios, Manhattan and Jig; the commander's and titans' blasts spare allies since June 2025, the Helios crash too",
+    "real": true,
+    "reason": "Exactly these pages have a Death Explosion box; the ally changes are in the posts.",
+    "evidence": "Death Explosion boxes on palobby.com pages imperial_able, imperial_alpha, titan_air, titan_bot, titan_orbital, titan_vehicle, tank_nuke and mining_platform; API items 1803527891512092 and 1839041357034121."
+   },
+   {
+    "claim": "Game-wide: the death blasts' ammo armour maps show they do nothing to orbital units",
+    "real": false,
+    "reason": "True for the commanders', the titans' and the Jig's blasts, but the Manhattan's death nuke does a third of its damage to orbital units.",
+    "evidence": "palobby.com/units/json/tank_nuke_pbaoe?version=titans (orbital and commander 0.33); nuke_pbaoe, the commander death blast linked from imperial_able (orbital 0); mining_platform_nuke (orbital 0); titan death ammo (orbital and air 0).",
+    "correction": "The commanders', titans' and Jig's death blasts do nothing to orbital units, and the titans' nothing to aircraft; the Manhattan's does a third of its damage to orbital units and to commanders."
+   },
+   {
+    "claim": "Game-wide: eight armour types; ammo scales damage only by 0, a third or 1; flak and air-defence ammo spare land, ships and structures; nukes do a third to commanders and orbital units; titan blasts spare aircraft and orbital units",
+    "real": false,
+    "reason": "All right except the nuke line: the nuke launcher's missile and the Manhattan's blast do a third to commanders and orbital units, but the commander's own death nuke and the Jig's death nuke do full damage to commanders and none to orbital units.",
+    "evidence": "Base spec blueprints (armour types), tank_hover and titan_vehicle (hover type); ammo blueprints nuke_launcher_ammo, tank_nuke_pbaoe, nuke_pbaoe, mining_platform_nuke, tank_flak_ammo and air_defense_ammo.",
+    "correction": "The nuke launcher's missile and the Manhattan's blast do a third of their damage to commanders and orbital units; the commander's and the Jig's death nukes do full damage to commanders and none to orbital units."
+   },
+   {
+    "claim": "Game-wide: armour-class step 2 never applies, so the class comes from steps 3 to 5 (a judgement for the skeptic to confirm)",
+    "real": true,
+    "reason": "Consistent with the precedents: the RA1 manual's armour word was a grade, not the game's type, and the dow2 and r6 notes read light and heavy in descriptions as job or weight words. But official text calls the Ant PA's main battle tank, which bears on step 3 and step 4 (see missing).",
+    "evidence": "research/registry-notes/games-r1.md line 459 (RA1), games-r5.md line 108 (dow2), games-r6.md line 62; data/vocab/armour-classes.json, first tie-break."
+   },
+   {
+    "claim": "Game-wide: no facing values; the Leveler is open to flanking with a slow-turning turret, so never directional",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "https://palobby.com/units/unit/tank_laser_adv?version=titans: header line; Weapon box, yaw turns at 30 degrees a second."
+   },
+   {
+    "claim": "Game-wide: friendly fire only on the Manhattan's nuke, the Jig's death nuke and the Unit Cannon's pods; burn damage listed but no harm over time",
+    "real": true,
+    "reason": "The allies flag appears on these three pages only; no page describes burning over time.",
+    "evidence": "Cached palobby.com unit pages: the splash-hurts-allies flag only on tank_nuke, mining_platform and unit_cannon; burn values on the Dox ammo and the death blasts; API item 5762993398273328359 ties area weapons to a tree bug."
+   },
+   {
+    "claim": "Game-wide: only weapons that target the orbital layer can hit orbital units",
+    "real": false,
+    "reason": "The April 2022 bug fixes say the Storm and the Galata, both anti-air, can now damage the Astraeus.",
+    "evidence": "API item 4353300134240266373, bug fixes section.",
+    "correction": "Weapons that target the orbital layer hit orbital units; the Astraeus can also be damaged by anti-air weapons such as the Storm and the Galata (probably while it lands)."
+   },
+   {
+    "claim": "Game-wide: most orbital units are always visible except the Astraeus, Hermes and ARKYD; twelve mobile units are Interplanetary",
+    "real": true,
+    "reason": "Both lists match.",
+    "evidence": "Visibility and Unit Types boxes of the cached orbital pages and fighter_adv on palobby.com."
+   },
+   {
+    "claim": "Game-wide: planet-smashers are the Halley, Catalyst and Ragnarok; the store page names lasers, asteroid impacts and the Ragnarok",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "Builds boxes of the advanced fabricators (palobby.com); https://store.steampowered.com/app/386070/Planetary_Annihilation_TITANS/, About This Game, the planet-smashing entry."
+   },
+   {
+    "claim": "Game-wide: the Pelican carries one land unit but never the commander, and since July 2026 the Dox fires from it; the Astraeus carries one land unit or an air or naval fabricator and can carry the commander",
+    "real": true,
+    "reason": "The transporter blocks say this; the Dox is the only basic amphibious bot.",
+    "evidence": "palobby.com/units/json/transport?version=titans and orbital_lander, transporter blocks; API item 1839041357034121, Pelican entry."
+   },
+   {
+    "claim": "Game-wide and traps: the Pelican's dummy weapon only slows it near enemy land units",
+    "real": false,
+    "reason": "Its dummy weapon also targets the water surface, underwater and sea floor layers, so the slowdown also applies near enemy ships and submarines.",
+    "evidence": "https://palobby.com/units/unit/transport?version=titans, Weapon box: no damage; Targets land, water surface, underwater and sea floor. API item 1839041357034121, Pelican entry: the dummy weapon targets land, sea and underwater.",
+    "correction": "The dummy weapon does no damage; it slows the Pelican when enemy land or naval units (on or under the water) are near."
+   },
+   {
+    "claim": "Game-wide: teleporters are built by commanders, fabricators, the Stitch and Mend and the orbital fabrication bot",
+    "real": false,
+    "reason": "Incomplete: the Built By box also lists the Barnacle (not of the Fabber type) and the Colonel.",
+    "evidence": "https://palobby.com/units/unit/teleporter?version=titans, Built By box.",
+    "correction": "Add the Barnacle and the Colonel."
+   },
+   {
+    "claim": "Game-wide: use-order exceptions (no titan has it; the orbital fabrication bot lost it in April 2024; the Kaiju gained it)",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "Titan blueprints (command lists); API item 5762993398273328359 (Kaiju entry; bug fix list)."
+   },
+   {
+    "claim": "Game-wide: Unit Cannon (up to 16 units, 17 types) and factories (advanced ones build the basic units, cooldown and roll-off, a basic fabricator builds the advanced factory of its kind)",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "https://palobby.com/units/unit/unit_cannon?version=titans (storage capacity, Builds); factories table (cooldown, roll-off); fabrication_bot Builds box."
+   },
+   {
+    "claim": "Game-wide: every unit has a surface-and-air sight radius and a separate underwater radius",
+    "real": false,
+    "reason": "About twenty land and air units show no underwater vision, and the Avenger, Artemis and Solar Array show only an orbital vision radius.",
+    "evidence": "Recon boxes on palobby.com pages: tank_laser_adv, bot_tesla, tank_hover, transport and others (no underwater vision); orbital_fighter, orbital_railgun and solar_array (orbital vision only).",
+    "correction": "Most units have a surface-and-air sight radius; some add underwater, orbital or mine vision; a few orbital units have orbital vision only."
+   },
+   {
+    "claim": "Game-wide: mobile radar needs energy (April 2024); jammers are the Nyx and the Radar Jamming Station; the Kraken is the only unit hidden from radar; nothing cloaks, burrows or disguises",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "API items 5762993398273328359 (Stingray entry) and 1803527891512092 (Nyx); the Stealth box only on nuclear_sub and a jammer radius only on tank_jammer among the cached pages."
+   },
+   {
+    "claim": "Game-wide: the Skitter, Stitch and Barnacle find mines",
+    "real": false,
+    "reason": "The Mend also has a mine vision radius.",
+    "evidence": "https://palobby.com/units/unit/fabrication_bot_combat_adv?version=titans, Recon box.",
+    "correction": "The Skitter, Stitch, Mend and Barnacle find mines."
+   },
+   {
+    "claim": "Game-wide: weapons that cost energy per shot are the Spark, Bumblebee, Wyrm, Icarus, Zeus, SXX-1304, Artemis and the Uber Cannon",
+    "real": false,
+    "reason": "Incomplete: the Boom's self-destruct also costs energy per shot (April 2024 gave it energy as its ammo source). Two other weapons cost metal (see missing).",
+    "evidence": "https://palobby.com/units/unit/bot_bomb?version=titans, Self Destruct box (energy per shot); API item 5762993398273328359, Boombot entry.",
+    "correction": "Add the Boom."
+   },
+   {
+    "claim": "Game-wide: shields added for testing in March 2026 and shown as a prototype in May 2026; no unit carries one",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "API items 1826992588601152 (mechanics and modding) and 1833968530894243 (30 May 2026)."
+   },
+   {
+    "claim": "Game-wide: the Gil-E, Bluehawk, Stingray, Angel and Ward shoot down missiles or pods by themselves",
+    "real": true,
+    "reason": "Exactly these five cached pages have an Anti Entity Targets box.",
+    "evidence": "palobby.com pages bot_sniper (tactical missiles), bot_tactical_missile and missile_ship (Unit Cannon pods), support_platform (anti-air missiles), tank_anti_nuke (the Pacifier nuke)."
+   },
+   {
+    "claim": "Game-wide: amphibious, hover and water-hover unit lists",
+    "real": true,
+    "reason": "All match; the Ares's hover shows in the hover table and its blueprint, not in its Physics box.",
+    "evidence": "palobby.com hover and waterhover tables (?version=titans); Physics boxes; titan_vehicle blueprint navigation type (hover-large)."
+   },
+   {
+    "claim": "Game-wide: game modes, and introduced_in pa-titans for the units missing from PA Lobby's Classic version",
+    "real": true,
+    "reason": "The Classic and TITANS tables differ by exactly the 21 units and four titans listed (the Kessler is a structure).",
+    "evidence": "Mobile, orbital and builders tables at ?version=classic and ?version=titans; API item 1803527891512092; store page (Bounty Mode, ranked ladder)."
+   },
+   {
+    "claim": "Registry tier_map/11/gate: Titan gate should be built by an advanced fabricator or the orbital fabrication bot, band t3",
+    "real": true,
+    "reason": "The Built By boxes confirm it. Two small points: the Orbital Launcher's Built By box also lists the advanced fabricators and the Colonel; and t3's allowance for a shallow prerequisite speaks of an end-game production building, so citing it for a builder unit is a stretch, while the game's own Titan unit type is the firmer basis.",
+    "evidence": "palobby.com pages titan_orbital, titan_bot, titan_vehicle, titan_air, orbital_fabrication_bot and orbital_launcher (Built By, Builds, Unit Types); data/vocab/tiers.json, t3 source rule."
+   },
+   {
+    "claim": "Registry sources/1/note: corrected builder list for the titans and the Ragnarok",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "https://palobby.com/units/table/titans?version=titans (prices, T3); titan_structure page, Built By (four advanced fabricators and the Colonel)."
+   },
+   {
+    "claim": "Registry cost_thresholds/basis: corrected bands (ARKYD medium, orbital fabrication bot high, T2 from low to very high)",
+    "real": true,
+    "reason": "Prices and bands check out. The text still leaves out that some T1 naval and orbital units sit in very low.",
+    "evidence": "naval, builders, orbital, radar and bots tables (?version=titans).",
+    "correction": "Optionally add that the T1 Piranha (150), Fabrication Ship (200), Astraeus and Hermes (200) and Avenger (300) are very low."
+   },
+   {
+    "claim": "Registry version_researched: name the July 2026 update, the August 2026 hotfix and the October 2026 patches",
+    "real": true,
+    "reason": "Every change named is in the posts and on the live pages. The October posts also change behaviour: the Stitch and Mend keep building nearby structures while moving.",
+    "evidence": "API items 1839041357034121, 1841579228669720, 1845383656389093, 1846018067928927; vehicles, radar, factories and air tables; tank_laser_adv at ?version=titans and at ?version=titans-124632."
+   },
+   {
+    "claim": "Registry sight_reference: say which vision figure to use",
+    "real": true,
+    "reason": "The Dox figures and the layer examples check out, but the text gives no rule for units with no surface-and-air figure.",
+    "evidence": "assault_bot page and blueprint recon block; Recon boxes of tank_laser_adv, orbital_lander, fabrication_bot_combat, missile_ship, orbital_fighter, orbital_railgun and solar_array.",
+    "correction": "Add: a unit with only an orbital vision radius (Avenger, Artemis, Solar Array) takes the sight band's no-figure default, with its orbital vision in sensors.notes."
+   },
+   {
+    "claim": "Other notes: speed corrections (Drifter and Stryker 14, slow; Locusts 30 since March 2026, medium; Boom 40, fast; three land units faster than the Dox)",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "Mobile table (?version=titans); API item 1826992588601152 (Locust entry); data/vocab/speed-bands.json."
+   },
+   {
+    "claim": "Other notes, Uncertain 4: T1 ships are low; the T2 fabricators and the Colonel cost 1,600 or more",
+    "real": false,
+    "reason": "The T1 Piranha (150) and Fabrication Ship (200) are very low, and the Mend, a T2 fabricator, costs 1,000 (medium). The rest holds (Omega 14,000, advanced fabricators 1,800 to 2,400, Colonel 6,000).",
+    "evidence": "Naval, waterhover, builders and orbital tables (?version=titans).",
+    "correction": "T1 runs from very low (Piranha, Fabrication Ship) through low (Narwhal, Barracuda, Barnacle, Orca) and medium (ARKYD) to high (orbital fabrication bot). Among T2 units the Mend is medium; the four advanced fabricators and the Colonel are very high."
+   },
+   {
+    "claim": "Other notes: every price in the step-1 Prices list still holds",
+    "real": true,
+    "reason": "Confirmed.",
+    "evidence": "Mobile table (?version=titans): Dox 45, Ant 150, Inferno 225, Slammer and Locusts 500, Bluehawk 700, Storm 750, Leveler and Gil-E 800, Sheller 1200, Vanguard 1500, Manhattan 8000, titans 30000."
+   },
+   {
+    "claim": "Other notes: the April 2022 update raised the Dox to 20 and cut its acceleration so it reaches full speed almost at once",
+    "real": false,
+    "reason": "Cutting acceleration (from 190 to 50) makes it slower to reach top speed; the notes give dodging as the reason. The conclusion that 20 is its real speed still stands.",
+    "evidence": "API item 4353300134240266373, Dox entry; assault_bot blueprint, navigation block.",
+    "correction": "The April 2022 update raised its speed from 19 to 20 and cut its acceleration from 190 to 50 to help it dodge; it still reaches top speed in under half a second."
+   },
+   {
+    "claim": "Other notes: separate interplanetary speed multipliers for orbital units, the Phoenix and the Unit Cannon's pods (September 2022)",
+    "real": true,
+    "reason": "Confirmed; the nuke launcher has them too.",
+    "evidence": "API item 6258337460558954026 (19 September 2022), balance entries."
+   },
+   {
+    "claim": "Other notes: sites to cite (PA Lobby unit pages and the Fandom wiki passed on 11 November; blueprint view and store page need a test; the API holds posts from August 2021 to 8 October 2026; store news and community pages give no text)",
+    "real": true,
+    "reason": "docs/handoff.md records both passes. My own plant tests: blueprint view 3 of 3 flagged, store page 4 of 5 (the miss is a news teaser the page draws by script), API 1 of 1 (only one passage could be planted). The cached store news and community post pages hold no post text; the API cache holds 40 items from 14 August 2021 to 8 October 2026.",
+    "evidence": "docs/handoff.md section 3 (site test of 11 November); node scripts/plant.mjs on the API address, https://palobby.com/units/json/assault_bot?version=titans and https://store.steampowered.com/app/386070/Planetary_Annihilation_TITANS/; node scripts/page-text.mjs --offline on the cached store post 1839041357034121 (exit 3)."
+   },
+   {
+    "claim": "Other notes: every mobile unit's page, every ammo blueprint and the patch notes are already cached",
+    "real": true,
+    "reason": "All 69 units in the mobile, builders and orbital tables are cached; the two dummy-weapon ammo files and every tool_weapon blueprint are not.",
+    "evidence": "Comparison of .cache/sources/palobby.com with the blueprint links on the cached unit pages."
+   },
+   {
+    "claim": "Other notes, traps (Skitter dummy tool, Typhoon's zero-damage launcher, Ward interceptor, Angel and Gil-E beams, out-of-date Fandom Commander page, Barracuda under water, Leveler off-screen against its sight)",
+    "real": true,
+    "reason": "All confirmed.",
+    "evidence": "API item 5762993398273328359 (Skitter); carrier and tank_anti_nuke Weapon boxes; bot_sniper and support_platform Anti Entity boxes; https://planetaryannihilation.fandom.com/wiki/Commander (Legion structures in Builds, old blast figures, allies hit); attack_sub Unit Types (Sub); April 2022 Barracuda entry; Leveler range 120 and vision 100."
+   },
+   {
+    "claim": "House rule: no run of six or more words copied from a page",
+    "real": false,
+    "reason": "The offline copy-check, run on these notes against the PA pages, flags three runs, all names: the Dox's game file path (8 words) and two patch post titles in the version_researched proposal (8 and 6 words). No copied prose was found.",
+    "evidence": "node scripts/copy-check.mjs --offline --also <scratch copy of the notes> --only palobby.com --only steampowered.com --only planetaryannihilation --only steamcommunity.com: three FOUND lines (role_line; registry finding 3, proposed, twice).",
+    "correction": "Name the posts by date and put their titles in the source's title field, and refer to the Dox's game file without spelling out its path; or record the three runs as names at the merge."
+   }
+  ],
+  "missing": [
+   "Official text calls the Ant, not the Leveler, PA's main battle tank (API item 4353300134240266373, 11 April 2022, Ant entry). The price method anchors on the main battle tank, the heavy armour class names the game's main battle tank, and assault's rule reads the main battle tank's guns, yet the registry anchors on the Leveler and the Ant is labelled Light Tank. Needs a decision: keep the Leveler anchor with a note saying why, or re-anchor.",
+   "Patch-note role labels missed (roles.secondary step 1): the Kestrel is meant as a raiding unit (item 5762993398273328359, Kestrel entry); Bumblebees go on denying ground to bunched bots, which uses the area-denial label (item 1839041357034121, Bumblebee entry); the Wyrm is made a bomber against bases (same item, Wyrm entry); Grenadiers are long-range support units (item 4353300134240266373; support's requires fail).",
+   "Patch-note weak points and matchups missed: the Slammer is made a little worse against durable targets such as tanks (item 1803527891512092), a weak point that drops anti-armour; Horseflies will not win against fighters alone (same item); Icarus make poor escorts (item 1839041357034121); Levelers without support should fall to swarms of Dox and Booms (item 5762993398273328359); Grenadiers grow stronger against static defences, slow T2 vehicles and commanders (same item); Stryker anti-air is aimed at the Hornet, Wyrm, Icarus and Angel (item 1803527891512092); Sparks are strengthened against the Dox and Stryker (item 1839041357034121); Narwhals are made more open to Piranhas and Drifters (item 1839041357034121) and to air (item 1803527891512092); the Bluehawk moves from an anti-vehicle and orbital counter to a skirmisher (items 1803527891512092 and 1826992588601152), so its old anti-vehicle label no longer holds.",
+   "Weapons that cost metal: the Ward's anti-nuke missile (7,500 metal a shot) and the Typhoon's drone launcher (30 a shot) draw on the side's metal (Weapon boxes on the tank_anti_nuke and carrier pages). The resources list has no metal term, so these need a fit_note.",
+   "Upkeep outside weapons: Base energy consumption boxes on the Stingray, Nyx, ARKYD, Advanced Radar Satellite and Helios (and teleporters); radar also on the Ward and the Manhattan (radar table). The notes cover only weapons that cost energy.",
+   "The Solar Array is a buildable mobile T2 orbital unit (label Economy) that makes energy; it is missing from the energy makers and from the no-role list.",
+   "Sight for units with orbital vision only: the Avenger, Artemis and Solar Array have no surface-and-air figure (their Recon boxes); the sight rule needs a line for them.",
+   "The Steam news API feed mixes press articles (four GamingOnLinux items, one PCGamesN item) with the official Community Announcements; only the latter are official text.",
+   "Anti-air can damage the Astraeus (item 4353300134240266373, bug fixes: the Storm and the Galata), an exception to the orbital-layer rule.",
+   "Role words after the dash: the Sheller's line calls it mobile artillery (siege alias), and the Stitch, Mend, Barnacle and Angel lines say they repair (support alias). The combat fabricators lead with repairing, so step 2 may give them support rather than engineer.",
+   "October 2026 behaviour change: the Stitch and Mend now go on building nearby structures of the kinds they can build as they move, rather than repairing those, and Squall wrecks no longer decay (items 1845383656389093 and 1846018067928927).",
+   "The reclaim guidance is undecided: it allows either gather-resources with a fit_note or no pattern with a fit_note. Pick one so every builder is coded the same way."
+  ],
+  "tool_problems": [
+   "curl, https://planetaryannihilation.com/ (11 November): HTTP 403, so the official site could not be read.",
+   "curl, a Wayback snapshot of planetaryannihilation.com: the connection was reset (curl exit 35); the archive's availability API did answer.",
+   "Page reader (scripts/page-text.mjs --offline) on the cached Steam store news post 1839041357034121: exit 3, no post text.",
+   "Plant test (scripts/plant.mjs) on the Steam news API address: the browser view is one long line, so only one passage could be planted; it was flagged, but the pass rests on that one passage.",
+   "Plant test on the Steam store app page: 4 of 5 passages flagged; the missed one comes from a news teaser the page draws by script, not from the game's own text."
+  ]
+ },
+ "candidates": {
+  "candidates": [
+   {
+    "id": "pa.shared.commander",
+    "name": "Commander",
+    "faction": "shared",
+    "class": "walker",
+    "role_guess": "engineer (secondary assault)",
+    "teaches": "The player's own avatar and the side's king piece. Every player starts with one; at the start it is the only builder and a big income source. Wikipedia (https://en.wikipedia.org/wiki/Planetary_Annihilation, Gameplay section) says a player is out once their last Commander is destroyed, so enemies hunt it and the team guards it. The PA Lobby Alpha page (https://palobby.com/units/unit/imperial_alpha?version=titans, Builds list, Economy box, Weapon #2 and Death Explosion boxes) shows several things: it builds the T1 factories, turrets and the Teleporter; it makes 20 metal and 2,000 energy a second; it has a slow heavy shot that costs 10,000 energy every time it fires; it has separate anti-air and torpedo weapons; and it explodes hugely when it dies. That heavy shot is the registry's fire-power-shot example (the Uber Cannon), but the name, and whether it fires on command, still need a source. The old Fandom page (Death Explosion section) says the blast also hurts its own side, but the current PA Lobby box does not mark it as hitting allies: check this. The commanders table shows 76 playable skins sharing one stat block. The teleporter page names four body classes (Imperial, Quadruped, Raptor, Tank), so code the Imperial body and name the others in notes. Repair and reclaim by the commander are still to check.",
+    "patterns": [
+     "build-structure",
+     "fire-power-shot"
+    ],
+    "new_mechanics": [
+     {
+      "id": "lose-match-on-death",
+      "summary": "The side's survival rides on this one unit: when it dies its player is knocked out, so enemies hunt it and teammates escort it (this may count as a game-mode rule instead; the game notes decide)."
+     }
+    ],
+    "pages": [
+     "https://palobby.com/units/unit/imperial_alpha?version=titans",
+     "https://palobby.com/units/table/commanders?version=titans",
+     "https://palobby.com/units/unit/teleporter?version=titans",
+     "https://planetaryannihilation.fandom.com/wiki/Commander",
+     "https://en.wikipedia.org/wiki/Planetary_Annihilation"
+    ],
+    "skirmish": "Never built: every player begins each skirmish and multiplayer match with one (gate Start of the match, t1). The database lists 25,000 metal, but the commander is never bought, so that figure sets no cost band.",
+    "shooter_note": "A slow, tough builder-brawler who lays down the team's base and turrets and lands a big energy shot, while the whole team plays around keeping them alive; when they fall the run is over, and anyone standing close goes with them.",
+    "repeats": "build-structure is on Iron Harvest's Engineers. Nothing in the data is a king piece whose death ends the match. The registry's fire-power-shot example (written from memory) already names this unit."
+   },
+   {
+    "id": "pa.shared.stitch",
+    "name": "Stitch",
+    "faction": "shared",
+    "class": "drone",
+    "role_guess": "support (secondary engineer, area-denial)",
+    "teaches": "A cheap frontline combat engineer whose signature is putting up a teleporter for the team. Its page (https://palobby.com/units/unit/fabrication_bot_combat?version=titans, description line, Builds list, Recon box) says it fixes damaged units and lays and spots mines: it builds the T0 Mine and has a mine-sight radius. It can also put up Teleporters, but it cannot help raise any other building. The Teleporter page (https://palobby.com/units/unit/teleporter?version=titans, description line and Economy box) says paired teleporters move units between them, even between planets; each costs 1,000 metal and drains energy while it stands. A twist to check: a wiki.palobby.com page (Use Enemy Teleporter) says units could once be sent home through the enemy's own teleporter, and talks about reworking that. Class: a small uncrewed bot is drone by the classes rule; if the coder rules it bigger than a soldier, it is a walker. The Mend (T2: faster repair, wreck reclaim, defences) is its upgrade: notes only.",
+    "patterns": [
+     "repair-allies",
+     "lay-mines",
+     "build-linked-exits"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://palobby.com/units/unit/fabrication_bot_combat?version=titans",
+     "https://palobby.com/units/unit/teleporter?version=titans",
+     "https://palobby.com/units/unit/fabrication_bot_combat_adv?version=titans",
+     "https://palobby.com/units/table/repair?version=titans",
+     "https://wiki.palobby.com/wiki/Use_Enemy_Teleporter"
+    ],
+    "skirmish": "Skirmish and multiplayer: T1 at the Bot Factory (also the Advanced Bot Factory and the Unit Cannon), 250 metal, very low.",
+    "shooter_note": "A fragile medic-engineer who patches up teammates, seeds mines on the approach and plants the far end of a teleporter, so the squad can jump straight to the front.",
+    "repeats": "Iron Harvest's Engineers (repair, mines, buildings), RA1's Field Mechanic and the RA1 Minelayers. Tempest Rising's Thunderhead links build-linked-exits. What is new: a cheap T1 bot that builds a linked gate, and it can see mines. The batch's Helios is the other end of the same teleporter system."
+   },
+   {
+    "id": "pa.shared.locusts",
+    "name": "Locusts",
+    "faction": "shared",
+    "class": "drone",
+    "role_guess": "raider (secondary siege against buildings)",
+    "teaches": "A hovering nanobot swarm that eats targets instead of shooting them. Its page (https://palobby.com/units/unit/bot_nanoswarm?version=titans, description line, Physics box, Unit Types, Weapon and Ammo boxes) calls it very quick, cheap and short-ranged, with huge damage. It skims across water, lava and land at speed 30 (the Dox does 20). Its beam hits ten times a second, the damage target is metal, and its unit type is Deconstruction. The ammo blueprint (https://palobby.com/units/json/bot_nanoswarm_ammo?version=titans) shows the same metal target. No page I read says what eating metal does, for example whether the metal goes to the owner: settle that before coding. The Steam store page names nanobot swarms among the new TITANS units. It also crosses lava, a hazard most land units must go around. Class: drone if the swarm counts as small; otherwise its hover movement makes it hover.",
+    "patterns": [],
+    "new_mechanics": [
+     {
+      "id": "deconstruct-target",
+      "summary": "A close-range swarm beam strips a unit or building down to nothing instead of blasting it; in some versions the stripped material pays your side (to check for this unit)."
+     }
+    ],
+    "pages": [
+     "https://palobby.com/units/unit/bot_nanoswarm?version=titans",
+     "https://palobby.com/units/json/bot_nanoswarm_ammo?version=titans",
+     "https://store.steampowered.com/app/386070/",
+     "https://palobby.com/units/table/hover?version=titans"
+    ],
+    "skirmish": "Skirmish and multiplayer: T2 at the Advanced Bot Factory or the Unit Cannon, 500 metal, low.",
+    "shooter_note": "A fast, flimsy swarm (160 health) that skims over lava and water to chew through an undefended base or a lone tank up close.",
+    "repeats": "Nothing in the data eats its targets; RA2's Slave Miner and Generals' Hacker earn money in other ways. The Fandom wiki has a Locusts page, but it is empty."
+   },
+   {
+    "id": "pa.shared.gil-e",
+    "name": "Gil-E",
+    "faction": "shared",
+    "class": "walker",
+    "role_guess": "marksman (secondary anti-air)",
+    "teaches": "The batch's marksman: a slow sniper bot that fires one 600-damage shot every five seconds at range 200 (the Dox's gun reaches 75). The shot can also hit aircraft. A second beam fires only at enemy tactical missiles near it (Bluehawk, Hornet, Catapult and Stingray ones). It has 150 health, so it must stay behind other units. Source: https://palobby.com/units/unit/bot_sniper?version=titans, description line, Weapon #1 and #2 boxes and the Anti Entity Targets list.",
+    "patterns": [],
+    "new_mechanics": [],
+    "pages": [
+     "https://palobby.com/units/unit/bot_sniper?version=titans",
+     "https://palobby.com/units/table/bots?version=titans"
+    ],
+    "skirmish": "Skirmish and multiplayer: T2 at the Advanced Bot Factory only, 800 metal, medium.",
+    "shooter_note": "A long-range sniper who one-shots light units, and even aircraft, from far back, and quietly swats incoming missiles away from the squad, but dies fast if caught.",
+    "repeats": "Generals' Jarmen Kell is the data's marksman. The missile beam is the interceptor armour model (Generals Paladin, not in the data), or the Angel's proposed intercept-for-allies; the overlap is noted there."
+   },
+   {
+    "id": "pa.shared.bluehawk",
+    "name": "Bluehawk",
+    "faction": "shared",
+    "class": "walker",
+    "role_guess": "siege (secondary anti-air, against orbital units)",
+    "teaches": "A missile bot that reaches what most units cannot. Its page (https://palobby.com/units/unit/bot_tactical_missile?version=titans, description line, Weapon #1 to #3 boxes, target priorities and Anti Entity Targets) shows three launchers. The first fires long-range homing missiles at ground and sea targets, picks defences and commanders first, and ignores shields. The second fires a heavier missile at orbital targets only. The third fires at orbit and air, and its listed special target is unit_cannon_deploy. That seems to be the units a Unit Cannon fires: the cannon page (https://palobby.com/units/unit/unit_cannon?version=titans, description line) says it fires as many as 16 units at a time to any point in the system. Confirm that link before coding. If it holds, the Bluehawk counters orbital lasers and can shoot down a cannon drop in flight.",
+    "patterns": [],
+    "new_mechanics": [
+     {
+      "id": "shoot-down-drops",
+      "summary": "An automatic weapon fires at enemy units while they are being launched or dropped in, killing them before they land."
+     }
+    ],
+    "pages": [
+     "https://palobby.com/units/unit/bot_tactical_missile?version=titans",
+     "https://palobby.com/units/unit/unit_cannon?version=titans",
+     "https://planetaryannihilation.fandom.com/wiki/Bluehawk"
+    ],
+    "skirmish": "Skirmish and multiplayer: T2 at the Advanced Bot Factory, 700 metal, low.",
+    "shooter_note": "A backline missile walker that cracks turrets from beyond their reach, and the ground team's answer to anything in orbit or dropping in.",
+    "repeats": "No unit in the data reaches an orbital layer or shoots down drops. The data's drop-in-from-above users (Combat Chinook, William Mason) would meet their counter here."
+   },
+   {
+    "id": "pa.shared.atlas",
+    "name": "Atlas",
+    "faction": "shared",
+    "class": "walker",
+    "role_guess": "assault",
+    "teaches": "The titan the Steam store page calls earth-shaking: a 30,000-metal walker with 60,000 health. Its only weapon is a ground slam every five seconds that deals 8,000 to everything within 140 around it and ignores shields. It is amphibious, so it walks the seabed. Its page (https://palobby.com/units/unit/titan_bot?version=titans, description line, Weapon #1 and Death Explosion boxes, Built By) also shows commanders first in its target list and a blast when it dies. It comes from no factory: an Advanced Fabrication Bot, the Colonel or the Orbital Fabrication Bot builds it in the field.",
+    "patterns": [],
+    "new_mechanics": [
+     {
+      "id": "stomp-shockwave",
+      "summary": "On a slow cycle, slam the ground so a shockwave hits every enemy in a wide ring around you at once; this may be a gap in the weapon-delivery list rather than a pattern."
+     }
+    ],
+    "pages": [
+     "https://palobby.com/units/unit/titan_bot?version=titans",
+     "https://palobby.com/units/table/titans?version=titans",
+     "https://store.steampowered.com/app/386070/"
+    ],
+    "skirmish": "Skirmish and multiplayer in TITANS: t3 (gate Titan, built by an advanced fabricator), 30,000 metal, very high.",
+    "shooter_note": "A walking earthquake: wade in, even underwater, and every few seconds flatten everything around you, so you want enemies close.",
+    "repeats": "Iron Harvest's Kaiser is the data's heaviest walker. RA1's MAD Tank has a shockwave, but only as its self-destruct."
+   },
+   {
+    "id": "pa.shared.manhattan",
+    "name": "Manhattan",
+    "faction": "shared",
+    "class": "vehicle",
+    "role_guess": "siege (secondary assault)",
+    "teaches": "A mobile nuke. Its page (https://palobby.com/units/unit/tank_nuke?version=titans, description line, Death Explosion box) gives it 15,000 health and, when it dies, a blast of 33,000 across a 150 radius that also harms its own side. The old Fandom page (https://planetaryannihilation.fandom.com/wiki/Manhattan, Information section) adds three points: it can be ordered to go off on a target, it can wreck its owner's army, and several Manhattans set each other off. So killing it near your base hurts you, and the enemy must stop it far away. The PA Lobby page also gives it radar and amphibious movement.",
+    "patterns": [
+     "self-destruct"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://palobby.com/units/unit/tank_nuke?version=titans",
+     "https://planetaryannihilation.fandom.com/wiki/Manhattan",
+     "https://palobby.com/units/table/vehicles?version=titans"
+    ],
+    "skirmish": "Skirmish and multiplayer: T2 at the Advanced Vehicle Factory, 8,000 metal, very high.",
+    "shooter_note": "Grind slowly toward the enemy with a nuke on board: they have to kill you before you arrive, and wherever you die, everyone nearby goes with you.",
+    "repeats": "RA1's MAD Tank links self-destruct, and three units in the data have death-blast. What is new: its death is the bomb, with friendly fire and chain reactions."
+   },
+   {
+    "id": "pa.shared.nyx",
+    "name": "Nyx",
+    "faction": "shared",
+    "class": "vehicle",
+    "role_guess": "scout (secondary support)",
+    "teaches": "A radar-and-jamming truck. Its page (https://palobby.com/units/unit/tank_jammer?version=titans, description line and Recon box) gives it a mobile radar of radius 260 and a radar jammer of radius 75. It has no weapon and costs 700 energy a second to run. It would be the first unit in the data with the radar and jammer sensor traits (only detector is used so far). Both are always on, so it links no pattern: jam-sensors is the version on a key.",
+    "patterns": [],
+    "new_mechanics": [],
+    "pages": [
+     "https://palobby.com/units/unit/tank_jammer?version=titans",
+     "https://palobby.com/units/table/radar?version=titans"
+    ],
+    "skirmish": "Skirmish and multiplayer: T2 at the Advanced Vehicle Factory, 500 metal, low.",
+    "shooter_note": "An unarmed support truck that shows the team enemy blips far ahead and keeps its own group off enemy radar, at a steady cost in team power.",
+    "repeats": "RA1's Mobile Gap Generator hides allies from sight (shroud-area). The Nyx works on radar instead, and carries a radar of its own."
+   },
+   {
+    "id": "pa.shared.kaiju",
+    "name": "Kaiju",
+    "faction": "shared",
+    "class": "hover",
+    "role_guess": "assault (secondary siege)",
+    "teaches": "A warship that leaves the sea. It is built at the Advanced Naval Factory, glides across water, land and lava, and carries two pairs of long-range guns (range 180) on 2,000 health (https://palobby.com/units/unit/hover_ship?version=titans, description line, Physics box, Weapon boxes). It teaches a naval-yard unit that is not tied to the water.",
+    "patterns": [],
+    "new_mechanics": [],
+    "pages": [
+     "https://palobby.com/units/unit/hover_ship?version=titans",
+     "https://palobby.com/units/table/hover?version=titans"
+    ],
+    "skirmish": "Skirmish and multiplayer: T2 at the Advanced Naval Factory, 1,500 metal, high.",
+    "shooter_note": "A heavy gun hovercraft that shells from the water, then slides ashore or over lava to keep pushing.",
+    "repeats": "The data's hovers (RA2 Robot Tank, RA3 Mecha Tengu and Sudden Transport, Tempest Rising Shieldmaiden) come from land factories; this one comes from the naval yard. It is also the list's only unit in the high price band."
+   },
+   {
+    "id": "pa.shared.icarus",
+    "name": "Icarus",
+    "faction": "shared",
+    "class": "drone",
+    "role_guess": "logistics (secondary anti-air)",
+    "teaches": "A flying power plant. Its page (https://palobby.com/units/unit/solar_drone?version=titans, description line, Economy and Weapon boxes) says it makes 175 energy a second for its side as long as it lives. It is slow for an aircraft (speed 50, while the Hummingbird fighter does 90). Its beam hops between up to four air targets and is paid for in energy. Class: a small uncrewed flyer is drone by the classes rule; if it is bigger, it is an aircraft.",
+    "patterns": [
+     "generate-income"
+    ],
+    "new_mechanics": [],
+    "pages": [
+     "https://palobby.com/units/unit/solar_drone?version=titans",
+     "https://palobby.com/units/table/air?version=titans"
+    ],
+    "skirmish": "Skirmish and multiplayer: T1 at the Air Factory (or the Advanced Air Factory), 150 metal, very low.",
+    "shooter_note": "A cheap support flyer that keeps the team's energy flowing just by staying alive, and zaps groups of enemy aircraft with chain lightning.",
+    "repeats": "Generals' Hacker links generate-income, but it must stop and stays defenceless; the Icarus earns on the move and fights aircraft. Tempest Rising's Voltaic Tank already has the chain weapon trait."
+   },
+   {
+    "id": "pa.shared.angel",
+    "name": "Angel",
+    "faction": "shared",
+    "class": "aircraft",
+    "role_guess": "support (secondary logistics)",
+    "teaches": "A flying escort with no gun. Its page (https://palobby.com/units/unit/support_platform?version=titans, description line, Economy box, Weapon box with its Anti Entity Targets list) says it repairs units near it and reclaims wreckage by itself. Its only beam fires at enemy anti-air and air-to-air missiles (from fighters, turrets, the commander and AA bots), so the allied aircraft around it survive flak. Wikipedia's Gameplay section lists reclaiming wreckage among the builders' jobs; the registry folds wreck reclaim into gather-resources.",
+    "patterns": [
+     "repair-allies",
+     "gather-resources"
+    ],
+    "new_mechanics": [
+     {
+      "id": "intercept-for-allies",
+      "summary": "An always-on point-defence weapon shoots down enemy missiles aimed at you or at allies close by, guarding a group rather than only yourself (the Gil-E does the same against tactical missiles)."
+     }
+    ],
+    "pages": [
+     "https://palobby.com/units/unit/support_platform?version=titans",
+     "https://palobby.com/units/table/repair?version=titans",
+     "https://en.wikipedia.org/wiki/Planetary_Annihilation"
+    ],
+    "skirmish": "Skirmish and multiplayer: T2 at the Advanced Air Factory, 4,000 metal, very high.",
+    "shooter_note": "A medic flyer with no gun: follow the air wing, mend it, zap the missiles fired at it, and sweep up wrecks after each fight.",
+    "repeats": "Tempest Rising's Shieldmaiden repairs, and blunts missiles by slowing the launchers (dampen-missile-fire); the Angel destroys the missiles instead. gather-resources is on RA2's Slave Miner and Generals' Combat Chinook."
+   },
+   {
+    "id": "pa.shared.astraeus",
+    "name": "Astraeus",
+    "faction": "shared",
+    "class": "aircraft",
+    "role_guess": "transport",
+    "teaches": "An orbital lander that carries one unit to another planet (https://palobby.com/units/unit/orbital_lander?version=titans, description line; Unit Types Interplanetary, Orbital, Transport). It is unarmed and frail (150 health) and comes from the T1 Orbital Launcher. It teaches the hop between worlds, and the orbital layer, which our word lists have no term for: no orbital mobility or target type. So aircraft is the nearest class, with an uncertain entry.",
+    "patterns": [
+     "carry-passengers",
+     "drop-in-from-above"
+    ],
+    "new_mechanics": [
+     {
+      "id": "travel-between-worlds",
+      "summary": "Leave the current planet or arena and fly to another one under your own power, cargo included; only units marked as interplanetary can do this."
+     }
+    ],
+    "pages": [
+     "https://palobby.com/units/unit/orbital_lander?version=titans",
+     "https://palobby.com/units/table/transports?version=titans",
+     "https://palobby.com/units/table/orbital?version=titans"
+    ],
+    "skirmish": "Skirmish and multiplayer: T1 at the Orbital Launcher (also the Orbital Factory), 200 metal, very low. It matters on maps with more than one planet.",
+    "shooter_note": "A one-seat space ferry: pick up a teammate, climb to orbit and set them down on a far front or another world.",
+    "repeats": "Generals' Combat Chinook links carry-passengers and drop-in-from-above; the trip between planets is new. The batch's Helios also travels between worlds."
+   },
+   {
+    "id": "pa.shared.sxx-1304-laser-platform",
+    "name": "SXX-1304 Laser Platform",
+    "faction": "shared",
+    "class": "aircraft",
+    "role_guess": "siege (secondary raider)",
+    "teaches": "An orbital gunship that fires straight down. Its page (https://palobby.com/units/unit/orbital_laser?version=titans, description line, Weapon box, Visibility line, target priorities) shows a beam that reaches only 40 below it and deals 1,000, with splash, every four seconds. Each shot costs 12,000 energy, and it goes for commanders, orbital defences, nukes and economy buildings first. It is always visible and can travel between planets. Only weapons that reach orbit can answer it, for example the Avenger orbital fighter, whose gun hits orbital targets only (https://palobby.com/units/unit/orbital_fighter?version=titans, Weapon box). The orbital layer is a word-list gap, so aircraft is the nearest class.",
+    "patterns": [],
+    "new_mechanics": [
+     {
+      "id": "strike-from-orbit",
+      "summary": "Hold a separate layer above the fight that only anti-orbit weapons reach, and fire straight down at whatever lies beneath you."
+     }
+    ],
+    "pages": [
+     "https://palobby.com/units/unit/orbital_laser?version=titans",
+     "https://palobby.com/units/unit/orbital_fighter?version=titans",
+     "https://palobby.com/units/table/orbital?version=titans",
+     "https://wiki.palobby.com/wiki/Planetary_Annihilation_World_Layers"
+    ],
+    "skirmish": "Skirmish and multiplayer: T2 at the Orbital Factory, 4,000 metal, very high.",
+    "shooter_note": "Drift over the map above the fight and burn whatever is under you: ground players cannot touch you, so only anti-orbit specialists and enemy orbital fighters matter.",
+    "repeats": "The data's siege flyers (Generals' Aurora Bomber, RA3's Kirov) sit in high air, which anti-air reaches; nothing in the data sits in a separate layer."
+   },
+   {
+    "id": "pa.shared.helios",
+    "name": "Helios",
+    "faction": "shared",
+    "class": "aircraft",
+    "role_guess": "transport (secondary assault)",
+    "teaches": "The invasion titan: an orbital titan that can pair with a teleporter, so units sent through it come out on the ground below it. Its beams hit every layer. Its page (https://palobby.com/units/unit/titan_orbital?version=titans, description line; Unit Types Interplanetary, Orbital, Titan; Visibility always visible; base energy upkeep 1,000 a second) shows all of this. The teleporters table (https://palobby.com/units/table/teleporters?version=titans) lists it next to the Teleporter. Only the Orbital Fabrication Bot builds it, for 30,000 metal. The orbital layer gap applies, as for the SXX-1304.",
+    "patterns": [
+     "build-linked-exits",
+     "drop-in-from-above"
+    ],
+    "new_mechanics": [
+     {
+      "id": "travel-between-worlds",
+      "summary": "Leave the current planet or arena and fly to another one under your own power; proposed with the Astraeus, and the Helios is a second example."
+     }
+    ],
+    "pages": [
+     "https://palobby.com/units/unit/titan_orbital?version=titans",
+     "https://palobby.com/units/table/teleporters?version=titans",
+     "https://palobby.com/units/unit/teleporter?version=titans",
+     "https://palobby.com/units/table/titans?version=titans"
+    ],
+    "skirmish": "Skirmish and multiplayer in TITANS: t3 (gate Titan), built in the field by the Orbital Fabrication Bot, 30,000 metal, very high.",
+    "shooter_note": "A slow mothership in the sky that is the far end of the team's teleporter: park it over the target and teammates pour out below you. You can never hide, so the enemy will come for you.",
+    "repeats": "Tempest Rising's Thunderhead links build-linked-exits, and its Vimana links host-spawn-point; here the exit is a flying titan. It pairs with the batch's Stitch, which builds teleporters."
+   }
+  ],
+  "coverage_note": "14 candidates, all from the single faction, shared.\n\nClasses:\n- walker 4: Commander, Gil-E, Bluehawk, Atlas.\n- drone 3: Stitch, Locusts, Icarus. These are small uncrewed bots; the size rule decides drone against walker, hover or aircraft.\n- vehicle 2: Manhattan, Nyx.\n- hover 1: Kaiju.\n- aircraft 4: the Angel, plus three orbital units (Astraeus, SXX-1304, Helios) coded as aircraft for lack of an orbital term.\n- PA has no infantry. No naval unit is kept: the class is research-only, and PA's ships repeat a carrier, a submarine and artillery.\n\nTiers: t1 4 (Commander, there from the match's start; Stitch, Icarus, Astraeus), t2 8, t3 2 (Atlas, Helios).\n\nPrices:\n- very low 3: Stitch 250, Icarus 150, Astraeus 200.\n- low 3: Locusts, Nyx, Bluehawk.\n- medium 1: Gil-E.\n- high 1: Kaiju.\n- very high 5: Manhattan, Angel, SXX-1304, Atlas, Helios.\n- none for the Commander: it is never bought.\n\nLikely primary roles: engineer (Commander), support (Stitch, Angel), raider (Locusts), marksman (Gil-E), siege (Bluehawk, Manhattan, SXX-1304), assault (Atlas, Kaiju), scout (Nyx), logistics (Icarus), transport (Astraeus, Helios). Secondary roles: anti-air (Gil-E, Icarus, Bluehawk against orbit) and area-denial (Stitch mines). PA has no infantry, damage types, stuns, auras or spies, so the list has no anti-infantry, anti-armour, disabler, buffer or infiltrator.\n\nRegistry patterns linked: build-structure, fire-power-shot (the registry's own PA example), repair-allies ×2, lay-mines, build-linked-exits ×2, self-destruct, generate-income, gather-resources (the registry's PA reclaim example), carry-passengers, drop-in-from-above ×3.\n\nProposed new ids: lose-match-on-death, deconstruct-target, shoot-down-drops, stomp-shockwave, intercept-for-allies, travel-between-worlds, strike-from-orbit. stomp-shockwave and strike-from-orbit may be word-list gaps rather than patterns. Gil-E, Nyx and Kaiju link no pattern; their lessons are word-list ones (the interceptor model; the first radar and jammer traits; a hover from the naval yard).\n\nLeft out on purpose:\n- Ward: a hover anti-nuke with one 7,500-metal interceptor shot per 100 seconds. Its interception overlaps the Angel's; it is the best extra if a superweapon counter is wanted.\n- Dox: the reference unit, but a plain cheap amphibious bot.\n- Ares and Zeus: titans whose big guns add nothing new beside the Atlas and the Helios.\n- Boom: self-destruct, which repeats the Manhattan.\n- Avenger: named as the SXX-1304's counter.\n- Scouts (Hermes, Skitter, Firefly).\n- Pelican: repeats the Astraeus.\n- Colonel: a proxy commander, repeats the Commander.\n- Mend: the Stitch's upgrade.\n- Typhoon, Kraken and the other ships.\n- Spark: weapons paid with energy are game-wide in PA.\n- Horsefly, Wyrm, Kestrel, Hornet and Bumblebee: gunship and bomber lessons the data already has.\n- Every structure: Unit Cannon, Teleporter, Halley, Catalyst, Ragnarok, Kessler, Anchor.\n\nFor the trim judge and the game notes:\n- The word lists have no orbital layer: no orbital mobility and no orbital target type.\n- Every PA unit is an uncrewed robot, so crew models and the line between drone and walker need a game-wide note.\n- The 76 playable commanders share one stat block but have four body classes.\n- Weapons paid with energy (Commander, SXX-1304, Icarus, Zeus, Spark, Wyrm) and shots paid with metal (Ward, Typhoon) look game-wide.\n- Facts with no source yet:\n  - what the Locusts' metal damage does;\n  - the name Uber Cannon, and whether the commander's heavy shot fires on command;\n  - whether the current commander death blast hurts allies;\n  - whether units can still use an enemy teleporter.\n\nSites I would cite (one page each for the plant test). I ran no plant test myself; the page reader read every page below without error:\n1. palobby.com, the database: https://palobby.com/units/unit/bot_nanoswarm?version=titans. The handoff records the 11 November test on this site with every passage flagged; repeat it on a unit page.\n2. planetaryannihilation.fandom.com, the old wiki: https://planetaryannihilation.fandom.com/wiki/Manhattan. The handoff records it flagged on 11 November. Most TITANS units have no page there, and its Locusts page is empty.\n3. en.wikipedia.org: https://en.wikipedia.org/wiki/Planetary_Annihilation. New to the batch, not tested.\n4. store.steampowered.com: https://store.steampowered.com/app/386070/. A store page, not a news post, so not tested yet.\n5. wiki.palobby.com, optional: https://wiki.palobby.com/wiki/Use_Enemy_Teleporter. A MediaWiki with its API at /w/api.php, which the page reader found by itself; not tested.\n6. planetaryannihilation.com: not cited. The handoff says it answers HTTP 403, so hand checks only.\nNothing from liquipedia.net is needed for this game.\n\nFor the token estimate: PA Lobby unit pages are short, about 100 to 260 lines of text. The Fandom wiki covers no TITANS unit, so the fill leans on PA Lobby, Wikipedia and Steam. The four unsourced facts may cost extra searching or end as uncertain entries, and the orbital and crew gaps will add rule problems.",
+  "tool_problems": []
+ }
+}
