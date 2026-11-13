@@ -42,8 +42,8 @@ export function dataVersionOf(root = REPO_ROOT) {
 /**
  * Everything src/core/ reads, as one plain object: the word lists, the patterns (sorted by file name), the pattern
  * registry, the link kinds of schemas/common.schema.json, the three generator files, the real names the name check
- * needs (unit names, faction names, game titles and franchises; the patterns' own example names and source terms
- * travel with the patterns) and the data version.
+ * needs (unit names and their weapons' names, faction names, game titles and franchises; the patterns' own example
+ * names and source terms travel with the patterns) and the data version.
  */
 export function loadGeneratorData(root = REPO_ROOT) {
   const vocab = {}
@@ -73,6 +73,8 @@ export function loadGeneratorData(root = REPO_ROOT) {
     texts: generator.texts,
     realNames: {
       units: units.map(u => u.name),
+      // Section 18: the name check also reads the weapon names of the researched units.
+      weapons: units.flatMap(u => (u.armament ?? []).map(w => w.name)).filter(n => typeof n === 'string' && n.length > 0),
       factions: games.flatMap(g => g.factions.map(x => x.name)),
       games: games.map(g => (g.franchise ? { title: g.title, franchise: g.franchise } : { title: g.title })),
     },

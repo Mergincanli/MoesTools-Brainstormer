@@ -107,6 +107,9 @@ export function withPendingLocks(d: Draft, parts: DraftParts): DraftParts | unde
   return waiting.reduce((p, piece) => piece.set(p), parts)
 }
 
+/** An RFC 3339 date and time, as the card schema's created_at (format date-time) asks. */
+const DATE_TIME = /^\d{4}-\d{2}-\d{2}[Tt]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:[Zz]|[+-]\d{2}:\d{2})$/
+
 export function inputsOf(request: RollRequest): Inputs {
   const i = request.inputs ?? {}
   return { class: i.class ?? null, tier: i.tier ?? null, flavour: i.flavour ?? null, role: i.role ?? null }
@@ -153,6 +156,7 @@ export function trace(d: Draft, entry: TraceEntry): void {
  *  disagree), or undefined when it can be tried. */
 export function requestProblem(ix: Index, request: RollRequest): string | undefined {
   if (typeof request.seed !== 'string' || request.seed.length === 0) return 'the seed must be a text of one character or more'
+  if (request.created_at !== undefined && (typeof request.created_at !== 'string' || !DATE_TIME.test(request.created_at))) return 'created_at must be a date and time such as 2026-11-13T10:00:00Z (the card schema\'s date-time)'
   const top = maxSpice(ix)
   if (!Number.isInteger(request.spice) || request.spice < 1 || request.spice > top) return `the spice must be a whole number from 1 to ${top}`
   const termOk = (list: string, id: unknown): boolean => typeof id === 'string' && !!term(ix, list, id) && !term(ix, list, id)?.source_only

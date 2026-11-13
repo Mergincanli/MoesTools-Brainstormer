@@ -176,8 +176,10 @@ function deliveriesThatFit(ix: Index, parts: DraftParts, w: WeaponDraft): string
 /** The mounts at the spice gate that fit the draft and this weapon (the body's allowed aim models, the delivery's
  *  excluded ones: G1 both ways). */
 function mountsThatFit(ix: Index, parts: DraftParts, spice: number, w: WeaponDraft): Candidate[] {
-  return offerTerms(ix, parts, spice, 'aim-models', { weapon: w }).candidates
+  // Body aim is fired from the driver seat, never from a gunner's (aim-models word list, in prose; validate.mjs).
+  return offerTerms(ix, parts, spice, 'aim-models', { weapon: w }).candidates.filter(c => c.id !== BODY_AIM || (w.seat ?? 'driver') === 'driver')
 }
+const BODY_AIM = 'body-aim'
 
 /** Does a weapon (its family and delivery chosen) leave a mount at the gate, or above it when `forced`? */
 function hasMount(ix: Index, parts: DraftParts, spice: number, w: WeaponDraft, forced: boolean): boolean {
@@ -191,8 +193,8 @@ function allowedFits(ix: Index, parts: DraftParts, spice: number, list: string, 
 
 /** Can a weapon of this family be completed on the draft: a damage, a delivery and a mount (at the gate, or above it
  *  when `forced`) that fit together? */
-function completable(ix: Index, parts: DraftParts, spice: number, family: string, forced: boolean): boolean {
-  const w: WeaponDraft = { family }
+function completable(ix: Index, parts: DraftParts, spice: number, family: string, forced: boolean, seat?: string): boolean {
+  const w: WeaponDraft = seat !== undefined ? { family, seat } : { family }
   if (family === ADAPTIVE) return hasMount(ix, parts, spice, w, forced)
   if (!allowedFits(ix, parts, spice, 'damage-types', w, damagesOf(ix, family), forced).length) return false
   return allowedFits(ix, parts, spice, 'weapon-delivery', w, deliveriesThatFit(ix, parts, w), forced).some(c => hasMount(ix, parts, spice, { ...w, delivery: c.id }, forced))
@@ -257,12 +259,12 @@ export function rollWeapon(ix: Index, d: Draft, s: WeaponSpec): string | undefin
   }
   // Family: set by a pattern (A10), else drawn; never adaptive on the card's own rolls (only a pattern brings one).
   if (s.family !== undefined) {
-    if (termProblem(ix, d.parts, 'weapon-families', s.family, {}) !== undefined || !completable(ix, d.parts, d.spice, s.family, true)) return `${s.familyBy} needs a ${s.family} weapon, and it does not fit`
+    if (termProblem(ix, d.parts, 'weapon-families', s.family, {}) !== undefined || !completable(ix, d.parts, d.spice, s.family, true, s.seat)) return `${s.familyBy} needs a ${s.family} weapon, and it does not fit`
     place({ ...w, family: s.family })
     d.trace.push({ field: `${s.path}.family`, value: s.family, how: 'implied', by: s.familyBy, rule: 'A10, G3', candidates: 0 })
   } else {
     const forced = mayForce(ix, d)
-    const families = offerTerms(ix, d.parts, d.spice, 'weapon-families', { weapon: {} }).candidates.filter(c => c.id !== ADAPTIVE && completable(ix, d.parts, d.spice, c.id, forced))
+    const families = offerTerms(ix, d.parts, d.spice, 'weapon-families', { weapon: {} }).candidates.filter(c => c.id !== ADAPTIVE && completable(ix, d.parts, d.spice, c.id, forced, s.seat))
     // The needs only weapons meet stay within reach of this weapon and the one after it, together (drawPart, jointOk).
     const offer = families
     const toWeapon = (id: string): WeaponDraft => {

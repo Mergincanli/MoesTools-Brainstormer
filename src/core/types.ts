@@ -272,9 +272,35 @@ export interface RulesFile {
   role_fit: Record<string, RoleFit>
   hard_control: HardControl
   same_mechanic: SameMechanicEntry[]
-  points: Record<string, unknown>
+  points: PointsRules
   layout: Record<string, string>
   attempts: number
+}
+
+/** Points of one part (section 10): by term, or one value when the part is there. */
+export interface PartPoints {
+  power?: Record<string, number> | number
+  cost?: Record<string, number> | number
+  complexity?: Record<string, number> | number
+}
+
+/** rules.json points (section 10, balance hints). */
+export interface PointsRules {
+  pattern: {
+    power: string
+    complexity: string
+    scale: Record<string, number>
+    cost_divisor: number
+    cost_rounding: 'up' | 'down'
+    stored_wins: boolean
+    ultimate_bonus: number
+    max: number
+  }
+  parts: Record<string, PartPoints>
+  power: { ability_minus: number; min: number; max: number }
+  complexity: { ability_minus: number; per_key: number; per_operating_seat: number; squad: number; second_form: number; min: number; max: number }
+  cost_bands: Record<string, { min: number; max?: number }>
+  tier_bands: Record<string, string[]>
 }
 
 // ---------------------------------------------------------------- data/generator/names.json and texts.json
@@ -307,6 +333,8 @@ export interface TextsFile {
 /** Names of real units, factions and games in the data, for the name and text checks (T-a, T-b). */
 export interface RealNames {
   units: string[]
+  /** The researched units' weapon names (section 18). */
+  weapons?: string[]
   factions: string[]
   games: Array<{ title: string; franchise?: string }>
 }
@@ -432,6 +460,8 @@ export interface RollRequest {
   spice: number
   inputs?: Partial<Inputs>
   locks?: Partial<LockValues>
+  /** When the card was made (the card's created_at; not part of the reproduction key). The module has no clock. */
+  created_at?: string
 }
 
 /**

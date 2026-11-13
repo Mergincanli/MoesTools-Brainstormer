@@ -6,10 +6,17 @@
 // next attempt rolls again on new dice; a failure no dice can change (the inputs or locks themselves cannot be held)
 // stops at once. After rules.json `attempts` attempts the inputs are unavailable for that seed (G7).
 //
-// Written: steps 1 to 16 and the second form (A9, at the end of step 14). The last step (matchups, balance, text) is
-// not written yet: the cost links its cost band answers stay open. The result carries the draft with every part of the
-// card set, and its trace; the card in the card schema comes with the last step.
+// Written: all 17 steps, the second form (A9) at the end of step 14, and step 17 (matchups, balance, text) with the
+// finished card in the card schema (card.ts). The result is that card and its trace (and the draft the steps filled),
+// or the unavailable answer with its reason.
+//
+// What a caller needs: the data as one plain object (GeneratorData: the word lists, the patterns, the generator files,
+// the real names and the data version); loading it is the caller's job, in Node through scripts/lib/generator-data.mjs
+// (loadGeneratorData). A request is a seed, a spice, optional inputs (class, tier, flavour, role), optional locks (the
+// card schema's lockable parts, with their values) and an optional created_at (the module has no clock). The module is
+// pure: no files, no clock, no randomness of its own.
 import { indexOf, type Index } from './data.ts'
+import { finishCard, type Card } from './card.ts'
 import { applyStepLocks, newDraft, requestProblem } from './draft.ts'
 import { needAnswer, ownersOf } from './needs.ts'
 import { stepCrew } from './step-crew.ts'
@@ -48,7 +55,7 @@ export const STEPS: readonly Step[] = [
 ]
 
 export type RollResult =
-  | { ok: true; draft: Draft; trace: TraceEntry[]; attempts: number }
+  | { ok: true; card: Card; trace: TraceEntry[]; attempts: number; draft: Draft }
   | { ok: false; reason: string; attempts: number }
 
 /** A need whose owners have all run must be met (a gap in a step shows here, and the attempt is rolled again). */
@@ -62,7 +69,8 @@ function unmetNeed(ix: Index, d: Draft): string | undefined {
   return undefined
 }
 
-/** Rolls the parts of a card for a request; the same data and request always give the same result. */
+/** Rolls a card for a request: the finished card and its trace, or the reason it is unavailable. The same data and
+ *  request always give the same result. */
 export function roll(data: GeneratorData, request: RollRequest): RollResult {
   const ix = indexOf(data)
   const bad = requestProblem(ix, request)
@@ -86,7 +94,16 @@ export function roll(data: GeneratorData, request: RollRequest): RollResult {
       const gap = unmetNeed(ix, d) ?? finishedProblem(ix, d)
       if (gap) failed = { ok: false, reason: `the finished card: ${gap}`, final: false }
     }
-    if (!failed) return { ok: true, draft: d, trace: d.trace, attempts: attempt }
+    if (!failed) {
+      // Step 17: matchups, balance and text; a block flag never reaches a card (G7).
+      const fin = finishCard(ix, d, request)
+      if ('problem' in fin) failed = { ok: false, reason: `matchups-balance-text: ${fin.flag ? `${fin.flag}: ` : ''}${fin.problem}`, final: false }
+      else {
+        d.done.push('matchups-balance-text')
+        d.trace.push(...fin.trace)
+        return { ok: true, card: fin.card, trace: d.trace, attempts: attempt, draft: d }
+      }
+    }
     if (failed.final) return { ok: false, reason: failed.reason, attempts: attempt }
     last = failed.reason
   }
