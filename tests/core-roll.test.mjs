@@ -40,15 +40,22 @@ describe('I2 and T1: the same request always gives the same result', () => {
 
 describe('T2: each field has its own dice', () => {
   const seeds = Array.from({ length: 40 }, (_, i) => `own-dice-${i}`)
+  // G7: a lock never moves another part's dice, but it can change which attempt passes the rules; draws are compared
+  // between rolls decided on the same attempt.
+  const sameAttempt = (a, b) => a.ok && b.ok && a.attempts === b.attempts
 
   it('locking the class at its own value keeps every other field, draw for draw', () => {
+    let compared = 0
     for (const seed of seeds) {
       const free = roll(data, { seed, spice: 2 })
       const locked = roll(data, { seed, spice: 2, locks: { class: free.draft.parts.class } })
+      assert.equal(entry(locked, 'class').how, 'locked')
+      if (free.attempts !== 1) continue // a card from a later attempt: an earlier one may now pass (G7)
+      compared++
       assert.deepEqual(picked(locked), picked(free), seed)
       for (const f of ['tier', 'flavour', 'roles.primary']) assert.equal(entry(locked, f).draw, entry(free, f).draw, `${seed} ${f}`)
-      assert.equal(entry(locked, 'class').how, 'locked')
     }
+    assert.ok(compared >= 30, `only ${compared} cards came on the first attempt`)
   })
 
   it('locking the class at another value does not move the dice of the tier, the flavour or the role', () => {
@@ -56,6 +63,7 @@ describe('T2: each field has its own dice', () => {
       const free = roll(data, { seed, spice: 2 })
       const other = CLASSES.find(c => c !== free.draft.parts.class)
       const locked = roll(data, { seed, spice: 2, locks: { class: other } })
+      if (!sameAttempt(free, locked)) continue
       for (const f of ['tier', 'flavour']) {
         assert.equal(entry(locked, f).draw, entry(free, f).draw, `${seed} ${f}: same dice`)
         assert.equal(entry(locked, f).value, entry(free, f).value, `${seed} ${f}: same offer, so the same value`)
@@ -72,6 +80,7 @@ describe('T2: each field has its own dice', () => {
       const t = roll(data, { seed, spice: 4, locks: { tier: free.draft.parts.tier === 't1' ? 't3' : 't1' } })
       const f = roll(data, { seed, spice: 4, locks: { flavour: free.draft.parts.flavour === 'soviet' ? 'empire' : 'soviet' } })
       for (const r of [t, f]) {
+        if (!sameAttempt(free, r)) continue
         assert.equal(entry(r, 'class').draw, entry(free, 'class').draw)
         assert.equal(r.draft.parts.class, free.draft.parts.class)
       }
@@ -82,8 +91,8 @@ describe('T2: each field has its own dice', () => {
     for (const seed of seeds.slice(0, 10)) {
       const free = roll(data, { seed, spice: 3 })
       const chosen = roll(data, { seed, spice: 3, inputs: { tier: free.draft.parts.tier } })
-      assert.deepEqual(picked(chosen), picked(free))
       assert.equal(entry(chosen, 'tier').how, 'input')
+      if (free.attempts === 1) assert.deepEqual(picked(chosen), picked(free))
     }
   })
 })
@@ -166,7 +175,7 @@ describe('step 3: the primary role', () => {
   })
 
   it('the role passes its needs on to the later steps (G2, G13)', () => {
-    const needs = role => roll(data, { seed: 'needs', spice: 3, inputs: { role, class: 'vehicle' } }).draft.needs
+    const needs = role => roll(data, { seed: 'needs', spice: 3, inputs: { role, class: 'vehicle' } }).draft.needs.filter(n => n.by.startsWith('role:'))
     assert.deepEqual(needs('anti-air'), [{ links: ['hits:high-air'], by: 'role:anti-air', rule: 'G2', forced: true }])
     assert.deepEqual(needs('engineer').map(n => [n.rule, n.links.length]), [['G13', 4]])
     assert.deepEqual(needs('assault'), [
@@ -208,7 +217,12 @@ describe('the steps follow the roll order', () => {
 
   it('the trace has one entry per field, in the roll order', () => {
     const r = roll(data, { seed: 'trace', spice: 2 })
-    assert.deepEqual(r.trace.map(e => e.field), ['class', 'tier', 'flavour', 'roles.primary'])
-    for (const e of r.trace) assert.ok(e.candidates > 0 && Number.isInteger(e.draw) && e.how === 'rolled')
+    const fields = r.trace.map(e => e.field)
+    assert.deepEqual(fields.slice(0, 4), ['class', 'tier', 'flavour', 'roles.primary'])
+    for (const e of r.trace.slice(0, 4)) assert.ok(e.candidates > 0 && Number.isInteger(e.draw) && e.how === 'rolled')
+    const order = ['signature.pattern', 'mobility.base', 'body.plan', 'body.size', 'mobility.speed', 'mobility.traits', 'armour.class', 'sensors.sight', 'crew.model', 'armament.secondary', 'abilities', 'seats']
+    const at = order.map(f => fields.indexOf(f))
+    assert.ok(at.every(i => i > 3), `every step leaves a trace: ${order.filter((f, i) => at[i] < 0).join(', ')}`)
+    assert.deepEqual(at, [...at].sort((a, b) => a - b), 'in the roll order')
   })
 })

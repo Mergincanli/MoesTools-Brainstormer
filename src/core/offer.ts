@@ -38,7 +38,7 @@ export const UNIT_PARTS: Readonly<Record<string, (p: DraftParts) => Values>> = {
   'sensor-traits': p => p.sensors.traits ?? [],
   'crew-models': p => [p.crew.model],
   resources: p => [p.resource],
-  'ability-kinds': p => [p.signature?.kind, ...(p.abilities ?? []).map(a => a.kind)],
+  'ability-kinds': p => [p.signature?.kind, ...(p.abilities ?? []).map(a => a.kind), ...(p.pending ?? []).map(a => a.kind)],
   'on-death': p => p.on_death ?? [],
 }
 
@@ -93,23 +93,58 @@ interface Chosen {
   weapon?: WeaponDraft
 }
 
-function chosenTerms(ix: Index, parts: DraftParts, weapons: readonly WeaponDraft[]): Chosen[] {
+/**
+ * What the offer filter reads from a draft: its unit-wide parts and its weapons' parts by list, and the terms they
+ * are. Worked out once per parts object and kept while the object lives: the steps never change a parts object once it
+ * is made (a change makes a new one), so a view never goes stale.
+ */
+interface View {
+  unit: Map<string, string[]>
+  weapons: WeaponDraft[]
+  allWeapon: Map<string, string[]>
+  unitChosen: Chosen[]
+  weaponChosen: Chosen[]
+}
+const VIEWS = new WeakMap<Index, WeakMap<DraftParts, View>>()
+const WEAPON_TERMS = new WeakMap<Index, WeakMap<WeaponDraft, Chosen[]>>()
+
+function weaponTerms(ix: Index, w: WeaponDraft): Chosen[] {
+  let byWeapon = WEAPON_TERMS.get(ix)
+  if (!byWeapon) WEAPON_TERMS.set(ix, (byWeapon = new WeakMap()))
+  const known = byWeapon.get(w)
+  if (known) return known
   const out: Chosen[] = []
-  for (const list of Object.keys(UNIT_PARTS)) {
-    for (const id of unitValues(parts, list)) {
+  for (const list of Object.keys(WEAPON_PARTS)) {
+    for (const id of weaponValues(w, list)) {
       const t = term(ix, list, id)
-      if (t) out.push({ list, id, t })
+      if (t) out.push({ list, id, t, weapon: w })
     }
   }
-  for (const w of weapons) {
-    for (const list of Object.keys(WEAPON_PARTS)) {
-      for (const id of weaponValues(w, list)) {
-        const t = term(ix, list, id)
-        if (t) out.push({ list, id, t, weapon: w })
-      }
-    }
-  }
+  byWeapon.set(w, out)
   return out
+}
+
+function viewOf(ix: Index, parts: DraftParts): View {
+  let byParts = VIEWS.get(ix)
+  if (!byParts) VIEWS.set(ix, (byParts = new WeakMap()))
+  const known = byParts.get(parts)
+  if (known) return known
+  const unit = new Map<string, string[]>()
+  const unitChosen: Chosen[] = []
+  for (const list of Object.keys(UNIT_PARTS)) {
+    const values = unitValues(parts, list)
+    unit.set(list, values)
+    for (const id of values) {
+      const t = term(ix, list, id)
+      if (t) unitChosen.push({ list, id, t })
+    }
+  }
+  const weapons = allWeapons(parts)
+  const allWeapon = new Map<string, string[]>()
+  for (const list of Object.keys(WEAPON_PARTS)) allWeapon.set(list, present(weapons.flatMap(w => WEAPON_PARTS[list]?.(w) ?? [])))
+  const view: View = { unit, weapons, allWeapon, unitChosen, weaponChosen: weapons.flatMap(w => weaponTerms(ix, w)) }
+  byParts.set(parts, view)
+  return view
 }
 
 /** The draft with one more part: the candidate placed where its list belongs (for the requires check of G2). */
@@ -169,20 +204,28 @@ export function withPart(parts: DraftParts, list: string, id: string, weapon?: W
   return p
 }
 
-/** G1 and G2 for one term: why it does not fit the draft, or undefined when it fits. */
-export function termProblem(ix: Index, parts: DraftParts, list: string, id: string, weapon?: WeaponDraft): string | undefined {
+/** The terms on the draft whose maps a term of `list` must satisfy (for a weapon part: that weapon's and the unit's). */
+function chosenFor(ix: Index, parts: DraftParts, list: string, weapon?: WeaponDraft): Chosen[] {
+  const v = viewOf(ix, parts)
+  if (!isWeaponList(list)) return v.weaponChosen.length ? [...v.unitChosen, ...v.weaponChosen] : v.unitChosen
+  return weapon ? [...v.unitChosen, ...weaponTerms(ix, weapon)] : v.unitChosen
+}
+
+/** G1 and G2 for one term: why it does not fit the draft, or undefined when it fits. `theirs` may be passed in when
+ *  many terms of one list are checked against the same draft (offerTerms). */
+export function termProblem(ix: Index, parts: DraftParts, list: string, id: string, weapon?: WeaponDraft, theirs = chosenFor(ix, parts, list, weapon)): string | undefined {
   const t = term(ix, list, id)
   if (!t) return `not a term of ${list}`
   if (t.source_only) return 'research only (G1)'
   if (parts.class !== undefined && t.classes && !t.classes.includes(parts.class)) return `not for class ${parts.class} (G1)`
   if (parts.tier !== undefined && !tierAtLeast(ix, parts.tier, t.min_tier)) return `starts at ${t.min_tier} (G1)`
   const weaponPart = isWeaponList(list)
-  const weapons = allWeapons(parts)
+  const view = viewOf(ix, parts)
   // Its own maps against the parts chosen so far.
-  const has = (k: string): string[] => {
-    if (!isWeaponList(k)) return unitValues(parts, k)
+  const has = (k: string): readonly string[] => {
+    if (!isWeaponList(k)) return view.unit.get(k) ?? []
     if (weaponPart) return weapon ? weaponValues(weapon, k) : []
-    return present(weapons.flatMap(w => WEAPON_PARTS[k]?.(w) ?? []))
+    return view.allWeapon.get(k) ?? []
   }
   for (const [k, allowed] of Object.entries(t.allowed ?? {})) {
     for (const x of has(k)) if (!allowed.includes(x) && !exempt(ix, list, k, x, weapon)) return `allowed.${k} leaves out ${x} (G1)`
@@ -191,7 +234,6 @@ export function termProblem(ix: Index, parts: DraftParts, list: string, id: stri
     for (const x of has(k)) if (excluded.includes(x)) return `excludes ${k} ${x} (G1)`
   }
   // Their maps (and their classes and min_tier) against the candidate.
-  const theirs = chosenTerms(ix, parts, weaponPart ? (weapon ? [weapon] : []) : weapons)
   for (const c of theirs) {
     if (list === 'classes' && c.t.classes && !c.t.classes.includes(id)) return `${c.list} ${c.id} is not for class ${id} (G1)`
     if (list === 'tiers' && !tierAtLeast(ix, id, c.t.min_tier)) return `${c.list} ${c.id} starts at ${c.t.min_tier} (G1)`
@@ -201,7 +243,7 @@ export function termProblem(ix: Index, parts: DraftParts, list: string, id: stri
   }
   // The patterns of chosen abilities bind the class and the tier too (A1: classes, min_tier).
   if (list === 'classes' || list === 'tiers') {
-    for (const a of [parts.signature, ...(parts.abilities ?? [])]) {
+    for (const a of [parts.signature, ...(parts.abilities ?? []), ...(parts.pending ?? [])]) {
       const p = a?.pattern !== undefined ? patternOf(ix, a.pattern) : undefined
       if (!p?.generator) continue
       const b = blockOf(p, a?.variant ?? null)
@@ -210,8 +252,9 @@ export function termProblem(ix: Index, parts: DraftParts, list: string, id: stri
     }
   }
   // G2: no requires group may become impossible.
-  const next = withPart(parts, list, id, weapon)
   const groups = [...(t.requires ?? []).map(g => ({ g, by: `${list} ${id}` })), ...theirs.flatMap(c => (c.t.requires ?? []).map(g => ({ g, by: `${c.list} ${c.id}` })))]
+  if (!groups.length) return undefined
+  const next = withPart(parts, list, id, weapon)
   for (const { g, by } of groups) {
     if (g.every(l => matchLink(ix, next, l) === 'no')) return `${by} requires one of ${g.join(', ')} (G2)`
   }
@@ -243,13 +286,14 @@ export function offerTerms(ix: Index, parts: DraftParts, spice: number, list: st
   const candidates: Candidate[] = []
   const dropped: Offer['dropped'] = []
   const ctx = { class: parts.class, flavour: parts.flavour, spice }
+  const theirs = chosenFor(ix, parts, list, opts.weapon)
   for (const t of termsOf(ix, list)) {
     if (opts.only && !opts.only.includes(t.id)) continue
     if (opts.except?.includes(t.id)) {
       dropped.push({ id: t.id, why: 'already on the card' })
       continue
     }
-    const why = termProblem(ix, parts, list, t.id, opts.weapon)
+    const why = termProblem(ix, parts, list, t.id, opts.weapon, theirs)
     if (why) dropped.push({ id: t.id, why })
     else candidates.push({ id: t.id, odds: termOdds(ix, list, t.id, ctx) })
   }

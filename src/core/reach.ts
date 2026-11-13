@@ -13,8 +13,9 @@
 import { blockOf, categoryOf, cmpRank, term, termsOf, tierAtLeast, usablePattern, type Block, type Index } from './data.ts'
 import { matchLink, parseLink, targetOf, weaponsOf } from './links.ts'
 import { patternOdds } from './odds.ts'
+import { abilitiesOf } from './keys.ts'
 import { offerTerms, onOwnRolls, termProblem, UNIT_PARTS, type Mode } from './offer.ts'
-import { conflicts, hardControlOf, kindsAtTier, neverOnCardWeapon, seatsBrought } from './patterns.ts'
+import { hardControlOf, kindsAtTier, mayJoin, neverOnCardWeapon, seatsBrought } from './patterns.ts'
 import type { DraftParts, Link, Term, WeaponDraft } from './types.ts'
 
 /** The single-valued parts the model narrows against each other. classes and tiers are always chosen already. */
@@ -165,6 +166,12 @@ function domains(ix: Index, parts: DraftParts, spice: number, mode: Mode): Map<s
     }
     D.set(list, new Set(ids))
   }
+  // The handling and the nature follow from the other parts. Worked out again after each pass, they only ever shrink
+  // (kept to what they were): a value the pass removed never comes back, so the narrowing always ends.
+  const narrow = (list: string, values: Set<string>): void => {
+    const before = D.get(list)
+    D.set(list, before ? new Set([...values].filter(v => before.has(v))) : values)
+  }
   const derive = (): void => {
     if (singleValue(parts, 'handling') === undefined) {
       // G10: handling is always the mobility's default_handling.
@@ -173,9 +180,9 @@ function domains(ix: Index, parts: DraftParts, spice: number, mode: Mode): Map<s
         const h = term(ix, 'mobility', m)?.default_handling
         if (h) hs.add(h)
       }
-      D.set('handling', hs)
+      narrow('handling', hs)
     }
-    if (singleValue(parts, 'nature') === undefined) D.set('nature', natures(ix, parts, D))
+    if (singleValue(parts, 'nature') === undefined) narrow('nature', natures(ix, parts, D))
   }
   derive()
   for (let changed = true; changed; ) {
@@ -255,8 +262,22 @@ function weaponReach(ix: Index, parts: DraftParts, spice: number, mode: Mode, D:
   }
   const allTargets = termsOf(ix, 'target-types').filter(t => !t.source_only).map(t => t.id)
   const allRanges = termsOf(ix, 'range-bands').filter(t => !t.source_only).map(t => t.id)
-  const traitTerms = termsOf(ix, 'weapon-traits').filter(t => !t.source_only && !neverOnCardWeapon(ix, `weapon-trait:${t.id}`))
   const bodies = D.get('bodies') ?? new Set<string>()
+  // Traits and mounts are checked once for a weapon with no parts yet; a family whose own maps name traits or mounts
+  // is checked again for itself (none does today, but the rules read maps both ways).
+  const mapsName = (fam: Term, list: string): boolean => !!fam.allowed?.[list] || !!fam.excluded?.[list]
+  const traitsFor = (weapon: WeaponDraft): Term[] =>
+    termsOf(ix, 'weapon-traits').filter(t => !t.source_only && !neverOnCardWeapon(ix, `weapon-trait:${t.id}`) && termProblem(ix, parts, 'weapon-traits', t.id, weapon) === undefined)
+  const mountsFor = (weapon: WeaponDraft): string[] =>
+    offerTerms(ix, parts, spice, 'aim-models', { weapon }).candidates
+      .filter(c => mode === 'forced' || onOwnRolls(c))
+      .filter(c => hasAny(bodies, b => {
+        const allowed = term(ix, 'bodies', b)?.allowed?.['aim-models']
+        return !allowed || allowed.includes(c.id)
+      }))
+      .map(c => c.id)
+  const plainTraits = traitsFor({})
+  const plainMounts = mountsFor({})
   for (const { fam, w } of slots) {
     out.families.add(fam.id)
     const weapon: WeaponDraft = { ...w, family: fam.id }
@@ -293,8 +314,7 @@ function weaponReach(ix: Index, parts: DraftParts, spice: number, mode: Mode, D:
     // Traits: every trait that fits the tier and some delivery, never the stun trait (HC1).
     if (w.traits !== undefined) for (const x of w.traits) out.traits.add(x)
     else {
-      for (const t of traitTerms) {
-        if (termProblem(ix, parts, 'weapon-traits', t.id, weapon) !== undefined) continue
+      for (const t of mapsName(fam, 'weapon-traits') ? traitsFor(weapon) : plainTraits) {
         const fits = dels.some(d => !(t.excluded?.['weapon-delivery'] ?? []).includes(d) && !(term(ix, 'weapon-delivery', d)?.excluded?.['weapon-traits'] ?? []).includes(t.id))
         if (fits || dels.length === 0) out.traits.add(t.id)
       }
@@ -302,16 +322,63 @@ function weaponReach(ix: Index, parts: DraftParts, spice: number, mode: Mode, D:
     // Mounts (G12): the aim models some possible body allows, at the gate, that some delivery does not exclude.
     if (w.mount !== undefined) out.mounts.add(w.mount)
     else {
-      for (const c of offerTerms(ix, parts, spice, 'aim-models', { weapon }).candidates) {
-        if (mode === 'gate' && !onOwnRolls(c)) continue
-        const bodyOk = hasAny(bodies, b => {
-          const allowed = term(ix, 'bodies', b)?.allowed?.['aim-models']
-          return !allowed || allowed.includes(c.id)
-        })
-        const delOk = dels.length === 0 || dels.some(d => !(term(ix, 'weapon-delivery', d)?.excluded?.['aim-models'] ?? []).includes(c.id))
-        if (bodyOk && delOk) out.mounts.add(c.id)
+      for (const m of mapsName(fam, 'aim-models') ? mountsFor(weapon) : plainMounts) {
+        const delOk = dels.length === 0 || dels.some(d => !(term(ix, 'weapon-delivery', d)?.excluded?.['aim-models'] ?? []).includes(m))
+        if (delOk) out.mounts.add(m)
       }
     }
+  }
+  return out
+}
+
+/** The unit-wide lists that a map links with weapon parts (a unit term's map names a weapon list, or a weapon term's
+ *  map names the unit list): the body's allowed mounts, for one. Worked out once per data. */
+function weaponLinkedLists(ix: Index): string[] {
+  const known = ix.derived.get('weapon-linked-lists') as string[] | undefined
+  if (known) return known
+  const weaponLists = ['weapon-families', 'aim-models', 'damage-types', 'weapon-delivery', 'target-types', 'range-bands', 'weapon-traits']
+  const out = new Set<string>()
+  for (const list of Object.keys(UNIT_PARTS)) {
+    for (const t of termsOf(ix, list)) for (const k of [...Object.keys(t.allowed ?? {}), ...Object.keys(t.excluded ?? {})]) if (weaponLists.includes(k)) out.add(list)
+  }
+  for (const wl of weaponLists) {
+    for (const t of termsOf(ix, wl)) for (const k of [...Object.keys(t.allowed ?? {}), ...Object.keys(t.excluded ?? {})]) if (Object.hasOwn(UNIT_PARTS, k)) out.add(k)
+  }
+  const list = [...out].sort()
+  ix.derived.set('weapon-linked-lists', list)
+  return list
+}
+
+/**
+ * The weapons a draft can still get, worked out from its chosen parts alone (the other parts are not narrowed against
+ * each other): the quick check of a need on a weapon part between the steps (needs.ts).
+ */
+export function weaponOptions(ix: Index, parts: DraftParts, spice: number, mode: Mode): WeaponReach {
+  const pool = (list: string): Set<string> => {
+    const v = singleValue(parts, list)
+    if (v !== undefined) return new Set([v])
+    return new Set(offerTerms(ix, parts, spice, list).candidates.filter(c => mode === 'forced' || onOwnRolls(c)).map(c => c.id))
+  }
+  const tgts = new Set<string>()
+  const sizes = pool('sizes')
+  for (const m of pool('mobility')) {
+    for (const s of sizes) {
+      const t = targetOf(ix, m, s)
+      if (t) tgts.add(t)
+    }
+  }
+  const bodies = pool('bodies')
+  // The weapons depend on the class, tier, flavour, spice and mode, the possible bodies (mounts) and targets (a dropped
+  // weapon needs a flier), the chosen weapons, and the unit-wide parts that a map links with weapon parts: kept by those.
+  const unitMaps = weaponLinkedLists(ix).map(l => `${l}=${(UNIT_PARTS[l]?.(parts) ?? []).join('+')}`)
+  const key = `weapons|${mode}|${spice}|${parts.class}|${parts.tier}|${parts.flavour}|${[...bodies].join('+')}|${[...tgts].join('+')}|${JSON.stringify(parts.armament)}|${unitMaps.join('|')}`
+  const known = ix.cache.get(key) as WeaponReach | undefined
+  if (known) return known
+  const out = weaponReach(ix, parts, spice, mode, new Map([['bodies', bodies]]), tgts)
+  ix.cache.set(key, out)
+  if (ix.cache.size > KEEP) {
+    const oldest = ix.cache.keys().next().value
+    if (oldest !== undefined) ix.cache.delete(oldest)
   }
   return out
 }
@@ -331,7 +398,7 @@ function build(ix: Index, parts: DraftParts, spice: number, mode: Mode): Reach {
   const fixedSeats = parts.crew.passengers
   const maxSeats = fixedSeats !== undefined ? (fixedSeats?.seats ?? 0) : Math.max(0, ...[...(D.get('sizes') ?? [])].map(s => caps[s] ?? 0))
   const fixedPatterns = new Set<string>()
-  for (const a of [parts.signature, ...(parts.abilities ?? [])]) if (a?.pattern !== undefined) fixedPatterns.add(a.pattern)
+  for (const a of abilitiesOf(parts)) if (a.pattern !== undefined) fixedPatterns.add(a.pattern)
   const R: Reach = {
     mode,
     spice,
@@ -398,6 +465,71 @@ function build(ix: Index, parts: DraftParts, spice: number, mode: Mode): Reach {
  *  and the mode, so a kept one is always right; the bound only keeps memory small over many rolls. */
 const KEEP = 2000
 
+/** Is the draft plain: nothing chosen yet but class, tier, flavour and roles? Only plain reaches are kept: they recur
+ *  across rolls (54 class, tier and flavour combinations), while a fuller draft is new on every roll. */
+function plain(parts: DraftParts): boolean {
+  const empty = (o: object): boolean => Object.values(o).every(v => v === undefined)
+  return (
+    parts.nature === undefined && parts.availability === undefined && empty(parts.mobility) && empty(parts.body) &&
+    empty(parts.armament) && empty(parts.armour) && empty(parts.sensors) && empty(parts.crew) &&
+    parts.signature === undefined && parts.abilities === undefined && parts.pending === undefined &&
+    parts.modes === undefined && parts.resource === undefined && parts.on_death === undefined
+  )
+}
+
+/** For each pattern: c (a pattern id, or "category:" plus a category) to the patterns whose requires, implies or
+ *  strength links name it. Worked out once per data. */
+function dependents(ix: Index): Map<string, string[]> {
+  const known = ix.derived.get('dependents') as Map<string, string[]> | undefined
+  if (known) return known
+  const out = new Map<string, string[]>()
+  for (const p of ix.patterns) {
+    if (!usablePattern(p)) continue
+    for (const v of p.variants) {
+      const b = blockOf(p, v.id)
+      for (const l of [...b.requires.flat(), ...b.implies, ...b.adds_strengths.map(s => s.ref), ...b.adds_weaknesses.map(s => s.ref)]) {
+        const { kind, id } = parseLink(l)
+        if (kind !== 'pattern' && kind !== 'category') continue
+        const key = kind === 'pattern' ? id : `category:${id}`
+        const list = out.get(key) ?? []
+        if (!list.includes(p.id)) list.push(p.id)
+        out.set(key, list)
+      }
+    }
+  }
+  ix.derived.set('dependents', out)
+  return out
+}
+
+/**
+ * The reach of a plain draft, seeing the abilities a draft already has: a pattern whose requires, implies or strength
+ * links name one of them (overload-past-cap needs mind-control, a signature-only pattern) may now be offered. Only
+ * those patterns are checked again.
+ */
+export function reachWithAbilities(ix: Index, R: Reach, parts: DraftParts): Reach {
+  const abilities = abilitiesOf(parts).filter(a => a.pattern !== undefined)
+  if (!abilities.length) return R
+  const seen = { signature: parts.signature, abilities: parts.abilities, pending: parts.pending }
+  const R2: Reach = {
+    ...R,
+    parts: { ...R.parts, ...seen },
+    fixedPatterns: new Set([...R.fixedPatterns, ...abilities.map(a => a.pattern as string)]),
+    categories: new Set([...R.categories, ...abilities.map(a => categoryOf(ix, a.pattern as string)).filter((c): c is string => !!c)]),
+    patterns: new Map(R.patterns),
+  }
+  const deps = dependents(ix)
+  const touched = new Set(abilities.flatMap(a => [...(deps.get(a.pattern as string) ?? []), ...(deps.get(`category:${categoryOf(ix, a.pattern as string)}`) ?? [])]))
+  for (const id of touched) {
+    const p = ix.patternById.get(id)
+    if (!p || R2.fixedPatterns.has(id)) continue
+    const ok = p.variants.filter(v => variantProblem(ix, R2, id, v.id) === undefined).map(v => v.id)
+    if (!ok.length) continue
+    const slot = p.generator?.slot
+    R2.patterns.set(id, { signature: slot === 'extra' ? [] : ok, extra: slot === 'signature' ? [] : ok })
+  }
+  return R2
+}
+
 /** JSON with the keys of every object sorted and undefined values left out: equal drafts give equal keys. */
 function canonical(x: unknown): string {
   if (Array.isArray(x)) return `[${x.map(canonical).join(',')}]`
@@ -413,10 +545,14 @@ export function reachOf(ix: Index, parts: DraftParts, spice: number, mode: Mode)
   if (parts.class === undefined || parts.tier === undefined || parts.flavour === undefined) {
     throw new Error('the reach of a draft needs its class, tier and flavour')
   }
-  const key = `reach|${mode}|${spice}|${canonical(parts)}`
+  if (!plain(parts)) return build(ix, parts, spice, mode)
+  // While the secondary roles are open, the roles change nothing the model offers (a role a pattern implies is then
+  // checked by whether the card can hold it), so they are left out and the 54 combinations share their entries.
+  const base: DraftParts = parts.roles.secondary === undefined ? { ...parts, roles: {} } : parts
+  const key = `reach|${mode}|${spice}|${canonical(base)}`
   const known = ix.cache.get(key) as Reach | undefined
   if (known) return known
-  const R = build(ix, parts, spice, mode)
+  const R = build(ix, base, spice, mode)
   ix.cache.set(key, R)
   if (ix.cache.size > KEEP) {
     const oldest = ix.cache.keys().next().value
@@ -583,7 +719,7 @@ export function variantProblem(ix: Index, R: Reach, patternId: string, variantId
   for (const l of b.implies) if (!canMeet(ix, R, l, { self, use: 'implies' })) return `cannot set implied ${l} (G3, A8, G5, G6)`
   for (const l of b.excludes) if (!canAvoid(ix, R, l)) return `cannot avoid ${l}`
   for (const s of [...b.adds_strengths, ...b.adds_weaknesses]) if (!canMeet(ix, R, s.ref, { self, use: 'strength' })) return `cannot set ${s.ref} (M2)`
-  for (const q of R.fixedPatterns) if (conflicts(ix, patternId, q)) return `conflicts with ${q} (A7, A11)`
-  return undefined
+  const placed = abilitiesOf(R.parts).filter(a => a.pattern !== undefined).map(a => ({ pattern: a.pattern as string, variant: a.variant }))
+  return mayJoin(ix, placed, patternId, variantId)
 }
 

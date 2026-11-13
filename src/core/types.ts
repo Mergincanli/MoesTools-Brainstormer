@@ -249,6 +249,18 @@ export interface HardControl {
   weapon_families: { families: string[]; note: string }
 }
 
+/** One side of a same-mechanic entry: a pattern, and some of its variants (none listed = every variant). */
+export interface SameMechanicSide {
+  pattern: string
+  variants?: string[]
+}
+
+/**
+ * A11: patterns Mustafa confirmed as one mechanic. Today a pair of pattern ids; the shape being discussed names each
+ * side's pattern and, optionally, some of its variants, with a verdict. Both shapes are read (patterns.ts mayJoin).
+ */
+export type SameMechanicEntry = string[] | { a: SameMechanicSide; b: SameMechanicSide; verdict?: string; note?: string }
+
 export interface RulesFile {
   kind: 'rules'
   version: string
@@ -259,7 +271,7 @@ export interface RulesFile {
   cooldowns: RuleCooldowns
   role_fit: Record<string, RoleFit>
   hard_control: HardControl
-  same_mechanic: string[][]
+  same_mechanic: SameMechanicEntry[]
   points: Record<string, unknown>
   layout: Record<string, string>
   attempts: number
@@ -372,6 +384,9 @@ export interface DraftParts {
   crew: { model?: string; solo_fallback?: string | null; passengers?: PassengersPart | null }
   signature?: AbilityDraft
   abilities?: AbilityDraft[]
+  /** Draft only, never on a card: extra abilities already chosen (needed ones, step 4) while more may still come.
+   *  Step 14 moves them to the front of `abilities`. Link matching and the key count see them. */
+  pending?: AbilityDraft[]
   modes?: ModeDraft[]
   resource?: string | null
   on_death?: string[]
@@ -421,14 +436,16 @@ export interface RollRequest {
 
 /**
  * Something the finished card must have, passed on from an earlier step to the step that owns the part (G2, G3,
- * G4, G13, M2): one of the links must hold. forced: it comes from an input or a lock, so a part above the spice gate
- * may meet it (G5). onPrimary: the link is read on the primary weapon only (G13, assault's main weapon).
+ * G4, G13, M2): one of the links must hold. avoid: none of the links may hold (a pattern's excludes). forced: it comes
+ * from an input or a lock, so a part above the spice gate may meet it (G5). onPrimary: the link is read on the
+ * primary weapon only (G13, assault's main weapon).
  */
 export interface Need {
   links: Link[]
   by: string
   rule: string
   forced: boolean
+  avoid?: boolean
   onPrimary?: boolean
 }
 
@@ -460,11 +477,15 @@ export interface Draft {
   /** The locked parts, in the card schema's order. */
   locks: LockName[]
   locked: Partial<LockValues>
+  /** The roll steps whose locked fields are already set on the parts (a lock is set at its own step: draft.ts). */
+  lockSteps: string[]
   parts: DraftParts
   /** A locked working name (text.name). */
   name?: string
   /** The cost band, known once the balance is worked out (step 17); cost: links stay open until then. */
   costBand?: string
   needs: Need[]
+  /** The steps (rules.json roll_order ids) that have run on this draft. */
+  done: string[]
   trace: TraceEntry[]
 }

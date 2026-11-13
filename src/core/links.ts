@@ -60,11 +60,12 @@ export function weaponsOf(parts: DraftParts): { weapons: WeaponDraft[]; complete
   return { weapons, complete: a.primary !== undefined && a.secondary !== undefined && a.conditional !== undefined }
 }
 
-/** The patterns of the card's abilities (signature first), and whether more may come. */
+/** The patterns of the card's abilities (signature first, then the extras chosen so far), and whether more may come. */
 export function abilityPatternsOf(parts: DraftParts): { patterns: Array<string | undefined>; complete: boolean } {
   const patterns: Array<string | undefined> = []
   if (parts.signature) patterns.push(parts.signature.pattern)
   for (const a of parts.abilities ?? []) patterns.push(a.pattern)
+  for (const a of parts.pending ?? []) patterns.push(a.pattern)
   return { patterns, complete: parts.signature !== undefined && parts.abilities !== undefined }
 }
 

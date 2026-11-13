@@ -12,8 +12,11 @@ export interface Index {
   readonly patterns: readonly Pattern[]
   readonly patternById: ReadonlyMap<string, Pattern>
   readonly registryById: ReadonlyMap<string, RegistryEntry>
-  /** Values worked out from the data (the reach of a card, see reach.ts), by key. Same data, same values. */
+  /** Values worked out from the data (the reach of a card, see reach.ts), by key. Same data, same values. Kept to a
+   *  bound size: the oldest go first. */
   readonly cache: Map<string, unknown>
+  /** Small values worked out from the data alone, kept for good (which lists a list's terms affect, and the like). */
+  readonly derived: Map<string, unknown>
 }
 
 const INDEXES = new WeakMap<GeneratorData, Index>()
@@ -31,6 +34,19 @@ function assertSupported(data: GeneratorData): void {
   if (d.avoided_blocks_implied !== true) bad.push('defaults.avoided_blocks_implied false (G6)')
   if (d.spice_fallback !== 'least-rare' && d.spice_fallback !== 'grey-out') bad.push(`defaults.spice_fallback '${d.spice_fallback}'`)
   if (d.flavour_lean !== 'favoured' && d.flavour_lean !== 'weight-only' && d.flavour_lean !== 'step-only') bad.push(`defaults.flavour_lean '${d.flavour_lean}'`)
+  // The switches steps 4 to 14 read: each is implemented for the value approved (true / 'equal') only.
+  const onOff: Array<[string, boolean]> = [
+    ['fill_pattern_requires (G4)', d.fill_pattern_requires],
+    ['take_what_fits (G16)', d.take_what_fits],
+    ['always_variant (A2)', d.always_variant],
+    ['implied_pattern_as_extra (A8)', d.implied_pattern_as_extra],
+    ['key_traits_only_when_implied (K-d)', d.key_traits_only_when_implied],
+    ['passengers.only_from_patterns (section 7)', d.passengers.only_from_patterns],
+  ]
+  for (const [name, on] of onOff) if (on !== true) bad.push(`defaults.${name} false`)
+  for (const [name, v] of [['variant_odds', d.variant_odds], ['kind_odds', d.kind_odds], ['passengers.seat_odds', d.passengers.seat_odds]] as const) {
+    if (v !== 'equal') bad.push(`defaults.${name} '${String(v)}'`)
+  }
   if (bad.length) throw new Error(`rules.json has values this generator does not implement: ${bad.join('; ')}`)
 }
 
@@ -54,6 +70,7 @@ export function indexOf(data: GeneratorData): Index {
     patternById: new Map(patterns.map(p => [p.id, p])),
     registryById: new Map(data.registry.map(r => [r.id, r])),
     cache: new Map(),
+    derived: new Map(),
   }
   INDEXES.set(data, ix)
   return ix
@@ -129,6 +146,19 @@ export interface Block {
  * flavour_lean and conflicts_with have no override. Without its own class_rarity a variant keeps the base one.
  */
 export function blockOf(p: Pattern, variantId: string | null): Block {
+  let byVariant = BLOCKS.get(p)
+  if (!byVariant) BLOCKS.set(p, (byVariant = new Map()))
+  const known = byVariant.get(variantId)
+  if (known) return known
+  const block = makeBlock(p, variantId)
+  byVariant.set(variantId, block)
+  return block
+}
+
+/** Blocks are worked out once per pattern and variant (they depend on the data alone, and nothing changes them). */
+const BLOCKS = new WeakMap<Pattern, Map<string | null, Block>>()
+
+function makeBlock(p: Pattern, variantId: string | null): Block {
   const G = p.generator
   if (!G) throw new Error(`pattern '${p.id}' has no generator block`)
   const v = variantOf(p, variantId)
