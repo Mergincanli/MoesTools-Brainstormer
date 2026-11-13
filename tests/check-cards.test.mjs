@@ -548,6 +548,16 @@ describe('names and text (section 11, T-a, T-b)', () => {
     assert.deepEqual(leaks('throw splash into the bunch, or use an EMP to drop them all'), [], 'EMP is a label of our own word lists')
     assert.ok(leaks("Follow up after an emergency fix: Battlefield's extinguisher leaves it on low health").includes('Battlefield'), 'a sentence goes on after a colon')
   })
+  test("T-b: the summary in the pitch starts a sentence of its own, so its first word is not read as a name", () => {
+    assert.ok(data.textCheck.leaks('a soldier: Reach the vehicle').includes('Reach'), 'Reach is a short form of a game title')
+    const a = card('a')
+    const sig = a.parts.signature
+    const summary = 'Reach the target and fire one heavy shot.'
+    const d = withPatternDoc(sig.pattern, doc => { doc.variants.find(v => v.id === sig.variant).summary = summary; return doc })
+    a.text.signature.effect = summary
+    a.text.pitch = `${a.text.pitch.slice(0, a.text.pitch.indexOf(': ') + 1)} ${summary}`
+    assert.deepEqual(checkCard(a, d), [], fmt(checkCard(a, d)))
+  })
   test('S11 controls: a key ability may sit on Q when the signature is passive, and only then', () => {
     const d = card('d') // a passive signature and one key extra, on R
     const smoke = d.text.how_it_plays.controls.find(c => c.input === data.rules.layout.next_ability)

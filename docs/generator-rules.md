@@ -443,5 +443,6 @@ The checker of P3 is written from this sheet alone, apart from the module. Writi
 ## What comes next
 
 1. The rules as data (P1), the key count (P2) and the card schema line (P4).
-2. The module in `src/core/` (job 1 of 4 is done), a command that rolls cards and a first page of sample cards, which Mustafa sees as soon as the module rolls valid cards and before the review passes.
-3. The wording of the card property for K2 A, for his approval.
+2. Done on 13 November 2026: the module in `src/core/`, the command that rolls cards (`npm run roll`), the cross-check with the separate checker (`npm run cross-check`) and a first page of sample cards ([docs/cards.md](cards.md)), which Mustafa sees before the review passes.
+3. Waiting for his word: the wording of the card property for K2 A, the list of patterns that are one mechanic under two names and the wording that lets it name variants, and whether the data version also covers the real names and the pattern registry.
+4. Then the two review passes and their fixes.

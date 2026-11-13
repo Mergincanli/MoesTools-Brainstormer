@@ -1367,7 +1367,11 @@ function textFields(card) {
 function checkTexts(ctx, add) {
   const { data, card, p, abil } = ctx
   for (const [at, s] of textFields(card)) {
-    const found = data.textCheck.leaks(s)
+    // The pitch is the template's opening, a colon, and the summary's first sentence, which starts a sentence of its
+    // own with a capital letter: the two parts are read apart, so that first word is not taken for a name ('Reach').
+    const cut = at === '/text/pitch' ? s.indexOf(': ') : -1
+    const pieces = cut >= 0 ? [s.slice(0, cut + 1), s.slice(cut + 2)] : [s]
+    const found = [...new Set(pieces.flatMap(x => data.textCheck.leaks(x)))]
     if (found.length) add('T-b', at, `names a real game, franchise, faction, unit or wiki: ${found.join(', ')}`)
   }
   const T = data.terms, X = data.texts, N = data.names, neutral = X.neutral || {}

@@ -29,7 +29,7 @@ Batch R3 (27 units and 33 new pattern files) was merged on 11 November 2026 ([re
 | `data/` | Games registry, pattern registry, word lists, researched units, mechanic patterns (JSON). |
 | `schemas/` | JSON Schemas for every record type. |
 | `docs/` | Proposal, generated reference pages and the example concept card (`docs/examples/`). |
-| `scripts/` | Validator, docs builder, JSON formatter, copy-check, checker sampler, agreement measure, word-list diff and pattern sync. |
+| `scripts/` | Validator, docs builder, JSON formatter, copy-check, checker sampler, agreement measure, word-list diff and pattern sync; for the generator, the roll command, the sample-page builder, the rolled-card checker and the cross-check. |
 | `research/` | Research working notes: `research/registry-notes/` has the notes for each research batch (games registry and patterns), `research/pilot/` the calibration pilot's record and report, `research/r<N>/` each batch's record, `research/workflows/` the batch's workflow scripts. |
 | `tests/` | Tests for the scripts (`node:test`). |
 | `.github/workflows/` | CI, which runs `npm run check` on every push to `main` and every pull request. |
@@ -52,6 +52,9 @@ You need Node.js 22.18 or newer; `npm install` refuses older versions. Install o
 | `npm run manifest` | Rewrites `data/manifest.json`, the content hash of the word lists, the patterns and the generator's rules that every rolled card records. Run it after any change to those. `npm run manifest:check` fails when it is out of date. |
 | `npm run check:generator` | Checks the generator's data files (`data/generator/`) against their schema, the ids they name and the rule sheet's counts. |
 | `node scripts/check-cards.mjs <card.json>` | Checks rolled concept cards against the generator's rule sheet ([docs/generator-rules.md](docs/generator-rules.md)): a checker written apart from the generator, from the same rules. |
+| `npm run roll -- --seed <text>` | Rolls a concept card and prints it as text. Steer it with `--class`, `--tier`, `--flavour`, `--role`, `--spice <1 to 5>` and `--lock <part>=<value>`; `--count <n>` rolls several, `--json` prints the card objects, `--out <file>` saves them. The same seed and inputs always give the same card on the same data. |
+| `npm run cards` | Rebuilds [docs/cards.md](docs/cards.md), the page of sample cards, from its fixed seeds. Run it after any change to the word lists, the patterns or the generator's rules. `npm run cards:check` fails when the page is out of date. |
+| `npm run cross-check -- t3` | Rolls 10,000 random cards and judges each with the separate checker and the validator's card rules (about five minutes). `npm run cross-check -- t4` does the same for every combination of inputs (slow: split it with `--shard <i>/<n>`). The tests run a small slice of both. |
 | `npm run typecheck` | Type-checks the generator module (`src/core/`). Node 22.18 or newer runs its TypeScript files directly; there is no build step. |
 | `npm test` | Runs the tests in `tests/`. |
 | `npm run copy-check` | Fetches every page the data cites and flags any run of six or more words that a record shares with a page it cites. Add `--also <folder>` to check notes too (see the options below). |
@@ -62,10 +65,10 @@ You need Node.js 22.18 or newer; `npm install` refuses older versions. Install o
 | `npm run vocab-diff -- <old> [<new>]` | Lists what changed in the word lists between two versions: each version is a folder of word lists or a git commit (its `data/vocab/`); `<new>` defaults to `data/vocab`. |
 | `npm run sync-patterns` | Fills in each pattern file's `source_units` from the units that link it (through abilities, weapons and modes). Research agents never run it and never edit an existing pattern file: they run `npm run validate`, which warns while a list is out of date (a new pattern they write gets its first list by hand). The merge pass runs it once, then `npm run docs`, then `npm run check:merge`. |
 | `npm run sync-patterns:check` | Lists the pattern files whose `source_units` are out of date, without changing them, and fails if there is one. |
-| `npm run check` | Format check, validator, the generator data check, the manifest check, docs check, type check and tests, in that order. This is what CI runs. |
+| `npm run check` | Format check, validator, the generator data check, the manifest check, the sample-cards check, docs check, type check and tests, in that order. This is what CI runs. |
 | `npm run check:merge` | The pattern sync check, then `npm run check`. For the merge pass: a research pull request may leave pattern lists out of date, so CI does not run it. |
 
-Edit the JSON directly; the word lists in `data/vocab/*.json` are the source of truth. After any JSON edit run `npm run format`; after any change under `data/`, `schemas/` or `docs/examples/` run `npm run docs`, and commit the rebuilt pages with it.
+Edit the JSON directly; the word lists in `data/vocab/*.json` are the source of truth. After any JSON edit run `npm run format`; after any change under `data/`, `schemas/` or `docs/examples/` run `npm run docs`, `npm run manifest` and `npm run cards`, and commit the rebuilt pages with it.
 
 **CI** (`.github/workflows/ci.yml`) runs `npm ci` and `npm run check` on every push to `main` and every pull request, on Linux and Windows with Node.js 22 and 24. Git checks every text file out with LF line endings (`.gitattributes`), so the checks give the same result on Windows.
 

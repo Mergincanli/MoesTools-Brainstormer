@@ -17,7 +17,7 @@ Unit Forge is a research database of real RTS and shooter units, and later a gen
 - **Never change the word lists or field rules without his approval**, recorded in the commit message. They are `data/vocab/`, `schemas/`, the Conventions text in `scripts/build-docs.mjs` and the rule checks in `scripts/validate.mjs`. Before a push, `git diff --name-only origin/main...HEAD -- data/vocab schemas scripts/build-docs.mjs scripts/validate.mjs` must print nothing that lacks that approval.
 - **Paraphrase only:** never six or more words in a row copied from a page. Before committing research text, run `npm run copy-check -- --also research/r<N> --also research/registry-notes`. Check cited PDF manuals by hand (`pdftotext`, then a six-word check). Then search for local paths with `grep -rnE "file://|/home/user|/tmp/|scratchpad" research/r<N>`. Reword text only, never a coded value.
 - No images. No AI model names in files, commits or pull-request text.
-- Run `npm run check:merge` before every push; CI runs `npm run check`. After a JSON edit run `npm run format`; after a data change run `npm run docs` and `npm run manifest`.
+- Run `npm run check:merge` before every push; CI runs `npm run check`. After a JSON edit run `npm run format`; after a data change run `npm run docs`, `npm run manifest` and `npm run cards`.
 - **Git:**
   - work on the batch's branch (`claude/quirky-cray-tih1w4` for R3, pull request #6);
   - add files by name, never `git add -A`;
